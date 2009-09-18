@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Simple example to demonstrate the DateValidator. -->
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+        xmlns:s="library://ns.adobe.com/flex/spark"
+        xmlns:mx="library://ns.adobe.com/flex/halo">
+
+    <fx:Script>
+        import mx.controls.Alert;
+    </fx:Script>
+
+    <fx:Declarations>
+        <fx:Model id="CheckModel">
+            <dateInfo>
+                <DOB>{dob.text}</DOB>
+            </dateInfo>
+        </fx:Model>
+
+        <mx:DateValidator source="{dob}" property="text" allowedFormatChars="/" 
+                trigger="{myButton}" triggerEvent="click" 
+                valid="Alert.show('Validation Succeeded!');"/>
+    </fx:Declarations>
+
+    <s:Panel title="DateValidator Example"
+            width="75%" height="75%" 
+            horizontalCenter="0" verticalCenter="0">
+        <mx:Form left="10" right="10" top="10" bottom="10">
+            <mx:FormItem label="Enter date of birth (mm/dd/yyyy): ">
+                <s:TextInput id="dob" width="100%"/>
+            </mx:FormItem>
+            <mx:FormItem >
+                <s:Button id="myButton" label="Validate" />
+            </mx:FormItem>
+        </mx:Form>
+    </s:Panel>
+
+</s:Application>

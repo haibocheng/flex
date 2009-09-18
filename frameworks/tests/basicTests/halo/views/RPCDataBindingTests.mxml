@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox 
+    xmlns:fx="http://ns.adobe.com/mxml/2009"
+    xmlns:s="library://ns.adobe.com/flex/spark"
+    xmlns:mx="library://ns.adobe.com/flex/halo"     
+    >
+
+<fx:Script>
+<![CDATA[
+
+    import mx.collections.*;
+    import mx.controls.*;
+    import mx.events.*;
+    import mx.managers.*;
+
+
+]]>
+</fx:Script>
+<fx:Declarations>
+    <mx:HTTPService id="svc" url="halo/views/ListOfUSStateNames.xml" />
+</fx:Declarations>
+
+    <mx:List id="testList" dataProvider="{svc.lastResult.states.state}" labelField="name"/>
+    <mx:Button id="loadButton" label="load" click="svc.send()" />
+</mx:VBox>

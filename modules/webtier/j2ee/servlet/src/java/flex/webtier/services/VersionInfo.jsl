@@ -1,0 +1,118 @@
+////////////////////////////////////////////////////////////////////////////////
+//
+//  ADOBE SYSTEMS INCORPORATED
+//  Copyright [Date] Adobe Systems Incorporated
+//  All Rights Reserved.
+//
+//  NOTICE: Adobe permits you to use, modify, and distribute this file
+//  in accordance with the terms of the license agreement accompanying it.
+//
+////////////////////////////////////////////////////////////////////////////////
+package flex.webtier.services;
+
+import flex.webtier.util.Trace;
+import flex.webtier.util.ResourceHelper;
+
+import java.util.ResourceBundle;
+import java.util.PropertyResourceBundle;
+
+public class VersionInfo
+{    
+    public static byte FLEX_MAJOR_VERSION = 1;
+    public static byte FLEX_MINOR_VERSION = 5;
+
+    //Cache this info as it should not change during the time class is loaded
+    static String BUILD_MESSAGE;
+    static String BUILD_NUMBER_STRING;
+    static long BUILD_NUMBER;
+
+    public static String buildMessage()
+    {
+        if (BUILD_MESSAGE == null)
+        {
+            try 
+            {
+                //Ensure we've parsed build info
+                getBuild();
+                
+                if (BUILD_NUMBER_STRING == null || BUILD_NUMBER_STRING == "")
+                {
+                    BUILD_MESSAGE = "Macromedia Flex Build: development";
+                }
+                else
+                {
+                    BUILD_MESSAGE = "Macromedia Flex Build: " + BUILD_NUMBER_STRING;
+                }
+            } 
+            catch (Throwable t)
+            {
+                BUILD_MESSAGE = "Macromedia Flex Build: information unavailable";
+            }
+        }
+            
+        return BUILD_MESSAGE;
+    }
+
+    public static long getBuildAsLong()
+    {
+        if (BUILD_NUMBER == 0)
+        {
+            getBuild();
+            
+            if (BUILD_NUMBER_STRING != null && !BUILD_NUMBER_STRING.equals(""))
+            {
+                try
+                {
+                    BUILD_NUMBER = Long.parseLong(BUILD_NUMBER_STRING);
+                }
+                catch (NumberFormatException nfe)
+                {
+                    // ignore, just return 0
+                }
+            }
+        }
+
+        return BUILD_NUMBER;
+    }
+
+    public static String getBuild()
+    {
+        if (BUILD_NUMBER_STRING == null)
+        {
+            BUILD_NUMBER_STRING = "";
+
+            try
+            {
+                /*
+                    [Pete] Working around J#.NET issue with ResourceBundle - it always seems to 
+                    report Access is denied. We can support other locales if required, for now 
+                    we only expect .properties 
+                */
+
+                //ResourceBundle resources = ResourceBundle.getBundle("flex.webtier.services.resource");
+                //String name = "flex.webtier.services.resource";
+
+                String resourceName = "flex/webtier/services/resource.properties";
+                java.io.InputStream is = ResourceHelper.getResourceAsInputStream(ResourceHelper.RESOURCE_BASE, resourceName);
+                ResourceBundle resources = new PropertyResourceBundle(is);
+
+                String serverBuild = resources.getString("server.build");
+                String appmodelBuild = resources.getString("appmodel.build");
+                if ((serverBuild != null) && (! serverBuild.equals("")) &&
+                    (appmodelBuild != null) && (! appmodelBuild.equals("")))
+                {
+                    BUILD_NUMBER_STRING = serverBuild + "." + appmodelBuild;
+                }
+            }
+            catch (Throwable t)
+            {
+                if (Trace.error)
+                {
+                    t.printStackTrace();
+                }
+            }
+        }
+            
+        return BUILD_NUMBER_STRING;
+    }
+}

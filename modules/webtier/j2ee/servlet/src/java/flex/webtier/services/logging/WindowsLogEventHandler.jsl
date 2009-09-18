@@ -1,0 +1,46 @@
+////////////////////////////////////////////////////////////////////////////////
+//
+//  ADOBE SYSTEMS INCORPORATED
+//  Copyright [Date] Adobe Systems Incorporated
+//  All Rights Reserved.
+//
+//  NOTICE: Adobe permits you to use, modify, and distribute this file
+//  in accordance with the terms of the license agreement accompanying it.
+//
+////////////////////////////////////////////////////////////////////////////////
+package flex.webtier.services.logging;
+
+/*
+ * This class serves as an integration point for Flex.NET.
+ * It has no used in Flex for Java.
+ */
+public class WindowsLogEventHandler extends LogEventHandler
+{
+    Flex.Services.Logging.EventLogger logger;
+    
+    public WindowsLogEventHandler(String logName)
+    {
+        this.logger = new Flex.Services.Logging.EventLogger(logName);
+    }
+
+    public boolean logEvent(LogEvent event)
+    {
+        System.Diagnostics.EventLogEntryType type;
+        switch (event.getType())
+        {
+            case LogEvent.LOG_ERROR:
+                type = System.Diagnostics.EventLogEntryType.Error;
+                break;
+            case LogEvent.LOG_WARNING:
+                type = System.Diagnostics.EventLogEntryType.Warning;
+                break;
+            case LogEvent.LOG_DEBUG:
+            case LogEvent.LOG_INFO:
+            default:
+                type = System.Diagnostics.EventLogEntryType.Information;
+                break;
+        }
+        
+        return logger.logEvent(event.getMessage(), type);
+    }
+}

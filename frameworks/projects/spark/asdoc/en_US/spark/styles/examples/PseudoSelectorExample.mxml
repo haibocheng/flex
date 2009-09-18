@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!-- Simple example to demonstrate the pseudo selectors -->
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
+    xmlns:mx="library://ns.adobe.com/flex/halo" xmlns:custom="*">
+     <fx:Style>
+        @namespace s "library://ns.adobe.com/flex/spark";
+        @namespace mx "library://ns.adobe.com/flex/halo";
+        s|Button:up {
+            baseColor: #000000;
+            color: #FFFFFF;
+        }
+
+        s|Button:over {
+            baseColor: #484848;
+            fontWeight: "bold";
+            color: #FFFFFF;
+        }
+
+        s|Button:down {
+            baseColor: #484848;
+            fontWeight: "bold";
+            color: #FFFF66;
+        }
+
+        mx|Box:normal {
+			fontSize: 10;
+		}
+
+		mx|Box:zoomed {
+			fontSize: 20;
+			color: #330066;
+		}
+
+    </fx:Style>
+    <fx:Script>
+    	<![CDATA[
+    	    private function changeCompState(): void
+    	    {
+    	        if(dateComp.currentState=='zoomed')
+    	        {
+    	            dateComp.currentState = 'normal';
+    	        }
+    	        else
+    	        {
+    	            dateComp.currentState = 'zoomed';
+    	        }
+    	    }
+    	]]>
+    </fx:Script>
+    <s:Panel title="Advanced CSS: Pseudo Selector Example" height="75%" width="75%"
+        horizontalCenter="0" verticalCenter="0">
+        <s:Label text="The Spark Button below uses pseudo selectors to define its baseColor for each of its states."
+        	x="10" y="10" />
+        <s:Button id="submitButton" label="Submit Form" x="10" y="35"/>
+
+        <s:Button label="change halo state" click="changeCompState()" x="10" y="65"/>
+        <custom:DateStateComp id="dateComp" currentState="normal" x="140" y="35"/>
+
+    </s:Panel>
+</s:Application>

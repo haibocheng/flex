@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Simple example to demonstrate ZipCodeFormatter. -->
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+        xmlns:s="library://ns.adobe.com/flex/spark"
+        xmlns:mx="library://ns.adobe.com/flex/halo">
+
+    <fx:Script>
+        <![CDATA[
+            import mx.events.ValidationResultEvent;
+
+            private var vResult:ValidationResultEvent;
+
+            // Event handler to validate and format input.
+            private function Format():void {
+                vResult = zcVal.validate();
+
+                if (vResult.type == ValidationResultEvent.VALID) {
+                    formattedZipcode.text = zipFormatter.format(zip.text);
+                } else {
+                    formattedZipcode.text = "";
+                }
+            }
+        ]]>
+    </fx:Script>
+
+    <fx:Declarations>
+        <mx:ZipCodeFormatter id="zipFormatter" formatString="#####-####"/>
+        <mx:ZipCodeValidator id="zcVal" source="{zip}" property="text" allowedFormatChars=""/>
+    </fx:Declarations>
+
+    <s:Panel title="ZipCodeFormatter Example"
+            width="75%" height="75%" 
+            horizontalCenter="0" verticalCenter="0">
+        <mx:Form left="10" right="10" top="10" bottom="10">
+            <mx:FormItem label="Enter a 5 or 9 digit U.S. ZIP code:" width="100%">
+                <s:TextInput id="zip" text=""/>
+            </mx:FormItem>
+            <mx:FormItem label="Formatted ZIP code: " width="100%">
+                <s:TextInput id="formattedZipcode" text="" editable="false"/>
+            </mx:FormItem>
+            <mx:FormItem>
+                <s:Button label="Validate and Format" click="Format();"/>
+            </mx:FormItem>
+        </mx:Form>
+    </s:Panel>
+
+</s:Application>

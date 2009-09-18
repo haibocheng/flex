@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:mx="library://ns.adobe.com/flex/halo"
+    creationComplete="{currentState='linear'}">
+    <mx:states>
+        <s:State name="linear"/>
+        <s:State name="power"/>
+        <s:State name="sine"/>
+    </mx:states>
+    <mx:transitions>
+        <mx:Transition>
+            <mx:Parallel>
+                <s:Fade targets="{[easeInput,powerInput,accelInput,decelInput]}"/>
+            </mx:Parallel>
+        </mx:Transition>
+    </mx:transitions>
+    <mx:VBox width="100%">
+        <mx:HBox>        
+            <mx:VBox>
+                <mx:HBox>
+                    <mx:Label text="duration:" width="100"/>
+                    <mx:TextInput id="duration" text="1000" width="50"/>                        
+                </mx:HBox>
+                <mx:HBox>
+                    <mx:Label text="startDelay:" width="100"/>
+                    <mx:TextInput id="startDelay" text="0" width="50"/>                        
+                </mx:HBox>
+                <mx:HBox>
+                    <mx:Label text="repeatCount:" width="100"/>
+                    <mx:TextInput id="repeatCount" text="1" width="50"/>                        
+                </mx:HBox>
+                <mx:ComboBox id="repeatBehavior" selectedIndex="1">
+                    <mx:ArrayCollection>
+                        <fx:String>LOOP</fx:String>
+                        <fx:String>REVERSE</fx:String>
+                    </mx:ArrayCollection>
+                </mx:ComboBox>
+                <mx:HBox>
+                    <mx:Label text="repeatDelay:" width="100"/>
+                    <mx:TextInput id="repeatDelay" text="0" width="50"
+                        enabled="{Number(repeatCount.text) != 1}" />                        
+                </mx:HBox>
+                <mx:HBox>        
+                    <mx:Label text="Easing Motion:"/>
+                    <mx:ComboBox id="f4state" 
+                        change="currentState=String(f4state.selectedItem);">
+                        <mx:ArrayCollection>
+                            <fx:String>linear</fx:String>
+                            <fx:String>power</fx:String>
+                            <fx:String>sine</fx:String>
+                        </mx:ArrayCollection>
+                    </mx:ComboBox>
+                </mx:HBox>
+                <mx:HBox id="easeInput" includeIn="power,sine">
+                    <mx:Label text="easeIn:" width="100"/>
+                    <mx:TextInput id="easeIn" text=".5" width="50"/>
+                </mx:HBox>
+                <mx:HBox id="accelInput" includeIn="linear">
+                    <mx:Label text="acceleration:" width="100"/>
+                    <mx:TextInput id="acceleration" text=".5" width="50"/>
+                </mx:HBox>
+                <mx:HBox id="decelInput" includeIn="linear">
+                    <mx:Label text="deceleration:" width="100"/>
+                    <mx:TextInput id="deceleration" text=".5" width="50"/>
+                </mx:HBox>
+                <mx:HBox id="powerInput" includeIn="power" >
+                    <mx:Label text="power:" width="100"/>
+                    <mx:TextInput id="power" text="2" width="50"/>
+                </mx:HBox>
+                <!--<mx:Button id="haloAnimButton" label="RunHaloAnim" click="haloAnim.play()"/>-->
+            </mx:VBox>
+        </mx:HBox>
+    </mx:VBox>     
+    
+</mx:Canvas>

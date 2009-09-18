@@ -1,0 +1,367 @@
+////////////////////////////////////////////////////////////////////////////////
+//
+//  ADOBE SYSTEMS INCORPORATED
+//  Copyright 2008-2009 Adobe Systems Incorporated
+//  All Rights Reserved.
+//
+//  NOTICE: Adobe permits you to use, modify, and distribute this file
+//  in accordance with the terms of the license agreement accompanying it.
+//
+//////////////////////////////////////////////////////////////////////////////////
+package flashx.textLayout.compose
+{
+	import flash.events.Event;
+	import flash.geom.Rectangle;
+	import flash.text.engine.TextBlock;
+	import flash.text.engine.TextLine;
+	import flash.text.engine.TextLineValidity;
+	
+	import flashx.textLayout.container.ContainerController;
+	import flashx.textLayout.debug.Debugging;
+	import flashx.textLayout.debug.assert;
+	import flashx.textLayout.elements.ContainerFormattedElement;
+	import flashx.textLayout.elements.FlowElement;
+	import flashx.textLayout.elements.FlowGroupElement;
+	import flashx.textLayout.elements.FlowLeafElement;
+	import flashx.textLayout.elements.OverflowPolicy;
+	import flashx.textLayout.elements.ParagraphElement;
+	import flashx.textLayout.elements.SubParagraphGroupElement;
+	import flashx.textLayout.elements.TextFlow;
+	import flashx.textLayout.compose.TextFlowLine;
+	import flashx.textLayout.compose.TextFlowLineLocation;
+	import flashx.textLayout.formats.BaselineOffset;
+	import flashx.textLayout.formats.BlockProgression;
+	import flashx.textLayout.formats.Direction;
+	import flashx.textLayout.formats.ITextLayoutFormat;
+	import flashx.textLayout.formats.TextAlign;
+	import flashx.textLayout.formats.VerticalAlign;
+	import flashx.textLayout.tlf_internal;
+	
+	use namespace tlf_internal;
+
+	[ExcludeClass]
+	/** Keeps track of internal state during composition. 
+	 * 
+	 * This is the simpler version, used when there are no floats, no wraps, no columns.
+	 * @private
+	 */
+	public class SimpleCompose extends BaseCompose
+	{
+		// reusable scratch TextFlowLine
+		protected var workingLine:TextFlowLine = new TextFlowLine(null, null);
+		
+		// resulting TextLines
+		public var _lines:Array;
+		
+		// scratch aligns for VJ
+		private var _vjLines:Array;
+		
+		// for figuring out when to do VJ
+		private var vjBeginLineIndex:int = 0;
+		private var vjDisableThisParcel:Boolean = false;
+		private var vjParcel:Parcel;
+		private var vjType:String;
+		
+		// accumulator for absolute start computation to support truncation 
+		private var _totalLength:Number;
+		
+		/** Constructor. */
+		public function  SimpleCompose()
+		{	
+			super();
+			_lines = new Array();
+			_vjLines = new Array();
+		}
+		
+		/** @private */
+		protected override function createParcelList():IParcelList
+		{
+			return ParcelList.getParcelList();
+		}
+		/** @private */
+		protected override function releaseParcelList(list:IParcelList):void
+		{
+			ParcelList.releaseParcelList(list);
+		}	
+
+		protected override function  initializeForComposer(composer:IFlowComposer, composeToPosition:int, controllerEndIndex:int):void
+		{
+			super.initializeForComposer(composer, composeToPosition, controllerEndIndex);
+			
+			// vj support
+			_vjLines.splice(0);
+			vjBeginLineIndex = 0;
+			vjParcel = parcelList.currentParcel;	
+			vjDisableThisParcel = false;
+			vjType = vjParcel ? vjParcel.controller.computedFormat.verticalAlign : VerticalAlign.TOP;		
+		}
+
+		/** @private */
+		public override function composeTextFlow(textFlow:TextFlow, composeToPosition:int, controllerEndIndex:int):int
+		{
+			_flowComposer = textFlow.flowComposer as StandardFlowComposer;
+			
+			// empty out lines array
+			_lines.splice(0);
+			
+			// accumulator initialization
+			_totalLength = 0;
+			
+			return super.composeTextFlow(textFlow, composeToPosition, controllerEndIndex);
+		}
+		
+ 		override protected function doVerticalAlignment(canVerticalAlign:Boolean,nextParcel:Parcel):Boolean
+ 		{
+			var result:Boolean = false;
+
+			if (canVerticalAlign && vjType != VerticalAlign.TOP && vjBeginLineIndex != _lines.length &&  !vjDisableThisParcel && vjParcel.columnCoverage == Parcel.FULL_COLUMN)
+			{						
+				applyVerticalAlignmentToColumn(vjParcel.controller,vjType,_vjLines,0,_vjLines.length);
+				result = true;	// lines were moved
+			}
+
+			_vjLines.splice(0);
+			vjBeginLineIndex = _lines.length;
+			vjParcel = nextParcel;	// next parcel
+			vjDisableThisParcel = false;
+			if (nextParcel)
+				vjType = vjParcel.controller.computedFormat.verticalAlign;
+			return result;
+ 		}
+ 		
+		private function finalizeLine(curLine:TextFlowLine):void
+		{
+			var line:TextLine = curLine.createShape(_blockProgression);
+			
+			if (textFlow.backgroundManager)
+				textFlow.backgroundManager.finalizeLine(curLine);
+				
+			line.userData = _totalLength; 		// store absolute start position in the userData field
+			_totalLength += line.rawTextLength; // update length accumulator
+			_lines.push(line);
+			if (vjType != VerticalAlign.TOP)
+				_vjLines.push(new VJHelper(line,curLine.height));
+				
+			commitLastLineState (curLine);	
+		}
+
+		public function get textFlow():TextFlow
+		{
+			return _textFlow;
+		}
+		
+		/** @private */
+		protected override function composeNextLine():TextFlowLine
+		{
+			// Check to see if there's an existing line that is composed up-to-date
+
+			var startCompose:int = _curElementStart + _curElementOffset - _curParaStart;
+			var prevLine:TextLine = startCompose != 0 ? workingLine.getTextLine() : null;
+			var finishLineSlug:Rectangle = _parcelList.currentParcel;
+			var curLine:TextFlowLine;
+			
+			do {
+				while (!curLine)
+				{	
+					// generate new line
+					CONFIG::debug { assert(!_parcelList.atEnd(), "failing to stop"); }
+					CONFIG::debug { assert(_curElement is FlowLeafElement, "element must be leaf before calling composeLine"); }
+					
+					curLine = createTextLine(prevLine,	startCompose, _parcelList.getComposeXCoord(finishLineSlug), _parcelList.getComposeYCoord(finishLineSlug),	_parcelList.getComposeWidth(finishLineSlug));
+					if (curLine != null)
+						break;
+					// force advance to the next parcel
+					if (!_parcelList.next())
+						return null;
+				}
+	
+				// Try to place the line in the current parcel.
+				// get a zero height parcel. place the line there and then test if it still fits.
+				// if it doesn't place it in the new result parcel
+				// still need to investigate because the height used on the 2nd getLineSlug call may be too big.
+				_parcelList.getLineSlug(_candidateLineSlug,0); // parcel.getLineSlug(curLine.height);
+				if (_parcelList.atEnd())
+					return null;
+				
+				curLine.setController(_parcelList.controller,_parcelList.columnIndex);
+				finishComposeLine(curLine, _candidateLineSlug);
+			
+				// If we are at the last parcel, we let text be clipped if that's specified in the configuration. At the point where no part of text can be accommodated, we go overset.
+				// If we are not at the last parcel, we let text flow to the next parcel instead of getting clipped.
+				var spaceBefore:Number = Math.max(curLine.spaceBefore, _spaceCarried);
+				_parcelList.getLineSlug(_lineSlug, spaceBefore + (_parcelList.atLast() && _textFlow.configuration.overflowPolicy != OverflowPolicy.FIT_DESCENDERS ? curLine.height-curLine.ascent : curLine.height+curLine.descent));
+
+				if (_parcelList.atEnd())
+					return null;
+				
+				if (_parcelList.getComposeWidth(_lineSlug) == curLine.outerTargetWidth)
+				{
+					curLine.setController(_parcelList.controller,_parcelList.columnIndex);
+					if (_parcelList.getComposeXCoord(_candidateLineSlug) != _parcelList.getComposeXCoord(_lineSlug) || _parcelList.getComposeYCoord(_candidateLineSlug) != _parcelList.getComposeYCoord(_lineSlug))
+						finishComposeLine(curLine, _lineSlug);
+					break;		// got a good line
+				}
+				curLine = null;		// try again with new targetWidth and new lineslug
+				finishLineSlug = _lineSlug;
+
+			} while (true);
+			
+			finalizeLine(curLine);
+
+			CONFIG::debug { assert(curLine != null, "curLine != null"); }			
+			return curLine;
+		}
+
+		/** @private */
+		protected function createTextLine(prevLine:TextLine,	// previous line
+			lineStart:int, 		// text index of position to start from, relative to start of paragraph
+			x:Number,			// left edge of the line
+			y:Number, 			// top of the line
+			targetWidth:Number	// target width we're composing into
+			):TextFlowLine
+        {     		    		
+			// adjust target width for text indent, start and end indent 			
+ 			var lineOffset:Number = Number(_curParaFormat.paragraphStartIndent);  	// indent to "beginning" of the line.  Direction dependent (as is paragraphStartIndent)    		
+     		if (prevLine == null) 	// first line indent
+     			lineOffset += Number(_curParaFormat.textIndent);
+     		
+     		var outerTargetWidth:Number = targetWidth;
+     		targetWidth -= (Number(_curParaFormat.paragraphEndIndent) + lineOffset);		// make room for offset and end indent
+     		targetWidth = (targetWidth < 0) ? 0 : targetWidth;		// no negative targetwidth allowed
+     		if (targetWidth > TextLine.MAX_LINE_WIDTH)
+     			targetWidth = TextLine.MAX_LINE_WIDTH;
+	   		
+        	//var textLine:TextLine = _flowComposer.textLineCreator.createTextLine(_curParaElement.getTextBlock(), prevLine, targetWidth, lineOffset, true);
+        	var textLine:TextLine = TextLineRecycler.getLineForReuse();
+	   		if (textLine)
+	   		{
+	   			if(_textFlow.backgroundManager)
+	   			{
+	   				_textFlow.backgroundManager.removeLineFromCache(textLine);
+	   			}
+	        	textLine = _flowComposer.textLineCreator.recreateTextLine(_curParaElement.getTextBlock(), textLine, prevLine, targetWidth, lineOffset, true);
+        		CONFIG::debug { Debugging.traceFTECall(textLine,_curParaElement.getTextBlock(),"recreateTextLine",textLine,prevLine, targetWidth, lineOffset, true); }
+      		}
+	   		else
+	   		{
+	        	textLine = _flowComposer.textLineCreator.createTextLine(_curParaElement.getTextBlock(), prevLine, targetWidth, lineOffset, true);
+        		CONFIG::debug { Debugging.traceFTECall(textLine,_curParaElement.getTextBlock(),"createTextLine",prevLine, targetWidth, lineOffset, true); }
+      		}
+        	// Unable to fit a new line
+        	if (textLine == null)
+        		return null;
+
+ 			CONFIG::debug { assert(_curParaStart == _curParaElement.getAbsoluteStart(),"bad _curParaStart"); }
+ 			workingLine.initialize(_curParaElement, outerTargetWidth, lineOffset, lineStart + _curParaStart, textLine.rawTextLength, textLine);
+ 			CONFIG::debug { assert(workingLine.targetWidth == targetWidth,"Bad targetWidth"); }
+ 			
+			// update spaceBefore & spaceAfter		
+			var linePos:uint = workingLine.location;
+			workingLine.setSpaceBefore((linePos & TextFlowLineLocation.FIRST) ? Number(_curParaFormat.paragraphSpaceBefore) : 0);
+			workingLine.setSpaceAfter((linePos & TextFlowLineLocation.LAST) ? Number(_curParaFormat.paragraphSpaceAfter) : 0); 
+
+ 			return workingLine;
+        }
+        
+        /** @private */
+        tlf_internal function swapLines(lines:Array):Array
+        {
+        	var current:Array = _lines;
+        	_lines = lines;
+        	return current;
+        }
+
+		/** Final adjustment on the content bounds. */
+ 		override protected function finalParcelAdjustment(controller:ContainerController):void
+ 		{
+ 			var minX:Number = TextLine.MAX_LINE_WIDTH;
+ 			var minY:Number = TextLine.MAX_LINE_WIDTH;
+ 			var maxX:Number = -TextLine.MAX_LINE_WIDTH;
+ 			var maxY:Number = -TextLine.MAX_LINE_WIDTH;
+ 			
+ 			var textLine:TextLine;
+ 			var verticalText:Boolean = _blockProgression == BlockProgression.RL;
+ 			var startPos:int = controller.absoluteStart;
+
+			for each (textLine in _lines)
+			{
+				var leaf:FlowLeafElement = controller.textFlow.findLeaf(startPos);
+				var para:ParagraphElement = leaf.getParagraph();
+
+            	// Check the logical vertical dimension first
+            	// If the lines have children, they may be inlines. The origin of the TextLine is the baseline, 
+            	// which does not include the ascent of the inlines or the text. So we have to factor that in.
+				// var verticalAdjust:Number = verticalText ? textLine.descent : textLine.ascent;
+				var inlineAscent:Number = 0;
+				if (textLine.numChildren > 0)		// adjustjust logical vertical coord to take into account inlines
+				{
+					var leafStart:int = leaf.getAbsoluteStart();
+					inlineAscent = TextFlowLine.getTextLineTypographicAscent(textLine, leaf, leafStart, startPos + textLine.rawTextLength, para);
+				}
+
+				// Figure out the logical horizontal adjustment
+				var edgeAdjust:Number = 0;
+				var curParaFormat:ITextLayoutFormat = para.computedFormat;
+				if (curParaFormat.direction == Direction.LTR)
+					edgeAdjust = curParaFormat.paragraphStartIndent + Math.max(curParaFormat.textIndent, 0);
+				else
+					edgeAdjust = curParaFormat.paragraphEndIndent;
+				
+				if (verticalText)
+				{
+		            minX = Math.min(textLine.x - textLine.descent, minX);
+		            maxX = Math.max(textLine.x + Math.max(inlineAscent,textLine.ascent), maxX);
+		           	minY = Math.min(textLine.y - edgeAdjust, minY);
+				}
+				else
+				{
+					if (inlineAscent < textLine.ascent)
+						inlineAscent = textLine.ascent;
+		            minX = Math.min(textLine.x - edgeAdjust, minX);
+		           	minY = Math.min(textLine.y - inlineAscent, minY);
+		  		}
+		  		startPos += textLine.rawTextLength;
+   			}
+            // Don't make adjustments for tiny fractional values.
+            if (minX != TextLine.MAX_LINE_WIDTH && Math.abs(minX-_parcelLeft) >= 1)
+         		_parcelLeft = minX;
+            if (maxX != -TextLine.MAX_LINE_WIDTH && Math.abs(maxX-_parcelRight) >= 1)
+         		_parcelRight = maxX;
+         	if (minY != TextLine.MAX_LINE_WIDTH && Math.abs(minY-_parcelTop) >= 1)
+           		_parcelTop = minY;
+         	if (maxY != -TextLine.MAX_LINE_WIDTH && Math.abs(maxY-_parcelBottom) >= 1)
+           		_parcelBottom = maxY;
+ 		}		
+	}
+}
+import flash.text.engine.TextLine;
+import flashx.textLayout.compose.IVerticalJustificationLine;
+import flash.text.engine.TextLineCreationResult;
+
+class VJHelper implements IVerticalJustificationLine
+{
+	private var _line:TextLine;
+	private var _height:Number;
+
+	public function VJHelper(line:TextLine,h:Number)
+	{
+		_line = line;
+		_height = h;
+	}
+	public function get x():Number
+	{ return _line.x; }
+	public function set x(val:Number):void
+	{ _line.x = val; }
+		
+	public function get y():Number
+	{ return _line.y; }
+	public function set y(val:Number):void
+	{ _line.y = val; }
+		
+	public function get ascent():Number
+	{ return _line.ascent; }
+	public function get descent():Number
+	{ return _line.descent; }
+	public function get height():Number
+	{ return _height; }
+}

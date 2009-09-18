@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UnitTester xmlns:mx="http://www.adobe.com/2006/mxml" xmlns="*" testSWF="main.mxml">
+
+	<!-- this set of lines form a template that must be in each unit test -->
+	<mx:Script>
+	<![CDATA[
+	public static function init(o:DisplayObject):void
+	{
+	}
+	]]>
+	</mx:Script>
+	<mx:Metadata>
+	<![CDATA[
+		[Mixin]
+	]]>
+	</mx:Metadata>
+	<!-- end of set of lines that must be in each unit test -->
+
+	<mx:Script>
+	<![CDATA[
+	]]>
+	</mx:Script>
+
+	<testCases>
+<!--
+-->
+		<TestCase testID="SetupSparkPanelControlBarTest">
+			<body>
+				<SetProperty target="" propertyName="currentState" value="sparkPanelControlBarTest" 
+                    waitEvent="updateComplete" />
+				<AssertPropertyValue target="sparkPanelControlBarTests.contentButton" propertyName="label" value="Content Button" />
+			</body>
+		</TestCase>
+		<TestCase testID="SparkPanelControlBarTest1">
+			<body>
+				<DispatchMouseEvent target="sparkPanelControlBarTests.contentButton" type="mouseOver" localX="10" localY="10" />
+				<DispatchMouseClickEvent target="sparkPanelControlBarTests.contentButton" localX="10" localY="10" />
+				<AssertPropertyValue target="sparkPanelControlBarTests.contentTextInput" propertyName="text" value="content clicked" />
+			</body>
+		</TestCase>
+		<TestCase testID="SparkPanelControlBarTest2">
+			<body>
+				<DispatchMouseEvent target="sparkPanelControlBarTests.controlButton" type="mouseOver" localX="10" localY="10" />
+				<DispatchMouseClickEvent target="sparkPanelControlBarTests.controlButton" localX="10" localY="10" />
+				<AssertPropertyValue target="sparkPanelControlBarTests.controlTextInput" propertyName="text" value="control clicked" />
+			</body>
+		</TestCase>
+	</testCases>
+</UnitTester>

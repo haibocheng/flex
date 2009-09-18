@@ -1,0 +1,72 @@
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+    xmlns:s="library://ns.adobe.com/flex/spark"
+    xmlns:mx="library://ns.adobe.com/flex/halo"
+    backgroundColor="white">
+
+    <s:layout>
+	<s:VerticalLayout/>
+    </s:layout>
+
+    <s:states>
+        <s:State name="StateA"/>
+        <s:State name="StateB"/>
+        <s:State name="StateC"/>
+    </s:states>
+
+    <mx:VBox>
+        <mx:HBox id="buttons">
+            <mx:Label text="Buttons: "/>
+            <mx:Button id="b1" label="First" />
+            <mx:Button id="b2" label="Second" includeIn="StateA, StateB" />
+            <mx:Button id="b3" label="Third" excludeFrom="StateA" />
+            <mx:Button id="b4" label="Fourth" />
+        </mx:HBox>
+  
+        <mx:VBox>
+            <mx:Label id="test_label" text="Content holder children: ">
+                <mx:filters>
+                    <s:DropShadowFilter distance="4" blurX="5" blurY="5" includeIn="StateA"/>
+                </mx:filters>
+            </mx:Label>
+            <s:Group id="holder">
+
+                <s:Group id="graphic">
+                    <s:layout> <s:VerticalLayout/> </s:layout>  
+                  <s:Path id="path" data="L 100 0 L 0 75 Z" data.StateB="L 100 0 L 100 75 L 50 50 L 0 75 Z" data.StateC="L 100 0 L 50 50 L 0 75 Z">
+                        <s:stroke>
+                            <s:SolidColorStroke />
+                        </s:stroke>
+                        <s:fill>
+                            <s:SolidColor color="0x336699" alpha="0.4" />
+                        </s:fill>
+                    </s:Path>
+                    <s:Ellipse id="ellipse" width="10" height="10" x="45" y="65" includeIn="StateA">
+                        <s:fill>
+                            <s:SolidColor color="0xFF0000" />
+                        </s:fill>
+                    </s:Ellipse>
+                </s:Group>
+                <s:Button id="contentButton"  includeIn="StateB" />
+            </s:Group>
+        </mx:VBox>
+
+        <mx:List height="50">
+            <fx:Array id="ds">
+                <fx:String>Item One</fx:String>
+                <fx:String>Item Two</fx:String>
+                <fx:String excludeFrom="StateC">Item Three</fx:String>
+            </fx:Array>
+        </mx:List>
+
+        <mx:Label text="Manual State Setters:"/>
+
+        <mx:HBox>
+            <mx:Button label="StateA" click="currentState='StateA'" />
+            <mx:Button label="StateB" click="currentState='StateB'" />
+            <mx:Button label="StateC" click="currentState='StateC'" />
+        </mx:HBox>
+
+    </mx:VBox>
+
+</s:Application>
+

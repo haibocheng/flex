@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+
+<!--
+
+    ADOBE SYSTEMS INCORPORATED
+    Copyright 2003-2008 Adobe Systems Incorporated
+    All Rights Reserved.
+
+    NOTICE: Adobe permits you to use, modify, and distribute this file
+    in accordance with the terms of the license agreement accompanying it.
+
+-->
+
+<project name="webtier/bootstrap" default="main" basedir="../../..">
+    <!-- properties -->
+    <property file="${basedir}/build.properties" />
+    <property file="${basedir}/modules/webtier/build.properties" />
+    
+    <property name="lib.dir" value="${basedir}/lib" />
+    <property name="module.dir" value="${webtier.dir}/bootstrap" />
+    <property name="module.lib.dir" location="${module.dir}/lib" />
+    <property name="module.src" value="${module.dir}/java/src" />
+    <property name="module.classes" value="${module.dir}/classes" />
+    <property name="bootstrap.jar" value="${webtier.lib.dir}/flex-bootstrap.jar" />
+    <property name="taglib.bootstrap.jar" value="${webtier.lib.dir}/flex-bootstrap-jsp.jar" />
+    <property name="build.number" value=""/>
+
+    <patternset id="bootstrap.jar.files">
+        <include name="**/*.class" />
+        <exclude name="flex/webtier/server/j2ee/jsp/**/*.class" />
+        <include name="*.properties" />
+    </patternset>
+
+    <patternset id="taglib.bootstrap.jar.files">
+        <include name="flex/webtier/server/j2ee/jsp/**/*.class" />
+        <include name="**/*.tld" />
+    </patternset>
+
+    <path id="classpath">
+        <pathelement location="${servlet-api.jar}" />
+        <pathelement location="${jsp-api.jar}" />
+    </path>
+
+    <target name="main" depends="clean,jar" />
+    <target name="dev" depends="jar" />
+
+    <target name="clean">
+        <delete file="${bootstrap.jar}" failonerror="false" />
+        <delete file="${taglib.bootstrap.jar}" failonerror="false" />
+        <delete failonerror="false" dir="${module.classes}"/>
+        <delete quiet="true">
+            <fileset dir="${module.src}" includes="flex/webtier/server/j2ee/jsp/*Impl.java" />
+            <fileset dir="${module.src}" includes="flex2/server/**" />
+        </delete>
+    </target>
+
+    <target name="prepare">
+        <echo>${ant.file}</echo>
+        <copy todir="${module.classes}">
+            <fileset dir="${module.src}">
+                <include name="**/*.properties" />
+                <include name="**/*.tld" />
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="compile" depends="prepare,run-depend">
+        <javac source="${javac.src}" debug="${src.debug}" srcdir="${module.src}" destdir="${module.classes}" classpathref="classpath" />
+    </target>
+
+    <target name="run-depend" if="src.depend">
+        <echo message="Removing class files that changed and dependent class files." />
+        <depend cache="${module.classes}" srcdir="${module.src}" destdir="${module.classes}" />
+    </target>
+
+    <target name="jar" depends="generate">
+        <jar file="${bootstrap.jar}">
+            <!-- now add the remaining files -->
+            <fileset dir="${module.classes}">
+                <patternset refid="bootstrap.jar.files" />
+            </fileset>
+            <manifest>
+                <attribute name="Sealed" value="${manifest.sealed}" />
+                <attribute name="Implementation-Title" value="${manifest.Implementation-Title} - Webtier Bootstrap" />
+                <attribute name="Implementation-Version" value="${manifest.Implementation-Version}.${build.number}" />
+                <attribute name="Implementation-Vendor" value="${manifest.Implementation-Vendor}" />
+            </manifest>
+        </jar>
+
+        <jar file="${taglib.bootstrap.jar}">
+            <fileset dir="${module.classes}">
+                <patternset refid="taglib.bootstrap.jar.files" />
+            </fileset>
+            <manifest>
+                <attribute name="Sealed" value="${manifest.sealed}" />
+                <attribute name="Implementation-Title" value="${manifest.Implementation-Title} - JSP Tag Library Bootstrap" />
+                <attribute name="Implementation-Version" value="${manifest.Implementation-Version}.${build.number}" />
+                <attribute name="Implementation-Vendor" value="${manifest.Implementation-Vendor}" />
+            </manifest>
+        </jar>
+    </target>
+
+    <!-- jsp tag specific -->
+    <target name="generate" depends="compile">
+        <java classname="flex.bootstrap.TagGenerator" fork='true'>
+            <arg value="${module.src}" />
+            <arg value="flex.webtier.server.j2ee.jsp.FlashVarTag" />
+            <arg value="flex.webtier.server.j2ee.jsp.MxmlTag" />
+            <classpath>
+                <path refid="classpath" />
+                <pathelement path="${module.classes}" />
+            </classpath>
+        </java>
+        <javac source="${javac.src}" debug="true" srcdir="${module.src}" destdir="${module.classes}" includes="**/*Impl.java">
+            <classpath>
+                <path refid="classpath" />
+                <pathelement path="${module.classes}" />
+            </classpath>
+        </javac>
+    </target>
+
+</project>

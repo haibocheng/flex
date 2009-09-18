@@ -1,0 +1,613 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical" invoke="onInvoke(event)" minHeight="780" minWidth="720" width="100%" height="100%"
+	 paddingLeft="0" paddingRight="0" paddingTop="10" paddingBottom="10" creationComplete="onCreationComplete(event)">
+
+	<mx:Script>
+		<![CDATA[
+			import mx.core.Window;
+			import mx.core.Application;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.controls.listClasses.IListItemRenderer;
+			import mx.collections.XMLListCollection;
+			import mx.events.ResizeEvent;
+
+			public function onCreationComplete(event:Event):void
+			{
+				callLater( afterCreationComplete );
+			}
+
+			public function afterCreationComplete():void
+			{
+				nativeWindow.width = 781;
+				nativeWindow.height = 721;
+			}
+
+			public var currentDir:File; 	// The folder where the app has been launched from
+			public var commandFile:File;
+			public var fileListFile:File;
+			public var svnStatusFile:File;
+			public var settingsFile:File;
+			public var packagePathFile:File;
+			public var svnStatus:XML;		// The svn status formatted as xml
+			public var svnStatusEntries:XMLList;
+ 			// curStatusEntries gets generated from svnStatusEntries based on
+ 			// the user settings
+ 			public var curStatusEntries:XMLList;
+
+ 			[Bindable]
+ 			public var showUnversioned:Boolean;
+
+			[Bindable]
+			public var svnStatusCollection:XMLListCollection;
+
+			public function initSettings():void
+			{
+				showUnversioned = false;
+			}
+
+			public function updateCurStatusEntries():void
+			{
+				if( !svnStatusEntries )
+					return;
+
+				curStatusEntries = svnStatusEntries.(
+					(( elements("wc-status").@item != "unversioned") || showUnversioned )
+					);
+				for each( var element:XML in curStatusEntries )
+				{
+					var str:String;
+					str = element.@selected;
+					if( str == "" )
+						element.@selected = true;
+				}
+				svnStatusCollection = new XMLListCollection( curStatusEntries );
+			}
+
+			public function writeSVNStatus():void
+			{
+				if( !svnStatus )
+					return;
+				svnStatusFile = currentDir.resolvePath("svnStatus.xml.diffpack");
+				var fileStream:FileStream = new FileStream();
+				fileStream.open(svnStatusFile, FileMode.WRITE);
+				fileStream.writeUTFBytes(svnStatus);
+				fileStream.close();
+			}
+
+			public function readSVNStatus():void
+			{
+
+				// try to read the svn status file
+				svnStatusFile = currentDir.resolvePath("svnStatus.xml.diffpack");
+				if( svnStatusFile.exists )
+				{
+					var fileStream:FileStream = new FileStream();
+					fileStream.open(svnStatusFile, FileMode.READ);
+					svnStatus = XML(fileStream.readUTFBytes(fileStream.bytesAvailable));
+					fileStream.close();
+					svnStatusEntries = svnStatus.target.entry;
+				}
+				updateCurStatusEntries();
+
+			}
+
+			public function checkSetup():void
+			{
+				if( settingsFile.exists )
+				{
+					return;
+				}
+				else
+				{
+					mainTab.enabled = false;
+					mainTabNavigator.selectedChild = settingsTab;
+				}
+			}
+
+			public var radio:Array = new Array(3);
+			public var path:Array = new Array(3);
+			public var args:Array = new Array(3);
+			public var commandString:String = new String();
+
+			public var browseIndex:uint;
+			public var browseFile:File;
+			public function browseForFile(index:uint):void
+			{
+				browseIndex = index;
+				browseFile = new File( File.applicationDirectory.nativePath );
+				var fileFilter:FileFilter = new FileFilter("Application", "*");
+				//fileFilter.macType;
+				//fileFilter.extension  = "*.exe";
+			    browseFile.browseForOpen("Select your diff app", [fileFilter]);
+			    browseFile.addEventListener(Event.SELECT, fileSelected);
+			}
+
+			public function fileSelected(event:Event):void
+			{
+				radio[ browseIndex ].selected = true;
+				path[ browseIndex ].text = browseFile.nativePath;
+				browseFile = null;
+			}
+
+			public var packageFile:File = null;
+			public function selectPackagePath():void
+			{
+				packageFile = new File();
+			    packageFile.browseForSave("Save package as");
+			    packageFile.addEventListener(Event.SELECT, packagePathSelected);
+			}
+
+			public function packagePathSelected(event:Event):void
+			{
+				if( packageFile.exists )
+					packageFile.deleteFile();
+				packagePath.text = packageFile.nativePath;
+				if( commandString == "createPackage" )
+				{
+					issueCommand("createPackage");
+				}
+			}
+
+			public function saveSettings():void
+			{
+				var settingsString:String = new String();
+				for( var i:uint = 2; i>=0; i--)
+				{
+					if( radio[i].selected )
+					{
+						settingsString += "DIFF_PATH=";
+						settingsString += path[i].text;
+						settingsString += "\nDIFF_ARGS=";
+						settingsString += args[i].text;
+						var subStrs:Array = settingsString.split( "\\" );
+						settingsString = subStrs.join( "/" );
+						break;
+					}
+				}
+
+				if( createPatchCmd.text.length > 0 )
+				{
+					settingsString += "\nCREATE_PATCH_CMD=";
+					settingsString += createPatchCmd.text;
+				}
+
+				if( createPatchCmd.text.length > 0 )
+				{
+					settingsString += "\nCREATE_PATCH_ARGS=";
+					settingsString += createPatchCmdArgs.text;
+				}
+
+				settingsFileContents.text = settingsString;
+
+				var fileStream:FileStream = new FileStream();
+				fileStream.open( settingsFile, FileMode.WRITE );
+				fileStream.writeMultiByte( settingsString, "iso-8859-15" );
+				fileStream.close();
+			}
+
+			private function getSettingsString(allSettings:String, match:String):String
+			{
+				var matches:Array = allSettings.match(match + "=.*" );
+				if( matches.length > 0 )
+					return matches[0].substr( 1 + match.length );
+				return null;
+			}
+
+			public function populateSettings():void
+			{
+				// TODO EvtimG: read settings from existing file.....
+
+				radio[0] = radio1;
+				radio[1] = radio2;
+				radio[2] = radio3;
+
+				path[0] = path1;
+				path[1] = path2;
+				path[2] = path3;
+
+				args[0] = args1;
+				args[1] = args2;
+				args[2] = args3;
+
+				settingsFilePathLabel.text = settingsFile.nativePath;
+
+				var curIndex:uint = 0;
+
+				if( settingsFile.exists )
+				{
+					// Read settings
+					var fileStream:FileStream = new FileStream();
+					fileStream.open( settingsFile, FileMode.READ );
+					//fileStream.writeMultiByte( settingsString, "iso-8859-15" );
+					settingsFileContents.text = fileStream.readMultiByte( fileStream.bytesAvailable, "iso-8859-15" );
+					fileStream.close();
+
+					// regular expressions:
+					var pathMatches:Array = settingsFileContents.text.match("DIFF_PATH=.*");
+					if( pathMatches.length > 0 )
+					{
+						var curPath:String =
+						path[ curIndex ].text = pathMatches[0].substr(10);
+
+						var argMatches:Array = settingsFileContents.text.match("DIFF_ARGS=.*");
+						args[ curIndex ].text = argMatches.length > 0 ? argMatches[0].substr(10) : ""
+						radio[ curIndex ].selected = true;
+						curIndex++;
+					}
+
+
+					var patchCmd:String = getSettingsString( settingsFileContents.text, "CREATE_PATCH_CMD" );
+					if( patchCmd )
+						createPatchCmd.text = patchCmd;
+					else
+						createPatchCmd.text = "svn";
+
+					var patchArgs:String = getSettingsString( settingsFileContents.text, "CREATE_PATCH_ARGS" );
+					if( patchArgs )
+						createPatchCmdArgs.text = patchArgs;
+					else
+						createPatchCmdArgs.text = "diff --diff-cmd=diff";
+
+
+//					var patchCmdMatches = settingsFileContents.text.match("");
+//					if( patchCmdMatches.length > 0 )
+//						createPatchCmd.text = patchCmdMatches[0].substr( 0 );
+//
+//					var patchCmdArgMatches = settingsFileContents.text.match("");
+//					if( patchCmdArgMatches.length > 0 )
+//						createPatchCmdArgs.text =
+				}
+				else
+				{
+					createPatchCmdArgs.text = "diff --diff-cmd=diff";
+					createPatchCmd.text = "svn";
+				}
+
+
+				// Try different paths for common apps
+				var winMerge:File = new File();
+				winMerge.nativePath = "C:/Program Files/WinMerge/WinMerge.exe"
+				if( winMerge.exists )
+				{
+					path[ curIndex ].text = winMerge.nativePath;
+					args[ curIndex ].text = "/r";
+					//radio[ curIndex ].selected = true;
+					curIndex++;
+				}
+
+				var araxis:File = new File();
+				araxis.nativePath = "C:/Program Files/Araxis/Araxis Merge/Compare.exe"
+				if( araxis.exists )
+				{
+					path[ curIndex ].text = araxis.nativePath;
+					args[ curIndex ].text = "-wait"
+					//radio[ curIndex ].selected = true;
+					curIndex++;
+				}
+
+				var araxisMac:File = new File();
+				araxisMac.nativePath = "/usr/bin/compare";
+				if( araxisMac.exists )
+				{
+					path[ curIndex ].text = araxisMac.nativePath;
+					args[ curIndex ].text = "-wait";
+					//radio[ curIndex ].selected = true;
+					curIndex++;
+				}
+
+				if( curIndex > 0 )
+					radio[ 0 ].selected = true;
+
+				if( !settingsFile.exists && curIndex > 0 )
+					saveSettings();
+			}
+
+			public function onCloseAlert(event:Event):void
+			{
+				onQuit();
+			}
+
+			public function onInvoke(invokeEvent:InvokeEvent):void
+			{
+				dataGrid.addEventListener( "selectedToTrue", onCheckBoxEventHandler );
+				dataGrid.addEventListener( "selectedToFalse", onCheckBoxEventHandler );
+				currentDir = invokeEvent.currentDirectory;
+				curLocation.text = currentDir.nativePath;
+				settingsFile = File.documentsDirectory.resolvePath("diffpack_settings/settings.txt");
+				packagePathFile = currentDir.resolvePath( "newPackagePath.diffpack" );
+
+
+				curLocation.text = currentDir.nativePath;
+
+				initSettings();
+				readSVNStatus();
+
+				// setup the command file
+				commandFile = currentDir.resolvePath("command.diffpack");
+				if( !commandFile.exists )
+				{
+					Alert.show("Run the 'diffpack' script from the console.",
+						       "Info", 4, null, onCloseAlert);
+					return;
+				}
+
+				// Read command:
+				var commandFileString:String;
+				{
+					var fileStream:FileStream = new FileStream();
+					fileStream.open( commandFile, FileMode.READ );
+					commandFileString = fileStream.readMultiByte( fileStream.bytesAvailable, "iso-8859-15" );
+					fileStream.close();
+					commandFile.deleteFile();
+					commandFileString = commandFileString.split("\r").join("");
+				}
+
+				var allCommands:Array = commandFileString.split("\n");
+				commandString = allCommands[0];
+				if( commandString == "setup" || commandString == "testSettings" )
+				{
+					if( commandString == "setup" )
+						mainTab.enabled = false;
+					mainTabNavigator.selectedChild = settingsTab;
+				}
+
+				if( packagePathFile.exists )
+				{
+					fileStream = new FileStream();
+					fileStream.open( packagePathFile, FileMode.READ );
+					var pathString:String = fileStream.readMultiByte( fileStream.bytesAvailable, "iso-8859-15" );
+					fileStream.close();
+					pathString = pathString.split("\r").join("");
+
+					packagePath.text = pathString;
+				}
+
+				fileListFile = currentDir.resolvePath("fileList.diffpack");
+				if( fileListFile.exists )
+					fileListFile.deleteFile();
+			}
+
+			public function writeSelectedFileNames():void
+			{
+				if( !curStatusEntries.length() )
+					return;
+
+				// Create file list for the script
+				var fileList:String="";
+				for each( var element:XML in curStatusEntries )
+				{
+					if( element.@selected == "true" )
+						fileList += element.@path + "\n";
+				}
+				var subStrs:Array = fileList.split( "\\" );
+				fileList = subStrs.join( "/" );
+
+				// Write out the file list
+				var fileStream:FileStream = new FileStream();
+				fileStream.open( fileListFile, FileMode.WRITE );
+				fileStream.writeMultiByte( fileList, "iso-8859-15" );
+				fileStream.close();
+			}
+
+			public function writeCommandToFile(command:String):void
+			{
+				if( command == "quit" )
+					return;
+
+				var stringToWrite:String = "COMMAND=" + command;
+				if( command == "createPackage" || command == "preview" )
+				{
+					var pathString:String = packagePath.text;
+					pathString = pathString.split("\\").join("/");
+
+					var fileStream1:FileStream = new FileStream();
+					fileStream1.open( packagePathFile, FileMode.WRITE );
+					fileStream1.writeMultiByte( pathString, "iso-8859-15" );
+					fileStream1.close();
+				}
+
+				var fileStream:FileStream = new FileStream();
+				fileStream.open( commandFile, FileMode.WRITE );
+				fileStream.writeMultiByte( stringToWrite, "iso-8859-15" );
+				fileStream.close();
+
+				writeSVNStatus();
+
+				if( command == "preview" || command == "createPackage" )
+					writeSelectedFileNames();
+			}
+
+			public function onOverWriteAlert(event:CloseEvent):void
+			{
+				if( event.detail == Alert.YES )
+				{
+					packageFile = new File( packageFilePath( packagePath.text ) );
+					if( packageFile.exists )
+						packageFile.deleteFile();
+					issueCommand( commandString );
+				}
+				else if( event.detail == Alert.NO )
+					selectPackagePath();
+			}
+
+			public function packageFilePath( path:String ):String
+			{
+				if( path.substr( path.length - 4, 4) == ".zip" )
+					return path;
+				return path + ".zip";
+			}
+
+
+			public function issueCommand( command:String ):void
+			{
+				commandString = command;
+
+				// Make sure we have a package path:
+				if( command == "createPackage" )
+				{
+					if( packagePath.text == "" )
+					{
+						selectPackagePath();
+						return;
+					}
+
+
+					packageFile = new File( packageFilePath( packagePath.text ) );
+					if( packageFile.exists )
+					{
+						// TODO Alert, asking whether to overwrite the file:
+						Alert.show( packageFilePath( packageFile.nativePath ),
+       								"The file already exits, do you want to overwrite it?",
+       								mx.controls.Alert.YES | mx.controls.Alert.NO | mx.controls.Alert.CANCEL,
+       								null,
+       								onOverWriteAlert);
+						return;
+					}
+				}
+
+				writeCommandToFile( command );
+				NativeApplication.nativeApplication.exit();
+			}
+
+			public function onPackage():void
+			{
+				issueCommand( "createPackage" );
+			}
+			public function onPrevierw():void
+			{
+				// create the command file
+				issueCommand( "preview" );
+			}
+			public function onQuit():void
+			{
+				issueCommand( "quit" );
+			}
+
+
+			public function onCheckBoxEventHandler(event:Event):void
+			{
+				for each( var element:XML in curStatusEntries )
+				{
+					if( dataGrid.isItemSelected( element ) )
+						event.type == "selectedToTrue" ? element.@selected = true : element.@selected = false;
+				}
+			}
+
+		]]>
+	</mx:Script>
+
+
+	<!-- need to set the selectedChild -->
+    <mx:TabNavigator id="mainTabNavigator" borderStyle="solid" minHeight="740" minWidth="680" width="100%" height="100%">
+        <mx:VBox id="mainTab" label="Select Files" width="100%" height="100%" horizontalAlign="center">
+			<mx:HBox width="100%" horizontalAlign="center">
+				<mx:Label text="Startup Path:"/>
+				<mx:Label text="Label" id="curLocation"/>
+			</mx:HBox>
+			<mx:DataGrid id="dataGrid" allowMultipleSelection="true"  height="80%" width="100%" dataProvider="{svnStatusCollection}">
+				<mx:columns>
+					<mx:DataGridColumn headerText="Path" dataField="@path" minWidth="520">
+						<mx:itemRenderer>
+							<mx:Component>
+								<mx:HBox paddingLeft="8" >
+								<mx:Script>
+									<![CDATA[
+										import mx.controls.CheckBox;
+										import mx.core.UIComponent;
+
+										public function onCheckBoxMouseDown(event:Event, data:Object):void
+										{
+											var checkBox:CheckBox = (event.currentTarget as CheckBox);
+											var dataGrid:mx.controls.DataGrid = (checkBox.parentApplication as diffpack).dataGrid;
+											if( dataGrid.isItemSelected( data ) )
+											{
+												event.stopImmediatePropagation();
+												return;
+											}
+										}
+
+										public function onEventche(event:Event, data:Object):void
+										{
+											var checkBox:CheckBox = (event.currentTarget as CheckBox);
+											var dataGrid:mx.controls.DataGrid = (checkBox.parentApplication as diffpack).dataGrid;
+											var newEvent:Event = new Event( checkBox.selected ? "selectedToTrue" : "selectedToFalse" );
+											(( event.currentTarget as CheckBox ).parentApplication as diffpack).dataGrid.dispatchEvent( newEvent );
+										}
+									]]>
+								</mx:Script>
+								<mx:CheckBox selected="{data.@selected == 'true'}" click="onEventche(event, data)" mouseDown="onCheckBoxMouseDown(event, data)">
+								</mx:CheckBox>
+								<mx:Label text="{data.@path}">
+								</mx:Label>
+								</mx:HBox>
+							</mx:Component>
+						</mx:itemRenderer>
+					</mx:DataGridColumn>
+					<mx:DataGridColumn headerText="Stat" minWidth="90">
+						<mx:itemRenderer>
+							<mx:Component>
+								<mx:HBox paddingLeft="8" >
+									<mx:Label width="90%" text="{data.child('wc-status').@item}"/>
+								</mx:HBox>
+							</mx:Component>
+						</mx:itemRenderer>
+					</mx:DataGridColumn>
+				</mx:columns>
+			</mx:DataGrid>
+			<mx:HBox width="100%" horizontalAlign="center">
+				<mx:Label text="Package Path:"/>
+				<mx:TextInput editable="true" width="451" id="packagePath"/>
+				<mx:Button label="Browse..." width="80" click="selectPackagePath()"/>
+			</mx:HBox>
+			<mx:Button label="Package" width="180" click="onPackage()"/>
+			<mx:Button label="Preview" width="180" click="issueCommand('preview')"/>
+			<mx:Button label="Close" width="180" click="onQuit()"/>
+			<mx:RadioButtonGroup id="mergeAppChoice"/>
+			<mx:CheckBox label="Show Unversioned" width="145" selected="{showUnversioned}" click=" showUnversioned = !showUnversioned; updateCurStatusEntries()"/>
+        </mx:VBox>
+        <mx:VBox id="settingsTab" label="Settings" initialize="populateSettings()" horizontalAlign="center">
+			<mx:HBox width="701">
+				<mx:Label width="58"/>
+				<mx:Label text="Diffing application path:" width="360"/>
+				<mx:Label text="Command line arguments:" width="179"/>
+			</mx:HBox>
+			<mx:HBox>
+				<mx:RadioButton id="radio1" label="1:" width="50" selected="true"/>
+				<mx:TextInput id="path1" width="450"/>
+				<mx:TextInput id="args1" width="100"/>
+				<mx:Button label="Browse..." click="browseForFile(0)" width="80"/>
+			</mx:HBox>
+			<mx:HBox>
+				<mx:RadioButton id="radio2" label="2:" width="50"/>
+				<mx:TextInput id="path2" width="450"/>
+				<mx:TextInput id="args2" width="100"/>
+				<mx:Button label="Browse..." click="browseForFile(1)" width="80"/>
+			</mx:HBox>
+			<mx:HBox>
+				<mx:RadioButton id="radio3" label="3:" width="50"/>
+				<mx:TextInput id="path3" width="450"/>
+				<mx:TextInput id="args3" width="100"/>
+				<mx:Button label="Browse..." click="browseForFile(2)" width="80"/>
+			</mx:HBox>
+			<mx:HBox width="704">
+				<mx:Label text="Create Patch Cmd:"/>
+				<mx:TextInput width="100%" id="createPatchCmd"/>
+				<mx:Label text="Args:"/>
+				<mx:TextInput id="createPatchCmdArgs"/>
+			</mx:HBox>
+			<mx:Button label="Save Settings" width="200" click="saveSettings()"/>
+			<mx:HBox width="700">
+				<mx:Label text="Settings File Path:" width="117"/>
+				<mx:TextInput editable="false" width="574" id="settingsFilePathLabel"/>
+			</mx:HBox>
+			<mx:HBox width="700" height="147">
+				<mx:Label text="Current Settings:" width="117" height="24"/>
+				<mx:TextArea width="574" height="145" id="settingsFileContents" editable="false"/>
+			</mx:HBox>
+			<mx:Button label="Test Saved Settings" width="200" id="testSettings" click="issueCommand('testSettings')"/>
+			<mx:Button label="Close" width="200" click="onQuit()"/>
+        </mx:VBox>
+    </mx:TabNavigator>
+
+</mx:WindowedApplication>

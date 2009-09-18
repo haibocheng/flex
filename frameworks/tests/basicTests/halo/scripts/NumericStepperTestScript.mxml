@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UnitTester xmlns:mx="http://www.adobe.com/2006/mxml" xmlns="*" testSWF="main.mxml">
+
+	<!-- this set of lines form a template that must be in each unit test -->
+	<mx:Script>
+	<![CDATA[
+	public static function init(o:DisplayObject):void
+	{
+	}
+	]]>
+	</mx:Script>
+	<mx:Metadata>
+	<![CDATA[
+		[Mixin]
+	]]>
+	</mx:Metadata>
+	<!-- end of set of lines that must be in each unit test -->
+
+	<mx:Script>
+	<![CDATA[
+	]]>
+	</mx:Script>
+
+	<testCases>
+<!--
+-->
+		<TestCase testID="SetupNumericStepperTest">
+			<body>
+				<SetProperty target="" propertyName="currentState" value="haloNumericStepperTest" 
+                    waitEvent="updateComplete" />
+				<AssertPropertyValue target="haloNumericStepperTests.testNumStep" propertyName="value" value="0" />
+			</body>
+		</TestCase>
+		<TestCase testID="NumericStepperTest1">
+			<body>
+				<DispatchMouseEvent target="haloNumericStepperTests.testNumStep.mx_internal:nextButton" type="mouseOver" localX="2" localY="2" />
+				<DispatchMouseClickEvent target="haloNumericStepperTests.testNumStep.mx_internal:nextButton" localX="2" localY="2" />
+				<AssertEvent target="haloNumericStepperTests.testNumStep" eventName="change" eventClass="mx.events::NumericStepperEvent" />
+				<AssertPropertyValue target="haloNumericStepperTests.testNumStep" propertyName="value" value="1" />
+			</body>
+			<cleanup>
+				<DispatchMouseEvent target="haloNumericStepperTests.testNumStep.mx_internal:nextButton" type="mouseOut" localX="2" localY="2" />
+			</cleanup>
+		</TestCase>
+		<TestCase testID="NumericStepperTest2">
+			<body>
+				<DispatchMouseEvent target="haloNumericStepperTests.testNumStep.mx_internal:nextButton" type="mouseOver" localX="2" localY="2" />
+				<DispatchMouseClickEvent target="haloNumericStepperTests.testNumStep.mx_internal:nextButton" localX="2" localY="2" />
+				<AssertEvent target="haloNumericStepperTests.testNumStep" eventName="change" eventClass="mx.events::NumericStepperEvent" />
+				<AssertPropertyValue target="haloNumericStepperTests.testNumStep" propertyName="value" value="2" />
+			</body>
+			<cleanup>
+				<DispatchMouseEvent target="haloNumericStepperTests.testNumStep.mx_internal:nextButton" type="mouseOut" localX="2" localY="2" />
+			</cleanup>
+		</TestCase>
+		<TestCase testID="NumericStepperTest3">
+			<body>
+				<DispatchMouseEvent target="haloNumericStepperTests.testNumStep.mx_internal:prevButton" type="mouseOver" localX="2" localY="2" />
+				<DispatchMouseClickEvent target="haloNumericStepperTests.testNumStep.mx_internal:prevButton" localX="2" localY="2" />
+				<AssertEvent target="haloNumericStepperTests.testNumStep" eventName="change" eventClass="mx.events::NumericStepperEvent" />
+				<AssertPropertyValue target="haloNumericStepperTests.testNumStep" propertyName="value" value="1" />
+			</body>
+			<cleanup>
+				<DispatchMouseEvent target="haloNumericStepperTests.testNumStep.mx_internal:prevButton" type="mouseOut" localX="2" localY="2" />
+			</cleanup>
+		</TestCase>
+	</testCases>
+</UnitTester>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UnitTester xmlns:mx="http://www.adobe.com/2006/mxml" xmlns="*" testSWF="main.mxml">
+
+	<!-- this set of lines form a template that must be in each unit test -->
+	<mx:Script>
+	<![CDATA[
+	public static function init(o:DisplayObject):void
+	{
+	}
+	]]>
+	</mx:Script>
+	<mx:Metadata>
+	<![CDATA[
+		[Mixin]
+	]]>
+	</mx:Metadata>
+	<!-- end of set of lines that must be in each unit test -->
+
+	<mx:Script>
+	<![CDATA[
+	]]>
+	</mx:Script>
+
+	<testCases>
+		<!-- controls -->
+		<TestCase testID="ButtonTest1">
+			<body>
+				<DispatchMouseEvent target="testButton" type="mouseOver" localX="10" localY="10" />
+				<DispatchMouseClickEvent target="testButton" localX="10" localY="10" />
+				<AssertPropertyValue target="testLabel" propertyName="text" value="This is a test" />
+			</body>
+		</TestCase>
+		<TestCase testID="CheckBoxTest1">
+			<body>
+				<DispatchMouseEvent target="testCheckBox" type="mouseOver" localX="10" localY="10" />
+				<DispatchMouseClickEvent target="testCheckBox" localX="10" localY="10" />
+				<AssertPropertyValue target="testCheckBox" propertyName="selected" value="true" />
+			</body>
+		</TestCase>
+		<TestCase testID="EnabledTest1">
+			<body>
+				<DispatchMouseEvent target="buttonEnabler" type="mouseOver" localX="10" localY="10" />
+				<DispatchMouseClickEvent target="buttonEnabler" localX="10" localY="10" />
+				<AssertPropertyValue target="testButton" propertyName="enabled" value="false" />
+				<AssertPropertyValue target="testCheckBox" propertyName="enabled" value="false" />
+			</body>
+		</TestCase>
+		<TestCase testID="VScrollBarTest1">
+			<body>
+				<DispatchMouseEvent target="testVScrollBar" type="mouseDown" localX="3" localY="60" waitEvent="change" />
+				<DispatchMouseEvent target="testVScrollBar" type="mouseDown" localX="3" localY="60" waitEvent="change" />
+				<AssertPropertyValue target="testVScrollBar" propertyName="value" value="40" />
+			</body>
+		</TestCase>
+		
+		<!-- states -->
+		<TestCase testID="StatesTest1">
+			<body>
+        	    <SetProperty target="" propertyName="currentState" value="altered" waitTarget="" waitEvent="currentStateChange" />
+				<AssertPropertyValue target="testButton" propertyName="label" value="World" />
+				<AssertPropertyValue target="stateTestButton" propertyName="visible" value="true" />
+				<AssertPropertyValue target="testButton2" propertyName="parent" value="null" />
+			</body>
+		</TestCase>
+		<TestCase testID="StatesTest2">
+			<body>
+        	    <SetProperty target="" propertyName="currentState" value="normal" waitTarget="" waitEvent="currentStateChange" />
+				<AssertPropertyValue target="testButton" propertyName="label" value="Hello" />
+				<AssertPropertyValue target="stateTestButton" propertyName="parent" value="null" />
+			</body>
+		</TestCase>
+
+
+		<!-- cff -->
+		<TestCase testID="CFF_width_height">
+			<body>
+				<AssertPropertyValue target="embeddedFontHolder.getChildAt(0)" propertyName="width" value="163.65" />
+				<AssertPropertyValue target="embeddedFontHolder.getChildAt(0)" propertyName="height" value="32.05" />
+			</body>
+		</TestCase>
+		
+		<!-- deferred instantiation -->
+		<TestCase testID="DeferredInstantiation1">
+			<setup>
+				<RunCode code="application.deferredContent.createDeferredContent()" 
+						 waitTarget="deferredContent" waitEvent="contentCreationComplete" />
+			</setup>
+			<body>
+				<AssertPropertyValue target="deferredContent" propertyName="numElements" value="2" />
+			</body>
+		</TestCase>
+	</testCases>
+</UnitTester>

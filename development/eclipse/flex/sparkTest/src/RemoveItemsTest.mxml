@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:mx="library://ns.adobe.com/flex/halo"
+             backgroundColor="white">
+   <s:layout>
+       <s:VerticalLayout/>
+   </s:layout>              
+
+    <s:states>
+        <s:State name="startState" />
+        <s:State name="foo" />
+    </s:states>    
+    
+    <mx:VBox id="vbox">
+        <mx:Button label="Toggle State" click="currentState=currentState=='foo'?'startState':'foo'"/>
+        <mx:Label text="Hello, World!" fontSize="16" id="t1">
+            <mx:filters>
+                <s:DropShadowFilter id="dsf" distance="4" blurX="5" blurY="5" excludeFrom="foo" />
+            </mx:filters>
+        </mx:Label>
+    </mx:VBox>
+
+    <mx:List height="40">
+        <mx:dataProvider>
+            <mx:ArrayCollection id="ac">
+                <fx:String id="zeke" excludeFrom="foo">Zeke</fx:String>
+            </mx:ArrayCollection>
+        </mx:dataProvider>
+    </mx:List>
+    
+    <s:Group id="ch">
+        <s:layout>
+        	<s:VerticalLayout/>
+        </s:layout>
+        <s:Group id="g1">
+            <s:Path id="p1" data="L 100 0 L 100 75 L 50 50 L 0 75 Z" data.foo="L 100 0 L 100 75 L 0 75 Z">
+                <s:stroke>
+                    <s:SolidColorStroke weight="1"/>
+                </s:stroke>
+                <s:fill>
+                    <s:SolidColor color="0x336699" alpha="0.4" />
+                </s:fill>
+            </s:Path>
+            <s:Ellipse id="e" width="10" height="10" x="45" y="65" excludeFrom="foo">
+                <s:fill>
+                    <s:SolidColor color="0xFF0000" />
+                </s:fill>
+            </s:Ellipse>
+        </s:Group>
+        <s:Button label="F4 Button 1" id="f4b1" excludeFrom="foo" />
+        <s:Button label="F4 Button 2" id="f4b2" excludeFrom="foo" />
+    </s:Group>
+    
+    <s:Button id="b1" label="Button1" excludeFrom="foo" />
+    <s:Button id="b2" label="Button2" excludeFrom="foo" />
+</s:Application>

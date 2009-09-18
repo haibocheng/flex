@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UnitTester
+    xmlns:mx="http://www.adobe.com/2006/mxml"
+    xmlns="*"
+    testSWF="main.mxml">
+
+    <!-- this set of lines form a template that must be in each unit test -->
+    <mx:Script>
+        <![CDATA[
+            import spark.effects.easing.*;
+            public static function init(o:DisplayObject):void
+            {
+            }
+        ]]>
+    </mx:Script>
+    <mx:Metadata>
+        <![CDATA[
+        [Mixin]
+        ]]>
+    </mx:Metadata>
+    <!-- end of set of lines that must be in each unit test -->
+    <mx:Script>
+        <![CDATA[
+            private function play(target:Object):void
+            {
+                target.play();
+            }
+                
+        ]]>
+    </mx:Script>
+            
+
+	<testCases>
+
+        <TestCase testID="SetupSparkEasingTest" keywords="[easing]" description="Spark.Effects.Easing checkin test 1.">
+            <body>
+                <SetProperty target="" propertyName="currentState" value="sparkEasingTest" 
+                             waitEvent="updateComplete" />
+                <AssertPropertyValue target="sparkEasingTests.bl" propertyName="y" value="100"/>
+                <AssertPropertyValue target="sparkEasingTests.rl" propertyName="y" value="100"/>
+            </body>
+        </TestCase>
+        
+        <TestCase testID="Easing_CheckinTest_1" keywords="[easing]" description="Spark.Effects.Easing checkin test 2.">
+            <body>
+                <RunCode code="application.sparkEasingTests.bd.play()" waitTarget="sparkEasingTests.bd" waitEvent="effectEnd" timeout="500"/>
+                <AssertPropertyValue target="sparkEasingTests.bl" propertyName="y" value="575"/>
+                <AssertPropertyValue target="sparkEasingTests.rl" propertyName="y" value="575"/>
+            </body>
+        </TestCase>
+        
+		<TestCase testID="Easing_CheckinTest_7" keywords="[easing]" description="Spark.Effects.Easing checkin test 3.">
+			<body>
+				<RunCode code="application.sparkEasingTests.bd.playheadTime = 250"/>
+				<AssertPropertyValue target="sparkEasingTests.bl" propertyName="y" value="575"/>
+				<AssertPropertyValue target="sparkEasingTests.rl" propertyName="y" value="575"/>
+			</body>
+		</TestCase>
+	</testCases>
+
+</UnitTester>

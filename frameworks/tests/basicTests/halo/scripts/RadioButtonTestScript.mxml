@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UnitTester xmlns:mx="http://www.adobe.com/2006/mxml" xmlns="*" testSWF="main.mxml">
+
+	<!-- this set of lines form a template that must be in each unit test -->
+	<mx:Script>
+	<![CDATA[
+	public static function init(o:DisplayObject):void
+	{
+	}
+	]]>
+	</mx:Script>
+	<mx:Metadata>
+	<![CDATA[
+		[Mixin]
+	]]>
+	</mx:Metadata>
+	<!-- end of set of lines that must be in each unit test -->
+
+	<mx:Script>
+	<![CDATA[
+	]]>
+	</mx:Script>
+
+	<testCases>
+<!--
+-->
+		<TestCase testID="SetupRadioButtonTest">
+			<body>
+				<SetProperty target="" propertyName="currentState" value="haloRadioButtonTest" 
+                    waitEvent="updateComplete" />
+				<AssertPropertyValue target="haloRadioButtonTests.testRadio1" propertyName="label" value="test Radio1" />
+				<AssertPropertyValue target="haloRadioButtonTests.testRadio2" propertyName="label" value="test Radio2" />
+			</body>
+		</TestCase>
+		<TestCase testID="RadioButtonTest1">
+			<body>
+				<DispatchMouseEvent target="haloRadioButtonTests.testRadio1" type="mouseOver" localX="10" localY="10" />
+				<DispatchMouseClickEvent target="haloRadioButtonTests.testRadio1" localX="10" localY="10" />
+				<AssertPropertyValue target="haloRadioButtonTests.testRadio1" propertyName="selected" value="true" />
+			</body>
+		</TestCase>
+		<TestCase testID="RadioButtonTest2">
+			<body>
+				<DispatchMouseEvent target="haloRadioButtonTests.testRadio2" type="mouseOver" localX="10" localY="10" />
+				<DispatchMouseClickEvent target="haloRadioButtonTests.testRadio2" localX="10" localY="10" />
+				<AssertPropertyValue target="haloRadioButtonTests.testRadio1" propertyName="selected" value="false" />
+				<AssertPropertyValue target="haloRadioButtonTests.testRadio2" propertyName="selected" value="true" />
+			</body>
+		</TestCase>
+	</testCases>
+</UnitTester>

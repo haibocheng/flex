@@ -1,0 +1,74 @@
+////////////////////////////////////////////////////////////////////////////////
+//
+//  ADOBE SYSTEMS INCORPORATED
+//  Copyright 2008 Adobe Systems Incorporated
+//  All Rights Reserved.
+//
+//  NOTICE: Adobe permits you to use, modify, and distribute this file
+//  in accordance with the terms of the license agreement accompanying it.
+//
+////////////////////////////////////////////////////////////////////////////////
+<languageVersion : 1.0;>
+kernel FxWipe
+<   namespace : "flex";
+    vendor : "Adobe";
+    version : 1;
+    description : "Directional wipe between two images for Flex effects";
+>
+{
+    // first input is unused in FxAnimateTransitionShader effect
+    input image4 src0;
+    input image4 from;
+    input image4 to;
+    output pixel4 dst;
+
+    parameter float progress<
+        minValue: 0.00;
+        maxValue: 1.00;
+        defaultValue: 0.0;
+    >;
+
+    parameter float width<
+        minValue: 0.0;
+        maxValue: 1024.0;
+        defaultValue: 576.0;
+    >;
+
+    parameter float height<
+        minValue: 0.00;
+        maxValue: 1024.0;
+        defaultValue: 384.0;
+    >;
+    
+    // 0 == left->right
+    // 1 == bottom->top
+    // 2 == right->left
+    // 3 == top->bottom
+    parameter int direction<
+        minValue: 0;
+        maxValue: 3;
+        defaultValue: 0;
+    >;
+
+    void
+    evaluatePixel()
+    {
+        float2 coord = outCoord();
+        // Use src0 just to defeat the optimizer from removing the input
+        pixel4 color1 = sampleNearest(src0, coord);
+        color1 = sampleNearest(from, coord);
+        pixel4 color2 = sampleNearest(to, coord);
+
+        if (direction == 0)
+            dst = ((width * progress) < coord.x) ? color1 : color2;
+        else if (direction == 1)
+            dst = ((height * (1.0 - progress)) >= coord.y) ? color1 : color2;
+        else if (direction == 2)
+            dst = ((width * (1.0 - progress)) >= coord.x) ? color1 : color2;
+        else
+            dst = ((height * progress) < coord.y) ? color1 : color2;
+        // workaround for Flash filter bug that replicates last column/row
+        if (coord.x >= width || coord.y >= height)
+            dst.a = 0.0;
+    }
+}

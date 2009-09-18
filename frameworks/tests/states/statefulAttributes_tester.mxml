@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UnitTester xmlns:mx="http://www.adobe.com/2006/mxml" xmlns="*" testSWF="main.mxml">
+
+        <!-- this set of lines form a template that must be in each unit test -->
+        <mx:Script>
+            <![CDATA[
+      	        public static function init(o:DisplayObject):void {}
+            ]]>
+        </mx:Script>
+        <mx:Metadata>
+            <![CDATA[
+               [Mixin]
+            ]]>
+        </mx:Metadata>
+        <!-- end of set of lines that must be in each unit test -->
+
+        <mx:Script>
+            <![CDATA[
+                import mx.core.mx_internal;
+                use namespace mx_internal;
+            ]]>
+        </mx:Script>
+
+	<testCases>
+	
+	    <TestCase testID="State-Specific Properties">
+    	    <body>
+        	    <AssertPropertyValue target="l1" propertyName="text" value="Monday" />
+        	    <SetProperty target="" propertyName="currentState" value="StateB" waitTarget="" waitEvent="currentStateChange" />
+        	    <AssertPropertyValue target="l1" propertyName="text" value="Friday" />
+        	</body>
+    	</TestCase>
+    	
+    	<TestCase testID="State-Specific Styles">
+    	    <body>
+              <AssertStyleValue target="l1" styleName="color" value="0xFF0000" />
+            </body>
+    	</TestCase>
+    	
+    	<TestCase testID="State-Specific Event Handlers">
+    	    <body>
+    	        <SetProperty target="" propertyName="currentState" value="StateA" waitTarget="" waitEvent="currentStateChange" />
+    	        <SetProperty target="l1" propertyName="text" value="before" />
+    	        <DispatchMouseEvent target="b1" type="click" localX="10" localY="10"/>
+        	    <AssertPropertyValue target="l1" propertyName="text" value="before" />
+        	    <SetProperty target="" propertyName="currentState" value="StateB" waitTarget="" waitEvent="currentStateChange" />
+        	    <DispatchMouseEvent target="b1" type="click" localX="10" localY="10"/>
+        	    <AssertPropertyValue target="l1" propertyName="text" value="after" />
+        	</body>
+    	</TestCase>
+    	
+    	<TestCase testID="State-Specific Databound Properties">
+    	    <body>
+    	        <SetProperty target="" propertyName="currentState" value="StateC" waitTarget="" waitEvent="currentStateChange" />
+    	        <AssertPropertyValue target="l1" propertyName="text" value="Wednesday" />
+        	</body>
+    	</TestCase>
+    	
+	</testCases>
+	
+	
+</UnitTester>

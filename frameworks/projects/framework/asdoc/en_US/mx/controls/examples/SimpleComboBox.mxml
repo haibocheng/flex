@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Simple example to demonstrate the Halo ComboBox control. -->
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+        xmlns:s="library://ns.adobe.com/flex/spark"
+        xmlns:mx="library://ns.adobe.com/flex/halo">
+
+    <fx:Script>
+        <![CDATA[
+            import mx.collections.ArrayCollection;
+            import mx.events.DropdownEvent;
+
+            [Bindable]
+            public var cards:ArrayCollection = new ArrayCollection(
+                [ {label:"Visa", data:1}, 
+                  {label:"MasterCard", data:2}, 
+                  {label:"American Express", data:3} ]);
+
+            private function closeHandler(evt:DropdownEvent):void {
+                myLabel.text = "You selected: " +  ComboBox(evt.target).selectedItem.label;
+                myData.text = "Data: " +  ComboBox(evt.target).selectedItem.data;
+            }
+        ]]>
+    </fx:Script>
+
+    <s:Panel title="Halo ComboBox Control Example" 
+            width="75%" height="75%"
+            horizontalCenter="0" verticalCenter="0">
+        <s:HGroup left="10" right="10" top="10" bottom="10">
+            <mx:ComboBox dataProvider="{cards}" width="150" 
+                    close="closeHandler(event);"/>
+
+            <s:VGroup width="250">
+                <s:Label width="200" color="blue" text="Select a type of credit card."/>
+                <s:Label id="myLabel" text="You selected:"/>
+                <s:Label id="myData" text="Data:"/>
+            </s:VGroup>
+        </s:HGroup>
+    </s:Panel>
+
+</s:Application>

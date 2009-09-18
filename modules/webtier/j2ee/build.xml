@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+
+<!--
+
+	ADOBE SYSTEMS INCORPORATED
+	Copyright 2007-2008 Adobe Systems Incorporated
+	All Rights Reserved.
+
+	NOTICE: Adobe permits you to use, modify, and distribute this file
+	in accordance with the terms of the license agreement accompanying it.
+
+-->
+
+<project name="webtier/j2ee" default="main" basedir="../../..">
+    <!-- Ant Properties -->
+    <property file="${basedir}/build.properties" />
+	<property file="${basedir}/modules/webtier/j2ee/build.properties" />
+	
+	<!-- define tomcat.home in here to start and stop server to test webapp -->
+	<property file="${webtier.dir}/local.properties" />
+
+    <property name="webtier.dist.dir" value="${webtier.dir}/dist" />
+    
+    <property name="build.number" value="${label}"/>
+    
+    <target name="main" depends="clean,modules" description="Full Build of webtier and webtier apps" />	
+	<target name="dev" depends="modules-dev" description="Runs src.depend build for development"/>
+
+	<target name="modules" depends="bootstrap,servlet,taglib,coldfusion" description="Full build of all JARs"/>
+	<target name="modules-dev" depends="bootstrap-dev,coldfusion-dev,servlet-dev,taglib-dev" description="Build src.depend JARs"/>
+	
+	<target name="bootstrap" description="full build of the bootstrap module">
+        <ant antfile="${webtier.dir}/bootstrap/build.xml" />
+    </target>
+
+	<target name="bootstrap-dev" description="Build src.depend asc">
+		<ant antfile="${webtier.dir}/bootstrap/build.xml" target="dev"/>
+	</target>
+	
+    <target name="coldfusion" description="expands the sdk for the server's web apps">
+        <ant antfile="${webtier.dir}/coldfusion/build.xml" />
+    </target>
+  
+	<target name="coldfusion-dev" description="Build src.depend asc">
+		<ant antfile="${webtier.dir}/coldfusion/build.xml" target="dev"/>
+	</target>
+	
+    <target name="servlet" description="full build of the webtier module">
+        <ant antfile="${webtier.dir}/servlet/build.xml" />
+    </target>
+
+	<target name="servlet-dev" description="Build src.depend asc">
+		<ant antfile="${webtier.dir}/servlet/build.xml" target="dev"/>
+	</target>
+  
+    <target name="taglib" description="full build of the taglib module">
+        <ant antfile="${webtier.dir}/taglib/build.xml" />
+    </target>
+
+	<target name="taglib-dev" description="Build src.depend asc">
+		<ant antfile="${webtier.dir}/taglib/build.xml" target="dev"/>
+	</target>
+  
+	<target name="cf-package">
+		<ant antfile="${webtier.dir}/coldfusion/build.xml" target="package" />
+    </target>
+
+    <target name="depend-check">
+        <available file="${webtier.dist.dir}/webtier.war" type="file" property="depend.war" />
+    	<fail message="webapps must be built first" unless="depend.war" />
+    </target>
+
+	<target name="package" depends="depend-check,cf-package" description="repackage webtier.war into flexmodule_j2ee.zip">
+		<mkdir dir="${webtier.dist.dir}"/>
+		<zip destfile="${webtier.dist.dir}/FlexModule_j2ee.zip" whenempty="fail">
+            <fileset dir="${webtier.dist.dir}">
+                <include name="webtier.war" />
+            </fileset>
+			<fileset dir="${webtier.dir}">
+                <include name="readme.txt" />
+            </fileset>
+        </zip>
+		<antcall target="stage"/>
+	</target>
+	
+	<target name="stage" if="stage">
+		<mkdir dir="${basedir}/out/webtier"/>
+		<copy todir="${basedir}/out/webtier" flatten="true">			
+			<fileset dir="${webtier.dist.dir}">
+	  			<include name="FlexModule_j2ee.zip"/>
+	  			<include name="webtier.war"/>
+	  			<include name="coldfusion/Flex4_webtier_for_coldfusion.zip"/>
+			</fileset>
+		</copy>
+	</target>
+		
+    <target name="clean" description="clean">
+        <delete dir="${webtier.dist.dir}" failonerror="false" />
+        <ant antfile="${webtier.dir}/bootstrap/build.xml" target="clean" />
+        <ant antfile="${webtier.dir}/servlet/build.xml" target="clean" />
+        <ant antfile="${webtier.dir}/taglib/build.xml" target="clean" />
+        <ant antfile="${webtier.dir}/coldfusion/build.xml" target="clean" />
+    </target>
+
+	<!--
+		Start tomcat server - must define tomcat.home
+	-->
+    <target name="startserver" description="Start Tomcat Server">
+	    <fail unless="tomcat.home" message="must specify tomcat.home in local.properties" />
+		<antcall target="asyncExec_window">
+			<param name="exec_dir" value="${tomcat.home}/bin"/>
+			<param name="exec_title" value="Tomcat started via Flex Automation"/>
+			<param name="exec" value="'${tomcat.home}/bin/catalina.bat' run"/>
+		</antcall>
+    </target>
+	
+	<!--
+		Stop tomcat server - must define tomcat.home
+	-->
+    <target name="stopserver" description="Stop Tomcat Server">
+	     <fail unless="tomcat.home" message="must specify tomcat.home in local.properties" />
+         <antcall target="asyncExec_window">
+             <param name="exec_dir" value="${tomcat.home}/bin"/>
+             <param name="exec_title" value="Tomcat started via Flex Automation"/>
+             <param name="exec" value="'${tomcat.home}/bin/catalina.bat' stop"/>
+         </antcall>
+    </target>
+    
+	<!--
+	********************************************************************
+	TARGET: asyncExec_window - run process async w/ window so ant doesn't wait
+            use this on windows
+	********************************************************************
+	-->
+    <target name="asyncExec_window"
+            description="Asynchronous Exec in a New Window">
+        <exec executable="${tomcat.home}/bin/antRunAsync" dir="${exec_dir}" vmlauncher="false"
+              failonerror="false" timeout="3000">
+            <env key="ANTRUN_TITLE" value="${exec_title}"/>
+            <!--<env key="ANTRUN_OUTPUT" value="${exec_log}" />-->
+            <arg line="${exec}"/>
+            <!-- actual executable and arguments to run -->
+        </exec>
+        <sleep seconds="2"/>
+        <echo message="leaving target"/>
+    </target>
+    
+</project>

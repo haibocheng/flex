@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UnitTester xmlns:mx="http://www.adobe.com/2006/mxml" xmlns="*" testSWF="main.mxml">
+
+	<!-- this set of lines form a template that must be in each unit test -->
+	<mx:Script>
+	<![CDATA[
+	public static function init(o:DisplayObject):void
+	{
+	}
+	]]>
+	</mx:Script>
+	<mx:Metadata>
+	<![CDATA[
+		[Mixin]
+	]]>
+	</mx:Metadata>
+	<!-- end of set of lines that must be in each unit test -->
+
+	<mx:Script>
+	<![CDATA[
+	]]>
+	</mx:Script>
+
+	<testCases>
+<!--
+-->
+		<TestCase testID="SetupSparkTextInputTest">
+			<body>
+				<SetProperty target="" propertyName="currentState" value="sparkTextInputTest" 
+                    waitEvent="updateComplete" />
+				<AssertPropertyValue target="sparkTextInputTests.testTextInput" propertyName="text" value="" />
+			</body>
+		</TestCase>
+		<TestCase testID="SparkTextInputTest1">
+			<body>
+				<DispatchMouseClickEvent target="sparkTextInputTests.testTextInput" localX="10" localY="10" />
+				<DispatchKeyEvent char="This is another test." waitEvent="change" waitTarget="sparkTextInputTests.testTextInput" />
+				<AssertPropertyValue target="sparkTextInputTests.testTextInput" propertyName="text" value="This is another test." />
+				<AssertPropertyValue target="sparkTextInputTests.testTextInput.textDisplay" propertyName="text" value="This is another test." />
+				<AssertPropertyValue target="sparkTextInputTests.testTextInput" propertyName="width" value="128" />
+				<AssertPropertyValue target="sparkTextInputTests.testTextInput" propertyName="height" value="22" />
+			</body>
+		</TestCase>
+	</testCases>
+</UnitTester>

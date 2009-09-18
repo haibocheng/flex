@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+    xmlns:s="library://ns.adobe.com/flex/spark"
+    xmlns:mx="library://ns.adobe.com/flex/halo"
+    backgroundColor="white"
+    width="800" height="600"
+    initialize="initApp();">
+
+    <fx:Script>
+        import flash.display.Sprite;
+        import flash.text.engine.*;
+
+        [Embed(source="BickhamScriptPro-Regular.otf", fontName="TestFont", mimeType="application/x-font", embedAsCFF="true")]
+        private var fontSymbol:Class;
+
+        private var textLine:TextLine;
+
+        private function initApp():void
+        {
+            var fd:FontDescription = new FontDescription("TestFont");
+            fd.fontLookup = FontLookup.EMBEDDED_CFF;
+            var ef:ElementFormat = new ElementFormat(fd);
+            ef.fontSize = 32;
+            var te:TextElement = new TextElement("The quick brown fox", ef);
+            var tb:TextBlock = new TextBlock(te);
+            textLine = tb.createTextLine();
+            textLine.x = 100;
+            textLine.y = 100;
+            embeddedFontHolder.addChild(textLine);
+        }
+    </fx:Script>
+
+    <s:layout>
+        <s:VerticalLayout/>
+    </s:layout>
+
+    <s:states>
+        <s:State name="normal" />
+        <s:State name="altered" />
+    </s:states>
+
+    <s:SkinnableContainer width="100%">
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+        <s:CheckBox label="Enabled" id="buttonEnabler" selected="true" />
+        <s:Button id="testButton" label="Hello" label.altered="World" enabled="{buttonEnabler.selected}" click="testLabel.text = 'This is a test'" />
+        <s:Button id="testButton2" label="Button with a long label" enabled="{buttonEnabler.selected}" excludeFrom="altered" />
+        <s:Button id="stateTestButton" includeIn="altered" />
+        <s:CheckBox id="testCheckBox" label="Check Box 1" enabled="{buttonEnabler.selected}" />
+        <s:CheckBox label="Check Box 2" enabled="{buttonEnabler.selected}" />
+        <s:RadioButton label="Radio Button" enabled="{buttonEnabler.selected}" />
+        <mx:Label id="testLabel" text=" " />
+    </s:SkinnableContainer>
+
+    <s:SkinnableContainer width="100%">
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+        <mx:CheckBox id="enabler" selected="true" label="Enabled"/>
+        <s:VScrollBar id="testVScrollBar" minimum="0" maximum="100" enabled="{enabler.selected}" />
+        <s:HScrollBar id="testHScrollBar" minimum="0" maximum="100" enabled="{enabler.selected}"/>
+    </s:SkinnableContainer>
+
+    <mx:UIComponent width="100%" id="embeddedFontHolder" />
+
+    <s:SkinnableContainer id="deferredContent" creationPolicy="none">
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+        <s:Button label="Button 1" />
+        <s:Button label="Button 2" />
+    </s:SkinnableContainer>
+</s:Application>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UnitTester xmlns:mx="http://www.adobe.com/2006/mxml" xmlns="*" testSWF="main.mxml">
+
+	<!-- this set of lines form a template that must be in each unit test -->
+	<mx:Script>
+	<![CDATA[
+	public static function init(o:DisplayObject):void
+	{
+	}
+	]]>
+	</mx:Script>
+	<mx:Metadata>
+	<![CDATA[
+		[Mixin]
+	]]>
+	</mx:Metadata>
+	<!-- end of set of lines that must be in each unit test -->
+
+	<mx:Script>
+	<![CDATA[
+	]]>
+	</mx:Script>
+
+	<testCases>
+<!--
+-->
+		<TestCase testID="SetupSliderTest">
+			<body>
+				<SetProperty target="" propertyName="currentState" value="haloSliderTest" 
+                    waitEvent="updateComplete" />
+				<AssertPropertyValue target="haloSliderTests.testSlider" propertyName="value" value="0" />
+			</body>
+		</TestCase>
+		<TestCase testID="SliderTest1">
+			<body>
+				<DispatchMouseEvent target="haloSliderTests.testSlider" type="mouseOver" localX="3" localY="30" />
+				<DispatchMouseEvent target="haloSliderTests.testSlider" type="mouseDown" localX="3" localY="30" />
+				<DispatchMouseEvent target="haloSliderTests.testSlider" type="mouseMove" localX="13" localY="30" />
+				<DispatchMouseEvent target="haloSliderTests.testSlider" type="mouseMove" localX="23" localY="30" />
+				<DispatchMouseEvent target="haloSliderTests.testSlider" type="mouseMove" localX="33" localY="30" />
+				<DispatchMouseEvent target="haloSliderTests.testSlider" type="mouseUp" localX="33" localY="30" />
+				<AssertPropertyValue target="haloSliderTests.testSlider" propertyName="alpha" value="0.21875" />
+			</body>
+		</TestCase>
+	</testCases>
+</UnitTester>

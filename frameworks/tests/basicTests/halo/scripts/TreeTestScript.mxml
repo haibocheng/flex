@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UnitTester xmlns:mx="http://www.adobe.com/2006/mxml" xmlns="*" testSWF="main.mxml">
+
+	<!-- this set of lines form a template that must be in each unit test -->
+	<mx:Script>
+	<![CDATA[
+	public static function init(o:DisplayObject):void
+	{
+	}
+	]]>
+	</mx:Script>
+	<mx:Metadata>
+	<![CDATA[
+		[Mixin]
+	]]>
+	</mx:Metadata>
+	<!-- end of set of lines that must be in each unit test -->
+
+	<mx:Script>
+	<![CDATA[
+	]]>
+	</mx:Script>
+
+	<testCases>
+<!--
+-->
+		<TestCase testID="SetupTreeTest">
+			<body>
+				<SetProperty target="" propertyName="currentState" value="haloTreeTest" 
+                    waitEvent="updateComplete" />
+				<AssertPropertyValue target="haloTreeTests.testTree.dataProvider" propertyName="length" value="5" />
+			</body>
+		</TestCase>
+		<TestCase testID="TreeTest1">
+			<body>
+				<DispatchMouseEvent target="haloTreeTests.addNodeButton" type="mouseOver" localX="10" localY="10" />
+				<DispatchMouseClickEvent target="haloTreeTests.addNodeButton"  localX="10" localY="10" waitEvent="updateComplete" waitTarget="haloTreeTests.testTree" />
+				<AssertPropertyValue target="haloTreeTests.testTree.dataProvider" propertyName="length" value="6" />
+			</body>
+		</TestCase>
+		<TestCase testID="TreeTest2">
+			<body>
+				<DispatchMouseEvent target="haloTreeTests.testTree" type="mouseOver" localX="10" localY="56" />
+				<DispatchMouseClickEvent target="haloTreeTests.testTree" localX="10" localY="56" />
+				<AssertEvent target="haloTreeTests.testTree" eventName="itemOpen" eventClass="mx.events::TreeEvent" />
+				<AssertPropertyValue target="haloTreeTests.testTree.mx_internal:wrappedCollection" propertyName="length" value="8" />
+			</body>
+		</TestCase>
+	</testCases>
+</UnitTester>

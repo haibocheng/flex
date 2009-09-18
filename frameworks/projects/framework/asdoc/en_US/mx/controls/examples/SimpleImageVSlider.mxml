@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Simple example to demonstrate the Halo VSlider control. -->
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+        xmlns:s="library://ns.adobe.com/flex/spark"
+        xmlns:mx="library://ns.adobe.com/flex/halo">
+
+    <fx:Script>
+        <![CDATA[
+            private var imageWidth:Number = 0;
+            private var imageHeight:Number = 0;
+
+            // Event handler function to change the image size.
+            private function changeSize():void
+            {
+                phoneImage.width = uint(imageWidth * hSlider.value / 100);
+                phoneImage.height = uint(imageHeight * hSlider.value / 100);
+            }
+        ]]>
+    </fx:Script>
+
+    <s:Panel id="panel" title="Halo VSlider Control Example" 
+            width="75%" height="75%" 
+            horizontalCenter="0" verticalCenter="0">
+        <s:HGroup left="10" right="10" top="10" bottom="10">
+            <s:HGroup width="200">
+                <mx:Image id="phoneImage" source="@Embed('assets/Nokia_6630.png')" 
+                        creationComplete="imageWidth = phoneImage.width; imageHeight = phoneImage.height;" />
+            </s:HGroup>
+
+            <s:VGroup>
+                <s:Label color="blue" text="Drag the slider to resize the image."/>
+                <mx:VSlider id="hSlider" 
+                        dataTipPlacement="top" 
+                        minimum="0" maximum="100" value="100" 
+                        tickColor="black" 
+                        snapInterval="1" tickInterval="10" 
+                        labels="[0%,100%]" 
+                        allowTrackClick="true" 
+                        liveDragging="true" 
+                        change="changeSize();"/>
+            </s:VGroup>
+        </s:HGroup>
+    </s:Panel>
+
+</s:Application>

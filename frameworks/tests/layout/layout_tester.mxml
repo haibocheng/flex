@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UnitTester xmlns:mx="http://www.adobe.com/2006/mxml" xmlns="*" testSWF="layout.mxml">
+
+        <!-- this set of lines form a template that must be in each unit test -->
+        <mx:Script>
+            <![CDATA[
+                  public static function init(o:DisplayObject):void {}
+            ]]>
+        </mx:Script>
+        <mx:Metadata>
+            <![CDATA[
+               [Mixin]
+            ]]>
+        </mx:Metadata>
+        <!-- end of set of lines that must be in each unit test -->
+
+        <mx:Script>
+            <![CDATA[
+                import mx.core.ILayoutElement;
+                public var layoutElement:ILayoutElement;
+            ]]>
+        </mx:Script>
+
+    <testCases>
+
+        <TestCase testID="preferredSize_from_measured">
+        <setup> 
+           <ResetComponent target="b1" className="mx.controls.Button" waitEvent="updateComplete" waitTarget="b1"/>
+           <SetProperty target="b1" propertyName="measuredWidth" value="100"/>
+           <SetProperty target="b1" propertyName="measuredHeight" value="110"/>
+           <RunCode code="layoutElement = application.b1" />
+        </setup>
+            <body>
+                <AssertMethodValue method="value=layoutElement.getPreferredBoundsWidth()" value="100" />
+                <AssertMethodValue method="value=layoutElement.getPreferredBoundsHeight()" value="110" />
+            </body>
+        </TestCase>
+
+        <TestCase testID="preferredSize_from_measured_and_explicitMin">
+        <setup> 
+           <ResetComponent target="b1" className="mx.controls.Button" waitEvent="updateComplete" waitTarget="b1"/>
+           <SetProperty target="b1" propertyName="measuredWidth" value="100"/>
+           <SetProperty target="b1" propertyName="measuredHeight" value="110"/>
+           <SetProperty target="b1" propertyName="explicitMinWidth" value="120"/>
+           <SetProperty target="b1" propertyName="explicitMinHeight" value="130" waitEvent="updateComplete"/>
+           <RunCode code="layoutElement = application.b1" />
+        </setup>
+            <body>
+                <AssertMethodValue method="value=layoutElement.getPreferredBoundsWidth()" value="120" />
+                <AssertMethodValue method="value=layoutElement.getPreferredBoundsHeight()" value="130" />
+            </body>
+        </TestCase>
+
+        <TestCase testID="preferredSize_from_measured_and_explicitMin_and_explicitMax">
+        <setup> 
+           <ResetComponent target="b1" className="mx.controls.Button" waitEvent="updateComplete" waitTarget="b1"/>
+           <SetProperty target="b1" propertyName="measuredWidth" value="100"/>
+           <SetProperty target="b1" propertyName="measuredHeight" value="110"/>
+           <SetProperty target="b1" propertyName="explicitMinWidth" value="120"/>
+           <SetProperty target="b1" propertyName="explicitMinHeight" value="130"/>
+           <SetProperty target="b1" propertyName="explicitMaxWidth" value="115"/>
+           <SetProperty target="b1" propertyName="explicitMaxHeight" value="125" waitEvent="updateComplete"/>
+           <RunCode code="layoutElement = application.b1" />
+        </setup>
+            <body>
+                <AssertMethodValue method="value=layoutElement.getPreferredBoundsWidth()" value="115" />
+                <AssertMethodValue method="value=layoutElement.getPreferredBoundsHeight()" value="125" />
+            </body>
+        </TestCase>
+
+        <TestCase testID="preferredSize_from_measured_rotation_90">
+        <setup> 
+           <ResetComponent target="b1" className="mx.controls.Button" waitEvent="updateComplete" waitTarget="b1"/>
+           <SetProperty target="b1" propertyName="measuredWidth" value="50"/>
+           <SetProperty target="b1" propertyName="measuredHeight" value="100"/>
+           <SetProperty target="b1" propertyName="rotation" value="90"/>
+           <RunCode code="layoutElement = application.b1" />
+        </setup>
+            <body>
+                <AssertMethodValue method="value=layoutElement.getPreferredBoundsWidth()" value="100" />
+                <AssertMethodValue method="value=layoutElement.getPreferredBoundsHeight()" value="50" />
+            </body>
+        </TestCase>
+
+        <TestCase testID="preferredSize_from_measured_rotation_180">
+        <setup> 
+           <ResetComponent target="b1" className="mx.controls.Button" waitEvent="updateComplete" waitTarget="b1"/>
+           <SetProperty target="b1" propertyName="measuredWidth" value="50"/>
+           <SetProperty target="b1" propertyName="measuredHeight" value="100"/>
+           <SetProperty target="b1" propertyName="rotation" value="180"/>
+           <RunCode code="layoutElement = application.b1" />
+        </setup>
+            <body>
+                <AssertMethodValue method="value=layoutElement.getPreferredBoundsWidth()" value="50" />
+                <AssertMethodValue method="value=layoutElement.getPreferredBoundsHeight()" value="100" />
+            </body>
+        </TestCase>
+
+        <TestCase testID="preferredSize_from_measured_rotation_negative90">
+        <setup> 
+           <ResetComponent target="b1" className="mx.controls.Button" waitEvent="updateComplete" waitTarget="b1"/>
+           <SetProperty target="b1" propertyName="measuredWidth" value="50"/>
+           <SetProperty target="b1" propertyName="measuredHeight" value="100"/>
+           <SetProperty target="b1" propertyName="rotation" value="-90"/>
+           <RunCode code="layoutElement = application.b1" />
+        </setup>
+            <body>
+                <AssertMethodValue method="value=layoutElement.getPreferredBoundsWidth()" value="100" />
+                <AssertMethodValue method="value=layoutElement.getPreferredBoundsHeight()" value="50" />
+            </body>
+        </TestCase>
+
+        <TestCase testID="preferredSize_from_explicit_size">
+        <setup> 
+           <ResetComponent target="b1" className="mx.controls.Button" waitEvent="updateComplete" waitTarget="b1"/>
+           <SetProperty target="b1" propertyName="measuredWidth"        value="50"/>
+           <SetProperty target="b1" propertyName="measuredHeight"       value="100"/>
+           <SetProperty target="b1" propertyName="measuredMinWidth"     value="20"/>
+           <SetProperty target="b1" propertyName="measuredMinHeight"    value="20"/>
+           <SetProperty target="b1" propertyName="explicitMinWidth"     value="30"/>
+           <SetProperty target="b1" propertyName="explicitMinHeight"    value="30"/>
+           <SetProperty target="b1" propertyName="explicitMaxWidth"     value="1"/>
+           <SetProperty target="b1" propertyName="explicitMaxHeight"    value="1"/>
+           <SetProperty target="b1" propertyName="explicitWidth"        value="4"/>
+           <SetProperty target="b1" propertyName="explicitHeight"       value="5"/>
+           <RunCode code="layoutElement = application.b1" />
+        </setup>
+            <body>
+                <AssertMethodValue method="value=layoutElement.getPreferredBoundsWidth()" value="4" />
+                <AssertMethodValue method="value=layoutElement.getPreferredBoundsHeight()" value="5" />
+            </body>
+        </TestCase>
+
+        <TestCase testID="setLayoutBoundsSize_NaN_width_NaN_height">
+        <setup> 
+           <ResetComponent target="b1" className="mx.controls.Button" waitEvent="updateComplete" waitTarget="b1"/>
+           <SetProperty target="b1" propertyName="measuredWidth" value="50"/>
+           <SetProperty target="b1" propertyName="measuredHeight" value="100"/>
+           <RunCode code="layoutElement = application.b1" />
+           <RunCode code="layoutElement.setLayoutBoundsSize(NaN, NaN);" />
+        </setup>
+            <body>
+                <AssertMethodValue method="value=layoutElement.getLayoutBoundsWidth()" value="50" />
+                <AssertMethodValue method="value=layoutElement.getLayoutBoundsHeight()" value="100" />
+            </body>
+        </TestCase>
+
+        <TestCase testID="setLayoutBoundsSize_40_width_NaN_height">
+        <setup> 
+           <ResetComponent target="b1" className="mx.controls.Button" waitEvent="updateComplete" waitTarget="b1"/>
+           <SetProperty target="b1" propertyName="measuredWidth" value="50"/>
+           <SetProperty target="b1" propertyName="measuredHeight" value="100"/>
+           <RunCode code="layoutElement = application.b1" />
+           <RunCode code="layoutElement.setLayoutBoundsSize(40, NaN);" />
+        </setup>
+            <body>
+                <AssertMethodValue method="value=layoutElement.getLayoutBoundsWidth()" value="40" />
+                <AssertMethodValue method="value=layoutElement.getLayoutBoundsHeight()" value="100" />
+            </body>
+        </TestCase>
+
+        <TestCase testID="setLayoutBoundsSize_NaN_width_90_height">
+        <setup> 
+           <ResetComponent target="b1" className="mx.controls.Button" waitEvent="updateComplete" waitTarget="b1"/>
+           <SetProperty target="b1" propertyName="measuredWidth" value="50"/>
+           <SetProperty target="b1" propertyName="measuredHeight" value="100"/>
+           <RunCode code="layoutElement = application.b1" />
+           <RunCode code="layoutElement.setLayoutBoundsSize(NaN, 90);" />
+        </setup>
+            <body>
+                <AssertMethodValue method="value=layoutElement.getLayoutBoundsWidth()" value="50" />
+                <AssertMethodValue method="value=layoutElement.getLayoutBoundsHeight()" value="90" />
+            </body>
+        </TestCase>
+
+        <TestCase testID="setLayoutBoundsSize_30_width_80_height">
+        <setup> 
+           <ResetComponent target="b1" className="mx.controls.Button" waitEvent="updateComplete" waitTarget="b1"/>
+           <SetProperty target="b1" propertyName="measuredWidth" value="50"/>
+           <SetProperty target="b1" propertyName="measuredHeight" value="100"/>
+           <RunCode code="layoutElement = application.b1" />
+           <RunCode code="layoutElement.setLayoutBoundsSize(30, 80);" />
+        </setup>
+            <body>
+                <AssertMethodValue method="value=layoutElement.getLayoutBoundsWidth()" value="30" />
+                <AssertMethodValue method="value=layoutElement.getLayoutBoundsHeight()" value="80" />
+            </body>
+        </TestCase>
+
+    </testCases>
+</UnitTester>

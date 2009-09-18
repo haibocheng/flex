@@ -1,0 +1,41 @@
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+    xmlns:s="library://ns.adobe.com/flex/spark"
+    xmlns:mx="library://ns.adobe.com/flex/halo">
+
+    <fx:Script>
+    <![CDATA[
+    
+        [Bindable]
+        public var bSrc:String = "Wednesday";
+        public function changeLabel():void
+        {
+            l1.text="after";
+        }
+    ]]>
+    </fx:Script>
+    
+    <s:layout>
+	<s:VerticalLayout/>
+    </s:layout>
+
+    <s:states>
+        <s:State name="StateA"/>
+        <s:State name="StateB"/>
+        <s:State name="StateC"/>
+    </s:states>
+
+    <mx:VBox>
+        <mx:HBox id="buttons">
+            <mx:Label id="l1" text="Friday" text.StateA="Monday" color.StateB="0xFF0000" text.StateC="{bSrc}" />
+            <mx:Button id="b1" label="clicker" click.StateB="changeLabel()" />
+        </mx:HBox>
+
+        <mx:HBox>
+            <mx:Button label="StateA" click="currentState='StateA'" />
+            <mx:Button label="StateB" click="currentState='StateB'" />
+            <mx:Button label="StateC" click="currentState='StateC'" />
+        </mx:HBox>
+    </mx:VBox>
+
+</s:Application>
+

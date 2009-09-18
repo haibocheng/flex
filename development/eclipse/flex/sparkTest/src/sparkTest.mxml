@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:mx="library://ns.adobe.com/flex/halo"
+				backgroundColor="white"
+				width="800" height="600">
+	<s:layout>
+    	<s:HorizontalLayout/> 
+    </s:layout>
+	<mx:VBox verticalGap="10">		
+		<mx:Panel title="Buttons" width="100%">
+			<s:CheckBox label="Enabled" id="buttonEnabler" selected="true" />
+			<s:Button label="Hello" enabled="{buttonEnabler.selected}" />
+			<s:Button label="Button with a long label" enabled="{buttonEnabler.selected}" />
+			<s:CheckBox label="Check Box 1" enabled="{buttonEnabler.selected}" />
+			<s:CheckBox label="Check Box 2" enabled="{buttonEnabler.selected}" />
+			<s:RadioButton label="Radio Button" enabled="{buttonEnabler.selected}" />
+		</mx:Panel> 
+		
+		<mx:Panel title="Scrollbars" width="100%">
+		    <mx:CheckBox id="enabler" selected="true" label="Enabled"/>
+			<s:VScrollBar minimum="0" maximum="100" enabled="{enabler.selected}" />
+			<s:HScrollBar minimum="0" maximum="100" enabled="{enabler.selected}"/>		
+		</mx:Panel>
+	</mx:VBox>
+	<mx:VBox verticalGap="10">
+		<mx:Panel width="100%" title="DataComponent">
+			<s:SkinnableDataContainer width="100%" itemRenderer="spark.skins.spark.DefaultItemRenderer">
+			    <mx:ArrayCollection>
+			        <fx:String>Item One</fx:String>
+    				<fx:String>Item Two</fx:String>
+    				<fx:String>Item Three</fx:String>
+			    </mx:ArrayCollection>
+			</s:SkinnableDataContainer>
+		</mx:Panel>
+		
+		<mx:Panel title="List" width="100%">
+			<s:List width="100%" itemRenderer="spark.skins.spark.DefaultItemRenderer">
+			    <mx:ArrayCollection>
+    				<fx:String>Item One</fx:String>
+    				<fx:String>Item Two</fx:String>
+    				<fx:String>Item Three</fx:String>
+				</mx:ArrayCollection>
+			</s:List>
+		</mx:Panel>
+		
+		<mx:Panel title="Sliders" width="100%">
+            <mx:CheckBox id="sliderEnabler" selected="true" label="Enabled"/>
+            <s:VSlider id="vslider" liveDragging="false"
+                     enabled="{sliderEnabler.selected}" />
+		    <s:HSlider id="hslider" minimum="-50" maximum="50" snapInterval="10"
+		             stepSize="10" liveDragging="true"
+		             enabled="{sliderEnabler.selected}" />
+        </mx:Panel>
+    </mx:VBox>
+    <mx:VBox verticalGap="10">
+        <mx:Panel title="NumericStepper" width="100%">
+            <s:NumericStepper id="NS" allowValueWrap="true" />
+            <s:Group>
+            	<s:RichText>Hello <s:span color="0xFF0000">World</s:span></s:RichText>
+            </s:Group>
+            <s:TextInput/>
+            <s:TextArea/>
+        </mx:Panel>
+    </mx:VBox>
+</s:Application>

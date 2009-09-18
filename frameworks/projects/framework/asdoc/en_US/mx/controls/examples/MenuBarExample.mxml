@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Simple example to demonstrate the Halo MenuBar control. -->
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+        xmlns:s="library://ns.adobe.com/flex/spark"
+        xmlns:mx="library://ns.adobe.com/flex/halo"
+        initialize="initCollections();">
+
+    <fx:Script>
+        <![CDATA[
+            import mx.collections.*;
+            import mx.controls.Alert;
+            import mx.events.MenuEvent;
+
+            [Bindable]
+            public var menuBarCollection:XMLListCollection;
+
+            private var menubarXML:XMLList =
+                <>
+                    <menuitem label="Menu1" data="top">
+                        <menuitem label="MenuItem 1-A" data="1A"/>
+                        <menuitem label="MenuItem 1-B" data="1B"/>
+                    </menuitem>
+                    <menuitem label="Menu2" data="top">
+                        <menuitem label="MenuItem 2-A" type="check" data="2A"/>
+                        <menuitem type="separator"/>
+                        <menuitem label="MenuItem 2-B" >
+                            <menuitem label="SubMenuItem 3-A" type="radio"
+                                groupName="one" data="3A"/>
+                            <menuitem label="SubMenuItem 3-B" type="radio"
+                                groupName="one" data="3B"/>
+                        </menuitem>
+                    </menuitem>
+                </>;
+
+            // Event handler to initialize the MenuBar control.
+            private function initCollections():void {
+                menuBarCollection = new XMLListCollection(menubarXML);
+            }
+
+            // Event handler for the MenuBar control's itemClick event.
+            private function menuHandler(evt:MenuEvent):void  {
+                // Don't open the Alert for a menu bar item that 
+                // opens a popup submenu.
+                if (evt.item.@data != "top") {
+                    Alert.show("Label: " + evt.item.@label + "\n" + 
+                        "Data: " + evt.item.@data, "Clicked menu item");
+                }
+            }
+         ]]>
+    </fx:Script>
+
+    <s:Panel title="Halo MenuBar Control Example"
+            width="75%" height="75%"
+            horizontalCenter="0" verticalCenter="0">
+        <s:VGroup left="10" right="10" top="10" bottom="10">
+            <s:Label width="100%" color="blue" text="Select a menu item."/>
+
+            <mx:MenuBar labelField="@label" itemClick="menuHandler(event);" 
+                    dataProvider="{menuBarCollection}" />
+        </s:VGroup>
+    </s:Panel>
+
+</s:Application>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application layout="absolute"
+    xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:mx="library://ns.adobe.com/flex/halo"
+    width="700" height="450" xmlns:components="components.*">
+    <fx:Script>
+        <![CDATA[
+            import spark.effects.*;
+            import spark.effects.interpolation.*;
+            import spark.effects.animation.*;
+            import spark.effects.easing.*;
+            
+            public const WIDTH:Number = 120;
+            public const HALO_X:Number = 10;
+            public const GUMBO_X:Number = HALO_X + WIDTH + 20;;
+            public const RECT_X:Number = 0;
+            
+            public var moveAnim:Move;
+            public var resizeAnim:Resize;
+            public var fadeAnim:Fade;
+            
+            private var duration:int;
+            private var startDelay:int;
+            private var repeatDelay:int;
+            private var repeatCount:int;
+            private var repeatBehavior:String;
+            private var easer:IEaser;
+            
+            public function animate():void
+            {
+                stopAnim();
+                duration = int(animProps.duration.text);
+                startDelay = int(animProps.startDelay.text);
+                repeatDelay = int(animProps.repeatDelay.text);
+                repeatCount = int(animProps.repeatCount.text);
+                repeatBehavior = (animProps.repeatBehavior.selectedItem == "LOOP") ?
+                    RepeatBehavior.LOOP : RepeatBehavior.REVERSE;
+                switch (animProps.currentState)
+                {
+                    case 'linear':
+                        easer = new Linear(Number(animProps.acceleration.text), 
+                            Number(animProps.deceleration.text));
+                        break;
+                    case 'power':
+                        easer = new Power(Number(animProps.easeIn.text), int(animProps.power.text));
+                        break;
+                    case 'sine':
+                        easer = new Sine(Number(animProps.easeIn.text));
+                        break;
+                    default:
+                        break;
+                }
+                runMove();
+                runResize();
+                runFade();
+            }
+            public function stopAnim():void
+            {
+                if (moveAnim)
+                {
+                    moveAnim.stop();
+                    haloMover.x = HALO_X;
+                    gumboMover.x = GUMBO_X;
+                    rectMover.x = RECT_X;
+                }
+                if (resizeAnim)
+                {
+                    resizeAnim.stop();
+                    haloResizer.width = WIDTH;
+                    gumboResizer.width = WIDTH;
+                    rectResizer.width = WIDTH;
+                }
+                if (fadeAnim)
+                {
+                    fadeAnim.stop();
+                    haloFader.alpha = 1;
+                    gumboFader.alpha = 1;
+                    rectFader.alpha = 1;
+                }
+            }
+            public function runMove():void
+            {
+                moveAnim = new Move();
+                moveAnim.xBy = 50;
+                moveAnim.duration = duration;
+                moveAnim.startDelay = startDelay;
+                moveAnim.repeatDelay = repeatDelay;
+                moveAnim.repeatCount = repeatCount;
+                moveAnim.repeatBehavior = repeatBehavior;
+                moveAnim.easer = easer;
+                moveAnim.play([haloMover,gumboMover,rectMover]);
+            }
+            public function runResize():void
+            {
+                resizeAnim = new Resize();
+                resizeAnim.widthBy = 20;
+                resizeAnim.duration = duration;
+                resizeAnim.startDelay = startDelay;
+                resizeAnim.repeatDelay = repeatDelay;
+                resizeAnim.repeatCount = repeatCount;
+                resizeAnim.repeatBehavior = repeatBehavior;
+                resizeAnim.easer = easer;
+                resizeAnim.play([haloResizer,gumboResizer,rectResizer]);
+            }
+            public function runFade():void
+            {
+                fadeAnim = new Fade();
+                fadeAnim.alphaFrom = 1;
+                fadeAnim.alphaTo = 0;
+                fadeAnim.duration = duration;
+                fadeAnim.startDelay = startDelay;
+                fadeAnim.repeatDelay = repeatDelay;
+                fadeAnim.repeatCount = repeatCount;
+                fadeAnim.repeatBehavior = repeatBehavior;
+                fadeAnim.easer = easer;
+                fadeAnim.play([haloFader,gumboFader,rectFader]);
+            }
+            
+        ]]>
+        
+    </fx:Script>
+    <mx:Button label="Animate" x="10" y="10" click="animate()"/>
+    <mx:Button label="Reset" x="100" y="10" click="stopAnim()"/>
+    <mx:Button id="haloMover" label="Halo Move" x="{HALO_X}" y="40" width="{WIDTH}"/>
+    <mx:Button id="haloResizer" label="Halo Resize" x="{HALO_X}" y="90" width="{WIDTH}"/>
+    <mx:Button id="haloFader" label="Halo Fade" x="{HALO_X}" y="140" width="{WIDTH}"/>
+    <s:Button id="gumboMover" label="Gumbo Move" x="{GUMBO_X}" y="40" width="{WIDTH}"/>
+    <s:Button id="gumboResizer" label="Gumbo Resize" x="{GUMBO_X}" y="90" width="{WIDTH}"/>
+    <s:Button id="gumboFader" label="Gumbo Fade" x="{GUMBO_X}" y="140" width="{WIDTH}"/>
+    <s:Group x="{GUMBO_X + WIDTH + 20}" y="40">
+        <s:Rect x="{RECT_X}" y="0" width="{WIDTH}" height="20" id="rectMover">
+            <s:stroke>            
+                <mx:SolidColorStroke color="0x808080" weight="1"/>
+            </s:stroke>
+        </s:Rect>
+        <s:Rect x="{RECT_X}" y="50" width="{WIDTH}" height="20" id="rectResizer">
+            <s:stroke>            
+                <mx:SolidColorStroke color="0x808080" weight="1"/>
+            </s:stroke>
+        </s:Rect>
+        <s:Rect x="{RECT_X}" y="100" width="{WIDTH}" height="20" id="rectFader">
+            <s:stroke>            
+                <mx:SolidColorStroke color="0x808080" weight="1"/>
+            </s:stroke>
+        </s:Rect>
+    </s:Group>
+    <components:AnimationPropertiesForm id="animProps" right="10" top="10"/>
+</mx:Application>

@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!-- Simple example to demonstrate the Spark ButtonBar -->
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+        xmlns:s="library://ns.adobe.com/flex/spark"
+        xmlns:mx="library://ns.adobe.com/flex/halo">
+
+    <fx:Style>
+        @namespace "library://ns.adobe.com/flex/spark";
+
+        ButtonBar ToggleButton:upAndSelected,
+        ButtonBar ToggleButton:overAndSelected,
+        ButtonBar ToggleButton:downAndSelected,
+        ButtonBar ToggleButton:disabledAndSelected {
+            baseColor: #663366;
+            color: #9999CC;
+        }
+
+        ButtonBar {
+            baseColor: #9999CC;
+            color: #663366;
+        }
+    </fx:Style>
+
+    <fx:Script>
+    <![CDATA[
+         import spark.events.IndexChangeEvent; 
+
+         private function changeSelection(event:IndexChangeEvent): void {
+             selectionText.text = "Selected Item: " + ButtonBar(event.target).selectedItem;
+         }
+    ]]>
+    </fx:Script>
+
+    <s:Panel title="Spark ButtonBar Example"
+            width="75%" height="75%"
+            horizontalCenter="0" verticalCenter="0">
+        <s:Label text="Select an item below:" x="10" y="15" />
+        <s:ButtonBar id="viewMenu" requireSelection="true" x="10" y="40" width="320"
+                change="changeSelection(event)">
+            <s:dataProvider>
+                <s:ArrayCollection source="['Home', 'Rooms', 'Dining']" />
+            </s:dataProvider>
+        </s:ButtonBar>
+        <s:Label x="10" y="75" id="selectionText" />
+    </s:Panel>
+
+</s:Application>

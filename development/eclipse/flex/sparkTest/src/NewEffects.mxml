@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application layout="absolute"
+    xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:mx="library://ns.adobe.com/flex/halo">
+
+    <mx:states>
+        <s:State name="base"/>
+        <s:State name="hidden"/>
+        <s:State name="removed"/>
+        <s:State name="resized"/>
+        <s:State name="moved"/>
+        <s:State name="rotated"/>
+        <s:State name="renamed"/>
+        <s:State name="recolored"/>
+    </mx:states>
+    <mx:transitions>
+        <mx:Transition toState="hidden">
+            <s:Fade targets="{[transitionTarget,rect]}"/>
+        </mx:Transition>
+        <mx:Transition toState="removed">
+            <s:Fade targets="{[transitionTarget,rect]}"/>
+        </mx:Transition>
+        <mx:Transition toState="resized">
+            <s:Resize targets="{[transitionTarget,rect]}" duration="2000"/>
+        </mx:Transition>
+        <mx:Transition toState="moved">
+            <s:Move targets="{[transitionTarget,rect]}" duration="2000"/>
+        </mx:Transition>
+        <mx:Transition toState="rotated">
+            <s:Rotate targets="{[transitionTarget,rect]}" duration="2000"/>
+        </mx:Transition>
+        <mx:Transition toState="renamed">
+            <mx:Sequence targets="{[transitionTarget,haloButton]}" >
+                <s:Fade alphaTo="0" duration="500"/>            
+                <s:SetAction property="label"/>
+                <s:Fade alphaTo="1" duration="500"/>            
+            </mx:Sequence>
+        </mx:Transition>
+        <mx:Transition toState="recolored">
+            <s:SetAction targets="{[strokeColor,fillColor,haloButton]}" property="color"/>
+        </mx:Transition>
+        <mx:Transition fromState="hidden">
+            <s:Fade targets="{[transitionTarget,rect]}"/>
+        </mx:Transition>
+        <mx:Transition fromState="removed">
+            <s:Fade targets="{[transitionTarget,rect]}"/>
+        </mx:Transition>
+        <mx:Transition fromState="resized">
+            <s:Resize targets="{[transitionTarget, rect]}" duration="2000"/>
+        </mx:Transition>
+        <mx:Transition fromState="moved">
+            <s:Move targets="{[transitionTarget,rect]}" duration="2000"/>
+        </mx:Transition>
+        <mx:Transition fromState="rotated">
+            <s:Rotate targets="{[transitionTarget,rect]}" duration="2000"/>
+        </mx:Transition>
+        <mx:Transition fromState="renamed">
+            <mx:Sequence targets="{[transitionTarget,haloButton]}" >
+                <s:Fade alphaTo="0" duration="500"/>            
+                <s:SetAction property="label"/>
+                <s:Fade alphaTo="1" duration="500"/>            
+            </mx:Sequence>
+        </mx:Transition>
+        <mx:Transition fromState="recolored">
+            <s:SetAction targets="{[strokeColor,fillColor,haloButton]}" property="color"/>
+        </mx:Transition>
+    </mx:transitions>
+        
+    <s:Button x="50" y="80" x.moved="150" y.moved="100" 
+    	width="150" width.resized="250" rotation.rotated="45" 
+        height.resized="41" label="gumbo button" 
+        label.renamed="renamed gumbo" id="transitionTarget"
+        excludeFrom="removed"
+        visible.hidden="false"/>
+    <s:Group x="50" y="120" id="group">
+        <s:Rect width="150" width.resized="250" height="50" height.resized="80"
+        	x.moved="100" y.moved="20" rotation.rotated="45"
+            id="rect"
+            visible.hidden="false"
+            excludeFrom="removed">
+            <s:stroke>            
+                <s:SolidColorStroke id="strokeColor" color="0x808080" color.recolored="0x00ff00"/>
+            </s:stroke>
+            <s:fill>            
+                <s:SolidColor id="fillColor" color="0x0000ff" color.recolored="0xff0000"/>
+            </s:fill>
+        </s:Rect>
+    </s:Group>
+    <mx:Button x="50" y="180" x.moved="150" y.moved="200" 
+        width="150" width.resized="250" rotation.rotated="45" 
+        height.resized="41" label="halo button" 
+        label.renamed="renamed halo" id="haloButton"
+        excludeFrom="removed" color="0" color.recolored="0xff0000"
+        visible.hidden="false"/>
+    <mx:HBox x="10" y="10">        
+    <mx:Label text="State:"/>
+    <mx:ComboBox id="f4state" closeDuration="0"
+        change="currentState=String(f4state.selectedItem)">
+        <mx:ArrayCollection>
+            <fx:String>base</fx:String>
+            <fx:String>hidden</fx:String>
+            <fx:String>removed</fx:String>
+            <fx:String>resized</fx:String>
+            <fx:String>moved</fx:String>
+            <fx:String>rotated</fx:String>
+            <fx:String>renamed</fx:String>
+            <fx:String>recolored</fx:String>
+        </mx:ArrayCollection>
+    </mx:ComboBox>
+    </mx:HBox>
+
+</mx:Application>

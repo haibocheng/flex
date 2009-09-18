@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Simple example to demonstrate SwitchSymbolFormatter. -->
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+        xmlns:s="library://ns.adobe.com/flex/spark"
+        xmlns:mx="library://ns.adobe.com/flex/halo">
+
+    <fx:Script>
+        <![CDATA[
+            import mx.formatters.SwitchSymbolFormatter;
+            import mx.events.ValidationResultEvent;
+
+            private var vResult:ValidationResultEvent;
+
+            // Event handler to validate and format input.
+            private function Format():void {
+                vResult = scVal.validate();
+
+                if (vResult.type == ValidationResultEvent.VALID) {
+                    var switcher:SwitchSymbolFormatter = new SwitchSymbolFormatter('#');
+                    formattedSCNumber.text = switcher.formatValue("Formatted Social Securty number: ###-##-#### ", scNum.text);
+                } else {
+                    formattedSCNumber.text= "";
+                }
+            }
+        ]]>
+    </fx:Script>
+
+    <fx:Declarations>
+        <mx:SocialSecurityValidator id="scVal" source="{scNum}" property="text"/>
+    </fx:Declarations>
+
+    <s:Panel title="SwitchSymbolFormatter Example"
+            width="75%" height="75%"
+            horizontalCenter="0" verticalCenter="0">
+        <s:VGroup left="10" right="10" top="10" bottom="10">
+            <s:Label text="Enter a 9 digit Social Security number with no separator characters:" />
+            <s:TextInput id="scNum" text="" maxChars="9" width="50%" />
+
+            <s:Button label="Validate and Format" click="Format();" />
+            <s:TextInput id="formattedSCNumber" editable="false" width="75%" />
+        </s:VGroup>
+    </s:Panel>
+
+</s:Application>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UnitTester xmlns:mx="http://www.adobe.com/2006/mxml" xmlns="*" testSWF="main.mxml">
+
+	<!-- this set of lines form a template that must be in each unit test -->
+	<mx:Script>
+	<![CDATA[
+	public static function init(o:DisplayObject):void
+	{
+	}
+	]]>
+	</mx:Script>
+	<mx:Metadata>
+	<![CDATA[
+		[Mixin]
+	]]>
+	</mx:Metadata>
+	<!-- end of set of lines that must be in each unit test -->
+
+	<mx:Script>
+	<![CDATA[
+        [Bindable]
+        public var props1:Object = { bytesLoaded: 50, bytesTotal: 100 };
+        [Bindable]
+        public var props2:Object = { bytesLoaded: 90, bytesTotal: 100 };
+        [Bindable]
+        public var props3:Object = { bytesLoaded: 100, bytesTotal: 100 };
+	]]>
+	</mx:Script>
+
+	<testCases>
+<!--
+-->
+		<TestCase testID="SetupProgressBarTest">
+			<body>
+				<SetProperty target="" propertyName="currentState" value="haloProgressBarTest" 
+                    waitEvent="updateComplete" />
+				<AssertPropertyValue target="haloProgressBarTests.testProgressBar" propertyName="label" value="Test ProgressBar" />
+			</body>
+		</TestCase>
+		<TestCase testID="ProgressBarTest1">
+			<body>
+				<DispatchEvent target="haloProgressBarTests" type="progress" eventClass="flash.events.ProgressEvent" properties="{props1}" />
+				<AssertPropertyValue target="haloProgressBarTests.testProgressBar" propertyName="value" value="50" />
+			</body>
+		</TestCase>
+		<TestCase testID="ProgressBarTest2">
+			<body>
+				<DispatchEvent target="haloProgressBarTests" type="progress" eventClass="flash.events.ProgressEvent" properties="{props2}" />
+				<AssertPropertyValue target="haloProgressBarTests.testProgressBar" propertyName="value" value="90" />
+			</body>
+		</TestCase>
+		<TestCase testID="ProgressBarTest3">
+			<body>
+				<DispatchEvent target="haloProgressBarTests" type="progress" eventClass="flash.events.ProgressEvent" properties="{props3}" />
+				<DispatchEvent target="haloProgressBarTests" type="complete" eventClass="flash.events.Event" />
+				<AssertPropertyValue target="haloProgressBarTests.testProgressBar" propertyName="value" value="100" />
+			</body>
+		</TestCase>
+	</testCases>
+</UnitTester>

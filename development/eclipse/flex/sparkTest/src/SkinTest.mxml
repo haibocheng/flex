@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:mx="library://ns.adobe.com/flex/halo" height="600" width="550" backgroundColor="0xE6E6E6">
+	<fx:Script>
+		<![CDATA[
+        import mx.styles.StyleManager;
+        
+        private var themes:Array = [
+            {appBG:0xE6E6E6, baseColor:0xCCCCCC, symbolColor:0x000000, contentBackgroundColor:0xFFFFFF, textColor:0x000000, rollOverColor:0xCEDBEF, selectionColor:0xA8C6EE, focusColor:0x70B2EE},
+            {appBG:0x333333, baseColor:0x4C4C4C, symbolColor:0xFFFFFF, contentBackgroundColor:0x555555, textColor:0xEEEEEE, rollOverColor:0x666666, selectionColor:0x999999, focusColor:0xEEEEEE},
+            {appBG:0xcccc99, baseColor:0x999966, symbolColor:0x663300, contentBackgroundColor:0xffffcc, textColor:0x333300, rollOverColor:0xffee88, selectionColor:0xffcc66, focusColor:0xcc9900}
+        ];
+        
+        private function applyTheme(theme:Object):void
+        {
+            setApplicationBackground(theme.appBG);
+            setBaseColor(theme.baseColor);
+            setSymbolColor(theme.symbolColor);
+            setContentColor(theme.contentBackgroundColor);
+            setTextColor(theme.textColor);
+            setRollOverColor(theme.rollOverColor);
+            setSelectionColor(theme.selectionColor);
+            setFocusColor(theme.focusColor);
+        }
+        
+        private function getGlobalStyles():CSSStyleDeclaration
+        {
+            return StyleManager.getStyleDeclaration("global");
+        }
+
+        private function setApplicationBackground(value:uint):void
+        {
+            backgroundColor = value;
+        }
+        
+        private function setBaseColor(value:uint):void
+        {
+            getGlobalStyles().setStyle('baseColor', value);
+        }
+        
+        private function setSymbolColor(value:uint):void
+        {
+            getGlobalStyles().setStyle('symbolColor', value);
+        }
+        
+        private function setContentColor(value:uint):void
+        {
+            getGlobalStyles().setStyle('contentBackgroundColor', value);
+        }
+        
+        private function setTextColor(value:uint):void
+        {
+            getGlobalStyles().setStyle('color', value);
+        }
+        
+        private function setRollOverColor(value:uint):void
+        {
+            getGlobalStyles().setStyle('rollOverColor', value);
+        }
+        
+        private function setSelectionColor(value:uint):void
+        {
+            getGlobalStyles().setStyle('selectionColor', value);
+        }
+        
+        private function setFocusColor(value:uint):void
+        {
+            getGlobalStyles().setStyle('focusColor', value);
+        }
+	]]>
+	</fx:Script>
+
+
+	<s:VGroup gap="20" scaleX="{1/appScaleX.value}" scaleY="{1/appScaleY.value}">
+		<s:HGroup height="0" />
+    	<s:HGroup verticalAlign="middle">
+    		<s:Label text="Color Theme:" width="120" textAlign="right" paddingTop="1" />
+            <s:Button label="Default" click="applyTheme(themes[0])" />
+            <s:Button label="Dark" click="applyTheme(themes[1])" />
+            <s:Button label="Jungle" click="applyTheme(themes[2])" />
+     	</s:HGroup>
+     	<s:HGroup>
+     		<s:Label text="Scaling:" width="120" textAlign="right" paddingTop="1" />
+		    <s:VGroup>
+		        <s:HGroup>
+		            <s:HSlider id="appScaleX" width="100" liveDragging="true"
+		                minimum="0.5" maximum="4" value="1" valueCommit="{this.scaleX=appScaleX.value}" snapInterval="0" stepSize="0.25"/>
+		            <s:Label text="{'scaleX='+appScaleX.value}" width="67" lineBreak="explicit"/>
+		        </s:HGroup>
+		        <s:HGroup>
+		            <s:HSlider id="appScaleY" width="100" liveDragging="true"
+		                minimum="0.5" maximum="4" value="1" valueCommit="{this.scaleY=appScaleY.value}" snapInterval="0" stepSize="0.25"/>
+		            <s:Label text="{'scaleY='+appScaleY.value}" width="67" lineBreak="explicit"/>
+		        </s:HGroup>
+		    </s:VGroup>
+		    <s:Button label="Reset" click="appScaleX.value = appScaleY.value = 1" />
+     	</s:HGroup>
+        <s:HGroup verticalAlign="middle">  
+        	<s:Label text="Other:" width="120" textAlign="right" paddingTop="2" />      
+            <s:CheckBox label="Disabled" id="cb" />
+            <s:Button label="Random App BG Color" click="setApplicationBackground(Math.random() * 0xFFFFFF)" />
+        </s:HGroup>
+	</s:VGroup>
+    <s:VGroup x="20" y="{150/appScaleY.value}" gap="20">
+        <s:Rect width="500" height="1">
+            <s:fill>
+                <s:SolidColor color="0x666666" />
+            </s:fill>
+        </s:Rect>
+        <s:HGroup gap="12" maintainProjectionCenter="true">
+            <s:VGroup width="200">
+                <s:Button label="Button" enabled="{!cb.selected}" />
+                <s:ToggleButton label="Toggle Button" enabled="{!cb.selected}" />
+                <s:CheckBox label="Check Box" enabled="{!cb.selected}" />
+                <s:RadioButton label="RadioButton" enabled="{!cb.selected}" />
+                <s:HSlider enabled="{!cb.selected}" />
+                <s:HScrollBar enabled="{!cb.selected}" />
+                <s:NumericStepper enabled="{!cb.selected}" />
+                <s:Spinner enabled="{!cb.selected}" />
+                <s:TextInput text="Text Input" enabled="{!cb.selected}" />
+                <s:TextArea text="Text Area" id="ta" enabled="{!cb.selected}" />
+            </s:VGroup>
+            <s:VGroup gap="20">
+            	<s:HGroup>
+		            <s:VSlider enabled="{!cb.selected}" />
+		            <s:VScrollBar enabled="{!cb.selected}" />
+		            <s:List enabled="{!cb.selected}" >
+		                <mx:ArrayCollection>
+		                    <fx:String>1. Alabama</fx:String>
+		                    <fx:String>2. Alaska</fx:String>
+		                    <fx:String>3. Arizona</fx:String>
+		                    <fx:String>4. Arkansas</fx:String>
+		                    <fx:String>5. California</fx:String>
+		                </mx:ArrayCollection>
+		            </s:List>	
+            	</s:HGroup>
+	            <!--ButtonBar click="event.currentTarget.dataProvider.removeItemAt(0); event.currentTarget.dataProvider.addItemAt('Now I have a long label', 0)" -->
+	            <s:ButtonBar enabled="{!cb.selected}">
+	            	<mx:ArrayCollection>
+	            		<fx:String>One</fx:String>
+	            		<fx:String>Two</fx:String>
+	            		<fx:String>Three</fx:String>
+	            		<fx:String>Four</fx:String>
+	            	</mx:ArrayCollection>
+	            </s:ButtonBar>
+	            <s:Panel title="Panel" enabled="{!cb.selected}" width="150" height="90">
+	                <s:Button label="Button in Panel" horizontalCenter="0" verticalCenter="0" />
+	            </s:Panel>
+            </s:VGroup>
+        </s:HGroup>
+    </s:VGroup>
+</s:Application>

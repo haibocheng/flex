@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UnitTester xmlns:mx="http://www.adobe.com/2006/mxml" xmlns="*" testSWF="main.mxml">
+
+	<!-- this set of lines form a template that must be in each unit test -->
+	<mx:Script>
+	<![CDATA[
+	public static function init(o:DisplayObject):void
+	{
+	}
+	]]>
+	</mx:Script>
+	<mx:Metadata>
+	<![CDATA[
+		[Mixin]
+	]]>
+	</mx:Metadata>
+	<!-- end of set of lines that must be in each unit test -->
+
+	<mx:Script>
+	<![CDATA[
+	]]>
+	</mx:Script>
+
+	<testCases>
+<!--
+-->
+		<TestCase testID="SetupCheckBoxTest">
+			<body>
+				<SetProperty target="" propertyName="currentState" value="haloCheckBoxTest" 
+                    waitEvent="updateComplete" />
+				<AssertPropertyValue target="haloCheckBoxTests.testCheckBox" propertyName="label" value="test CheckBox" />
+			</body>
+		</TestCase>
+		<TestCase testID="CheckBoxTest1">
+			<body>
+				<DispatchMouseEvent target="haloCheckBoxTests.testCheckBox" type="mouseOver" localX="10" localY="10" />
+				<DispatchMouseClickEvent target="haloCheckBoxTests.testCheckBox" localX="10" localY="10" />
+				<AssertPropertyValue target="haloCheckBoxTests.testCheckBox" propertyName="selected" value="true" />
+			</body>
+		</TestCase>
+	</testCases>
+</UnitTester>

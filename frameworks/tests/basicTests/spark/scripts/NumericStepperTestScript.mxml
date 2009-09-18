@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UnitTester xmlns:mx="http://www.adobe.com/2006/mxml" xmlns="*" testSWF="main.mxml">
+
+	<!-- this set of lines form a template that must be in each unit test -->
+	<mx:Script>
+	<![CDATA[
+	public static function init(o:DisplayObject):void
+	{
+	}
+	]]>
+	</mx:Script>
+	<mx:Metadata>
+	<![CDATA[
+		[Mixin]
+	]]>
+	</mx:Metadata>
+	<!-- end of set of lines that must be in each unit test -->
+
+	<mx:Script>
+	<![CDATA[
+	]]>
+	</mx:Script>
+
+	<testCases>
+<!--
+-->
+		<TestCase testID="SetupSparkNumericStepperTest">
+			<body>
+				<SetProperty target="" propertyName="currentState" value="sparkNumericStepperTest" 
+                    waitEvent="updateComplete" />
+				<AssertPropertyValue target="sparkNumericStepperTests.testNumStep" propertyName="value" value="0" />
+			</body>
+		</TestCase>
+		<TestCase testID="SparkNumericStepperTest1">
+			<body>
+				<DispatchMouseEvent target="sparkNumericStepperTests.testNumStep.incrementButton" type="rollOver" waitEvent="rollOver" localX="2" localY="2" />
+				<DispatchMouseEvent target="sparkNumericStepperTests.testNumStep.incrementButton" type="mouseDown" waitEvent="mouseDown" localX="2" localY="2" />
+				<AssertEvent target="sparkNumericStepperTests.testNumStep" eventName="change" eventClass="flash.events::Event" />
+				<AssertPropertyValue target="sparkNumericStepperTests.testNumStep" propertyName="value" value="1" />
+			</body>
+			<cleanup>
+				<DispatchMouseEvent target="sparkNumericStepperTests.testNumStep.incrementButton" type="mouseUp" waitEvent="mouseUp" localX="2" localY="2" />
+				<DispatchMouseEvent target="sparkNumericStepperTests.testNumStep.incrementButton" type="rollOut" localX="2" localY="2" />
+			</cleanup>
+		</TestCase>
+		<TestCase testID="SparkNumericStepperTest2">
+			<body>
+				<DispatchMouseEvent target="sparkNumericStepperTests.testNumStep.incrementButton" type="rollOver" waitEvent="rollOver" localX="2" localY="2" />
+				<DispatchMouseEvent target="sparkNumericStepperTests.testNumStep.incrementButton" type="mouseDown" waitEvent="mouseDown" localX="2" localY="2" />
+				<AssertEvent target="sparkNumericStepperTests.testNumStep" eventName="change" eventClass="flash.events::Event" />
+				<AssertPropertyValue target="sparkNumericStepperTests.testNumStep" propertyName="value" value="2" />
+			</body>
+			<cleanup>
+				<DispatchMouseEvent target="sparkNumericStepperTests.testNumStep.incrementButton" type="mouseUp" waitEvent="mouseUp" localX="2" localY="2" />
+				<DispatchMouseEvent target="sparkNumericStepperTests.testNumStep.incrementButton" type="rollOut" localX="2" localY="2" />
+			</cleanup>
+		</TestCase>
+		<TestCase testID="SparkNumericStepperTest3">
+			<body>
+				<DispatchMouseEvent target="sparkNumericStepperTests.testNumStep.decrementButton" type="rollOver" waitEvent="rollOver" localX="2" localY="2" />
+				<DispatchMouseEvent target="sparkNumericStepperTests.testNumStep.decrementButton" type="mouseDown" waitEvent="mouseDown" localX="2" localY="2" />
+				<AssertEvent target="sparkNumericStepperTests.testNumStep" eventName="change" eventClass="flash.events::Event" />
+				<AssertPropertyValue target="sparkNumericStepperTests.testNumStep" propertyName="value" value="1" />
+			</body>
+			<cleanup>
+				<DispatchMouseEvent target="sparkNumericStepperTests.testNumStep.decrementButton" type="mouseUp" waitEvent="mouseUp" localX="2" localY="2" />
+				<DispatchMouseEvent target="sparkNumericStepperTests.testNumStep.decrementButton" type="rollOut" localX="2" localY="2" />
+			</cleanup>
+		</TestCase>
+	</testCases>
+</UnitTester>

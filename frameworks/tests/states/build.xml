@@ -1,0 +1,100 @@
+<?xml version="1.0"?> 
+
+<!--
+
+	ADOBE SYSTEMS INCORPORATED
+	Copyright 2008 Adobe Systems Incorporated
+	All Rights Reserved.
+
+	NOTICE: Adobe permits you to use, modify, and distribute this file
+	in accordance with the terms of the license agreement accompanying it.
+
+-->
+
+<project name="states" default="main" basedir=".">
+
+	<property name="FLEX_HOME" location="${basedir}"/>
+	<property file="${FLEX_HOME}/build.properties"/>
+
+    <condition property="flash.player" value="${FLEX_HOME}/in/player/win/FlashPlayer.exe">
+        <os family="windows"/>
+    </condition>
+
+    <condition property="flash.player" value="${FLEX_HOME}/in/player/mac/Flash Player.app/Contents/MacOS/Flash Player">
+        <os family="mac"/>
+    </condition>
+
+    <target name="main" depends="clean, test"/>
+    
+	<target name="test" depends="mustella-setup, test-mustella-nodes, test-mustella-attrs"/>
+
+    <target name="clean">
+       <delete>
+           <fileset dir="${basedir}" includes="*.swf*,*config*,*link*,statefulNodes,statefulAttributes"/>
+       </delete>
+    </target>
+
+    <target name="statefulNodes">
+        <taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/lib/flexTasks.jar"/>
+        <mxmlc file="${basedir}/statefulNodes.mxml" keep="true" />
+    </target>
+
+    <target name="statefulAttributes">
+        <taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/lib/flexTasks.jar"/>
+        <mxmlc file="${basedir}/statefulAttributes.mxml" keep="true" />
+    </target>
+
+    <target name="mustella-setup" description="compile mustella java file">
+		<property name="moreCompilerArgs" value=""/>
+		<!-- compile the results parser -->
+		<javac srcdir="${FLEX_HOME}/mustella"/>
+    </target>
+
+	<target name="test-mustella-attrs" >
+        <!-- load the <mxmlc> task; we can't do this at the <project> level -->
+        <!-- because targets that run before flexTasks.jar gets built would fail -->
+        <taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/lib/flexTasks.jar"/>
+        <mxmlc fork="true" file="${basedir}/statefulAttributes.mxml">
+			<includes symbol="statefulAttributes_tester"/>
+			<includes symbol="ExitWhenDone"/>
+                        <includes symbol="SendFormattedResultsToLog"/>
+			<library-path dir="${FLEX_HOME}" append="true">
+				<include name="mustella/mustella.swc"/>
+			</library-path>
+        </mxmlc>
+        <exec executable="${flash.player}" dir="${FLEX_HOME}/frameworks">
+			<arg line="${basedir}/statefulAttributes.swf"/>
+        </exec>
+        <!-- halt if there was an error -->
+        <antcall target="mustellaresultsparser"/>
+	</target>
+
+	<target name="test-mustella-nodes" >
+        <!-- load the <mxmlc> task; we can't do this at the <project> level -->
+        <!-- because targets that run before flexTasks.jar gets built would fail -->
+        <taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/lib/flexTasks.jar"/>
+        <mxmlc fork="true" file="${basedir}/statefulNodes.mxml">
+			<includes symbol="statefulNodes_tester"/>
+			<includes symbol="ExitWhenDone"/>
+                        <includes symbol="SendFormattedResultsToLog"/>
+			<library-path dir="${FLEX_HOME}" append="true">
+				<include name="mustella/mustella.swc"/>
+			</library-path>
+        </mxmlc>
+        <exec executable="${flash.player}" dir="${FLEX_HOME}/frameworks">
+			<arg line="${basedir}/statefulNodes.swf"/>
+        </exec>
+        <!-- halt if there was an error -->
+        <antcall target="mustellaresultsparser"/>
+	</target>
+
+	<target name="mustellaresultsparser">
+		<java classname="mustella.MustellaResultsParser" failonerror="true">
+			<sysproperty key="APPDATA" value="${env.APPDATA}"/>
+			<classpath>
+				<pathelement location="${FLEX_HOME}"/>
+			</classpath>
+		</java>
+	</target>
+
+</project>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox 
+    xmlns:fx="http://ns.adobe.com/mxml/2009"
+    xmlns:s="library://ns.adobe.com/flex/spark"
+    xmlns:mx="library://ns.adobe.com/flex/halo"     
+    initialize="initTreeComponent()"
+    >
+
+<fx:Script>
+<![CDATA[
+
+    import mx.collections.*;
+    import mx.controls.*;
+    import mx.events.*;
+    import mx.managers.*;
+
+    public var treeDP:Array = [ { label: "Inbox", children: [
+                                                    { label: "Personal", data: "personal"},
+                                                    { label: "Marketing", data: "mktg"},
+                                                    { label: "To do", data: "todo"} ]},
+                                                    { label: "Calendar", children: [
+                                                                 { label: "Appointments", data: "appointments"},
+                                                                 { label: "Meetings", data: "meetings"} ]}, 
+                                                    { label: "Sent", data: "sent" },
+                                                    { label: "Deleted Items", data: "deleted" },
+                                                    { label: "Spam", data: "spam" } ];
+
+
+    public function initTreeComponent():void
+    {
+            testTree.dataProvider = treeDP;
+    }
+
+    public function insertItemInTree():void
+    {
+            var c:ICollectionView = ICollectionView(testTree.dataProvider);
+            var cursor:IViewCursor = c.createCursor();
+            cursor.seek(CursorBookmark.FIRST, 1);
+            cursor.insert({label:'Archive', data:'archive'});
+    }
+
+]]>
+</fx:Script>
+
+    <mx:Tree id="testTree" />
+    <mx:Button id="addNodeButton" label="addTreeNodeAt" click="insertItemInTree()" />
+
+</mx:VBox>

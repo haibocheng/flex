@@ -1,0 +1,676 @@
+#!/bin/sh
+#
+# bash "C:/opensource/flex/sdk/trunk/tools/diffpack/diffpack"
+
+
+CR='\015'
+
+
+###############################################################################
+# Path to the AIR component
+###############################################################################
+
+case `uname` in
+                CYGWIN*)
+                        OS="Windows"
+                ;;
+                *)
+                        OS=MacOS
+esac
+
+if [ $OS = "Windows" ]
+then
+	
+	AIRApp="C:/program files/diffpack/diffpack.exe"
+	SettingsFolder="C:/Documents and Settings/$USER/My Documents/diffpack_settings"
+
+elif [ $OS = "MacOS" ]
+then
+
+	AIRApp="/Applications/diffpack.app/Contents/MacOS/diffpack"
+	SettingsFolder="/Users/$USER/Documents/diffpack_settings"
+	TEMP="/tmp"
+
+fi
+
+###############################################################################
+# Globals
+###############################################################################
+
+TargetFolder=""
+TargetFolder2=""
+FolderParam=""
+UnzipFolderName=""
+UnzipFolderName2=""
+CurPath=`pwd`
+Command=0
+TempFolder=""
+TempFolderPkg=""
+RepositoryRootURL=""
+SVNRepositoryRootToCurPath=""
+SVNRootFolderOnThisMachine=""
+
+
+###############################################################################
+# Cleanup temp files and exit
+###############################################################################
+
+cleanupAndExitFunction()
+{
+	echo Cleaning temp folder $TempFolder.
+	if [[ $TempFolder != "" && -e $TempFolder ]]
+	then
+		rm -r -f $TempFolder
+	fi
+	exit
+}
+
+
+###############################################################################
+# Cleanup temp files and exit
+###############################################################################
+
+cleanupTempPkgFolder()
+{
+	#echo Cleaning temp folder $TempFolderPkg.
+	if [[ $TempFolderPkg != "" && -e $TempFolderPkg ]]
+	then
+		rm -r -f $TempFolderPkg/*
+	fi
+}
+
+
+###############################################################################
+# Generate a temp folder
+###############################################################################
+
+Counter=1
+for((Counter=1; Counter<=500; Counter++))
+do
+	if [[ ! -e $TEMP/diffpack/$Counter ]]
+	then
+		TempFolder=$TEMP/diffpack/$Counter
+		mkdir -p $TempFolder		
+		break;
+	fi
+done
+
+if [[ $TempFolder == "" || ! -e $TempFolder ]]
+then
+	echo Can\'t create a temp folder $TEMP/diffpack/$Counter, aborting
+	cleanupAndExitFunction
+fi
+
+TempFolderPkg=$TempFolder/pkg
+mkdir -p $TempFolderPkg
+
+if [[ $TempFolderPkg == "" || ! -e $TempFolderPkg ]]
+then
+	echo Can\'t create a temp folder $TempFolderPkg, aborting
+	cleanupAndExitFunction
+fi
+
+echo TEMPFOLDER $TempFolder
+
+
+###############################################################################
+# Settings (diff app)
+###############################################################################
+
+ReadSettingsFunction()
+{
+	if [[ ! -e "$SettingsFolder"/settings.txt ]]
+	then
+		echo "No settings found in $SettingsFolder/settings.txt, aborting"
+		exit
+	fi
+	
+	DiffApp=`cat "$SettingsFolder/settings.txt" | grep DIFF_PATH= | tr -d $CR`
+	DiffApp=${DiffApp#DIFF_PATH=}
+	
+	DiffArgs=`cat "$SettingsFolder/settings.txt" | grep DIFF_ARGS= | tr -d $CR`
+	DiffArgs=${DiffArgs#DIFF_ARGS=}
+	
+	CreatePatchCmd=`cat "$SettingsFolder/settings.txt" | grep CREATE_PATCH_CMD= | tr -d $CR`
+	CreatePatchCmd=${CreatePatchCmd#CREATE_PATCH_CMD=}
+
+	CreatePatchCmdArgs=`cat "$SettingsFolder/settings.txt" | grep CREATE_PATCH_ARGS= | tr -d $CR`
+	CreatePatchCmdArgs=${CreatePatchCmdArgs#CREATE_PATCH_ARGS=}
+
+
+	if [[ $CreatePatchCmd == "" ]]
+	then
+		echo "CREATE_PATCH_CMD is missing from the settings file, please run setup again"
+		CreatePatchCmd="svn"
+		CreatePatchCmdArgs="diff --diff-cmd=diff"
+		echo "Using $CreatePatchCmd $CreatePatchCmdArgs [filename]"
+		
+		echo " ">> "$SettingsFolder/settings.txt"
+		echo CREATE_PATCH_CMD=$CreatePatchCmd >> "$SettingsFolder/settings.txt" 
+		echo CREATE_PATCH_ARGS=$CreatePatchCmdArgs >> "$SettingsFolder/settings.txt"
+	fi
+}
+
+
+testSettingsFunction()
+{
+	cleanupTempPkgFolder
+
+	mkdir -p $TempFolderPkg/base/Folder1
+	mkdir -p $TempFolderPkg/base/Folder2
+	mkdir -p $TempFolderPkg/base/Folder1/Folder3
+
+	mkdir -p $TempFolderPkg/changes/Folder1
+	mkdir -p $TempFolderPkg/changes/Folder2
+	mkdir -p $TempFolderPkg/changes/Folder1/Folder3
+
+	echo "Unmodified File" > $TempFolderPkg/base/Folder1/unmodified.txt
+	echo "Unmodified File" > $TempFolderPkg/changes/Folder1/unmodified.txt
+	
+	echo "Modified File" > $TempFolderPkg/base/Folder1/modified.txt
+	echo "This is a modified File" > $TempFolderPkg/changes/Folder1/modified.txt
+
+	echo "Added File" > $TempFolderPkg/changes/Folder2/added.txt
+	echo "Removed File" > $TempFolderPkg/base/Folder2/removed.txt
+
+	echo "File in a subfolder, unmodified" > $TempFolderPkg/base/Folder1/Folder3/sub-unmodified.txt
+	echo "File in a subfolder, unmodified" > $TempFolderPkg/changes/Folder1/Folder3/sub-unmodified.txt
+
+	echo "File in a subfolder, modified" > $TempFolderPkg/base/Folder1/Folder3/sub-modified.txt
+	echo "File in a subfolder, somewhat modified" > $TempFolderPkg/changes/Folder1/Folder3/sub-modified.txt
+
+	echo "File in a subfolder, added" > $TempFolderPkg/changes/Folder1/Folder3/sub-added.txt
+	echo "File in a subfolder, removed" > $TempFolderPkg/base/Folder1/Folder3/sub-removed.txt
+
+	echo "Trying the diff application $DiffApp with arguments $DiffArgs..."
+	cd $TempFolderPkg
+	"$DiffApp" $DiffArgs base changes
+	cd $CurPath
+	cleanupTempPkgFolder
+}
+
+
+if [[ ! -e "$SettingsFolder"/settings.txt ]]
+then
+	echo "Cant find settings file "$SettingsFolder"/settings.txt"
+	Command=setup
+else
+	ReadSettingsFunction
+	if [[ ! -e $DiffApp ]]
+	then
+		echo "1Cannot find diff app: $DiffApp"
+		Command=setup
+	fi
+fi
+
+	
+if [[ $Command == "setup" ]]
+then
+	while [[ $Command == "setup" || $Command == "testSettings" ]]
+	do
+		Command="setup"
+		echo $Command > $TempFolder/command.diffpack
+		echo "Running setup..."
+	
+		cd $TempFolder
+		"$AIRApp" -wait $TempFolder
+		cd "$CurPath"
+		
+		if [[ -e "$SettingsFolder"/settings.txt ]]
+		then
+			ReadSettingsFunction	
+		fi
+
+		if [[ -e $TempFolder/command.diffpack ]]
+	   	then
+			Command=`cat $TempFolder/command.diffpack | grep COMMAND= | tr -d $CR`
+			Command=${Command#COMMAND=}
+		else
+			echo Script done
+			cleanupAndExitFunction
+		fi
+		
+		if [[ $Command == "testSettings" ]]
+		then
+			testSettingsFunction
+		fi
+	done
+	
+	echo "Setup finished, re-run script to package/diff changes"
+	cleanupAndExitFunction 
+fi
+
+ReadSettingsFunction
+
+#Make sure settings are alright
+
+if [[ ! -e "$DiffApp" ]]
+then
+	echo "Cannot find diff app: $DiffApp"
+	cleanupAndExitFunction
+fi
+
+echo Diff app: $DiffApp
+echo diff args: $DiffArgs
+echo Create Patch command: "$CreatePatchCmd" $CreatePatchCmdArgs [filename] 
+
+
+###############################################################################
+# Find Repository Root URL, Relative path from Root to current folder
+# and the folder closest to the root that exists on the client
+###############################################################################
+
+findSVNRootFolderFunction()
+{
+	# Get the repository root so that when we package files we always create the
+	# folder structure relative to the root folder (so that it's easy to diff
+	# packages created by invoking the script from different repository subfolders)
+	RepositoryRootURL=`svn info | grep ^'Repository Root:'`
+	RepositoryRootURL=${RepositoryRootURL:17}
+	echo Repository Root is: $RepositoryRootURL
+	
+	CurURL=`svn info | grep ^URL:`
+	CurURL=${CurURL:5}
+	echo Current URL is: $CurURL
+	
+	RRootLength=${#RepositoryRootURL}
+	SVNRepositoryRootToCurPath=${CurURL:$RRootLength}
+	SVNRepositoryRootToCurPath=`echo $SVNRepositoryRootToCurPath | tr -d $CR`
+	
+	# Users may not have synced the Repository Root on their machine,
+	# so we go up from the current path to find which SVN Folder they
+	# have synced as a Root on their machine.
+	SVNRootFolderOnThisMachine=$CurPath
+	RelPath=$SVNRepositoryRootToCurPath
+	while [[ `basename "$RelPath"` == `basename "$SVNRootFolderOnThisMachine"` ]]
+	do
+		RelPath=`dirname "$RelPath"`
+		SVNRootFolderOnThisMachine=`dirname "$SVNRootFolderOnThisMachine"`
+	done
+
+	echo "SVN Repository Root URL is:               $RepositoryRootURL"
+	echo "SVN Repository Root URL to current path:  $SVNRepositoryRootToCurPath"
+	echo "SVN Root folder on this machine:          $SVNRootFolderOnThisMachine"
+}
+
+
+###############################################################################
+# Diff unzipped files
+###############################################################################
+
+viewDiffFunction()
+{
+	# view the diff:
+	echo lauhching diff program...
+	echo close the diff program to continue with the script
+	
+	cd $TempFolderPkg
+
+	if [[ $TargetFolder2 == "" ]]
+	then
+		TargetFolderName=`basename "${TargetFolder%.zip}"`
+		"$DiffApp" $DiffArgs "$TargetFolderName/base" "$TargetFolderName/changes"
+	else
+		TargetFolderName=`basename "${TargetFolder%.zip}"`
+		TargetFolderName2=`basename "${TargetFolder2%.zip}"`
+		"$DiffApp" $DiffArgs "$TargetFolderName/changes" "$TargetFolderName2/changes"
+	fi
+
+	cd $CurPath			
+}
+
+
+###############################################################################
+# Package files
+###############################################################################
+
+createPackageFunction()
+{
+	if [[ -e $TargetFolder ]]
+	then
+		echo $TargetFolder already exists, aborting
+		cleanupAndExitFunction
+	fi
+	
+	cleanupTempPkgFolder
+	TargetFolderName=`basename "$TargetFolder"`
+
+   	echo Processing files/folders:
+   	cat $TempFolder/fileList.diffpack | while read RelativePath
+   	do
+   		FileNameAndPath=$RelativePath
+		FilePath=`dirname "$FileNameAndPath"`
+		FileName=`basename "$FileNameAndPath"`
+		FilePathBase="$FilePath/.svn/text-base"
+		FileNameBase="$FileName.svn-base"
+		FileNameAndPathBase="$FilePathBase/$FileNameBase"
+		
+		echo $FileNameAndPath
+		
+		#DstFile="$TargetFolder/changes/$SVNRepositoryRootToCurPath/$FilePath/$FileName"
+		#DstFileBase="$TargetFolder/base/$SVNRepositoryRootToCurPath/$FilePath/$FileName"
+		
+		
+		DstFile="$TempFolderPkg/$TargetFolderName/changes/$SVNRepositoryRootToCurPath/$FilePath/$FileName"
+		DstFileBase="$TempFolderPkg/$TargetFolderName/base/$SVNRepositoryRootToCurPath/$FilePath/$FileName"
+
+# TODO EGeorgie: test whether DstFile and DstFileBase are files or folders, currently we're handling files only
+		
+		mkdir -p "$TempFolderPkg/$TargetFolderName/changes/$SVNRepositoryRootToCurPath/$FilePath"
+	    if [ -e $FileNameAndPath ]
+	    then
+	      cp "$CurPath/$FileNameAndPath" "$DstFile"
+	    fi
+	
+	    mkdir -p "$TempFolderPkg/$TargetFolderName/base/$SVNRepositoryRootToCurPath/$FilePath"
+	    if [ -e $FileNameAndPathBase ]
+	    then 
+	      cp "$CurPath/$FileNameAndPathBase" "$DstFileBase"
+	    fi
+	    
+		#TODO EGeorgie: what if a file is deleted?
+   		#create a SVN patch as well
+	    #svn diff "$FileNameAndPath" --diff-cmd=diff 
+	    #svn diff --diff-cmd=diff $FileNameAndPath | tr -d $CR >> $TempFolderPkg/$TargetFolderName/$TargetFolderName.patch
+	    "$CreatePatchCmd" $CreatePatchCmdArgs "$FileNameAndPath" | tr -d $CR >> $TempFolderPkg/$TargetFolderName/$TargetFolderName.patch
+   	done
+   	
+   	echo ROOT_URL=$RepositoryRootURL > $TempFolderPkg/$TargetFolderName/root.txt
+   	echo ROOT_TO_CURPATH=$SVNRepositoryRootToCurPath >> $TempFolderPkg/$TargetFolderName/root.txt
+}
+
+
+###############################################################################
+# Save the SVN status to an xml file
+###############################################################################
+
+getSVNStatusFunction()
+{
+	# TODO EGeorgie: Going to the root folder on current machine to obtain
+	# status doesn't work because svn doesn't report some of the changes in
+	# some of the sub-folders that are branches... Need to investigate.
+	# cd $SVNRootFolderOnThisMachine
+
+	echo getting svn status, please wait...
+	svn status --xml > $TempFolder/svnStatus.xml.diffpack
+	echo done
+
+	# cd $CurPath
+}
+
+
+###############################################################################
+# Zip TargetFolder to TargetFolder.zip file, removes TargetFolder
+###############################################################################
+
+zipTargetFolderFunction()
+{
+	FolderName=`basename "$TargetFolder"`
+	
+	if [[ -e "$FolderName.zip" ]]
+	then
+		echo package already exists, aborting...
+		cleanupAndExitFunction
+	fi
+	
+	cd $TempFolderPkg
+	zip -r -q "$FolderName" "$FolderName"
+	mv "$FolderName.zip" "$TargetFolder.zip"
+	cleanupTempPkgFolder
+	cd $CurPath
+}
+
+
+###############################################################################
+# Unzip TargetFolder & TargetFolder2 to UnzipFolder & UnzipFolder2
+###############################################################################
+
+unzipTargetFoldersFunction()
+{
+	unzipTargetFolderFunction()
+	{
+		FolderParent=`dirname "$FolderParam"`
+		FolderName=`basename "$FolderParam"`
+	
+		
+		cd $TempFolderPkg
+		unzip -q "$FolderParam"
+		cd $CurPath
+	}
+
+	cleanupTempPkgFolder
+
+	FolderParam=$TargetFolder
+	unzipTargetFolderFunction
+	UnzipFolderName=${FolderName%.zip}
+	
+	if [[ $TargetFolder2 != "" ]]
+	then
+		FolderParam=$TargetFolder2
+		unzipTargetFolderFunction
+		UnzipFolderName2=${FolderName%.zip}
+	fi
+}
+
+
+###############################################################################
+# Help
+###############################################################################
+folderParamToAbsolutePathFunction()
+{
+	FolderParamDirName=`dirname "$FolderParam"`
+	FolderParamBaseName=`basename "$FolderParam"`
+	if [[ $FolderParamDirName != "" ]]
+	then
+		cd "$FolderParamDirName"
+	fi
+
+	FolderParamDirName=`pwd`
+	FolderParam=$FolderParamDirName/$FolderParamBaseName
+	cd "$CurPath"
+}
+
+
+###############################################################################
+# Help
+###############################################################################
+
+printHelpFunction()
+{
+echo "Usage:"
+echo
+echo " diffpack help                       -  Prints this message"
+echo
+echo " diffpack (no arguments)             -  Starts the GUI from where users"
+echo "                                        can select files to pack"
+echo
+echo " diffpack pack filename              -  Prompts for file selection and"
+echo "                                        creates a .zip file that contains"
+echo "                                        folder structures with base and"
+echo "                                        current versions of the selected"
+echo "                                        files. Requires the installation of"
+echo "                                        an Adobe AIR component for the file"
+echo "                                        selection dialog."
+echo
+echo " diffpack diff filename              -  Diffs the base and the changed"
+echo "                                        versions of the files from the"
+echo "                                        package." 
+echo
+echo " diffpack diff filename1 filename2   -  Diffs the changed versions from"
+echo "                                        filename1 with the changed versions"
+echo "                                        from filename2. Useful for iterative"
+echo "                                        code reviews."
+echo
+echo " diffpack setup                      -  Lets you pick and configure"
+echo "                                        diffing applications for viewing"
+echo "                                        packaged."
+}
+
+###############################################################################
+# Command line params
+###############################################################################
+
+if [[ $# == 0 ]]
+then
+	TargetFolder=$TempFoloder/preview
+	Command="preview"
+else
+
+	if [[ $# > 3 || $# < 1 ]]
+	then
+		echo Invalid number of arguments.
+		printHelpFunction
+		cleanupAndExitFunction
+	fi
+	
+	if [[ $1 != "setup" && $1 != "help" && $# == 1 ]]
+	then
+		echo Invalid number of arguments.
+		printHelpFunction
+		cleanupAndExitFunction
+	fi
+	
+	if [[ $1 == "help" ]]
+	then
+		printHelpFunction
+		cleanupAndExitFunction
+	fi
+	
+	if [[ $1 == "pack" && $# != 2 ]]
+	then
+		echo Option pack requires one argument.
+		printHelpFunction
+		cleanupAndExitFunction
+	fi
+	
+	if [[ $1 != "pack" && $1 != "diff" && $1 != "setup" ]]
+	then
+		echo Unrecognized option.
+		printHelpFunction
+		cleanupAndExitFunction
+	fi 
+	
+	Command=$1
+	if [[ $Command == "diff" || $Command == "pack" ]]
+	then
+		FolderParam=$2
+		folderParamToAbsolutePathFunction
+		TargetFolder=$FolderParam
+		echo Path1: $TargetFolder
+	fi
+	
+	if [[ $# == 3 ]]
+	then
+		FolderParam=$3
+		folderParamToAbsolutePathFunction
+		TargetFolder2=$FolderParam
+		echo Path2: $TargetFolder2
+	fi
+	
+	if [[ $Command == "pack" ]]
+	then
+		TargetFolder=${TargetFolder%.zip}
+		if [[ -e $TargetFolder.zip ]]
+		then
+			echo $TargetFolder.zip already exists, aborting
+			cleanupAndExitFunction
+		fi
+		BaseFolder=`dirname "$TargetFolder"`
+		if [[ ! -e $BaseFolder ]]
+		then
+			echo $BaseFolder does not exist, aborting
+			cleanupAndExitFunction
+		fi
+	fi
+	
+	if [[ $Command == "diff" ]]
+	then
+		if [[ ! -e $TargetFolder && ! -e $TargetFolder.zip ]]
+		then
+			echo Can\'t find $TargetFolder or $TargetFolder.zip, aborting
+			cleanupAndExitFunction
+		fi
+		if [[ $TargetFolder2 != "" && ! -e $TargetFolder2 && ! -e $TargetFolder2.zip ]]
+		then
+			echo Can\'t find $TargetFolder2 or $TargetFolder2.zip, aborting
+			cleanupAndExitFunction
+		fi
+	fi
+fi
+
+findSVNRootFolderFunction
+
+
+###############################################################################
+# Execute command
+###############################################################################
+
+if [[ $Command == "pack" ]]
+then
+	echo $TargetFolder > $TempFolder/newPackagePath.diffpack
+fi
+
+if [[ $Command == "pack" || $Command == "preview" ]]
+then
+	getSVNStatusFunction
+fi
+
+while [[ $Command != "quit" && $Command != "" ]]
+do
+	if [[ $Command == "pack" || $Command == "preview" || $Command == "setup" || $Command == "testSettings" ]]
+	then
+		echo Launching GUI...
+		cd $TempFolder
+		echo $Command > $TempFolder/command.diffpack
+		
+		"$AIRApp" -wait $TempFolder
+		cd "$CurPath"
+		if [[ -e $TempFolder/command.diffpack ]]
+	   	then
+			Command=`cat $TempFolder/command.diffpack | grep COMMAND= | tr -d $CR`
+			Command=${Command#COMMAND=}
+		else
+			echo Script done
+			break
+		fi
+	fi
+
+   	echo Executing: $Command
+    ReadSettingsFunction
+   	
+   	if [[ $Command == "testSettings" ]]
+   	then
+   		testSettingsFunction
+   	fi
+   
+	if [[ $Command == "createPackage" ]]
+	then
+		TargetFolder=`cat $TempFolder/newPackagePath.diffpack | tr -d $CR`
+		TargetFolder=${TargetFolder%.zip}
+		createPackageFunction
+		zipTargetFolderFunction
+		echo
+		echo package is in: "$TargetFolder"
+		break
+	fi
+   
+	if [[ $Command == "diff" ]]
+	then
+		unzipTargetFoldersFunction
+   		viewDiffFunction
+   		cleanupTempPkgFolder
+    	break
+	fi
+	
+	if [[ $Command == "preview" ]]
+	then
+		createPackageFunction
+		viewDiffFunction
+		cleanupTempPkgFolder
+		##echo NYI: diff files in place, no packaging
+	fi
+
+done
+
+cleanupAndExitFunction
+

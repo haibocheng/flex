@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/halo"
+	width="600" height="600"
+	backgroundColor="0x000000">
+	<s:layout>
+		<s:BasicLayout/>
+	</s:layout>
+
+	<fx:Declarations>
+		<s:Parallel id="bd">
+			<s:Move id="m1" duration="200" target="{bl}" yFrom="100" yTo="575">
+				<s:easer>
+					<s:Bounce/>
+				</s:easer>
+			</s:Move>
+			<s:Move id="m2" duration="200" target="{rl}" yFrom="100" yTo="575">
+				<s:easer>
+					<s:Elastic/>
+				</s:easer>
+			</s:Move>
+		</s:Parallel>
+	</fx:Declarations>
+
+	<s:Line xFrom="{bl.x + (bl.width/2)}" yFrom="{bl.y + (bl.height/2)}" xTo="{rl.x + (rl.width/2)}" yTo="{rl.y + (rl.height/2)}">
+		<s:stroke>
+			<s:SolidColorStroke color="0xFFFFFF" weight="3"/>
+		</s:stroke>
+	</s:Line>
+
+	<s:Group id="bl" left="200" y="100">
+		<s:Ellipse width="25" height="25">
+			<s:fill>
+				<s:SolidColor color="white"/>
+			</s:fill>
+		</s:Ellipse>
+	</s:Group>
+
+	<s:Group id="rl" right="200" y="100">
+		<s:Ellipse width="25" height="25">
+			<s:fill>
+				<s:SolidColor color="white"/>
+			</s:fill>
+		</s:Ellipse>
+	</s:Group>
+
+</s:Application>

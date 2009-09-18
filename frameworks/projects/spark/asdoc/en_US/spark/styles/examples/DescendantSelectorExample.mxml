@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!-- Simple example to demonstrate the descendant selectors
+   in both Spark and Halo components. -->
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
+    xmlns:mx="library://ns.adobe.com/flex/halo">
+     <fx:Style>
+        @namespace s "library://ns.adobe.com/flex/spark";
+	    @namespace mx "library://ns.adobe.com/flex/halo";
+
+        s|ButtonBar s|ToggleButton:upAndSelected,
+        s|ButtonBar s|ToggleButton:overAndSelected,
+        s|ButtonBar s|ToggleButton:downAndSelected,
+        s|ButtonBar s|ToggleButton:disabledAndSelected {
+            baseColor: #FF6633;
+            color: #FFFFCC;
+        }
+
+        s|ButtonBar {
+            baseColor: #FFFFCC;
+        }
+
+        mx|VBox mx|Text {
+            fontWeight: "bold";
+        }
+    </fx:Style>
+
+    <s:Panel title="Advanced CSS: Descendant Selector Example" height="75%" width="75%"
+        horizontalCenter="0" verticalCenter="0">
+
+    <s:ButtonBar id="viewMenu" requireSelection="true" x="10" y="10">
+        <s:dataProvider>
+            <mx:ArrayCollection source="['Home', 'Events', 'Rooms', 'Dining']" />
+        </s:dataProvider>
+    </s:ButtonBar>
+
+    <s:Label x="10" y="60" text="Only text in the VBox below has bold content." />
+    <mx:VBox x="10" y="80">
+    	<mx:Text text="Featured Content" fontSize="15" />
+    	<mx:Text text="From holding onto depleted assets to delaying Social Security, these ..." />
+    </mx:VBox>
+
+    </s:Panel>
+</s:Application>

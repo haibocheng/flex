@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UnitTester xmlns:mx="http://www.adobe.com/2006/mxml" xmlns="*" testSWF="main.mxml">
+
+        <!-- this set of lines form a template that must be in each unit test -->
+        <mx:Script>
+            <![CDATA[
+      	        public static function init(o:DisplayObject):void {}
+            ]]>
+        </mx:Script>
+        <mx:Metadata>
+            <![CDATA[
+               [Mixin]
+            ]]>
+        </mx:Metadata>
+        <!-- end of set of lines that must be in each unit test -->
+
+        <mx:Script>
+            <![CDATA[
+                import mx.core.mx_internal;
+                use namespace mx_internal;
+            ]]>
+        </mx:Script>
+
+	<testCases>
+	    <TestCase testID="State-Specific_Buttons">
+    	    <body>
+            	    <AssertMethodValue method="value=application.b4.parent==application.buttons" value="true" />
+            	    <AssertMethodValue method="value=application.b2.parent==application.buttons" value="true" />
+        	    <AssertPropertyValue target="" propertyName="b3" value="null" />
+        	    <SetProperty target="" propertyName="currentState" value="StateB" waitTarget="" waitEvent="currentStateChange" />
+        	    <AssertMethodValue method="value=application.b3.parent==application.buttons" value="true" />
+                    <AssertMethodValue method="value=application.buttons.getChildIndex(application.b3)" value="3" />
+        	    <SetProperty target="" propertyName="currentState" value="StateC" waitTarget="" waitEvent="currentStateChange" />
+        	    <AssertPropertyValue target="b2" propertyName="parent" value="null" />
+        	    <SetProperty target="" propertyName="currentState" value="StateA" waitTarget="" waitEvent="currentStateChange" />
+        	    <AssertPropertyValue target="b3" propertyName="parent" value="null" />
+        	</body>
+    	</TestCase>
+    	
+    	<TestCase testID="State-Specific_ContentHolder_Buttons">
+    	    <body>
+        	    <AssertPropertyValue target="contentButton" propertyName="parent" value="null" />
+        	    <SetProperty target="" propertyName="currentState" value="StateB" waitTarget="" waitEvent="currentStateChange" />
+        	    <AssertMethodValue method="value=application.contentButton.parent==application.holder" value="true" />
+        	</body>
+    	</TestCase>
+    	
+    	<TestCase testID="State-Specific_Array_Elements">
+    	    <body>
+        	    <AssertPropertyValue target="test_label.filters" propertyName="length" value="0" />
+        	    <SetProperty target="" propertyName="currentState" value="StateA" waitTarget="" waitEvent="currentStateChange" />
+        	    <AssertPropertyValue target="test_label.filters" propertyName="length" value="1" />
+        	    <AssertPropertyValue target="ds" propertyName="length" value="3" />
+        	    <SetProperty target="" propertyName="currentState" value="StateC" waitTarget="" waitEvent="currentStateChange" />
+        	    <AssertPropertyValue target="ds" propertyName="length" value="2" />
+       	    </body>
+    	</TestCase>
+    	
+	</testCases>
+	
+	
+</UnitTester>

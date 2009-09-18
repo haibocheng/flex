@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+
+<!--
+
+	ADOBE SYSTEMS INCORPORATED
+	Copyright 2007-2008 Adobe Systems Incorporated
+	All Rights Reserved.
+
+	NOTICE: Adobe permits you to use, modify, and distribute this file
+	in accordance with the terms of the license agreement accompanying it.
+
+-->
+
+<project name="webtier" default="main" basedir="../..">
+    <!-- Ant Properties -->
+    <property file="${basedir}/build.properties" />
+	<property file="${basedir}/modules/webtier/build.properties" />
+	
+    
+    <target name="main" description="Full Build of webtier and webtier apps">
+        <ant antfile="${basedir}/modules/webtier/j2ee/build.xml" target="main" />
+	</target>
+	
+	<target name="dev" description="Runs src.depend build for development">
+        <ant antfile="${basedir}/modules/webtier/j2ee/build.xml" target="dev" />
+	</target>
+		
+    <target name="clean" description="clean">
+        <ant antfile="${basedir}/modules/webtier/j2ee/build.xml" target="clean" />
+    </target>
+
+    <target name="package" description="package">
+        <ant antfile="${basedir}/modules/webtier/j2ee/build.xml" target="package" />
+    </target>
+
+</project>

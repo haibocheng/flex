@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+
+<!--
+
+	ADOBE SYSTEMS INCORPORATED
+	Copyright 2003-2008 Adobe Systems Incorporated
+	All Rights Reserved.
+
+	NOTICE: Adobe permits you to use, modify, and distribute this file
+	in accordance with the terms of the license agreement accompanying it.
+
+-->
+
+<project name="webapps/webtier" default="main" basedir="../..">
+
+    <property name="webtier.dir" value="${basedir}/modules/webtier/j2ee" />
+
+    <property file="${basedir}/build.properties" />
+    <property file="${webtier.dir}/build.properties" />
+
+    <property name="webtier.war" value="${basedir}/webapps/webtier" />
+    <property name="webtier.lib.dir" value="${webtier.dir}/lib" />
+    <property name="dist.dir" value="${webtier.dir}/dist" />    
+	<property name="frameworks.dir" value="${basedir}/frameworks" />
+
+    <path id="classpath">
+        <fileset dir="${webtier.war}/WEB-INF/lib" includes="**/*.jar" />
+        <fileset dir="${webtier.war}/WEB-INF/flex/jars" includes="**/*.jar" />
+    </path>
+
+	<!-- note there are dependencies on modules and frameworks being built first -->
+    <target name="main" depends="clean,stage-war,build-war" />
+    <target name="dev" depends="stage-war" />
+    <target name="stage-war" depends="prepare,copy-resources,copy-history-files,copy-jars" />
+
+    <target name="depend-check">
+        <available file="${basedir}/lib/mxmlc.jar" type="file" property="depend.modules" />
+    	<fail message="modules must be built first" unless="depend.modules" />
+        <available file="${basedir}/frameworks/libs/framework.swc" type="file" property="depend.frameworks" />
+    	<fail message="frameworks must be built first" unless="depend.frameworks" />
+    </target>
+
+    <target name="prepare" depends="depend-check">
+        <mkdir dir="${webtier.war}/history" />
+        <mkdir dir="${webtier.war}/WEB-INF/lib" />
+        <mkdir dir="${webtier.war}/WEB-INF/flex/hotfixes" />
+        <mkdir dir="${webtier.war}/WEB-INF/flex/logs" />
+    </target>
+
+    <target name="copy-resources">
+        <!-- copy to the /WEB-INF/flex directory -->
+        <copy todir="${webtier.war}/WEB-INF/flex">
+			<fileset dir="${basedir}">
+        	 	<include name="flex-sdk-description.xml" />
+        	 </fileset>
+            <fileset dir="${frameworks.dir}">
+                <include name="*-manifest.xml" />
+                <include name="flash-unicode-table.xml" />
+                <include name="*.ser" />
+                <include name="locale/**/*.swc" />
+                <include name="rsls/*.*" />
+				<include name="themes/*.swc" />
+            </fileset>
+        </copy>
+
+        <!-- copy swcs to the /WEB-INF/flex/libs directory -->
+        <copy todir="${webtier.war}/WEB-INF/flex/libs">
+            <fileset dir="${frameworks.dir}/libs" includes="player/*/playerglobal.swc,*.swc" />
+        </copy>
+
+        <!-- copy to the /WEB-INF/lib directory -->
+        <copy todir="${webtier.war}/WEB-INF/lib" failonerror="true">
+            <fileset dir="${webtier.lib.dir}" includes="flex-bootstrap.jar,flex-bootstrap-jsp.jar" />
+        </copy>
+	</target>
+
+    <target name="copy-jars">
+        <!-- copy to the /WEB-INF/flex/jars directory -->
+        <copy todir="${webtier.war}/WEB-INF/flex/jars" failonerror="true">
+            <fileset dir="${basedir}/lib"> 
+            	<include name="asc.jar" /> 
+            	<include name="afe.jar" /> 
+            	<include name="aglj40.jar" /> 
+            	<include name="batik-*" /> 
+            	<include name="commons-*" /> 
+            	<include name="flex-*" /> 
+            	<include name="fxgutils.jar" /> 
+            	<include name="mxmlc*.jar" /> 
+            	<include name="oscache.jar" /> 
+            	<include name="rideau.jar" /> 
+            	<include name="swfutils.jar" /> 
+            	<include name="xalan*" /> 
+            	<include name="xerces*" /> 
+            	<include name="xmlParserAPIs.jar" /> 
+            	<include name="velocity-dep-1.4-flex.jar" /> 
+            </fileset>
+            <fileset dir="${webtier.lib.dir}" includes="**/**" excludes="flex-bootstrap*.jar,servlet.jar"/>
+        </copy>
+	</target>
+
+    <!-- copy to the history directory - same files are in many of the template directories so just pick one -->
+    <target name="copy-history-files" description="Copy history files to apps">
+        <copy todir="${webtier.war}/history" flatten="true" failonerror="true">
+            <fileset dir="${basedir}/templates/swfobject">
+                <include name="playerProductInstall.swf" />
+                <include name="history/history.css" />
+                <include name="history/history.js" />
+                <include name="history/historyFrame.html" />
+                <include name="swfobject.js" />
+            </fileset>
+    	</copy>
+        <copy todir="${webtier.war}/history" flatten="true" failonerror="true">
+            <fileset dir="${basedir}/templates/metadata">
+                <include name="AC_OETags.js" />
+            </fileset>
+    	</copy>
+	</target>
+	
+    <target name="build-war" description="Creates distribution war file">
+        <mkdir dir="${dist.dir}" />
+        <war file="${dist.dir}/webtier.war" webxml="${webtier.war}/WEB-INF/web.xml">
+            <manifest>
+                <attribute name="Sealed" value="${manifest.sealed}" />
+                <attribute name="Implementation-Title" value="${manifest.Implementation-Title} - Template Webtier Application" />
+                <attribute name="Implementation-Version" value="${manifest.Implementation-Version}.${build.number}" />
+                <attribute name="Implementation-Vendor" value="${manifest.Implementation-Vendor}" />
+            </manifest>
+            <fileset dir="${webtier.war}">
+                <exclude name="build.xml" />
+                <exclude name="**/generated/**/*" />
+                <exclude name="WEB-INF/src/**/*.java" />
+                <exclude name="WEB-INF/jsp/**/*" />
+                <exclude name="WEB-INF/sessions/**/*" />
+                <!-- This is included in the war task already -->
+                <exclude name="WEB-INF/web.xml" />
+            </fileset>
+        </war>
+    </target>
+
+    <target name="clean" description="--> Removes war as well as generated jars and classes">
+        <delete quiet="true" file="${dist.dir}/webtier.war" />
+		<delete quiet="true" dir="${webtier.war}/history"/>
+		<delete quiet="true" dir="${webtier.war}/WEB-INF/lib"/>
+        <delete quiet="true">
+            <fileset dir="${webtier.war}/WEB-INF/flex" excludes="*config*.xml,global.css,license.properties,hotfixes/**,user_classes/**" />
+        </delete>
+		<delete quiet="true" dir="${webtier.war}/WEB-INF/flex/frameworks"/>
+		<delete quiet="true" dir="${webtier.war}/WEB-INF/flex/hotfixes"/>
+		<delete quiet="true" dir="${webtier.war}/WEB-INF/flex/jars"/>
+		<delete quiet="true" dir="${webtier.war}/WEB-INF/flex/libs"/>
+		<delete quiet="true" dir="${webtier.war}/WEB-INF/flex/logs"/>
+		<delete quiet="true" dir="${webtier.war}/WEB-INF/flex/locale"/>
+		<delete quiet="true" dir="${webtier.war}/WEB-INF/flex/theme"/>
+   </target>
+</project>

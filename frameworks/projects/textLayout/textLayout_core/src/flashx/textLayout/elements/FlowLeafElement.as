@@ -1,0 +1,843 @@
+////////////////////////////////////////////////////////////////////////////////
+//
+//  ADOBE SYSTEMS INCORPORATED
+//  Copyright 2008-2009 Adobe Systems Incorporated
+//  All Rights Reserved.
+//
+//  NOTICE: Adobe permits you to use, modify, and distribute this file
+//  in accordance with the terms of the license agreement accompanying it.
+//
+//////////////////////////////////////////////////////////////////////////////////
+package flashx.textLayout.elements
+{
+	import flash.display.Shape;
+	import flash.events.EventDispatcher;
+	import flash.geom.Rectangle;
+	import flash.text.engine.ContentElement;
+	import flash.text.engine.ElementFormat;
+	import flash.text.engine.FontDescription;
+	import flash.text.engine.FontMetrics;
+	import flash.text.engine.TextBaseline;
+	import flash.text.engine.TextElement;
+	import flash.text.engine.TextLine;
+	import flash.text.engine.TextRotation;
+	import flash.text.engine.TypographicCase;
+	import flash.utils.Dictionary;
+	
+	import flashx.textLayout.compose.StandardFlowComposer;
+	import flashx.textLayout.compose.TextFlowLine;
+	import flashx.textLayout.debug.Debugging;
+	import flashx.textLayout.debug.assert;
+	import flashx.textLayout.formats.BackgroundColor;
+	import flashx.textLayout.formats.BaselineShift;
+	import flashx.textLayout.formats.BlockProgression;
+	import flashx.textLayout.formats.FormatValue;
+	import flashx.textLayout.formats.ITextLayoutFormat;
+	import flashx.textLayout.formats.JustificationRule;
+	import flashx.textLayout.formats.TLFTypographicCase;
+	import flashx.textLayout.formats.TextDecoration;
+	import flashx.textLayout.formats.TextLayoutFormat;
+	import flashx.textLayout.tlf_internal;
+	import flashx.textLayout.utils.CharacterUtil;
+	import flashx.textLayout.utils.LocaleUtil;
+	
+	use namespace tlf_internal;
+		
+	
+	/** Base class for FlowElements that appear at the lowest level of the flow hierarchy. FlowLeafElement objects have
+	* no children and include InlineGraphicElement objects and SpanElement objects.
+	*
+	* @playerversion Flash 10
+	* @playerversion AIR 1.5
+	* @langversion 3.0
+	*
+	* @see InlineGraphicElement
+	* @see SpanElement
+	*/
+	public class FlowLeafElement extends FlowElement
+	{				
+		/** Holds the content of the leaf @private */
+		protected var _blockElement:ContentElement;
+		
+		/** @private
+		 * Holds the text for the leaf element - unless there's a valid blockElement, 
+		 * in which case the text is in the rawText field of the blockElement.
+		 */
+		protected var _text:String;	// holds the text property if the blockElement is null
+		private var _hasAttachedListeners:Boolean;	// true if FTE eventMirror may be in use
+		
+		/** 
+		 * Base class - invoking new FlowLeafElement() throws an error exception. 
+		 *
+		 * @playerversion Flash 10
+		 * @playerversion AIR 1.5
+		 * @langversion 3.0
+		 * 
+		 */
+		public function FlowLeafElement()
+		{
+			_hasAttachedListeners = false;
+			super();
+		}
+		
+		/** @private */
+		override tlf_internal function createContentElement():void
+		{
+			CONFIG::debug { assert(_blockElement != null, "_blockElement not allocated in derived class"); }
+			if (_computedFormat)
+			{
+				_blockElement.elementFormat = getCanonicalElementFormat();
+				CONFIG::debug { Debugging.traceFTEAssign(_blockElement,"elementFormat",_blockElement.elementFormat); }
+			}
+			if (parent)
+				parent.insertBlockElement(this,_blockElement);
+		}
+		/** @private */
+		override tlf_internal function releaseContentElement():void
+		{
+			if (_hasAttachedListeners)
+				return;
+			if (_blockElement == null)
+				return;
+				
+			_blockElement = null;
+		}
+		/** @private */
+		override tlf_internal function canReleaseContentElement():Boolean
+		{
+			return !_hasAttachedListeners;
+		}
+		
+		private function blockElementExists():Boolean
+		{
+			return _blockElement != null;
+		}
+
+		/** @private */
+		tlf_internal function getBlockElement():ContentElement
+		{ 
+			if (!_blockElement)
+				createContentElement();
+			return _blockElement; 
+		}
+		
+		
+		/**
+		 * The text associated with the FlowLeafElement:
+		 * <p><ul>
+		 * <li>The value for SpanElement subclass will be one character less than <code>textLength</code> if this is the last span in a ParagraphELement.</li>
+		 * <li>The value for BreakElement subclass is a U+2028</li>
+		 * <li>The value for TabElement subclass is a tab</li>
+		 * <li>The value for InlineGraphicElement subclass is U+FDEF</li>
+		 * </ul></p>
+		 *
+		 * @playerversion Flash 10
+		 * @playerversion AIR 1.5
+	 	 * @langversion 3.0
+	 	 *
+	 	 * @see flashx.textLayout.elements.SpanElement#replaceText()
+		 */
+		public function get text():String
+		{
+			return _blockElement ?  _blockElement.rawText : _text;
+		}
+		
+		/** @private */
+		tlf_internal function getElementFormat():ElementFormat
+		{ 			
+			if (!_blockElement)
+				createContentElement();
+			return _blockElement.elementFormat; 
+ 		}
+		
+		/** @private */
+		tlf_internal override function setParentAndRelativeStart(newParent:FlowGroupElement,newStart:int):void
+		{
+			if (newParent == parent)
+				return;
+		
+			var hasBlock:Boolean = _blockElement != null;
+			
+			if (_blockElement && parent && parent.hasBlockElement())	// remove textElement from the parent content
+				parent.removeBlockElement(this,_blockElement);
+			if (newParent && !newParent.hasBlockElement() && _blockElement)
+				newParent.createContentElement();
+					
+			super.setParentAndRelativeStart(newParent,newStart);
+			
+			// Update the FTE ContentElement structure. If the parent has FTE elements, then create FTE elements for the leaf node 
+			// if it doesn't already have them, and add them in. If the parent does not have FTE elements, release the leaf's FTE
+			// elements also so they match.
+			if (parent)
+			{
+				if (parent.hasBlockElement())
+				{
+					if (!_blockElement)
+						createContentElement();
+					else if (hasBlock)	// don't do this if the _blockElement was constructed as side-effect of setParentAndRelativeStart; in that case, it's already attached
+						parent.insertBlockElement(this,_blockElement);
+				}
+				else if (_blockElement)
+					releaseContentElement();
+			}
+		}
+	
+		/** @private */
+		protected function quickInitializeForSplit(sibling:FlowLeafElement,newSpanLength:int,newSpanTextElement:TextElement):void
+		{
+			setTextLength(newSpanLength);
+			_blockElement = newSpanTextElement;
+			quickCloneTextLayoutFormat(sibling);
+			var tf:TextFlow = sibling.getTextFlow();
+			if (tf == null || tf.formatResolver == null)
+			{
+				_computedFormat = sibling._computedFormat;
+				if (_blockElement)
+					_blockElement.elementFormat = sibling.getElementFormat();
+			}
+		}
+		
+		/** @private */
+		tlf_internal function addParaTerminator():void
+		{
+			// some FlowLeafElement types have RO text and can't have a paragraph terminator
+			CONFIG::debug { assert(this is InlineGraphicElement,"TODO: para terminator in non-span leaves"); }
+		}
+		/** @private */
+		tlf_internal function removeParaTerminator():void
+		{
+			// some FlowLeafElement types have RO text and can't have a paragraph terminator
+			CONFIG::debug { assert(this is InlineGraphicElement,"TODO: para terminator in non-span leaves"); }
+		}
+		
+		/**
+		 * Returns the next FlowLeafElement object.  
+		 * 
+		 * @param limitElement	Specifies FlowGroupElement on whose last leaf to stop looking. A value of null (default) 
+		 * 	means search till no more elements.
+		 * @return 	next FlowLeafElement or null if at the end
+		 *
+		 * @includeExample examples\FlowLeafElement_getNextLeafExample.as -noswf
+		 *
+		 * @playerversion Flash 10
+		 * @playerversion AIR 1.5
+	 	 * @langversion 3.0
+	 	 *
+		 */
+		 
+		 public function getNextLeaf(limitElement:FlowGroupElement=null):FlowLeafElement
+		{
+			if (!parent)
+				return null;
+			return parent.getNextLeafHelper(limitElement,this);
+		}
+		
+		/**
+		 * Returns the previous FlowLeafElement object.  
+		 * 
+		 * @param limitElement	Specifies the FlowGroupElement on whose first leaf to stop looking.   null (default) means search till no more elements.
+		 * @return 	previous leafElement or null if at the end
+		 *
+		 * @includeExample examples\FlowLeafElement_getPreviousLeafExample.as -noswf
+		 *
+		 * @playerversion Flash 10
+		 * @playerversion AIR 1.5
+	 	 * @langversion 3.0
+	 	 *
+		 */
+		 
+		public function getPreviousLeaf(limitElement:FlowGroupElement=null):FlowLeafElement
+		{
+			if (!parent)
+				return null;
+			return parent.getPreviousLeafHelper(limitElement,this);
+		}
+		
+		/** @private */
+		public override function getCharAtPosition(relativePosition:int):String
+		{
+			var textValue:String = _blockElement ? _blockElement.rawText : _text;
+			if (textValue)
+				return textValue.charAt(relativePosition);
+			return String("");
+		} 
+		
+		/** @private */
+		tlf_internal override function normalizeRange(normalizeStart:uint,normalizeEnd:uint):void
+		{
+			// this does the cascade - potential optimization to skip it if the _blockElement isn't attached
+			computedFormat;
+		}
+		
+		/** Returns the FontMetrics object for the span. The properties of the FontMetrics object describe the 
+		 * emBox, strikethrough position, strikethrough thickness, underline position, 
+		 * and underline thickness for the specified font. 
+		 *
+ 		 * @playerversion Flash 10
+		 * @playerversion AIR 1.5
+	 	 * @langversion 3.0
+	 	 *
+		 * @see flash.text.engine.FontMetrics
+		 * @see flash.text.engine.ElementFormat#getFontMetrics
+		 *
+		 * @return font metrics associated with the span
+		 */
+		public function getComputedFontMetrics():FontMetrics
+		{
+			if (!_blockElement)
+				createContentElement();
+			return _blockElement && _blockElement.elementFormat ? _blockElement.elementFormat.getFontMetrics() : null;
+		}
+	
+		static private var _elementFormats:Dictionary = new Dictionary(true);
+		
+		/** @private 
+		 */
+		tlf_internal static function clearElementFormatsCache():void
+		{ 
+			for each (var elementFormat:ElementFormat in _elementFormats)
+			{
+				// At least one entry exists. Create a new dictionary and return.
+				// This may be cheaper than deleting all entries one by one.
+				_elementFormats = new Dictionary(true);
+				return;
+			}
+		}
+		
+		private function getCanonicalElementFormat():ElementFormat
+		{
+			CONFIG::debug { assert(_computedFormat != null,"bad call to getCanonicalElementFormat"); }
+			var format:ElementFormat = _elementFormats[_computedFormat] as ElementFormat;
+			if (!format)
+			{
+				// compute the cascaded elementFormat
+				format = new ElementFormat();
+				CONFIG::debug { Debugging.traceFTECall(format,null,"new ElementFormat"); }
+				
+				format.alignmentBaseline	= _computedFormat.alignmentBaseline;
+				format.alpha				= Number(_computedFormat.textAlpha);
+				format.breakOpportunity		= _computedFormat.breakOpportunity;
+				format.color				= uint(_computedFormat.color);
+				//use the computed value if format is not AUTO
+				if(_computedFormat.dominantBaseline != FormatValue.AUTO)
+					format.dominantBaseline		= _computedFormat.dominantBaseline;
+				else
+				{
+					var para:ParagraphElement = getParagraph();
+					//otherwise, avoid using the locale of the element and use the paragraph's locale
+					if(para != null)
+						format.dominantBaseline = para.getEffectiveDominantBaseline();
+					else
+						format.dominantBaseline = LocaleUtil.dominantBaseline(_computedFormat.locale);
+				}
+				format.digitCase			= _computedFormat.digitCase;
+				format.digitWidth			= _computedFormat.digitWidth;
+				format.ligatureLevel		= _computedFormat.ligatureLevel;
+				format.fontSize				= Number(_computedFormat.fontSize);
+				format.kerning				= _computedFormat.kerning;
+				format.locale				= _computedFormat.locale;
+				format.trackingLeft			= TextLayoutFormat.trackingLeftProperty.computeActualPropertyValue(_computedFormat.trackingLeft,format.fontSize);
+				format.trackingRight		= TextLayoutFormat.trackingRightProperty.computeActualPropertyValue(_computedFormat.trackingRight,format.fontSize);
+				format.textRotation			= _computedFormat.textRotation;
+				format.baselineShift 		= -(TextLayoutFormat.baselineShiftProperty.computeActualPropertyValue(_computedFormat.baselineShift, format.fontSize));
+				switch (_computedFormat.typographicCase)
+				{
+					case TLFTypographicCase.LOWERCASE_TO_SMALL_CAPS:
+						format.typographicCase = TypographicCase.CAPS_AND_SMALL_CAPS;
+						break;
+					case TLFTypographicCase.CAPS_TO_SMALL_CAPS:
+						format.typographicCase = TypographicCase.SMALL_CAPS;
+						break;
+					/* These map directly so we handle it in the default case
+					case TLFTypographicCase.LOWERCASE:
+						format.typographicCase = TypographicCase.LOWERCASE;
+						break;
+					case TLFTypographicCase.DEFAULT:
+						format.typographicCase = TypographicCase.DEFAULT;
+						break;
+					case TLFTypographicCase.UPPERCASE:
+						format.typographicCase = TypographicCase.UPPERCASE;
+						break;
+					*/
+					default:
+						format.typographicCase = _computedFormat.typographicCase;
+						break;
+				}
+				
+				CONFIG::debug { Debugging.traceFTEAssign(format,"alignmentBaseline",format.alignmentBaseline); }
+				CONFIG::debug { Debugging.traceFTEAssign(format,"alpha",format.alpha); }
+				CONFIG::debug { Debugging.traceFTEAssign(format,"breakOpportunity",format.breakOpportunity); }
+				CONFIG::debug { Debugging.traceFTEAssign(format,"color",format.color); }
+				CONFIG::debug { Debugging.traceFTEAssign(format,"dominantBaseline",format.dominantBaseline); }
+				CONFIG::debug { Debugging.traceFTEAssign(format,"digitCase",format.digitCase); }
+				CONFIG::debug { Debugging.traceFTEAssign(format,"digitWidth",format.digitWidth); }
+				CONFIG::debug { Debugging.traceFTEAssign(format,"ligatureLevel",format.ligatureLevel); }
+				CONFIG::debug { Debugging.traceFTEAssign(format,"fontSize",format.fontSize); }
+				CONFIG::debug { Debugging.traceFTEAssign(format,"kerning",format.kerning); }
+				CONFIG::debug { Debugging.traceFTEAssign(format,"locale",format.locale); }
+				CONFIG::debug { Debugging.traceFTEAssign(format,"trackingLeft",format.trackingLeft); }
+				CONFIG::debug { Debugging.traceFTEAssign(format,"trackingRight",format.trackingRight); }
+				CONFIG::debug { Debugging.traceFTEAssign(format,"typographicCase",format.typographicCase); }
+				CONFIG::debug { Debugging.traceFTEAssign(format,"textRotation",format.textRotation); }
+				CONFIG::debug { Debugging.traceFTEAssign(format,"baselineShift",format.baselineShift);	 }	
+								
+				// set the fontDesription in the cascadedFormat
+				var fd:FontDescription = new FontDescription();
+				fd.fontWeight = _computedFormat.fontWeight;
+				fd.fontPosture = _computedFormat.fontStyle;
+				fd.fontName = _computedFormat.fontFamily;
+				fd.renderingMode = _computedFormat.renderingMode;
+				fd.cffHinting = _computedFormat.cffHinting;
+				fd.fontLookup = _computedFormat.fontLookup;
+				var fontMapper:Function = GlobalConfiguration.fontMapper;
+				if (fontMapper != null)
+					fontMapper(fd);
+				CONFIG::debug { Debugging.traceFTECall(fd,null,"new FontDescription"); }
+				CONFIG::debug { Debugging.traceFTEAssign(fd,"fontWeight",fd.fontWeight);	 }
+				CONFIG::debug { Debugging.traceFTEAssign(fd,"fontPosture",fd.fontPosture);	 }
+				CONFIG::debug { Debugging.traceFTEAssign(fd,"fontName",fd.fontName);	 }
+				CONFIG::debug { Debugging.traceFTEAssign(fd,"renderingMode",fd.renderingMode);	 }
+				CONFIG::debug { Debugging.traceFTEAssign(fd,"cffHinting",fd.cffHinting);	 }
+				CONFIG::debug { Debugging.traceFTEAssign(fd,"fontLookup",fd.fontLookup);	 }
+				
+				format.fontDescription = fd;
+				CONFIG::debug { Debugging.traceFTEAssign(format,"fontDescription",fd); }
+				
+				//Moved code here because original code tried to access fontMetrics prior to setting the elementFormat.
+				//Since getFontMetrics returns the value of blockElement.elementFormat.getFontMetrics(), we cannot call this
+				//until after the element has been set. Watson 1820571 - gak 06.11.08
+				// Adjust format for superscript/subscript
+				if (_computedFormat.baselineShift == BaselineShift.SUPERSCRIPT || 
+					_computedFormat.baselineShift == BaselineShift.SUBSCRIPT)
+				{
+					var fontMetrics:FontMetrics = format.getFontMetrics();	
+					if (_computedFormat.baselineShift == BaselineShift.SUPERSCRIPT)
+					{
+						format.baselineShift = (fontMetrics.superscriptOffset * format.fontSize);
+						format.fontSize = fontMetrics.superscriptScale * format.fontSize;
+					}
+					else // it's subscript
+					{
+						format.baselineShift = (fontMetrics.subscriptOffset * format.fontSize);
+						format.fontSize = fontMetrics.subscriptScale * format.fontSize;
+					}
+					CONFIG::debug { Debugging.traceFTEAssign(format,"baselineShift",format.baselineShift); }
+					CONFIG::debug { Debugging.traceFTEAssign(format,"fontSize",format.fontSize); }
+				}
+				
+				_elementFormats[_computedFormat] = format;
+			}
+			
+			return format;
+		}
+
+		/** 
+		 * Returns the computed character format attributes that are in effect for this element.
+		 * Takes into account the inheritance of attributes.
+		 *
+		 * @playerversion Flash 10
+		 * @playerversion AIR 1.5
+	 	 * @langversion 3.0
+	 	 *
+		 * @see flashx.textLayout.formats.ICharacterFormat
+		 */
+		public override function get computedFormat():ITextLayoutFormat
+		{		
+			if (!_computedFormat)
+			{
+				doComputeTextLayoutFormat(formatForCascade);
+
+				if (_blockElement)
+				{
+					_blockElement.elementFormat = getCanonicalElementFormat();
+					CONFIG::debug { Debugging.traceFTEAssign(_blockElement,"elementFormat",_blockElement.elementFormat); }
+				}
+
+			}
+			return _computedFormat;
+		}
+		
+		/** Returns the fontSize from this element's properties.  @private */
+		tlf_internal function getEffectiveFontSize():Number
+		{
+			return Number(computedFormat.fontSize);
+		}
+		/** @private */
+		tlf_internal function getSpanBoundsOnLine(textLine:TextLine, blockProgression:String):Array
+		{
+			var line:TextFlowLine = TextFlowLine(textLine.userData);
+			var paraStart:int = line.paragraph.getAbsoluteStart();
+			var lineEnd:int = (line.absoluteStart + line.textLength) - paraStart;
+			var spanStart:int = getAbsoluteStart() - paraStart;		// get start pos relative to the paragraph (which might not be the parent)
+			var endPos:int = spanStart + text.length;		// so we don't include the paragraph terminator character, if present
+		
+			// Clip to start of line	
+			var startPos:int = Math.max(spanStart, line.absoluteStart - paraStart);
+			
+			// Clip to end of line	
+			// Heuristic for detecting spaces at the end of the line and eliminating them from the range so they won't be underlined.
+			if (endPos >= lineEnd)
+			{
+				endPos = lineEnd;
+				var spanText:String = text;
+				while (endPos > startPos && CharacterUtil.isWhitespace(spanText.charCodeAt(endPos - spanStart - 1)))
+					--endPos;
+			}
+
+			var mainRects:Array = [];
+			line.calculateSelectionBounds(mainRects, startPos, endPos, blockProgression, [ line.textHeight,0]);
+			return mainRects;
+		}
+		/** @private */
+		tlf_internal function updateAdornments(line:TextFlowLine, blockProgression:String):void
+		{
+			CONFIG::debug { assert(_computedFormat != null,"invalid call to updateAdornments"); }
+
+			// Only work on lines with strikethrough or underline
+			if (_computedFormat.textDecoration == TextDecoration.UNDERLINE || _computedFormat.lineThrough || _computedFormat.backgroundAlpha > 0 && _computedFormat.backgroundColor != BackgroundColor.TRANSPARENT)
+			{
+				var tLine:TextLine = line.getTextLine();
+				var spanBoundsArray:Array = getSpanBoundsOnLine(tLine, blockProgression);
+				for (var i:int = 0; i < spanBoundsArray.length; i++)
+					updateAdornmentsOnBounds(line, blockProgression, Rectangle(spanBoundsArray[i]));
+			}
+		}
+		 
+		private function updateAdornmentsOnBounds(line:TextFlowLine, blockProgression:String, spanBounds:Rectangle):void
+		{
+			var tLine:TextLine = line.getTextLine();
+			CONFIG::debug { assert(_computedFormat != null,"invalid call to updateAdornmentsOnBounds"); }
+
+   			var selObj:Shape = new Shape();
+			var metrics:FontMetrics = getComputedFontMetrics();
+		
+			selObj.alpha = Number(_computedFormat.textAlpha);       				
+						
+			selObj.graphics.beginFill(uint(_computedFormat.color));
+			//trace(spanBounds);
+			var stOffset:Number = calculateStrikeThrough(tLine, blockProgression, metrics, spanBounds);
+			//trace("stOffset =", stOffset);
+			var ulOffset:Number = calculateUnderlineOffset(stOffset, blockProgression, metrics, tLine);
+			//trace("ulOffset =", ulOffset);					
+						
+			if (blockProgression != BlockProgression.RL)
+			{
+				if (_computedFormat.textDecoration == TextDecoration.UNDERLINE)
+				{
+					selObj.graphics.lineStyle(metrics.underlineThickness, _computedFormat.color as uint, selObj.alpha);
+					selObj.graphics.moveTo(spanBounds.topLeft.x, ulOffset);
+					selObj.graphics.lineTo(spanBounds.topLeft.x + spanBounds.width, ulOffset);
+				}
+				
+				if((_computedFormat.lineThrough))
+				{
+					selObj.graphics.lineStyle(metrics.strikethroughThickness, _computedFormat.color as uint, selObj.alpha);
+					selObj.graphics.moveTo(spanBounds.topLeft.x, stOffset);
+					selObj.graphics.lineTo(spanBounds.topLeft.x + spanBounds.width, stOffset);
+				}
+				
+				addBackgroundRect (line, tLine, metrics, spanBounds, true); 
+			}
+			else
+			{
+				//is this TCY?
+				var elemIdx:int = this.getAbsoluteStart() - line.absoluteStart;
+				
+				//elemIdx can sometimes be negative if the text is being wrapped due to a
+				//resize gesture - in which case the tLine has not necessarily been updated.
+				//If the elemIdx is invalid, just treat it like it's normal ttb text - gak 07.08.08
+				if(elemIdx < 0 || tLine.atomCount <= elemIdx || tLine.getAtomTextRotation(elemIdx) != TextRotation.ROTATE_0)
+				{
+					if (_computedFormat.textDecoration == TextDecoration.UNDERLINE)
+					{
+						selObj.graphics.lineStyle(metrics.underlineThickness, _computedFormat.color as uint, selObj.alpha);
+						selObj.graphics.moveTo(ulOffset, spanBounds.topLeft.y);
+						selObj.graphics.lineTo(ulOffset, spanBounds.topLeft.y + spanBounds.height);
+					}
+					
+					if (_computedFormat.lineThrough == true)
+					{
+						selObj.graphics.lineStyle(metrics.strikethroughThickness, _computedFormat.color as uint, selObj.alpha);
+						selObj.graphics.moveTo(-stOffset, spanBounds.topLeft.y);
+						selObj.graphics.lineTo(-stOffset, spanBounds.topLeft.y + spanBounds.height);															
+					}
+					
+					addBackgroundRect (line, tLine, metrics, spanBounds, false);
+				}
+				else
+				{
+					//it is TCY!
+					var tcyParent:TCYElement =  this.getParentByType(TCYElement) as TCYElement;
+					CONFIG::debug{ assert(tcyParent != null, "What kind of object is this that is ROTATE_0, but not TCY?");}
+					
+					addBackgroundRect (line, tLine, metrics, spanBounds, true, true); 
+					
+					//only perform calculations for TCY adornments when we are on the last leaf.  ONLY the last leaf matters
+					if((this.getAbsoluteStart() + this.textLength) == (tcyParent.getAbsoluteStart() + tcyParent.textLength))
+					{
+						var tcyAdornBounds:Rectangle = new Rectangle();
+						tcyParent.calculateAdornmentBounds(tcyParent, tLine, blockProgression, tcyAdornBounds);
+						
+						if (_computedFormat.textDecoration == TextDecoration.UNDERLINE)
+						{
+							selObj.graphics.lineStyle(metrics.underlineThickness, _computedFormat.color as uint, selObj.alpha);
+							var baseULAdjustment:Number = metrics.underlineOffset + (metrics.underlineThickness/2);
+							selObj.graphics.moveTo(spanBounds.bottomRight.x + baseULAdjustment, tcyAdornBounds.top);
+							selObj.graphics.lineTo(spanBounds.bottomRight.x + baseULAdjustment, tcyAdornBounds.bottom);
+						}
+
+						if (_computedFormat.lineThrough == true)
+						{
+							var tcyMid:Number = spanBounds.bottomRight.x - tcyAdornBounds.x;
+							tcyMid /= 2;
+							tcyMid += tcyAdornBounds.x;
+							
+							selObj.graphics.lineStyle(metrics.strikethroughThickness, _computedFormat.color as uint, selObj.alpha);
+							selObj.graphics.moveTo(tcyMid, tcyAdornBounds.top);
+							selObj.graphics.lineTo(tcyMid, tcyAdornBounds.bottom);
+						}
+						
+					}
+				}
+			}
+			
+		selObj.graphics.endFill();
+		tLine.addChild(selObj);
+		}
+		
+		/** @private
+		 * Adds the background rectangle (if needed), making adjustments for glyph shifting as appropriate
+		 */
+		 private function addBackgroundRect(line:TextFlowLine, tLine:TextLine, metrics:FontMetrics, spanBounds:Rectangle, horizontalText:Boolean, isTCY:Boolean=false):void
+		 {
+			if(_computedFormat.backgroundAlpha == 0 || _computedFormat.backgroundColor == BackgroundColor.TRANSPARENT)
+				return;
+				
+			var tf:TextFlow = this.getTextFlow();
+			// ensure the TextFlow has a background manager - but its only supported with the StandardFlowComposer at this time
+			if(!tf.backgroundManager && (tf.flowComposer is StandardFlowComposer))
+				tf.backgroundManager = StandardFlowComposer(tf.flowComposer).createBackgroundManager();
+			
+			if (!tf.backgroundManager)
+				return;
+					
+			// The background rectangle usually needs to coincide with the passsed-in span bounds.
+			var r:Rectangle = spanBounds.clone();
+			
+			// With constrained glyph shifting (such as when superscript/subscript are in use), we'd like the
+			// background rectangle to follow the glyphs. Not so for arbitrary glyph shifting (such as when 
+			// baseline shift or baseline alignment are in use)	 	
+			// TODO-06/12/2009: Need to figure out adjustment for TCY background rect. No adjustment for now.
+			if (!isTCY && (_computedFormat.baselineShift == BaselineShift.SUPERSCRIPT || _computedFormat.baselineShift == BaselineShift.SUBSCRIPT))
+			{	
+				// The atom bounds returned by FTE do not reflect the effect of glyph shifting.
+				// We approximate this effect by making the following assumptions (strikethrough/underline code does the same)
+				// - The strike-through adornment runs through the center of the glyph
+				// - The Roman baseline is halfway between the center and bottom (descent)
+				// Effectively, the glyph's descent equals the strike-through offset, and its ascent is three times that
+				
+				var desiredExtent:Number; // The desired extent of the rectangle in the block progression direction
+				var baselineShift:Number; 
+				var fontSize:Number = getEffectiveFontSize();
+				var baseStrikethroughOffset:Number = metrics.strikethroughOffset + metrics.strikethroughThickness/2;
+				
+				if (_computedFormat.baselineShift == BaselineShift.SUPERSCRIPT)
+				{
+					// The rectangle needs to sit on the line's descent and must extend far enough to accommodate the
+					// ascender of the glyph (that has moved up because of superscript)
+					
+					var glyphAscent:Number = -3 * baseStrikethroughOffset; // see assumptions above
+					baselineShift = -metrics.superscriptOffset * fontSize;
+					var lineDescent:Number = tLine.getBaselinePosition(TextBaseline.DESCENT) - tLine.getBaselinePosition(TextBaseline.ROMAN);
+					
+					desiredExtent = glyphAscent  + baselineShift + lineDescent;
+					if (horizontalText)
+					{
+						if (desiredExtent > r.height)
+						{
+							r.y -= desiredExtent - r.height;
+							r.height = desiredExtent;
+						}
+					}
+					else
+					{
+						if (desiredExtent > r.width)
+							r.width = desiredExtent;
+					}
+				}
+				else
+				{
+					// The rectangle needs to hang from the line's ascent and must extend far enough to accommodate the
+					// descender of the glyph (that has moved down because of superscript)
+					
+					var glyphDescent:Number = -baseStrikethroughOffset; // see assumptions above
+					baselineShift = metrics.subscriptOffset * fontSize; 
+					var lineAscent:Number = tLine.getBaselinePosition(TextBaseline.ROMAN) - tLine.getBaselinePosition(TextBaseline.ASCENT);
+					
+					desiredExtent = lineAscent + baselineShift + glyphDescent;
+					if (horizontalText)
+					{
+						if (desiredExtent > r.height)
+							r.height = desiredExtent;
+					}
+					else
+					{
+						if (desiredExtent > r.width)
+						{
+							r.x -= desiredExtent - r.width
+							r.width = desiredExtent;
+						}
+					}
+				}
+			}
+			
+			tf.backgroundManager.addRect(line, this, r, _computedFormat.backgroundColor, _computedFormat.backgroundAlpha);	 
+		 }
+		 
+		
+		/** @private
+		 * Gets the EventDispatcher associated with this FlowLeafElement.  Use the functions
+		 * of EventDispatcher such as <code>setEventHandler()</code> and <code>removeEventHandler()</code> 
+		 * to capture events that happen over this FlowLeafElement object.  The
+		 * event handler that you specify will be called after this FlowLeafElement object does
+		 * the processing it needs to do.
+		 *
+		 * @playerversion Flash 10
+		 * @playerversion AIR 1.5
+	 	 * @langversion 3.0
+	 	 *
+		 * @see flash.events.EventDispatcher
+		 */
+		tlf_internal function getEventMirror():EventDispatcher
+		{
+			if (!_blockElement)
+			{
+				var para:ParagraphElement = getParagraph();
+				if (para)
+					para.getTextBlock();
+				else
+					createContentElement();
+			}
+			if (_blockElement.eventMirror == null)
+			{				
+				_blockElement.eventMirror = new EventDispatcher();
+			}
+			_hasAttachedListeners = true;
+			return (_blockElement.eventMirror);
+		}
+		
+		
+		/** @private */
+		tlf_internal function calculateStrikeThrough(tLine:TextLine, blockProgression:String, metrics:FontMetrics, spanBounds:Rectangle):Number
+		{
+			var underlineAndStrikeThroughShift:int = 0;	
+			var effectiveFontSize:Number = this.getEffectiveFontSize()
+			if (_computedFormat.baselineShift == BaselineShift.SUPERSCRIPT)
+			{
+				underlineAndStrikeThroughShift = -(metrics.superscriptOffset * effectiveFontSize);
+			} else if (_computedFormat.baselineShift == BaselineShift.SUBSCRIPT)
+			{
+				underlineAndStrikeThroughShift = -(metrics.subscriptOffset * (effectiveFontSize / metrics.subscriptScale));
+			} else {
+				underlineAndStrikeThroughShift = TextLayoutFormat.baselineShiftProperty.computeActualPropertyValue(_computedFormat.baselineShift, effectiveFontSize);
+			}
+			
+			//grab the dominantBaseline and alignmentBaseline strings
+			var domBaselineString:String;
+			if(this.computedFormat.dominantBaseline != FormatValue.AUTO)
+			{
+				domBaselineString = this._computedFormat.dominantBaseline;
+			}
+			else
+			{
+				//use the paragraph's locale to get the dominantBaseline
+				domBaselineString = getParagraph().getEffectiveDominantBaseline();
+			}
+			var alignmentBaselineString:String = this.computedFormat.alignmentBaseline;
+			
+			//this value represents the position of the baseline used to align this text
+			var alignDomBaselineAdjustment:Number = tLine.getBaselinePosition(domBaselineString);
+			
+			//if the alignment baseline differs from the dominant, then we need to apply the delta between the
+			//dominant and the alignment to determine the line along which the glyphs are lining up...
+			if(alignmentBaselineString != flash.text.engine.TextBaseline.USE_DOMINANT_BASELINE && 
+				alignmentBaselineString != domBaselineString)
+			{
+				alignDomBaselineAdjustment = tLine.getBaselinePosition(alignmentBaselineString);
+				//take the alignmentBaseline offset and make it relative to the dominantBaseline
+			}
+			
+			
+			//first, establish the offset relative to the glyph based in fontMetrics data
+			var baseSTAdjustment:Number = metrics.strikethroughOffset + (metrics.strikethroughThickness/2);
+			var stOffset:Number = baseSTAdjustment;
+			
+			
+			//why are we using the stOffset?  Well, the stOffset effectively tells us where the mid-point
+			//of the glyph is.  By using this value, we can determine how we need to offset the underline.
+			//now adjust the value.  If it is center, then the glyphs are aligned along the ST position already
+			if(domBaselineString == flash.text.engine.TextBaseline.IDEOGRAPHIC_CENTER)
+			{
+				stOffset = 0;
+			}
+			else if(domBaselineString == flash.text.engine.TextBaseline.IDEOGRAPHIC_TOP || 
+				domBaselineString == flash.text.engine.TextBaseline.ASCENT)
+			{
+				stOffset *= -2;  //if the glyphs are top or ascent, then we need to invert and double the offset
+			}
+			else if(domBaselineString == flash.text.engine.TextBaseline.IDEOGRAPHIC_BOTTOM || 
+				domBaselineString == flash.text.engine.TextBaseline.DESCENT)
+			{
+				stOffset *= 2; //if they're bottom, then we need to simply double it
+			}
+			
+			
+			//Now apply the actual dominant baseline position to the offset
+			stOffset += alignDomBaselineAdjustment - underlineAndStrikeThroughShift;
+			return stOffset;
+		}
+		
+		/** @private */
+		tlf_internal function calculateUnderlineOffset(stOffset:Number, blockProgression:String, metrics:FontMetrics, textLine:TextLine):Number
+		{
+			var baseULAdjustment:Number = metrics.underlineOffset + (metrics.underlineThickness/2);
+			var baseSTAdjustment:Number = metrics.strikethroughOffset + (metrics.strikethroughThickness/2);
+			var ulOffset:Number = baseULAdjustment;
+			
+			var justRule:String = this.getParagraph().getEffectiveJustificationRule();
+			
+			//we need to add a bit of space when dealing with Asian scripts.  ASJ recommended a 1 mm space (4 Ha).
+			//by adding a pixel here, we come very close to meeting that target without making overly expensive
+			//calculations.  UL drawing was reviewed by QA and meets expectations. - gak 08.06.08
+			if(justRule == JustificationRule.EAST_ASIAN)
+				ulOffset += 1;
+				
+			//based on the stOffset - which really represents the middle of the glyph, set the ulOffset
+			//which will always be relative.  Note that simply using the alignDomBaselineAdjustment is not enough
+			if(blockProgression != BlockProgression.RL)
+				ulOffset += (stOffset - baseSTAdjustment);
+			else
+			{	
+				ulOffset -= (-ulOffset + stOffset + baseSTAdjustment);
+			}
+			
+			return ulOffset;
+		}
+		
+		/** @private */
+		CONFIG::debug public override function debugCheckFlowElement(depth:int = 0, extraData:String = ""):int
+		{
+			// debugging function that asserts if the flow element tree is in an invalid state
+			
+			var rslt:int = super.debugCheckFlowElement(depth," fte:"+getDebugIdentity(_blockElement)+" "+extraData);
+			
+			// TODO: eventually these tests will be valid for InlineGraphicElement elements as well
+			if (!(this is InlineGraphicElement))
+			{
+				rslt += assert(textLength != 0 || (parent is SubParagraphGroupElement && parent.numChildren == 1), "FlowLeafElement with zero textLength must be deleted"); 
+				rslt += assert(parent is ParagraphElement || parent is SubParagraphGroupElement, "FlowLeafElement must have a ParagraphElement or SubParagraphGroupElement parent");
+			}
+			return rslt;
+		}
+	}
+}

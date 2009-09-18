@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+
+<!--
+
+    ADOBE SYSTEMS INCORPORATED
+    Copyright 2005-2008 Adobe Systems Incorporated
+    All Rights Reserved.
+
+    NOTICE: Adobe permits you to use, modify, and distribute this file
+    in accordance with the terms of the license agreement accompanying it.
+
+-->
+
+<project name="webtier/servlet" default="main" basedir="../../..">
+
+    <!-- properties -->
+    <property file="${basedir}/build.properties" />
+    <property file="${basedir}/modules/webtier/build.properties" />
+
+    <property name="lib.dir" value="${basedir}/lib"/>
+    <property name="module.dir" value="${webtier.dir}/servlet"/>		
+    <property name="module.lib.dir" location="${module.dir}/lib"/>
+    <property name="module.src" value="${module.dir}/src/java"/>
+    <property name="module.classes" value="${module.dir}/classes"/>
+    <property name="module.jar" value="${webtier.lib.dir}/flex-webtier.jar"/>
+    <property name="build.number" value=""/>
+	
+	<patternset id="webtier.jars">
+        <include name="flex-bootstrap.jar" />
+        <include name="oscache.jar" />
+	</patternset>
+
+	<patternset id="sdk.jars">
+        <include name="mxmlc.jar" />
+        <include name="swfutils.jar" />
+        <include name="velocity-dep-*-flex.jar" />
+	</patternset>
+	
+    <path id="classpath">
+		<pathelement location="${servlet-api.jar}"/>
+		<pathelement location="${jsp-api.jar}"/>
+        <fileset dir="${webtier.lib.dir}" >
+			<patternset refid="webtier.jars" />
+		</fileset>
+       <fileset dir="${lib.dir}" >
+			<patternset refid="sdk.jars" />
+		</fileset>
+    </path>
+
+    <target name="main" depends="clean,dev" description="cleans and runs the full build"/>
+    <target name="dev" depends="jar" description="runs src.depend build for development"/>
+
+    <target name="prepare">
+        <echo>${ant.file}</echo>
+        <mkdir dir="${webtier.lib.dir}"/>
+        <mkdir dir="${module.classes}"/>
+    </target>
+
+    <target name="copy-resources">
+        <copy todir="${module.classes}">
+            <fileset dir="${module.src}" includes="flex/webtier/server/j2ee/filemanager/history/**/*,flex/webtier/server/j2ee/filemanager/about/aboutFlex.swf,flex/webtier/server/j2ee/filemanager/detection-kit/**/*,**/*.xml,**/*.as,**/*.dtd,**/*.xsd,**/*.txt,**/*.vms,**/*.properties,**/*.sif" excludes="**/build.xml,flex/webtier/server/j2ee/filemanager/about/about*.as"/>
+        </copy>
+    </target>
+
+    <target name="compile" depends="prepare,run-depend,copy-resources" description="compile">
+        <javac source="${javac.src}" debug="${src.debug}" destdir="${module.classes}" srcdir="${module.src}"
+            includes="**/*.java" classpathref="classpath"/>
+        <echo file="${module.classes}/flex/webtier/services/version.properties" append="false">build=${build.number}</echo>
+    </target>
+
+    <!-- just copy all velocity templates *.vm from src/ to classes/ -->
+    <!-- TODO should actually compile them in Velocity for validation before copying -->
+    <target name="templates">
+        <echo level="info" message="Building serialized velocity templates."/>
+        <java fork="true" classname="flex.util.SerializedTemplateFactory" dir="${module.src}">
+            <classpath>
+                <fileset dir="${lib.dir}" includes="*.jar"/>
+            </classpath>
+            <arg value="flex/webtier/util/index.template.vm"/>
+            <arg value="flex/webtier/util/body.vm"/>
+            <arg value="flex/webtier/util/client.vm"/>
+            <arg value="flex/webtier/util/error.vm"/>
+            <arg value="flex/webtier/util/express.vm"/>
+            <arg value="flex/webtier/util/nodetection.vm"/>
+        </java>
+        <copy todir="${module.classes}">
+            <fileset dir="${module.src}" includes="**/*.vms"/>
+        </copy>
+    </target>
+
+    <target name="jar" depends="compile,templates">
+        <jar file="${module.jar}">
+            <fileset dir="${module.classes}">
+                <include name="**/*"/>
+            </fileset>
+            <manifest>
+                <attribute name="Sealed" value="${manifest.sealed}" />
+                <attribute name="Implementation-Title" value="${manifest.Implementation-Title} - Webtier Compiler" />
+                <attribute name="Implementation-Version" value="${manifest.Implementation-Version}.${build.number}" />
+                <attribute name="Implementation-Vendor" value="${manifest.Implementation-Vendor}" />
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="clean" description="clean">
+        <delete file="${module.jar}" failonerror="false"/>
+        <delete file="${module.req.jar}" failonerror="false"/>
+        <delete file="${webtier.lib.dir}/flex-webtier-req.jar"/>
+        <delete file="${webtier.lib.dir}/flex-server.jar" failonerror="false"/>
+        <delete failonerror="false" dir="${module.classes}"/>
+        <delete file="${module.src}/velocity.log" failonerror="false"/>
+        <!-- the generated pre-compiled velocity templates -->
+        <delete failonerror="false">
+        	<fileset dir="${module.src}" includes="**/*.vms"/>
+        </delete>
+    </target>
+
+    <target name="run-depend" if="src.depend">
+        <echo message="Removing class files that changed and dependent class files."/>
+        <depend cache="${module.classes}" srcdir="${module.src}" destdir="${module.classes}"/>
+    </target>
+
+</project>

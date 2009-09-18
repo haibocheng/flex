@@ -1,0 +1,197 @@
+<?xml version="1.0"?>
+
+<!--
+
+    ADOBE SYSTEMS INCORPORATED
+    Copyright 2007-2008 Adobe Systems Incorporated
+    All Rights Reserved.
+
+    NOTICE: Adobe permits you to use, modify, and distribute this file
+    in accordance with the terms of the license agreement accompanying it.
+
+-->
+
+<project name="webtier/coldfusion" default="main" basedir="../../..">
+
+    <!-- properties -->
+    <property file="${basedir}/build.properties" />
+    <property file="${basedir}/modules/webtier/build.properties" />
+
+    <property name="lib.dir" value="${basedir}/lib" />
+    <property name="module.dir" value="${webtier.dir}/coldfusion"/>
+    <property name="module.lib.dir" location="${module.dir}/lib"/>
+    <property name="module.src" value="${module.dir}/src/java"/>
+    <property name="module.classes" value="${module.dir}/classes"/>
+    <property name="module.dist.dir" value="${module.dir}/dist"/>
+    <property name="module.war" value="${module.dist.dir}/webapp"/>
+	<property name="flex.bootstrap.module.dir" value="${webtier.dir}/bootstrap"/>
+    <property name="flex.bootstrap.module.src" value="${flex.bootstrap.module.dir}/java/src"/>
+    <property name="bootstrap.jar" value="${module.dist.dir}/webapp/WEB-INF/lib/cf-bootstrap-for-flex.jar"/>
+	<property name="template.war" value="${basedir}/webapps/webtier"/>
+    <property name="build.number" value=""/>
+
+    <patternset id="bootstrap.jar.files">
+        <include name="flex/webtier/server/j2ee/jsp/**/*.class"/>
+        <include name="flex/webtier/server/j2ee/wrappers/**/*.class"/>
+        <include name="flex/webtier/util/**/*.class"/>
+        <include name="coldfusion/bootstrap/**/*.class"/>
+        <include name="**/*.tld"/>
+        <exclude name="coldfusion/bootstrap/TagGenerator*.class"/>
+    </patternset>
+	
+    <path id="classpath">
+        <pathelement location="${servlet-api.jar}"/>
+        <pathelement location="${jsp-api.jar}"/>
+        <fileset dir="${module.lib.dir}" includes="*.jar"/>
+    </path>
+	
+	<patternset id="webapp.flex.files">
+        <include name="flash-unicode-table.xml" />
+        <include name="flex-config.xml" />
+        <include name="flex-sdk-description.xml" />
+        <include name="flex-webtier-config.xml" />
+        <include name="global.css" />
+        <include name="license.properties" />
+        <include name="*-manifest.xml" />
+        <include name="*.ser" />
+        <include name="jars/*.jar" />
+        <include name="libs/**/*.swc" />
+        <include name="rsls/**/*.*" />
+        <include name="locale/**/*.swc" />
+        <include name="themes/*.swc" />
+        <include name="user_classes/add_your_as_and_swc_files_here" />
+        <exclude name="jars/commons-collections.jar" />
+        <exclude name="jars/commons-discovery.jar" />
+        <exclude name="jars/commons-logging.*" />
+        <exclude name="jars/commons-logging.properties" />
+        <exclude name="jars/flex-messaging-common.jar" />
+    </patternset>
+
+    <patternset id="webapp.lib.files">
+        <include name="cfdataservicesadapter.jar" />
+        <include name="cfgatewayadapter.jar" />
+        <include name="concurrent.jar" />
+        <include name="flex-acrobat.jar" />
+    </patternset>
+
+    <target name="main" depends="clean,jar" description="cleans and runs the full build"/>
+    <target name="dev" depends="jar" description="runs src.depend build for development"/>
+
+    <target name="clean">
+        <delete file="${bootstrap.jar}" failonerror="false"/>
+        <delete failonerror="false" dir="${module.classes}"/>
+        <delete failonerror="false" dir="${module.src}/flex"/>
+        <delete dir="${module.dist.dir}" includeemptydirs="true" quiet="true"/>
+        <delete dir="${webtier.dist.dir}/coldfusion" includeemptydirs="true" quiet="true"/>
+    </target>
+
+    <target name="prepare">
+        <mkdir dir="${module.classes}"/>
+        <mkdir dir="${module.dist.dir}/webapp"/>
+        <mkdir dir="${module.war}/WEB-INF/lib"/>
+		<mkdir dir="${template.war}/WEB-INF/lib"/>
+		
+        <!-- 
+            Grab the flex bootstrap JSP tag files that will be used to
+            generate new implementations that will use the coldfusion
+            bootstrap instead
+        -->
+        <copy todir="${module.classes}">
+            <fileset dir="${flex.bootstrap.module.src}">
+                <include name="**/*.properties"/>
+                <include name="**/*.tld"/>
+            </fileset>
+        </copy>
+        <copy todir="${module.src}">
+            <fileset dir="${flex.bootstrap.module.src}">
+                <include name="flex/webtier/server/j2ee/jsp/FlashVarTag.java"/>
+                <include name="flex/webtier/server/j2ee/jsp/MxmlTag.java"/>
+                <include name="flex/webtier/server/j2ee/wrappers/*.java"/>
+                <include name="flex/webtier/util/FileUtils.java"/>
+                <include name="flex/webtier/util/J2EEUtil.java"/>
+            </fileset>
+        </copy>
+
+		<!--
+		    Copy files for our partial distribution of flex for cf to our
+		    module distribution directory for the webapp.
+         -->
+        <copy todir="${module.war}/WEB-INF/flex">
+            <fileset dir="${template.war}/WEB-INF/flex">
+                <patternset refid="webapp.flex.files"/>
+            </fileset>
+        </copy>
+        <copy todir="${module.war}/WEB-INF/flex/jars">
+            <fileset dir="${template.war}/WEB-INF/lib">
+                <patternset refid="webapp.lib.files"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="compile" depends="prepare,run-depend">
+        <javac source="${javac.src}" debug="${src.debug}" srcdir="${module.src}" destdir="${module.classes}" classpathref="classpath"/>
+    </target>
+
+    <target name="run-depend" if="src.depend">
+        <echo message="Removing class files that changed and dependent class files."/>
+        <depend cache="${module.classes}" srcdir="${module.src}" destdir="${module.classes}"/>
+    </target>
+
+    <target name="jar" depends="generate">
+        <jar file="${bootstrap.jar}">
+            <fileset dir="${module.classes}">
+                <patternset refid="bootstrap.jar.files"/>
+            </fileset>
+            <manifest>
+                <attribute name="Sealed" value="${manifest.sealed}"/>
+                <attribute name="Implementation-Title" value="${manifest.Implementation-Title} - ColdFusion Bootstrap Additions"/>
+                <attribute name="Implementation-Version" value="${manifest.Implementation-Version}.${build.number}"/>
+                <attribute name="Implementation-Vendor" value="${manifest.Implementation-Vendor}"/>
+            </manifest>
+        </jar>
+        <delete quiet="true" includeemptydirs="true">
+           <fileset dir="${module.src}">
+               <include name="flex/webtier/server/j2ee/jsp/*.java"/>
+               <include name="flex/webtier/server/j2ee/wrappers/*.java"/>
+               <include name="flex/webtier/util/FileUtils.java"/>
+               <include name="flex/webtier/util/J2EEUtil.java"/>
+           </fileset>
+       </delete>
+    </target>
+
+    <target name="package">
+        <mkdir dir="${webtier.dist.dir}/coldfusion"/>
+        <zip destfile="${webtier.dist.dir}/coldfusion/Flex4_webtier_for_coldfusion.zip">
+            <fileset dir="${module.war}">
+                <exclude name="build.xml" />
+                <exclude name="META-INF/MANIFEST.MF" />
+                <exclude name="**/generated/**/*"/>
+            </fileset>
+        </zip>
+        <copy todir="${webtier.dist.dir}/coldfusion/lib">
+            <fileset dir="${basedir}/lib">
+                <include name="flex-messaging-common.jar" />
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- jsp tag specific -->
+    <target name="generate" depends="compile">
+        <java classname="coldfusion.bootstrap.TagGenerator" fork="true">
+            <arg value="${module.src}"/>
+            <arg value="flex.webtier.server.j2ee.jsp.FlashVarTag"/>
+            <arg value="flex.webtier.server.j2ee.jsp.MxmlTag"/>
+            <classpath>
+                <path refid="classpath"/>
+                <pathelement path="${module.classes}"/>
+            </classpath>
+        </java>
+        <javac source="${javac.src}" debug="true" srcdir="${module.src}" destdir="${module.classes}" includes="**/*Impl.java">
+            <classpath>
+                <path refid="classpath"/>
+                <pathelement path="${module.classes}"/>
+            </classpath>
+        </javac>
+    </target>
+
+</project>

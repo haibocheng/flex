@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UnitTester xmlns:mx="http://www.adobe.com/2006/mxml" xmlns="*" testSWF="main.mxml">
+
+	<!-- this set of lines form a template that must be in each unit test -->
+	<mx:Script>
+	<![CDATA[
+	public static function init(o:DisplayObject):void
+	{
+	}
+	]]>
+	</mx:Script>
+	<mx:Metadata>
+	<![CDATA[
+		[Mixin]
+	]]>
+	</mx:Metadata>
+	<!-- end of set of lines that must be in each unit test -->
+
+	<mx:Script>
+	<![CDATA[
+	]]>
+	</mx:Script>
+
+	<testCases>
+<!--
+-->
+		<TestCase testID="SetupSparkDeferredInstantiationTest">
+			<body>
+				<SetProperty target="" propertyName="currentState" value="sparkDeferredInstantiationTest" 
+                    waitEvent="updateComplete" />
+				<AssertPropertyValue target="sparkDeferredInstantiationTests.deferredContent" propertyName="numElements" value="0" />
+			</body>
+		</TestCase>
+		<TestCase testID="SparkDeferredInstantiationTest1">
+			<setup>
+				<RunCode code="application.sparkDeferredInstantiationTests.deferredContent.createDeferredContent()" 
+						 waitTarget="sparkDeferredInstantiationTests.deferredContent" waitEvent="contentCreationComplete" />
+			</setup>
+			<body>
+				<AssertPropertyValue target="sparkDeferredInstantiationTests.deferredContent" propertyName="numElements" value="2" />
+			</body>
+		</TestCase>
+	</testCases>
+</UnitTester>

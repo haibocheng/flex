@@ -397,6 +397,17 @@ public class TextFlowUtil
         
         return xml;
     }
+
+	/**
+	 *  Simple helper function to clone the TextFlow object.
+	 *	
+	 *	This is required because editable TextFlow's cannot be passed
+	 *	around to different text editors
+	 */
+	public static function clone(textFlow:TextFlow):TextFlow
+	{
+		return importFromXML(export(textFlow));
+	}
 }
 
 }

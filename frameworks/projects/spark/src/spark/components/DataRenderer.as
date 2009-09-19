@@ -113,5 +113,27 @@ public class DataRenderer extends Group implements IDataRenderer
 
         dispatchEvent(new FlexEvent(FlexEvent.DATA_CHANGE));
     }
+
+	private var _index:int = -1;
+	[Bindable(event="indexChange")]
+	/**
+	 *  The index of this DataRenderer.
+	 *	
+	 *	This allows you to be able to easily use this information
+	 *	from a custom item renderer without having to write complex functions.
+	 *	
+	 *	API_CHANGE (should go into Interface)
+	 */
+	public function get index():int
+	{
+		return _index;
+	}
+	public function set index(value:int):void
+	{
+		if (_index == value) 
+			return;
+		_index = value;
+		dispatchBindingEvent("indexChange");
+	}
 }
 }

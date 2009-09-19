@@ -3192,7 +3192,7 @@ public class RichEditableText extends UIComponent
      *  READ_WRITE.
      *  When done call releaseSelectionManager().
      */
-    private function getSelectionManager():ISelectionManager
+    mx_internal function getSelectionManager():ISelectionManager
     {
         priorEditingMode = editingMode;
         
@@ -3205,7 +3205,7 @@ public class RichEditableText extends UIComponent
     /**
      *  @private
      */
-    private function releaseSelectionManager():void
+    mx_internal function releaseSelectionManager():void
     {
         _textContainerManager.endInteraction();
         
@@ -3217,7 +3217,7 @@ public class RichEditableText extends UIComponent
      *  The editingMode is set to READ_WRITE.
      *  When done call releaseEditManager().  Should only be used by API calls.
      */
-    private function getEditManager():IEditManager
+    mx_internal function getEditManager():IEditManager
     {
         // This triggers a damage event if the interactionManager is
         // changed. 
@@ -3242,7 +3242,7 @@ public class RichEditableText extends UIComponent
      *  @private
      *  Should only be used by API calls.
      */
-    private function releaseEditManager(editManager:IEditManager):void
+    mx_internal function releaseEditManager(editManager:IEditManager):void
     {
         editManager.endCompositeOperation();
                     

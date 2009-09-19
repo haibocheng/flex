@@ -643,7 +643,8 @@ public class PopUpAnchor extends UIComponent
             DisplayObject(popUp).transform.matrix = m;
         
         // apply the color transformation
-        DisplayObject(popUp).transform.colorTransform = $transform.concatenatedColorTransform
+		// this causes flickering to occur if you run an effect
+        // DisplayObject(popUp).transform.colorTransform = $transform.concatenatedColorTransform
             
     }
 

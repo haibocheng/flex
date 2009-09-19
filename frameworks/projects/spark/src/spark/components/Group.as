@@ -1311,11 +1311,10 @@ public class Group extends GroupBase implements IVisualElementContainer, IShared
         
         if (notifyListeners)
         {
-            dispatchEvent(new ElementExistenceEvent(
-                          ElementExistenceEvent.ELEMENT_ADD, false, false, element, index));
+            dispatchElementExistenceEvent(ElementExistenceEvent.ELEMENT_ADD, element, index);;
             
             if (element is IUIComponent)
-                element.dispatchEvent(new FlexEvent(FlexEvent.ADD));
+                (element as UIComponent).dispatchFlexEvent(FlexEvent.ADD);;
         }
         
         invalidateSize();
@@ -1339,11 +1338,10 @@ public class Group extends GroupBase implements IVisualElementContainer, IShared
 
         if (notifyListeners)
         {        
-            dispatchEvent(new ElementExistenceEvent(
-                          ElementExistenceEvent.ELEMENT_REMOVE, false, false, element, index));
+            dispatchElementExistenceEvent(ElementExistenceEvent.ELEMENT_REMOVE, element, index);;
             
             if (element is IUIComponent)
-                element.dispatchEvent(new FlexEvent(FlexEvent.REMOVE));
+                (element as UIComponent).dispatchFlexEvent(FlexEvent.REMOVE);;
         }
         
         if (element && (element is IGraphicElement))

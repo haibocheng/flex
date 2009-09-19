@@ -26,6 +26,7 @@ import mx.events.PropertyChangeEvent;
 import spark.components.ResizeMode;
 import spark.core.IViewport;
 import spark.core.MaskType;
+import spark.events.ElementExistenceEvent;
 import spark.layouts.BasicLayout;
 import spark.layouts.supportClasses.LayoutBase;
 
@@ -1215,6 +1216,12 @@ public class GroupBase extends UIComponent implements IViewport
     {
         super.removeEventListener(type, listener, useCapture);
     }
+
+	public function dispatchElementExistenceEvent(type:String, element:IVisualElement, index:int = -1):void
+	{
+		if (shouldDispatchEvent(type))
+			dispatchEvent(new ElementExistenceEvent(type, false, false, element, index));
+	}
            
     //--------------------------------------------------------------------------
     //

@@ -125,6 +125,15 @@ public class AddItems extends OverrideBase implements IOverride
      *  @private
      */
     private var instanceCreated:Boolean = false;
+
+    /**
+     *  @private
+     * 
+     * 	This keeps track of the document, so when we
+     * 	remove it, and add it back, it uses the same doc.
+     * 	Required for effects.
+     */
+    private var documentContext:Object;
     
 
     //--------------------------------------------------------------------------
@@ -501,6 +510,8 @@ public class AddItems extends OverrideBase implements IOverride
             localItems = items;
         else
             localItems = [items];
+		
+		prepareAdd(localItems);
         
         switch (position)
         {
@@ -537,6 +548,9 @@ public class AddItems extends OverrideBase implements IOverride
         
         added = true;
         numAdded = localItems.length;
+		
+		// for effects
+		dispatchAddEvent(dest, localItems);
     }
 
     /**
@@ -562,6 +576,9 @@ public class AddItems extends OverrideBase implements IOverride
             localItems = items;
         else
             localItems = [items];
+		
+		// save doc
+		prepareRemove(localItems);
              
         if ((propertyName == null || propertyName == "mxmlContent") && (dest is IVisualElementContainer))
         {
@@ -597,9 +614,122 @@ public class AddItems extends OverrideBase implements IOverride
         
         if (destructionPolicy == "auto")
             destroyInstance();
+		else
+			// this dispatches an event for effects if it so desires.
+			// otherwise we'll continue on as normal
+			dispatchRemoveEvent(dest, localItems);
             
         added = false;
     }
+	
+	/**
+	 *  Dispatches an "added" event at the right time, and makes
+	 *	sure the document is the right document to get the effects from.
+	 *	Allows you to do state change events with "includeIn"
+	 */
+	protected function dispatchAddEvent(destionation:Object, items:Array):void
+	{
+		var item:Object;
+		var n:int = items.length;
+		for (var i:int = 0; i < n; i++)
+		{
+			item = items[i];
+			if (item is UIComponent && item.hasEventListener("added"))
+			{
+				if (item.getStyle("addedEffect") != null)
+				{
+					// set stored document
+					if ("document" in item && item.document != documentContext
+						&& documentContext != null)
+					{
+			        	item.document = documentContext;
+					}
+		
+					item.dispatchEvent(new Event("added"));
+				}
+			}
+		}
+	}
+	
+	/**
+	 *  Ends the End effect if there is one
+	 */
+	protected function prepareAdd(items:Array):void
+	{
+		// this ends hide effects, that's it
+		var item:Object;
+		var n:int = items.length;
+		for (var i:int = 0; i < n; i++)
+		{
+			item = items[i];
+			if (item is UIComponent && item.hasEventListener("added"))
+			{
+				if (item.getStyle("addedEffect") != null)
+				{
+					var effects:Array = item.getEffectsForProperty("parent");
+					if (effects)
+					{
+						var effect:Object;
+						for each (effect in effects)
+						{
+							if (effect.triggerEvent && effect.triggerEvent.type == "removed")
+							{
+								effect.end();
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 *  Support for remove effect.  Sets document to value after it was removed
+	 */
+	protected function dispatchRemoveEvent(destination:Object, items:Array):void
+	{
+		var item:Object;
+		var n:int = items.length;
+		for (var i:int = 0; i < n; i++)
+		{
+			item = items[i];
+			if (item is UIComponent && item.hasEventListener("removed"))
+			{
+				if (item.getStyle("removedEffect") != null)
+				{	
+					if ("document" in item && item.document == null)
+						item.document = documentContext;
+						
+					item.dispatchEvent(new Event("removed"));
+				}
+			}
+		}
+	}
+	
+	/**
+	 *  Stores the document because of a Flex bug
+	 */
+	protected function prepareRemove(items:Array):void
+	{
+		var item:Object;
+		var n:int = items.length;
+		for (var i:int = 0; i < n; i++)
+		{
+			item = items[i];
+			if (item is UIComponent && item.hasEventListener("removed"))
+			{
+				if (item.getStyle("removedEffect") != null)
+				{
+					// store the document for these items
+					if ("document" in item && documentContext != item.document
+							&& item.document != null)
+					{
+			        	documentContext = item.document;
+					}
+				}
+			}
+		}
+	}
        
     /**
      *  @private

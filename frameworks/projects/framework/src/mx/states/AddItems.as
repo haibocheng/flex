@@ -12,6 +12,7 @@
 package mx.states 
 {
 import flash.display.DisplayObject;
+import flash.events.Event;
 
 import mx.collections.IList;
 import mx.core.ContainerCreationPolicy;

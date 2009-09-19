@@ -45,6 +45,17 @@ def modified
   files
 end
 
+def revision
+  revision = 'unknown'
+  %x[svn info].each do |line|
+    if line.match(/Revision\:\s*(.*)/)
+      revision = $1
+      break
+    end
+  end
+  revision
+end
+
 desc "Commit to svn and git"
 task :push do
 end
@@ -95,13 +106,7 @@ namespace :svn do
   desc "Updates and merges Flex SDK with local working copy"
   task :commit => ['svn:cleanup'] do
     file = "svn-commit-template-tempfile.txt"
-    @revision = 'unknown'
-    %x[svn info].each do |line|
-      if line.match(/Revision\:\s*(.*)/)
-        @revision = $1
-        break
-      end
-    end
+    @revision = revision
     @files = modified
     begin
       # eventually I will use Process and Kernel, but haven't learned that yet
@@ -131,15 +136,15 @@ namespace :svn do
   
   desc "Merge remote trunk with local working copy"
   task :merge_local => ['svn:cleanup'] do
+    newer = ENV.include?("new") ? ENV["new"] : "HEAD"
+    older = nil
     File.open(__FILE__, "r+") do |this|
-      newer = ENV.include?("new") ? ENV["new"] : "HEAD"
-      older = nil
       this.readlines.each do |line|
         if line.match(LAST_MERGE_PATTERN)
           match = $1
           older = ENV.include?("old") ? ENV["old"] : match # the last match
           system("svn merge -r #{older}:#{newer} #{TRUNK} ..")
-          line.gsub(match, newer)
+          line.gsub("LAST_MERGE = #{match}", "LAST_MERGE = #{revision}")
           break
         end
       end
@@ -147,7 +152,9 @@ namespace :svn do
         raise "No old merge pattern (LAST_MERGE) in Rakefile"
       end
     end
-    system("svn commit -m 'merged with trunk: #{older.to_s} => #{newer.to_s}'")
+    message = "merged with trunk: #{older.to_s} => #{newer.to_s}"
+    system("svn commit -m '#{message}'")
+    puts message
   end
   
   desc "Merge remote trunk with local working copy"

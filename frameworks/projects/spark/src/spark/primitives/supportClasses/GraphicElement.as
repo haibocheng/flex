@@ -45,6 +45,7 @@ import mx.filters.BaseFilter;
 import mx.filters.IBitmapFilter;
 import mx.geom.Transform;
 import mx.geom.TransformOffsets;
+import mx.managers.EventManager;
 import mx.managers.ILayoutManagerClient;
 import mx.utils.MatrixUtil;
 
@@ -3733,12 +3734,21 @@ public class GraphicElement extends EventDispatcher
     
     /**
      *  @private
-     *  Helper function to dispatch the UpdateComplete event 
+     *  Helper function to dispatch the UpdateComplete event.
+     *	
+     *	Conditionally dispatches it because 90% of the time you
+     *	don't need to listen to it.
      */
     private function dispatchUpdateComplete():void
     {
-        dispatchEvent(new FlexEvent(FlexEvent.UPDATE_COMPLETE));
+		if (shouldDispatchEvent(FlexEvent.UPDATE_COMPLETE))
+        	dispatchEvent(new FlexEvent(FlexEvent.UPDATE_COMPLETE));
     }
+
+	public function shouldDispatchEvent(type:String):Boolean
+	{
+		return (hasEventListener(type) || EventManager.capturable(type));
+	}
 
     //--------------------------------------------------------------------------
     //

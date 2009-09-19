@@ -1,5 +1,7 @@
 require 'rake'
 
+# This might soon integrate with ProjectSprouts
+
 # Basic Rake tasks for compiling Flex, if you have ruby and everything setup
 # This will be automated in the future (installing ruby and such)
 

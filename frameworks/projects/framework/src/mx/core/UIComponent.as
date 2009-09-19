@@ -59,6 +59,7 @@ import mx.geom.RoundedRectangle;
 import mx.geom.Transform;
 import mx.geom.TransformOffsets;
 import mx.managers.CursorManager;
+import mx.managers.EventManager;
 import mx.managers.ICursorManager;
 import mx.managers.IFocusManager;
 import mx.managers.IFocusManagerComponent;
@@ -1379,6 +1380,37 @@ public class UIComponent extends FlexSprite
         }
     }
 
+	private var _suspendEventProcessing:Boolean = false;
+	/**
+	 *  If you don't want any binding to occur, you can temporarily set this to true
+	 *	
+	 *	API_CHANGE
+	 */
+	public function get suspendEventProcessing():Boolean
+	{
+		return _suspendEventProcessing;
+	}
+	
+	public function set suspendEventProcessing(value:Boolean):void
+	{
+		_suspendEventProcessing = value;
+	}
+	
+	private var _forceEvents:Boolean = false;
+	/**
+	 *  Force events to be dispatched, even if there are no listeners
+	 *	
+	 *	API_CHANGE
+	 */
+	public function get forceEvents():Boolean
+	{
+		return _forceEvents;
+	}
+	public function set forceEvents(value:Boolean):void
+	{
+		_forceEvents = value;
+	}
+
     //--------------------------------------------------------------------------
     //
     //  Constructor
@@ -1522,7 +1554,7 @@ public class UIComponent extends FlexSprite
         {
             setVisible(_visible, true);
 
-            dispatchEvent(new FlexEvent(FlexEvent.CREATION_COMPLETE));
+            dispatchFlexEvent(FlexEvent.CREATION_COMPLETE);
         }
     }
 
@@ -1575,7 +1607,7 @@ public class UIComponent extends FlexSprite
         _processedDescriptors = value;
 
         if (value)
-            dispatchEvent(new FlexEvent(FlexEvent.INITIALIZE));
+            dispatchFlexEvent(FlexEvent.INITIALIZE);
     }
 
     //----------------------------------
@@ -1957,7 +1989,7 @@ public class UIComponent extends FlexSprite
 
         invalidateProperties();
 
-        dispatchEvent(new Event("xChanged"));
+        dispatchBindingEvent("xChanged");
     }
 
     [Bindable("zChanged")]
@@ -1989,7 +2021,7 @@ public class UIComponent extends FlexSprite
         _layoutFeatures.layoutZ = value;
         invalidateTransform();
         invalidateProperties();
-        dispatchEvent(new Event("zChanged"));
+        dispatchBindingEvent("zChanged");
     }
 
     /**
@@ -2315,7 +2347,7 @@ public class UIComponent extends FlexSprite
         }
         invalidateProperties();
 
-        dispatchEvent(new Event("yChanged"));
+        dispatchBindingEvent("yChanged");
     }
 
     //----------------------------------
@@ -2387,7 +2419,7 @@ public class UIComponent extends FlexSprite
 
             _width = value;
 
-            dispatchEvent(new Event("widthChanged"));
+            dispatchBindingEvent("widthChanged");
         }
     }
 
@@ -2459,7 +2491,7 @@ public class UIComponent extends FlexSprite
 
             _height = value;
 
-            dispatchEvent(new Event("heightChanged"));
+            dispatchBindingEvent("heightChanged");
         }
     }
 
@@ -2540,7 +2572,7 @@ public class UIComponent extends FlexSprite
             invalidateParentSizeAndDisplayList();
     
         }
-        dispatchEvent(new Event("scaleXChanged"));
+        dispatchBindingEvent("scaleXChanged");
     }
 
     //----------------------------------
@@ -2622,7 +2654,7 @@ public class UIComponent extends FlexSprite
             invalidateParentSizeAndDisplayList();
         }
 
-        dispatchEvent(new Event("scaleYChanged"));
+        dispatchBindingEvent("scaleYChanged");
     }
 
    //----------------------------------
@@ -2670,7 +2702,7 @@ public class UIComponent extends FlexSprite
         invalidateTransform();
         invalidateProperties();
 		invalidateParentSizeAndDisplayList();
-        dispatchEvent(new Event("scaleZChanged"));
+        dispatchBindingEvent("scaleZChanged");
     }
 
     /**
@@ -2796,9 +2828,7 @@ public class UIComponent extends FlexSprite
 
         if (!noEvent)
         {
-            dispatchEvent(new FlexEvent(value ?
-                                        FlexEvent.SHOW :
-                                        FlexEvent.HIDE));
+            dispatchFlexEvent(value ? FlexEvent.SHOW : FlexEvent.HIDE);
         }
     }
 
@@ -2839,7 +2869,7 @@ public class UIComponent extends FlexSprite
             
             $alpha = value;
 
-            dispatchEvent(new Event("alphaChanged"));
+            dispatchBindingEvent("alphaChanged");
         }
     }
 
@@ -2930,7 +2960,7 @@ public class UIComponent extends FlexSprite
 
         invalidateDisplayList();
 
-        dispatchEvent(new Event("enabledChanged"));
+        dispatchBindingEvent("enabledChanged");
     }
 
     //----------------------------------
@@ -3393,7 +3423,7 @@ public class UIComponent extends FlexSprite
     public function set focusManager(value:IFocusManager):void
     {
         _focusManager = value;
-        dispatchEvent(new FlexEvent(FlexEvent.ADD_FOCUS_MANAGER));
+        dispatchFlexEvent(FlexEvent.ADD_FOCUS_MANAGER);
     }
 
     //----------------------------------
@@ -4389,7 +4419,7 @@ public class UIComponent extends FlexSprite
         if (value != _hasFocusableChildren)
         {
             _hasFocusableChildren = value;
-            dispatchEvent(new Event("hasFocusableChildrenChange"));
+            dispatchBindingEvent("hasFocusableChildrenChange");
         }
     }
 
@@ -4480,7 +4510,7 @@ public class UIComponent extends FlexSprite
         if (value != _tabFocusEnabled)
         {
             _tabFocusEnabled = value;
-            dispatchEvent(new Event("tabFocusEnabledChange"));
+            dispatchBindingEvent("tabFocusEnabledChange");
         }
     }
 
@@ -5035,7 +5065,7 @@ public class UIComponent extends FlexSprite
         invalidateSize();
         invalidateParentSizeAndDisplayList();
 
-        dispatchEvent(new Event("explicitMinWidthChanged"));
+        dispatchBindingEvent("explicitMinWidthChanged");
     }
 
     //----------------------------------
@@ -5102,7 +5132,7 @@ public class UIComponent extends FlexSprite
         invalidateSize();
         invalidateParentSizeAndDisplayList();
 
-        dispatchEvent(new Event("explicitMinHeightChanged"));
+        dispatchBindingEvent("explicitMinHeightChanged");
     }
 
     //----------------------------------
@@ -5172,7 +5202,7 @@ public class UIComponent extends FlexSprite
         invalidateSize();
         invalidateParentSizeAndDisplayList();
 
-        dispatchEvent(new Event("explicitMaxWidthChanged"));
+        dispatchBindingEvent("explicitMaxWidthChanged");
     }
 
     //----------------------------------
@@ -5242,7 +5272,7 @@ public class UIComponent extends FlexSprite
         invalidateSize();
         invalidateParentSizeAndDisplayList();
 
-        dispatchEvent(new Event("explicitMaxHeightChanged"));
+        dispatchBindingEvent("explicitMaxHeightChanged");
     }
 
     //----------------------------------
@@ -5304,7 +5334,7 @@ public class UIComponent extends FlexSprite
         invalidateSize();
         invalidateParentSizeAndDisplayList();
 
-        dispatchEvent(new Event("explicitWidthChanged"));
+        dispatchBindingEvent("explicitWidthChanged");
     }
 
     //----------------------------------
@@ -5366,7 +5396,7 @@ public class UIComponent extends FlexSprite
         invalidateSize();
         invalidateParentSizeAndDisplayList();
 
-        dispatchEvent(new Event("explicitHeightChanged"));
+        dispatchBindingEvent("explicitHeightChanged");
     }
     
     //----------------------------------
@@ -5463,7 +5493,7 @@ public class UIComponent extends FlexSprite
                 p.invalidateDisplayList();
             }
 
-            dispatchEvent(new Event("includeInLayoutChanged"));
+            dispatchBindingEvent("includeInLayoutChanged");
         }
     }
 
@@ -6066,7 +6096,7 @@ public class UIComponent extends FlexSprite
 
         ToolTipManager.registerToolTip(this, oldValue, value);
 
-        dispatchEvent(new Event("toolTipChanged"));
+        dispatchBindingEvent("toolTipChanged");
     }
 
     //----------------------------------
@@ -6363,7 +6393,7 @@ public class UIComponent extends FlexSprite
 
         errorStringChanged = true;
         invalidateProperties();
-        dispatchEvent(new Event("errorStringChanged"));
+        dispatchBindingEvent("errorStringChanged");
     }
 
     /**
@@ -6559,8 +6589,8 @@ public class UIComponent extends FlexSprite
 
         invalidateProperties();
 
-        dispatchEvent(new Event("xChanged"));
-        dispatchEvent(new Event("yChanged"));
+        dispatchBindingEvent("xChanged");
+        dispatchBindingEvent("yChanged");
     }
 
     //--------------------------------------------------------------------------
@@ -6900,7 +6930,7 @@ public class UIComponent extends FlexSprite
         // affect child creation.
         // Note that this implies that "preinitialize" handlers are called
         // top-down; i.e., parents before children.
-        dispatchEvent(new FlexEvent(FlexEvent.PREINITIALIZE));
+        dispatchFlexEvent(FlexEvent.PREINITIALIZE);
 
         // Create child objects.
         createChildren();
@@ -7254,9 +7284,9 @@ public class UIComponent extends FlexSprite
     {
         StyleProtoChain.styleChanged(this, styleProp);
         if (styleProp && (styleProp != "styleName"))
-            dispatchEvent(new Event(styleProp + "Changed"));
+            dispatchBindingEvent(styleProp + "Changed");
         else
-            dispatchEvent(new Event("allStylesChanged"));
+            dispatchBindingEvent("allStylesChanged");
     }
 
     /**
@@ -8212,10 +8242,11 @@ public class UIComponent extends FlexSprite
     public function setConstraintValue(constraintName:String, value:*):void
     {
         setStyle(constraintName, value);
+		dispatchBindingEvent(constraintName + "Change");
     }
     
     [Inspectable(category="General")]
-
+	[Bindable(event="leftChange")]
     /**
      *  @inheritDoc
      *  
@@ -8234,7 +8265,7 @@ public class UIComponent extends FlexSprite
     }
 
     [Inspectable(category="General")]
-
+	[Bindable(event="rightChange")]
     /**
      *  @inheritDoc
      *  
@@ -8253,7 +8284,7 @@ public class UIComponent extends FlexSprite
     }
 
     [Inspectable(category="General")]
-
+	[Bindable(event="topChange")]
     /**
      *  @inheritDoc
      *  
@@ -8272,7 +8303,7 @@ public class UIComponent extends FlexSprite
     }
 
     [Inspectable(category="General")]
-
+	[Bindable(event="bottomChange")]
     /**
      *  @inheritDoc
      *  
@@ -8291,7 +8322,7 @@ public class UIComponent extends FlexSprite
     }
 
     [Inspectable(category="General")]
-
+	[Bindable(event="horizontalCenterChange")]
     /**
      *  @inheritDoc
      *  
@@ -8310,7 +8341,7 @@ public class UIComponent extends FlexSprite
     }
 
     [Inspectable(category="General")]
-
+	[Bindable(event="verticalCenterChange")]
     /**
      *  @inheritDoc
      *  
@@ -8326,6 +8357,7 @@ public class UIComponent extends FlexSprite
     public function set verticalCenter(value:Object):void
     {
         setConstraintValue("verticalCenter", value != null ? value : undefined);
+		dispatchBindingEvent("verticalCenterChange");
     }
 
     [Inspectable(category="General")]
@@ -8675,7 +8707,7 @@ public class UIComponent extends FlexSprite
             else
                 _layoutFeatures.layoutX = x;
             
-            dispatchEvent(new Event("xChanged"));
+            dispatchBindingEvent("xChanged");
             changed = true;
         }
 
@@ -8686,7 +8718,7 @@ public class UIComponent extends FlexSprite
             else
                 _layoutFeatures.layoutY = y;
             
-            dispatchEvent(new Event("yChanged"));
+            dispatchBindingEvent("yChanged");
             changed = true;
         }
 
@@ -8726,14 +8758,14 @@ public class UIComponent extends FlexSprite
         if (_width != w)
         {
             _width = w;
-            dispatchEvent(new Event("widthChanged"));
+            dispatchBindingEvent("widthChanged");
             changed = true;
         }
 
         if (_height != h)
         {
             _height = h;
-            dispatchEvent(new Event("heightChanged"));
+            dispatchBindingEvent("heightChanged");
             changed = true;
         }
 
@@ -9179,12 +9211,11 @@ public class UIComponent extends FlexSprite
     /**
      *  @private
      */
-    private function dispatchMoveEvent():void
+    protected function dispatchMoveEvent():void
     {
-        var moveEvent:MoveEvent = new MoveEvent(MoveEvent.MOVE);
-        moveEvent.oldX = oldX;
-        moveEvent.oldY = oldY;
-        dispatchEvent(moveEvent);
+		if (shouldDispatchEvent(MoveEvent.MOVE))
+        	dispatchEvent(new MoveEvent(MoveEvent.MOVE, false, false,
+				oldX, oldY));
 
         oldX = x;
         oldY = y;
@@ -9193,16 +9224,73 @@ public class UIComponent extends FlexSprite
     /**
      *  @private
      */
-    private function dispatchResizeEvent():void
+    protected function dispatchResizeEvent():void
     {
-        var resizeEvent:ResizeEvent = new ResizeEvent(ResizeEvent.RESIZE);
-        resizeEvent.oldWidth = oldWidth;
-        resizeEvent.oldHeight = oldHeight;
-        dispatchEvent(resizeEvent);
+		if (shouldDispatchEvent(ResizeEvent.RESIZE))
+			dispatchEvent(new ResizeEvent(ResizeEvent.RESIZE, false, false,
+				oldWidth, oldHeight));
 
         oldWidth = width;
         oldHeight = height;
     }
+	
+	/**
+	 *  Helper method to give you space to customize event dispatching
+	 *	when properties are set.
+	 *	
+	 *	This may be overriden in subclasses, but be careful that it
+	 *	doesn't break any existing code. The default implementation
+	 *	just checks to see if it has an even listener before it creates
+	 *	the event.
+	 *	
+	 *	API_CHANGE
+	 */
+	public function dispatchBindingEvent(type:String):void
+    {
+		if (shouldDispatchEvent(type))
+        	dispatchEvent(new Event(type));
+    }
+
+	/**
+	 *  API_CHANGE
+	 */
+	public function dispatchFlexEvent(type:String):void
+	{
+		if (shouldDispatchEvent(type))
+			dispatchEvent(new FlexEvent(type));
+	}
+	
+	/**
+	 *  API_CHANGE
+	 */
+	public function dispatchStateChangeEvent(type:String, oldState:String, newState:String):void
+	{
+		if (shouldDispatchEvent(type))
+			dispatchEvent(new StateChangeEvent(type, false, false,
+				oldState, newState));
+	}
+	
+	/**
+	 *  API_CHANGE
+	 */
+	public function dispatchEffectEvent(type:String, effect:IEffectInstance):void
+	{
+		if (shouldDispatchEvent(type))
+			dispatchEvent(new EffectEvent(type, false, false,
+				effect));
+	}
+	
+	/**
+	 *  Dispatches event if it has event listener, or something in the chain has
+	 *	an event listener for it.
+	 *	
+	 *	API_CHANGE
+	 */
+	public function shouldDispatchEvent(type:String):Boolean
+	{
+		return (forceEvents || (!suspendEventProcessing
+			&& (hasEventListener(type) || EventManager.capturable(type))))
+	}
     
     /**
      *  @private
@@ -9313,7 +9401,6 @@ public class UIComponent extends FlexSprite
             getTransition(_currentState, requestedCurrentState) :
             null;
         var commonBaseState:String = findCommonBaseState(_currentState, requestedCurrentState);
-        var event:StateChangeEvent;
         var oldState:String = _currentState ? _currentState : "";
         var destination:State = getState(requestedCurrentState);
 
@@ -9343,14 +9430,12 @@ public class UIComponent extends FlexSprite
             nextTransition.effect.captureStartValues();
 
         // Dispatch currentStateChanging event
-        event = new StateChangeEvent(StateChangeEvent.CURRENT_STATE_CHANGING);
-        event.oldState = oldState;
-        event.newState = requestedCurrentState ? requestedCurrentState : "";
-        dispatchEvent(event);
+		dispatchStateChangeEvent(StateChangeEvent.CURRENT_STATE_CHANGING,
+			oldState, requestedCurrentState ? requestedCurrentState : "");
 
         // If we're leaving the base state, send an exitState event
         if (isBaseState(_currentState))
-            dispatchEvent(new FlexEvent(FlexEvent.EXIT_STATE));
+            dispatchFlexEvent(FlexEvent.EXIT_STATE);
 
         // Remove the existing state
         removeState(_currentState, commonBaseState);
@@ -9362,15 +9447,13 @@ public class UIComponent extends FlexSprite
         // If we're going back to the base state, dispatch an
         // enter state event, otherwise apply the state.
         if (isBaseState(currentState))
-            dispatchEvent(new FlexEvent(FlexEvent.ENTER_STATE));
+            dispatchFlexEvent(FlexEvent.ENTER_STATE);
         else
             applyState(_currentState, commonBaseState);
 
         // Dispatch currentStateChange
-        event = new StateChangeEvent(StateChangeEvent.CURRENT_STATE_CHANGE);
-        event.oldState = oldState;
-        event.newState = _currentState ? _currentState : "";
-        dispatchEvent(event);
+		dispatchStateChangeEvent(StateChangeEvent.CURRENT_STATE_CHANGE,
+			oldState, _currentState ? _currentState : "");
 
         if (nextTransition)
         {
@@ -12078,11 +12161,11 @@ public class UIComponent extends FlexSprite
             invalidateTransform();      
             invalidateParentSizeAndDisplayList();
             if (prevX != _layoutFeatures.layoutX)
-                dispatchEvent(new Event("xChanged"));
+                dispatchBindingEvent("xChanged");
             if (prevY != _layoutFeatures.layoutY)
-                dispatchEvent(new Event("yChanged"));
+                dispatchBindingEvent("yChanged");
             if (prevZ != _layoutFeatures.layoutZ)
-                dispatchEvent(new Event("zChanged"));
+                dispatchBindingEvent("zChanged");
         }
         else
         {
@@ -12231,7 +12314,7 @@ public class UIComponent extends FlexSprite
 			initAdvancedLayoutFeatures();
 
         _layoutFeatures.depth = value;      
-        dispatchEvent(new FlexEvent("layerChange"));
+        dispatchFlexEvent("layerChange");
         if (parent != null && parent is UIComponent)
             (parent as UIComponent).invalidateLayering();
     }

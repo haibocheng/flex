@@ -1,4 +1,6 @@
 require 'rake'
+require 'fileutils'
+require 'erb'
 
 # This might soon integrate with ProjectSprouts
 
@@ -20,6 +22,31 @@ LAST_MERGE_PATTERN = /\#\s*LAST_MERGE\s*\=\s*(\d+)/
 # Helper Methods
 def message
   # soon this will be a template once i figure that out
+end
+
+def template(target_path, template_path)
+  FileUtils.touch(target_path) unless File.exists?(target_path)
+  File.truncate(target_path, 0)
+  File.open(target_path, 'r+') do |f|
+    # parse the template file into this
+    f.print ERB.new(IO.read(template_path), nil, '-').result(binding) 
+  end
+end
+
+def modified
+  files = []
+  %x[svn status].each do |line|
+    line.gsub!(SVN_STATUS) do |match|
+      if $1 == "M"
+        files << $2 # $2 is the file name
+      end
+    end
+  end
+  files
+end
+
+desc "Commit to svn and git"
+task :push do
 end
 
 namespace :flex do
@@ -67,7 +94,34 @@ namespace :svn do
   
   desc "Updates and merges Flex SDK with local working copy"
   task :commit => ['svn:cleanup'] do
-    system("svn commit -m 'merging")
+    file = "svn-commit-template-tempfile.txt"
+    @revision = 'unknown'
+    %x[svn info].each do |line|
+      if line.match(/Revision\:\s*(.*)/)
+        @revision = $1
+        break
+      end
+    end
+    @files = modified
+    begin
+      # eventually I will use Process and Kernel, but haven't learned that yet
+      FileUtils.touch("#{file}") unless File.exists?("#{file}")
+      template("#{file}", "svn-commit-template.txt.erb")
+      $stdout.print "Please write your commit message.  Press Enter when complete\n"
+      system("vi #{file}") unless
+        system("edit #{file}") unless
+          system("mate #{file}")
+      $stdout.flush
+      $stdin.gets.chomp
+      message = IO.read(file)
+      raise 'stop: ' + message.to_s
+      system("svn commit -m '#{message}'")
+      system("git add .")
+      system("git commit -a -m '#{message}'")
+    rescue Exception => e
+      
+    end
+    FileUtils.remove(file) if File.exists?(file)
   end
   
   desc "Merge remote sandbox with remote trunk"
@@ -110,6 +164,14 @@ namespace :svn do
     end
     current_revision << "Last Merge: #{last_merge}\n\n"
     puts current_revision
+  end
+  
+  desc "Add modified, helper method"
+  task :add_m do
+    files = modified
+    if !files.empty?
+      system("svn add #{files.join(' ')}")
+    end
   end
   
   desc "Add all, helper method"

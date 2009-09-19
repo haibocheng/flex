@@ -15,6 +15,7 @@ package mx.managers.systemClasses
 import flash.display.DisplayObject;
 import flash.display.DisplayObjectContainer;
 import flash.display.InteractiveObject;
+import flash.events.Event;
 import flash.events.IEventDispatcher;
 
 import mx.core.IFlexDisplayObject;
@@ -191,6 +192,9 @@ public class ChildManager implements ISystemManagerChildManager
 	{
 		if (child is IUIComponent)
 			IUIComponent(child).parentChanged(null);
+		// this is used so the popup can have an animation on it
+		if (child.hasEventListener("removed"))
+			child.dispatchEvent(new Event("removeComplete"));
 	}
 
 	//--------------------------------------------------------------------------

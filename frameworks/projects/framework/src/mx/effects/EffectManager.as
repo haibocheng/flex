@@ -25,6 +25,8 @@ import mx.core.FlexGlobals;
 import mx.core.IDeferredInstantiationUIComponent;
 import mx.core.IFlexDisplayObject;
 import mx.core.IUIComponent;
+import mx.core.IVisualElement;
+import mx.core.IVisualElementContainer;
 import mx.core.UIComponent;
 import mx.core.UIComponentCachePolicy;
 import mx.core.mx_internal;
@@ -622,8 +624,20 @@ public class EffectManager extends EventDispatcher
                             // Since we get the "removed" event before the child is actually removed, 
                             // we need to delay adding back the child. We must exit the current 
                             // script block must exit before the child can be removed.
-                            UIComponent(targ).callLater(removedEffectHandler, [targ, parent, index, eventObj]);
-                        }
+                            if (targ.parent is SystemManager)
+                            {
+                            	var f:Function = function(event:Event):void
+                            	{
+	                            	targ.removeEventListener("removeComplete", f);
+                            		removedEffectHandler.apply(null, [targ, parent, index, eventObj]);
+                            	}
+                            	targ.addEventListener("removeComplete", f);
+                            }
+                            else
+                            {
+	                            UIComponent(targ).callLater(removedEffectHandler, [targ, parent, index, eventObj]);
+	                        }
+						}
                     }
                 }
             }
@@ -775,8 +789,7 @@ public class EffectManager extends EventDispatcher
         n = instances.length;
         for (i = 0; i < n; i++)
         {
-            effectsPlaying.push(
-                new EffectNode(effectInst, instances[i]));
+            effectsPlaying.push(new EffectNode(effectInst, instances[i]));
         }
         
         // Block all layout, responses from web services, and other background
@@ -793,7 +806,10 @@ public class EffectManager extends EventDispatcher
     {
         suspendEventHandling();
         // Add the child back to the parent so the effect can play upon it
-        parent.addChildAt(target, index);
+        if (parent is IVisualElementContainer)
+			(parent as IVisualElementContainer).addElementAt(target as IVisualElement, index);
+		else
+        	parent.addChildAt(target, index);
         resumeEventHandling();
         // Use target because the player assigns the Stage to the currentTarget when we leave the scope of the event handler function
         createAndPlayEffect(eventObj, target); 
@@ -842,7 +858,10 @@ public class EffectManager extends EventDispatcher
                     // Since we added the child back to the parent when the effect began,
                     // we need to remove it once the effect has finished.
                     suspendEventHandling();
-                    parent.removeChild(targ);
+                    if (parent is IVisualElementContainer)
+						(parent as IVisualElementContainer).removeElement(targ as IVisualElement);
+					else
+                    	parent.removeChild(targ);
                     resumeEventHandling();
                 }
             }

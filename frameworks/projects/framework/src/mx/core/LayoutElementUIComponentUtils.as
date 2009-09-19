@@ -446,42 +446,29 @@ public class LayoutElementUIComponentUtils
                                    pos);
         return pos.y;
     }
-
-    /**
-     *  @inheritDoc
-     *  
-     *  @langversion 3.0
-     *  @playerversion Flash 9
-     *  @playerversion AIR 1.1
-     *  @productversion Flex 3
-     */
-    public static function setLayoutBoundsPosition(obj:IUIComponent,x:Number, y:Number, transformMatrix:Matrix):void
-    {
-        if (transformMatrix)
+	
+	/**
+	 *  Helper method to retrieve a possible layoutElement position values if you were to set them.
+	 */
+	public static function getProposedLayoutBoundsPosition(obj:IUIComponent, x:Number, y:Number, transformMatrix:Matrix):Point
+	{
+		var result:Point = new Point(x, y);
+		if (transformMatrix)
+		{
+			result.x += - getLayoutBoundsX(obj, transformMatrix) + obj.x;
+			result.y += - getLayoutBoundsY(obj,transformMatrix) + obj.y;
+		}
+		return result;
+	}
+	
+	/**
+	 *  Helper method to retrieve a possible layoutElement size values if you were to set them.
+	 */
+	public static function getProposedLayoutBoundsSize(obj:IUIComponent, width:Number, height:Number, transformMatrix:Matrix):Point
+	{
+		if (!transformMatrix)
         {
-        	//race("Setting actual position to " + x + "," + y);
-        	//race("\tcurrent x/y is " + obj.x + "," + obj.y); 
-        	//race("\tcurrent actual position is " + actualPosition.x + "," + actualPosition.y);
-            x = x - getLayoutBoundsX(obj,transformMatrix) + obj.x;
-            y = y - getLayoutBoundsY(obj,transformMatrix) + obj.y;
-        }
-        obj.move(x, y);
-    }
-
-    /**
-     *  @inheritDoc
-     *  
-     *  @langversion 3.0
-     *  @playerversion Flash 9
-     *  @playerversion AIR 1.1
-     *  @productversion Flex 3
-     */
-    public static function setLayoutBoundsSize(obj:IUIComponent,width:Number,
-                                               height:Number,
-                                               transformMatrix:Matrix):void
-    {
-        if (!transformMatrix)
-        {
+			// set them if they aren't there
             if (isNaN(width))
                 width = getPreferredUBoundsWidth(obj);
             if (isNaN(height))
@@ -494,8 +481,7 @@ public class LayoutElementUIComponentUtils
                 width *= obj.scaleX;
                 height *= obj.scaleY;
             }
-            obj.setActualSize(width, height);
-            return;
+			return new Point(width, height);
         }
 
         var fitSize:Point = MatrixUtil.fitBounds(width, height, transformMatrix,
@@ -514,10 +500,40 @@ public class LayoutElementUIComponentUtils
         {
             // We are already taking scale into account from the transform,
             // so adjust here since IUIComponent mixes it with width/height
-            obj.setActualSize(fitSize.x * obj.scaleX, fitSize.y * obj.scaleY);
+            fitSize.x *= obj.scaleX;
+			fitSize.y *= obj.scaleY;
         }
-        else
-            obj.setActualSize(fitSize.x, fitSize.y);
+		return fitSize;
+	}
+
+    /**
+     *  @inheritDoc
+     *  
+     *  @langversion 3.0
+     *  @playerversion Flash 9
+     *  @playerversion AIR 1.1
+     *  @productversion Flex 3
+     */
+    public static function setLayoutBoundsPosition(obj:IUIComponent, x:Number, y:Number, transformMatrix:Matrix):void
+    {
+        var result:Point = getProposedLayoutBoundsPosition(obj, x, y, transformMatrix);
+        obj.move(result.x, result.y);
+    }
+
+    /**
+     *  @inheritDoc
+     *  
+     *  @langversion 3.0
+     *  @playerversion Flash 9
+     *  @playerversion AIR 1.1
+     *  @productversion Flex 3
+     */
+    public static function setLayoutBoundsSize(obj:IUIComponent,width:Number,
+                                               height:Number,
+                                               transformMatrix:Matrix):void
+    {
+        var fitSize:Point = getProposedLayoutBoundsSize(obj, width, height, transformMatrix);
+        obj.setActualSize(fitSize.x, fitSize.y);
     }
 }
 }

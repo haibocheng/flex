@@ -1,0 +1,111 @@
+h3. Relevant Sites:
+
+"Adobes 'Set up your Development Environment'":http://opensource.adobe.com/wiki/display/flexsdk/Setup
+"All Ant Binary Downloads":http://archive.apache.org/dist/ant/binaries/
+"Ant 1.7.1 (Not used with Flex)":http://ant.apache.org/bindownload.cgi
+"Macports Guide":http://guide.macports.org/
+"Flex SDK Forum":http://forums.adobe.com/community/opensource/flexsdk
+
+h3. Install Git, and SVN
+
+If you don't have MacPorts, install that.  It makes it so you don't have to install everything from source.  Then install git, svn, ant, and flex.  The Flex Team uses Ant 1.7.0, so make sure you get that one:
+
+# "Mac Leopard MacPorts DMG":http://distfiles.macports.org/MacPorts/MacPorts-1.8.0-10.5-Leopard.dmg
+# "Ant 1.7.0":http://archive.apache.org/dist/ant/binaries/apache-ant-1.7.0-bin.zip
+# "TextMate":http://macromates.com/
+# Install the TextMate bundles so it's easier to code:
+** <code>mkdir ~/Library/Application\ Support/TextMate/Bundles</code>
+** <code>cd ~/Library/Application\ Support/TextMate/Bundles</code>
+** <code>git clone git://github.com/textmate/subversion.tmbundle.git</code>
+** <code>git clone git://github.com/viatropos/actionscript.tmbundle.git</code>
+** <code>git clone git://github.com/viatropos/flex-tmbundle.git</code>
+# <code>sudo port install git-core +svn</code>
+# <code>git clone git://github.com/viatropos/flex.git</code>
+# <code>cd flex</code>
+# <code>source setup.sh</code> # setup flex sdk
+
+h3. Build and Test
+
+Now that you have the basic Development Environment setup, you will need to compile the Flex SDK, run their test suite to make sure it passes, and then load it into Flex Builder.
+
+# <code>ant -q main</code> # ant task to compile all of flex
+# <code>ant -q checkintests</code> # ant task to run flex test suite, run this when you make changes to make sure everything still works
+
+Other helpful tasks:
+# <code>ant -q framework-compile</code> # compiles just the "mx" framework
+# <code>ant -q spark-compile</code> # compiles just spark framework
+# <code>cd frameworks/projects/textLayout && ant -q compile</code> # compiles the textLayout framework
+
+Notes:
+If <code>ant -q checkintests</code> doesn't work, you will have to recompile the flex sdk.
+
+h2. Setting up Flex Builder
+
+Once you have downloaded and installed everything above, you're ready to use the sdk in Flex:
+
+# Go to Preferences -> General -> Linked Resources
+# Add FLEX_SDK, and the path to the downloaded sdk, and save
+# Go to Preferences -> Flex -> Installed Flex SDKs, and add the path to the downloaded sdk, and name it "Flex 4".
+
+Create your project!  It's up!
+
+To stay up-to-date with the latest changes, whenever you get a chance, either by checking github, or just by habit, run:
+
+# <code>git pull origin master</code>
+# <code>ant -q main</code>
+# <code>ant -q checkintests</code> # only if you want
+
+That'll update your flex source, recompile it, and run the tests.  If you have Flex Builder 3 open when you do this, you will need to refresh your project (but "refresh" doesn't always work).  What I do is make a change to the Flex Project files that you're working on, and "build".  And make sure you empty the browser cache because it stores the old Flex SDK sometimes.
+
+Here is a helpful command-line alias to get you to that sdk directory:
+<code>alias flexsdk="cd ~/Documents/Development/git/flex"</code> # or wherever it is
+
+Cheers!
+
+h2. Using Git to Modify the Flex SDK
+
+The best way to learn Git is to watch this Peepcode screencast, and to get the Git book:
+
+"Peepcode Git Screencast":http://peepcode.com/products/git
+
+Here is a nice overview of the commands:
+
+"Git Basic Tricks":http://www-cs-students.stanford.edu/~blynn/gitmagic/ch02.html#_saving_state
+
+If you add something to the git cache, and you haven't committed, and you want to remove everything to start over, do this:
+
+<code>git rm -r —cached . </code># remove added files
+
+= This is the Unofficial Github port of Adobe Flex
+
+== Notes
+
+Adobe builds Flex with Cygwin on Windows XP Pro SP2.
+
+It requires the following software that is not under source control:
+
+    J2SDK 1.5.0_13 (see http://java.sun.com/products/archive/j2se/5.0_13/index.html)
+    
+    Ant 1.7.0 (see http://archive.apache.org/dist/ant/binaries/)
+    
+The following environment variables must be set:
+
+    JAVA_HOME
+    ANT_HOME
+
+The PATH must include
+
+    bin directory of Flex SDK
+    bin directory of Ant
+    bin directory of Java
+
+For testing, the Flash Player's mm.cfg file must have the following entries
+
+    ErrorReportingEnable=1
+    TraceOutputFileEnable=1
+
+and a FlashPlayerTrust file must allow local SWFs to access local files.
+
+To build and test the SDK, execute
+
+    ant main checkintests

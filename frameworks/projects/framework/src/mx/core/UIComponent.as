@@ -9455,7 +9455,7 @@ public class UIComponent extends FlexSprite
 		dispatchStateChangeEvent(StateChangeEvent.CURRENT_STATE_CHANGE,
 			oldState, _currentState ? _currentState : "");
 
-        if (nextTransition)
+        if (initialized && nextTransition)
         {
             // Force a validation before playing the transition effect
             UIComponentGlobals.layoutManager.validateNow();
@@ -11872,6 +11872,23 @@ public class UIComponent extends FlexSprite
 
         return super.dispatchEvent(event);
     }
+
+	override public function addEventListener(type:String, listener:Function,
+        useCapture:Boolean = false, priority:int = 0,
+        useWeakReference:Boolean = false):void
+    {
+        super.addEventListener(type, listener, useCapture, priority, useWeakReference);
+		// EventManager will let us know whether or not this event is capturable
+		EventManager.addEventListener(type, listener, useCapture, priority, useWeakReference);
+	}
+	
+	override public function removeEventListener(type:String, listener:Function,
+        useCapture:Boolean = false):void
+    {
+        super.removeEventListener(type, listener, useCapture);
+		// EventManager will let us know whether or not this event is capturable
+		EventManager.removeEventListener(type, listener, useCapture);
+	}
 
     private static var fakeMouseX:QName = new QName(mx_internal, "_mouseX");
     private static var fakeMouseY:QName = new QName(mx_internal, "_mouseY");

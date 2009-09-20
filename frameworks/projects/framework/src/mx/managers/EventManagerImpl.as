@@ -32,9 +32,8 @@ package mx.managers
 {
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
-	
 	import flash.utils.Dictionary;
-	
+		
 	/**
 	 *	EventManagerImpl
 	 *	
@@ -42,7 +41,7 @@ package mx.managers
 	 */
 	public class EventManagerImpl
 	{
-		private static var registeredCaptures:Dictionary = new Dictionary(true);
+		private var registeredCaptures:Dictionary = new Dictionary(false);
 	
 		/**
 		 *	EventManagerImpl Constructor

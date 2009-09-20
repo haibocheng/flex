@@ -364,37 +364,16 @@ public class GroupBase extends UIComponent implements IViewport
         }
 
         if (_layout)
-        {
-            _layout.target = null;
-            _layout.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, redispatchLayoutEvent);
-        }
-        _layout = value; 
+			_layout.detach(this);
+			
+        _layout = value;
+
         if (_layout)
-        {
-            _layout.target = this;
-            _layout.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, redispatchLayoutEvent);
-        }
+        	_layout.attach(this);
 
         invalidateSize();
         invalidateDisplayList();
     }
-    
-    /**
-     *  @private
-     *  Redispatch the bindable LayoutBase properties that we expose (that we "facade"). 
-     */
-    private function redispatchLayoutEvent(event:Event):void
-    {
-        var pce:PropertyChangeEvent = event as PropertyChangeEvent;
-        if (pce)
-            switch (pce.property)
-            {
-                case "verticalScrollPosition":
-                case "horizontalScrollPosition":
-                    dispatchEvent(event);
-                    break;
-            }
-    }    
     
     //----------------------------------
     //  horizontalScrollPosition

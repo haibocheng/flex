@@ -18,8 +18,10 @@ import flash.geom.Rectangle;
 import flash.ui.Keyboard; 
 
 import spark.components.supportClasses.GroupBase;
+import spark.core.IAttachable;
 import spark.core.NavigationUnit;
 import mx.core.ILayoutElement;
+import mx.events.PropertyChangeEvent;
 import mx.utils.OnDemandEventDispatcher;
 import spark.core.NavigationUnit;
 
@@ -63,7 +65,7 @@ import spark.core.NavigationUnit;
  *  @playerversion AIR 1.5
  *  @productversion Flex 4
  */
-public class LayoutBase extends OnDemandEventDispatcher
+public class LayoutBase extends OnDemandEventDispatcher implements IAttachable
 {
     //--------------------------------------------------------------------------
     //
@@ -423,6 +425,41 @@ public class LayoutBase extends OnDemandEventDispatcher
     //  Methods
     //
     //--------------------------------------------------------------------------
+
+    //----------------------------------
+    //  IAttachable
+    //----------------------------------
+
+	public function attach(target:Object):void
+	{
+		this.target = target as GroupBase;
+		addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, redispatchLayoutEvent);
+	}
+	
+	public function detach(target:Object):void
+	{
+		this.target = null;
+		removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, redispatchLayoutEvent);
+	}
+	
+    /**
+     *  @private
+     *  Redispatch the bindable LayoutBase properties that we expose (that we "facade"). 
+     */
+    private function redispatchLayoutEvent(event:Event):void
+    {
+		if (!target)
+			return;
+        var pce:PropertyChangeEvent = event as PropertyChangeEvent;
+        if (pce)
+            switch (pce.property)
+            {
+                case "verticalScrollPosition":
+                case "horizontalScrollPosition":
+                    target.dispatchEvent(event);
+                    break;
+            }
+    }    
     
     /**
      *  Measures the target's default size based on its content, and optionally

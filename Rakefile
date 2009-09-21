@@ -13,10 +13,11 @@ FLEX_SDK = File.expand_path(".")
 TRUNK = "http://opensource.adobe.com/svn/opensource/flex/sdk/trunk"
 SANDBOX = "http://opensource.adobe.com/svn/opensource/flex/sdk/sandbox/viatropos/trunk"
 SVN_STATUS = /(.)\s*(.*)/
+THIS = File.expand_path(File.dirname(__FILE__))
 # This is a special variable.
 # Because subversion 1.4 doesn't have merge tracking,
 # this will be rewritten every time you run the merge command in here
-# LAST_MERGE = 10422
+# LAST_MERGE = 10444
 LAST_MERGE_PATTERN = /\#\s*LAST_MERGE\s*\=\s*(\d+)/
 
 # Helper Methods
@@ -143,7 +144,7 @@ namespace :svn do
         if line.match(LAST_MERGE_PATTERN)
           match = $1
           older = ENV.include?("old") ? ENV["old"] : match # the last match
-          system("svn merge -r #{older}:#{newer} #{TRUNK} ..")
+          system("svn merge -r #{older}:#{newer} #{TRUNK} .")
           line.gsub("LAST_MERGE = #{match}", "LAST_MERGE = #{revision}")
           break
         end
@@ -169,7 +170,8 @@ namespace :svn do
         end
       end
     end
-    current_revision << "Last Merge: #{last_merge}\n\n"
+    current_revision << "Last Merge: #{last_merge}\n"
+    current_revision << "Execute all 'rake svn:' tasks from: #{THIS}\n\n"
     puts current_revision
   end
   

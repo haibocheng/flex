@@ -77,11 +77,11 @@ public class BindingManager
         if ((document is IBindingClient) && document._bindings)
         {
             var bindings:Array = document._bindings as Array;
-            
-            for (var i:uint = 0; i < bindings.length; i++)
+            var n:int = bindings.length;
+			
+            for (var i:int = 0; i < n; i++)
             {
-                var binding:Binding = bindings[i];
-                binding.isEnabled = isEnabled;
+                bindings[i].isEnabled = isEnabled;
             }
         }
     }

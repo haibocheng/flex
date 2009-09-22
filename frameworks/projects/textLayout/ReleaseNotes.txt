@@ -1,4 +1,34 @@
-﻿Build 502
+﻿	* Add new manifest entry for TextLayoutFormat, and remove entries for format, linkNormalFormat, linkActiveFormat, linkHoverFormat, EditManager, SelectionManager, and StandardFlowComposer. 
+	  Updated build scripts so the manifest for textLayout_edit is removed. Removed the stub objects for linkActiveFormat, linkNormalFormat and linkHoverFormat, 
+	  these are now handled as standard properties in MXMLC. Dynamic import of markup unchanged. Fixed use of ${forkValue} to be consistent in Ant build scripts.
+	* Fix 2391771, data from one import is carried over into the following import. The bug happens because of how we are handling the id property. 
+	  Problem is that clearing the array does not remove the dynamic properties of the array. Updating the code so that it allocates a bindingArray only if it is used, 
+	  instead of allocating once at construction, and clear() now nulls out the previous bindingArray. 
+	* Fix 2425075 MAX: When you have multiple containers that a flow goes through, the text will sometimes disappear.
+Build 511
+	* Fix 2429543: Text doesn't recompose with a change to dominantBaseline... - Issue caused by use of auto value in cached element formats. New code properly resolves auto values for dominantBaseline.
+	* Fix 2375158 MAX: Character attributes revert to their default settings when you delete all text.
+	* Fix 2424847 MAX: Certain formatting operations in linked flows can result in FlowElement.deleteContainerText getting caught in an infinite loop.
+	* Fix 2393374 MAX: If you delete a newline at the end of a text flow and then Undo, TLF has an error.
+Build 510
+	* Fix 2417461 MAX: Text selection is difficult and flickers in TCM if there is scrolling text
+Build 509
+	* Fix 2425242 ContentWidth is reported incorrectly for linked containers.
+Build 507
+	* Fix 2412931 Doc bug - fontSize (and other TextLayoutFormat properties) do not specify the type (number, int, unit etc.)
+	* Partial fix 2355904 Scrolling Performance (its improved but there's still a larger piece of work to fully resolve this issue)
+	* Fix 2414731 - Reopened with request to make ContainerController attachAllContainers and detachAllContainers tlf_internal
+Build 506
+	* Fix 2414871 Inconsistent defaults for LinkElement target vs legacy TextField target
+	* Fix 2411686 Add a CopyOperation
+	* Fix 2413911 Error on Drag Scroll in Empty Container Attached to Vertical TextFlow
+	* Fix 2414745 Support class attribute on <p> and <span> tags in HTML_FORMAT. This attribute is mapped to the styleName property.
+Build 504
+	* Fix 2414833 Honor <TextFormat> settings for implied paragraphs
+Build 503
+	* Fix 2404882 [SDK-22695] RTE in ContainerController when calling scrollToRange() with int.MAX_VALUE
+	* Fix 2414731 make _rootElement property of StandardFlowComposer either protected or tlf_internal
+Build 502
 	* Fix 2376037 Empty spans with formatting are lost on import
 	* Fix 2402561 Change to IFlowComposer.composeToPosition
 	- composeToPosition - previously 0 meant compose to the end.  Now <= 0 means not specified.  Any value >= textFlow.textLength means compose to the end.  Default value changed to int.MAX_VALUE

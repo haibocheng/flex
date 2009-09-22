@@ -282,6 +282,11 @@ public final class SymbolTable
         return result;
     }
 
+    public Set<String> getClassNames()
+    {
+        return classTable.keySet();
+    }
+
 	// app-wide style management
 
 	public void registerStyles(Styles newStyles) throws StyleConflictException

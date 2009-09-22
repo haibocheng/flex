@@ -79,10 +79,32 @@ package flashx.textLayout.debug
 					str = "null"
 				else if (obj is String)
 				{
-					if (obj == '\u2029')
-						str = "'\\u2029'"
+					var tempString:String = String(obj);
+					var idx:int;
+					
+					// any out of bounds characters?
+					var allokay:Boolean = true;
+					for (idx = 0; idx < tempString.length; idx++)
+					{
+						if (tempString.charCodeAt(idx) > 0xFF)
+						{
+							allokay = false;
+							break;
+						}
+					}
+					if (allokay)
+						str = "\"" + tempString +  "\"";
 					else
-						str = "\"" + obj.toString() +  "\"";
+					{
+						str = "String.fromCharCode("
+						for (idx = 0; idx < tempString.length; idx++)
+						{
+							if (idx != 0)
+								str += ", ";
+							str += "0x" + tempString.charCodeAt(idx).toString(16);
+						}
+						str += ")";
+					}
 				}
 				else if (obj is Number || obj is int)
 					str = obj.toString();

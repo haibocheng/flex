@@ -140,7 +140,13 @@ package flashx.textLayout.conversion
 				xml.@href= link.href;
 			if (link.target)
 				xml.@target = link.target;
-			
+			else
+			{
+				// HTML_FORMAT uses _self as the default target (to replicate TextField behavior) 
+				// while the TLF object model uses null (funcionally identical to _blank). Account for this difference.
+				xml.@target = "_blank";
+			}
+						
 			exportChildren(xml, link);
 			return xml;
 		}
@@ -174,6 +180,8 @@ package flashx.textLayout.conversion
 		{
 			var xml:XML  = <{name}/>; 
 			BaseTextLayoutExporter.exportSpanText(xml, span, brRegEx, getSpanTextReplacementXML);
+			if (span.styleName)
+				xml["@class"] = span.styleName; // xml.@class confuses the compiler
 			return exportCharacterFormat (xml, span);
 		}
 		
@@ -226,7 +234,7 @@ package flashx.textLayout.conversion
 			var charFormat:ITextLayoutFormat = flowElement.computedFormat;
 			var defaultFormat:ITextLayoutFormat = TextLayoutFormat.defaultFormat;
 			
-			var font:XML = <Font/>;
+			var font:XML = <font/>;
 			if (charFormat.fontSize != defaultFormat.fontSize)
 				font.@size = charFormat.fontSize;
 			if (charFormat.fontFamily != defaultFormat.fontFamily)
@@ -272,8 +280,11 @@ package flashx.textLayout.conversion
 				}
 				xml.@align = textAlignment;
 			}
+			
+			if (para.styleName)
+				xml["@class"] = para.styleName; // xml.@class confuses the compiler
 				
-			var textFormat:XML = <TextFormat/>;
+			var textFormat:XML = <textformat/>;
 			if (paraFormat.paragraphStartIndent != defaultFormat.paragraphStartIndent)
 			{
 				if (paraFormat.direction == Direction.LTR)

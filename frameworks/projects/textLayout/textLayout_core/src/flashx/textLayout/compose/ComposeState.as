@@ -16,8 +16,6 @@ package flashx.textLayout.compose
 	import flash.text.engine.TextLine;
 	import flash.text.engine.TextLineValidity;
 	
-	import flashx.textLayout.compose.TextFlowLine;
-	import flashx.textLayout.compose.TextFlowLineLocation;
 	import flashx.textLayout.container.ContainerController;
 	import flashx.textLayout.debug.Debugging;
 	import flashx.textLayout.debug.assert;
@@ -160,13 +158,16 @@ package flashx.textLayout.compose
             	// If the lines have children, they may be inlines. The origin of the TextFlowLine is the baseline - ascent, 
             	// which does not include the ascent of the inlines. So we have to factor that in.
 				if (verticalText)
+				{
+	      	 		maxX = Math.max(line.x + line.ascent, maxX);
 	      	 		minX = Math.min(line.x, minX);
+	   			}	
 	      	 	else
 	      	 		minY = Math.min(line.y, minY);
 	       		var textLine:TextLine = line.getTextLine();
 	       		
 	       		// this is a test for an inline graphic
-	       		if (textLine.numChildren > 0)
+	       		if (textLine.hasGraphicElement)
 	       		{
 	       			var leafElement:FlowLeafElement = _textFlow.findLeaf(line.absoluteStart);
 	       			var adjustedAscent:Number = line.getLineTypographicAscent(leafElement, leafElement.getAbsoluteStart());
@@ -235,7 +236,8 @@ package flashx.textLayout.compose
 			}
 			var finishLineSlug:Rectangle = _parcelList.currentParcel;
 			
-			do {
+			for (;;) 
+			{
 				while (!curLine)
 				{	
 					useExistingLine = false;
@@ -250,37 +252,15 @@ package flashx.textLayout.compose
 					if (!_parcelList.next())
 						return null;
 				}
-	
-				// Try to place the line in the current parcel.
-				// get a zero height parcel. place the line there and then test if it still fits.
-				// if it doesn't place it in the new result parcel
-				// still need to investigate because the height used on the 2nd getLineSlug call may be too big.
-				_parcelList.getLineSlug(_candidateLineSlug,0); // parcel.getLineSlug(curLine.height);
+				
+				// updates _lineSlug
+				curLine = fitLineToParcel(curLine);
+				if (curLine)
+					break;
 				if (_parcelList.atEnd())
 					return null;
-				
-				curLine.setController(_parcelList.controller,_parcelList.columnIndex);
-				finishComposeLine(curLine, _candidateLineSlug);
-			
-				// If we are at the last parcel, we let text be clipped if that's specified in the configuration. At the point where no part of text can be accommodated, we go overset.
-				// If we are not at the last parcel, we let text flow to the next parcel instead of getting clipped.
-				var spaceBefore:Number = Math.max(curLine.spaceBefore, _spaceCarried);
-				_parcelList.getLineSlug(_lineSlug, spaceBefore + (_parcelList.atLast() && _textFlow.configuration.overflowPolicy != OverflowPolicy.FIT_DESCENDERS ? curLine.height-curLine.ascent : curLine.height+curLine.descent));
-
-				if (_parcelList.atEnd())
-					return null;
-				
-				if (_parcelList.getComposeWidth(_lineSlug) == curLine.outerTargetWidth)
-				{
-					curLine.setController(_parcelList.controller,_parcelList.columnIndex);
-					if (_parcelList.getComposeXCoord(_candidateLineSlug) != _parcelList.getComposeXCoord(_lineSlug) || _parcelList.getComposeYCoord(_candidateLineSlug) != _parcelList.getComposeYCoord(_lineSlug))
-						finishComposeLine(curLine, _lineSlug);
-					break;		// got a good line
-				}
-				curLine = null;		// try again with new targetWidth and new lineslug
 				finishLineSlug = _lineSlug;
-
-			} while (true);
+			}
 			
 			// Clear up user_invalid
 			if (curLine.validity == FlowDamageType.GEOMETRY)
@@ -330,7 +310,7 @@ package flashx.textLayout.compose
 	   		else
 	   		{
 	        	textLine = _flowComposer.textLineCreator.createTextLine(_curParaElement.getTextBlock(), prevLine?prevLine.getTextLine(true):null, targetWidth, lineOffset, true);
-        	CONFIG::debug { Debugging.traceFTECall(textLine,_curParaElement.getTextBlock(),"createTextLine",prevLine?prevLine.getTextLine():null, targetWidth, lineOffset, true); }
+        		CONFIG::debug { Debugging.traceFTECall(textLine,_curParaElement.getTextBlock(),"createTextLine",prevLine?prevLine.getTextLine():null, targetWidth, lineOffset, true); }
       		}
         	// Unable to fit a new line
         	if (textLine == null)

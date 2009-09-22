@@ -1,8 +1,8 @@
 //========================================================================================
 //  $File: //a3t/argon/dev/textLayout_core/src/flashx/textLayout/formats/TabStopFormatInc.as $
-//  $DateTime: 2009/07/14 04:51:58 $
-//  $Revision: #7 $
-//  $Change: 709357 $
+//  $DateTime: 2009/08/31 15:29:53 $
+//  $Revision: #9 $
+//  $Change: 716623 $
 //  
 //  ADOBE CONFIDENTIAL
 //  
@@ -24,10 +24,9 @@
 		/**
 		 * TabStopFormat:
 		 * The position of the tab stop, in pixels, relative to the start of the line.
-		 * <p>Legal values are from 0 to 10000 and flashx.textLayout.formats.FormatValue.INHERIT.</p>
-		 * <p>Default value is 0.</p>
-		 * <p>Values may be undefined indicating not set.</p>
-		 * <p>If undefined during the cascade this property will have its default value.</p>
+		 * <p>Legal values are numbers from 0 to 10000 and flashx.textLayout.formats.FormatValue.INHERIT.</p>
+		 * <p>Default value is undefined indicating not set.</p>
+		 * <p>If undefined during the cascade this property will have a value of 0.</p>
 		 * @see FormatValue#INHERIT
 		 * 
 		 * @playerversion Flash 10
@@ -48,9 +47,8 @@
 		 * TabStopFormat:
 		 * The tab alignment for this tab stop. 
 		 * <p>Legal values are flash.text.engine.TabAlignment.START, flash.text.engine.TabAlignment.CENTER, flash.text.engine.TabAlignment.END, flash.text.engine.TabAlignment.DECIMAL, flashx.textLayout.formats.FormatValue.INHERIT.</p>
-		 * <p>Default value is START.</p>
-		 * <p>Values may be undefined indicating not set.</p>
-		 * <p>If undefined during the cascade this property will have its default value.</p>
+		 * <p>Default value is undefined indicating not set.</p>
+		 * <p>If undefined during the cascade this property will have a value of START.</p>
 		 * @see FormatValue#INHERIT
 		 * 
 		 * @playerversion Flash 10
@@ -71,9 +69,8 @@
 		/**
 		 * TabStopFormat:
 		 * The alignment token to be used if the alignment is DECIMAL.
-		 * <p>Default value is null.</p>
-		 * <p>Values may be undefined indicating not set.</p>
-		 * <p>If undefined during the cascade this property will have its default value.</p>
+		 * <p>Default value is undefined indicating not set.</p>
+		 * <p>If undefined during the cascade this property will have a value of null.</p>
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5

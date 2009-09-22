@@ -27,7 +27,6 @@ package flashx.textLayout.compose
 	import flashx.textLayout.elements.ContainerFormattedElement;
 	import flashx.textLayout.elements.ParagraphElement;
 	import flashx.textLayout.elements.TextFlow;
-	import flashx.textLayout.compose.TextFlowLine;
 	import flashx.textLayout.events.CompositionCompleteEvent;
 	import flashx.textLayout.formats.BlockProgression;
 	import flashx.textLayout.formats.FormatValue;
@@ -67,7 +66,8 @@ package flashx.textLayout.compose
 	
 	public class StandardFlowComposer extends FlowComposerBase implements IFlowComposer
 	{
-		private var _rootElement:ContainerFormattedElement;
+		/** @private */
+		tlf_internal var _rootElement:ContainerFormattedElement;
 		private var _controllerList:Array;
 		private var _composing:Boolean;
 
@@ -160,16 +160,16 @@ package flashx.textLayout.compose
 				{
 					clearCompositionResults();
 
-					detatchAllContainers();
+					detachAllContainers();
 					_rootElement = newRootElement;
 					_textFlow = _rootElement ? _rootElement.getTextFlow() :  null;
-					attatchAllContainers();
+					attachAllContainers();
 				}
 			}
 		}
 		
-		// TODO: Add efficient methods for adding/removing containers?
-		private function detatchAllContainers():void
+		/** @private */
+		tlf_internal function detachAllContainers():void
 		{
 			
 			// detatch accessibility from the containers
@@ -200,7 +200,8 @@ package flashx.textLayout.compose
 			}
 		}
 		
-		private function attatchAllContainers():void
+		/** @private */
+		tlf_internal function attachAllContainers():void
 		{
 			var cont:ContainerController;
 			for each (cont in _controllerList)
@@ -269,7 +270,7 @@ package flashx.textLayout.compose
 			_controllerList.push(ContainerController(controller));
 			if (this.numControllers == 1)
 			{				
-				attatchAllContainers();
+				attachAllContainers();
 			}
 			else
 			{
@@ -311,9 +312,9 @@ package flashx.textLayout.compose
 		public function addControllerAt(controller:ContainerController, index:int):void
 		{
 			CONFIG::debug { assert (_controllerList.indexOf(controller) == -1, "adding controller twice"); }
-			detatchAllContainers();
+			detachAllContainers();
 			_controllerList.splice(index,0,ContainerController(controller));
-			attatchAllContainers();
+			attachAllContainers();
 		}
 		
 		/** Removes a trailing controller with no content without doing any damage */
@@ -352,9 +353,9 @@ package flashx.textLayout.compose
 			var index:int = getControllerIndex(controller);
 			if (!fastRemoveController(index))
 			{
-				detatchAllContainers();
+				detachAllContainers();
 				_controllerList.splice(index,1);
-				attatchAllContainers();
+				attachAllContainers();
 			}
 		}
 		/** @copy IFlowComposer#removeControllerAt()
@@ -369,9 +370,9 @@ package flashx.textLayout.compose
 		{ 
 			if (!fastRemoveController(index))
 			{
-				detatchAllContainers();
+				detachAllContainers();
 				_controllerList.splice(index,1);
-				attatchAllContainers();
+				attachAllContainers();
 			}
 		}
 		/** @copy IFlowComposer#removeAllControllers()
@@ -383,7 +384,7 @@ package flashx.textLayout.compose
 		 
 		public function removeAllControllers():void
 		{
-			detatchAllContainers();
+			detachAllContainers();
 			_controllerList.splice(0,_controllerList.length);
 		}
 		
@@ -534,14 +535,15 @@ package flashx.textLayout.compose
 			var sm:ISelectionManager = textFlow.interactionManager;
 			if (sm)
 				sm.flushPendingOperations();
-			var neededCompose:Boolean = composeToController(index);
-			if (neededCompose)
+			composeToController(index);
+			var shapesDamaged:Boolean = areShapesDamaged();
+			if (shapesDamaged)
 				updateCompositionShapes();
 
 			if (sm)
 				sm.refreshSelection();
 			releaseLines();
-			return neededCompose;
+			return shapesDamaged;
 		}
 		
 		/** 
@@ -669,6 +671,12 @@ package flashx.textLayout.compose
 			return true;
 		}
 		
+		private var lastBPDirectionScrollPosition:Number = Number.NEGATIVE_INFINITY;
+		
+		static private function getBPDirectionScrollPosition(bp:String,cont:ContainerController):Number
+		{
+			return bp == BlockProgression.TB ? cont.verticalScrollPosition : cont.horizontalScrollPosition;
+		}
 		
 		/** Bottleneck function for all types of compose. Does the work of compose, no matter how it is called. @private */
 		private function internalCompose(composeToPosition:int = -1, composeToControllerIndex:int = -1):Boolean
@@ -679,6 +687,23 @@ package flashx.textLayout.compose
 
 			if (composeToControllerIndex == -1 && composeToPosition >= 0 && damageAbsoluteStart >= composeToPosition)
 				return false;
+			
+			var lastController:ContainerController;
+			var bp:String;
+			if (composeToControllerIndex == numControllers-1)
+			{
+				lastController = this.getControllerAt(numControllers-1);
+				// skip it if damageAbsoluteStart is past the end of the controller.  are there risks here? AND scrollpositions haven't changed since last composeToControllerIndex
+				var a:Array = lastController.findFirstAndLastVisibleLine();
+				var lastVisibleLine:TextFlowLine = a[1];
+				if (lastVisibleLine)
+				{
+					bp = rootElement.computedFormat.blockProgression
+					if (getBPDirectionScrollPosition(bp,lastController) == this.lastBPDirectionScrollPosition && damageAbsoluteStart >= lastVisibleLine.absoluteStart+lastVisibleLine.textLength)
+						return false;
+				}
+			}
+			lastBPDirectionScrollPosition = Number.NEGATIVE_INFINITY;
 			
 			CONFIG::debug { assert(_composing == false,"internalCompose: Recursive call"); }
 				
@@ -706,6 +731,19 @@ package flashx.textLayout.compose
 			}
 			_composing = false;
 			
+			if (lastController)
+			{
+				lastBPDirectionScrollPosition = getBPDirectionScrollPosition(bp,lastController);
+			}
+			
+			return true;
+		}
+		
+		
+		/** @private */
+		tlf_internal function areShapesDamaged():Boolean
+		{
+			var cont:ContainerController;	// scratch
 			// TODO: a flag on this?
 			for each (cont in _controllerList)
 			{

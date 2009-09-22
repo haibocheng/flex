@@ -27,7 +27,6 @@ import mx.controls.listClasses.IListItemRenderer;
 import mx.controls.DataGrid;
 import mx.core.EdgeMetrics;
 import mx.core.FlexSprite;
-import mx.core.FlexVersion;
 import mx.core.IFlexDisplayObject;
 import mx.core.UIComponent;
 import mx.core.UIComponentGlobals;
@@ -296,7 +295,11 @@ public class DataGridHeader extends DataGridHeaderBase
                 extraItem = headerItems.pop();
                 // if it is parented by us, remove it (could be in lockedColumns header)
                 if (extraItem.parent == this)
-                    removeChild(DisplayObject(extraItem));
+                {
+                    // make sure it isn't already in there elsewhere
+                    if (headerItems.indexOf(extraItem) == -1)
+                        removeChild(DisplayObject(extraItem));
+                }
             }
         }
         var headerBG:UIComponent =
@@ -316,27 +319,17 @@ public class DataGridHeader extends DataGridHeaderBase
             headerBG.name = "headerBG";
             addChildAt(DisplayObject(headerBG), 0);
                         
-            if (FlexVersion.compatibilityVersion >= FlexVersion.VERSION_3_0)
-            {
-                var headerBGSkinClass:Class = getStyle("headerBackgroundSkin");
-                var headerBGSkin:IFlexDisplayObject = new headerBGSkinClass();
-           
-                if (headerBGSkin is ISimpleStyleClient)
-                    ISimpleStyleClient(headerBGSkin).styleName = this;
-                headerBG.addChild(DisplayObject(headerBGSkin)); 
-            }
+            var headerBGSkinClass:Class = getStyle("headerBackgroundSkin");
+            var headerBGSkin:IFlexDisplayObject = new headerBGSkinClass();
+       
+            if (headerBGSkin is ISimpleStyleClient)
+                ISimpleStyleClient(headerBGSkin).styleName = this;
+            headerBG.addChild(DisplayObject(headerBGSkin));
         }
         if (dataGrid.headerVisible)
         {
             headerBG.visible = true;
-            if (FlexVersion.compatibilityVersion < FlexVersion.VERSION_3_0)
-            {
-                dataGrid._drawHeaderBackground(headerBG);
-            }
-            else
-            {
-                drawHeaderBackgroundSkin(IFlexDisplayObject(headerBG.getChildAt(0)));
-            }
+            drawHeaderBackgroundSkin(IFlexDisplayObject(headerBG.getChildAt(0)));
             dataGrid._drawSeparators();
         }
         else

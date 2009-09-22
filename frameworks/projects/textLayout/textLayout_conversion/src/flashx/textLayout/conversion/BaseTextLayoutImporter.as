@@ -403,8 +403,9 @@ package flashx.textLayout.conversion
 		/** Parse XML, convert to FlowElements and add to the parent.
 		 * @param xmlToParse	content to parse
 		 * @param parent 		the parent for the new content
+		 * @param chainedParent whether parent actually corresponds to xmlToParse or has been chained (such as when xmlToParse is a formatting element) 
 		 */
-		public function parseFlowGroupElementChildren(xmlToParse:XML, parent:FlowGroupElement, exceptionElements:Object = null):void
+		public function parseFlowGroupElementChildren(xmlToParse:XML, parent:FlowGroupElement, exceptionElements:Object = null, chainedParent:Boolean=false):void
 		{
 			for each (var child:XML in xmlToParse.children())
 			{
@@ -441,6 +442,10 @@ package flashx.textLayout.conversion
 					}
 				}
 			}
+			
+			// no implied paragraph should extend across container elements
+			if (!chainedParent && parent is ContainerFormattedElement)
+				_impliedPara = null;
 		}
 		
 		
@@ -500,7 +505,9 @@ package flashx.textLayout.conversion
 				// See note 1. above
 				if (!_impliedPara)
 				{
-					_impliedPara = new ParagraphElement(); 
+					// Derived classes may have special behavior for <p> tags. Implied paragraphs may need the same behavior.
+					// So call createParagraphFromXML, don't just instantiate a ParagraphElement 
+					_impliedPara = createParagraphFromXML(<p/>); 
 					parent.addChild(_impliedPara);
 				}
 				

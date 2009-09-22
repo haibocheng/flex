@@ -575,7 +575,7 @@ package flashx.textLayout.elements
 			else
 			{
 				var eastAsianJustifier:EastAsianJustifier = new EastAsianJustifier(_computedFormat.locale,lineJust, makeJustRuleStyle);
-				CONFIG::debug { Debugging.traceFTECall(eastAsianJustifier,null,"new EastAsianJustifier",lineJust,makeJustRuleStyle); }
+				CONFIG::debug { Debugging.traceFTECall(eastAsianJustifier,null,"new EastAsianJustifier",_computedFormat.locale,lineJust,makeJustRuleStyle); }
 				_textBlock.textJustifier = eastAsianJustifier;
 				CONFIG::debug { Debugging.traceFTEAssign(_textBlock,"textJustifier",eastAsianJustifier);  }
 				_textBlock.baselineZero = getLeadingBasis(this.getEffectiveLeadingModel());

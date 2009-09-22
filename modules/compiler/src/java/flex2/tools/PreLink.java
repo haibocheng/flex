@@ -95,7 +95,9 @@ public class PreLink implements flex2.compiler.PreLink
      */
     public void postRun(List<Source> sources, List<CompilationUnit> units,
                         ResourceContainer resources,
+                        SymbolTable symbolTable,
                         CompilerSwcContext swcContext,
+                        NameMappings nameMappings,
                         Configuration configuration)
     {
         LinkedList<Source> extraSources = new LinkedList<Source>();
@@ -129,6 +131,42 @@ public class PreLink implements flex2.compiler.PreLink
         for (Source extraSource : extraSources)
         {
             sources.add(resources.addResource(extraSource));
+        }
+
+        for (int i = 0, length = units.size(); i < length; i++)
+        {
+            CompilationUnit u = (CompilationUnit) units.get(i);
+
+            if (u.isRoot())
+            {
+                StylesContainer stylesContainer =
+                    (StylesContainer) symbolTable.getContext().getAttribute(StylesContainer.class.getName());
+                StylesContainer rootStylesContainer = u.getStylesContainer();
+
+                // If the backgroundColor wasn't specified inline, go looking for it in CSS.
+                if ((u.swfMetaData == null) || (u.swfMetaData.getValue("backgroundColor") == null))
+                {
+                    QName qName = u.topLevelDefinitions.last();
+                    
+                    if (qName != null)
+                    {
+                        String def = qName.toString();
+                        lookupBackgroundColor(stylesContainer, rootStylesContainer, u.styleName,
+                                              NameFormatter.toDot(def), symbolTable, configuration);
+                    }
+                }
+
+                if (rootStylesContainer != null)
+                {
+                    rootStylesContainer.validate(symbolTable, nameMappings, u.getStandardDefs());
+                }
+            }
+
+            if (u.isDone())
+            {
+                // C: we don't need the styles container anymore
+                u.setStylesContainer(null);
+            }
         }
     }
 
@@ -204,20 +242,19 @@ public class PreLink implements flex2.compiler.PreLink
 					// We also need styles for an AS file that subclasses Application or Module.
                     if (u.loaderClass != null || u.loaderClassBase != null)
                     {
-                        CompilerConfiguration compilerConfig = configuration.getCompilerConfiguration(); 
-                        locateStyleDefaults(units, compilerConfig);
+                        CompilerConfiguration compilerConfig = configuration.getCompilerConfiguration();
 
-                        StylesContainer stylesContainer = new StylesContainer(compilerConfig, u, symbolTable.perCompileData);
-                        stylesContainer.setNameMappings(nameMappings);
-                        stylesContainer.loadDefaultStyles();
+                        StylesContainer stylesContainer =
+                            (StylesContainer) symbolTable.getContext().getAttribute(StylesContainer.class.getName());
 
-                        StylesContainer localStylesContainer = u.getStylesContainer();
-
-                        // If the backgroundColor wasn't specified inline, go looking for it in CSS.
-                        if ((u.swfMetaData == null) || (u.swfMetaData.getValue("backgroundColor") == null))
+                        if (stylesContainer == null)
                         {
-                            lookupBackgroundColor(stylesContainer, localStylesContainer, u.styleName,
-                                                  NameFormatter.toDot(def), symbolTable, configuration);
+                            locateStyleDefaults(units, compilerConfig);
+                            stylesContainer = new StylesContainer(compilerConfig, u, symbolTable.perCompileData);
+                            stylesContainer.setNameMappings(nameMappings);
+                            stylesContainer.loadDefaultStyles();
+                            stylesContainer.validate(symbolTable, nameMappings, u.getStandardDefs());
+                            symbolTable.getContext().setAttribute(StylesContainer.class.getName(), stylesContainer);
                         }
 
                         List<CULinkable> linkables = new LinkedList<CULinkable>();
@@ -233,12 +270,6 @@ public class PreLink implements flex2.compiler.PreLink
 
                             // C: generate style classes for components which we want to link in.
                             List styleSources = stylesContainer.processDependencies(state.getDefNames(), resources);
-                            StylesContainer rootStylesContainer = u.getStylesContainer();
-
-                            if (rootStylesContainer != null)
-                            {
-                                rootStylesContainer.checkForUnusedTypeSelectors(state.getDefNames());
-                            }
 
                             // put all the names into sourceSet
                             Set<String> sourceSet = new HashSet<String>(sources.size());
@@ -269,16 +300,6 @@ public class PreLink implements flex2.compiler.PreLink
                 }
 
                 break;
-            }
-        }
-
-        for (int i = 0, length = units.size(); i < length; i++)
-        {
-            CompilationUnit u = (CompilationUnit) units.get(i);
-            if (u.isDone())
-            {
-                // C: we don't need the styles container anymore
-                u.setStylesContainer(null);
             }
         }
     }
@@ -313,7 +334,7 @@ public class PreLink implements flex2.compiler.PreLink
             styleName = lookupStyleName(localStylesContainer, className);
         }
 
-        if (styleName == null)
+        if ((styleName == null) && (globalStylesContainer != null))
         {
             styleName = lookupStyleName(globalStylesContainer, className);
         }
@@ -325,7 +346,7 @@ public class PreLink implements flex2.compiler.PreLink
             backgroundColor = lookupClassSelectorBackgroundColor(localStylesContainer, styleName);
         }
 
-        if ((styleName != null) && backgroundColor == -1)
+        if ((backgroundColor == -1) && (styleName != null) && (globalStylesContainer != null))
         {
             backgroundColor = lookupClassSelectorBackgroundColor(globalStylesContainer, styleName);
         }        
@@ -335,7 +356,7 @@ public class PreLink implements flex2.compiler.PreLink
             backgroundColor = lookupTypeSelectorBackgroundColor(localStylesContainer, className);
         }
 
-        if (backgroundColor == -1)
+        if ((backgroundColor == -1) && (globalStylesContainer != null))
         {
             backgroundColor = lookupTypeSelectorBackgroundColor(globalStylesContainer, className);
         }
@@ -366,7 +387,7 @@ public class PreLink implements flex2.compiler.PreLink
                         backgroundColor = lookupTypeSelectorBackgroundColor(localStylesContainer, "global");
                     }
 
-                    if (backgroundColor == -1)
+                    if ((backgroundColor == -1) && (globalStylesContainer != null))
                     {
                         backgroundColor = lookupTypeSelectorBackgroundColor(globalStylesContainer, "global");
                     }

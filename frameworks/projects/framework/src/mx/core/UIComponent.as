@@ -3594,6 +3594,24 @@ public class UIComponent extends FlexSprite
         return sm;
     }
 
+    /**
+     *  @private
+     */
+    protected function invalidateSystemManager():void
+    {
+        var childList:IChildList = (this is IRawChildrenContainer) ?
+            IRawChildrenContainer(this).rawChildren : IChildList(this);
+        
+        var n:int = childList.numChildren;
+        for (var i:int = 0; i < n; i++)
+        {
+            var child:UIComponent = childList.getChildAt(i) as UIComponent;
+            if (child)
+                child.invalidateSystemManager();
+        }
+        _systemManagerDirty = true;
+    }
+    
     //----------------------------------
     //  nestLevel
     //----------------------------------
@@ -5893,9 +5911,6 @@ public class UIComponent extends FlexSprite
      */
     public function get baselinePosition():Number
     {
-        if (FlexVersion.compatibilityVersion < FlexVersion.VERSION_3_0)
-            return NaN;
-
         if (!validateBaselinePosition())
             return NaN;
 
@@ -11137,7 +11152,7 @@ public class UIComponent extends FlexSprite
         {
 
         }
-        _systemManagerDirty = true;
+        invalidateSystemManager();
     }
 
     /**

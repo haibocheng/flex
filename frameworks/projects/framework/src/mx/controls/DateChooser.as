@@ -962,9 +962,6 @@ public class DateChooser extends UIComponent implements IFocusManagerComponent, 
      */
     override public function get baselinePosition():Number
     {
-        if (FlexVersion.compatibilityVersion < FlexVersion.VERSION_3_0)
-            return super.baselinePosition;
-
         if (!validateBaselinePosition())
             return NaN;
              

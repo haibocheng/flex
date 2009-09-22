@@ -307,8 +307,20 @@ package flashx.textLayout.elements
 		private function getCanonicalElementFormat():ElementFormat
 		{
 			CONFIG::debug { assert(_computedFormat != null,"bad call to getCanonicalElementFormat"); }
+			
+			var domBase:String = _computedFormat.dominantBaseline;
+			if(domBase == FormatValue.AUTO)
+			{
+				var para:ParagraphElement = getParagraph();
+				//otherwise, avoid using the locale of the element and use the paragraph's locale
+				if(para != null)
+					domBase = para.getEffectiveDominantBaseline();
+				else
+					domBase = LocaleUtil.dominantBaseline(_computedFormat.locale);
+			}
+			
 			var format:ElementFormat = _elementFormats[_computedFormat] as ElementFormat;
-			if (!format)
+			if (!format || format.dominantBaseline != domBase)
 			{
 				// compute the cascaded elementFormat
 				format = new ElementFormat();
@@ -318,18 +330,8 @@ package flashx.textLayout.elements
 				format.alpha				= Number(_computedFormat.textAlpha);
 				format.breakOpportunity		= _computedFormat.breakOpportunity;
 				format.color				= uint(_computedFormat.color);
-				//use the computed value if format is not AUTO
-				if(_computedFormat.dominantBaseline != FormatValue.AUTO)
-					format.dominantBaseline		= _computedFormat.dominantBaseline;
-				else
-				{
-					var para:ParagraphElement = getParagraph();
-					//otherwise, avoid using the locale of the element and use the paragraph's locale
-					if(para != null)
-						format.dominantBaseline = para.getEffectiveDominantBaseline();
-					else
-						format.dominantBaseline = LocaleUtil.dominantBaseline(_computedFormat.locale);
-				}
+				format.dominantBaseline		= domBase;
+				
 				format.digitCase			= _computedFormat.digitCase;
 				format.digitWidth			= _computedFormat.digitWidth;
 				format.ligatureLevel		= _computedFormat.ligatureLevel;

@@ -703,8 +703,8 @@ package flashx.textLayout.compose
 			var textLine:TextLine = getTextLine();
 			textLine.x = createShapeX();
 			textLine.y = createShapeY(bp);
-			CONFIG::debug { Debugging.traceFTEAssign(textLine,"x", textLine.x);  }
-			CONFIG::debug { Debugging.traceFTEAssign(textLine,"y", textLine.y);  }
+			CONFIG::debug { Debugging.traceFTEAssign(textLine,"x", createShapeX());  }
+			CONFIG::debug { Debugging.traceFTEAssign(textLine,"y", createShapeY(bp));  }
 			return textLine;
 		}
 		
@@ -1259,8 +1259,12 @@ package flashx.textLayout.compose
  				
  				if(this.controller.computedFormat.firstBaselineOffset == FormatValue.AUTO)
  				{
- 					//shift it down so that the top abutts the top of the controller
- 					verticalAdj = bounds.top;
+ 					//this adjustment should only be applied to Top to bottom text (ie Roman)
+ 					if(this.controller.computedFormat.blockProgression == BlockProgression.TB)
+ 					{
+ 						//shift it down so that the top abutts the top of the controller
+ 						verticalAdj = bounds.top;
+ 					}
  				}
  			}
  			return [rectHeight, verticalAdj];

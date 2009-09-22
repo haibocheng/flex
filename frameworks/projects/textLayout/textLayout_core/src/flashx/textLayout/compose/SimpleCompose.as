@@ -160,8 +160,9 @@ package flashx.textLayout.compose
 			var finishLineSlug:Rectangle = _parcelList.currentParcel;
 			var curLine:TextFlowLine;
 			
-			do {
-				while (!curLine)
+			for (;;) 
+			{
+				for (;;)
 				{	
 					// generate new line
 					CONFIG::debug { assert(!_parcelList.atEnd(), "failing to stop"); }
@@ -174,37 +175,15 @@ package flashx.textLayout.compose
 					if (!_parcelList.next())
 						return null;
 				}
-	
-				// Try to place the line in the current parcel.
-				// get a zero height parcel. place the line there and then test if it still fits.
-				// if it doesn't place it in the new result parcel
-				// still need to investigate because the height used on the 2nd getLineSlug call may be too big.
-				_parcelList.getLineSlug(_candidateLineSlug,0); // parcel.getLineSlug(curLine.height);
+				
+				// updates _lineSlug
+				curLine = fitLineToParcel(curLine);
+				if (curLine)
+					break;
 				if (_parcelList.atEnd())
 					return null;
-				
-				curLine.setController(_parcelList.controller,_parcelList.columnIndex);
-				finishComposeLine(curLine, _candidateLineSlug);
-			
-				// If we are at the last parcel, we let text be clipped if that's specified in the configuration. At the point where no part of text can be accommodated, we go overset.
-				// If we are not at the last parcel, we let text flow to the next parcel instead of getting clipped.
-				var spaceBefore:Number = Math.max(curLine.spaceBefore, _spaceCarried);
-				_parcelList.getLineSlug(_lineSlug, spaceBefore + (_parcelList.atLast() && _textFlow.configuration.overflowPolicy != OverflowPolicy.FIT_DESCENDERS ? curLine.height-curLine.ascent : curLine.height+curLine.descent));
-
-				if (_parcelList.atEnd())
-					return null;
-				
-				if (_parcelList.getComposeWidth(_lineSlug) == curLine.outerTargetWidth)
-				{
-					curLine.setController(_parcelList.controller,_parcelList.columnIndex);
-					if (_parcelList.getComposeXCoord(_candidateLineSlug) != _parcelList.getComposeXCoord(_lineSlug) || _parcelList.getComposeYCoord(_candidateLineSlug) != _parcelList.getComposeYCoord(_lineSlug))
-						finishComposeLine(curLine, _lineSlug);
-					break;		// got a good line
-				}
-				curLine = null;		// try again with new targetWidth and new lineslug
 				finishLineSlug = _lineSlug;
-
-			} while (true);
+			}
 			
 			finalizeLine(curLine);
 

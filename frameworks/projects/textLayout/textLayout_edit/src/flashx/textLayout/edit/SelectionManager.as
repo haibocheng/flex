@@ -40,12 +40,15 @@ package flashx.textLayout.edit
 	import flashx.textLayout.elements.InlineGraphicElement;
 	import flashx.textLayout.elements.ParagraphElement;
 	import flashx.textLayout.elements.TextFlow;
+	import flashx.textLayout.events.FlowOperationEvent;
 	import flashx.textLayout.events.SelectionEvent;
 	import flashx.textLayout.formats.BlockProgression;
 	import flashx.textLayout.formats.Category;
 	import flashx.textLayout.formats.Direction;
 	import flashx.textLayout.formats.ITextLayoutFormat;
 	import flashx.textLayout.formats.TextLayoutFormat;
+	import flashx.textLayout.operations.CopyOperation;
+	import flashx.textLayout.operations.FlowOperation;
 	import flashx.textLayout.property.Property;
 	import flashx.textLayout.tlf_internal;
 	import flashx.textLayout.utils.NavigationUtil;
@@ -1125,10 +1128,10 @@ package flashx.textLayout.edit
 			return rslt;
 		}
 		
-		/** initialize a new point selection at click point */
-		private function setNewSelectionPoint(event:MouseEvent, extendSelection:Boolean = false):Boolean
+		/** initialize a new point selection at click point @private */
+		tlf_internal function setNewSelectionPoint(currentTarget:Object, target:InteractiveObject, localX:Number, localY:Number, extendSelection:Boolean = false):Boolean
 		{
-			var selState:SelectionState = selectionPoint(event.currentTarget, event.target as InteractiveObject, event.localX, event.localY, extendSelection);
+			var selState:SelectionState = selectionPoint(currentTarget, target, localX, localY, extendSelection);
 			if (selState == null)
 				return false;	// ignore
 			
@@ -1178,7 +1181,7 @@ package flashx.textLayout.edit
 		{
 			var startSelectionActive:Boolean = hasSelection();
 			
-			if (setNewSelectionPoint(event, startSelectionActive && allowExtend))
+			if (setNewSelectionPoint(event.currentTarget, event.target as InteractiveObject, event.localX, event.localY, startSelectionActive && allowExtend))
 			{
 				selectionChanged();
 				if (startSelectionActive)
@@ -1380,6 +1383,30 @@ package flashx.textLayout.edit
 			}
 		}
 		
+		/** Perform a SelectionManager operation - these never modify the flow but clients still are able to cancel them. */
+		private function doInternal(op:FlowOperation):void
+		{
+			var opEvent:FlowOperationEvent = new FlowOperationEvent(FlowOperationEvent.FLOW_OPERATION_BEGIN,false,true,op,null);
+			textFlow.dispatchEvent(opEvent);
+			if (!opEvent.isDefaultPrevented())
+			{
+				var opError:Error = null;
+				try
+				{
+					op.doOperation();
+				}
+				catch(e:Error)
+				{
+					opError = e;
+				}
+				// operation completed - send event whether it succeeded or not.
+				opEvent = new FlowOperationEvent(FlowOperationEvent.FLOW_OPERATION_END,false,true,op,opError);
+				textFlow.dispatchEvent(opEvent);
+				if (opError && !opEvent.isDefaultPrevented())
+					throw (opError);
+			}			
+		}
+
 		/** 
 		 * @copy IInteractionEventHandler#editHandler()
 		 * 
@@ -1392,10 +1419,12 @@ package flashx.textLayout.edit
 			switch (event.type)
 			{
 				case Event.COPY:
-					if (activePosition != anchorPosition)
-						TextClipboard.setContents(TextScrap.createTextScrap(getSelectionState()));
+					flushPendingOperations();
+					doInternal(new CopyOperation(getSelectionState()));
+
 					break;
 				case Event.SELECT_ALL:
+					flushPendingOperations();
 					selectAll();
 					refreshSelection();
 					break;	
@@ -1403,8 +1432,6 @@ package flashx.textLayout.edit
 			
 		}
 
-		
-		
 		private function handleLeftArrow(event:KeyboardEvent):SelectionState
 		{
 			var selState:SelectionState = getSelectionState();

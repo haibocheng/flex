@@ -106,13 +106,11 @@ package flashx.textLayout.conversion
 		public function TextLayoutImporter(textFlowConfiguration:IConfiguration)
 		{
 			super(textFlowConfiguration, flowNS, defaultConfiguration);
-			bindingsArray = new Array();
 		}
 
 		override protected function clear():void
 		{
-			if (bindingsArray)
-				bindingsArray.splice(0, bindingsArray.length);
+			bindingsArray = null;
 			super.clear();
 		}
 		
@@ -328,6 +326,8 @@ package flashx.textLayout.conversion
 			for each (var item:XML in xmlToParse.attributes())
 				importer.importOneFormat(item.name().localName,item.toString());
 			
+			if (!bindingsArray)
+				bindingsArray = new Array();
 			bindingsArray[idName] = importer.result ? importer.result : new importer.classType();
 		}
 		
@@ -346,10 +346,9 @@ package flashx.textLayout.conversion
 		// available in the BaseTextLayoutImportFilter.
 		internal function getBoundObjNamed(name:String, typeClass:Class):Object
 		{
-	//		if (!name)
-	//			return new typeClass();
-
 			CONFIG::debug {assert(name != null && name.length > 0, "null string for a bound object")}
+			if (!bindingsArray)
+				bindingsArray = new Array();
 			if (bindingsArray[name] == null) 
 			{
 				if (typeClass == TextFlow)
@@ -361,30 +360,6 @@ package flashx.textLayout.conversion
 			return bindingsArray[name];
 		}
 
-		// Return a "bindings" object. This method allows us to encounter a object via a binding
-		// (it appears within "{}" or we can encounter the actual tag (e.g, <CharacterFormat ... >). Either way
-		// this method will allocate an object with the given name, and assign the attributes as they become
-		// available in the BaseTextLayoutImporter.
-		private function getBoundContainerNamed(name:String):ContainerController
-		{
-	//		if (!name)
-	//			return new typeClass();
-
-			CONFIG::debug {assert(name != null && name.length > 0, "null string for a bound object")}
-			return bindingsArray[name];
-		}
-
-		// Return a "bindings" object. This method allows us to encounter a object via a binding
-		// (it appears within "{}" or we can encounter the actual tag (e.g, <CharacterFormat ... >). If the 
-		// object has not previously been created, it will get created here. If previously created, the previously
-		// created instance is returned.
-		private function getBoundContainerNamedDefault(name:String):ContainerController
-		{
-			if (bindingsArray[name]) 
-				return bindingsArray[name];
-			return getBoundContainerNamed(name);
-		}
-		
 		/** Parse a TCY Block.
 		 * 
 		 * @param - importFilter:BaseTextLayoutImporter - parser object

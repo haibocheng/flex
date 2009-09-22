@@ -165,12 +165,6 @@ package flashx.textLayout.elements
 					}
 					effectiveParent.replaceChildren(effectiveParent.numChildren, effectiveParent.numChildren, s);
 				}
-				else if (child is LinkNormalFormat)
-					linkNormalFormat = (child as LinkNormalFormat);
-				else if (child is LinkActiveFormat)
-					linkActiveFormat = (child as LinkActiveFormat);
-				else if (child is LinkHoverFormat)
-					linkHoverFormat = (child as LinkHoverFormat);
 				else
 					throw new TypeError("Bad element of type "+getQualifiedClassName(this)+" passed to FlowGroupElement.mxmlChildren");
 			}

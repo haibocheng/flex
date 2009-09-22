@@ -45,9 +45,8 @@ public class MxmlCompiler extends AbstractSubCompiler
 	//	MXML document state
 	static final String DOCUMENT_INFO = "DocumentInfo";
 	//	type table wrapper around symbol table, held to avoid
-	//	recreation overhead.  This is intentionally non-public so it
-	//	won't be used outside the context of an Mxml compilation.
-	static final String TYPE_TABLE = flex2.compiler.mxml.reflect.TypeTable.class.getName();
+	//	recreation overhead.
+	public static final String TYPE_TABLE = flex2.compiler.mxml.reflect.TypeTable.class.getName();
 	//	line number map - maps regions of generated code back to original MXML. TODO fold into document info
 	static final String LINE_NUMBER_MAP = "LineNumberMap";
 	//	each subcompiler uses a delegate compilation unit for generated code

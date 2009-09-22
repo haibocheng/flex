@@ -31,6 +31,7 @@ package flashx.textLayout
 		import flashx.textLayout.operations.ApplyElementIDOperation; ApplyElementIDOperation;
 		import flashx.textLayout.operations.ApplyElementStyleNameOperation; ApplyElementStyleNameOperation;
 		import flashx.textLayout.operations.CompositeOperation; CompositeOperation;
+		import flashx.textLayout.operations.CopyOperation; CopyOperation;
 		import flashx.textLayout.operations.CutOperation; CutOperation;
 		import flashx.textLayout.operations.DeleteTextOperation; DeleteTextOperation;
 		import flashx.textLayout.operations.FlowOperation; FlowOperation;

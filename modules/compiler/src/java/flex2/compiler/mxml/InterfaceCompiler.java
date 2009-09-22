@@ -1278,6 +1278,25 @@ public class InterfaceCompiler extends flex2.compiler.AbstractSubCompiler implem
             super.analyze(node);
         }
 
+        protected void traverse(Node node)
+        {
+            for (int i = 0; i < node.getChildCount(); i++)
+            {
+                Node child = (Node) node.getChildAt(i);
+                child.analyze(this);
+                
+                // We strip ScriptNode instances from the node tree as
+                // we process them, to avoid having to trip over them 
+                // in later compilation stages (for example, when type
+                // checking value nodes).
+                if (child instanceof ScriptNode)
+                {
+                    node.replaceNode(i, Collections.<Token>emptyList());
+                    i -= 1;
+                }
+            }
+        }
+        
         private void registerVariableForId(Node node, String className)
         {
             String id = null;

@@ -31,7 +31,6 @@ package flashx.undo
 	 * @playerversion AIR 1.5
  	 * @langversion 3.0
 	 *
-	 * @includeExample examples\UndoManager_example.as -noswf
 	 * @see flashx.textLayout.edit.EditManager
 	 */
 	public class UndoManager implements IUndoManager

@@ -502,10 +502,11 @@ package flashx.textLayout.elements
 				if (myidx != 0)
 				{
 					var sib:SpanElement = parent.getChildAt(myidx-1) as SpanElement;
-					if (sib != null && sib.canReleaseContentElement() && equalStylesForMerge(sib))
+					if (sib != null && sib.canReleaseContentElement() && 
+						(equalStylesForMerge(sib) || (this.textLength == 1 && this.hasParagraphTerminator)))
 					{
 						CONFIG::debug { assert(this.parent == sib.parent, "Should never merge two spans with different parents!"); }
-						CONFIG::debug { assert(TextLayoutFormat.isEqual(this.formatForCascade,sib.formatForCascade), "Bad merge!"); }
+						CONFIG::debug { assert(TextLayoutFormat.isEqual(this.formatForCascade,sib.formatForCascade) || (this.textLength == 1 && this.hasParagraphTerminator), "Bad merge!"); }
 						
 						// Merge them in the Player's TextBlock structure
 						var siblingInsertPosition:int = sib.textLength;

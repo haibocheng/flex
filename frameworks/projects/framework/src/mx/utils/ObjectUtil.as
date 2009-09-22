@@ -12,6 +12,7 @@
 package mx.utils
 {
 
+import flash.net.registerClassAlias;
 import flash.utils.ByteArray;
 import flash.utils.Dictionary;
 import flash.utils.getQualifiedClassName;
@@ -50,6 +51,28 @@ public class ObjectUtil
     //  Class methods
     //
     //--------------------------------------------------------------------------
+
+	/**
+	 *  If the object has no properties, or the object is null,
+	 *	this will return true
+	 */
+	public static function isBlank(object:Object):Boolean
+	{
+		if (object == null)
+			return true;
+		for (var property:* in object)
+			return false;
+		return true;
+	}
+	
+	/**
+	 *  Lets you know if an object is equal to the Class type passed in.
+	 */
+	public static function typeEquals(target:*, Cls:Class):Boolean
+	{
+		var result:Boolean = target == null ? false : Object(target).constructor == Cls;
+		return (result) ? true : (target is Cls);
+	}
 
     /**
      *  Compares the Objects and returns an integer value 

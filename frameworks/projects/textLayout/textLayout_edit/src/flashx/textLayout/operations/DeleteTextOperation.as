@@ -131,7 +131,7 @@ package flashx.textLayout.operations
 					if (absoluteEnd == paraEl.getAbsoluteStart())
 					{
 						_undoParaFormat = paraEl.format;
-						_undoCharacterFormat = paraEl.format;
+						_undoCharacterFormat = leafEl.format;
 						_needsOldFormat = true;
 					}
 				}
@@ -155,10 +155,14 @@ package flashx.textLayout.operations
 				TextFlowEdit.replaceRange(textFlow, absoluteStart, absoluteStart, _textScrap);
 				if (_needsOldFormat)
 				{
+					textFlow.normalize();
 					var leafEl:FlowLeafElement = textFlow.findLeaf(absoluteEnd);
-					var paraEl:ParagraphElement = leafEl.getParagraph();
-					paraEl.format = _undoParaFormat;
-					paraEl.format = _undoCharacterFormat; 
+					if (leafEl)
+					{
+						var paraEl:ParagraphElement = leafEl.getParagraph();
+						paraEl.format = _undoParaFormat;
+						paraEl.format = _undoCharacterFormat; 
+					}
 					
 				}
 				textFlow.interactionManager.notifyInsertOrDelete(absoluteStart, absoluteEnd - absoluteStart);

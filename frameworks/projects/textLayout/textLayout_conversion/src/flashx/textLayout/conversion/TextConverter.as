@@ -241,7 +241,7 @@ package flashx.textLayout.conversion
 		 * </li>
 		 * 
 		 * <li>
-		 * <strong>Note: </strong> Unlike the TextField class, the <code>class</code> attribute is not supported. 
+		 * class: Specifies a class name that can be used for styling 
 		 * </li>
 		 * 
 		 * </ul>
@@ -257,12 +257,12 @@ package flashx.textLayout.conversion
 		 * 
 		 * <td>
 		 * 
-		 * The <code>&lt;span&gt;</code> tag is available but supports no attributes.
+		 * The <code>&lt;span&gt;</code> tag supports the following attributes:
 		 * 
 		 * <ul>
 		 * 
 		 * <li>
-		 * <strong>Note: </strong> Unlike the TextField class, the <code>class</code> is not supported.
+		 * class: Specifies a class name that can be used for styling 
 		 * </li>
 		 * 
 		 * </ul>

@@ -76,6 +76,14 @@ package flashx.textLayout.conversion
 			align	: new StringProperty("align", null, false, null)};
 		static private const _ilgFormatImporter:TLFormatImporter = new TLFormatImporter(Dictionary,_imageDescription);
 		
+		static internal const _classDescription:Object =
+		{
+			// A property named 'class' confuses the compiler. 
+			// class	: new StringProperty("class",   null, false, null)
+			// So, we initialize _classDescription in the constructor 
+		};
+		static private const _classImporter:TLFormatImporter = new TLFormatImporter(Dictionary,_classDescription);
+		
 		// Character/paragraph formats specified by formatting elements in the ancestry of the element being parsed currently 
 		static private var _activeCharFormat:TextLayoutFormatValueHolder = new TextLayoutFormatValueHolder();
 		static private var _activeParaFormat:TextLayoutFormatValueHolder = new TextLayoutFormatValueHolder();
@@ -111,6 +119,8 @@ package flashx.textLayout.conversion
 				_textFormatImporter = new TextFormatImporter(TextLayoutFormat, _textFormatDescription);
 			if (_fontImporter == null)
 				_fontImporter = new FontImporter(TextLayoutFormat, _fontDescription);
+				
+			_classDescription["class"] = new StringProperty("class", null, false, null);
 						
 			super(textFlowConfiguration, null, config);
 		}
@@ -157,9 +167,9 @@ package flashx.textLayout.conversion
 		public override function createParagraphFromXML(xmlToParse:XML):ParagraphElement
 		{
 			var paraElem:ParagraphElement = new ParagraphElement();
-			
+				
 			// parse xml attributes for paragraph format
-			var formatImporters:Array = [_paragraphFormatImporter];
+			var formatImporters:Array = [_paragraphFormatImporter, _classImporter];
 			parseAttributes(xmlToParse, formatImporters);
 			var paragraphFormat:TextLayoutFormat = new TextLayoutFormat(_paragraphFormatImporter.result as ITextLayoutFormat);
 			
@@ -168,6 +178,10 @@ package flashx.textLayout.conversion
 			
 			// TODO: concat here???
 			paraElem.format = paragraphFormat;
+			
+			// Use the value of the 'class' attribute (if present) as styleName
+			if (_classImporter.result)
+				paraElem.styleName = _classImporter.result["class"]; 
 			
 			return paraElem;
 		}
@@ -184,6 +198,11 @@ package flashx.textLayout.conversion
 				linkElem.href = _linkFormatImporter.result["href"];
 				linkElem.target = _linkFormatImporter.result["target"];
 			}
+			
+			// HTML_FORMAT uses _self as the default target (to replicate TextField behavior) 
+			// while the TLF object model uses null. Account for this difference.
+			if (!linkElem.target)
+				linkElem.target = "_self";
 
 			return linkElem;
 		}
@@ -210,6 +229,12 @@ package flashx.textLayout.conversion
 		public override function createSpanFromXML(xmlToParse:XML):SpanElement
 		{
 			var spanElem:SpanElement = new SpanElement();
+			
+			// Use the value of the 'class' attribute (if present) as styleName
+			var formatImporters:Array = [_classImporter];
+			parseAttributes(xmlToParse,formatImporters);
+			if (_classImporter.result)
+				spanElem.styleName = _classImporter.result["class"];
 			
 			// no char format expressed as xml attributes
 			// apply char format inherited from formatting elements
@@ -265,7 +290,7 @@ package flashx.textLayout.conversion
 		
 		static private function parseHtmlContainer(importFilter:BaseTextLayoutImporter, xmlToParse:XML, parent:FlowGroupElement):void
 		{
-			importFilter.parseFlowGroupElementChildren (xmlToParse, parent);
+			importFilter.parseFlowGroupElementChildren (xmlToParse, parent, null, true);
 		}
 		
 		static private function parseHead(importFilter:BaseTextLayoutImporter, xmlToParse:XML, parent:FlowGroupElement):void
@@ -288,7 +313,7 @@ package flashx.textLayout.conversion
 			if (format)
 				_activeCharFormat.apply(format);
 
-			importFilter.parseFlowGroupElementChildren(xmlToParse, parent);
+			importFilter.parseFlowGroupElementChildren(xmlToParse, parent, null, true);
 			
 			// restore original state
 			_activeCharFormat = charFormat;
@@ -309,7 +334,7 @@ package flashx.textLayout.conversion
 			if (format)
 				_activeParaFormat.apply(format);
 
-			importFilter.parseFlowGroupElementChildren(xmlToParse, parent);
+			importFilter.parseFlowGroupElementChildren(xmlToParse, parent, null, true);
 			
 			// restore original state
 			_activeParaFormat = paraFormat;
@@ -323,7 +348,7 @@ package flashx.textLayout.conversion
 			var fontWeight:* = _activeCharFormat.fontWeight;
 			_activeCharFormat.fontWeight = flash.text.engine.FontWeight.BOLD;
 			
-			importFilter.parseFlowGroupElementChildren(xmlToParse, parent);
+			importFilter.parseFlowGroupElementChildren(xmlToParse, parent, null, true);
 			
 			_activeCharFormat.fontWeight = fontWeight;
 		}
@@ -336,7 +361,7 @@ package flashx.textLayout.conversion
 			var fontStyle:* = _activeCharFormat.fontStyle;
 			_activeCharFormat.fontStyle = flash.text.engine.FontPosture.ITALIC;
 			
-			importFilter.parseFlowGroupElementChildren(xmlToParse, parent);
+			importFilter.parseFlowGroupElementChildren(xmlToParse, parent, null, true);
 			
 			_activeCharFormat.fontStyle = fontStyle; 
 		}
@@ -349,7 +374,7 @@ package flashx.textLayout.conversion
 			var textDecoration:* = _activeCharFormat.textDecoration;
 			_activeCharFormat.textDecoration = flashx.textLayout.formats.TextDecoration.UNDERLINE;
 			
-			importFilter.parseFlowGroupElementChildren(xmlToParse, parent);
+			importFilter.parseFlowGroupElementChildren(xmlToParse, parent, null, true);
 			
 			_activeCharFormat.textDecoration = textDecoration; 
 		}												

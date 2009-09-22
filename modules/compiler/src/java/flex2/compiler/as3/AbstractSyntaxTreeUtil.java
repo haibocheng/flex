@@ -1166,7 +1166,7 @@ public class AbstractSyntaxTreeUtil
         // the fragment in braces so as to catch several classes of lookahead 
         // errors (syntactical) that would normally fail silently otherwise.
         InputBuffer offsetInputBuffer =
-            new InputBuffer("{" + text + "}", origin, codeFragmentsInputBuffer.getLength(),0);
+            new InputBuffer("{" + text + "\n}", origin, codeFragmentsInputBuffer.getLength(),0);
 
         Parser parser = new Parser(context, offsetInputBuffer, origin, emitDocInfo);
         parser.block_kind_stack.add(Tokens.PACKAGE_TOKEN);

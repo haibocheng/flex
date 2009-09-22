@@ -35,6 +35,8 @@ public interface PreLink
     void postRun(List<Source> sources,
                  List<CompilationUnit> units,
                  ResourceContainer resources,
+                 SymbolTable symbolTable,
                  CompilerSwcContext swcContext,
+                 NameMappings nameMappings,
                  Configuration configuration);
 }

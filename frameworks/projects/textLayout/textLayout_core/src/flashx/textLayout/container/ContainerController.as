@@ -72,6 +72,10 @@ package flashx.textLayout.container
 	 * @includeExample examples\ContainerControllerExample1.as -noswf
 	 * @includeExample examples\ContainerControllerExample2.as -noswf
 	 *
+	 * @playerversion Flash 10
+	 * @playerversion AIR 1.5
+	 * @langversion 3.0
+	 *
 	 * @see flashx.textLayout.compose.IFlowComposer
 	 * @see flashx.textLayout.elements.TextFlow
 	 */
@@ -476,6 +480,9 @@ package flashx.textLayout.container
 		{
 			return _textLength;
 		}
+		/** @private */
+		tlf_internal function setTextLengthOnly(numChars:int):void
+		{ _textLength = numChars; }
 		
 		/** @private */
 		tlf_internal function setTextLength(numChars:int):void
@@ -962,27 +969,23 @@ package flashx.textLayout.container
 
 		public function scrollToRange(activePosition:int,anchorPosition:int):void
 		{
-			// Don't try to scroll to positions before the controller
-			if (activePosition < absoluteStart && anchorPosition < absoluteStart)
-				return;
-			
-			// Don't try to scroll to position after the controller
-			var endOfController:int = absoluteStart + _textLength;
-			if (activePosition >= endOfController && anchorPosition >= endOfController)
-				return;
-			
+
 			// return if we're not scrolling, or if it's not the last controller
 			if (!_hasScrollRect || !flowComposer || flowComposer.getControllerAt(flowComposer.numControllers-1) != this)
 				return;
-				
+			
+			// clamp values to range absoluteStart,absoluteStart+_textLength
+			var controllerStart:int = absoluteStart;
+			activePosition = Math.max(controllerStart,Math.min(activePosition,controllerStart+_textLength));
+			anchorPosition = Math.max(controllerStart,Math.min(anchorPosition,controllerStart+_textLength));
+								
 			var verticalText:Boolean = effectiveBlockProgression == BlockProgression.RL;
 			var begPos:int = Math.min(activePosition,anchorPosition);
 			var endPos:int = Math.max(activePosition,anchorPosition);
 			
 			// is part of the selection in view?
-			var preferPrevious:Boolean = (begPos == textFlow.textLength);
-			var begLineIndex:int = flowComposer.findLineIndexAtPosition(begPos,preferPrevious);
-			var endLineIndex:int = flowComposer.findLineIndexAtPosition(endPos,preferPrevious);
+			var begLineIndex:int = flowComposer.findLineIndexAtPosition(begPos,(begPos == textFlow.textLength));
+			var endLineIndex:int = flowComposer.findLineIndexAtPosition(endPos,(endPos == textFlow.textLength));
 			
 			// no scrolling if any part of the selection is in view
 			var prevLine:TextFlowLine = begLineIndex == 0 ? null : flowComposer.getLineAt(begLineIndex-1);
@@ -1360,25 +1363,17 @@ package flashx.textLayout.container
 			}
 			else if (_container.stage)
 			{
-				var scrollChange:int = autoScrollIfNecessaryInternal(_container.stage.mouseX, _container.stage.mouseY);
+				var containerPoint:Point = new Point(_container.stage.mouseX, _container.stage.mouseY);
+				containerPoint = _container.globalToLocal(containerPoint);
+				var scrollChange:int = autoScrollIfNecessaryInternal(containerPoint);
 				if (scrollChange != 0 && interactionManager)		// force selection update if we actually scrolled and we have a selection manager
 				{
-					// If we scrolled down, extend the selection to cover the last visible position.
-					// If we scroll up, extend to the selection backwards to cover the first visible position
-					var a:Array = findFirstAndLastVisibleLine();
-					var newActivePosition:int = -1;
-					if (scrollChange == 1)	// forward scroll, select to end of visible area
-					{
-						var lastVisibleLine:TextFlowLine = a[1];
-						newActivePosition = lastVisibleLine.absoluteStart + lastVisibleLine.textLength;
-					}
-					else	// backward scroll, select to start of visible area
-					{
-						var firstVisibleLine:TextFlowLine = a[0];
-						newActivePosition = firstVisibleLine.absoluteStart;
-					}
-					interactionManager.selectRange(interactionManager.anchorPosition, newActivePosition);
-					interactionManager.refreshSelection();
+					//if (interactionManager["setNewSelectionPoint"](_container,_container as InteractiveObject,containerPoint.x,containerPoint.y,true))
+					//	interactionManager.refreshSelection();
+					// var mouseEvent:MouseEvent = new MouseEvent(MouseEvent.MOUSE_DOWN,false,false,containerPoint.x,containerPoint.y,container as InteractiveObject,false,false,true,true);
+					// _container.dispatchEvent(mouseEvent);
+					var mouseEvent:MouseEvent = new PsuedoMouseEvent(MouseEvent.MOUSE_MOVE,false,false,containerPoint.x,containerPoint.y,_container as InteractiveObject,false,false,false,true);
+					interactionManager.mouseMoveHandler(mouseEvent);
 				}
 			}
 			// trace("AFTER scrollTimerHandler");
@@ -1420,8 +1415,9 @@ package flashx.textLayout.container
 						lastController.autoScrollIfNecessary(mouseX, mouseY);
 				}
  			}
- 			
-			autoScrollIfNecessaryInternal(mouseX, mouseY);
+			var containerPoint:Point = new Point(mouseX, mouseY);
+			containerPoint = _container.globalToLocal(containerPoint); 			
+			autoScrollIfNecessaryInternal(containerPoint);
 		}
 
 		/** 
@@ -1436,20 +1432,17 @@ package flashx.textLayout.container
 	 	 * @langversion 3.0
 	 	 */
 		 
-		private function autoScrollIfNecessaryInternal(mouseX:int, mouseY:int):int
+		private function autoScrollIfNecessaryInternal(extreme:Point):int
 		{
 			CONFIG::debug 
 			{ 
 				assert(_hasScrollRect, "internal scrolling function called on non-scrollable container");
-				assert(flowComposer.getControllerIndex(ContainerController(this)) == flowComposer.numControllers - 1, 
-					"internal scrolling function called on container that is not the last in the flow");
 			}
 			
 			var scrollDirection:int = 0;
 			
 			var scrolled:Boolean = false;
-			var extreme:Point = new Point(mouseX, mouseY);
-			extreme = _container.globalToLocal(extreme);
+
 			if (extreme.y - containerScrollRectBottom > 0) {
 				verticalScrollPosition += textFlow.configuration.scrollDragPixels;
 				scrollDirection = 1;
@@ -1484,7 +1477,8 @@ package flashx.textLayout.container
 			return scrollDirection;
 		}
 
-		private function findFirstAndLastVisibleLine():Array
+		/** @private */
+		tlf_internal function findFirstAndLastVisibleLine():Array
 		{
 			var firstLine:int = flowComposer.findLineIndexAtPosition(absoluteStart);
 			var lastLine:int = flowComposer.findLineIndexAtPosition(absoluteStart + _textLength - 1);
@@ -2161,6 +2155,97 @@ package flashx.textLayout.container
 	    		}
 	    	}
 	    
+	    public function get canReconvert():Boolean
+		{
+			var selMgr:ISelectionManager = interactionManager;
+			if(!selMgr)
+				return false;
+			
+			return selMgr.editingMode == EditingMode.READ_WRITE;
+		}
+		
+		public function get selectionActiveIndex():int
+		{
+			var selMgr:ISelectionManager = interactionManager;
+			var selIndex:int = -1;
+			if(selMgr && selMgr.editingMode != EditingMode.READ_ONLY)
+			{
+				selIndex = selMgr.activePosition;
+			}
+			
+			return selIndex;
+		}
+	    
+		public function get selectionAnchorIndex():int
+		{
+			var selMgr:ISelectionManager = interactionManager;
+			var selIndex:int = -1;
+			if(selMgr && selMgr.editingMode != EditingMode.READ_ONLY)
+			{
+				selIndex = selMgr.anchorPosition;
+			}
+			
+			return selIndex;
+		}
+	    
+	    public function getTextInRange(startIndex:int = -1, endIndex:int = -1):String
+	    {
+	    	var text:String = "";
+	    	var childIter:int = 0;
+	    	
+	    	if(startIndex == -1 && endIndex == -1)
+	    	{
+	    		while(childIter < this.textFlow.numChildren)
+	    		{
+	    			var curPara:ParagraphElement = this.textFlow.getChildAt(childIter) as ParagraphElement;
+	    			CONFIG::debug{ assert(curPara != null, "child of the text flow does not appear to be a Paragraph!"); }
+	    			text += curPara.getText();
+	    			++childIter;
+	    		}
+	    		
+	    	}
+	    	else
+	    	{
+	    		var curPos:int = startIndex != -1 ? startIndex : 0;
+	    		if(endIndex == -1)
+	    			endIndex = this.textFlow.textLength;
+	    			
+	    		while(curPos < endIndex && childIter < textFlow.numChildren)
+	    		{
+	    			var rangedPara:ParagraphElement = this.textFlow.getChildAt(childIter) as ParagraphElement;
+	    			CONFIG::debug{ assert(rangedPara != null, "child of the text flow does not appear to be a Paragraph!"); }
+	    			var paraStart:int = rangedPara.getAbsoluteStart();
+	    			var paraEnd:int = paraStart + rangedPara.textLength;
+	    			if(curPos <= paraStart && paraEnd >= endIndex)
+	    			{
+		    			var relStart:int = curPos - paraStart;
+		    			var relEnd:int = relStart + (endIndex - curPos);
+		    			
+		    			if(relEnd > (paraStart + rangedPara.textLength))
+		    				relEnd = paraStart + rangedPara.textLength;
+		    			
+		    			var rangedParaText:String = rangedPara.getText();
+		    			text += rangedParaText.substr(relStart, relEnd - relStart);
+		    			
+		    			curPos += rangedPara.textLength;
+		    			++childIter;
+		    		}
+	    		}
+	    	}
+	    	
+	    	return text;
+	    }
+	    
+	    public function selectRange(anchorIndex:int, activeIndex:int):void
+	    {
+	    	if(interactionManager && interactionManager.editingMode == EditingMode.READ_WRITE)
+	    	{
+		    	interactionManager.selectRange(anchorIndex, activeIndex);
+	    	}
+	    }
+	    
+	    
+	    
 		//--------------------------------------------------------------------------
 		//
 		//  Cursor blinking code
@@ -2806,7 +2891,7 @@ package flashx.textLayout.container
 				var xpos:int = horizontalScrollPosition + xOrigin;
 				var ypos:int = verticalScrollPosition;
 				
-				if (xpos == 0 && ypos == 0 && _contentLeft >= xOrigin && _contentTop >= 0 && contentRight <= compositionRight && contentBottom <= compositionBottom)
+				if (textLength == 0 || xpos == 0 && ypos == 0 && _contentLeft >= xOrigin && _contentTop >= 0 && contentRight <= compositionRight && contentBottom <= compositionBottom)
 				{
 					if(_hasScrollRect)
 					{
@@ -3072,4 +3157,18 @@ package flashx.textLayout.container
 		{ return this; }
 	}
 
+}
+import flash.events.MouseEvent;
+import flash.display.InteractiveObject;
+	
+class PsuedoMouseEvent extends MouseEvent
+{
+	public function PsuedoMouseEvent(type:String, bubbles:Boolean = true, cancelable:Boolean = false, localX:Number = NaN, localY:Number = NaN, relatedObject:InteractiveObject = null, ctrlKey:Boolean = false, altKey:Boolean = false, shiftKey:Boolean = false, buttonDown:Boolean = false)
+	{
+		super(type,bubbles,cancelable,localX,localY,relatedObject,ctrlKey,altKey,shiftKey,buttonDown);
+	}
+	public override function get currentTarget():Object
+	{ return relatedObject; }
+	public override function get target():Object
+	{ return relatedObject; }
 }

@@ -14,20 +14,26 @@ package flex2.compiler.css;
 import flex2.compiler.CompilationUnit;
 import flex2.compiler.ResourceContainer;
 import flex2.compiler.Source;
+import flex2.compiler.SymbolTable;
 import flex2.compiler.common.PathResolver;
 import flex2.compiler.io.FileUtil;
 import flex2.compiler.io.TextFile;
 import flex2.compiler.io.VirtualFile;
+import flex2.compiler.mxml.MxmlCompiler;
 import flex2.compiler.mxml.MxmlConfiguration;
 import flex2.compiler.mxml.SourceCodeBuffer;
 import flex2.compiler.mxml.gen.VelocityUtil;
 import flex2.compiler.mxml.lang.StandardDefs;
+import flex2.compiler.mxml.reflect.Type;
+import flex2.compiler.mxml.reflect.TypeTable;
 import flex2.compiler.mxml.rep.AtEmbed;
 import flex2.compiler.mxml.rep.MxmlDocument;
 import flex2.compiler.swc.SwcFile;
 import flex2.compiler.util.CompilerMessage.CompilerWarning;
 import flex2.compiler.util.CompilerMessage;
 import flex2.compiler.util.MimeMappings;
+import flex2.compiler.util.NameFormatter;
+import flex2.compiler.util.NameMappings;
 import flex2.compiler.util.ThreadLocalToolkit;
 import flex2.compiler.util.VelocityException;
 import flex2.compiler.util.VelocityManager;
@@ -43,6 +49,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import flash.css.StyleDeclaration;
+import flash.css.StyleProperty;
 import flash.css.StyleSelector;
 import flash.css.StyleSheet;
 import flash.fonts.FontManager;
@@ -73,9 +80,10 @@ public class StylesContainer extends StyleModule
     /**
      * Called by PreLink to load style declarations from defaults.css and
      * themes from SWCs.
-     * 
-     * TODO: Constructors differing only by argument order is a terribly
-     * confusing design.
+     *
+     * Also, called by MxmlDocument in preparation for local
+     * StyleNodes.  DocumentBuilder.analyze(StyleNode) will call
+     * extractStyles().
      * 
      * @param mxmlConfiguration
      * @param compilationUnit
@@ -88,7 +96,6 @@ public class StylesContainer extends StyleModule
         super(compilationUnit.getSource(), perCompileData);
         this.mxmlConfiguration = mxmlConfiguration;
         this.compilationUnit = compilationUnit;
-        this.perCompileData = perCompileData;
 
         if (mxmlConfiguration != null)
         {
@@ -102,41 +109,6 @@ public class StylesContainer extends StyleModule
                 setQualifiedTypeSelectors(mxmlConfiguration.getQualifiedTypeSelectors());
             }
         }
-
-        atEmbeds = new HashMap<String, AtEmbed>();
-    }
-
-    /**
-     * Called by MxmlDocument in preparation for local StyleNodes.
-     * DocumentBuilder.analyze(StyleNode) will call extractStyles(). It also
-     * associates this StylesContainer with the CompilationUnit.
-     * 
-     * @param compilationUnit
-     * @param perCompileData
-     * @param mxmlConfiguration
-     */
-    public StylesContainer(CompilationUnit compilationUnit,
-                           ContextStatics perCompileData,
-                           MxmlConfiguration mxmlConfiguration)
-    {
-        super(compilationUnit.getSource(), perCompileData);
-        this.mxmlConfiguration = mxmlConfiguration;
-        this.compilationUnit = compilationUnit;
-
-        if (mxmlConfiguration != null)
-        {
-            if (mxmlConfiguration.getCompatibilityVersion() <= flex2.compiler.common.MxmlConfiguration.VERSION_3_0)
-            {
-                setAdvanced(false);
-                setQualifiedTypeSelectors(false);
-            }
-            else
-            {
-                setQualifiedTypeSelectors(mxmlConfiguration.getQualifiedTypeSelectors());
-            }
-        }
-
-        compilationUnit.setStylesContainer(this);
     }
 
     //--------------------------------------------------------------------------
@@ -186,7 +158,7 @@ public class StylesContainer extends StyleModule
         {
             String defName = defNameIterator.next();
             if (qualifiedTypeSelectors)
-                processedDefNames.add(defName.replace(':', '.'));
+                processedDefNames.add(NameFormatter.toDot(defName));
             else
                 processedDefNames.add(defName.replaceFirst(".*:", ""));
         }
@@ -243,38 +215,53 @@ public class StylesContainer extends StyleModule
      * 
      * Called from PreLink.processMainUnit()
      */
-    public void checkForUnusedTypeSelectors(Set<String> defNames)
+    public void validate(SymbolTable symbolTable, NameMappings nameMappings,
+                         StandardDefs standardDefs)
     {
-        Set<String> unqualifiedDefNames = new HashSet<String>();
+        Set<String> classNames;
+        TypeTable typeTable = null;
 
-        Iterator<String> defNameIterator = defNames.iterator();
-        while (defNameIterator.hasNext())
+        if (qualifiedTypeSelectors)
         {
-            String defName = defNameIterator.next();
-            if (qualifiedTypeSelectors)
-                unqualifiedDefNames.add(defName.replace(':', '.'));
-            else
-                unqualifiedDefNames.add(defName.replaceFirst(".*:", ""));
+            classNames = symbolTable.getClassNames();
+            typeTable = (TypeTable) symbolTable.getContext().getAttribute(MxmlCompiler.TYPE_TABLE);
+
+            if (typeTable == null)
+            {
+                typeTable = new TypeTable(symbolTable, nameMappings, standardDefs);
+            }
+        }
+        else
+        {
+            classNames = new HashSet<String>();
+
+            for (String className : symbolTable.getClassNames())
+            {
+                if (qualifiedTypeSelectors)
+                    classNames.add(NameFormatter.toDot(className));
+                else
+                    classNames.add(className.replaceFirst(".*:", ""));
+            }
         }
 
-        Iterator<Entry<String, StyleDef>> iterator = styleDefs.entrySet().iterator();
-        while (iterator.hasNext())
+        for (Entry<String, StyleDef> entry : styleDefs.entrySet())
         {
-            Entry<String, StyleDef> entry = iterator.next();
             String styleName = entry.getKey();
             StyleDef styleDef = entry.getValue();
             String typeName = StyleDef.dehyphenize(styleName);
 
-            if (styleDef.isTypeSelector() &&
-                localStyleTypeNames.contains(styleName) &&
-                !unqualifiedDefNames.contains(typeName) &&
-                !styleName.equals(StyleDef.GLOBAL))
+            if (styleDef.isTypeSelector())
             {
-                if (mxmlConfiguration.showUnusedTypeSelectorWarnings())
+                if (localStyleTypeNames.contains(styleName) &&
+                    !classNames.contains(NameFormatter.toColon(typeName)) &&
+                    !styleName.equals(StyleDef.GLOBAL))
                 {
-                    ThreadLocalToolkit.log(new UnusedTypeSelector(getPathForReporting(styleDef),
-                                                                  styleDef.getLineNumber(),
-                                                                  styleName));
+                    if (mxmlConfiguration.showUnusedTypeSelectorWarnings())
+                    {
+                        ThreadLocalToolkit.log(new UnusedTypeSelector(getPathForReporting(styleDef),
+                                                                      styleDef.getLineNumber(),
+                                                                      styleName));
+                    }
                 }
             }
         }

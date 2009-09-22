@@ -453,16 +453,14 @@ package flashx.textLayout.compose
 		 */
 		public function getLineSlug(slugRect:Rectangle, height:Number, minWidth:Number = 0):Boolean
 		{
-			// Fit the line if any part of the line fits in the height.
-			var requiredHeight:int = currentParcel.fitAny ? 1 : height;
-			var parcelResult:Rectangle = null;
-			while (_currentParcelIndex < _numParcels) 
+			// trace("getLineSlug",slugRect,height,minWidth);
+			if (_currentParcelIndex < _numParcels) 
 			{
-				//var parcelBounds:Rectangle = _currentParcel.bounds;
 				var tileWidth:Number = getComposeWidth(_currentParcel);
 				if (tileWidth > minWidth)
 				{
-					if (currentParcel.composeToPosition || _totalDepth + requiredHeight <= getComposeHeight(_currentParcel))
+					// Fit the line if any part of the line fits in the height. Observe the cast to int!
+					if (currentParcel.composeToPosition || _totalDepth + (_currentParcel.fitAny ? 1 : int(height)) <= getComposeHeight(_currentParcel))
 					{
 						if (_blockProgression != BlockProgression.RL)
 						{
@@ -481,7 +479,6 @@ package flashx.textLayout.compose
 						return true;
 					}
 				}
-				next();
 			} 
 			return false;
 		}

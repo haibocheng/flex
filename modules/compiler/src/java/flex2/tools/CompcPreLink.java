@@ -64,7 +64,9 @@ public class CompcPreLink implements flex2.compiler.PreLink
 
     public void postRun(List<Source> sources, List<CompilationUnit> units,
                         ResourceContainer resources,
+                        SymbolTable symbolTable,
                         CompilerSwcContext swcContext,
+                        NameMappings nameMappings,
                         Configuration configuration)
     {
         // No-op for compc.

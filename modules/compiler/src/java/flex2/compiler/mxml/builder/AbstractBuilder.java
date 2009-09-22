@@ -1185,15 +1185,7 @@ public abstract class AbstractBuilder extends AnalyzerAdapter
         String rvalueTypeName = (rtype != null) ? rtype.getName() : node.getLocalPart();
         int compat = TypeCompatibility.check(lvalueType, lvalueArrayElementType, rtype, rvalueIsSingleton, standardDefs);
         compat = coerceStatefulNodes(node, lvalueType, compat);
-        	
-        // Script nodes made an exception to the rule and are allowed most anywhere.
-        if (rtype == null)
-        {
-            Class<? extends Node> nodeClass = node.getClass();
-            if (nodeClass == ScriptNode.class)
-                return TypeCompatibility.Ok;
-        }
-        
+        	      
         switch (compat)
         {
             case TypeCompatibility.Ok:

@@ -668,6 +668,12 @@ package flashx.textLayout.elements
 					var containerIdx:int = flowComposer.getControllerIndex(workLine.controller);
 					trace("line:",lineIdx,"controller:",containerIdx,workLine.toString());
 				}
+				
+				for (var idx:int = 0; idx < flowComposer.numControllers; idx++)
+				{
+					var controller:ContainerController = flowComposer.getControllerAt(idx);
+					trace("controller:",idx,Debugging.getIdentity(controller),controller.absoluteStart,controller.textLength,controller.compositionWidth,controller.compositionHeight,controller.getContentBounds());
+				}
 			}
 			
 			rslt += assert(parent == null, "TextFlow should not have a parent");

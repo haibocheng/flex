@@ -71,9 +71,7 @@ package flashx.textLayout.compose
 		/** Maximum bottom edge coordinate across all the parcels in a controller */
 		private var _controllerBottom:Number;
 		
-		/** Alignment Width for a parcel */
-		protected var _contentAlignmentWidth:Number;
-		/** Maximum horizontal extension from left/right edge of the parcel */
+		/** Maximum horizontal extension from left/right edge of the parcel.  Alignment width for the parcel. */
 		protected var _contentLogicalExtent:Number;
 		/** Minimum left edge coordinate across all the parcels in a controller */
 		protected var _parcelLeft:Number;
@@ -138,7 +136,6 @@ package flashx.textLayout.compose
 			// this chains through the list - tell it if a "care about" comopseToPosition was specified
 			_parcelList.beginCompose(composer, controllerEndIndex, composeToPosition > 0);	
 			
-			_contentAlignmentWidth = 0;
 			_contentLogicalExtent = 0;
 		}
 		
@@ -362,20 +359,10 @@ package flashx.textLayout.compose
 					// trace("AlignData",alignData.leftSidePadding,alignData.rightSidePadding,alignData.lineWidth,alignData.leftSideIndent,alignData.rightSideIndent);
 				}
 				
-				_contentAlignmentWidth = Math.max(_contentAlignmentWidth, lineWidth + Math.max(leftSidePadding+leftSideIndent, 0) + Math.max(rightSidePadding+rightSideIndent, 0));
 				// extent from the left margin
 				var lineExtent:Number = lineWidth + leftSidePadding+leftSideIndent + rightSidePadding+rightSideIndent;
-				/* if (alignData && _curParaFormat.direction == Direction.RTL && rightSideGap < 0)
-				{
-					if (alignData.center)
-						lineExtent -= rightSideGap/2;
-					else
-						lineExtent -= rightSideGap;
-				}  */
 				_contentLogicalExtent = Math.max(_contentLogicalExtent, lineExtent);
 				
-				// trace("contentAlignmentWidth:",_contentAlignmentWidth,"contentLogicalExtent",_contentLogicalExtent);
-
 				CONFIG::debug { assert(_parcelList.controller.textLength >= 0, "frame has negative composition"); }
 				
 				if (_parcelList.atEnd())
@@ -405,14 +392,8 @@ package flashx.textLayout.compose
 					} while (_curElementOffset >= _curElement.textLength || _curElement.textLength == 0 );
 				}
 				
-				 // Add in whatever space the line wants after itself
-				if (curLine != null && curLine.spaceAfter)
-				{
-			//		_parcelList.addTotalDepth(curLine.spaceAfter);
-					_spaceCarried = curLine.spaceAfter;
-				}
-				else
-					_spaceCarried = 0;
+				_spaceCarried = curLine.spaceAfter;
+
 					
 				if (_curElement == null)
 					break;
@@ -426,6 +407,52 @@ package flashx.textLayout.compose
 			return null;
 		}
 		
+		// fills in _lineSlug
+ 		protected function fitLineToParcel(curLine:TextFlowLine):TextFlowLine
+ 		{
+ 			// Try to place the line in the current parcel.
+			// get a zero height parcel. place the line there and then test if it still fits.
+			// if it doesn't place it in the new result parcel
+			// still need to investigate because the height used on the 2nd getLineSlug call may be too big.
+			for (;;)
+			{
+				if (_parcelList.getLineSlug(_candidateLineSlug,0))
+					break;
+				_parcelList.next();
+				if (_parcelList.atEnd())
+					return null;
+				_spaceCarried = 0;
+			}
+			
+			curLine.setController(_parcelList.controller,_parcelList.columnIndex);
+			
+			// If we are at the last parcel, we let text be clipped if that's specified in the configuration. At the point where no part of text can be accommodated, we go overset.
+			// If we are not at the last parcel, we let text flow to the next parcel instead of getting clipped.
+			var spaceBefore:Number = Math.max(curLine.spaceBefore, _spaceCarried);
+			for (;;)
+			{
+				finishComposeLine(curLine, _candidateLineSlug);	
+				if (_parcelList.getLineSlug(_lineSlug, spaceBefore + (_parcelList.atLast() && _textFlow.configuration.overflowPolicy != OverflowPolicy.FIT_DESCENDERS ? curLine.height-curLine.ascent : curLine.height+curLine.descent)))
+				{
+					CONFIG::debug { assert(_parcelList.getComposeXCoord(_candidateLineSlug) == _parcelList.getComposeXCoord(_lineSlug) && _parcelList.getComposeYCoord(_candidateLineSlug) == _parcelList.getComposeYCoord(_lineSlug),"fitLineToParcel: slug mismatch"); }
+					break;
+				}
+				spaceBefore = curLine.spaceBefore;
+				for (;;)
+				{
+					_parcelList.next();
+					if (_parcelList.atEnd())
+						return null;
+					if (_parcelList.getLineSlug(_candidateLineSlug,0))
+						break;
+				}
+				curLine.setController(_parcelList.controller,_parcelList.columnIndex);
+			}						
+			
+			// check to see if we got a good line
+			return (_parcelList.getComposeWidth(_lineSlug) == curLine.outerTargetWidth) ? curLine : null;
+		}
+				
         protected function finishComposeLine(curLine:TextFlowLine, lineSlug:Rectangle):void
         {      	
        		var curTextLine:TextLine = curLine.getTextLine();
@@ -711,7 +738,10 @@ package flashx.textLayout.compose
  		protected function finishParcel(controller:ContainerController,nextParcel:Parcel):Boolean
  		{
  			if (_curParcelStart == _curElementStart+_curElementOffset)		// empty parcel -- nothing composed into it
+ 			{
+ 				CONFIG::debug { assert(_contentLogicalExtent == 0,"bad contentlogicalextent on empty container"); }
  				return false;
+ 			}
  				
 			// We're only going to align the lines in measurement mode if there's only one parcel
  			var doTextAlign:Boolean = (_alignLines && _alignLines.length > 0); 
@@ -773,6 +803,7 @@ package flashx.textLayout.compose
  			// trace("BEF finalParcelAdjustment",_parcelLeft,_parcelRight,_parcelTop,_parcelBottom);
  			finalParcelAdjustment(controller);
  			// trace("AFT finalParcelAdjustment",_parcelLeft,_parcelRight,_parcelTop,_parcelBottom);
+ 			_contentLogicalExtent = 0;
 
  			return true;
  		}
@@ -872,9 +903,12 @@ package flashx.textLayout.compose
  		{
  			var oldController:ContainerController = _curParcel ? ContainerController(_curParcel.controller) : null;
  			var newController:ContainerController = newParcel  ? ContainerController(newParcel.controller)  : null;
+ 			
+ 			/* if (newParcel)
+	 			trace("parcelHasChanged newParcel: ",newParcel.clone().toString()); */
 
  			if (_curParcel != null)
- 			{ 
+ 			{
  				if (finishParcel(oldController,newParcel))
  				{
  					if (_parcelLeft < _controllerLeft)
@@ -888,9 +922,7 @@ package flashx.textLayout.compose
   				}
  			}
  				
-			// parcel data
- 			_contentAlignmentWidth = 0;		// zero out the parcel total for the next run through
-			
+			// update parcel data			
  			if (oldController != newController)		// we're going on to the next controller in the chain
  			{
 	 			if (oldController)

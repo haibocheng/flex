@@ -430,11 +430,15 @@ package flashx.textLayout.elements
 				var formatStr:String = formatName.substr(1);
 				return tf == null ? null : tf.configuration["defaultL" + formatStr];
 			}
+			else if (linkStyle is ITextLayoutFormat)
+				return ITextLayoutFormat(linkStyle);
+		
+			// We need to convert the linkStyle object into a ITextLayoutFormat object		
 			var ca:TextLayoutFormatValueHolder = new TextLayoutFormatValueHolder;
 			var desc:Object = TextLayoutFormat.description;
-			for (var prop:String in linkStyle)
+			for (var prop:String in desc)
 			{
-				if (desc.hasOwnProperty(prop))
+				if (linkStyle[prop] != undefined)
 					ca[prop] = linkStyle[prop];
 			}
 			return ca;

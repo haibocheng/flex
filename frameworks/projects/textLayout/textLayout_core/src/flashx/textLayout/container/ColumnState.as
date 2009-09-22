@@ -28,6 +28,10 @@ package flashx.textLayout.container
 	 * independently to calculate column values, or you can get the column values that 
 	 * were used for the text after the container has been composed or updated (redrawn).
 	 *
+	 * @playerversion Flash 10
+	 * @playerversion AIR 1.5
+	 * @langversion 3.0
+	 *
 	 * @see ContainerController
 	 */
 

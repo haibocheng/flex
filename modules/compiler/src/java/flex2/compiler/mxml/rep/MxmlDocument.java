@@ -105,9 +105,9 @@ public final class MxmlDocument
         typeRefs = new TreeSet<String>();
         
         designLayers = new HashMap<DesignLayerNode, DesignLayer>();
-        
 
-        stylesContainer = new StylesContainer(unit, typeTable.getPerCompileData(), mxmlConfiguration);
+        stylesContainer = new StylesContainer(mxmlConfiguration, unit, typeTable.getPerCompileData());
+        unit.setStylesContainer(stylesContainer);
         showDeprecationWarnings = mxmlConfiguration.showDeprecationWarnings();
 
         stylesContainer.setMxmlDocument(this);

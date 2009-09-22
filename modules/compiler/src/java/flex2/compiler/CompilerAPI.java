@@ -1559,7 +1559,7 @@ public final class CompilerAPI
                     {
                         runPrelink = false;
                         // Add synthetic link-in units now that we've found all of our sources
-                        preLink.postRun(sources, units, resources, swcContext, configuration);
+                        preLink.postRun(sources, units, resources, symbolTable, swcContext, nameMappings, configuration);
                     }
 
                     if (configuration.getBenchmarkCompilerDetails() > 0 &&

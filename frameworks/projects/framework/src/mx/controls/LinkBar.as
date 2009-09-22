@@ -16,7 +16,6 @@ import flash.display.DisplayObject;
 import flash.events.MouseEvent;
 import mx.core.ClassFactory;
 import mx.core.EdgeMetrics;
-import mx.core.FlexVersion;
 import mx.core.IFlexDisplayObject;
 import mx.core.mx_internal;
 import mx.events.ChildExistenceChangedEvent;
@@ -209,8 +208,6 @@ use namespace mx_internal;
 [IconFile("LinkBar.png")]
 
 [MaxChildren(0)]
-
-[Alternative(replacement="spark.components.ButtonBar", since="4.0")]
 
 /**
  *  A LinkBar control defines a horizontal or vertical row of LinkButton controls
@@ -408,14 +405,8 @@ public class LinkBar extends NavBar
         
         var navItemStyleName:Object;
         
-        if (styleProp == "styleName" && FlexVersion.compatibilityVersion < FlexVersion.VERSION_3_0)
-        {
-            navItemStyleName = this;
-        }
-        else if (styleProp == "linkButtonStyleName" && FlexVersion.compatibilityVersion >= FlexVersion.VERSION_3_0)
-        {
+        if (styleProp == "linkButtonStyleName")
             navItemStyleName = getStyle("linkButtonStyleName");
-        }
         
         if (navItemStyleName)
         {
@@ -554,17 +545,10 @@ public class LinkBar extends NavBar
 
         var newLink:Button = Button(navItemFactory.newInstance());
 
-        if (FlexVersion.compatibilityVersion < FlexVersion.VERSION_3_0)
-        {
-            newLink.styleName = this;
-        }
-        else
-        {
-            var linkButtonStyleName:String = getStyle("linkButtonStyleName");
-            if (linkButtonStyleName)
-                newLink.styleName = linkButtonStyleName;
-        }
-         
+        var linkButtonStyleName:String = getStyle("linkButtonStyleName");
+        if (linkButtonStyleName)
+            newLink.styleName = linkButtonStyleName;
+                 
         if (label && label.length > 0)
             newLink.label = label;
         else

@@ -1216,7 +1216,8 @@ package flashx.textLayout.elements
 					} 
 					// Container textFlowLength may contain fewer characters than the those to be deleted in case of overset text. 
 					var containerTextLengthDelta:int = enclosingController.textLength < charsDeletedFromCurContainer ? enclosingController.textLength : charsDeletedFromCurContainer;
-					ContainerController(enclosingController).setTextLength(enclosingController.textLength -  containerTextLengthDelta);
+					// working backwards - can't call setTextLength as it examines previous controllers and gets confused in the composeCompleteRatio logic
+					ContainerController(enclosingController).setTextLengthOnly(enclosingController.textLength -  containerTextLengthDelta);
 					deleteTotal -= containerTextLengthDelta;
 					absoluteEndPos -= containerTextLengthDelta;
 					endPos -= containerTextLengthDelta;

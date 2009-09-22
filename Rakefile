@@ -1,7 +1,7 @@
 require 'rake'
 require 'fileutils'
 require 'erb'
-
+# git tag -am 'Rolled the annotated version' 1.0-a
 # This might soon integrate with ProjectSprouts
 
 # Basic Rake tasks for compiling Flex, if you have ruby and everything setup
@@ -17,7 +17,7 @@ THIS = File.expand_path(File.dirname(__FILE__))
 # This is a special variable.
 # Because subversion 1.4 doesn't have merge tracking,
 # this will be rewritten every time you run the merge command in here
-# LAST_MERGE = 10515
+# LAST_MERGE = 10444
 LAST_MERGE_PATTERN = /\#\s*LAST_MERGE\s*\=\s*(\d+)/
 
 # Helper Methods
@@ -154,7 +154,7 @@ namespace :svn do
       end
     end
     message = "merged with trunk: #{older.to_s} => #{newer.to_s}"
-#    system("svn commit -m '#{message}'")
+    system("svn commit -m '#{message}'")
     puts message
   end
   

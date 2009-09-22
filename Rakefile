@@ -1,4 +1,4 @@
-require 'rake'
+require 'rake'#
 require 'fileutils'
 require 'erb'
 # git tag -am 'Rolled the annotated version' 1.0-a

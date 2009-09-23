@@ -28,7 +28,7 @@ public class MetaDataNode extends Node
 		attributes = new HashSet<QName>();
 	}
 
-	MetaDataNode(String uri, String localName, int size)
+	public MetaDataNode(String uri, String localName, int size)
 	{
 		super(uri, localName, size);
 	}

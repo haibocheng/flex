@@ -1465,11 +1465,40 @@ public class InterfaceCompiler extends flex2.compiler.AbstractSubCompiler implem
             inlineDocumentNode.setLanguageNamespace(docInfo.getLanguageNamespace());
             inlineDocumentNode.setVersion(docInfo.getVersion());
 
+            addExcludeClassNode(inlineDocumentNode, componentRoot);
+            
             source.addSourceFragment(AttrInlineComponentSyntaxTree, inlineDocumentNode, null);
 
             unit.addGeneratedSource(classQName, source);
         }
 
+        /**
+         *  Adds ExcludeClass Metadata to inline_component nodes.
+         */
+        private void addExcludeClassNode(DocumentNode inlineDocumentNode, Node componentRoot)
+        {
+            MetaDataNode inlineExcludeNode =
+            	new MetaDataNode(componentRoot.getNamespace(), componentRoot.getLocalPart(), 0);
+            
+            inlineExcludeNode.beginLine = componentRoot.beginLine;
+            inlineExcludeNode.beginColumn = componentRoot.beginColumn;
+            inlineExcludeNode.endLine = componentRoot.endLine;
+            inlineExcludeNode.endColumn = componentRoot.endColumn;
+            inlineExcludeNode.image = componentRoot.image;
+            
+        	CDATANode excludeTextNode = new CDATANode();
+            excludeTextNode.image = "[ExcludeClass]";
+            
+            excludeTextNode.beginLine = componentRoot.beginLine;
+            excludeTextNode.beginColumn = componentRoot.beginColumn;
+            excludeTextNode.endLine = componentRoot.endLine;
+            excludeTextNode.endColumn = componentRoot.endColumn;
+            
+            inlineExcludeNode.addChild(excludeTextNode);
+            inlineDocumentNode.addChild(inlineExcludeNode);
+        }
+        
+        
         /**
          * A Library Definition - equivalent to an inline private class
          * definition that is dynamically generated and can be used elsewhere 

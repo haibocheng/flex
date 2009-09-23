@@ -17,7 +17,7 @@ THIS = File.expand_path(File.dirname(__FILE__))
 # This is a special variable.
 # Because subversion 1.4 doesn't have merge tracking,
 # this will be rewritten every time you run the merge command in here
-# LAST_MERGE = 10444
+# LAST_MERGE = 10553
 LAST_MERGE_PATTERN = /\#\s*LAST_MERGE\s*\=\s*(\d+)/
 
 # Helper Methods
@@ -197,5 +197,13 @@ namespace :svn do
       puts "files: " + files.join("\n")
       # system("svn add #{files.join(' ')}")
     end
+  end
+  
+  task :todo do
+    puts "-------------------------------------"
+    puts "Run the following commands: "
+    puts "svn commit"
+    puts "rake svn:update"
+    puts "-------------------------------------"
   end
 end

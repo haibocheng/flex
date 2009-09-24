@@ -668,7 +668,7 @@ public class PopUpAnchor extends UIComponent
      */ 
     private function removedFromStageHandler(event:Event):void
     {
-        if (DisplayObject(popUp).parent != null)
+        if (popUp && DisplayObject(popUp).parent != null)
             removeAndResetPopUp();
         
         addedToStage = false;

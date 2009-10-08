@@ -242,6 +242,10 @@ namespace :svn do
     puts "just keep running the command over again:"
     puts ""
     puts "svn: Could not get content-type from response"
+    puts ""
+    puts "If it keeps saying 'Aborting commit', run this:"
+    puts ""
+    puts "svn resolved -R"
     puts "-------------------------------------"
   end
 end

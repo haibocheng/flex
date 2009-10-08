@@ -191,7 +191,27 @@ public abstract class GenerativeClassInfo
 
                 if (multiName.getNamespace().length == 1)
                 {
-                    imports.add(NameFormatter.toDot(multiName.getQName(0)));
+                    QName qName = multiName.getQName(0);
+                    String className = qName.getLocalPart();
+
+                    // Check if we have a Vector type.  If so, just
+                    // import the element type.
+                    int lessThanIndex = className.indexOf("<");
+            
+                    if (lessThanIndex != -1)
+                    {
+                        int greaterThanIndex = className.lastIndexOf(">");
+
+                        if (greaterThanIndex != -1)
+                        {
+                            String elementTypeName = className.substring(lessThanIndex + 1, greaterThanIndex);
+                            imports.add(NameFormatter.toDot(elementTypeName));
+                        }
+                    }
+                    else
+                    {
+                        imports.add(NameFormatter.toDot(qName));
+                    }
                 }
                 else
                 {

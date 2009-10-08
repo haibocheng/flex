@@ -298,18 +298,19 @@ package flashx.textLayout.compose
      			targetWidth = TextLine.MAX_LINE_WIDTH;
 	   		
 	   		var textLine:TextLine = TextLineRecycler.getLineForReuse();
+	   		var textBlock:TextBlock = _curParaElement.getTextBlock();
 	   		if (textLine)
 	   		{
 	   			if(_textFlow.backgroundManager)
 	   			{
 	   				_textFlow.backgroundManager.removeLineFromCache(textLine);
 	   			}
-	        	textLine = _flowComposer.textLineCreator.recreateTextLine(_curParaElement.getTextBlock(), textLine, prevLine?prevLine.getTextLine(true):null, targetWidth, lineOffset, true);
-        		CONFIG::debug { Debugging.traceFTECall(textLine,_curParaElement.getTextBlock(),"recreateTextLine",textLine,prevLine?prevLine.getTextLine():null, targetWidth, lineOffset, true); }
+	        	textLine = _flowComposer.swfContext.callInContext(textBlock["recreateTextLine"],textBlock,[textLine, prevLine?prevLine.getTextLine(true):null, targetWidth, lineOffset, true]);
+        		CONFIG::debug { Debugging.traceFTECall(textLine,textBlock,"recreateTextLine",textLine,prevLine?prevLine.getTextLine():null, targetWidth, lineOffset, true); }
       		}
 	   		else
 	   		{
-	        	textLine = _flowComposer.textLineCreator.createTextLine(_curParaElement.getTextBlock(), prevLine?prevLine.getTextLine(true):null, targetWidth, lineOffset, true);
+	        	textLine = _flowComposer.swfContext.callInContext(textBlock.createTextLine,textBlock,[prevLine?prevLine.getTextLine(true):null, targetWidth, lineOffset, true]);
         		CONFIG::debug { Debugging.traceFTECall(textLine,_curParaElement.getTextBlock(),"createTextLine",prevLine?prevLine.getTextLine():null, targetWidth, lineOffset, true); }
       		}
         	// Unable to fit a new line

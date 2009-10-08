@@ -212,18 +212,19 @@ package flashx.textLayout.compose
 	   		
         	//var textLine:TextLine = _flowComposer.textLineCreator.createTextLine(_curParaElement.getTextBlock(), prevLine, targetWidth, lineOffset, true);
         	var textLine:TextLine = TextLineRecycler.getLineForReuse();
+        	var textBlock:TextBlock = _curParaElement.getTextBlock();
 	   		if (textLine)
 	   		{
 	   			if(_textFlow.backgroundManager)
 	   			{
 	   				_textFlow.backgroundManager.removeLineFromCache(textLine);
 	   			}
-	        	textLine = _flowComposer.textLineCreator.recreateTextLine(_curParaElement.getTextBlock(), textLine, prevLine, targetWidth, lineOffset, true);
+	        	textLine = _flowComposer.swfContext.callInContext(textBlock["recreateTextLine"], textBlock, [ textLine, prevLine, targetWidth, lineOffset, true ]);
         		CONFIG::debug { Debugging.traceFTECall(textLine,_curParaElement.getTextBlock(),"recreateTextLine",textLine,prevLine, targetWidth, lineOffset, true); }
       		}
 	   		else
 	   		{
-	        	textLine = _flowComposer.textLineCreator.createTextLine(_curParaElement.getTextBlock(), prevLine, targetWidth, lineOffset, true);
+	        	textLine = _flowComposer.swfContext.callInContext(textBlock.createTextLine, textBlock, [prevLine, targetWidth, lineOffset, true ]);
         		CONFIG::debug { Debugging.traceFTECall(textLine,_curParaElement.getTextBlock(),"createTextLine",prevLine, targetWidth, lineOffset, true); }
       		}
         	// Unable to fit a new line

@@ -14,6 +14,7 @@ package flex2.compiler.common;
 import flash.util.FileUtils;
 import flash.util.StringUtils;
 import flex.messaging.config.ServicesDependencies;
+import flex2.compiler.io.LocalFile;
 import flex2.compiler.io.VirtualFile;
 import flex2.compiler.as3.As3Configuration;
 import flex2.compiler.config.AdvancedConfigurationInfo;
@@ -568,6 +569,35 @@ public class CompilerConfiguration implements As3Configuration,
     {
         return new ConfigurationInfo( 1, "context-path" )
         {
+        };
+    }
+
+    //
+    // 'compiler.create-style-manager' option
+    //
+
+    // Allow the user to decide if the compiled application/module should have its
+    // own style manager.
+    private boolean createStyleManager = false;
+
+    public boolean getCreateStyleManager()
+    {
+        return createStyleManager;
+    }
+
+    public void cfgCreateStyleManager( ConfigurationValue cv, boolean createStyleManager )
+    {
+        this.createStyleManager = createStyleManager;
+    }
+
+    public static ConfigurationInfo getCreateStyleManagerInfo()
+    {
+        return new AdvancedConfigurationInfo()
+        {
+            public boolean isHidden()
+            {
+                return true;
+            }
         };
     }
 
@@ -1402,6 +1432,74 @@ public class CompilerConfiguration implements As3Configuration,
     }
 
     //
+    // 'compiler.report-invalid-styles-as-warnings' option
+    /**
+     * Controls whether invalid styles are report as errors or
+     * warnings.
+     */
+    private boolean reportInvalidStylesAsWarnings = false;
+
+    public boolean reportInvalidStylesAsWarnings()
+    {
+        return reportInvalidStylesAsWarnings;
+    }
+
+    public void setReportInvalidStylesAsWarnings(boolean reportInvalidStylesAsWarnings)
+    {
+        this.reportInvalidStylesAsWarnings = reportInvalidStylesAsWarnings;
+    }
+
+    public void cfgReportInvalidStylesAsWarnings(ConfigurationValue cv, boolean show)
+    {
+        this.reportInvalidStylesAsWarnings = show;
+    }
+    
+    public static ConfigurationInfo getReportInvalidStylesAsWarningsInfo()
+    {
+        return new AdvancedConfigurationInfo()
+        {
+            public boolean isHidden()
+            {
+                return true;
+            }
+        };
+    }    
+
+    //
+    // 'compiler.show-invalid-css-property-warnings' option
+    /**
+     * Controls whether warnings are displayed when styles, which
+     * don't apply to the current theme(s), are used in CSS.
+     */
+    private boolean showInvalidCssPropertyWarnings = true;
+
+    public boolean showInvalidCssPropertyWarnings()
+    {
+        return showInvalidCssPropertyWarnings;
+    }
+
+    public void setShowInvalidCssPropertyWarnings(boolean showInvalidCssPropertyWarnings)
+    {
+        this.showInvalidCssPropertyWarnings = showInvalidCssPropertyWarnings;
+    }
+
+    public void cfgShowInvalidCssPropertyWarnings(ConfigurationValue cv, boolean show)
+    {
+        this.showInvalidCssPropertyWarnings = show;
+    }
+    
+    public static ConfigurationInfo getShowInvalidCssPropertyWarningsInfo()
+    {
+        return new AdvancedConfigurationInfo()
+        {
+            public boolean isHidden()
+            {
+                return true;
+            }
+        };
+    }
+
+    //
     // 'compiler.show-deprecation-warnings' option
     //
 
@@ -1780,6 +1878,22 @@ public class CompilerConfiguration implements As3Configuration,
 
     public VirtualFile[] getThemeFiles()
     {
+        // Swap in the default Flex 3 theme of Halo.
+        if ((mxmlConfig.getCompatibilityVersion() <= MxmlConfiguration.VERSION_3_0) &&
+            ((themeFiles != null) && ((themeFiles.length == 1))))
+        {
+            File file = new File("/themes/Spark/spark.css");
+
+            if (themeFiles[0].getName().endsWith(file.getPath()))
+            {
+                String name = themeFiles[0].getName();
+                int index = name.indexOf(file.getPath());
+                themeFiles[0] = new LocalFile(new File(name.substring(0, index) + "/themes/Halo/halo.swc"));
+                themeNames.remove("spark");
+                themeNames.add("halo");
+            }
+        }
+
         return themeFiles;
     }
 
@@ -1791,6 +1905,7 @@ public class CompilerConfiguration implements As3Configuration,
         for (Iterator it = paths.iterator(); it.hasNext();)
         {
             String path = (String) it.next();
+            addThemeName(path);
             VirtualFile theme = ConfigurationPathResolver.getVirtualFile( path,
                                                                           configResolver,
                                                                           cv );
@@ -1817,6 +1932,31 @@ public class CompilerConfiguration implements As3Configuration,
             	return false;
             }
         };
+    }
+
+    private Set<String> themeNames = new HashSet<String>();
+    
+    private void addThemeName(String path)
+    {
+        File file = new File(path);
+        String fileName = file.getName();
+        int end = fileName.lastIndexOf("-");
+
+        if (end == -1)
+        {
+            end = fileName.lastIndexOf(".");
+        }
+
+        if (end != -1)
+        {
+            String themeName = fileName.substring(0, end);
+            themeNames.add(themeName);
+        }
+    }
+
+    public Set<String> getThemeNames()
+    {
+        return themeNames;
     }
     
     //

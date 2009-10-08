@@ -518,6 +518,21 @@ public final class MxmlDocument
         bindingExpressions.add(expr);
         info.addInterfaceName(standardDefs.INTERFACE_IBINDINGCLIENT_DOT, -1);
     }
+    
+    /**
+     *
+     */
+   public final void removeBindingExpression(BindingExpression expr)
+   {
+       int index = bindingExpressions.indexOf(expr);
+       if (index >= 0)
+       {
+           for (int i=index; i < bindingExpressions.size(); i++)
+               bindingExpressions.get(i).setId(i-1);
+       }
+       bindingExpressions.remove(index);
+   }
+   
 
     public final List<BindingExpression> getBindingExpressions()
     {
@@ -827,7 +842,7 @@ public final class MxmlDocument
     }
     
     /**
-     * If a binding expression has isConstructTwoWay set, this signals that another 
+     * If a binding expression has isTwoWayPrimary set, this signals that another 
      * binding needs to be created with the source and destination reversed.  
      * This binding couldn't be created until the component registered it's model 
      * which sets the id.

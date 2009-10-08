@@ -48,7 +48,7 @@ package flashx.textLayout.compose
 	 * @langversion 3.0
 	 */
 	 
-	public class FlowComposerBase implements ITextLineCreator
+	public class FlowComposerBase implements ISWFContext
 	{
 				// Composition data
 		[ ArrayElementType("text.elements.TextFlowLine") ]
@@ -61,7 +61,7 @@ package flashx.textLayout.compose
 		protected var _damageAbsoluteStart:int;
 		
 		/** @private */
-		protected var _textLineCreator:ITextLineCreator;
+		protected var _swfContext:ISWFContext;
 		
 		/** Constructor. 
 		 *
@@ -73,7 +73,7 @@ package flashx.textLayout.compose
 		public function FlowComposerBase():void
 		{
 			_lines = new Array();
-			_textLineCreator = this;
+			_swfContext = this;
 		}
 		
 		/** Returns the array of lines. @private */
@@ -536,78 +536,39 @@ package flashx.textLayout.compose
 		
 		
 		/** 
-		* The ITextLineCreator instance used to create lines of text. 
+		* The ISWFContext instance used to make FTE calls as needed. 
 		*
-		* <p>By default, the ITextLineCreator implementation is this FlowComposerBase object.
+		* <p>By default, the ISWFContext implementation is this FlowComposerBase object.
 		* Applications can provide a custom implementation to use fonts
 		* embedded in a different SWF file or to cache and reuse text lines.</p>
 		* 
-		* @see flashx.textLayout.compose.ITextLineCreator
+		* @see flashx.textLayout.compose.ISWFContext
 		* 
 		* @playerversion Flash 10
 		* @playerversion AIR 1.5
 	 	* @langversion 3.0
 	 	*/
  	
-		public function get textLineCreator():ITextLineCreator
+		public function get swfContext():ISWFContext
 		{
-			return _textLineCreator;
+			return _swfContext;
 		}
-		public function set textLineCreator(creator:ITextLineCreator):void
+		public function set swfContext(context:ISWFContext):void
 		{
-			var newCreator:ITextLineCreator = creator ? creator : this;
-			if (newCreator != _textLineCreator)
+			var newContext:ISWFContext = context ? context : this;
+			if (newContext != _swfContext)
 			{
-				_textLineCreator = newCreator;
+				_swfContext = newContext;
 				if (textFlow)
 					damage(0,textFlow.textLength,FlowDamageType.INVALID);
 			}
 		}
 		
-		/** 
-		 * Called by the Text Layout Framework when a text line is created.
-		 * 
-		 * <p>This method is part of the default ITextLineCreator implementation. 
-		 * Application code does not typically call this function. To provide custom functionality,
-		 * implement the ITextLineCreator interface and assign an instance of your implementation to
-		 * the <code>textLineCreator</code> property.</p>
-		 * 
-		 * @see #textLineCreator
-		 *  
-		 * @playerversion Flash 10
-		 * @playerversion AIR 1.5
-	 	 * @langversion 3.0
-	 	 */
-		public function createTextLine(textBlock:TextBlock, previousLine:TextLine=null, width:Number=1000000, lineOffset:Number=0.0, fitSomething:Boolean=false):TextLine
+	    public function callInContext(fn:Function, thisArg:Object, argsArray:Array, returns:Boolean=true):*
 		{
-			CONFIG::debug  { numCreateTextLine++; };
-			return textBlock.createTextLine(previousLine, width, lineOffset, fitSomething);
-			// trace("createTextLine",Debugging.getIdentity(rslt));
-		}
-		
-		
-		CONFIG::debug static tlf_internal var numCreateTextLine:int = 0;
-		CONFIG::debug static tlf_internal var numRecreateTextLine:int = 0;
-
-		/** 
-		 * Called by the Text Layout Framework when a text line is recreated.
-		 * 
-		 * <p>This method is part of the default ITextLineCreator implementation. 
-		 * Application code does not typically call this function. To provide custom functionality,
-		 * implement the ITextLineCreator interface and assign an instance of your implementation to
-		 * the <code>textLineCreator</code> property.</p>
-		 * 
-		 * @see #textLineCreator
-		 *  
-		 * @playerversion Flash 10
-		 * @playerversion AIR 1.5
-	 	 * @langversion 3.0
-	 	 */
-		public function recreateTextLine(textBlock:TextBlock, textLine:TextLine, previousLine:TextLine=null, width:Number=1000000, lineOffset:Number=0.0, fitSomething:Boolean=false):TextLine
-		{
-			CONFIG::debug  { numRecreateTextLine++; }
-			return  TextLineRecycler.textBlockHasRecreateTextLine ? textBlock["recreateTextLine"](textLine, previousLine, width, lineOffset, fitSomething) : textBlock.createTextLine(previousLine, width, lineOffset, fitSomething);
-			// trace("recreateTextLine",Debugging.getIdentity(rslt));
+	        if (returns)
+	            return fn.apply(thisArg, argsArray);
+	        fn.apply(thisArg, argsArray);
 		}
 
 		/**

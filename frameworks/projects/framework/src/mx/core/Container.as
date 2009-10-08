@@ -51,7 +51,6 @@ import mx.managers.ISystemManager;
 import mx.styles.CSSStyleDeclaration;
 import mx.styles.ISimpleStyleClient;
 import mx.styles.IStyleClient;
-import mx.styles.StyleManager;
 import mx.styles.StyleProtoChain;
 
 use namespace mx_internal;
@@ -2601,7 +2600,7 @@ public class Container extends UIComponent
             if (createdComponents)
             {
                 var n:int = createdComponents.length;
-                for(var i:int = 0; i < n; i++)
+                for (var i:int = 0; i < n; i++)
                 {
                     if (createdComponents[i] === child)
                     {
@@ -2657,6 +2656,7 @@ public class Container extends UIComponent
         /*
 
         Shouldn't implement removeChildAt() in terms of removeChild().
+        If we change this ViewStack IList is depending on it
 
         */
     }
@@ -3571,7 +3571,7 @@ public class Container extends UIComponent
 
         // Check to see if this is one of the style properties that is known
         // to affect page layout.
-        if (allStyles || StyleManager.isSizeInvalidatingStyle(styleProp))
+        if (allStyles || styleManager.isSizeInvalidatingStyle(styleProp))
         {
             // Some styles, such as horizontalAlign and verticalAlign,
             // affect the layout of this object's children without changing the
@@ -3608,7 +3608,7 @@ public class Container extends UIComponent
         // Check to see if this is one of the style properties that is known.
         // to affect page layout.
         if (allStyles ||
-            StyleManager.isSizeInvalidatingStyle(styleProp))
+            styleManager.isSizeInvalidatingStyle(styleProp))
         {
             invalidateViewMetricsAndPadding();
         }

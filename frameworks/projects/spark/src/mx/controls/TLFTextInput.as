@@ -35,14 +35,14 @@ use namespace mx_internal;
  *  You can listen for this event and update the component
  *  when the <code>data</code> property changes.</p>
  *
- *  @eventType mx.events..DATA_CHANGE
+ *  @eventType mx.events.DATA_CHANGE
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
  *  @playerversion AIR 1.1
  *  @productversion Flex 3
  */
-[Event(name="dataChange", type="mx.events.")]
+[Event(name="dataChange", type="mx.events.FlexEvent")]
 
 
 /**
@@ -65,13 +65,27 @@ public class TLFTextInput extends TextInput implements ITextInput
     //
     //--------------------------------------------------------------------------
 
-	/**
-	 *  Constructor.
-	 */
-	public function TLFTextInput()
-	{
-		super();
-	}
+    /**
+     *  Constructor.
+     */
+    public function TLFTextInput()
+    {
+        super();
+    }
+
+    //--------------------------------------------------------------------------
+    //
+    //  Variables
+    //
+    //--------------------------------------------------------------------------
+    
+    /**
+     *  @private
+     *  Used by showBorder to record the value of contentBackgroundAlpha
+     *  before it is set to 0 so that it can be restored.
+     */
+    private var oldContentBackgroundAlpha:Number;
+    
 
     //--------------------------------------------------------------------------
     //
@@ -145,25 +159,25 @@ public class TLFTextInput extends TextInput implements ITextInput
     }
     
 
-	//----------------------------------
-	//  fontContext
-	//----------------------------------
+    //----------------------------------
+    //  fontContext
+    //----------------------------------
 
-	/**
-	 *  Documentation is not currently available.
-	 */
-	public function get fontContext():IFlexModuleFactory
-	{
-		return null;
-	}
+    /**
+     *  Documentation is not currently available.
+     */
+    public function get fontContext():IFlexModuleFactory
+    {
+        return null;
+    }
 
-	/**
-	 *  @private
-	 */
-	public function set fontContext(value:IFlexModuleFactory):void
-	{
+    /**
+     *  @private
+     */
+    public function set fontContext(value:IFlexModuleFactory):void
+    {
         // not used for DefineFont4
-	}
+    }
 
     //----------------------------------
     //  horizontalScrollPosition
@@ -228,29 +242,29 @@ public class TLFTextInput extends TextInput implements ITextInput
         _listData = value;
     }
     
-	//----------------------------------
-	//  parentDrawsFocus
-	//----------------------------------
+    //----------------------------------
+    //  parentDrawsFocus
+    //----------------------------------
 
     private var _parentDrawsFocus:Boolean = false;
 
-	/**
-	 *  Documentation is not currently available.
-	 */
-	public function get parentDrawsFocus():Boolean
-	{
-		return _parentDrawsFocus;
-	}
-	
-	/**
-	 *  @private
-	 */
-	public function set parentDrawsFocus(value:Boolean):void
-	{
-	    _parentDrawsFocus = value;
-	}
+    /**
+     *  Documentation is not currently available.
+     */
+    public function get parentDrawsFocus():Boolean
+    {
+        return _parentDrawsFocus;
+    }
+    
+    /**
+     *  @private
+     */
+    public function set parentDrawsFocus(value:Boolean):void
+    {
+        _parentDrawsFocus = value;
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     //
     //  Methods
     //
@@ -261,11 +275,38 @@ public class TLFTextInput extends TextInput implements ITextInput
     //----------------------------------
     
     /**
-     *  Documentation is not currently available.
+     *  Used to determine if the control's border and background are 
+     *  visible.
+     *  
+     *  @langversion 3.0
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
      */
-    public function showBorder(visible:Boolean):void
+    public function showBorderAndBackground(visible:Boolean):void
     {
-        // TLF-based text does not have a border.
+        // Hide everything in TextInputSkin except the textDisplay and
+        // the contentFill by setting borderVisible to false.
+        setStyle("borderVisible", visible);
+
+        var contentBackgroundAlpha:Number = getStyle("contentBackgroundAlpha");
+        
+        // Hide background/contentFill of TextInput by setting 
+        // contentBackgroundAlpha to 0.
+        if (!visible)
+        {
+            if (isNaN(contentBackgroundAlpha)||contentBackgroundAlpha != 0)
+            {
+                // Save old value so it can be restored when visible again.
+                oldContentBackgroundAlpha = getStyle("contentBackgroundAlpha");
+                setStyle("contentBackgroundAlpha", 0);
+            }
+        }
+        else if (!isNaN(oldContentBackgroundAlpha))
+        {
+            setStyle("contentBackgroundAlpha", oldContentBackgroundAlpha);
+            oldContentBackgroundAlpha = NaN;
+        }
     }    
 
     //--------------------------------------------------------------------------

@@ -17,12 +17,25 @@ THIS = File.expand_path(File.dirname(__FILE__))
 # This is a special variable.
 # Because subversion 1.4 doesn't have merge tracking,
 # this will be rewritten every time you run the merge command in here
-# LAST_MERGE = 10553
+# LAST_MERGE = 10926
 LAST_MERGE_PATTERN = /\#\s*LAST_MERGE\s*\=\s*(\d+)/
 
 # Helper Methods
 def message
   # soon this will be a template once i figure that out
+end
+
+def get_last_merge
+  last_merge = nil
+  File.open(__FILE__, "r+") do |this|
+    this.readlines.each do |line|
+      if line.match(LAST_MERGE_PATTERN)
+        last_merge = $1
+        break
+      end
+    end
+  end
+  last_merge
 end
 
 def template(target_path, template_path)
@@ -44,6 +57,19 @@ def modified
     end
   end
   files
+end
+
+def get_revisions_to_merge
+  revisions = []
+  last_merge = get_last_merge.to_i
+  %x[svn log -q #{TRUNK}].each do |logging|
+    if logging =~ /^r(\d+)/
+      num = $1.to_i
+      break if num <= last_merge
+      revisions << num
+    end
+  end
+  revisions
 end
 
 def revision
@@ -136,40 +162,38 @@ namespace :svn do
   end
   
   desc "Merge remote trunk with local working copy"
-  task :merge_local => ['svn:cleanup'] do
+  task :merge_local do
     newer = ENV.include?("new") ? ENV["new"] : "HEAD"
-    older = nil
-    File.open(__FILE__, "r+") do |this|
-      this.readlines.each do |line|
-        if line.match(LAST_MERGE_PATTERN)
-          match = $1
-          older = ENV.include?("old") ? ENV["old"] : match # the last match
-          system("svn merge -r #{older}:#{newer} #{TRUNK} .")
-          line.gsub("LAST_MERGE = #{match}", "LAST_MERGE = #{revision}")
-          break
-        end
+    older = ENV.include?("old") ? ENV["old"] : get_last_merge
+    
+    revisions = get_revisions_to_merge.reverse.collect {|r| r.to_s}
+    revisions.each do |r|
+      puts "executing >> svn merge -r #{older}:#{r} #{TRUNK} ."
+      system("svn merge -r #{older}:#{r} #{TRUNK} .")
+      puts "completed merge"
+      conflicts = %x[grep -r "<<<<<<<[^<]" ./*]
+      if conflicts and conflicts.length > 0
+        puts "Please fix the conflicts,"
+        puts "set the LAST_MERGE = #{r},"
+        puts "and rerun 'rake svn:merge_local'"
+        puts ""
+        puts conflicts.join("\n")
+        puts ""
+        raise "exited"
       end
-      if older.nil?
-        raise "No old merge pattern (LAST_MERGE) in Rakefile"
-      end
+      older = r
     end
+    
+    #line.gsub("LAST_MERGE = #{match}", "LAST_MERGE = #{revision}")
     message = "merged with trunk: #{older.to_s} => #{newer.to_s}"
-    system("svn commit -m '#{message}'")
+    #system("svn commit -m '#{message}'")
     puts message
   end
   
   desc "Merge remote trunk with local working copy"
   task :info do
-    last_merge = nil
+    last_merge = get_last_merge
     current_revision = "\n#{%x[svn info][0..-2]}" # capture command output
-    File.open(__FILE__, "r+") do |this|
-      this.readlines.each do |line|
-        if line.match(LAST_MERGE_PATTERN)
-          last_merge = $1
-          break
-        end
-      end
-    end
     current_revision << "Last Merge: #{last_merge}\n"
     current_revision << "Execute all 'rake svn:' tasks from: #{THIS}\n\n"
     puts current_revision
@@ -199,11 +223,25 @@ namespace :svn do
     end
   end
   
+  desc "The revision numbers in an array since merge"
+  task :since_merge do
+    revisions = get_revisions_to_merge.reverse
+    puts "Merge the following revisions:"
+    puts revisions.join(", ")
+    revisions
+  end
+  
   task :todo do
     puts "-------------------------------------"
     puts "Run the following commands: "
     puts "svn commit"
     puts "rake svn:update"
+    puts "rake svn:merge_local"
+    puts ""
+    puts "If you get the following error,"
+    puts "just keep running the command over again:"
+    puts ""
+    puts "svn: Could not get content-type from response"
     puts "-------------------------------------"
   end
 end

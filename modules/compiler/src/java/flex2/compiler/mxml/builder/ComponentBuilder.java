@@ -12,18 +12,19 @@
 package flex2.compiler.mxml.builder;
 
 import flex2.compiler.CompilationUnit;
-import flex2.compiler.util.CompilerMessage.CompilerError;
+import flex2.compiler.mxml.InvalidStateSpecificValue;
 import flex2.compiler.mxml.MXMLNamespaces;
 import flex2.compiler.mxml.MxmlConfiguration;
 import flex2.compiler.mxml.dom.*;
 import flex2.compiler.mxml.lang.*;
 import flex2.compiler.mxml.reflect.*;
 import flex2.compiler.mxml.rep.*;
+import flex2.compiler.mxml.rep.init.Initializer;
+import flex2.compiler.util.CompilerMessage.CompilerError;
+import flex2.compiler.util.CompilerMessage.CompilerWarning;
 import flex2.compiler.util.MimeMappings;
 import flex2.compiler.util.NameFormatter;
 import flex2.compiler.util.QName;
-import flex2.compiler.mxml.InvalidStateSpecificValue;
-import flex2.compiler.mxml.rep.init.Initializer;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -372,7 +373,32 @@ public class ComponentBuilder extends AbstractBuilder
 
         protected void unknown(String namespace, String localPart)
         {
-            unknownAttributeError(namespace, localPart, line);
+            String styleThemes = type.getStyleThemes(localPart);
+
+            if (type.isExcludedStyle(localPart))
+            {
+                    log(line, new ExcludedStyleProperty(localPart,
+                                                        NameFormatter.toDot(component.getType().getName())));
+            }
+            else if (styleThemes != null)
+            {
+                if (mxmlConfiguration.reportInvalidStylesAsWarnings())
+                {
+                    log(line, new InvalidStyleThemeWarning(localPart,
+                                                           NameFormatter.toDot(component.getType().getName()),
+                                                           styleThemes));
+                }
+                else
+                {
+                    log(line, new InvalidStyleThemeError(localPart,
+                                                         NameFormatter.toDot(component.getType().getName()),
+                                                         styleThemes));
+                }
+            }
+            else
+            {
+                unknownAttributeError(namespace, localPart, line);
+            }
         }
 
         protected void invoke(Type type, String namespace, String localPart)
@@ -859,6 +885,54 @@ public class ComponentBuilder extends AbstractBuilder
         // Here we process special attributes 'includedStates' and 'excludedStates', so that
         // we detect and process any state-specific nodes.
         processStateAttributes(node, component);
+    }
+
+    public class ExcludedStyleProperty extends CompilerError
+    {
+        private static final long serialVersionUID = -655374071288180326L;
+
+        public String stylePropertyName;
+        public String typeName;
+
+        public ExcludedStyleProperty(String stylePropertyName, String typeName)
+        {
+            this.stylePropertyName = stylePropertyName;
+            this.typeName = typeName;
+        }
+    }
+
+    public class InvalidStyleThemeError extends CompilerError
+    {
+        private static final long serialVersionUID = -655374071288180327L;
+
+        public String stylePropertyName;
+        public String typeName;
+        public String styleThemes;
+
+        public InvalidStyleThemeError(String stylePropertyName,
+                                      String typeName, String styleThemes)
+        {
+            this.stylePropertyName = stylePropertyName;
+            this.typeName = typeName;
+            this.styleThemes = styleThemes;
+        }
+    }
+
+    public class InvalidStyleThemeWarning extends CompilerWarning
+    {
+        private static final long serialVersionUID = -655374071288180328L;
+
+        public String stylePropertyName;
+        public String typeName;
+        public String styleThemes;
+
+        public InvalidStyleThemeWarning(String stylePropertyName,
+                                        String typeName, String styleThemes)
+        {
+            this.stylePropertyName = stylePropertyName;
+            this.typeName = typeName;
+            this.styleThemes = styleThemes;
+        }
     }
 
     public static class UnknownNamespace extends CompilerError

@@ -36,7 +36,25 @@ public interface ITextInput
 	//
 	//--------------------------------------------------------------------------
 	
-	//----------------------------------
+    //----------------------------------
+    //  selectionActivePosition
+    //----------------------------------
+    
+    /**
+     *  Documentation is not currently available.
+     */
+    function get selectionActivePosition():int;
+    
+    //----------------------------------
+    //  selectionAnchorPosition
+    //----------------------------------
+    
+    /**
+     *  Documentation is not currently available.
+     */
+    function get selectionAnchorPosition():int;
+
+    //----------------------------------
 	//  editable
 	//----------------------------------
 
@@ -169,15 +187,15 @@ public interface ITextInput
 	//--------------------------------------------------------------------------
 
     /**
-     *  For Halo, used to determine if the control's border object is visible.
-     *  For Spark, it does nothing.
+     *  Determines whether the border and background of the TextInput are
+     *  visible. 
      *  
      *  @langversion 3.0
      *  @playerversion Flash 10
      *  @playerversion AIR 1.5
      *  @productversion Flex 4
      */
-    function showBorder(visible:Boolean):void;
+    function showBorderAndBackground(visible:Boolean):void;
     
     /**
      *  Selects the text in the range specified by the parameters.
@@ -187,7 +205,7 @@ public interface ITextInput
      *  @playerversion AIR 1.5
      *  @productversion Flex 4
      */
-    function selectRange(anchorIndex:int, activeIndex:int):void;
+    function selectRange(anchorPosition:int, activePosition:int):void;
 }
 
 }

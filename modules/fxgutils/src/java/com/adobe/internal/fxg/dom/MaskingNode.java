@@ -21,4 +21,17 @@ import com.adobe.fxg.dom.FXGNode;
 public interface MaskingNode extends FXGNode
 {
     GraphicContext createGraphicContext();
+
+    /**
+     * @return the index of a mask in a parent DisplayObject's list of children.
+     * This can be used to access the mask programmatically at runtime.
+     */
+    int getMaskIndex();
+
+    /**
+     * Records the index of this mask in the parent DisplayObject's list of
+     * children. (Optional).
+     * @param index - the child index to the mask  
+     */
+    void setMaskIndex(int index);
 }

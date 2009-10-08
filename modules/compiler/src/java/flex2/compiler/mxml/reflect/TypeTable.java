@@ -42,6 +42,7 @@ public class TypeTable
     private SymbolTable symbolTable;
     private final StandardDefs standardDefs;
     private NameMappings manifest;
+    private Set<String> themeNames;
 
     public final Type noType;
     public final Type stringType;
@@ -61,11 +62,13 @@ public class TypeTable
     private Map<String, Type> typeMap;
     private Map<String, String> nonRepeaters;
 
-    public TypeTable(SymbolTable symbolTable, NameMappings manifest, StandardDefs standardDefs)
+    public TypeTable(SymbolTable symbolTable, NameMappings manifest,
+                     StandardDefs standardDefs, Set<String> themeNames)
     {
         this.symbolTable = symbolTable;
         this.manifest = manifest;
         this.standardDefs = standardDefs;
+        this.themeNames = themeNames;
 
         nonRepeaters = new WeakHashMap<String, String>();
         typeMap = new HashMap<String, Type>();
@@ -117,6 +120,7 @@ public class TypeTable
      */
     public Type getType(String className)
     {
+        assert NameFormatter.toColon(className).equals(className);
         Type t = typeMap.get(className);
 
         if (t == null)
@@ -230,6 +234,7 @@ public class TypeTable
         private Type elementType;
         private EventListHelper events;
         private List<MetaData> effects;
+        private List<MetaData> excludes;
         private List<MetaData> styles;
         private final StandardDefs standardDefs;
 
@@ -485,23 +490,93 @@ public class TypeTable
                 styles = classInfo.getMetaData("Style", true);
             }
 
-            for (int i = 0, length = styles.size(); i < length; i++)
+            if (!isExcludedStyle(name))
             {
-                MetaData md = styles.get(i);
-                if (name.equals(md.getValue("name")))
+                for (int i = 0, length = styles.size(); i < length; i++)
                 {
-                    return new StyleHelper(name,
-                                           md.getValue("type"),
-                                           md.getValue("enumeration"),
-                                           md.getValue("format"),
-                                           md.getValue("inherit"),
-                                           md.getValue(Deprecated.DEPRECATED_MESSAGE),
-                                           md.getValue(Deprecated.DEPRECATED_REPLACEMENT),
-                                           md.getValue(Deprecated.DEPRECATED_SINCE));
+                    MetaData md = styles.get(i);
+
+                    if (name.equals(md.getValue("name")))
+                    {
+                        String theme = md.getValue("theme");
+
+                        if ((theme == null) || (themeNames == null) || hasTheme(theme))
+                        {
+                            return new StyleHelper(name,
+                                                   md.getValue("type"),
+                                                   md.getValue("enumeration"),
+                                                   md.getValue("format"),
+                                                   md.getValue("inherit"),
+                                                   md.getValue(Deprecated.DEPRECATED_MESSAGE),
+                                                   md.getValue(Deprecated.DEPRECATED_REPLACEMENT),
+                                                   md.getValue(Deprecated.DEPRECATED_SINCE));
+                        }
+                    }
                 }
             }
 
             return null;
+        }
+
+        public boolean isExcludedStyle(String name)
+        {
+            boolean result = false;
+
+            if (excludes == null)
+            {
+                excludes = classInfo.getMetaData("Exclude", true);
+            }
+
+            for (MetaData metaData : excludes)
+            {
+                if (name.equals(metaData.getValue("name")) &&
+                    "style".equals(metaData.getValue("kind")))
+                {
+                    result = true;
+                }
+            }
+
+            return result;
+        }
+
+        /**
+         * [Style(theme="...")]
+         */
+        public String getStyleThemes(String name)
+        {
+            if (styles == null)
+            {
+                styles = classInfo.getMetaData("Style", true);
+            }
+
+            for (int i = 0, length = styles.size(); i < length; i++)
+            {
+                MetaData md = styles.get(i);
+
+                if (name.equals(md.getValue("name")))
+                {
+                    return md.getValue("theme");
+                }
+            }
+
+            return null;
+        }
+        
+        private boolean hasTheme(String value)
+        {
+            boolean result = false;
+            String[] themes = value.split("[, ]");
+            
+            for (int i = 0; i < themes.length; i++)
+            {
+                if (themeNames.contains(themes[i]))
+                {
+                    result = true;
+                    break;
+                }
+            }
+
+            return result;
         }
 
         /**
@@ -1019,6 +1094,12 @@ public class TypeTable
 
                     if (instanceType == null)
                     {
+                        // TODO: this needs to be handled differently,
+                        // because it doesn't get a path or a line
+                        // number before being reported.  Since there
+                        // is no context here, one option is to throw
+                        // it and catch it upstream when the context
+                        // is available.
                         ThreadLocalToolkit.log(new NullInstanceType(StandardDefs.MD_INSTANCETYPE, instanceTypeName));
                         instanceType = objectType;
                     }

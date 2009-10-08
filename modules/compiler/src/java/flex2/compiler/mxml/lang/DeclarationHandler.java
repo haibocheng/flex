@@ -68,12 +68,9 @@ public abstract class DeclarationHandler
 	 */
 	protected void invoke(Type type, String namespace, String localPart, String state)
 	{
-		//	String msg = "\tDeclarationHandler.invoke(" + type.getName() + ",'" + name + "'): ";
-
 		Event event = type.getEvent(localPart);
 		if (event != null)
 		{
-			//	System.out.println(msg + "event()");
 			event.setStateName(state);
 			event(event);
 			return;
@@ -82,7 +79,6 @@ public abstract class DeclarationHandler
 		Property property = type.getProperty(localPart);
 		if (property != null)
 		{
-			//	System.out.println(msg + "property()");
 			property.setStateName(state);
 
 			if (localPart.equals(StandardDefs.PROP_UICOMPONENT_STATES))
@@ -99,20 +95,18 @@ public abstract class DeclarationHandler
 		Effect effect = type.getEffect(localPart);
 		if (effect != null)
 		{
-			//	System.out.println(msg + "effect()");
 			effect.setStateName(state);
 			effect(effect);
 			return;
 		}
 
-		Style style = type.getStyle(localPart);
-		if (style != null)
-		{
-			//	System.out.println(msg + "style()");
-			style.setStateName(state);
-			style(style);
-			return;
-		}
+        Style style = type.getStyle(localPart);
+        if (style != null)
+        {
+            style.setStateName(state);
+            style(style);
+            return;
+        }
 
 		if (type.hasDynamic())
 		{
@@ -120,7 +114,6 @@ public abstract class DeclarationHandler
 			return;
 		}
 
-		//	System.out.println(msg + "unknown()");
 		unknown(namespace, localPart);
 	}
 	

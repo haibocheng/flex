@@ -13,10 +13,13 @@ package mx.containers
 {
 
 import mx.core.Container;
+import mx.core.FlexVersion;
 import mx.core.ScrollPolicy;
 import mx.core.mx_internal;
 import mx.core.UIComponent;
+import mx.styles.CSSStyleDeclaration;
 import mx.styles.IStyleClient;
+import mx.styles.StyleManager;
 
 use namespace mx_internal;
 
@@ -34,7 +37,6 @@ use namespace mx_internal;
 [Exclude(name="backgroundColor", kind="style")]
 [Exclude(name="borderColor", kind="style")]
 [Exclude(name="borderSides", kind="style")]
-[Exclude(name="borderStyle", kind="style")]
 [Exclude(name="borderThickness", kind="style")]
 [Exclude(name="dropShadowColor", kind="style")]
 [Exclude(name="dropShadowEnabled", kind="style")]
@@ -139,7 +141,7 @@ public class ControlBar extends Box
         // ControlBar defaults to direction="horizontal", but can be changed
         // later if desired
         direction = BoxDirection.HORIZONTAL;
-    }
+     }
 
     //--------------------------------------------------------------------------
     //

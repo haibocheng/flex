@@ -1038,14 +1038,14 @@ public class AsDocUtil
                         {
                             if (thisClass.getFieldGetSet().get(apiName.getTextContent()) == 1)
                             {
-                                if (ancestorClass.getFieldGetSet().get(apiName.getTextContent()) > 1)
+                                if (ancestorClass.getFieldGetSet().get(apiName.getTextContent()) != null && ancestorClass.getFieldGetSet().get(apiName.getTextContent()) > 1)
                                 {
                                     thisClass.getFieldGetSet().put(apiName.getTextContent(), thisClass.getFieldGetSet().get(apiName.getTextContent()) + 2);
                                 }
                             }
                             else if (thisClass.getFieldGetSet().get(apiName.getTextContent()) == 2)
                             {
-                                if (ancestorClass.getFieldGetSet().get(apiName.getTextContent()) != 2)
+                                if (ancestorClass.getFieldGetSet().get(apiName.getTextContent()) != null && ancestorClass.getFieldGetSet().get(apiName.getTextContent()) != 2)
                                 {
                                     thisClass.getFieldGetSet().put(apiName.getTextContent(), thisClass.getFieldGetSet().get(apiName.getTextContent()) + 1);
                                 }

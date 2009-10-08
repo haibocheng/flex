@@ -20,7 +20,6 @@ import flex2.compiler.util.QName;
  */
 public abstract class AttributeHandler extends DeclarationHandler
 {
-	protected Node node;
 	protected Type type;
 	protected String text;
 	protected int line;
@@ -31,7 +30,7 @@ public abstract class AttributeHandler extends DeclarationHandler
 	public void invoke(Node node, Type type, QName qname)
 	{
 		//	String msg = "AttributeHandler[" + node.image + "/" + node.beginLine + ":" + type.getName() + "].invoke('" + qname + "'): ";
-
+        this.type = type;
 		this.text = (String)node.getAttributeValue(qname);
 		this.line = node.getLineNumber(qname);
 

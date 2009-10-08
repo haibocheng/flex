@@ -16,6 +16,7 @@ import flex2.compiler.common.FontsConfiguration;
 import flex2.compiler.io.VirtualFile;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * This interface is used to restrict consumers of
@@ -52,6 +53,12 @@ public interface MxmlConfiguration
 
     String getGeneratedDirectory();
 
+    /**
+     * Controls whether invalid styles are report as errors or
+     * warnings.
+     */
+    boolean reportInvalidStylesAsWarnings();
+
 	/**
 	 * Controls whether warnings are displayed when a deprecated API is used.
 	 */
@@ -61,6 +68,12 @@ public interface MxmlConfiguration
      * Controls whether warnings are displayed when a deprecated API is used.
      */
     boolean showBindingWarnings();
+
+    /**
+     * Controls whether warnings are displayed when styles, which
+     * don't apply to the current theme(s), are used in CSS.
+     */
+    boolean showInvalidCssPropertyWarnings();
 
     /**
      * Controls whether warnings are displayed when an embedded font name
@@ -138,4 +151,6 @@ public interface MxmlConfiguration
     void setFontsConfiguration(FontsConfiguration fc);
 
 	boolean getGenerateAbstractSyntaxTree();
+
+    Set<String> getThemeNames();
 }

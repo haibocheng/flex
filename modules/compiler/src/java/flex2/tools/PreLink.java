@@ -158,7 +158,8 @@ public class PreLink implements flex2.compiler.PreLink
 
                 if (rootStylesContainer != null)
                 {
-                    rootStylesContainer.validate(symbolTable, nameMappings, u.getStandardDefs());
+                    rootStylesContainer.validate(symbolTable, nameMappings, u.getStandardDefs(),
+                                                 configuration.getCompilerConfiguration().getThemeNames());
                 }
             }
 
@@ -253,7 +254,7 @@ public class PreLink implements flex2.compiler.PreLink
                             stylesContainer = new StylesContainer(compilerConfig, u, symbolTable.perCompileData);
                             stylesContainer.setNameMappings(nameMappings);
                             stylesContainer.loadDefaultStyles();
-                            stylesContainer.validate(symbolTable, nameMappings, u.getStandardDefs());
+                            stylesContainer.validate(symbolTable, nameMappings, u.getStandardDefs(), compilerConfig.getThemeNames());
                             symbolTable.getContext().setAttribute(StylesContainer.class.getName(), stylesContainer);
                         }
 
@@ -670,8 +671,11 @@ public class PreLink implements flex2.compiler.PreLink
 
         StringBuilder sb = new StringBuilder();
         sb.append("package {\n");
+        sb.append("import flash.display.DisplayObject;\n");
         sb.append("import flash.utils.*;\n");
         sb.append("import ").append(standardDefs.INTERFACE_IFLEXMODULEFACTORY_DOT).append(";\n");
+        sb.append("import ").append(standardDefs.INTERFACE_ISTYLEMANAGER2_DOT).append(";\n");
+        sb.append("import ").append(standardDefs.CLASS_REQUEST_DOT).append(";\n");
         sb.append("import ").append(standardDefs.CLASS_STYLEMANAGERIMPL_DOT).append(";\n");
         sb.append("import ").append(standardDefs.CLASS_SYSTEMMANAGERCHILDMANAGER_DOT).append(";\n");
         sb.append("import ").append(standardDefs.CLASS_TEXTFIELDFACTORY_DOT).append("; TextFieldFactory;\n");
@@ -693,7 +697,33 @@ public class PreLink implements flex2.compiler.PreLink
         sb.append("   public static function init(fbs:IFlexModuleFactory):void\n");
         sb.append("   {\n");
         sb.append("       new ChildManager(fbs);\n");
-        sb.append("       new StyleManagerImpl(fbs);\n");
+
+        sb.append("       var styleManager:IStyleManager2;\n");
+        if ((configuration.getCompatibilityVersion() <= flex2.compiler.common.MxmlConfiguration.VERSION_3_0))
+        {
+            // For backwards compatibility use the top level style manager. 
+            sb.append("       styleManager = StyleManagerImpl.getInstance();\n");
+            sb.append("       fbs.registerImplementation(\"mx.styles::IStyleManager2\", styleManager);\n");
+        }
+        else if (!configuration.getCompilerConfiguration().getCreateStyleManager())
+        {
+            // If this module factory is not creating its own style factory, then use its parent if available.
+            // Fall back to using the top level style manager.
+            sb.append("       var request:mx.events.Request = new mx.events.Request(mx.events.Request.GET_PARENT_FLEX_MODULE_FACTORY_REQUEST);\n");
+            sb.append("       DisplayObject(fbs).dispatchEvent(request);\n");
+            sb.append("       var moduleFactory:IFlexModuleFactory = request.value as IFlexModuleFactory;\n");
+            sb.append("       if (moduleFactory)\n");
+            sb.append("           styleManager = IStyleManager2(moduleFactory.getImplementation(\"mx.styles::IStyleManager2\"));\n\n");
+            sb.append("       if (!styleManager)\n");
+            sb.append("           styleManager = StyleManagerImpl.getInstance();\n");
+            sb.append("       fbs.registerImplementation(\"mx.styles::IStyleManager2\", styleManager);\n");
+        }
+        else
+        {
+            sb.append("       styleManager = new StyleManagerImpl(fbs);\n");
+        }
+        
+        sb.append(codegenQualifiedTypeSelectors(configuration));
         sb.append(codegenEffectTriggerRegistration(effectTriggers));
         sb.append(codegenAccessibilityList(accessibilityList));
         sb.append(codegenRemoteClassAliases(remoteClassAliases));
@@ -1311,13 +1341,13 @@ public class PreLink implements flex2.compiler.PreLink
 
         if ((accessibilityImplementations != null) && (accessibilityImplementations.size() != 0))
         {
-            sb.append("      // trace(\"Flex accessibility startup: \" + Capabilities.hasAccessibility);\n");
-            sb.append("      if (Capabilities.hasAccessibility) {\n");
+            sb.append("       // trace(\"Flex accessibility startup: \" + Capabilities.hasAccessibility);\n");
+            sb.append("       if (Capabilities.hasAccessibility) {\n");
             for (Iterator<String> it = accessibilityImplementations.iterator(); it.hasNext();)
             {
-                sb.append("         " + it.next() + ".enableAccessibility();\n");
+                sb.append("          " + it.next() + ".enableAccessibility();\n");
             }
-            sb.append("      }\n");
+            sb.append("       }\n");
         }
 
         if (Trace.accessible)
@@ -1361,11 +1391,11 @@ public class PreLink implements flex2.compiler.PreLink
             String className = (String) e.getKey();
             String alias = (String) e.getValue();
 
-            sb.append( "      try {\n");
-            sb.append( "      if (flash.net.getClassByAlias(\"" + alias + "\") == null){\n");
-            sb.append( "          flash.net.registerClassAlias(\"" + alias + "\", " + className + ");}\n");
-            sb.append( "      } catch (e:Error) {\n");
-            sb.append( "          flash.net.registerClassAlias(\"" + alias + "\", " + className + "); }\n");
+            sb.append( "       try {\n");
+            sb.append( "       if (flash.net.getClassByAlias(\"" + alias + "\") == null){\n");
+            sb.append( "           flash.net.registerClassAlias(\"" + alias + "\", " + className + ");}\n");
+            sb.append( "       } catch (e:Error) {\n");
+            sb.append( "           flash.net.registerClassAlias(\"" + alias + "\", " + className + "); }\n");
         }
         return sb.toString();
     }
@@ -1392,7 +1422,7 @@ public class PreLink implements flex2.compiler.PreLink
             String name = (String) e.getKey();
             String event = (String) e.getValue();
 
-            sb.append( "      EffectManager.mx_internal::registerEffectTrigger(\"" + name + "\", \"" + event + "\");\n");
+            sb.append( "       EffectManager.mx_internal::registerEffectTrigger(\"" + name + "\", \"" + event + "\");\n");
         }
 
         return sb.toString();
@@ -1401,7 +1431,7 @@ public class PreLink implements flex2.compiler.PreLink
     private String codegenInheritingStyleRegistration( Set<String> inheritingStyles )
     {
         StringBuilder sb = new StringBuilder();
-        sb.append("      var styleNames:Array = [");
+        sb.append("       var styleNames:Array = [");
 
         Iterator<String> iterator = inheritingStyles.iterator();
 
@@ -1418,11 +1448,10 @@ public class PreLink implements flex2.compiler.PreLink
         StandardDefs standardDefs = ThreadLocalToolkit.getStandardDefs();
 
         sb.append("];\n\n");
-        sb.append("      import ").append(standardDefs.getStylesPackage()).append(".StyleManager;\n\n");
-        sb.append("      for (var i:int = 0; i < styleNames.length; i++)\n");
-        sb.append("      {\n");
-        sb.append("         StyleManager.registerInheritingStyle(styleNames[i]);\n");
-        sb.append("      }\n");
+        sb.append("       for (var i:int = 0; i < styleNames.length; i++)\n");
+        sb.append("       {\n");
+        sb.append("          styleManager.registerInheritingStyle(styleNames[i]);\n");
+        sb.append("       }\n");
 
         return sb.toString();
     }
@@ -1466,7 +1495,7 @@ public class PreLink implements flex2.compiler.PreLink
     {
         // If we're not using qualified type selectors, change the runtime default to false.
         boolean qualified = configuration.getQualifiedTypeSelectors();
-        return qualified ? "" : "        StyleManager.mx_internal::qualifiedTypeSelectors = false;";
+        return qualified ? "" : "       styleManager.qualifiedTypeSelectors = false;\n";
     }
 
     static String codegenModuleFactory(String base,
@@ -1498,13 +1527,12 @@ public class PreLink implements flex2.compiler.PreLink
             codegenResourceBundleMetadata(null /*externalResourceBundleNames*/),
             "public class ", rootClassName, lineSep,
             "    extends ", base, lineSep,
-            "    implements IFlexModuleFactory, ITextLineCreator", lineSep,
+            "    implements IFlexModuleFactory, ISWFContext", lineSep,
             "{", lineSep,
             codegenLinkInCrossDomainRSLItem(configuration, lineSep, cdRsls, standardDefs),
             "    public function ", rootClassName, "()", lineSep,
             "    {", lineSep,
             codegenCompatibilityCall(configuration), lineSep,
-            codegenQualifiedTypeSelectors(configuration), lineSep,
             "        super();", lineSep,
             codegenAddRslCompleteListener(isLibraryCompile, hasFonts, lineSep),
             "    }", lineSep, lineSep,
@@ -1515,42 +1543,12 @@ public class PreLink implements flex2.compiler.PreLink
              */
             !isLibraryCompile ?
             "    override " : "",
-            "    public function callInContext(fn:Function, thisArg:*, argsArray:*, returns:Boolean=true):*", lineSep,
+            "    public function callInContext(fn:Function, thisArg:Object, argArray:Array, returns:Boolean=true):*", lineSep,
             "    {", lineSep,
             "        if (returns)", lineSep,
-	        "           return fn.apply(thisArg, argsArray);", lineSep,
+	        "           return fn.apply(thisArg, argArray);", lineSep,
             "        else", lineSep,
-            "           fn.apply(thisArg, argsArray);", lineSep,
-            "    }", lineSep, lineSep,
-            /**
-             *  Calls createTextLine() on the specified TextBlock
-             *  with the specified parameters. 
-             *  In order for a TextLine to use an embedded font,
-             *  it must be created in the SWF where the font is.
-             *  This factory method makes that possible.
-             */
-            "    public function createTextLine(textBlock:TextBlock,", lineSep,
-    		"                      previousLine:TextLine = null,", lineSep,
-            "                      width:Number = 1000000,", lineSep,
-    		"                      lineOffset:Number = 0.0,", lineSep,
-    		"                      fitSomething:Boolean = false):TextLine", lineSep,
-            "    {", lineSep,
-	        "        return textBlock.createTextLine(previousLine, width, lineOffset, fitSomething);", lineSep,
-            "    }", lineSep, lineSep,
-	        // The recreateTextLine() method was added to TextBlock
-	        // in Player 10.1, so it must be looked up by name
-	        // since we are compiling for Player 10.0.
-            "    public function recreateTextLine(textBlock:TextBlock,", lineSep,
-    		"                      textLine:TextLine,", lineSep,
-    		"                      previousLine:TextLine = null,", lineSep,
-            "                      width:Number = 1000000,", lineSep,
-    		"                      lineOffset:Number = 0.0,", lineSep,
-    		"                      fitSomething:Boolean = false):TextLine", lineSep,
-            "    {", lineSep,
-	        "        var recreateTextLine:Function = textBlock[\"recreateTextLine\"];", lineSep,
-	        "        if (recreateTextLine == null)", lineSep,
-	    	"            return null;", lineSep,
-	        "        return recreateTextLine(textLine, previousLine, width, lineOffset, fitSomething);", lineSep,
+            "           fn.apply(thisArg, argArray);", lineSep,
             "    }", lineSep, lineSep,
             codegenGetRegisterImplementationStubs(isLibraryCompile, lineSep),
             !isLibraryCompile ?
@@ -1704,7 +1702,7 @@ public class PreLink implements flex2.compiler.PreLink
         sb.append("import flash.system.Security").append(lineSep);
         sb.append("import flash.utils.Dictionary;").append(lineSep);
         sb.append("import flash.utils.getDefinitionByName;").append(lineSep);
-        sb.append("import flashx.textLayout.compose.ITextLineCreator;").append(lineSep);
+        sb.append("import flashx.textLayout.compose.ISWFContext;").append(lineSep);
         sb.append("import ").append(standardDefs.INTERFACE_IFLEXMODULE_DOT).append(";").append(lineSep);
         sb.append("import ").append(standardDefs.INTERFACE_IFLEXMODULEFACTORY_DOT).append(";").append(lineSep);
         sb.append(codegenImportEmbeddedFontRegistry(fonts, lineSep, standardDefs));

@@ -252,6 +252,10 @@ public class SyntaxTreeEvaluator extends EvaluatorAdapter
             {
                 processPercentProxyMetaData(cx, node);
             }
+            else if (StandardDefs.MD_SKINPART.equals(node.id))
+            {
+                processSkinPartMetaData(cx, node);
+            }
         }
 
         return null;
@@ -582,12 +586,36 @@ public class SyntaxTreeEvaluator extends EvaluatorAdapter
     {
         if (node.count() == 1)
         {
-        	unit.expressions.add(NameFormatter.toMultiName(node.getValue(0)));
-        	unit.hasHostComponentMD = true;
+            if (unit.hostComponentMetaData == null)
+            {
+                unit.expressions.add(NameFormatter.toMultiName(node.getValue(0)));
+                unit.hostComponentMetaData = node;
+            }
+            else
+            {
+                cx.localizedError2(cx.input.origin, node.pos(), new OnlyOneHostComponentAllowed());
+            }
         }
         else
         {
             cx.localizedError2(cx.input.origin, node.pos(), new HostComponentMustHaveType());
+        }
+    }
+
+    private void processSkinPartMetaData(Context cx, MetaDataNode node)
+    {
+        if (!node.def.attrs.hasPublic &&
+            !NodeMagic.getAttributes(node.def).contains(NodeMagic.PUBLIC) &&
+            !NodeMagic.getAttributes(node.def).contains(SymbolTable.publicNamespace))
+        {
+            String origin = null;
+
+            if (cx.input != null)
+            {
+                origin = cx.input.origin;
+            }
+
+            cx.localizedError2(origin, node.def.pos(), new SkinPartsMustBePublic());
         }
     }
 	
@@ -808,6 +836,11 @@ public class SyntaxTreeEvaluator extends EvaluatorAdapter
         private static final long serialVersionUID = -3077472527217768870L;
     }
 
+    public static class OnlyOneHostComponentAllowed extends CompilerMessage.CompilerError
+    {
+        private static final long serialVersionUID = -8834434137722392865L;
+    }
+
     public static class PercentProxyMustHaveProperty extends CompilerMessage.CompilerError
     {
         private static final long serialVersionUID = -5187666526248931183L;
@@ -826,6 +859,11 @@ public class SyntaxTreeEvaluator extends EvaluatorAdapter
     public static class RBEmptyMetadata extends CompilerMessage.CompilerError
     {
         private static final long serialVersionUID = 5290330001936137663L;
+    }
+
+    public static class SkinPartsMustBePublic extends CompilerMessage.CompilerError
+    {
+        private static final long serialVersionUID = 5290330001936137666L;
     }
 
     public static class VariableLevelResourceBundleMetaDataDeprecated

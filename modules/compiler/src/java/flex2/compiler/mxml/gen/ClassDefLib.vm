@@ -259,7 +259,7 @@ $str
 
 	mx_internal function $fname():void
 	{
-		//	only add our style defs to the StyleManager once
+		//	only add our style defs to the style manager once
 		if (mx_internal::${fname}_done)
 			return;
 		else
@@ -283,7 +283,7 @@ $str
         conditions = null;
 #emitSelectorAncestor($selector)
         // $selector.toString()
-        style = StyleManager.getStyleDeclaration("$selector.toString()");
+        style = styleManager.getStyleDeclaration("$selector.toString()");
         if (!style)
         {
             style = new CSSStyleDeclaration(selector);
@@ -320,17 +320,17 @@ $str
 ##
         // ${styleDef.subject}
 #if ($styleDef.isTypeSelector())
-        style = StyleManager.getStyleDeclaration("${styleDef.typeName}");
+        style = styleManager.getStyleDeclaration("${styleDef.typeName}");
 #else
-        style = StyleManager.getStyleDeclaration(".${styleDef.typeName}");
+        style = styleManager.getStyleDeclaration(".${styleDef.typeName}");
 #end
         if (!style)
         {
             style = new CSSStyleDeclaration();
 #if ($styleDef.isTypeSelector())
-            StyleManager.setStyleDeclaration("${styleDef.typeName}", style, false);
+            styleManager.setStyleDeclaration("${styleDef.typeName}", style, false);
 #else
-            StyleManager.setStyleDeclaration(".${styleDef.typeName}", style, false);
+            styleManager.setStyleDeclaration(".${styleDef.typeName}", style, false);
 #end
         }
 #if ($styleDef.styles.size() > 0)
@@ -359,7 +359,7 @@ $str
 #end
 
 #if ($doc.isFlexApplication)
-		StyleManager.mx_internal::initProtoChainRoots();
+		styleManager.initProtoChainRoots();
 #end
 	}
 #end

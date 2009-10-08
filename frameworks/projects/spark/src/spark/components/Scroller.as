@@ -20,13 +20,14 @@ import flash.system.ApplicationDomain;
 import flash.text.TextField;
 import flash.ui.Keyboard;
 
+import spark.components.Group;
 import spark.components.supportClasses.ScrollerLayout;
 import spark.components.supportClasses.SkinnableComponent;
 import spark.core.IViewport;
+import spark.core.NavigationUnit;
 import mx.core.IVisualElement;
 import mx.core.IVisualElementContainer;
 import mx.core.ScrollPolicy;
-import spark.core.NavigationUnit;
 import mx.events.PropertyChangeEvent;
 import mx.managers.IFocusManagerComponent;
 import flash.display.InteractiveObject;
@@ -76,19 +77,19 @@ include "../styles/metadata/SelectionFormatTextStyles.as"
 [Style(name="focusColor", type="uint", format="Color", inherit="yes", theme="spark")]
 
 /**
- *  Indicates under what conditions the horizontal scrollbar is displayed.
+ *  Indicates under what conditions the horizontal scroll bar is displayed.
  * 
  *  <ul>
  *  <li>
- *  <code>ScrollPolicy.ON</code> ("on") - the scrollbar is always displayed.
+ *  <code>ScrollPolicy.ON</code> ("on") - the scroll bar is always displayed.
  *  </li> 
  *  <li>
- *  <code>ScrollPolicy.OFF</code> ("off") - the scrollbar is never displayed.
+ *  <code>ScrollPolicy.OFF</code> ("off") - the scroll bar is never displayed.
  *  The viewport can still be scrolled programmatically, by setting its
  *  horizontalScrollPosition property.
  *  </li>
  *  <li>
- *  <code>ScrollPolicy.AUTO</code> ("auto") - the scrollbar is displayed when 
+ *  <code>ScrollPolicy.AUTO</code> ("auto") - the scroll bar is displayed when 
  *  the viewport's contentWidth is larger than its width.
  *  </li>
  *  </ul>
@@ -129,19 +130,19 @@ include "../styles/metadata/SelectionFormatTextStyles.as"
 [Style(name="symbolColor", type="uint", format="Color", inherit="yes", theme="spark")]
 
 /**
- *  Indicates under what conditions the vertical scrollbar is displayed.
+ *  Indicates under what conditions the vertical scroll bar is displayed.
  * 
  *  <ul>
  *  <li>
- *  <code>ScrollPolicy.ON</code> ("on") - the scrollbar is always displayed.
+ *  <code>ScrollPolicy.ON</code> ("on") - the scroll bar is always displayed.
  *  </li> 
  *  <li>
- *  <code>ScrollPolicy.OFF</code> ("off") - the scrollbar is never displayed.
+ *  <code>ScrollPolicy.OFF</code> ("off") - the scroll bar is never displayed.
  *  The viewport can still be scrolled programmatically, by setting its
  *  verticalScrollPosition property.
  *  </li>
  *  <li>
- *  <code>ScrollPolicy.AUTO</code> ("auto") - the scrollbar is displayed when 
+ *  <code>ScrollPolicy.AUTO</code> ("auto") - the scroll bar is displayed when 
  *  the viewport's contentHeight is larger than its height.
  *  </li>
  *  </ul>
@@ -174,15 +175,54 @@ include "../styles/metadata/SelectionFormatTextStyles.as"
 
 /**
  *  The Scroller component displays a single scrollable component, 
- *  called a viewport, and a horizontal and vertical scrollbars. 
- *  The viewport must implement the IViewport interface.
+ *  called a viewport, and horizontal and vertical scroll bars. 
+ *  The viewport must implement the IViewport interface.  Its skin
+ *  must be a derivative of the Group class.
+ *
+ *  <p>The Spark Group, DataGroup, and RichEditableText components implement 
+ *  the IViewport interface and can be used as the children of the Scroller control,
+ *  as the following example shows:</p>
  * 
- *  <p>The scrollbars control the viewport's <code>horizontalScrollPosition</code> and
+ *  <pre>
+ *  &lt;s:Scroller&gt;
+ *       &lt;s:Group width="100" height="100"&gt; 
+ *          &lt;mx:Image width="300" height="400" 
+ *               source="&#64;Embed(source='assets/logo.jpg')"/&gt; 
+ *       &lt;/s:Group&gt;        
+ *  &lt;/s:Scroller&gt;</pre>     
+ *
+ *  <p>The size of the Image control is set larger than that of its parent Group container. 
+ *  By default, the child extends past the boundaries of the parent container. 
+ *  Rather than allow the child to extend past the boundaries of the parent container, 
+ *  the Scroller specifies to clip the child to the boundaries and display scroll bars.</p>
+ *
+ *  <p>For Spark containers that do not implement the IViewport interface, 
+ *  you can still use scroll bars. 
+ *  To add scroll bars, create a custom skin for the container that 
+ *  includes the Scroller control. </p>
+ * 
+ *  <p>The IViewport interface define a viewport for the components that implement it.
+ *  A viewport is a rectangular subset of the area of a container that you want to display, 
+ *  rather than displaying the entire container.
+ *  The scrollbars control the viewport's <code>horizontalScrollPosition</code> and
  *  <code>verticalScrollPosition</code> properties.
  *  Scrollbars make it possible to view the area defined by the viewport's 
  *  <code>contentWidth</code> and <code>contentHeight</code> properties.</p>
+ *
+ *  <p>You can combine scroll bars with explicit settings for the container's viewport. 
+ *  The viewport settings determine the initial position of the viewport, 
+ *  and then you can use the scroll bars to move it, as the following example shows: </p>
+ *  
+ *  <pre>
+ *  &lt;s:Scroller&gt;
+ *      &lt;s:Group width="100" height="100"
+ *          horizontalScrollPosition="50" verticalScrollPosition="50"&gt; 
+ *          &lt;mx:Image width="300" height="400" 
+ *              source="&#64;Embed(source='assets/logo.jpg')"/&gt; 
+ *      &lt;/s:Group&gt;                 
+ *  &lt;/s:Scroller&gt;</pre>
  * 
- *  <p>The scrollbars are displayed according to the vertical and horizontal scrollbar
+ *  <p>The scrollbars are displayed according to the vertical and horizontal scroll bar
  *  policy, which can be <code>auto</code>, <code>on</code>, or <code>off</code>.
  *  The <code>auto</code> policy means that the scrollbar will be visible and included
  *  in the layout when the viewport's content is larger than the viewport itself.</p>
@@ -226,6 +266,7 @@ include "../styles/metadata/SelectionFormatTextStyles.as"
  *  <pre>
  *  &lt;s:Scroller
  *   <strong>Properties</strong>
+ *    measuredSizeIncludesScrollBars="true"
  *    minViewportInset="0"
  *    viewport="null"
  *  
@@ -237,6 +278,7 @@ include "../styles/metadata/SelectionFormatTextStyles.as"
  *    breakOpportunity="auto"
  *    cffHinting="horizontal_stem"
  *    color="0"
+ *    contentBackgroundAlpha=""
  *    contentBackgroundColor=""
  *    digitCase="default"
  *    digitWidth="default"
@@ -284,7 +326,14 @@ include "../styles/metadata/SelectionFormatTextStyles.as"
  *  /&gt;
  *  </pre>
  *  
+ *  @see spark.core.IViewport
+ *  @see spark.components.DataGroup
+ *  @see spark.components.Group
+ *  @see spark.components.RichEditableText
  *  @see spark.skins.spark.ScrollerSkin
+ *
+ *  @includeExample examples/ScrollerExample.mxml
+ *  
  *  @langversion 3.0
  *  @playerversion Flash 10
  *  @playerversion AIR 1.5
@@ -431,7 +480,7 @@ public class Scroller extends SkinnableComponent
         if (skin && viewport)
         {
             viewport.clipAndEnableScrolling = true;
-            skin.addElementAt(viewport, 0);
+            Group(skin).addElementAt(viewport, 0);
             viewport.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, viewport_propertyChangeHandler);
         }
         if (verticalScrollBar)
@@ -449,7 +498,7 @@ public class Scroller extends SkinnableComponent
         if (skin && viewport)
         {
             viewport.clipAndEnableScrolling = false;
-            skin.removeElement(viewport);
+            Group(skin).removeElement(viewport);
             viewport.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, viewport_propertyChangeHandler);
         }
     }
@@ -500,15 +549,15 @@ public class Scroller extends SkinnableComponent
     private var _measuredSizeIncludesScrollBars:Boolean = true;
     
     /**
-     *  If true, the Scroller's measured size includes the space required for
+     *  If <code>true</code>, the Scroller's measured size includes the space required for
      *  the visible scrollbars, otherwise the Scroller's measured size depends
      *  only on its viewport.
      * 
      *  <p>Components like TextArea, which "reflow" their contents to fit the
      *  available width or height may use this property to stabilize their
-     *  measured size.  By default a TextArea's is defined by its widthInChars
-     *  and heightInChars properties and in many applications it's preferable
-     *  for the measured size to remain constant, event when scrollbars are displayed
+     *  measured size.  By default a TextArea's is defined by its <code>widthInChars</code>
+     *  and <code>heightInChars</code> properties and in many applications it's preferable
+     *  for the measured size to remain constant, event when scroll bars are displayed
      *  by the TextArea skin's Scroller.</p>
      * 
      *  <p>In components where the content does not reflow, like a typical List's
@@ -773,7 +822,7 @@ public class Scroller extends SkinnableComponent
     override protected function attachSkin():void
     {
         super.attachSkin();
-        skin.layout = new ScrollerLayout();
+        Group(skin).layout = new ScrollerLayout();
         installViewport();
         skin.addEventListener(MouseEvent.MOUSE_WHEEL, skin_mouseWheelHandler);
     }
@@ -784,7 +833,7 @@ public class Scroller extends SkinnableComponent
     override protected function detachSkin():void
     {    
         uninstallViewport();
-        skin.layout = null;
+        Group(skin).layout = null;
         skin.removeEventListener(MouseEvent.MOUSE_WHEEL, skin_mouseWheelHandler);
         super.detachSkin();
     }
@@ -938,7 +987,7 @@ public class Scroller extends SkinnableComponent
         if (verticalScrollBar && verticalScrollBar.visible)
         {
             navigationUnit = (event.delta < 0) ? NavigationUnit.DOWN : NavigationUnit.UP;
-            for(var vStep:int = 0; vStep < nSteps; vStep++)
+            for (var vStep:int = 0; vStep < nSteps; vStep++)
             {
                 var vspDelta:Number = vp.getVerticalScrollPositionDelta(navigationUnit);
                 if (!isNaN(vspDelta))
@@ -949,7 +998,7 @@ public class Scroller extends SkinnableComponent
         else if (horizontalScrollBar && horizontalScrollBar.visible)
         {
             navigationUnit = (event.delta < 0) ? NavigationUnit.LEFT : NavigationUnit.RIGHT;
-            for(var hStep:int = 0; hStep < nSteps; hStep++)
+            for (var hStep:int = 0; hStep < nSteps; hStep++)
             {
                 var hspDelta:Number = vp.getHorizontalScrollPositionDelta(navigationUnit);
                 if (!isNaN(hspDelta))

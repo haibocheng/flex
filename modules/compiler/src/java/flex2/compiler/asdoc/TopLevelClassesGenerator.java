@@ -1914,7 +1914,7 @@ public class TopLevelClassesGenerator
                 labelStr = labelStr.replaceAll("effect:", "");
                 labelStr = labelStr.replaceAll("skinstate:", "");
                 labelStr = labelStr.replaceAll("skinpart:", "");                
-                labelStr = labelStr.replaceAll("global.", "");
+                labelStr = labelStr.replaceAll("global\\.", "");
             }
         }
 

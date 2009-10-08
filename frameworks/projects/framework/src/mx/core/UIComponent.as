@@ -78,8 +78,8 @@ import mx.styles.CSSStyleDeclaration;
 import mx.styles.IAdvancedStyleClient;
 import mx.styles.ISimpleStyleClient;
 import mx.styles.IStyleClient;
-import mx.styles.StyleManager;
 import mx.styles.IStyleManager2;
+import mx.styles.StyleManager;
 import mx.styles.StyleProtoChain;
 import mx.utils.ColorUtil;
 import mx.utils.GraphicsUtil;
@@ -97,7 +97,8 @@ use namespace mx_internal;
 
 /**
  *  Dispatched when the component is added to a container as a content child
- *  by using the <code>addChild()</code> or <code>addChildAt()</code> method.
+ *  by using the <code>addChild()</code>, <code>addChildAt()</code>, 
+ *  <code>addElement()</code>, or <code>addElementAt()</code> method.
  *  If the component is added to the container as a noncontent child by
  *  using the <code>rawChildren.addChild()</code> or
  *  <code>rawChildren.addChildAt()</code> method, the event is not dispatched.
@@ -228,7 +229,8 @@ use namespace mx_internal;
 
 /**
  *  Dispatched when the component is removed from a container as a content child
- *  by using the <code>removeChild()</code> or <code>removeChildAt()</code> method.
+ *  by using the <code>removeChild()</code>, <code>removeChildAt()</code>,
+ *  <code>removeElement()</code>, or <code>removeElementAt()</code> method.
  *  If the component is removed from the container as a noncontent child by
  *  using the <code>rawChildren.removeChild()</code> or
  *  <code>rawChildren.removeChildAt()</code> method, the event is not dispatched.
@@ -1966,7 +1968,7 @@ public class UIComponent extends FlexSprite
      */
     override public function get x():Number
     {
-        return (_layoutFeatures == null)? super.x:_layoutFeatures.layoutX;
+        return (_layoutFeatures == null) ? super.x : _layoutFeatures.layoutX;
     }
 
     /**
@@ -2005,7 +2007,7 @@ public class UIComponent extends FlexSprite
      */
     override public function get z():Number
     {
-        return (_layoutFeatures == null)? super.z:_layoutFeatures.layoutZ;
+        return (_layoutFeatures == null) ? super.z : _layoutFeatures.layoutZ;
     }
 
     /**
@@ -2051,7 +2053,7 @@ public class UIComponent extends FlexSprite
      */
     public function get transformX():Number
     {
-        return (_layoutFeatures == null)? 0 : _layoutFeatures.transformX;
+        return (_layoutFeatures == null) ? 0 : _layoutFeatures.transformX;
     }
 
     /**
@@ -2096,7 +2098,7 @@ public class UIComponent extends FlexSprite
      */
     public function get transformY():Number
     {
-        return (_layoutFeatures == null)? 0 : _layoutFeatures.transformY;
+        return (_layoutFeatures == null) ? 0 : _layoutFeatures.transformY;
     }
 
     /**
@@ -2141,7 +2143,7 @@ public class UIComponent extends FlexSprite
      */
     public function get transformZ():Number
     {
-        return (_layoutFeatures == null)? 0:_layoutFeatures.transformZ;
+        return (_layoutFeatures == null) ? 0 : _layoutFeatures.transformZ;
     }
     /**
      *  @private
@@ -2150,8 +2152,8 @@ public class UIComponent extends FlexSprite
     {
         if (transformZ == value)
             return;
-		if (_layoutFeatures == null)
-			initAdvancedLayoutFeatures();
+        if (_layoutFeatures == null)
+            initAdvancedLayoutFeatures();
 
         _layoutFeatures.transformZ = value;
         invalidateTransform();
@@ -2171,7 +2173,7 @@ public class UIComponent extends FlexSprite
     {
         if (FlexVersion.compatibilityVersion < FlexVersion.VERSION_4_0)
             return super.rotation;
-        return (_layoutFeatures == null)? super.rotation:_layoutFeatures.layoutRotationZ;
+        return (_layoutFeatures == null) ? super.rotation : _layoutFeatures.layoutRotationZ;
     }
 
     /**
@@ -2237,13 +2239,13 @@ public class UIComponent extends FlexSprite
      * This property is ignored during calculation by any of Flex's 2D layouts. 
      *  
      *  @langversion 3.0
-	 *  @playerversion Flash 10
-	 *  @playerversion AIR 1.5
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
      *  @productversion Flex 3
      */
     override public function get rotationX():Number
     {
-        return (_layoutFeatures == null)? super.rotationX:_layoutFeatures.layoutRotationX;
+        return (_layoutFeatures == null) ? super.rotationX : _layoutFeatures.layoutRotationX;
     }
 
     /**
@@ -2277,7 +2279,7 @@ public class UIComponent extends FlexSprite
      */
     override public function get rotationY():Number
     {
-        return (_layoutFeatures == null)? super.rotationY:_layoutFeatures.layoutRotationY;
+        return (_layoutFeatures == null) ? super.rotationY : _layoutFeatures.layoutRotationY;
     }
 
     /**
@@ -2325,7 +2327,7 @@ public class UIComponent extends FlexSprite
      */
     override public function get y():Number
     {
-        return (_layoutFeatures == null)? super.y:_layoutFeatures.layoutY;
+        return (_layoutFeatures == null) ? super.y : _layoutFeatures.layoutY;
     }
 
     /**
@@ -2527,7 +2529,7 @@ public class UIComponent extends FlexSprite
         if (FlexVersion.compatibilityVersion < FlexVersion.VERSION_4_0)
             return _scaleX;
         else
-            return ((_layoutFeatures == null)? super.scaleX:_layoutFeatures.layoutScaleX);
+            return (_layoutFeatures == null) ? super.scaleX : _layoutFeatures.layoutScaleX;
     }
 
     /**
@@ -2550,7 +2552,7 @@ public class UIComponent extends FlexSprite
         }
         else
         {
-            var prevValue:Number = (_layoutFeatures == null)? scaleX:_layoutFeatures.layoutScaleX;
+            var prevValue:Number = (_layoutFeatures == null) ? scaleX : _layoutFeatures.layoutScaleX;
             if (prevValue == value)
                 return;
             
@@ -2609,7 +2611,7 @@ public class UIComponent extends FlexSprite
             return _scaleY;     
         }
         else
-            return ((_layoutFeatures == null)? super.scaleY:_layoutFeatures.layoutScaleY);
+            return (_layoutFeatures == null) ? super.scaleY : _layoutFeatures.layoutScaleY;
     }
 
     /**
@@ -2633,7 +2635,7 @@ public class UIComponent extends FlexSprite
        }
        else
        {
-            var prevValue:Number = (_layoutFeatures == null)? scaleY:_layoutFeatures.layoutScaleY;
+            var prevValue:Number = (_layoutFeatures == null) ? scaleY : _layoutFeatures.layoutScaleY;
             if (prevValue == value)
                 return;
     
@@ -2684,7 +2686,7 @@ public class UIComponent extends FlexSprite
      */
     override public function get scaleZ():Number
     {
-        return ((_layoutFeatures == null)? super.scaleZ:_layoutFeatures.layoutScaleZ);
+        return (_layoutFeatures == null) ? super.scaleZ : _layoutFeatures.layoutScaleZ;
     }
 
     /**
@@ -2698,10 +2700,10 @@ public class UIComponent extends FlexSprite
             initAdvancedLayoutFeatures();
 
         _hasComplexLayoutMatrix = true;
-		_layoutFeatures.layoutScaleZ = value;
+        _layoutFeatures.layoutScaleZ = value;
         invalidateTransform();
         invalidateProperties();
-		invalidateParentSizeAndDisplayList();
+        invalidateParentSizeAndDisplayList();
         dispatchBindingEvent("scaleZChanged");
     }
 
@@ -3466,7 +3468,7 @@ public class UIComponent extends FlexSprite
     /**
      *  @private
      * 
-     *  Returns the StyleManager object used by this component.
+     *  Returns the style manager used by this component.
      *  
      *  @langversion 3.0
      *  @playerversion Flash 10
@@ -3475,16 +3477,7 @@ public class UIComponent extends FlexSprite
      */
     public function get styleManager():IStyleManager2
     {
-        var styleManager:IStyleManager2;
-        
-        if (moduleFactory)
-            styleManager = moduleFactory.getImplementation("mx.styles::IStyleManager2") as IStyleManager2;
-        
-        if (!styleManager)
-            styleManager = SystemManagerGlobals.topLevelSystemManagers[0].
-                getImplementation("mx.styles::IStyleManager2") as IStyleManager2;
-        
-        return styleManager;
+        return StyleManager.getStyleManager(moduleFactory);
     }
     
     //----------------------------------
@@ -4027,8 +4020,9 @@ public class UIComponent extends FlexSprite
     [Inspectable(environment="none")]
 
     /**
-     *  The moduleFactory that is used to create TextFields in the correct SWF context. This is necessary so that
-     *  embedded fonts will work.
+     *  A module factory is used as context for using embeded fonts and for
+     *  finding the style manager that controls the styles for this 
+     *  component. 
      *  
      *  @langversion 3.0
      *  @playerversion Flash 9
@@ -9951,8 +9945,8 @@ public class UIComponent extends FlexSprite
     protected function stateChanged(oldState:String, newState:String, recursive:Boolean):void
     {
         if (currentCSSState && oldState != newState &&
-               (StyleManager.hasPseudoCondition(oldState) ||
-                StyleManager.hasPseudoCondition(newState)))
+               (styleManager.hasPseudoCondition(oldState) ||
+                styleManager.hasPseudoCondition(newState)))
         {
             regenerateStyleCache(recursive);
             initThemeColor();
@@ -9989,8 +9983,8 @@ public class UIComponent extends FlexSprite
      *  not the same as <code>false</code>, <code>""</code>,
      *  <code>NaN</code>, <code>0</code>, or <code>null</code>.
      *  No valid style value is ever <code>undefined</code>.
-     *  You can use the static method
-     *  <code>StyleManager.isValidStyleValue()</code>
+     *  You can use the method
+     *  <code>IStyleManager2.isValidStyleValue()</code>
      *  to test whether the value was set.</p>
      *
      *  @param styleProp Name of the style property.
@@ -10004,7 +9998,7 @@ public class UIComponent extends FlexSprite
      */
     public function getStyle(styleProp:String):*
     {
-        return StyleManager.inheritingStyles[styleProp] ?
+        return styleManager.inheritingStyles[styleProp] ?
                _inheritingStyles[styleProp] :
                _nonInheritingStyles[styleProp];
     }
@@ -10111,11 +10105,11 @@ public class UIComponent extends FlexSprite
             sc = _styleDeclaration.getStyle("selectionColor");
         }
 
-        if (StyleManager.hasAdvancedSelectors())
+        if (styleManager.hasAdvancedSelectors())
         {
             // Next look for matching selectors (working backwards, starting
             // with the most specific selector)
-            if (tc === null || !StyleManager.isValidStyleValue(tc))
+            if (tc === null || !styleManager.isValidStyleValue(tc))
             {
                 var styleDeclarations:Array = StyleProtoChain.getMatchingStyleDeclarations(this);
                 for (i = styleDeclarations.length - 1; i >= 0; i--)
@@ -10128,7 +10122,7 @@ public class UIComponent extends FlexSprite
                         sc = decl.getStyle("selectionColor");
                     }
 
-                    if (tc !== null && StyleManager.isValidStyleValue(tc))
+                    if (tc !== null && styleManager.isValidStyleValue(tc))
                         break;
                 }
             }
@@ -10136,12 +10130,12 @@ public class UIComponent extends FlexSprite
         else
         {
             // Next look for class selectors
-            if ((tc === null || !StyleManager.isValidStyleValue(tc)) &&
+            if ((tc === null || !styleManager.isValidStyleValue(tc)) &&
                 (styleName && !(styleName is ISimpleStyleClient)))
             {
                 var classSelector:Object =
                     styleName is String ?
-                    StyleManager.getStyleDeclaration("." + styleName) :
+                    styleManager.getStyleDeclaration("." + styleName) :
                     styleName;
 
                 if (classSelector)
@@ -10153,7 +10147,7 @@ public class UIComponent extends FlexSprite
             }
 
             // Finally look for type selectors
-            if (tc === null || !StyleManager.isValidStyleValue(tc))
+            if (tc === null || !styleManager.isValidStyleValue(tc))
             {
                 var typeSelectors:Array = getClassStyleDeclarations();
 
@@ -10168,7 +10162,7 @@ public class UIComponent extends FlexSprite
                         sc = typeSelector.getStyle("selectionColor");
                     }
 
-                    if (tc !== null && StyleManager.isValidStyleValue(tc))
+                    if (tc !== null && styleManager.isValidStyleValue(tc))
                         break;
                 }
             }
@@ -10177,13 +10171,13 @@ public class UIComponent extends FlexSprite
         // If we have a themeColor but no rollOverColor or selectionColor, call
         // setThemeColor here which will calculate rollOver/selectionColor based
         // on the themeColor.
-        if (tc !== null && StyleManager.isValidStyleValue(tc) && isNaN(rc) && isNaN(sc))
+        if (tc !== null && styleManager.isValidStyleValue(tc) && isNaN(rc) && isNaN(sc))
         {
             setThemeColor(tc);
             return true;
         }
 
-        return (tc !== null && StyleManager.isValidStyleValue(tc)) && !isNaN(rc) && !isNaN(sc);
+        return (tc !== null && styleManager.isValidStyleValue(tc)) && !isNaN(rc) && !isNaN(sc);
     }
 
     /**
@@ -10200,7 +10194,7 @@ public class UIComponent extends FlexSprite
             newValue = Number(value);
 
         if (isNaN(newValue))
-            newValue = StyleManager.getColorName(value);
+            newValue = styleManager.getColorName(value);
 
         var newValueS:Number = ColorUtil.adjustBrightness2(newValue, 50);
 
@@ -10261,17 +10255,17 @@ public class UIComponent extends FlexSprite
             textFormat.sharpness = _inheritingStyles.fontSharpness;
             textFormat.thickness = _inheritingStyles.fontThickness;
             
-            textFormat.useTLF =
-                getTextFieldClassName() == "mx.core::UITLFTextField" ||
-                getTextInputClassName() == "mx.controls::TLFTextInput";
+            textFormat.useFTE =
+                getTextFieldClassName() == "mx.core::UIFTETextField" ||
+                getTextInputClassName() == "mx.controls::MXFTETextInput";
 
-            if (textFormat.useTLF)
-			{
-				textFormat.direction = _inheritingStyles.direction;
-				textFormat.locale = _inheritingStyles.locale;
-			}
-			
-			cachedTextFormat = textFormat;
+            if (textFormat.useFTE)
+            {
+                textFormat.direction = _inheritingStyles.direction;
+                textFormat.locale = _inheritingStyles.locale;
+            }
+            
+            cachedTextFormat = textFormat;
         }
 
         return textFormat;
@@ -11276,17 +11270,17 @@ public class UIComponent extends FlexSprite
             errorArray = new Array();
         }
         
-    	var validatorIndex:int = errorObjectArray.indexOf(event.target);
+        var validatorIndex:int = errorObjectArray.indexOf(event.target);
         // If we are valid, then clear the error string
         if (event.type == ValidationResultEvent.VALID)
         {
             if (validatorIndex != -1)
             {
-            	errorObjectArray.splice(validatorIndex, 1);
-            	errorArray.splice(validatorIndex, 1);
+                errorObjectArray.splice(validatorIndex, 1);
+                errorArray.splice(validatorIndex, 1);
                 errorString = errorArray.join("\n");
-            	if (errorArray.length == 0)
-                	dispatchEvent(new FlexEvent(FlexEvent.VALID));
+                if (errorArray.length == 0)
+                    dispatchEvent(new FlexEvent(FlexEvent.VALID));
             }
         }
         else // If we get an invalid event
@@ -11309,14 +11303,14 @@ public class UIComponent extends FlexSprite
                         }
                         else
                         {
-				            if (validatorIndex != -1)
-				            {
-				            	errorObjectArray.splice(validatorIndex, 1);
-				            	errorArray.splice(validatorIndex, 1);
-				                errorString = errorArray.join("\n");
-				            	if (errorArray.length == 0)
-				                	dispatchEvent(new FlexEvent(FlexEvent.VALID));
-				            }
+                            if (validatorIndex != -1)
+                            {
+                                errorObjectArray.splice(validatorIndex, 1);
+                                errorArray.splice(validatorIndex, 1);
+                                errorString = errorArray.join("\n");
+                                if (errorArray.length == 0)
+                                    dispatchEvent(new FlexEvent(FlexEvent.VALID));
+                            }
                         }
                         break;
                     }
@@ -11335,8 +11329,8 @@ public class UIComponent extends FlexSprite
             }
             else if (msg && validatorIndex == -1)
             {
-            	errorObjectArray.push(event.target);
-            	errorArray.push(msg);
+                errorObjectArray.push(event.target);
+                errorArray.push(msg);
                 errorString = errorArray.join("\n");
                 dispatchEvent(new FlexEvent(FlexEvent.INVALID));
             }
@@ -11502,25 +11496,30 @@ public class UIComponent extends FlexSprite
         // depending on the version number
         // and the value of the textFieldClass style.
         if (className == "mx.core::UITextField")
+        {
             className = getTextFieldClassName();
+            if (className == "mx.core::UIFTETextField")
+                classObj = Class(ApplicationDomain.currentDomain.
+                                                    getDefinition(className));
+        }
                                
         // Not in font registry, so create in this font context.
         var obj:Object = createInModuleContext(moduleContext, className);
 
-        // If we just created a UITLFTextField, set its textLineCreator property
-        // so that it knows what module to use for creating its TextLines.
-        if (className == "mx.core::UITLFTextField")
-        	obj.textLineCreator = moduleContext;
-
         if (obj == null)
             obj = new classObj();
+
+        // If we just created a UITLFTextField, set its fontContext property
+        // so that it knows what module to use for creating its TextLines.
+        if (className == "mx.core::UIFTETextField")
+            obj.fontContext = moduleContext;
 
         return obj;
     }
 
     /**
      *  @private
-     *  Returns either "mx.core::UITextField" or "mx.core::UITLFTextField",
+     *  Returns either "mx.core::UITextField" or "mx.core::UIFTETextField",
      *  based on the version number and the textFieldClass style.
      */
     private function getTextFieldClassName():String
@@ -11535,7 +11534,7 @@ public class UIComponent extends FlexSprite
 
     /**
      *  @private
-     *  Returns either "mx.core::TextInput" or "mx.core::TLFTextInput",
+     *  Returns either "mx.core::TextInput" or "mx.core::MXFTETextInput",
      *  based on the version number and the textInputClass style.
      */
     private function getTextInputClassName():String
@@ -11930,15 +11929,16 @@ public class UIComponent extends FlexSprite
 
 
     /**
-     * Initializes the implementation and storage of some of the less frequently used
-     * advanced layout features of a component.  Call this function before attempting to use any of the 
-     * features implemented by the AdvancedLayoutFeatures object.
-     * 
+     *  Initializes the implementation and storage of some of the less frequently
+     *  used advanced layout features of a component.
+     *  
+     *  Call this function before attempting to use any of the features implemented
+     *  by the AdvancedLayoutFeatures object.
      *  
      *  @langversion 3.0
-     *  @playerversion Flash 9
-     *  @playerversion AIR 1.1
-     *  @productversion Flex 3
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
      */
     protected function initAdvancedLayoutFeatures():void
     {
@@ -11959,6 +11959,12 @@ public class UIComponent extends FlexSprite
         invalidateTransform();
     }
 
+    /**
+     *  @private
+     *  Helper function to update the storage vairable _transform.
+     *  Also updates the <code>target</code> proeprty of the new and the old
+     *  values.
+     */
     private function setTransform(value:flash.geom.Transform):void
     {
         // Clean up the old transform
@@ -12037,9 +12043,9 @@ public class UIComponent extends FlexSprite
      *  @copy mx.core.ILayoutElement#postLayoutTransformOffsets
      *  
      *  @langversion 3.0
-     *  @playerversion Flash 9
-     *  @playerversion AIR 1.1
-     *  @productversion Flex 3
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
      */
     public function get postLayoutTransformOffsets():TransformOffsets
     {
@@ -12072,9 +12078,9 @@ public class UIComponent extends FlexSprite
      *  component, one will be added automatically.
      *  
      *  @langversion 3.0
-     *  @playerversion Flash 9
-     *  @playerversion AIR 1.1
-     *  @productversion Flex 3
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
      */
     public function set maintainProjectionCenter(value:Boolean):void
     {
@@ -12097,9 +12103,9 @@ public class UIComponent extends FlexSprite
      *  @inheritDoc 
      *  
      *  @langversion 3.0
-     *  @playerversion Flash 9
-     *  @playerversion AIR 1.1
-     *  @productversion Flex 3
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
      */
     public function setLayoutMatrix(value:Matrix, invalidateLayout:Boolean):void
     {
@@ -12128,9 +12134,9 @@ public class UIComponent extends FlexSprite
      *  doesn't trigger a layout pass. 
      *  
      *  @langversion 3.0
-     *  @playerversion Flash 9
-     *  @playerversion AIR 1.1
-     *  @productversion Flex 3
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
      */
     public function setLayoutMatrix3D(value:Matrix3D, invalidateLayout:Boolean):void
     {
@@ -12150,12 +12156,12 @@ public class UIComponent extends FlexSprite
     private static var xformPt:Point;
 
     /**
-     * @copy mx.core.ILayoutElement#transformAround
+     *  @copy mx.core.ILayoutElement#transformAround
      *  
      *  @langversion 3.0
-     *  @playerversion Flash 9
-     *  @playerversion AIR 1.1
-     *  @productversion Flex 3
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
      */
     public function transformAround(transformCenter:Vector3D,
                                     scale:Vector3D = null,
@@ -12264,7 +12270,9 @@ public class UIComponent extends FlexSprite
      *  @playerversion AIR 1.5
      *  @productversion Flex 4
      */
-    public function transformPointToParent(transformCenter:Vector3D,position:Vector3D,postLayoutPosition:Vector3D):void
+    public function transformPointToParent(transformCenter:Vector3D,
+                                           position:Vector3D, 
+                                           postLayoutPosition:Vector3D):void
     {
         if (_layoutFeatures != null)
         {
@@ -12304,46 +12312,50 @@ public class UIComponent extends FlexSprite
     }
 
     /**
-     *  The transform matrix that is used to calculate a component's layout relative to its siblings. This matrix is defined by
-     *  the component's 3D properties (which include the 2D properties such as <code>x</code>, <code>y</code>, <code>rotation</code>, 
-     *  <code>scaleX</code>, <code>scaleY</code>, <code>transformX</code>, and <code>transformY</code>, as well as <code>rotationX</code>, 
-     *  <code>rotationY</code>, <code>scaleZ</code>, <code>z</code>, and <code>transformZ</code>.
+     *  The transform matrix that is used to calculate a component's layout
+     *  relative to its siblings. This matrix is defined by the component's
+     *  3D properties (which include the 2D properties such as <code>x</code>,
+     *  <code>y</code>, <code>rotation</code>, <code>scaleX</code>,
+     *  <code>scaleY</code>, <code>transformX</code>, and 
+     *  <code>transformY</code>, as well as <code>rotationX</code>, 
+     *  <code>rotationY</code>, <code>scaleZ</code>, <code>z</code>, and
+     *  <code>transformZ</code>.
      *  
      *  <p>Most components do not have any 3D transform properties set on them.</p>
      *  
-     *  <p>This matrix is modified by the values of the <code>offset</code> property to determine its final, computed matrix.</p>
+     *  <p>This layout matrix is combined with the values of the 
+     *  <code>postLayoutTransformOffsets</code> property to determine the
+     *  component's final, computed matrix.</p>
+     * 
+     *  @see #postLayoutTransformOffsets
      *  
      *  @langversion 3.0
-     *  @playerversion Flash 9
-     *  @playerversion AIR 1.1
-     *  @productversion Flex 3
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
      */
     public function set layoutMatrix3D(value:Matrix3D):void
     {
-		if (_layoutFeatures == null)
-			initAdvancedLayoutFeatures();
-        
-        // layout features will internally make a copy of this matrix rather than
-        // holding onto a reference to it.
-        _layoutFeatures.layoutMatrix3D = value;
-        invalidateTransform();
-        invalidateParentSizeAndDisplayList();
+        setLayoutMatrix3D(value, true /*invalidateLayout*/);
     }
 
+    //----------------------------------
+    //  depth
+    //----------------------------------  
+
     /**
-     * @inheritDoc
+     *  @inheritDoc
      *  
      *  @langversion 3.0
-     *  @playerversion Flash 9
-     *  @playerversion AIR 1.1
-     *  @productversion Flex 3
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
      */
     public function get depth():Number
     {
-        return (_layoutFeatures == null)? 0:_layoutFeatures.depth;
+        return (_layoutFeatures == null) ? 0 : _layoutFeatures.depth;
     }
 
-    [Bindable("layerChange")]
     /**
      * @private
      */
@@ -12351,38 +12363,43 @@ public class UIComponent extends FlexSprite
     {
         if (value == depth)
             return;
-		if (_layoutFeatures == null)
-			initAdvancedLayoutFeatures();
+        if (_layoutFeatures == null)
+            initAdvancedLayoutFeatures();
 
         _layoutFeatures.depth = value;      
         dispatchFlexEvent("layerChange");
-        if (parent != null && parent is UIComponent)
+        if (parent is UIComponent)
             (parent as UIComponent).invalidateLayering();
     }
 
     /**
-     *  Called by a component's items to indicate that their layer property has changed.
-     *  Note that while this function is defined on UIComponent, it is up to subclasses
-     *  to implement support for complex layering.  By default, only Groups support
+     *  Called by a component's items to indicate that their <code>depth</code>
+     *  property has changed. Note that while this function is defined on
+     *  <code>UIComponent</code>, it is up to subclasses to implement support
+     *  for complex layering.
+     *
+     *  By default, only <code>Group</code> and <code>DataGroup</code> support
      *  arbitrary layering of their children.
+     * 
+     *  @see #depth
      *  
      *  @langversion 3.0
-     *  @playerversion Flash 9
-     *  @playerversion AIR 1.1
-     *  @productversion Flex 3
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.4
+     *  @productversion Flex 4
      */
     public function invalidateLayering():void
     {
-
     }
 
     /**
-     *  Commits the computed matrix built from the combination of the layout matrix and the transform offsets to the flash displayObject's transform.
+     *  Commits the computed matrix built from the combination of the layout
+     *  matrix and the transform offsets to the flash displayObject's transform.
      *  
      *  @langversion 3.0
-     *  @playerversion Flash 9
-     *  @playerversion AIR 1.1
-     *  @productversion Flex 3
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
      */
     protected function applyComputedMatrix():void
     {
@@ -12404,9 +12421,9 @@ public class UIComponent extends FlexSprite
      *  @param stretchY The vertical component of the stretch factor.
      * 
      *  @langversion 3.0
-     *  @playerversion Flash 9
-     *  @playerversion AIR 1.1
-     *  @productversion Flex 3
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
      */
     protected function setStretchXY(stretchX:Number, stretchY:Number):void
     {
@@ -12439,9 +12456,9 @@ public class UIComponent extends FlexSprite
      *  @inheritDoc
      *  
      *  @langversion 3.0
-     *  @playerversion Flash 9
-     *  @playerversion AIR 1.1
-     *  @productversion Flex 3
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
      */
     public function getPreferredBoundsWidth(postLayoutTransform:Boolean=true):Number
     {
@@ -12452,9 +12469,9 @@ public class UIComponent extends FlexSprite
      *  @inheritDoc
      *  
      *  @langversion 3.0
-     *  @playerversion Flash 9
-     *  @playerversion AIR 1.1
-     *  @productversion Flex 3
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
      */
     public function getPreferredBoundsHeight(postLayoutTransform:Boolean=true):Number
     {
@@ -12465,9 +12482,9 @@ public class UIComponent extends FlexSprite
      *  @inheritDoc
      *  
      *  @langversion 3.0
-     *  @playerversion Flash 9
-     *  @playerversion AIR 1.1
-     *  @productversion Flex 3
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
      */
     public function getMinBoundsWidth(postLayoutTransform:Boolean=true):Number
     {
@@ -12478,9 +12495,9 @@ public class UIComponent extends FlexSprite
      *  @inheritDoc
      *  
      *  @langversion 3.0
-     *  @playerversion Flash 9
-     *  @playerversion AIR 1.1
-     *  @productversion Flex 3
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
      */
     public function getMinBoundsHeight(postLayoutTransform:Boolean=true):Number
     {
@@ -12491,9 +12508,9 @@ public class UIComponent extends FlexSprite
      *  @inheritDoc
      *  
      *  @langversion 3.0
-     *  @playerversion Flash 9
-     *  @playerversion AIR 1.1
-     *  @productversion Flex 3
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
      */
     public function getMaxBoundsWidth(postLayoutTransform:Boolean=true):Number
     {
@@ -12504,9 +12521,9 @@ public class UIComponent extends FlexSprite
      *  @inheritDoc
      *  
      *  @langversion 3.0
-     *  @playerversion Flash 9
-     *  @playerversion AIR 1.1
-     *  @productversion Flex 3
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
      */
     public function getMaxBoundsHeight(postLayoutTransform:Boolean=true):Number
     {
@@ -12517,9 +12534,9 @@ public class UIComponent extends FlexSprite
      *  @inheritDoc
      *  
      *  @langversion 3.0
-     *  @playerversion Flash 9
-     *  @playerversion AIR 1.1
-     *  @productversion Flex 3
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
      */
     public function getBoundsXAtSize(width:Number, height:Number, postLayoutTransform:Boolean = true):Number
     {
@@ -12531,9 +12548,9 @@ public class UIComponent extends FlexSprite
      *  @inheritDoc
      *  
      *  @langversion 3.0
-     *  @playerversion Flash 9
-     *  @playerversion AIR 1.1
-     *  @productversion Flex 3
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
      */
     public function getBoundsYAtSize(width:Number, height:Number, postLayoutTransform:Boolean = true):Number
     {
@@ -12545,9 +12562,9 @@ public class UIComponent extends FlexSprite
      *  @inheritDoc
      *  
      *  @langversion 3.0
-     *  @playerversion Flash 9
-     *  @playerversion AIR 1.1
-     *  @productversion Flex 3
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
      */
     public function getLayoutBoundsWidth(postLayoutTransform:Boolean=true):Number
     {
@@ -12558,9 +12575,9 @@ public class UIComponent extends FlexSprite
      *  @inheritDoc
      *  
      *  @langversion 3.0
-     *  @playerversion Flash 9
-     *  @playerversion AIR 1.1
-     *  @productversion Flex 3
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
      */
     public function getLayoutBoundsHeight(postLayoutTransform:Boolean=true):Number
     {
@@ -12571,9 +12588,9 @@ public class UIComponent extends FlexSprite
      *  @inheritDoc
      *  
      *  @langversion 3.0
-     *  @playerversion Flash 9
-     *  @playerversion AIR 1.1
-     *  @productversion Flex 3
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
      */
     public function getLayoutBoundsX(postLayoutTransform:Boolean=true):Number
     {
@@ -12584,9 +12601,9 @@ public class UIComponent extends FlexSprite
      *  @inheritDoc
      *  
      *  @langversion 3.0
-     *  @playerversion Flash 9
-     *  @playerversion AIR 1.1
-     *  @productversion Flex 3
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
      */
     public function getLayoutBoundsY(postLayoutTransform:Boolean=true):Number
     {
@@ -12597,9 +12614,9 @@ public class UIComponent extends FlexSprite
      *  @inheritDoc
      *  
      *  @langversion 3.0
-     *  @playerversion Flash 9
-     *  @playerversion AIR 1.1
-     *  @productversion Flex 3
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
      */
     public function setLayoutBoundsPosition(x:Number, y:Number, postLayoutTransform:Boolean=true):void
     {
@@ -12610,9 +12627,9 @@ public class UIComponent extends FlexSprite
      *  @inheritDoc
      *  
      *  @langversion 3.0
-     *  @playerversion Flash 9
-     *  @playerversion AIR 1.1
-     *  @productversion Flex 3
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
      */
     public function setLayoutBoundsSize(width:Number,
                                         height:Number,
@@ -12625,9 +12642,9 @@ public class UIComponent extends FlexSprite
      *  @inheritDoc
      *  
      *  @langversion 3.0
-     *  @playerversion Flash 9
-     *  @playerversion AIR 1.1
-     *  @productversion Flex 3
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
      */
     public function getLayoutMatrix():Matrix
     {
@@ -12650,9 +12667,35 @@ public class UIComponent extends FlexSprite
      *  @inheritDoc
      *  
      *  @langversion 3.0
-     *  @playerversion Flash 9
-     *  @playerversion AIR 1.1
-     *  @productversion Flex 3
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
+     */
+    public function get hasLayoutMatrix3D():Boolean
+    {
+        return _layoutFeatures ? _layoutFeatures.layoutIs3D : false;
+    }
+
+    /**
+     *  @inheritDoc
+     *  
+     *  @langversion 3.0
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
+     */
+    public function get is3D():Boolean
+    {
+        return _layoutFeatures ? _layoutFeatures.is3D : false;
+    }
+    
+    /**
+     *  @inheritDoc
+     *  
+     *  @langversion 3.0
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
      */
     public function getLayoutMatrix3D():Matrix3D
     {

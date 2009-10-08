@@ -1,8 +1,8 @@
 //========================================================================================
 //  $File: //a3t/argon/dev/textLayout_core/src/flashx/textLayout/factory/TextFlowTextLineFactory.as $
-//  $DateTime: 2009/08/21 15:42:50 $
-//  $Revision: #11 $
-//  $Change: 715139 $
+//  $DateTime: 2009/09/22 13:41:56 $
+//  $Revision: #12 $
+//  $Change: 719892 $
 //  
 //  ADOBE CONFIDENTIAL
 //  
@@ -112,7 +112,7 @@ package flashx.textLayout.factory
 			var bp:String = textFlow.computedFormat.blockProgression;
 						
 			var helper:IFlowComposer = createFlowComposer();
-			helper.textLineCreator = textLineCreator;
+			helper.swfContext = swfContext;
 
 			helper.addController(containerController);
 			textFlow.flowComposer = helper; 

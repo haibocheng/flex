@@ -114,7 +114,7 @@ public class DefaultsConfigurator
 	    set( cfgbuf,
 	         new String[]
 	         {
-	             "compiler.accessible",
+                 "compiler.accessible",
 		         "compiler.es",
 	             "compiler.verbose-stacktraces",
 	             "compiler.show-dependency-warnings",
@@ -142,6 +142,8 @@ public class DefaultsConfigurator
 
 	    set( cfgbuf, "debug-password", "" );
 	    set( cfgbuf, "framework", "halo" );
+        // The Flex 4 default theme.
+        set( cfgbuf, "compiler.theme", "${flexlib}/themes/Spark/spark.css" );
 	    set( cfgbuf, "compiler.locale", java.util.Locale.getDefault().toString());
 	    set( cfgbuf, "compiler.translation-format", "flex2.compiler.i18n.PropertyTranslationFormat");
 

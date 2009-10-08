@@ -53,6 +53,9 @@
 		    <doc-classes class="HaloClasses"/>
 		    <doc-classes class="SparkSkinsClasses"/>
 		    <doc-classes class="RPCClasses"/>
+			<doc-classes class="flashx.textLayout.CoreClasses"/>
+			<doc-classes class="flashx.textLayout.EditClasses"/>
+			<doc-classes class="flashx.textLayout.ConversionClasses"/>
 
 			<!-- source path for asdoc -->
 			<compiler.source-path path-element="${flexlib}/projects/airframework/src"/>
@@ -62,12 +65,17 @@
 			<compiler.source-path path-element="${flexlib}/projects/halo/src"/>
 			<compiler.source-path path-element="${flexlib}/projects/sparkskins/src"/>
 			<compiler.source-path path-element="${flexlib}/projects/rpc/src"/>
+		    <compiler.source-path path-element="${flexlib}/projects/textLayout/textLayout_core/src"/>
+			<compiler.source-path path-element="${flexlib}/projects/textLayout/textLayout_edit/src"/>
+			<compiler.source-path path-element="${flexlib}/projects/textLayout/textLayout_conversion/src"/>
 
 			<!-- namespaces to include in asdoc -->
 		    <doc-namespaces uri="http://www.adobe.com/2006/airmxml"/>
 		    <doc-namespaces uri="library://ns.adobe.com/flex/spark"/>
 		    <doc-namespaces uri="http://www.adobe.com/2006/mxml"/>
 		    <doc-namespaces uri="http://www.adobe.com/2006/rpcmxml"/>
+ 			<doc-namespaces uri="library:adobe/flashx/textLayout"/>
+		    <namespace uri="library:adobe/flashx/textLayout" manifest="${flexlib}/projects/textLayout/textLayout_core/manifest.xml"/>
 
 			<!-- namespace declaration for asdoc -->
 		    <namespace uri="http://www.adobe.com/2006/airmxml" manifest="${flexlib}/projects/airframework/halo-air-manifest.xml"/>
@@ -76,15 +84,15 @@
 		    <namespace uri="library://ns.adobe.com/flex/spark" manifest="${flexlib}/projects/spark/manifest.xml"/>
 		    <namespace uri="library://ns.adobe.com/flex/halo" manifest="${flexlib}/mxml-manifest.xml"/>
 
-		    <library-path dir="${flexlib}/libs">
-		    	<include name="textLayout.swc" />
-		    </library-path>
-
-		    <external-library-path dir="${flexlib}/libs/air">
+			<library-path/>
+			<external-library-path dir="${flexlib}/libs/air">
 		    	<include name="airglobal.swc" />
 		    </external-library-path>
 
 			<jvmarg line="${asdoc.jvm.args}"/>
+
+				<define name="CONFIG::debug" value="false"/>
+			<define name="CONFIG::release" value="true"/>
 		</asdoc>
 	</target>
 </project>

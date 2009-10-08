@@ -201,12 +201,24 @@ final public class ActionFactory
     public Label getLabel(int target)
     {
         int i = target-startOffset;
-        Label label = labels[i];
-        if (label == null)
+        Label label = null;
+
+        // See http://bugs.adobe.com/jira/browse/SDK-23169, for a SWF
+        // where i is negative.  This seems like a broken SWF, because
+        // a branch is trying to jump before the start of the
+        // DoInitAction.  To avoid a ArrayIndexOutOfBoundsException,
+        // do a range check.
+        if ((i >= 0) && (i < labels.length))
         {
-            labels[i] = label = new Label();
-            count++;
+            label = labels[i];
+
+            if (label == null)
+            {
+                labels[i] = label = new Label();
+                count++;
+            }
         }
+
         return label;
     }
 

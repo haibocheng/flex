@@ -48,7 +48,7 @@ import java.util.Set;
  * "if (value instanceof Model)" scaffolding can be removed. At that point it would also make sense to move
  * from a subclasses-of-Model approach (another remaining bit of legacy) to an explicit-discriminant approach.
  */
-public abstract class ValueInitializer implements Initializer
+public abstract class ValueInitializer implements Initializer, Cloneable
 {
 	private static final String INT = "int";
 	private static final String ARRAY = "Array";
@@ -92,7 +92,7 @@ public abstract class ValueInitializer implements Initializer
     private static final String __E = "__e".intern();
 
     protected final StandardDefs standardDefs;
-    protected final Object value;
+    protected Object value;
 	protected final int line;
 	protected boolean stateSpecific;
 
@@ -102,18 +102,24 @@ public abstract class ValueInitializer implements Initializer
         this.line = line;
         this.stateSpecific = false;
         this.standardDefs = defs;
-        
-        if (value instanceof Model)
-        {
-            // Assume the current ValueInitializer instance is state specific
-            // if the rvalue is itself state specific.
-            this.stateSpecific = ((Model)value).isStateSpecific();
-        } 
+        setValue(value);
 	}
 
 	public Object getValue()
 	{
 		return value;
+	}
+	
+	public void setValue(Object value)
+	{
+		this.value = value;
+		
+		if (value instanceof Model)
+        {
+            // Assume the current ValueInitializer instance is state specific
+            // if the rvalue is itself state specific.
+            this.stateSpecific = ((Model)value).isStateSpecific();
+        } 
 	}
 
 	//	Initializer impl
@@ -730,6 +736,7 @@ public abstract class ValueInitializer implements Initializer
         TypeExpressionNode returnType =
             AbstractSyntaxTreeUtil.generateTypeExpression(nodeFactory, selfTypeName, true);
         FunctionSignatureNode functionSignature = nodeFactory.functionSignature(null, returnType);        
+        int position = AbstractSyntaxTreeUtil.lineNumberToPosition(nodeFactory, getLineRef());
         VariableDefinitionNode variableDefinition;
 
         //  value creation
@@ -737,7 +744,8 @@ public abstract class ValueInitializer implements Initializer
         {
             variableDefinition = AbstractSyntaxTreeUtil.generateVariable(nodeFactory, varName,
                                                                          selfTypeName, true,
-                                                                         generateInlineRValue(nodeFactory));
+                                                                         generateInlineRValue(nodeFactory),
+                                                                         position);
         }
         else if (value instanceof Vector)
         {
@@ -752,12 +760,15 @@ public abstract class ValueInitializer implements Initializer
             }
             
             variableDefinition = AbstractSyntaxTreeUtil.generateVariableNew(nodeFactory, varName,
-                                                                            selfTypeName, argumentList);
+                                                                            selfTypeName, argumentList,
+                                                                            position);
         }
         else
         {
-            //  TODO confirm the availability of a 0-arg ctor!! but do it upstream from here, like when Model is built
-            variableDefinition = AbstractSyntaxTreeUtil.generateVariableNew(nodeFactory, varName, selfTypeName);
+            //  TODO confirm the availability of a 0-arg ctor!! but do
+            //  it upstream from here, like when Model is built
+            variableDefinition = AbstractSyntaxTreeUtil.generateVariableNew(nodeFactory, varName,
+                                                                            selfTypeName, position);
         }
 
         StatementListNode functionStatementList = nodeFactory.statementList(null, variableDefinition);
@@ -1848,4 +1859,10 @@ public abstract class ValueInitializer implements Initializer
 	    
 	    return null;
 	}
+	
+	public ValueInitializer clone() throws CloneNotSupportedException 
+	{
+        return (ValueInitializer) super.clone();
+    }
+
 }

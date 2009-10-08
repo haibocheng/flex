@@ -216,7 +216,7 @@ public class StylesContainer extends StyleModule
      * Called from PreLink.processMainUnit()
      */
     public void validate(SymbolTable symbolTable, NameMappings nameMappings,
-                         StandardDefs standardDefs)
+                         StandardDefs standardDefs, Set<String> themeNames)
     {
         Set<String> classNames;
         TypeTable typeTable = null;
@@ -228,7 +228,7 @@ public class StylesContainer extends StyleModule
 
             if (typeTable == null)
             {
-                typeTable = new TypeTable(symbolTable, nameMappings, standardDefs);
+                typeTable = new TypeTable(symbolTable, nameMappings, standardDefs, themeNames);
             }
         }
         else
@@ -244,6 +244,10 @@ public class StylesContainer extends StyleModule
             }
         }
 
+        // Strip off the leading '[' and trailing ']'.
+        String themeNamesString = themeNames.toString();
+        themeNamesString = themeNamesString.substring(1, themeNamesString.length() - 1);
+
         for (Entry<String, StyleDef> entry : styleDefs.entrySet())
         {
             String styleName = entry.getKey();
@@ -252,6 +256,26 @@ public class StylesContainer extends StyleModule
 
             if (styleDef.isTypeSelector())
             {
+                if (qualifiedTypeSelectors && mxmlConfiguration.showInvalidCssPropertyWarnings())
+                {
+                    Type type = typeTable.getType(NameFormatter.toColon(typeName));
+
+                    if (type != null)
+                    {
+                        Map<String, StyleDeclaration> declarations = styleDef.getDeclarations();
+
+                        if (declarations != null)
+                        {
+                            for (StyleDeclaration styleDeclaration : declarations.values())
+                            {
+                                Map<String, StyleProperty> styleProperties = styleDeclaration.getProperties();
+                                validateStyleProperties(styleProperties, type, styleDef,
+                                                        typeName, themeNamesString);
+                            }
+                        }
+                    }
+                }
+
                 if (localStyleTypeNames.contains(styleName) &&
                     !classNames.contains(NameFormatter.toColon(typeName)) &&
                     !styleName.equals(StyleDef.GLOBAL))
@@ -261,6 +285,47 @@ public class StylesContainer extends StyleModule
                         ThreadLocalToolkit.log(new UnusedTypeSelector(getPathForReporting(styleDef),
                                                                       styleDef.getLineNumber(),
                                                                       styleName));
+                    }
+                }
+            }
+        }
+    }
+
+    private void validateStyleProperties(Map<String, StyleProperty> styleProperties, Type type,
+                                         StyleDef styleDef, String typeName, String themeNamesString)
+    {
+        if (styleProperties != null)
+        {
+            for (StyleProperty styleProperty : styleProperties.values())
+            {
+                String stylePropertyName = styleProperty.getName();
+
+                if (type.getStyle(stylePropertyName) == null)
+                {
+                    String styleThemes = type.getStyleThemes(stylePropertyName);
+
+                    if (type.isExcludedStyle(stylePropertyName))
+                    {
+                        ThreadLocalToolkit.log(new ExcludedStyleProperty(getPathForReporting(styleDef),
+                                                                         styleProperty.getLineNumber(),
+                                                                         stylePropertyName,
+                                                                         typeName));
+                    }
+                    else if (styleThemes != null)
+                    {
+                        ThreadLocalToolkit.log(new InvalidStyleTheme(getPathForReporting(styleDef),
+                                                                     styleProperty.getLineNumber(),
+                                                                     stylePropertyName,
+                                                                     typeName,
+                                                                     styleThemes));
+                    }
+                    else if (mxmlDocument != null)
+                    {
+                        ThreadLocalToolkit.log(new InvalidStyleProperty(getPathForReporting(styleDef),
+                                                                        styleProperty.getLineNumber(),
+                                                                        stylePropertyName,
+                                                                        typeName,
+                                                                        themeNamesString));
                     }
                 }
             }
@@ -707,6 +772,59 @@ public class StylesContainer extends StyleModule
 
         public DefaultCSSFileNotFound()
         {
+        }
+    }
+
+    public static class ExcludedStyleProperty extends CompilerWarning
+    {
+        private static final long serialVersionUID = -655374071288180325L;
+        public String stylePropertyName;
+        public String typeName;
+
+        public ExcludedStyleProperty(String path, int line, String stylePropertyName,
+                                     String typeName)
+        {
+            this.path = path;
+            this.line = line;
+            this.stylePropertyName = stylePropertyName;
+            this.typeName = typeName;
+        }
+    }
+
+    public static class InvalidStyleProperty extends CompilerWarning
+    {
+        private static final long serialVersionUID = -655374071288180326L;
+        public String stylePropertyName;
+        public String typeName;
+        public String themeNames;
+
+        public InvalidStyleProperty(String path, int line, String stylePropertyName,
+                                    String typeName, String themeNames)
+        {
+            this.path = path;
+            this.line = line;
+            this.stylePropertyName = stylePropertyName;
+            this.typeName = typeName;
+            this.themeNames = themeNames;
+        }
+    }
+
+    public class InvalidStyleTheme extends CompilerWarning
+    {
+        private static final long serialVersionUID = -655374071288180328L;
+
+        public String stylePropertyName;
+        public String typeName;
+        public String styleThemes;
+
+        public InvalidStyleTheme(String path, int line, String stylePropertyName,
+                                 String typeName, String styleThemes)
+        {
+            this.path = path;
+            this.line = line;
+            this.stylePropertyName = stylePropertyName;
+            this.typeName = typeName;
+            this.styleThemes = styleThemes;
         }
     }
 

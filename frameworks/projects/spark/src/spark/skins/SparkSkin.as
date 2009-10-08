@@ -43,14 +43,14 @@ public class SparkSkin extends Skin
     /**
      *  Flag that specified whether or not this skin should be affected by baseColor.
      *
-     *  @default true
+     *  @default false
      *  
      *  @langversion 3.0
      *  @playerversion Flash 10
      *  @playerversion AIR 1.5
      *  @productversion Flex 4
      */
-    protected var useBaseColor:Boolean = true;
+    protected var useBaseColor:Boolean = false;
     
     private var colorized:Boolean = false;
     
@@ -248,7 +248,7 @@ public class SparkSkin extends Skin
 				/* if we're lucky, the IGE has its own DisplayObject, and we can just trip its alpha.
 				If not, we're going to have to set it to 0, and force a redraw of the whole component */
 				var ge:IGraphicElement = ex as IGraphicElement;
-				if(ge.displayObjectSharingMode == DisplayObjectSharingMode.OWNS_UNSHARED_OBJECT)
+				if (ge.displayObjectSharingMode == DisplayObjectSharingMode.OWNS_UNSHARED_OBJECT)
 				{
                     exclusionAlphaValues[i] = ge.displayObject.alpha;
 					ge.displayObject.alpha = 0;

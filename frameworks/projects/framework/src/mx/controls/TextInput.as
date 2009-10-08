@@ -206,6 +206,13 @@ include "../styles/metadata/TextStyles.as"
 
 [Alternative(replacement="spark.components.TextInput", since="4.0")]
     
+//--------------------------------------
+//  Excluded APIs
+//--------------------------------------
+
+[Exclude(name="selectionActivePosition", kind="method")]
+[Exclude(name="selectionAnchorPosition", kind="method")]
+
 /**
  *  The TextInput control is a single-line text field
  *  that is optionally editable.
@@ -2297,14 +2304,46 @@ public class TextInput extends UIComponent implements ITextInput
     //--------------------------------------------------------------------------
 
     /**
-     *  Used to determine if the control's border object is visible.
+     *  For the ITextInput interface; the same as selectionEndIndex.
+     *  
+     *  @see mx.controls.TextInput#selectionEndIndex 
+     * 
+     *  @langversion 3.0
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
+     */
+    public function get selectionActivePosition():int
+    {
+        return selectionEndIndex;
+    }
+    
+   
+    /**
+     *  For the ITextInput interface; the same as selectionBeginIndex.
+     *  
+     *  @see mx.controls.TextInput#selectionBeginIndex
      *  
      *  @langversion 3.0
      *  @playerversion Flash 10
      *  @playerversion AIR 1.5
      *  @productversion Flex 4
      */
-    public function showBorder(visible:Boolean):void
+    public function get selectionAnchorPosition():int
+    {
+        return selectionBeginIndex;
+    }
+    
+    /**
+     *  Used to determine if the control's border and background are 
+     *  visible.
+     *  
+     *  @langversion 3.0
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
+     */
+    public function showBorderAndBackground(visible:Boolean):void
     {
         if (border)
             border.visible = visible;

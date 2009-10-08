@@ -154,7 +154,8 @@ class ImplementationCompiler extends flex2.compiler.AbstractSubCompiler
 		TypeTable typeTable = (TypeTable) symbolTable.getContext().getAttribute(MxmlCompiler.TYPE_TABLE);
 		if (typeTable == null)
 		{
-			typeTable = new TypeTable(symbolTable, nameMappings, unit.getStandardDefs());
+			typeTable = new TypeTable(symbolTable, nameMappings, unit.getStandardDefs(),
+                                      mxmlConfiguration.getThemeNames());
 			symbolTable.getContext().setAttribute(MxmlCompiler.TYPE_TABLE, typeTable);
 		}
 

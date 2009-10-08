@@ -166,6 +166,20 @@ use namespace mx_internal;
 
 /**
  *  Name of the class to use as the skin for the background and border
+ *  when the <code>editable</code>
+ *  property is <code>true</code>. This skin is only used by the ComboBox class.
+ *  For the ComboBase class, there is no default value.
+ *  For the ComboBox class, the default value is the ComboBoxArrowSkin class.
+ *  
+ *  @langversion 3.0
+ *  @playerversion Flash 9
+ *  @playerversion AIR 1.1
+ *  @productversion Flex 3
+ */
+[Style(name="editableSkin", type="Class", inherit="no")]
+
+/**
+ *  Name of the class to use as the skin for the background and border
  *  when the mouse is not over the control, and the <code>editable</code>
  *  property is <code>true</code>. This skin is only used by the ComboBox class.
  *  For the ComboBase class, there is no default value.
@@ -226,7 +240,7 @@ use namespace mx_internal;
  *
  *  <p>It can be set to either the mx.core.TextInput class
  *  (to use the classic Halo TextInput control)
- *  or the mx.controls.TLFTextInput class
+ *  or the mx.controls.MXFTETextInput class
  *  (to use the Spark TextInput component based on the Text Layout Framework 
  *  to get improved text rendering, including bidirectional layout).</p>
  *
@@ -1153,7 +1167,7 @@ public class ComboBase extends UIComponent implements IIMESupport, IFocusManager
             if (!textInputStyleName)
                 textInputStyleName = new StyleProxy(this, textInputStyleFilters);
             
-            // Mechanism to use TLFTextInput. 
+            // Mechanism to use MXFTETextInput. 
             var textInputClass:Class = getStyle("textInputClass");            
             if (!textInputClass || 
                 FlexVersion.compatibilityVersion < FlexVersion.VERSION_4_0)
@@ -1418,7 +1432,7 @@ public class ComboBase extends UIComponent implements IIMESupport, IFocusManager
                 if (border)
                 	border.setActualSize(w, h);
                 textInput.setActualSize(w - arrowWidth, textInputHeight);
-                textInput.showBorder(false);
+                textInput.showBorderAndBackground(false);
                 textInput.move(textInput.x, ((h - textInputHeight - paddingTop - paddingBottom) / 2) + paddingTop);
                 downArrowButton.setActualSize(unscaledWidth, unscaledHeight);
             }
@@ -1429,7 +1443,7 @@ public class ComboBase extends UIComponent implements IIMESupport, IFocusManager
                 	border.setActualSize(w - arrowWidth, h);
                 textInput.setActualSize(w - arrowWidth, h);
                 downArrowButton.setActualSize(arrowWidth, unscaledHeight);
-                textInput.showBorder(true);
+                textInput.showBorderAndBackground(true);
             }
         }
         

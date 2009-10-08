@@ -1,8 +1,8 @@
 //========================================================================================
 //  $File: //a3t/argon/dev/textLayout_core/src/flashx/textLayout/factory/TextLineFactoryBase.as $
-//  $DateTime: 2009/06/25 16:06:57 $
-//  $Revision: #10 $
-//  $Change: 707844 $
+//  $DateTime: 2009/09/22 13:41:56 $
+//  $Revision: #11 $
+//  $Change: 719892 $
 //  
 //  ADOBE CONFIDENTIAL
 //  
@@ -28,7 +28,7 @@ package flashx.textLayout.factory
 	import flash.text.engine.TextLineValidity;
 	
 	import flashx.textLayout.compose.IFlowComposer;
-	import flashx.textLayout.compose.ITextLineCreator;
+	import flashx.textLayout.compose.ISWFContext;
 	import flashx.textLayout.compose.SimpleCompose;
 	import flashx.textLayout.compose.StandardFlowComposer;
 	import flashx.textLayout.container.ContainerController;
@@ -77,7 +77,7 @@ package flashx.textLayout.factory
 		private var _containerController:ContainerController;
 		static private var _tc:Sprite = new Sprite();
 		
-		private var _textLineCreator:ITextLineCreator;
+		private var _swfContext:ISWFContext;
 		
 		/** @private */
 		static tlf_internal var _factoryComposer:SimpleCompose= new SimpleCompose();
@@ -142,24 +142,26 @@ package flashx.textLayout.factory
 		}
 		
 		/** 
-		* The ITextLineCreator instance used to create lines of text. 
+		* The ISWFContext instance used to make FTE calls as needed. 
 		*
-		* <p>Applications can provide a custom implementation of ITextLineCreator to use fonts
+		* <p>By default, the ISWFContext implementation is this FlowComposerBase object.
+		* Applications can provide a custom implementation to use fonts
 		* embedded in a different SWF file or to cache and reuse text lines.</p>
 		* 
-		* @see flashx.textLayout.compose.ITextLineCreator
+		* @see flashx.textLayout.compose.ISWFContext
 		* 
 		* @playerversion Flash 10
 		* @playerversion AIR 1.5
 	 	* @langversion 3.0
 	 	*/
-		public function get textLineCreator():ITextLineCreator
+ 	
+		public function get swfContext():ISWFContext
 		{
-			return _textLineCreator;
+			return _swfContext;
 		}
-		public function set textLineCreator(value:ITextLineCreator):void
+		public function set swfContext(value:ISWFContext):void
 		{
-			_textLineCreator = value;
+			_swfContext = value;
 		}
 		
 		/** 

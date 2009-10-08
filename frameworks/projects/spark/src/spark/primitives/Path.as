@@ -674,7 +674,7 @@ public class Path extends FilledElement
         while (true)
         {
             // Find a segment with a valid tangent or stop at a MoveSegment
-            while (start < count && (!segments[start] is MoveSegment))
+            while (start < count && !(segments[start] is MoveSegment))
             {
                 var prevSegment:PathSegment = start > 0 ? segments[start - 1] : null;
                 if (tangentIsValid(prevSegment, segments[start], sx, sy, m))
@@ -1016,18 +1016,18 @@ public class Path extends FilledElement
         var sx:Number = naturalBounds.width == 0 ? 1 : width / naturalBounds.width;
         var sy:Number = naturalBounds.height == 0 ? 1 : height / naturalBounds.height; 
 
-
+        var origin:Point = new Point(drawX, drawY);
         var bounds:Rectangle = new Rectangle(drawX + measuredX * sx,
                                              drawY + measuredY * sy,
                                              width, 
                                              height);
         if (stroke)
-            stroke.apply(g, bounds);
+            stroke.apply(g, bounds, origin);
         else
             g.lineStyle();
         
         if (fill)
-            fill.begin(g, bounds);
+            fill.begin(g, bounds, origin);
     }
  
     // FIXME (egeorgie): these are a short term fix for MAX to work around the fact
@@ -1049,7 +1049,7 @@ public class Path extends FilledElement
     {
         // FIXME (egeorgie): temporary check until DOsharing and graphics caching is cleaned up
         //after MAX.  See above.
-        if(drawX !=  _drawBounds.x || drawY !=  _drawBounds.y ||
+        if (drawX !=  _drawBounds.x || drawY !=  _drawBounds.y ||
             width !=  _drawBounds.width || height !=  _drawBounds.height)
         {
             graphicsPathChanged = true;

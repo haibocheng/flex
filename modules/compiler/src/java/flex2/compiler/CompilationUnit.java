@@ -191,7 +191,7 @@ public final class CompilationUnit
 	public ObjectValue typeInfo;
 	public Map<String, AbcClass> classTable;
 	
-	public boolean hasHostComponentMD = false;
+	public MetaDataNode hostComponentMetaData;
     
     /**
      * The CRC32 of the class signature, coming from SignatureExtension.

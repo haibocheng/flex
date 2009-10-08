@@ -31,7 +31,7 @@ import flash.text.engine.TextBlock;
 import flash.text.engine.TextElement;
 import flash.text.engine.TextLine;
 
-import flashx.textLayout.compose.ITextLineCreator;
+import flashx.textLayout.compose.ISWFContext;
 import flashx.textLayout.compose.TextLineRecycler;
 
 import mx.core.IEmbeddedFontRegistry;
@@ -439,7 +439,7 @@ public class Label extends TextBase
         releaseLinesFromTextBlock();
                                                        
         // Add the new text lines to the container.
-        addTextLines(this);
+        addTextLines();
 
         // Figure out if a scroll rect is needed.
         isOverset = isTextOverset(width, height);
@@ -536,11 +536,17 @@ public class Label extends TextBase
 			
         elementFormat.alpha = getStyle("textAlpha");
         	
-        elementFormat.baselineShift = getStyle("baselineShift");
+        elementFormat.baselineShift = -getStyle("baselineShift");
+			// Note: The negative sign is because, as in TLF,
+			// we want a positive number to shift the baseline up,
+			// whereas FTE does it the opposite way.
+			// In FTE, a positive baselineShift increases
+			// the y coordinate of the baseline, which is
+			// mathematically appropriate, but unintuitive.
         	
-        s = getStyle("breakOpportunity");
-        if (s != null)
-        	elementFormat.breakOpportunity = s;
+        // Note: Label doesn't support a breakOpportunity style,
+		// so we leave elementFormat.breakOpportunity with its
+		// default value of "auto".
         	
         elementFormat.color = getStyle("color");
         
@@ -675,7 +681,7 @@ public class Label extends TextBase
 		// can affect both Halo and Spark components,
 		// we need to map true to "on" and false to "off"
 		// here and in Label.
-		// For Halo components, UITextField and UITLFTextField
+		// For Halo components, UITextField and UIFTETextField
 		// do the opposite mapping
 		// of "auto" and "on" to true and "off" to false.
 		// We also support a value of "default"
@@ -833,7 +839,8 @@ public class Label extends TextBase
 		var innerWidth:Number = bounds.width - paddingLeft - paddingRight;
 		var innerHeight:Number = bounds.height - paddingTop - paddingBottom;
 		
-		if (isNaN(innerWidth))
+        var measureWidth:Boolean = isNaN(innerWidth);
+		if (measureWidth)
 			innerWidth = maxWidth;
 
         var maxLineWidth:Number = lineBreak == "explicit" ?
@@ -870,8 +877,7 @@ public class Label extends TextBase
 		var nextY:Number = 0;
 		var textLine:TextLine;
         
-        var textLineCreator:ITextLineCreator =
-        	ITextLineCreator(embeddedFontContext);
+        var swfContext:ISWFContext = ISWFContext(embeddedFontContext);
         			
 		// For truncation, need to know if all lines have been composed.
         var createdAllLines:Boolean = false;
@@ -885,10 +891,11 @@ public class Label extends TextBase
             var recycleLine:TextLine = TextLineRecycler.getLineForReuse();
             if (recycleLine)
             {
-                if (textLineCreator)
+                if (swfContext)
                 {
-                    nextTextLine = textLineCreator.recreateTextLine(
-                    	textBlock, recycleLine, textLine, maxLineWidth);		
+                    nextTextLine = swfContext.callInContext(
+						textBlock["recreateTextLine"], textBlock,
+						[ recycleLine, textLine, maxLineWidth ]);		
                 }        
                 else
                 {
@@ -898,10 +905,11 @@ public class Label extends TextBase
 		    }
 		    else
 		    {
-                if (textLineCreator)
+                if (swfContext)
                 {
-                    nextTextLine = textLineCreator.createTextLine(
-               			textBlock, textLine, maxLineWidth);
+                    nextTextLine = swfContext.callInContext(
+						textBlock.createTextLine, textBlock,
+						[ textLine, maxLineWidth ]);
                 }
                 else
                 {
@@ -990,8 +998,12 @@ public class Label extends TextBase
 			return createdAllLines;
 		}
 		
-        // innerWidth remains the same.  alignment is done over the innerWidth
-        // not over the width of the text that was just composed.
+        // If not measuring the width, innerWidth remains the same since 
+        // alignment is done over the innerWidth not over the width of the
+        // text that was just composed.
+        if (measureWidth)
+            innerWidth = maxTextWidth;
+
         if (isNaN(bounds.height))
             innerHeight = textLine.y + textLine.descent;
 		

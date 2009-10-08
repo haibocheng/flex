@@ -334,7 +334,7 @@ public final class WebTierAPI extends Tool
 	 */
 	public static String[] getSourceListMimeTypes()
 	{
-		return new String[]{MimeMappings.AS, MimeMappings.MXML, MimeMappings.CSS};
+		return new String[]{MimeMappings.AS, MimeMappings.MXML, MimeMappings.FXG, MimeMappings.CSS};
 	}
 
 	/**
@@ -347,6 +347,10 @@ public final class WebTierAPI extends Tool
 
 	/**
 	 * This method is called by flex.webtier.server.j2ee.IncrementalCompilerFilter.
+     *
+     * FXG is not included in the list of target mime types, because
+     * the compiler doesn't support an FXG based root yet and we don't
+     * want to allow broken SWF's to be created.
 	 */
 	public static String[] getTargetMimeTypes()
 	{

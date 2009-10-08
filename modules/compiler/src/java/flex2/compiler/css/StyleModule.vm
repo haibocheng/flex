@@ -58,8 +58,11 @@ import mx.styles.CSSCondition;
 import mx.styles.CSSSelector;
 #end
 import mx.styles.CSSStyleDeclaration;
-import mx.styles.IStyleModule;
 import mx.styles.StyleManager;
+import mx.styles.IStyleManager2;
+import mx.styles.IStyleModule;
+
+
 ##
 ## imports
 ##
@@ -86,7 +89,10 @@ public class ${styleModule.name} extends ModuleBase implements IStyleModule
      * @private
      */
     private var unloadGlobal:Boolean;
-
+    /**
+     * @private
+     */
+    private var styleManager:IStyleManager2;
     /**
      * @private
      */
@@ -113,6 +119,16 @@ public class ${styleModule.name} extends ModuleBase implements IStyleModule
 
     public function ${styleModule.name}()
     {
+        super();
+    }
+    
+    public function setStyleDeclarations(styleManager:IStyleManager2):void
+    {
+        if (styleManager == null)
+            styleManager = StyleManager.getStyleManager(null);
+
+        this.styleManager = styleManager;
+        
 #if ($styleModule.isAdvanced())
         var conditions:Array;
         var condition:CSSCondition;
@@ -136,10 +152,10 @@ public class ${styleModule.name} extends ModuleBase implements IStyleModule
 #styleSelectorAncestor($selector)
         // $selector.toString()
         selectorString = "$selector.toString()";
-        style = StyleManager.getStyleDeclaration(selectorString);
+        style = styleManager.getStyleDeclaration(selectorString);
         if (!style)
         {
-            style = new CSSStyleDeclaration(selector);
+            style = new CSSStyleDeclaration(selector, styleManager);
             selectors.push(selectorString);
         }
 
@@ -188,12 +204,12 @@ public class ${styleModule.name} extends ModuleBase implements IStyleModule
         selectorString = ".${styleDef.typeName}";
 #end
 
-        style = StyleManager.getStyleDeclaration(selectorString);
+        style = styleManager.getStyleDeclaration(selectorString);
 
         if (!style)
         {
-            style = new CSSStyleDeclaration();
-            StyleManager.setStyleDeclaration(selectorString, style, false);
+            style = new CSSStyleDeclaration(null, styleManager);
+            styleManager.setStyleDeclaration(selectorString, style, false);
             selectors.push(selectorString);
         }
 
@@ -232,8 +248,8 @@ public class ${styleModule.name} extends ModuleBase implements IStyleModule
 ## End Legacy Flex 3 StyleDeclarations
 ##
 #if ($styleDef.subject == "global")
-        StyleManager.mx_internal::stylesRoot = null;
-        StyleManager.mx_internal::initProtoChainRoots();
+        styleManager.stylesRoot = null;
+        styleManager.initProtoChainRoots();
         unloadGlobal = true;
 #end
 #end
@@ -252,8 +268,8 @@ public class ${styleModule.name} extends ModuleBase implements IStyleModule
 
         if (unloadGlobal)
         {
-            StyleManager.mx_internal::stylesRoot = null;
-            StyleManager.mx_internal::initProtoChainRoots();
+            styleManager.stylesRoot = null;
+            styleManager.initProtoChainRoots();
         }
     }
 
@@ -264,7 +280,7 @@ public class ${styleModule.name} extends ModuleBase implements IStyleModule
     {
         for (var selector:String in overrideMap)
         {
-            var style:CSSStyleDeclaration = StyleManager.getStyleDeclaration(selector);
+            var style:CSSStyleDeclaration = styleManager.getStyleDeclaration(selector);
 
             if (style != null)
             {
@@ -316,7 +332,7 @@ public class ${styleModule.name} extends ModuleBase implements IStyleModule
         for (var i:int = 0; i < numSelectors; i++)
         {
             var selector:String = selectors[i];
-            StyleManager.clearStyleDeclaration(selector, false);
+            styleManager.clearStyleDeclaration(selector, false);
         }
 
         selectors = null;

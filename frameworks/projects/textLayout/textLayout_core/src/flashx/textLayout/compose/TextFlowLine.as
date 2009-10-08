@@ -672,7 +672,7 @@ package flashx.textLayout.compose
 					return textLine;
 			}
 			
-			textLine = flowComposer.textLineCreator.createTextLine(textBlock, previousLine, _targetWidth, _lineOffset, true);
+			textLine = flowComposer.swfContext.callInContext(textBlock.createTextLine, textBlock, [ previousLine, _targetWidth, _lineOffset, true ]);
 			textLine.x = createShapeX();
 			textLine.y = createShapeY(paragraph.getAncestorWithContainer().computedFormat.blockProgression);
 			textLine.doubleClickEnabled = true;

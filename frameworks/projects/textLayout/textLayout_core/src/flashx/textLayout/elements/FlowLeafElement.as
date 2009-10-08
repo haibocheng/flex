@@ -286,7 +286,15 @@ package flashx.textLayout.elements
 		{
 			if (!_blockElement)
 				createContentElement();
-			return _blockElement && _blockElement.elementFormat ? _blockElement.elementFormat.getFontMetrics() : null;
+			var ef:ElementFormat = _blockElement.elementFormat;
+			if (!ef)
+				return null;
+				
+			var tf:TextFlow = getTextFlow()
+			if (tf && tf.flowComposer && tf.flowComposer.swfContext)
+				return tf.flowComposer.swfContext.callInContext(ef.getFontMetrics,ef,null,true);
+
+			return ef.getFontMetrics();
 		}
 	
 		static private var _elementFormats:Dictionary = new Dictionary(true);
@@ -412,7 +420,12 @@ package flashx.textLayout.elements
 				if (_computedFormat.baselineShift == BaselineShift.SUPERSCRIPT || 
 					_computedFormat.baselineShift == BaselineShift.SUBSCRIPT)
 				{
-					var fontMetrics:FontMetrics = format.getFontMetrics();	
+					var fontMetrics:FontMetrics;
+					var tf:TextFlow = getTextFlow();
+					if (tf.flowComposer && tf.flowComposer.swfContext)
+						fontMetrics = tf.flowComposer.swfContext.callInContext(format.getFontMetrics,format,null,true);
+					else	
+						fontMetrics = format.getFontMetrics();	
 					if (_computedFormat.baselineShift == BaselineShift.SUPERSCRIPT)
 					{
 						format.baselineShift = (fontMetrics.superscriptOffset * format.fontSize);

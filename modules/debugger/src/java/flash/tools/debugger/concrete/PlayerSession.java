@@ -486,7 +486,8 @@ public class PlayerSession implements Session, DProtocolNotifierIF, Runnable
 					if (!closedAnyWindows && runningApps.contains("Safari")) //$NON-NLS-1$
 					{
 						try {
-							String safariClosedAnyWindows = executeAppleScript("appleScriptCloseSafariWindow.txt", new String[] { m_launchUrl }); //$NON-NLS-1$
+							String url = m_launchUrl.replaceAll(" ", "%20"); //$NON-NLS-1$ //$NON-NLS-2$
+							String safariClosedAnyWindows = executeAppleScript("appleScriptCloseSafariWindow.txt", new String[] { url }); //$NON-NLS-1$
 							if ("true".equals(safariClosedAnyWindows)) //$NON-NLS-1$
 								closedAnyWindows = true;
 						} catch (IOException e) {

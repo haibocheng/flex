@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UnitTester xmlns:mx="http://www.adobe.com/2006/mxml" xmlns="*" testSWF="main.mxml">
+
+	<!-- this set of lines form a template that must be in each unit test -->
+	<mx:Script>
+	<![CDATA[
+	public static function init(o:DisplayObject):void
+	{
+	}
+	]]>
+	</mx:Script>
+	<mx:Metadata>
+	<![CDATA[
+		[Mixin]
+	]]>
+	</mx:Metadata>
+	<!-- end of set of lines that must be in each unit test -->
+
+	<mx:Script>
+	<![CDATA[
+	]]>
+	</mx:Script>
+
+	<testCases>
+<!--
+-->
+		<TestCase testID="SetupSparkTileGroupTest">
+			<body>
+				<SetProperty target="" propertyName="currentState" value="sparkTileGroupTest" 
+                    waitEvent="updateComplete" />
+				<AssertPropertyValue target="sparkTileGroupTests.testTileGroup" propertyName="requestedRowCount" value="-1" />
+			</body>
+		</TestCase>
+		<TestCase testID="SparkTileGroupTest1">
+			<body>
+				<SetProperty target="sparkTileGroupTests.testTileGroup" propertyName="horizontalGap" value="10" 
+                    waitEvent="updateComplete" />
+                <SetProperty target="sparkTileGroupTests.testTileGroup" propertyName="verticalGap" value="10" 
+                    waitEvent="updateComplete" />
+            	<AssertPropertyValue target="sparkTileGroupTests.testTileGroup" propertyName="horizontalGap" value="10" />
+            	<AssertPropertyValue target="sparkTileGroupTests.testTileGroup" propertyName="verticalGap" value="10" />
+            	<AssertPropertyValue target="sparkTileGroupTests.btn5" propertyName="x" value="80" />
+            	<AssertPropertyValue target="sparkTileGroupTests.btn5" propertyName="y" value="31" />
+			</body>
+		</TestCase>
+	</testCases>
+</UnitTester>

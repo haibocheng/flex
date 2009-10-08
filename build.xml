@@ -222,7 +222,7 @@
 		Build framework SWCs
 	-->
 
-	<target name="frameworks" depends="locale.info" description="Full build of all framework SWCs, including resource bundles and themes">
+	<target name="frameworks" description="Full build of all framework SWCs, including resource bundles and themes">
 		<ant dir="${basedir}/frameworks">
 			<property name="locale" value="en_US"/>
 		</ant>
@@ -245,16 +245,7 @@
 	<target name="other.locales" if="locales" description="Build resource SWCs for additional locales">
 		<ant dir="${basedir}/frameworks" target="other.locales"/>
 	</target>
-
-	<target name="locale.info" description="echo to the console the target to use in order to compile all locales">
-		<echo>
-To compile all locales for the framework, spark, rpc,and
-airframework swc's use the other.locales target:
-$ant frameworks other.locales or
-$ant -Dlocales=true
-		</echo>
-	</target>
-
+	
 	<target name="javadoc" description="Build javadoc">
 		<javadoc destdir="${basedir}/javadoc" useexternalfile="yes">
 			<classpath>
@@ -690,6 +681,7 @@ zip -yrq ../out/flex_sdk_4 * -x /zip_pkg.sh
 			<fileset dir=".">
 				<include name="build.xml"/>
 				<include name="build.properties"/>
+				<include name="flex-sdk-description.xml"/>
 			</fileset>
 		</copy>
 

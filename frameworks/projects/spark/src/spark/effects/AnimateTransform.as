@@ -16,6 +16,7 @@ package spark.effects
 import flash.geom.Vector3D;
 import flash.utils.Dictionary;
 
+import mx.core.ILayoutElement;
 import mx.core.IUIComponent;
 import mx.core.mx_internal;
 import mx.effects.CompositeEffect;
@@ -33,7 +34,6 @@ import spark.effects.animation.MotionPath;
 import spark.effects.easing.IEaser;
 import spark.effects.easing.Linear;
 import spark.effects.supportClasses.AnimateTransformInstance;
-import mx.core.ILayoutElement;
 
 use namespace mx_internal;
 
@@ -132,7 +132,8 @@ public class AnimateTransform extends Animate
          "postLayoutRotationX","postLayoutRotationY","postLayoutRotationZ",
          "postLayoutScaleX","postLayoutScaleY","postLayoutScaleZ",
          "left", "right", "top", "bottom",
-         "horizontalCenter", "verticalCenter"];
+         "horizontalCenter", "verticalCenter",
+         "width", "height"];
     
     // FIXME (chaase): We probably need to advertise percentWidth/Height
     // in the affected properties/styles arrays; we don't pick these up
@@ -600,11 +601,11 @@ public class AnimateTransform extends Animate
             // the target, but that's not the case currently.
             computedTransformCenter = new Vector3D(target.transformX,
                 target.transformY, target.transformZ);
-            if(!isNaN(transformX))
+            if (!isNaN(transformX))
                 computedTransformCenter.x = transformX; 
-            if(!isNaN(transformY))
+            if (!isNaN(transformY))
                 computedTransformCenter.y = transformY; 
-            if(!isNaN(transformZ))
+            if (!isNaN(transformZ))
                 computedTransformCenter.z = transformZ;
         }
         return computedTransformCenter;
@@ -669,6 +670,7 @@ public class AnimateTransform extends Animate
                     // to transform center changes
                     if (propName in valueMap &&
                         (propName == "translationX" || propName == "translationY" ||
+                         propName == "postLayoutTranslationX" || propName == "postLayoutTranslationY" ||
                          valueMap[propName] != otherValueMap[propName]))
                     {
                         transitionValues[propName] = valueMap[propName];
@@ -767,18 +769,18 @@ public class AnimateTransform extends Animate
                         isNaN(offsetTranslation.z))
                     {
 
-                        if(currentXFormPositionComputed == false)
+                        if (currentXFormPositionComputed == false)
                         {
                             target.transformPointToParent(xformCenter,
                                 xformPosition, postLayoutPosition);
                             currentXFormPositionComputed = true;
                         }
                         
-                        if(isNaN(offsetTranslation.x))
+                        if (isNaN(offsetTranslation.x))
                             offsetTranslation.x = postLayoutPosition.x;
-                        if(isNaN(offsetTranslation.y))
+                        if (isNaN(offsetTranslation.y))
                             offsetTranslation.y = postLayoutPosition.y;
-                        if(isNaN(offsetTranslation.z))
+                        if (isNaN(offsetTranslation.z))
                             offsetTranslation.z = postLayoutPosition.z;
                     }
 
@@ -834,8 +836,10 @@ public class AnimateTransform extends Animate
     override protected function applyValueToTarget(target:Object, property:String, 
                                           value:*, props:Object):void
     {
-        // We've already set these properties in applyStartValues() or
-        // applyEndValues() override; don't set them again here
+        // We've already set most of these properties in applyStartValues() or
+        // applyEndValues() override; don't set them again here. Skip width/height
+        // because they are only used to track the size for autoCenterTransform;
+        // we should not apply those values as a side effect of this transform effect
         if (property == "translationX" || property == "translationY" ||
             property == "translationZ" || property == "rotationX" ||
             property == "rotationY" || property == "rotationZ" ||
@@ -845,7 +849,8 @@ public class AnimateTransform extends Animate
             property == "postLayoutTranslationZ" || property == "postLayoutRotationX" ||
             property == "postLayoutRotationY" || property == "postLayoutRotationZ" ||
             property == "postLayoutScaleX" || property == "postLayoutScaleY" ||
-            property == "postLayoutScaleZ"
+            property == "postLayoutScaleZ" || 
+            property == "width" || property == "height"
             )
         {
             return;
@@ -1008,7 +1013,7 @@ public class AnimateTransform extends Animate
             // flag.  In that case, we can assume that they need an offsets object if one doesn't already exist.
             // Second, if we captured post-layout changes from a state change. In that case, we can assume that since values were captured,
             // offsets must already exist.      
-            if(target.postLayoutTransformOffsets == null)
+            if (target.postLayoutTransformOffsets == null)
                 target.postLayoutTransformOffsets = new TransformOffsets();
         }
         // Feed startDelay directly into keyframe times

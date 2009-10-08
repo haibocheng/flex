@@ -30,6 +30,7 @@ import mx.resources.IResourceManager;
 import mx.resources.ResourceManager;
 import mx.styles.ISimpleStyleClient;
 import mx.styles.IStyleClient;
+import mx.styles.IStyleManager2;
 import mx.styles.StyleManager;
 import mx.styles.StyleProtoChain;
 import mx.utils.NameUtil;
@@ -1519,6 +1520,25 @@ public class UITextField extends FlexTextField
     }
 
     //----------------------------------
+    //  styleManager
+    //----------------------------------
+    
+    /**
+     *  @private
+     * 
+     *  Returns the style manager used by this component.
+     *  
+     *  @langversion 3.0
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
+     */
+    public function get styleManager():IStyleManager2
+    {
+        return StyleManager.getStyleManager(moduleFactory);
+    }
+    
+    //----------------------------------
     //  styleName
     //----------------------------------
 
@@ -1923,7 +1943,7 @@ public class UITextField extends FlexTextField
      */
     public function getStyle(styleProp:String):*
     {
-        if (StyleManager.inheritingStyles[styleProp])
+        if (styleManager.inheritingStyles[styleProp])
         {        
             return inheritingStyles ?
                    inheritingStyles[styleProp] :
@@ -2138,7 +2158,7 @@ public class UITextField extends FlexTextField
         // can affect both Halo and Spark components,
         // we need to map "auto" and "on" to true
         // and "off" to false for Halo components
-        // here and in UITLFTextField.
+        // here and in UIFTETextField.
         // For Spark components, Label and CSSTextLayoutFormat,
         // do the opposite mapping of true to "on" and false to "off".
         // We also support a value of "default"

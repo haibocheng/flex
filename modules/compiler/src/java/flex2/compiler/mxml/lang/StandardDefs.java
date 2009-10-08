@@ -169,6 +169,7 @@ public abstract class StandardDefs
     public final String INTERFACE_IFLEXMODULE_DOT = NameFormatter.toDot(getCorePackage(), "IFlexModule");
     public final String INTERFACE_IFLEXMODULEFACTORY_DOT = NameFormatter.toDot(getCorePackage(), "IFlexModuleFactory");
     public final String INTERFACE_IBINDINGCLIENT_DOT = NameFormatter.toDot(getBindingPackage(), "IBindingClient");
+    public final String INTERFACE_ISTYLEMANAGER2_DOT = NameFormatter.toDot(getStylesPackage(), "IStyleManager2");
 
     // Interface name with colon
     public final String INTERFACE_ICHILDLIST = NameFormatter.toColon(getCorePackage(), "IChildList");
@@ -211,6 +212,7 @@ public abstract class StandardDefs
     public final String CLASS_FLEXVERSION_DOT = NameFormatter.toDot(getCorePackage(), "FlexVersion");
     public final String CLASS_EFFECTMANAGER_DOT = NameFormatter.toDot(getEffectsPackage(), "EffectManager");
     public final String CLASS_PROPERTYCHANGEEVENT_DOT = NameFormatter.toDot(getEventsPackage(), "PropertyChangeEvent").intern();
+    public final String CLASS_REQUEST_DOT = NameFormatter.toDot(getEventsPackage(), "Request").intern();
     public final String CLASS_RESOURCEBUNDLE_DOT = NameFormatter.toDot(getResourcesPackage(), "ResourceBundle");
     public final String CLASS_RESOURCEMANAGER_DOT = NameFormatter.toDot(getResourcesPackage(), "ResourceManager");
     public final String CLASS_REPEATER_DOT = NameFormatter.toDot(getCorePackage(), "Repeater");

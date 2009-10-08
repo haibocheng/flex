@@ -20,7 +20,6 @@ import flash.display.DisplayObjectContainer;
 import flash.display.Graphics;
 import flash.display.Shape;
 import flash.display.Sprite;
-import flash.events.DataEvent;
 import flash.events.Event;
 import flash.events.KeyboardEvent;
 import flash.events.MouseEvent;
@@ -28,7 +27,6 @@ import flash.geom.Point;
 import flash.ui.Keyboard;
 import flash.utils.Dictionary;
 import flash.utils.clearInterval;
-import flash.utils.getTimer;
 import flash.utils.setInterval;
 
 import mx.collections.ArrayCollection;
@@ -48,7 +46,6 @@ import mx.core.DragSource;
 import mx.core.EdgeMetrics;
 import mx.core.EventPriority;
 import mx.core.FlexShape;
-import mx.core.FlexSprite;
 import mx.core.IDataRenderer;
 import mx.core.IFactory;
 import mx.core.IFlexDisplayObject;
@@ -59,10 +56,8 @@ import mx.core.IUITextField;
 import mx.core.ScrollControlBase;
 import mx.core.ScrollPolicy;
 import mx.core.SpriteAsset;
-import mx.core.UITextField;
 import mx.core.mx_internal;
 import mx.effects.IEffect;
-import mx.effects.IEffectInstance;
 import mx.effects.IEffectTargetHost;
 import mx.effects.Tween;
 import mx.events.CollectionEvent;
@@ -72,7 +67,6 @@ import mx.events.EffectEvent;
 import mx.events.FlexEvent;
 import mx.events.ListEvent;
 import mx.events.MoveEvent;
-import mx.events.PropertyChangeEvent;
 import mx.events.SandboxMouseEvent;
 import mx.events.ScrollEvent;
 import mx.events.ScrollEventDetail;
@@ -82,7 +76,6 @@ import mx.managers.DragManager;
 import mx.managers.IFocusManagerComponent;
 import mx.managers.ISystemManager;
 import mx.skins.halo.ListDropIndicator;
-import mx.styles.StyleManager;
 import mx.styles.StyleProxy;
 import mx.utils.ObjectUtil;
 import mx.utils.UIDUtil;
@@ -175,7 +168,6 @@ use namespace mx_internal;
 //  Styles
 //--------------------------------------
 
-include "../../styles/metadata/FocusStyles.as"
 include "../../styles/metadata/PaddingStyles.as"
 
 /**
@@ -4839,7 +4831,7 @@ public class ListBase extends ScrollControlBase
             invalidateProperties();
         }
 
-        if (StyleManager.isSizeInvalidatingStyle(styleProp))
+        if (styleManager.isSizeInvalidatingStyle(styleProp))
             scrollAreaChanged = true;
     }
 
@@ -10291,7 +10283,8 @@ public class ListBase extends ScrollControlBase
 
         lastDragEvent = event;
 
-        if (enabled && iteratorValid && event.dragSource.hasFormat("items"))
+        if (enabled && iteratorValid && 
+            (event.dragSource.hasFormat("items") || event.dragSource.hasFormat("orderedItems")))
         {
             DragManager.acceptDragDrop(this);
             DragManager.showFeedback(event.ctrlKey ? DragManager.COPY : DragManager.MOVE);
@@ -10323,7 +10316,8 @@ public class ListBase extends ScrollControlBase
 
         lastDragEvent = event;
 
-        if (enabled && iteratorValid && event.dragSource.hasFormat("items"))
+        if (enabled && iteratorValid && 
+            (event.dragSource.hasFormat("items") || event.dragSource.hasFormat("orderedItems")))
         {
             DragManager.showFeedback(event.ctrlKey ? DragManager.COPY : DragManager.MOVE);
             showDropFeedback(event);
@@ -10388,48 +10382,90 @@ public class ListBase extends ScrollControlBase
         hideDropFeedback(event);
         lastDragEvent = null;
         resetDragScrolling();
+        
+        if (!enabled)
+            return;
+        
+        var dragSource:DragSource = event.dragSource;
+        if (!dragSource.hasFormat("items") && !dragSource.hasFormat("orderedItems"))
+            return;
 
-        if (enabled && event.dragSource.hasFormat("items"))
-        {
-            if (!dataProvider)
-                // Create an empty collection to drop items into.
-                dataProvider = [];
+        if (!dataProvider)
+            // Create an empty collection to drop items into.
+            dataProvider = [];
 
-            var items:Array = event.dragSource.dataForFormat("items") as Array;
-            var dropIndex:int = calculateDropIndex(event);
-            if (event.action == DragManager.MOVE && dragMoveEnabled)
-            {
-                if (event.dragInitiator == this)
-                {
-                    var indices:Array = selectedIndices;
-                    indices.sort(Array.NUMERIC);
-                    
-                    for (var i:int = indices.length - 1; i >= 0; i--)
-                    {
-                        collectionIterator.seek(CursorBookmark.FIRST, indices[i]);
-                        if (indices[i] < dropIndex)
-                            dropIndex--;
-                        collectionIterator.remove();
-                    }
-                    clearSelected(false);
-                }
-            }
-            collectionIterator.seek(CursorBookmark.FIRST, dropIndex);
-            
-            for (i = items.length - 1; i >= 0; i--)
-            {
-                if (event.action == DragManager.COPY)
-                {
-                    collectionIterator.insert(copyItemWithUID(items[i]));
-                }
-                else if (event.action == DragManager.MOVE)
-                {
-                    collectionIterator.insert(items[i]);
-                } 
-            }
-        }
+        var dropIndex:int = calculateDropIndex(event);
+
+        if (dragSource.hasFormat("items"))
+            insertItems(dropIndex, dragSource, event);
+        else
+            insertOrderedItems(dropIndex, dragSource, event);
+
         lastDragEvent = null;
-
+    }
+    
+    /**
+     *  @private 
+     *  Insert for drag and drop, handles the Spark "orderedItems" data format.
+     */
+    private function insertOrderedItems(dropIndex:int, dragSource:DragSource, event:DragEvent):void
+    {
+        var items:Vector.<Object> = dragSource.dataForFormat("orderedItems") as Vector.<Object>;
+        
+        // Copy or move the items. No need to check whether the operation is
+        // reorder within this list, as ListBase never creates the
+        // "orderedItems" data format. This is a new data format from Spark List only. 
+        collectionIterator.seek(CursorBookmark.FIRST, dropIndex);
+        var count:int = items.length;
+        for (var i:int = 0; i < count; i++)
+        {
+            if (event.action == DragManager.COPY)
+            {
+                collectionIterator.insert(copyItemWithUID(items[i]));
+            }
+            else if (event.action == DragManager.MOVE)
+            {
+                collectionIterator.insert(items[i]);
+            } 
+        }
+    }
+    
+    /**
+     *  @private
+     *  Insert for drag and drop, handles the Halo "items" data format. 
+     */
+    private function insertItems(dropIndex:int, dragSource:DragSource, event:DragEvent):void
+    {
+        var items:Array = dragSource.dataForFormat("items") as Array;
+        if (event.action == DragManager.MOVE && 
+            dragMoveEnabled &&
+            event.dragInitiator == this)
+        {
+            var indices:Array = selectedIndices;
+            indices.sort(Array.NUMERIC);
+            
+            for (var i:int = indices.length - 1; i >= 0; i--)
+            {
+                collectionIterator.seek(CursorBookmark.FIRST, indices[i]);
+                if (indices[i] < dropIndex)
+                    dropIndex--;
+                collectionIterator.remove();
+            }
+            clearSelected(false);
+        }
+        collectionIterator.seek(CursorBookmark.FIRST, dropIndex);
+        
+        for (i = items.length - 1; i >= 0; i--)
+        {
+            if (event.action == DragManager.COPY)
+            {
+                collectionIterator.insert(copyItemWithUID(items[i]));
+            }
+            else if (event.action == DragManager.MOVE)
+            {
+                collectionIterator.insert(items[i]);
+            } 
+        }
     }
     
     /**

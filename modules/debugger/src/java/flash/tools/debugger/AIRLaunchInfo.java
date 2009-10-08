@@ -75,4 +75,9 @@ public class AIRLaunchInfo
 	 * null, no pubid is passed to adl.
 	 */
 	public String airPublisherID;
+
+	/**
+	 * The profile to pass to AIR 2.0's "-profile" argument, or null to omit the "-profile" argument.
+	 */
+	public String profile;
 }

@@ -1,4 +1,10 @@
-﻿	* Add new manifest entry for TextLayoutFormat, and remove entries for format, linkNormalFormat, linkActiveFormat, linkHoverFormat, EditManager, SelectionManager, and StandardFlowComposer. 
+﻿Build 517
+	* Fix 2414442 ElementFormat.getFontMetrics needs to be called in proper context
+	  replace ITextLineCreator with ISWFContext.  ISWFContext has one method callInContext similar to flex method of the same name
+	  replace textLineCreator setters with swfContext setters in IFlowComposer and TextContainerManager
+	  Note: ITextLineCreator remains so that TLF test apps compile.  It's completely unused.
+Build 516
+	* Add new manifest entry for TextLayoutFormat, and remove entries for format, linkNormalFormat, linkActiveFormat, linkHoverFormat, EditManager, SelectionManager, and StandardFlowComposer. 
 	  Updated build scripts so the manifest for textLayout_edit is removed. Removed the stub objects for linkActiveFormat, linkNormalFormat and linkHoverFormat, 
 	  these are now handled as standard properties in MXMLC. Dynamic import of markup unchanged. Fixed use of ${forkValue} to be consistent in Ant build scripts.
 	* Fix 2391771, data from one import is carried over into the following import. The bug happens because of how we are handling the id property. 

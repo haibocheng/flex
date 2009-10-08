@@ -26,7 +26,6 @@ import mx.core.IUIComponent;
 import mx.core.mx_internal;
 import mx.core.ScrollPolicy;
 import mx.styles.CSSStyleDeclaration;
-import mx.styles.StyleManager;
 
 use namespace mx_internal;
 
@@ -418,22 +417,6 @@ public class FormItem extends Container
     }
     
     //----------------------------------
-    //  labelObject
-    //----------------------------------
-
-    [Deprecated(replacement="FormItem.itemLabel", since="3.0")]
-
-    /**
-     *  @private
-     *  A read-only reference to the FormItemLabel subcomponent
-     *  displaying the label of the FormItem.
-     */
-    mx_internal function get labelObject():Object
-    {
-        return labelObj;
-    }
-
-    //----------------------------------
     //  required
     //----------------------------------
 
@@ -503,7 +486,7 @@ public class FormItem extends Container
             if (labelStyleName)
             {
                 var styleDecl:CSSStyleDeclaration =
-                	StyleManager.getStyleDeclaration("." + labelStyleName);
+                	styleManager.getStyleDeclaration("." + labelStyleName);
             
                 if (styleDecl)
                     labelObj.styleDeclaration = styleDecl;
@@ -1280,7 +1263,7 @@ public class FormItem extends Container
 	            if (labelStyleName)
 	            {
 	                var styleDecl:CSSStyleDeclaration =
-	                	StyleManager.getStyleDeclaration("." + labelStyleName);
+	                	styleManager.getStyleDeclaration("." + labelStyleName);
 	            
 	                if (styleDecl)
 	                {

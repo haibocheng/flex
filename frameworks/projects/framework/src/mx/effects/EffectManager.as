@@ -38,6 +38,8 @@ import mx.managers.ISystemManager;
 import mx.managers.SystemManager;
 import mx.resources.IResourceManager;
 import mx.resources.ResourceManager;
+import mx.core.IVisualElementContainer;
+import mx.core.IVisualElement;
 
 use namespace mx_internal;
 
@@ -128,7 +130,7 @@ public class EffectManager extends EventDispatcher
      */
     mx_internal static function get lastEffectCreated():Effect
     {
-        for( var item:* in weakKeys ) 
+        for (var item:* in weakKeys) 
             return item;
             
         return null;
@@ -806,10 +808,10 @@ public class EffectManager extends EventDispatcher
     {
         suspendEventHandling();
         // Add the child back to the parent so the effect can play upon it
-        if (parent is IVisualElementContainer)
-			(parent as IVisualElementContainer).addElementAt(target as IVisualElement, index);
-		else
-        	parent.addChildAt(target, index);
+        if (parent is IVisualElementContainer && target is IVisualElement)
+            (IVisualElementContainer(parent).addElementAt(target as IVisualElement, index));
+        else
+            parent.addChildAt(target, index);
         resumeEventHandling();
         // Use target because the player assigns the Stage to the currentTarget when we leave the scope of the event handler function
         createAndPlayEffect(eventObj, target); 
@@ -858,10 +860,10 @@ public class EffectManager extends EventDispatcher
                     // Since we added the child back to the parent when the effect began,
                     // we need to remove it once the effect has finished.
                     suspendEventHandling();
-                    if (parent is IVisualElementContainer)
-						(parent as IVisualElementContainer).removeElement(targ as IVisualElement);
-					else
-                    	parent.removeChild(targ);
+                    if (parent is IVisualElementContainer && targ is IVisualElement)
+                        (IVisualElementContainer(parent).removeElement(targ as IVisualElement));
+                    else
+                        parent.removeChild(targ);
                     resumeEventHandling();
                 }
             }

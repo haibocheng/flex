@@ -95,6 +95,7 @@ use namespace mx_internal;
 
 include "../../styles/metadata/GapStyles.as"
 include "../../styles/metadata/PaddingStyles.as"
+include "../../styles/metadata/TextStyles.as"
 
 /**
  *  Background color of the component.
@@ -111,7 +112,7 @@ include "../../styles/metadata/PaddingStyles.as"
  *  @playerversion AIR 1.1
  *  @productversion Flex 3
  */
-[Style(name="backgroundColor", type="uint", format="Color", inherit="no", theme="halo")]
+[Style(name="backgroundColor", type="uint", format="Color", inherit="no")]
 
 /**
  *  Black section of a three-dimensional border, or the color section
@@ -128,7 +129,7 @@ include "../../styles/metadata/PaddingStyles.as"
  *  @playerversion AIR 1.1
  *  @productversion Flex 3
  */
-[Style(name="borderColor", type="uint", format="Color", inherit="no", theme="halo")]
+[Style(name="borderColor", type="uint", format="Color", inherit="no")]
 
 /**
  *  Number of columns in the swatch grid.
@@ -151,6 +152,28 @@ include "../../styles/metadata/PaddingStyles.as"
  *  @productversion Flex 3
  */
 [Style(name="highlightColor", type="uint", format="Color", inherit="yes", theme="halo")]
+
+/**
+ *  Number of pixels between the component's top border
+ *  and the top edge of its content area.
+ *  
+ *  @langversion 3.0
+ *  @playerversion Flash 9
+ *  @playerversion AIR 1.1
+ *  @productversion Flex 3
+ */
+[Style(name="paddingTop", type="Number", format="Length", inherit="no")]
+
+/**
+ *  Number of pixels between the component's bottom border
+ *  and the bottom edge of its content area.
+ *  
+ *  @langversion 3.0
+ *  @playerversion Flash 9
+ *  @playerversion AIR 1.1
+ *  @productversion Flex 3
+ */
+[Style(name="paddingBottom", type="Number", format="Length", inherit="no")]
 
 /**
  *  Color for the left and right inside edges of a component's skin.
@@ -218,7 +241,7 @@ include "../../styles/metadata/PaddingStyles.as"
  *  @playerversion AIR 1.1
  *  @productversion Flex 3
  */
-[Style(name="swatchBorderColor", type="uint", format="Color", inherit="no", theme="halo")]
+[Style(name="swatchBorderColor", type="uint", format="Color", inherit="no")]
 
 /**
  *  Size of the single border around the grid of swatches.
@@ -240,7 +263,7 @@ include "../../styles/metadata/PaddingStyles.as"
  *  @playerversion AIR 1.1
  *  @productversion Flex 3
  */
-[Style(name="swatchGridBackgroundColor", type="uint", format="Color", inherit="no", theme="halo")]
+[Style(name="swatchGridBackgroundColor", type="uint", format="Color", inherit="no")]
 
 /**
  *  Height of each swatch.
@@ -316,7 +339,7 @@ include "../../styles/metadata/PaddingStyles.as"
  *
  *  <p>It can be set to either the mx.core.TextInput class
  *  (to use the classic Halo TextInput control)
- *  or the mx.controls.TLFTextInput class
+ *  or the mx.controls.MXFTETextInput class
  *  (to use the Spark TextInput component based on the Text Layout Framework 
  *  to get improved text rendering, including bidirectional layout).</p>
  *
@@ -375,6 +398,14 @@ public class SwatchPanel extends UIComponent implements IFocusManagerContainer
      *  @private
      */    
     mx_internal var textInput:ITextInput;
+
+    /**
+     *  @private
+     *  Set by the parent to determine the type of TextInput to be created.
+     *  If this style is also set on this component directly, it will take
+     *  precedence.
+     */    
+    mx_internal var textInputClass:Class;
 
     /**
      *  @private
@@ -972,17 +1003,16 @@ public class SwatchPanel extends UIComponent implements IFocusManagerContainer
         // Create the hex text field  
         if (!textInput)
 		{			
-            // Mechanism to use TLFTextInput. 
-            var textInputClass:Class = getStyle("textInputClass");            
-            if (!textInputClass || 
-                FlexVersion.compatibilityVersion < FlexVersion.VERSION_4_0)
-            {
+            // Mechanism to use FTETextInput. Look for it in SwatchPanel and
+            // if not found see if we got it from our parent.
+            var c:Class = getStyle("textInputClass");
+            if (!c) 
+                c = textInputClass;
+            
+            if (!c || FlexVersion.compatibilityVersion < FlexVersion.VERSION_4_0)
                 textInput = new TextInput();
-            }
             else
-            {
                 textInput = new textInputClass();
-            }
 			
 			textInput.styleName = getStyle("textFieldStyleName");
 			
@@ -1189,9 +1219,21 @@ public class SwatchPanel extends UIComponent implements IFocusManagerContainer
                 label = dataProvider.getItemAt(focusedIndex)[labelField];
             }
 
+            
+            // MXFTETextInput does not maintain its selection when the
+            // text is reset.  Remember to maintain soft link to MXFTETextInput.
+            if (!(textInput is TextInput))
+            {
+                var anchorPosition:int = textInput.selectionAnchorPosition;
+                var activePosition:int = textInput.selectionActivePosition;
+            }
+
             textInput.text = label != null && label.length != 0 ?
 							 label :
                              rgbToHex(color);
+
+            if (!(textInput is TextInput))
+                textInput.selectRange(anchorPosition, activePosition);
         }
     }
 

@@ -334,6 +334,7 @@ BrowserHistory = (function() {
 						// this.iframe.src = this.blankURL + hash;
 						var sourceToSet = historyFrameSourcePrefix + getHash();
 						getHistoryFrame().src = sourceToSet;
+                        currentHref = document.location.href;
 					}
                 }
             }

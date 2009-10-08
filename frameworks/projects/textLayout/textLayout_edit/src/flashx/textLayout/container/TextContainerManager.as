@@ -28,7 +28,7 @@ package flashx.textLayout.container
 	import flash.ui.MouseCursor;
 	import flash.utils.Dictionary;
 	
-	import flashx.textLayout.compose.ITextLineCreator;
+	import flashx.textLayout.compose.ISWFContext;
 	import flashx.textLayout.compose.StandardFlowComposer;
 	import flashx.textLayout.compose.TextFlowLine;
 	import flashx.textLayout.compose.TextLineRecycler;
@@ -208,7 +208,7 @@ package flashx.textLayout.container
 	 * 
 	 * @see ContainerController
 	 */			
-	public class TextContainerManager extends EventDispatcher implements ITextLineCreator, IInteractionEventHandler, ISandboxSupport
+	public class TextContainerManager extends EventDispatcher implements ISWFContext, IInteractionEventHandler, ISandboxSupport
 	{
 		static private var _inputManagerTextFlowFactory:TextFlowTextLineFactory = new TextFlowTextLineFactory();
 		
@@ -289,7 +289,7 @@ package flashx.textLayout.container
 		private var _horizontalScrollPolicy:String;
 		private var _verticalScrollPolicy:String;
 		
-		private var _textLineCreator:ITextLineCreator;
+		private var _swfContext:ISWFContext;
 		private var _config:IConfiguration;
 		
 		/** @private */
@@ -660,7 +660,7 @@ package flashx.textLayout.container
 				_container.mouseChildren = true;
 				clearContainerChildren();
 				_textFlow.flowComposer = new StandardFlowComposer();
-				_textFlow.flowComposer.textLineCreator = _textLineCreator;
+				_textFlow.flowComposer.swfContext = _swfContext;
 				var controller:TMContainerController = new TMContainerController(_container,_compositionWidth,_compositionHeight,this);
 				_textFlow.flowComposer.addController(controller);
 				
@@ -784,30 +784,48 @@ package flashx.textLayout.container
 				convertToTextFlowWithComposer();
 			getController().scrollToRange(activePosition,anchorPosition);	 		
 	 	}
-		
-		/** Optional ITextLineCreator override to intercept TLF calls to TextBlock.createTextLine and 
-		 * TextBlock.recreateTextLine. 
-		 * 
-		 * @playerversion Flash 10
-		 * @playerversion AIR 1.5
-		 * @langversion 3.0
-		 * 
-		 * @see flashx.textLayout.compose.ITextLineCreator ITextLineCreator
-		 */
-		public function get textLineCreator():ITextLineCreator
-		{ return _textLineCreator; }
-		public function set textLineCreator(value:ITextLineCreator):void
+
+		/** 
+		* Optional ISWFContext instance used to make FTE calls as needed in the proper swf context. 
+		*
+		* 
+		* @see flashx.textLayout.compose.ISWFContext
+		* 
+		* @playerversion Flash 10
+		* @playerversion AIR 1.5
+	 	* @langversion 3.0
+	 	*/
+ 	
+		public function get swfContext():ISWFContext
+		{ return _swfContext; }
+		public function set swfContext(context:ISWFContext):void
 		{ 
-			_textLineCreator = value;
+			_swfContext = context;
 			if (_composeState == COMPOSE_COMPOSER)
-				_textFlow.flowComposer.textLineCreator = _textLineCreator;
+				_textFlow.flowComposer.swfContext = _swfContext;
 			else
 				_damaged = true;
+		}
+		
+	    public function callInContext(fn:Function, thisArg:Object, argsArray:Array, returns:Boolean=true):*
+		{
+			var textBlock:TextBlock = thisArg as TextBlock;
+			if (textBlock)
+			{
+			 	if (fn == textBlock.createTextLine)
+					return createTextLine(textBlock,argsArray);
+				if (TextLineRecycler.textBlockHasRecreateTextLine && fn == thisArg["recreateTextLine"])
+					return recreateTextLine(textBlock,argsArray);
+			}
+	        if (returns)
+	            return fn.apply(thisArg, argsArray);
+	        fn.apply(thisArg, argsArray);
 		}
 		
 		/** 
 		 * Uses the <code>textBlock</code> parameter, and calls the <code>TextBlock.createTextLine()</code> method on it 
 		 * using the remaining parameters.
+		 * WARNING: modifies argsArray
 		 *  
 		 * @copy flash.text.engine.TextBlock
 		 *
@@ -815,20 +833,23 @@ package flashx.textLayout.container
 		 * @playerversion AIR 1.5
 	 	 * @langversion 3.0
 	 	 */
-		public function createTextLine(textBlock:TextBlock, previousLine:TextLine = null, width:Number = 1000000, lineOffset:Number = 0.0, fitSomething:Boolean = false):TextLine
+		private function createTextLine(textBlock:TextBlock, argsArray:Array):TextLine
 		{
 			CONFIG::debug { assert(TextLineRecycler.textBlockHasRecreateTextLine,"Bad call to createTextLine"); }
 			if (_composeRecycledInPlaceLines < _composedLines.length)
 			{
 				var textLine:TextLine = _composedLines[_composeRecycledInPlaceLines++];
-				if (_textLineCreator)
-					return _textLineCreator.recreateTextLine(textBlock,textLine,previousLine,width,lineOffset,fitSomething);
-				return textBlock["recreateTextLine"](textLine,previousLine,width,lineOffset,fitSomething);
+				if (_swfContext)
+				{
+					argsArray.splice(0,0,textLine);
+					return _swfContext.callInContext(textBlock["recreateTextLine"],textBlock,argsArray);
+				}
+				return textBlock["recreateTextLine"](textLine,argsArray[0],argsArray[1],argsArray[2],argsArray[3]);
 			}
 
-			if (_textLineCreator)
-				return _textLineCreator.createTextLine(textBlock,previousLine,width,lineOffset,fitSomething);
-			return textBlock.createTextLine(previousLine,width,lineOffset,fitSomething);
+			if (_swfContext)
+				return _swfContext.callInContext(textBlock.createTextLine,textBlock,argsArray);
+			return textBlock.createTextLine.apply(textBlock,argsArray);
 		}
 
 		/** 
@@ -853,16 +874,16 @@ package flashx.textLayout.container
 		 * @playerversion AIR 1.5
 	 	 * @langversion 3.0
 	 	 */
-		public function recreateTextLine(textBlock:TextBlock, textLine:TextLine, previousLine:TextLine = null, width:Number = 1000000, lineOffset:Number = 0.0, fitSomething:Boolean = false):TextLine
+		private function recreateTextLine(textBlock:TextBlock, argsArray:Array):TextLine
 		{
 			if (_composeRecycledInPlaceLines < _composedLines.length)
 			{
-				TextLineRecycler.addLineForReuse(textLine);	// not going to use this one
-				textLine = _composedLines[_composeRecycledInPlaceLines++];
+				TextLineRecycler.addLineForReuse(argsArray[0]);	// not going to use this one
+				argsArray[0] = _composedLines[_composeRecycledInPlaceLines++];
 			}
-			if (_textLineCreator)
-				return _textLineCreator.recreateTextLine(textBlock,textLine,previousLine,width,lineOffset,fitSomething);
-			return textBlock["recreateTextLine"](textLine,previousLine,width,lineOffset,fitSomething);
+			if (_swfContext)
+				return _swfContext.callInContext(textBlock["recreateTextLine"],textBlock,argsArray);
+			return textBlock["recreateTextLine"].apply(textBlock,argsArray);
 		}
 
 		
@@ -1163,7 +1184,7 @@ package flashx.textLayout.container
 						inputManagerFactory.verticalScrollPolicy = _verticalScrollPolicy;
 						inputManagerFactory.horizontalScrollPolicy = _horizontalScrollPolicy;
 						inputManagerFactory.compositionBounds = new Rectangle(0,0,_compositionWidth,_compositionHeight);
-						inputManagerFactory.textLineCreator = TextLineRecycler.textBlockHasRecreateTextLine ? this : _textLineCreator;
+						inputManagerFactory.swfContext = TextLineRecycler.textBlockHasRecreateTextLine ? this : _swfContext;
 							
 						if (_sourceState == SOURCE_STRING)
 						{
@@ -1408,9 +1429,9 @@ package flashx.textLayout.container
 									
 			_textFlow = new TextFlow(_config);
 			_textFlow.hostFormat = _hostFormat;
-			if(_textLineCreator)
+			if(_swfContext)
 			{
-				_textFlow.flowComposer.textLineCreator = _textLineCreator;
+				_textFlow.flowComposer.swfContext = _swfContext;
 			}
 	
 			var p:ParagraphElement = new ParagraphElement();
@@ -1436,7 +1457,7 @@ package flashx.textLayout.container
 				var controller:TMContainerController = new TMContainerController(_container,_compositionWidth,_compositionHeight,this);
 				_textFlow.flowComposer = new StandardFlowComposer();
 				_textFlow.flowComposer.addController(controller);
-				_textFlow.flowComposer.textLineCreator = _textLineCreator;
+				_textFlow.flowComposer.swfContext = _swfContext;
 				_composeState = COMPOSE_COMPOSER;
 				
 				invalidateInteractionManager();

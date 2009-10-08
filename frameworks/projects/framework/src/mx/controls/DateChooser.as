@@ -171,33 +171,7 @@ include "../styles/metadata/TextStyles.as"
  *  @playerversion AIR 1.1
  *  @productversion Flex 3
  */
-[Style(name="cornerRadius", type="Number", format="Length", inherit="no", theme="halo")]
-
-/**
- *  Alphas used for the background fill of controls. Use [1, 1] to make the control background
- *  opaque.
- *  
- *  @default [ 0.6, 0.4 ]
- *  
- *  @langversion 3.0
- *  @playerversion Flash 9
- *  @playerversion AIR 1.1
- *  @productversion Flex 3
- */
-[Style(name="fillAlphas", type="Array", arrayType="Number", inherit="no", deprecatedReplacement="nextMonthStyleFilters, prevMonthStyleFilters", deprecatedSince="3.0")]
-
-/**
- *  Colors used to tint the background of the control.
- *  Pass the same color for both values for a flat-looking control.
- *  
- *  @default [ 0xFFFFFF, 0xCCCCCC ]
- *  
- *  @langversion 3.0
- *  @playerversion Flash 9
- *  @playerversion AIR 1.1
- *  @productversion Flex 3
- */
-[Style(name="fillColors", type="Array", arrayType="uint", format="Color", inherit="no", deprecatedReplacement="nextMonthStyleFilters, prevMonthStyleFilters", deprecatedSince="3.0")]
+[Style(name="cornerRadius", type="Number", format="Length", inherit="no", theme="halo, spark")]
 
 /**
  *  Color of focus ring when the component is in focus
@@ -557,7 +531,7 @@ include "../styles/metadata/TextStyles.as"
  *  @playerversion AIR 1.1
  *  @productversion Flex 3
  */
-[Style(name="todayColor", type="uint", format="Color", inherit="yes", theme="halo")]
+[Style(name="todayColor", type="uint", format="Color", inherit="yes", theme="halo, spark")]
 
 /**
  *  Name of the class to use as the skin for the 
@@ -2615,10 +2589,12 @@ public class DateChooser extends UIComponent implements IFocusManagerComponent, 
         border.visible = true;
 
         var headerColors:Array = getStyle("headerColors");
+        if (!headerColors)
+            headerColors = [0xFFFFFF, 0xD8D8D8];
         var headerContext:Graphics = calHeader.graphics;
         headerContext.clear();
         
-        StyleManager.getColorNames(headerColors);
+        styleManager.getColorNames(headerColors);
         var matrix:Matrix = new Matrix();
         matrix.createGradientBox(w, headerHeight, Math.PI / 2, 0, 0);
         headerContext.beginGradientFill(GradientType.LINEAR, headerColors,

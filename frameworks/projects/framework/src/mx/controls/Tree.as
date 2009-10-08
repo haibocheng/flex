@@ -69,7 +69,6 @@ import mx.events.TreeEvent;
 import mx.managers.DragManager;
 import mx.managers.ISystemManager;
 import mx.managers.SystemManager;
-import mx.styles.StyleManager;
 
 use namespace mx_internal;
 
@@ -1431,7 +1430,7 @@ public class Tree extends List implements IIMESupport
             listContent.addChildAt(rowBGs, 0);
         }
 
-        var color:Object;
+        var color:*;
         var colors:Array;
         var depthColors:Boolean = false;
 
@@ -1445,6 +1444,8 @@ public class Tree extends List implements IIMESupport
             colors = getStyle("alternatingItemColors");
         }
         color = getStyle("backgroundColor");
+        if (color === undefined)
+            color = 0xFFFFFF;
         if (!colors || colors.length == 0)
 		{
 			while (rowBGs.numChildren > n)
@@ -1454,7 +1455,7 @@ public class Tree extends List implements IIMESupport
             return;
 		}
 
-        StyleManager.getColorNames(colors);
+        styleManager.getColorNames(colors);
 
         var curRow:int = 0;
         var actualRow:int = verticalScrollPosition;

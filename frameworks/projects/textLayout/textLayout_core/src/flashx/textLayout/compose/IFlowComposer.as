@@ -10,7 +10,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 package flashx.textLayout.compose
 {
-	import flashx.textLayout.compose.ITextLineCreator;
+	import flashx.textLayout.compose.ISWFContext;
 	import flashx.textLayout.container.ContainerController;
 	import flashx.textLayout.edit.ISelectionManager;
 	import flashx.textLayout.elements.ContainerFormattedElement;
@@ -437,20 +437,19 @@ package flashx.textLayout.compose
 		function get composing():Boolean;
 		
 		/** 
-		 * The ITextLineCreator instance to be used for creating TextLines.  
+		 * The ISWFContext instance to be used for calls that must be made in a specific SWF context  
 		 * 
 		 * <p>Implementations of IFlowComposer should allow this property to be set so that users
 		 * of the interface can create lines in a different SWF context than the one containing the 
-		 * implementation.  A default implementation of ITextLineCreator should also be supplied.</p>
+		 * implementation.  A default implementation of ISWFContext should also be supplied.</p>
 		 * 
-		 * @see flashx.elements.ITextLineCreator ITextLineCreator
-		 * @see flashx.elements.TextLineCreator TextLineCreator
+		 * @see flashx.elements.ISWFContext ISWFContext
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
 	 	 * @langversion 3.0
 	 	 */
-		function get textLineCreator():ITextLineCreator;
-		function set textLineCreator(creator:ITextLineCreator):void;
+		function get swfContext():ISWFContext;
+		function set swfContext(creator:ISWFContext):void;
 		
 		/**
 		 * Called by the TextFlow when the interaction manager changes. 

@@ -19,7 +19,7 @@ import mx.styles.CSSCondition;
 import mx.styles.CSSSelector;
 #end
 import mx.styles.CSSStyleDeclaration;
-import mx.styles.StyleManager;
+import mx.styles.IStyleManager2;
 ##
 ## imports
 ##
@@ -41,6 +41,8 @@ public class _${styleDef.typeName}Style
 
     public static function init(fbs:IFlexModuleFactory):void
     {
+        var styleManager:IStyleManager2 = fbs.getImplementation("mx.styles::IStyleManager2") as IStyleManager2;
+        
 ##
 ## Start Macro
 ## This macro recursively walks the selector chain, starting from the furthest
@@ -78,10 +80,10 @@ public class _${styleDef.typeName}Style
         conditions = null;
 #selectorAncestor($selector)
         // $selector.toString()
-        style = StyleManager.getStyleDeclaration("$selector.toString()");
+        style = styleManager.getStyleDeclaration("$selector.toString()");
         if (!style)
         {
-            style = new CSSStyleDeclaration(selector);
+            style = new CSSStyleDeclaration(selector, styleManager);
         }
 
         if (style.defaultFactory == null)
@@ -114,18 +116,18 @@ public class _${styleDef.typeName}Style
 ## Start Legacy Flex 3 StyleDeclarations
 ##
 #if ($styleDef.isTypeSelector())
-        var style:CSSStyleDeclaration = StyleManager.getStyleDeclaration("${styleDef.typeName}");
+        var style:CSSStyleDeclaration = styleManager.getStyleDeclaration("${styleDef.typeName}");
 #else
-        var style:CSSStyleDeclaration = StyleManager.getStyleDeclaration(".${styleDef.typeName}");
+        var style:CSSStyleDeclaration = styleManager.getStyleDeclaration(".${styleDef.typeName}");
 #end
     
         if (!style)
         {
-            style = new CSSStyleDeclaration();
+            style = new CSSStyleDeclaration(null, styleManager);
 #if ($styleDef.isTypeSelector() || $styleDef.subject == "global" || $styleDef.subject == "*")
-            StyleManager.setStyleDeclaration("${styleDef.typeName}", style, false);
+            styleManager.setStyleDeclaration("${styleDef.typeName}", style, false);
 #else
-            StyleManager.setStyleDeclaration(".${styleDef.typeName}", style, false);
+            styleManager.setStyleDeclaration(".${styleDef.typeName}", style, false);
 #end
         }
 

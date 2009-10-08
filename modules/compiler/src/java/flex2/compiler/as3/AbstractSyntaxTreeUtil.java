@@ -922,7 +922,13 @@ public class AbstractSyntaxTreeUtil
     public static TypeExpressionNode generateTypeExpression(NodeFactory nodeFactory, String type,
                                                             boolean intern)
     {
-        return generateTypeExpression(nodeFactory, type, intern, false);
+        return generateTypeExpression(nodeFactory, type, intern, false, -1);
+    }
+
+    public static TypeExpressionNode generateTypeExpression(NodeFactory nodeFactory, String type,
+                                                            boolean intern, int position)
+    {
+        return generateTypeExpression(nodeFactory, type, intern, false, position);
     }
 
     /**
@@ -932,6 +938,18 @@ public class AbstractSyntaxTreeUtil
      */
     public static TypeExpressionNode generateTypeExpression(NodeFactory nodeFactory, String type,
                                                             boolean intern, boolean includeAnyType)
+    {
+        return generateTypeExpression(nodeFactory, type, intern, includeAnyType, -1);
+    }
+
+    /**
+     * @param intern Hint to ASC for controlling if <code>type</code>
+     *               is interned.  If <code>type</code> is a constant,
+     *               <code>intern</code> should be false.
+     */
+    public static TypeExpressionNode generateTypeExpression(NodeFactory nodeFactory, String type,
+                                                            boolean intern, boolean includeAnyType,
+                                                            int position)
     {
         TypeExpressionNode result = null;
 
@@ -969,7 +987,7 @@ public class AbstractSyntaxTreeUtil
                 memberExpression = generateGetterSelector(nodeFactory, type, intern);
             }
 
-            result = nodeFactory.typeExpression(memberExpression, true, false, -1);
+            result = nodeFactory.typeExpression(memberExpression, true, false, position);
         }
 
         return result;
@@ -1014,9 +1032,23 @@ public class AbstractSyntaxTreeUtil
                                                           String type, boolean internType,
                                                           Node rvalue)
     {
+        return generateVariable(nodeFactory, name, type, internType, rvalue, -1);
+    }
+
+    /**
+     * @param name This is assumed to be interned.
+     * @param intern Hint to ASC for controlling if <code>type</code>
+     *               is interned.  If <code>type</code> is a constant,
+     *               <code>internType</code> should be false.
+     */
+    public static VariableDefinitionNode generateVariable(NodeFactory nodeFactory, String name,
+                                                          String type, boolean internType,
+                                                          Node rvalue, int position)
+    {
         IdentifierNode identifier = nodeFactory.identifier(name, false);
         int kind = Tokens.VAR_TOKEN;
-        TypeExpressionNode typeExpression = generateTypeExpression(nodeFactory, type, internType);
+        TypeExpressionNode typeExpression = generateTypeExpression(nodeFactory, type,
+                                                                   internType, position);
         TypedIdentifierNode typedIdentifier = nodeFactory.typedIdentifier(identifier,
                                                                           typeExpression);
 
@@ -1102,9 +1134,9 @@ public class AbstractSyntaxTreeUtil
      * @param type This is assumed not to be interned.
      */
     public static VariableDefinitionNode generateVariableNew(NodeFactory nodeFactory, String name,
-                                                             String type)
+                                                             String type, int position)
     {
-        return generateVariableNew(nodeFactory, name, type, null);
+        return generateVariableNew(nodeFactory, name, type, null, position);
     }
 
     /**
@@ -1112,10 +1144,11 @@ public class AbstractSyntaxTreeUtil
      * @param type This is assumed not to be interned.
      */
     public static VariableDefinitionNode generateVariableNew(NodeFactory nodeFactory, String name,
-                                                             String type, ArgumentListNode argumentList)
+                                                             String type, ArgumentListNode argumentList,
+                                                             int position)
     {
         IdentifierNode identifier = nodeFactory.identifier(name, false);
-        TypeExpressionNode typeExpression = generateTypeExpression(nodeFactory, type, true);
+        TypeExpressionNode typeExpression = generateTypeExpression(nodeFactory, type, true, position);
         TypedIdentifierNode typedIdentifier = nodeFactory.typedIdentifier(identifier,
                                                                           typeExpression);
         int lessThanIndex = type.indexOf(LESS_THAN);

@@ -170,4 +170,31 @@ public class GroupNode extends GraphicContentNode implements MaskingNode
 
     private boolean definesScaleGrid;
     private boolean insideScaleGrid;
+
+    //--------------------------------------------------------------------------
+    //
+    // MaskingNode Implementation
+    //
+    //--------------------------------------------------------------------------
+
+    private int maskIndex;
+
+    /**
+     * @return the index of a mask in a parent DisplayObject's list of children.
+     * This can be used to access the mask programmatically at runtime.
+     */
+    public int getMaskIndex()
+    {
+        return maskIndex;
+    }
+
+    /**
+     * Records the index of this mask in the parent DisplayObject's list of
+     * children. (Optional).
+     * @param index - the child index to the mask  
+     */
+    public void setMaskIndex(int index)
+    {
+        maskIndex = index;
+    }
 }

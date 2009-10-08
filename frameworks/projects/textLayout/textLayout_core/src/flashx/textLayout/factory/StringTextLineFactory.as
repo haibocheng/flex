@@ -1,8 +1,8 @@
 //========================================================================================
 //  $File: //a3t/argon/dev/textLayout_core/src/flashx/textLayout/factory/StringTextLineFactory.as $
-//  $DateTime: 2009/08/21 15:42:50 $
-//  $Revision: #8 $
-//  $Change: 715139 $
+//  $DateTime: 2009/09/22 13:41:56 $
+//  $Revision: #9 $
+//  $Change: 719892 $
 //  
 //  ADOBE CONFIDENTIAL
 //  
@@ -24,7 +24,7 @@ package flashx.textLayout.factory
 	import flash.geom.Rectangle;
 	import flash.text.engine.TextLine;
 	
-	import flashx.textLayout.compose.ITextLineCreator;
+	import flashx.textLayout.compose.ISWFContext;
 	import flashx.textLayout.container.ScrollPolicy;
 	import flashx.textLayout.debug.assert;
 	import flashx.textLayout.elements.Configuration;
@@ -264,7 +264,7 @@ package flashx.textLayout.factory
 			_isTruncated = false;
 			_truncatedText = text;			
 
-			_tf.flowComposer.textLineCreator = textLineCreator;
+			_tf.flowComposer.swfContext = swfContext;
 
 			_tf.flowComposer.compose();
 			

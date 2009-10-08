@@ -101,7 +101,7 @@ public class ItemRenderer extends DataRenderer implements IItemRenderer
             var idx:int;
             
             // translate these colors into uints
-            StyleManager.getColorNames(alternatingColors);
+            styleManager.getColorNames(alternatingColors);
             
             if (parent is GroupBase)
                 idx = GroupBase(parent).getElementIndex(this);
@@ -120,56 +120,6 @@ public class ItemRenderer extends DataRenderer implements IItemRenderer
     public function set contentBackgroundColor(value:uint):void
     {
         setStyle("contentBackgroundColor", value);
-    }
-    
-    [Bindable("rollOverColorChanged")]
-    /**
-     *  Color of the highlight when the mouse is over an
-     *  item renderer
-     *   
-     *  @default 0xCEDBEF
-     *  
-     *  @langversion 3.0
-     *  @playerversion Flash 10
-     *  @playerversion AIR 1.5
-     *  @productversion Flex 4
-     */   
-    public function get rollOverColor():uint
-    {
-        return getStyle("rollOverColor");
-    }
-    
-    /**
-     *  @private
-     */
-    public function set rollOverColor(value:uint):void
-    {
-        setStyle("rollOverColor", value);
-    }
-    
-    [Bindable("selectionColorChanged")]
-    /**
-     *  Color of the fill of a selected item 
-     *  renderer 
-     *   
-     *  @default 0xA8C6EE
-     *  
-     *  @langversion 3.0
-     *  @playerversion Flash 10
-     *  @playerversion AIR 1.5
-     *  @productversion Flex 4
-     */   
-    public function get selectionColor():uint
-    {
-        return getStyle("selectionColor");
-    }
-    
-    /**
-     *  @private
-     */
-    public function set selectionColor(value:uint):void
-    {
-        setStyle("selectionColor", value);
     }
     
     //--------------------------------------------------------------------------

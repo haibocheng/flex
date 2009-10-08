@@ -141,7 +141,10 @@ public class MxmlConfiguration
 		}
 
 		if (major <= 3)
+        {
 		    qualifiedTypeSelectors = false;
+            
+        }
 	}
 
 	public static ConfigurationInfo getCompatibilityVersionInfo()

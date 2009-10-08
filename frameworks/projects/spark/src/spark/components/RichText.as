@@ -16,7 +16,7 @@ import flash.display.DisplayObject;
 import flash.text.TextFormat;
 import flash.text.engine.FontLookup;
 
-import flashx.textLayout.compose.ITextLineCreator;
+import flashx.textLayout.compose.ISWFContext;
 import flashx.textLayout.conversion.ConversionType;
 import flashx.textLayout.conversion.ITextExporter;
 import flashx.textLayout.conversion.ITextImporter;
@@ -389,6 +389,12 @@ public class RichText extends TextBase implements IFontContextComponent
 	 */
 	private var factory:TextLineFactoryBase;
 
+    /**
+     *  @private
+     *  If true, the damage handler will return immediately.
+     */
+    private var ignoreDamageEvent:Boolean;
+    
     //--------------------------------------------------------------------------
     //
     //  Overridden properties
@@ -469,7 +475,10 @@ public class RichText extends TextBase implements IFontContextComponent
     	textFlowChanged = false;
     	contentChanged = false;
     	
-		// The other two are now invalid and must be recalculated when needed.
+        // If there was a textFlow remove its damage handler.
+        removeDamageHandler();
+
+        // The other two are now invalid and must be recalculated when needed.
 		_textFlow = null;
     	_content = null;
     	
@@ -616,7 +625,10 @@ public class RichText extends TextBase implements IFontContextComponent
 		textChanged = false;
         textFlowChanged = false;
         
-		// The other two are now invalid and must be recalculated when needed.
+        // If there was a textFlow remove its damage handler.
+        removeDamageHandler();
+
+        // The other two are now invalid and must be recalculated when needed.
 		_text = null;
 		_textFlow = null;
 		        
@@ -716,7 +728,10 @@ public class RichText extends TextBase implements IFontContextComponent
 		
 		if (value == _textFlow)
 			return;
-			
+			        
+        // If there was a textFlow remove its damage handler.
+        removeDamageHandler();
+        
 		_textFlow = value;
 		textFlowChanged = true;
 		
@@ -795,10 +810,10 @@ public class RichText extends TextBase implements IFontContextComponent
 		
 		if (embeddedFontContext != oldEmbeddedFontContext)
 		{
-			staticTextFlowFactory.textLineCreator =
-				ITextLineCreator(embeddedFontContext)
-			staticStringFactory.textLineCreator = 
-				ITextLineCreator(embeddedFontContext)
+			staticTextFlowFactory.swfContext =
+				ISWFContext(embeddedFontContext)
+			staticStringFactory.swfContext = 
+				ISWFContext(embeddedFontContext)
 		}
 				
 		// If the styles have changed, hostFormat will have
@@ -822,9 +837,13 @@ public class RichText extends TextBase implements IFontContextComponent
 		
 			if (_textFlow.flowComposer)
 			{
-				_textFlow.flowComposer.textLineCreator = 
-					staticTextFlowFactory.textLineCreator;
+				_textFlow.flowComposer.swfContext = 
+					staticTextFlowFactory.swfContext;
 			}
+            
+            // Add a damage handler.
+            _textFlow.addEventListener(DamageEvent.DAMAGE, 
+                                       textFlow_damageHandler);
 		}
 	}
     
@@ -869,35 +888,54 @@ public class RichText extends TextBase implements IFontContextComponent
 	 */
 	override mx_internal function composeTextLines(width:Number = NaN,
 												   height:Number = NaN):Boolean
-	{
+	{   
+        // If there is no explicit width but there is an explicit
+        // maxWidth use that.
+        if (isNaN(width) && !isNaN(explicitMaxWidth))
+            width = explicitMaxWidth;
+        
 		super.composeTextLines(width, height);
 		
-		// Don't want this handler firing when we're re-composing the text lines.
-		if (factory is TextFlowTextLineFactory && _textFlow != null)
-		{
-			_textFlow.removeEventListener(DamageEvent.DAMAGE,
-										  textFlow_damageHandler);
-		}
-		
-		
+		// Ignore damage events while we're re-composing the text lines.
+        ignoreDamageEvent = true;
+
 		// Set the composition bounds to be used by createTextLines().
-		// If the width or height is NaN, it will be computed by this method
+        // If there is no explicit width, and there is no explicit maxWidth,
+        // the width will be computed by this method.
+		// If the height is NaN, it will be computed by this method
 		// by the time it returns.
 		// The bounds are then used by the addTextLines() method
 		// to determine the isOverset flag.
 		// The composition bounds are also reported by the measure() method.
+        
 		bounds.x = 0;
 		bounds.y = 0;
-		bounds.width = isNaN(width) ? maxWidth : width;
+        bounds.width = width;
 		bounds.height = height;
 		
 		removeTextLines();
 		releaseTextLines();
 		
 		createTextLines();
+        
+        // Truncation only done if not measuring width and line breaks are
+        // toFit.  So if we are measuring, create the text lines to figure
+        // out their size and then recreate them using this size so truncation 
+        // will be done.
+        if (maxDisplayedLines != 0 && !isTruncated &&
+            getStyle("lineBreak") == "toFit")
+        {
+            var bp:String = getStyle("blockProgression");
+            if ((isNaN(width) && bp == "tb") || (isNaN(height) && bp != "tb"))
+            {
+                textLines.length = 0;
+                // bounds contains the measured size of the lines created above
+                createTextLines();
+            }
+        }
 		
-        // TODO (rfrishbe): can we optimize the "this" away since we know what the displayObject is now
-		addTextLines(this);
+        // Add the new text lines to the container.
+        addTextLines();
 		
 		// Figure out if the text overruns the available space for composition.
 		isOverset = isTextOverset(width, height);
@@ -907,11 +945,7 @@ public class RichText extends TextBase implements IFontContextComponent
 		
 		// Listen for "damage" events in case the textFlow is 
 		// modified programatically.
-		if (factory is TextFlowTextLineFactory && _textFlow != null)
-		{
-			_textFlow.addEventListener(DamageEvent.DAMAGE, 
-									   textFlow_damageHandler);
-		}  
+        ignoreDamageEvent = false;
 		
 		// Created all lines.
 		return true;      
@@ -1056,7 +1090,22 @@ public class RichText extends TextBase implements IFontContextComponent
     {
         textLines.push(textLine);
     }
-  
+
+    /**
+     *  @private
+     *  Make sure to remove the damage handler before resetting the text flow.
+     */
+    private function removeDamageHandler():void
+    {
+        // Could check factory is TextFlowTextLineFactory but be safe and 
+        // try to remove whenever there is a text flow.
+        if (_textFlow != null)
+        {
+            _textFlow.removeEventListener(DamageEvent.DAMAGE,
+                textFlow_damageHandler);
+        }
+    }
+
     //--------------------------------------------------------------------------
     //
     //  Event handlers
@@ -1071,18 +1120,14 @@ public class RichText extends TextBase implements IFontContextComponent
      */
     private function textFlow_damageHandler(event:DamageEvent):void
     {
-        // If the target is the current textFlow then check the generation.
-        // If there are no changes, don't recompose.  The TextFlowFactory
-        // createTextLines dispatches damage events every time the textFlow
-        // is composed, even if there are no changes.
-        if (TextFlow(event.target) == _textFlow)
-        { 
-            if (_textFlow.generation == lastGeneration)
-                return;
-            
-            // Update the last know generation for _textFlow.
-            lastGeneration = _textFlow.generation;
-        }
+        // If there are no changes to the generation, don't recompose.  
+        // The TextFlowFactory createTextLines dispatches damage events every 
+        // time the textFlow is composed, even if there are no changes.
+        if (ignoreDamageEvent || _textFlow.generation == lastGeneration)
+            return;
+        
+        // Update the last know generation for _textFlow.
+        lastGeneration = _textFlow.generation;
 
         // Invalidate _text and _content.
         _text = null;

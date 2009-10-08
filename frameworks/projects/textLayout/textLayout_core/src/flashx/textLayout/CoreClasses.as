@@ -24,6 +24,7 @@ package flashx.textLayout
 		import flashx.textLayout.compose.FlowDamageType; FlowDamageType;
 		import flashx.textLayout.compose.IFlowComposer; IFlowComposer;
 		import flashx.textLayout.compose.ITextLineCreator; ITextLineCreator;
+		import flashx.textLayout.compose.ISWFContext; ISWFContext;
 		import flashx.textLayout.compose.IVerticalJustificationLine; IVerticalJustificationLine;
 		import flashx.textLayout.compose.Parcel; Parcel;
 		import flashx.textLayout.compose.ParcelList; ParcelList;

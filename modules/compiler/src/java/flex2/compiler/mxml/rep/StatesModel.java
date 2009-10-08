@@ -30,6 +30,7 @@ import flex2.compiler.mxml.reflect.ElementTypeNotFound;
 import flex2.compiler.mxml.reflect.Type;
 import flex2.compiler.mxml.reflect.Property;
 import flex2.compiler.mxml.reflect.Style;
+import flex2.tools.oem.Library;
 import macromedia.asc.parser.*;
 
 import java.util.*;
@@ -813,7 +814,7 @@ public final class StatesModel {
      * target being the DOM node, we redirect the binding to apply its changes directly to our 
      * override (which serves as the middle man between the binding and the DOM node.
      */
-    private void postProcessBindingInstance(ValueInitializer value, Override override) 
+    private void postProcessBindingInstance(ValueInitializer value, SetPropertyOverride override) 
     {
         if (value.getValue() instanceof BindingExpression)
         {
@@ -821,12 +822,34 @@ public final class StatesModel {
             Model model = new Model(document, type, null, 0);
             document.ensureDeclaration(model);
         
-            BindingExpression bindingExpression = (BindingExpression)value.getValue();
+            // We need to ensure each override has its own unique copy of the 
+            // the BindingExpression, as several overrides could share a binding
+            // instance via stateGroups.
+            
+            BindingExpression sourceExpression = (BindingExpression)value.getValue();    
+            BindingExpression bindingExpression = new BindingExpression(
+            		sourceExpression.getSourceExpression(),
+            		sourceExpression.xmlLineNumber, 
+            		document);
+            
             bindingExpression.setDestination(model);
             bindingExpression.setDestinationLValue("value");
             bindingExpression.setDestinationProperty("value");
             bindingExpression.setDestinationStyle(null);
             override.setDeclaration(model.getId());
+            document.removeBindingExpression(sourceExpression);
+
+            try
+            {
+            	ValueInitializer valueClone = value.clone();
+            	valueClone.setValue(bindingExpression);
+            	override.value = valueClone;
+                value.setValue(bindingExpression);
+            }
+            catch ( CloneNotSupportedException e ) 
+            {
+            	throw new RuntimeException(e); //wont happen
+            }
         }
     }
     

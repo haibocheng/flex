@@ -281,17 +281,13 @@ Application
 
 ApplicationControlBar
 {
-	borderStyle: "applicationControlBar";
 	cornerRadius: 5;
-	docked: false;
-	dropShadowEnabled: true;
-	fillAlphas: 0, 0;
+ 	fillAlphas: 0, 0;
 	fillColors: #FFFFFF, #FFFFFF;
 	paddingBottom: 4;
 	paddingLeft: 8;
 	paddingRight: 8;
 	paddingTop: 5;
-	shadowDistance: 5;
 }
 
 /*
@@ -346,7 +342,6 @@ Button
 
 ButtonBar
 {
-    borderSkin: ClassReference("mx.skins.halo.HaloBorder");
 	firstButtonStyleName: "";
 	horizontalAlign: "center";
 	horizontalGap: 0;
@@ -361,6 +356,16 @@ ButtonBar
 //  ButtonBarButton
 //------------------------------
 */
+
+ButtonBarButton.buttonBarFirstButtonStyle
+{
+	skin: ClassReference(null);
+}
+
+ButtonBarButton.buttonBarLastButtonStyle
+{
+	skin: ClassReference(null);
+}
 
 ButtonBarButton
 {
@@ -392,8 +397,6 @@ ButtonBarButton
 
 CalendarLayout
 {
-	cellWidthPadding: 6;
-	cellHeightPadding: 6;
 	color: #2B333C;
 	horizontalGap: 7;
 	paddingBottom: 10;
@@ -461,7 +464,6 @@ ColorPicker
 	fontSize: 11;
 	iconColor: #000000;
 /*	overSkin: null; */
-	shadowColor: #4D555E;
 	skin: ClassReference("mx.skins.halo.ColorPickerSkin");
 	swatchBorderSize: 0;
 /*	upSkin: null; */
@@ -538,8 +540,8 @@ Container
 
 ControlBar
 {
-	disabledOverlayAlpha: 0; 
 	borderStyle: "controlBar";
+	disabledOverlayAlpha: 0; 
 	paddingBottom: 10;
 	paddingLeft: 10;
 	paddingRight: 10;
@@ -750,8 +752,6 @@ FormHeading
 {
 	fontSize: 12;
 	fontWeight: "bold";
-	borderStyle: "none";
-	verticalGap: 16;
 }
 
 /*
@@ -1036,7 +1036,6 @@ MenuBar
 /*	itemUpSkin: null
 	itemOverSkin: null
 	itemDownSkin: null */
-	translucent: false;
 }
 
 /*
@@ -1208,7 +1207,6 @@ PrintDataGrid
 {
 	alternatingItemColors: #FFFFFF, #FFFFFF;
 	borderColor: 0;
-	columnResizeSkin: ClassReference("mx.skins.halo.DataGridColumnResizeSkin");
 	headerColors: #FFFFFF, #FFFFFF;
 	headerSeparatorSkin: ClassReference("mx.skins.halo.DataGridHeaderSeparator");
 	headerStyleName: "dataGridStyles";
@@ -1324,10 +1322,6 @@ ScrollBar
 	downArrowSkin: ClassReference("mx.skins.halo.ScrollArrowSkin");
 /*	downArrowUpSkin: null
 	fillColors: #FFFFFF, #E7E7E7; // bailed these as ScrollBar is now a translucent component backed by backgroundColor-derived solid shapes */
-	paddingBottom: 0;
-	paddingLeft: 0;
-	paddingRight: 0;
-	paddingTop: 0;
 	thumbOffset: 0;
 /*	thumbDownSkin: null
 	thumbOverSkin: null */
@@ -1340,6 +1334,19 @@ ScrollBar
 	upArrowOverSkin: null */
 	upArrowSkin: ClassReference("mx.skins.halo.ScrollArrowSkin");
 /*	upArrowUpSkin: null */
+}
+
+/*
+//------------------------------
+//  Slider
+//------------------------------
+*/
+
+Slider
+{
+    thumbSkin: ClassReference(null);
+    trackHighlightSkin: ClassReference(null);
+    trackSkin: ClassReference(null);
 }
 
 /*
@@ -1404,7 +1411,6 @@ SwatchPanel
 
 SWFLoader
 {
-	borderStyle: "none";
 	brokenImageBorderSkin: ClassReference("mx.skins.halo.BrokenImageBorderSkin");
 	brokenImageSkin: Embed(source="Assets.swf",symbol="__brokenImage");
 }
@@ -1616,7 +1622,6 @@ ToolTip
 	paddingLeft: 4;
 	paddingRight: 4;
 	paddingTop: 2;
-	shadowColor: #000000;
 }
 
 /*

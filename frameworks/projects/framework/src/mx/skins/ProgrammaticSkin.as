@@ -15,17 +15,23 @@ package mx.skins
 import flash.display.Graphics;
 import flash.display.Shape;
 import flash.geom.Matrix;
+import flash.utils.getDefinitionByName;
+
+import mx.core.FlexShape;
+import mx.core.IFlexModule;
+import mx.core.IFlexModuleFactory;
 import mx.core.IInvalidating;
 import mx.core.IFlexDisplayObject;
-import mx.core.UIComponentGlobals;
+import mx.core.IProgrammaticSkin;
 import mx.core.mx_internal;
+import mx.core.UIComponentGlobals;
 import mx.managers.ILayoutManagerClient;
 import mx.styles.ISimpleStyleClient;
 import mx.styles.IStyleClient;
+import mx.styles.IStyleManager2;
+import mx.styles.StyleManager;
 import mx.utils.GraphicsUtil;
 import mx.utils.NameUtil;
-import mx.core.FlexShape;
-import mx.core.IProgrammaticSkin;
 
 use namespace mx_internal;
 
@@ -55,7 +61,13 @@ public class ProgrammaticSkin extends FlexShape
 	 *  Set by horizontalGradientMatrix() or verticalGradientMatrix().
 	 */
 	private static var tempMatrix:Matrix = new Matrix();
-	
+
+    /**
+     *  @private
+     *  Soft link to UIComponent. Cache the class for performance.
+     */
+    private static var uiComponentClass:Class;
+
 	//--------------------------------------------------------------------------
 	//
 	//  Constructor
@@ -627,6 +639,23 @@ public class ProgrammaticSkin extends FlexShape
         return _styleName ? _styleName.getStyle(styleProp) : null;
     }
 		
+    /**
+     *  @private
+     *  Get the style manager for this skin. The style manager is 
+     *  based on the UIComponent that owns the skin. If this skin does not
+     *  have a styleName then use the top-level style manager.
+     */     
+    protected function get styleManager():IStyleManager2
+    {
+        if (uiComponentClass == null)
+            uiComponentClass = Class(getDefinitionByName("mx.core.UIComponent"));
+        
+        if (styleName is uiComponentClass) 
+            return styleName.styleManager;
+        else
+            return StyleManager.getStyleManager(null);
+    }
+
 	/**
 	 *  Utility function to create a horizontal gradient matrix.
 	 *

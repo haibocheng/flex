@@ -94,7 +94,7 @@ public class ScrollTrackSkin extends Border
 
 		// User-defined styles.
 		var fillColors:Array = getStyle("trackColors");
-		StyleManager.getColorNames(fillColors);
+		styleManager.getColorNames(fillColors);
 		
 		var borderColor:uint =
 			ColorUtil.adjustBrightness2(getStyle("borderColor"), -20);

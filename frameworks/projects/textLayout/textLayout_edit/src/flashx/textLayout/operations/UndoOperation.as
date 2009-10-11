@@ -41,7 +41,10 @@ package flashx.textLayout.operations
 		 * @langversion 3.0 
 		 */
 		public function UndoOperation(op:FlowOperation)
-		{ super(null); }
+		{ 
+			super(null);
+			_operation = op;
+		}
 		
 		/** 
 		 * The operation to undo. 

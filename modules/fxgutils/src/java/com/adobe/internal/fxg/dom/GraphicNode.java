@@ -128,10 +128,31 @@ public class GraphicNode extends AbstractFXGNode implements MaskableNode
     {
         if (child instanceof MaskPropertyNode)
         {
-            mask = ((MaskPropertyNode)child).mask;
+        	/**
+        	 * According to FXG 2.0 spec., <mask> must be before any graphical element.
+        	 */
+        	if (children != null)
+        	{
+                throw new FXGException(child.getStartLine(), child.getStartColumn(), "InvalidMaskElement");
+        	}	
+        	if (mask == null)
+        	{
+        		mask = ((MaskPropertyNode)child).mask;
+        	}
+        	else
+        	{
+                throw new FXGException(child.getStartLine(), child.getStartColumn(), "MultipleMaskElements");
+        	}           
         }
         else if (child instanceof LibraryNode)
         {   
+        	/**
+        	 * According to FXG 2.0 spec., <Library> must be before <mask> and any graphical element.
+        	 */
+        	if (mask != null || children != null)
+        	{
+                throw new FXGException(child.getStartLine(), child.getStartColumn(), "InvalidLibraryElement");
+        	}	
             if (library == null)
             {
                 library = (LibraryNode)child;
@@ -261,6 +282,16 @@ public class GraphicNode extends AbstractFXGNode implements MaskableNode
         return maskType;
     }
 
+    public boolean getLuminosityClip()
+    {
+        return luminosityClip;
+    }
+    
+    public boolean getLuminosityInvert()
+    {
+        return luminosityInvert;
+    }
+    
     //--------------------------------------------------------------------------
     //
     // Other Methods

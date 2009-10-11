@@ -1,4 +1,45 @@
-﻿Build 517
+Build 524
+	* Fix 2446258 Cursor for first line of bottom aligned text container is incorrect.
+	* Fix 2443549 Assertion error when placing graphic after another graphic in TCY.
+	* Re-adjustment to Underline and Strikethrough code.  Positioning is more consistent than previous implementation.
+	* Fix 2397598 Delete/Clear context menu commands don't work in Vellum containers.  New code properly supports action.
+	* API CHANGE: Rename TextConverter HTML_FORMAT to TEXT_FIELD_HTML_FORMAT to better reflect the fact that this is based on the TextField htmlText property.
+	* API CHANGE: Removed FXG_FORMAT from TextConverter. This was an old format, it is no longer supported. Use TEXT_LAYOUT_FORMAT instead.
+Build 523
+	* Integrated first pass implementation of Inline IME support.
+Build 522
+	* Fix 2441993 tcy improperly rotated in horizontal text.  Issue caused by failure of code to apply rotation of 0 under certain, unknown race conditions.  New code handles all cases and has unified rotation into single, private API.
+	* Fix 2446323 paddingRight not taken into account when calculating the contentWidth of measured container
+	* Fix for mis-alignment of underline and strikethrough on text.  Placement of UL and ST was inconsistent based on baseline alignment.  New code properly calculates UL/ST on runs of text.  Note that there are still inconsistencies between fonts due to reported values in FontMetrics which cannot be overcome.  However, relative placement within a single font face match regardless of baseline.
+	* Fix case in links format where colors that came in as "0x" syntax were also exported via TLF markup as "0x". Now they are normalized to "#" syntax.
+	* Fix 2437033 better worded exception when EditManager.deleteNextCharacter called on invalid text (e.g., when called from a FlowOperationEvent).
+	* Fix 2434028 Tab key moving focus out of the editor after inserting tab.
+	- API change added IInteractionEventHandler.keyFocusChangeHandler
+	- TLF no longer sets tabEnabled flag to Containers passed to DisplayObjectController or TextContainerManager.  Client must manage that flag.
+	- WinIE requires additional special handling in html wrapper.  See http://ats.macromedia.com/Players/ATS/ATS9AS2/Staging/html/browserHTML/SeamlessTabbing/SeamlessTabbingFalse7.htm
+	* Fix 2447482 [SDK-23540] Make flashx.textLayout.container.ContainerController.attachTransparentBackgroundForHit()  public (made it tlf_internal)
+	* Fix 2447819 ParcelList keeps reference to controller of last edited component preventing garbage collection
+Build 521
+	* Fix 2445581 FMR: [SDK-23517] RTE in ParagraphElement (and SpanElement) when setting null mxmlChildren
+	* Fix 2432300 Geometry Left not included in contentBounds in vertical text
+	* Fix (no bug #) FlowComposeBase.findLineAtPosition was ignoring preferPrevious parameter
+	* MARKUP CHANGES: 
+	     (1) linkNormalFormat, linkActiveFormat, and linkHoverFormat elements now expect to find the attributes on a child element called TextLayoutFormat. Here's an example of how it looks now: <a><linkActiveFormat><TextLayoutFormat textDecoration="underline"/></linkActiveFormat>Anchor</a>
+	     (2) the named <format> element has been removed. You should apply the attributes directly to the element instead.
+	* Fix SDK-22792 TLF SelectionManager.computeSelectionIndex runtime error
+	* Updated the way color values are exported in TLF markup and FXG to use "#" format instead of "0x". 
+Build 519
+	* Fix 2431183 FlowElementMouseEvent variables should not be public
+	* Fix 2431182 TextLayoutEvent needs a clone function.
+	* Fix 2441765 Calling updateToController on uncomposed content generates an error
+	* Fix 2420904 Autoscrolling with explicit lineBreaks
+	* Fix 2428141 Insertion point should not show when text is scrolled so insertion pt no longer visible (lineBreak=explicit)
+Build 518
+	* Implementation of code needed to support inline IME (though not the actual implementation of inline IME), searchability and certain missing API's needed to support
+	  future accessibility functionality.
+	* Fix 2437575 Argument Error in TextBlock.releaseLines when changing NumContainers
+	* Fix 2394529 When paddingLeft and paddingRight are set, at the container controller sometimes returns different content widths.
+Build 517
 	* Fix 2414442 ElementFormat.getFontMetrics needs to be called in proper context
 	  replace ITextLineCreator with ISWFContext.  ISWFContext has one method callInContext similar to flex method of the same name
 	  replace textLineCreator setters with swfContext setters in IFlowComposer and TextContainerManager

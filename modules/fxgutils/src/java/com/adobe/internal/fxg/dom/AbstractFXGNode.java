@@ -366,7 +366,7 @@ public abstract class AbstractFXGNode implements FXGNode
      * Convert an FXG String value to a double after taking care of the % sign.
      * 
      * @param value - the FXG String value.
-    * @return the double precision floating point value represented by the
+     * @return the double precision floating point value represented by the
      * String.
      * @throws NumberFormatException if the String did not represent a double.
      */
@@ -381,6 +381,72 @@ public abstract class AbstractFXGNode implements FXGNode
         }
 
         return Double.parseDouble(value);
+    }
+    
+    /**
+     * Convert an FXG String value to a double after taking care of the % sign.
+     * If the value is double, it is checked against the specified range 
+     * (inclusive).
+     * 
+     * @param value - the FXG String value.
+     * @param min - the smallest double value that the result must be greater
+     * or equal to.
+     * @param max - the largest double value that the result must be smaller
+     * than or equal to.
+     * @param defaultValue - the default double value; if the encountered minor 
+     * version is later than the supported minor version and the attribute value
+     *  is out-of-range, the default value is returned.
+     * @return the double precision floating point value represented by the
+     * String.
+     * @throws NumberFormatException if the String did not represent a double 
+     * or the value isn't within the specified range (inclusive).
+     */
+    protected double parseNumberPercent(String value, double min, double max, double defaultValue)
+    {
+        value = value.trim();
+
+        if (value.charAt(value.length()-1) == '%')
+        {
+            value = value.substring(0, value.length()-1);
+            value = value.trim();
+        }
+        return parseDouble(value, min, max, defaultValue);      
+    }
+    
+    /**
+     * Convert an FXG String value to a double after taking care of the % sign.
+     * If the value is double, it is checked against the specified range 
+     * (inclusive). There are separate ranges for percent and number.
+     * 
+     * @param value - the FXG String value.
+     * @param min - the smallest double value that the result must be greater
+     * or equal to.
+     * @param max - the largest double value that the result must be smaller
+     * than or equal to.
+     * @param defaultValue - the default double value; if the encountered minor 
+     * version is later than the supported minor version and the attribute value
+     *  is out-of-range, the default value is returned.
+     * @return the double precision floating point value represented by the
+     * String.
+     * @throws NumberFormatException if the String did not represent a double 
+     * or the value isn't within the specified range (inclusive).
+     */
+    protected double parseNumberPercentWithSeparateRange(String value, double minNumber, 
+    		double maxNumber, double minPercent, double maxPercent, 
+    		double defaultValue)
+    {
+        value = value.trim();
+
+        if (value.charAt(value.length()-1) == '%')
+        {
+            value = value.substring(0, value.length()-1);
+            value = value.trim();
+            return parseDouble(value, minPercent, maxPercent, defaultValue);
+        }
+        else
+        {
+        	return parseDouble(value, minNumber, maxNumber, defaultValue);
+        }
     }
     
     /**
@@ -402,7 +468,7 @@ public abstract class AbstractFXGNode implements FXGNode
      * @param value - the FXG String value.
      * @param min - the smallest double value that the result must be greater
      * or equal to.
-     * @param min - the largest double value that the result must be smaller
+     * @param max - the largest double value that the result must be smaller
      * than or equal to.
      * @param defaultValue - the default double value; if the encountered minor 
      * version is later than the supported minor version and the attribute value
@@ -443,7 +509,7 @@ public abstract class AbstractFXGNode implements FXGNode
      * @param value - the FXG String value.
      * @param min - the smallest int value that the result must be greater
      * or equal to.
-     * @param min - the largest int value that the result must be smaller
+     * @param max - the largest int value that the result must be smaller
      * than or equal to.
      * @param defaultValue - the default int value; if the encountered minor 
      * version is later than the supported minor version and the attribute value

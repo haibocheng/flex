@@ -20,6 +20,8 @@ import java.util.List;
 
 import com.adobe.fxg.FXGVersion;
 import com.adobe.internal.fxg.dom.BitmapGraphicNode;
+import com.adobe.internal.fxg.dom.FillNode;
+import com.adobe.internal.fxg.dom.fills.BitmapFillNode;
 import com.adobe.internal.fxg.dom.types.FillMode;
 
 import flash.graphics.images.ImageUtil;
@@ -133,13 +135,13 @@ public class ImageHelper
     }
     
     /**
-     * Determines whether the bitmap should be clipped. 
+     * Determines whether the bitmap image should be clipped. 
      * 
      * @param tag The DefineBits tag encoding the image.
      * @param node The BitmapGraphicNode.
       * @return boolean if bitmap should be clipped. 
      */    
-    public static boolean bitmapNeedsClipping(DefineBits imageTag, BitmapGraphicNode node)
+    public static boolean bitmapImageNeedsClipping(DefineBits imageTag, BitmapGraphicNode node)
     {
     	if (((node.getFileVersion().equalTo(FXGVersion.v1_0)) && !node.repeat) ||
     			(node.fillMode.equals(FillMode.CLIP)))
@@ -152,7 +154,56 @@ public class ImageHelper
     	
     }
     
+    /**
+     * Determines whether the bitmap fill mode is repeat. 
+     * 
+     * @param node The BitmapFillNode.
+     * @return boolean if bitmap should repeat. 
+     */    
+    public static boolean bitmapFillModeIsRepeat(BitmapFillNode node)
+    {
+    	if (((node.getFileVersion().equalTo(FXGVersion.v1_0)) && node.repeat) ||
+    			(node.fillMode.equals(FillMode.REPEAT)))
+    	{
+    		return true;
+    	}
+    	
+    	return false;
+    	
+    }
  
+    public static boolean isBitmapFillWithClip(FillNode fill)
+    {
+    	if (fill == null) 
+    		return false;
+    	
+    	if (fill instanceof BitmapFillNode)
+    	{
+    		BitmapFillNode bFill = (BitmapFillNode) fill;
+    		if (ImageHelper.bitmapFillModeIsRepeat(bFill))
+    		{
+    			return false;
+    		}
+    		else
+    		{
+    			if ((bFill.getFileVersion() == FXGVersion.v2_0) && (bFill.fillMode == FillMode.SCALE))
+    			{
+    				if ((bFill.scaleX == Double.NaN) && (bFill.scaleY == Double.NaN) && 
+    						(bFill.x == Double.NaN) && (bFill.y == Double.NaN) &&
+    						(bFill.rotation == Double.NaN))
+    					return false;
+    				else
+    					return true;
+    			}
+    			else
+    			{
+    				return true;
+    			}
+    		}    		
+    		
+    	}
+    	return false;
+    }
     public static DefineBits createDefineBits(InputStream in, String mimeType) throws IOException
     {
         // TODO: Investigate faster mechanisms of getting image info and pixels

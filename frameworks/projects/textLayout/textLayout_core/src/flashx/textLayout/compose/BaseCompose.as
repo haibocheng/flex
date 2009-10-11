@@ -132,7 +132,6 @@ package flashx.textLayout.compose
 			// for a non-specified compose position the ParcelList handles the bail out - just set to textLength
 			_stopComposePos = composeToPosition >= 0 ? Math.min(_textFlow.textLength,composeToPosition) : _textFlow.textLength;
 			
-			_parcelList.initialize();
 			// this chains through the list - tell it if a "care about" comopseToPosition was specified
 			_parcelList.beginCompose(composer, controllerEndIndex, composeToPosition > 0);	
 			
@@ -312,7 +311,7 @@ package flashx.textLayout.compose
 					textLine = curLine.getTextLine(true);
 					var lastAtom:int = textLine.atomCount - 1;
 					// If we're at the end of the paragraph, don't count the terminator
-					var endOfParagraph:Boolean = _curElementOffset == _curParaStart + _curParaElement.textLength;
+					var endOfParagraph:Boolean = _curElementStart+_curElementOffset == _curParaStart + _curParaElement.textLength;
 					if (endOfParagraph && !isRTL)
 						--lastAtom;	// can go negative if just the terminator.  in that case use left/top of atom zero
 					var bounds:Rectangle = textLine.getAtomBounds(lastAtom >= 0 ? lastAtom : 0);	// get rightmost atom bounds
@@ -848,32 +847,67 @@ package flashx.textLayout.compose
  			{
 	 			// Leave room for the padding. If the content overlaps the padding, don't count the padding twice.
 	  			var paddingLeft:Number = controller.effectivePaddingLeft;
-	 			if (_controllerLeft > 0)
-	 			{
-	 				if (_controllerLeft < paddingLeft)
-	 					_controllerLeft = 0;
-	 				else 
-	 					_controllerLeft -= paddingLeft;
-	 			}
-	
 	  			var paddingTop:Number = controller.effectivePaddingTop;
-	 			if (_controllerTop > 0)
-	 			{
-	 				if (_controllerTop < paddingTop)
-	 					_controllerTop = 0;
-	 				else 
-	 					_controllerTop -= paddingTop;
-	 			}
+	  			var paddingRight:Number = controller.effectivePaddingRight;
+	  			var paddingBottom:Number = controller.effectivePaddingBottom;
+	  			if (_blockProgression == BlockProgression.TB)
+	  			{
+		 			if (_controllerLeft > 0)
+		 			{
+		 				if (_controllerLeft < paddingLeft)
+		 					_controllerLeft = 0;
+		 				else 
+		 					_controllerLeft -= paddingLeft;
+		 			}
+	
+		 			if (_controllerTop > 0)
+		 			{
+		 				if (_controllerTop < paddingTop)
+		 					_controllerTop = 0;
+		 				else 
+		 					_controllerTop -= paddingTop;
+		 			}
 	 			
-	 			var paddingWidthAdj:Number = (_blockProgression == BlockProgression.TB) ? controller.effectivePaddingRight : controller.effectivePaddingLeft;
-	 			if (_controllerRight < controller.compositionWidth)
-	 			{
-	 				if (_controllerRight > controller.compositionWidth - paddingWidthAdj)
-	 					_controllerRight = controller.compositionWidth;
-	 				else 
-	 					_controllerRight = _controllerRight + paddingWidthAdj;
-	 			}
-				_controllerBottom += controller.effectivePaddingBottom;	
+		 			if (isNaN(controller.compositionWidth))
+		 				_controllerRight += paddingRight;		 				
+		 			else if (_controllerRight < controller.compositionWidth)
+		 			{
+		 				if (_controllerRight > controller.compositionWidth - paddingRight)
+		 					_controllerRight = controller.compositionWidth;
+		 				else 
+		 					_controllerRight += paddingRight;
+		 			}
+					_controllerBottom += paddingBottom;	
+	  			}
+	  			else
+	  			{
+	  				_controllerLeft -= paddingLeft;
+	  				if (_controllerTop > 0)
+	  				{
+	  					if (_controllerTop < paddingTop)
+		 					_controllerTop = 0;
+		 				else 
+		 					_controllerTop -= paddingTop;
+	  				}
+	  				if (_controllerRight < 0)
+	  				{
+	  					if (_controllerRight > -paddingRight)
+	  					{
+	  						_controllerRight = 0;
+	  					}
+	  					else
+	  						_controllerRight += paddingRight;
+	  				}
+	  				if (isNaN(controller.compositionHeight))
+	  					_controllerBottom += paddingBottom;
+	  				else if (_controllerBottom < controller.compositionHeight)
+	  				{
+	  					if (_controllerBottom > controller.compositionWidth - paddingBottom)
+		 					_controllerBottom = controller.compositionWidth;
+		 				else 
+		 					_controllerBottom += paddingBottom;
+	  				}
+	  			}
  				controller.setContentBounds(_controllerLeft, _controllerTop, _controllerRight-_controllerLeft, _controllerBottom-_controllerTop);
 			}
 			else

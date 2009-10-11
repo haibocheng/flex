@@ -547,7 +547,7 @@ public class AsyncListView extends OnDemandEventDispatcher implements IList
         var item:Object = null;
         try
         {
-            return list.getItemAt(index);
+            return list.getItemAt(index, prefetch);
         }
         catch (ipe:ItemPendingError)
         {
@@ -571,6 +571,9 @@ public class AsyncListView extends OnDemandEventDispatcher implements IList
      */
     public function getItemIndex(item:Object):int
     {
+        for each (var responder:ListItemResponder in pendingResponders)
+            if (responder.item === item)
+                return responder.index;
         return (list) ? list.getItemIndex(item) : -1;
     }
     

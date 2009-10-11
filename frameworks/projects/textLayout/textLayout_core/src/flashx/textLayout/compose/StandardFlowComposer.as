@@ -207,37 +207,29 @@ package flashx.textLayout.compose
 			for each (cont in _controllerList)
 				ContainerController(cont).setRootElement(_rootElement);
 			
-			// attach accessibility to the containers
-			// Why only the first container?
+
 			if (_controllerList.length > 0 && _textFlow)
 			{
-				var firstContainerController:ContainerController = getControllerAt(0);
-				var firstContainer:Sprite = firstContainerController.container;
-				if (firstContainer)
+				// attach accessibility to the containers
+				// Why only the first container?  There are workflows that this will fail
+				// for example: a pagination workflow that has a composed chain of containers but only displays one at a time.
+				if (textFlow.configuration.enableAccessibility && flash.system.Capabilities.hasAccessibility)
 				{
-					if(textFlow.configuration.enableAccessibility && flash.system.Capabilities.hasAccessibility)
+					var firstContainer:Sprite = getControllerAt(0).container;
+					if (firstContainer)
 					{
 						clearContainerAccessibilityImplementation(firstContainer);
 						firstContainer.accessibilityImplementation = new TextAccImpl(firstContainer, _textFlow);
 					}
-					if (textFlow.configuration.manageTabKey)
-						firstContainer.tabEnabled = false;
-					else
-						firstContainer.tabEnabled = true;
-					firstContainer.focusRect = false;
 				}
 				
-				var curContainerController:ContainerController;
 				var curContainer:Sprite;
-				for (var i:int = 1; i < _controllerList.length; ++i)
+				// turn off focusRect on all containers
+				for (var i:int = 0; i < _controllerList.length; ++i)
 				{
-					curContainerController = getControllerAt(i);
-					curContainer = curContainerController.container;
+					curContainer = getControllerAt(i).container;
 					if (curContainer)
-					{
-						curContainer.tabEnabled = false;
 						curContainer.focusRect = false;
-					}
 				} 
 		  	}
 
@@ -277,10 +269,7 @@ package flashx.textLayout.compose
 				ContainerController(controller).setRootElement(_rootElement)
 				var curContainer:Sprite = controller.container;
 				if (curContainer)
-				{
-					curContainer.tabEnabled = false;
 					curContainer.focusRect = false;
-				}
 				// mark the previous container as geometry damaged - this is more than is needed
 				controller = this.getControllerAt(this.numControllers-2);
 				var damageStart:int = controller.absoluteStart;

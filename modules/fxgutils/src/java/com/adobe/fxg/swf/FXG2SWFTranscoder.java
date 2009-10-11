@@ -23,7 +23,6 @@ import java.util.Random;
 
 import com.adobe.fxg.FXGTranscoder;
 import com.adobe.fxg.FXGException;
-import com.adobe.fxg.FXGVersion;
 import com.adobe.internal.fxg.dom.AbstractShapeNode;
 import com.adobe.internal.fxg.dom.BitmapGraphicNode;
 import com.adobe.internal.fxg.dom.DefinitionNode;
@@ -56,6 +55,7 @@ import com.adobe.internal.fxg.dom.filters.DropShadowFilterNode;
 import com.adobe.internal.fxg.dom.filters.GlowFilterNode;
 import com.adobe.internal.fxg.dom.filters.GradientBevelFilterNode;
 import com.adobe.internal.fxg.dom.filters.GradientGlowFilterNode;
+import com.adobe.internal.fxg.dom.strokes.AbstractStrokeNode;
 import com.adobe.internal.fxg.dom.strokes.LinearGradientStrokeNode;
 import com.adobe.internal.fxg.dom.strokes.RadialGradientStrokeNode;
 import com.adobe.internal.fxg.dom.strokes.SolidColorStrokeNode;
@@ -177,8 +177,10 @@ public class FXG2SWFTranscoder implements FXGTranscoder
         DefineSprite clipSprite = createDefineSprite("BitmapGraphic_Clip");
         spriteStack.push(clipSprite);
         GraphicContext context = node.createGraphicContext();
-        List<ShapeRecord> shapeRecords = ShapeHelper.rectangle(0.0, 0.0, imageTag.width, imageTag.height);
-        DefineShape clipShape = createDefineShape(shapeRecords, new SolidColorFillNode(), null, context.getTransform());
+        double width = (imageTag.width < node.width) ? imageTag.width : node.width;
+        double height = (imageTag.height < node.height) ? imageTag.height : node.height;
+        List<ShapeRecord> shapeRecords = ShapeHelper.rectangle(0.0, 0.0, width, height);
+        DefineShape clipShape = createDefineShape(null, shapeRecords, new SolidColorFillNode(), null, context.getTransform());
         placeObject(clipShape, new GraphicContext());
         spriteStack.pop();
         
@@ -202,20 +204,18 @@ public class FXG2SWFTranscoder implements FXGTranscoder
     // --------------------------------------------------------------------------
     protected PlaceObject bitmap(BitmapGraphicNode node)
     {
-        double width = node.width;
-        double height = node.height;
         GraphicContext context = node.createGraphicContext();
-        if (node.visible)
+        String source = parseSource(node.source);
+        if (source == null)
         {
-            String source = parseSource(node.source);
-            if (source == null)
-            {
-                // Source is required after FXG 1.0
-                // Exception: Missing source attribute in <BitmapGraphic> or <BitmapFill>.
-                throw new FXGException(node.getStartLine(), node.getStartColumn(), "MissingSourceAttribute");
-            }
-            DefineBits imageTag = createDefineBits(node, source, width, height);
+            // Exception: Missing source attribute in <BitmapGraphic> or <BitmapFill>.
+            throw new FXGException(node.getStartLine(), node.getStartColumn(), "MissingSourceAttribute");
+        }
+        DefineBits imageTag = createDefineBits(node, source);
         
+        if ((node.visible) && (!node.isPartofMask))
+        {
+       
             DefineShape imageShape;
             ScalingGrid scalingGrid = context.scalingGrid;
             if (scalingGrid != null)
@@ -227,7 +227,7 @@ public class FXG2SWFTranscoder implements FXGTranscoder
             }
             else
             {
-            	if (ImageHelper.bitmapNeedsClipping(imageTag, node))
+            	if (ImageHelper.bitmapImageNeedsClipping(imageTag, node))
             	{
             		PlaceObject p03 = bitmapWithClip(imageTag, node);
             		return p03;
@@ -242,10 +242,22 @@ public class FXG2SWFTranscoder implements FXGTranscoder
         }
         else
         {
-            List<ShapeRecord>  shapeRecords = ShapeHelper.rectangle(0.0, 0.0, width, height);        
-            DefineShape shape = createDefineShape(shapeRecords, null, null, context.getTransform());
-            PlaceObject po3 = placeObject(shape, context);
-            return po3;
+        	if (!ImageHelper.bitmapImageNeedsClipping(imageTag, node))
+        	{       		
+        		 List<ShapeRecord>  shapeRecords = ShapeHelper.rectangle(0.0, 0.0, node.width, node.height);        
+        	     DefineShape shape = createDefineShape(null, shapeRecords, new SolidColorFillNode(), null, context.getTransform());
+        		 PlaceObject po3 = placeObject(shape, context);
+        		 return po3;
+        	}
+        	else
+        	{
+                double width = (imageTag.width < node.width) ? imageTag.width : node.width;
+                double height = (imageTag.height < node.height) ? imageTag.height : node.height;
+       		 	List<ShapeRecord>  shapeRecords = ShapeHelper.rectangle(0.0, 0.0, width, height);        
+       	        DefineShape shape = createDefineShape(null, shapeRecords, new SolidColorFillNode(), null, context.getTransform());
+       		 	PlaceObject po3 = placeObject(shape, context);
+       		 	return po3;
+        	}
         }
 
     }
@@ -329,8 +341,7 @@ public class FXG2SWFTranscoder implements FXGTranscoder
         Ellipse2D.Double ellipse = new Ellipse2D.Double(0.0, 0.0, node.width, node.height);
         GraphicContext context = node.createGraphicContext();
         
-        DefineShape shape = createDefineShape(ellipse, node.fill, node.stroke, context.getTransform());
-        PlaceObject po3 = placeObject(shape, context);
+        PlaceObject po3 = placeDefineShape(node, ellipse, node.fill, node.stroke, context);
         return po3;
     }
 
@@ -375,8 +386,7 @@ public class FXG2SWFTranscoder implements FXGTranscoder
     {
         List<ShapeRecord> shapeRecords = ShapeHelper.line(node.xFrom, node.yFrom, node.xTo, node.yTo);
         GraphicContext context = node.createGraphicContext();
-        DefineShape shape = createDefineShape(shapeRecords, node.fill, node.stroke, context.getTransform());
-        PlaceObject po3 = placeObject(shape, context);
+        PlaceObject po3 = placeDefineShape(node, shapeRecords, node.fill, node.stroke, context);
         return po3;
     }
 
@@ -421,6 +431,8 @@ public class FXG2SWFTranscoder implements FXGTranscoder
                 // Set the masking node's matrix with the concatenated values.
                 maskMatrix.setMatrixNodeValue(matrixNodeMasking);
             }
+            
+            markLeafNodesAsMask((GroupNode) mask);
             po3 = group((GroupNode)mask);
         }
         else if (mask instanceof PlaceObjectNode)
@@ -464,10 +476,11 @@ public class FXG2SWFTranscoder implements FXGTranscoder
 
     protected PlaceObject path(PathNode node)
     {
-        List<ShapeRecord> shapeRecords = ShapeHelper.path(node.data, (node.fill != null));
+        List<ShapeRecord> shapeRecords = ShapeHelper.path(node);
         GraphicContext context = node.createGraphicContext();
-        DefineShape shape = createDefineShape(shapeRecords, node.fill, node.winding, node.stroke, context.getTransform());
-        PlaceObject po3 = placeObject(shape, context);
+        Winding winding[] = new Winding[1];
+        winding[0] = node.winding;
+        PlaceObject po3 = placeDefineShape(node, shapeRecords, node.fill, node.stroke, context, winding);
         return po3;
     }
 
@@ -562,8 +575,7 @@ public class FXG2SWFTranscoder implements FXGTranscoder
              shapeRecords = ShapeHelper.rectangle(0.0, 0.0, node.width, node.height);
         }
         
-        DefineShape shape = createDefineShape(shapeRecords, node.fill, node.stroke, context.getTransform());
-        PlaceObject po3 = placeObject(shape, context);
+        PlaceObject po3 = placeDefineShape(node, shapeRecords, node.fill, node.stroke, context);
         return po3;
     }
 
@@ -635,8 +647,7 @@ public class FXG2SWFTranscoder implements FXGTranscoder
     //
     // --------------------------------------------------------------------------
 
-    protected DefineBits createDefineBits(FXGNode node, String source, double width,
-            double height)
+    protected DefineBits createDefineBits(FXGNode node, String source)
     {
         try
         {
@@ -668,65 +679,23 @@ public class FXG2SWFTranscoder implements FXGTranscoder
         return sprite;
     }
 
-    protected DefineShape createDefineShape(java.awt.Shape shape2d,
+    protected DefineShape createDefineShape(AbstractShapeNode node, java.awt.Shape shape2d,
             FillNode fill, StrokeNode stroke, FXGMatrix transform)
     {
         ShapeBuilder builder = new ShapeBuilder();
         ShapeIterator iterator = new PathIteratorWrapper(shape2d.getPathIterator(null));
         builder.processShape(iterator);
         Shape shape = builder.build();
-        return createDefineShape(shape.shapeRecords, fill, stroke, transform);
+        return createDefineShape(node, shape.shapeRecords, fill, stroke, transform);
     }
-
-    protected DefineShape createDefineShape(List<ShapeRecord> shapeRecords,
-            FillNode fill, StrokeNode stroke, FXGMatrix transform)
+    
+    protected DefineShape createDefineShape(AbstractShapeNode node, List<ShapeRecord> shapeRecords, FillNode fill,
+            StrokeNode stroke, FXGMatrix transform, Winding... windings)
     {
-        // Calculate the bounds of the shape outline (without strokes)
-        Rect bounds = ShapeHelper.getBounds(shapeRecords, null);
-        Rect edgeBounds = bounds;
-
-        ShapeWithStyle sws = new ShapeWithStyle();
-        sws.shapeRecords = shapeRecords;
-
-        int lineStyleIndex = stroke == null ? 0 : 1;
-        int fillStyle0Index = fill == null ? 0 : 1;
-        int fillStyle1Index = 0;
-        ShapeHelper.setStyles(shapeRecords, lineStyleIndex, fillStyle0Index, fillStyle1Index);
-
+        // Calculate the bounds of the shape outline (without strokes) - edgeBounds
+        Rect edgeBounds = (node == null) ? ShapeHelper.getBounds(shapeRecords, null, (AbstractStrokeNode)stroke) : node.getBounds(shapeRecords, null);
         
-        if (fill != null)
-        {
-            FillStyle fillStyle = createFillStyle(fill, bounds, transform);
-            sws.fillstyles = new ArrayList<FillStyle>(1);
-            sws.fillstyles.add(fillStyle);
-        }
-
-        if (stroke != null)
-        {
-            LineStyle lineStyle = createLineStyle(stroke, bounds, transform);
-            sws.linestyles = new ArrayList<LineStyle>(1);
-            sws.linestyles.add(lineStyle);
-
-            // Consider linestyle stroke widths with bounds calculation
-            edgeBounds = ShapeHelper.getBounds(shapeRecords, sws.linestyles);
-        }
-
-        DefineShape defineShape4 = new DefineShape(Tag.stagDefineShape4);
-        defineShape4.shapeWithStyle = sws;
-        defineShape4.bounds = bounds;
-        defineShape4.edgeBounds = edgeBounds;
-         
-        return defineShape4;
-    }
-    
-    
-    protected DefineShape createDefineShape(List<ShapeRecord> shapeRecords, FillNode fill,
-            Winding windingValue, StrokeNode stroke, FXGMatrix transform)
-    {
- 
-        // Calculate the bounds of the shape outline (without strokes)
-        Rect edgeBounds = ShapeHelper.getBounds(shapeRecords, null);
-        Rect bounds = edgeBounds;
+        Rect shapeBounds;
 
         ShapeWithStyle sws = new ShapeWithStyle();
         sws.shapeRecords = shapeRecords;
@@ -734,7 +703,10 @@ public class FXG2SWFTranscoder implements FXGTranscoder
         int lineStyleIndex = stroke == null ? 0 : 1;
         int fillStyle0Index = fill == null ? 0 : 1;
         int fillStyle1Index = 0;
-        ShapeHelper.setPathStyles(shapeRecords, lineStyleIndex, fillStyle0Index, fillStyle1Index);
+        if (windings.length > 0)
+        	ShapeHelper.setPathStyles(shapeRecords, lineStyleIndex, fillStyle0Index, fillStyle1Index);
+        else
+        	ShapeHelper.setStyles(shapeRecords, lineStyleIndex, fillStyle0Index, fillStyle1Index);
 
         if (fill != null)
         {
@@ -745,22 +717,137 @@ public class FXG2SWFTranscoder implements FXGTranscoder
 
         if (stroke != null)
         {
-            LineStyle lineStyle = createLineStyle(stroke, edgeBounds, transform);
-            sws.linestyles = new ArrayList<LineStyle>();
-            sws.linestyles.add(lineStyle);
+        	//find the shapeBounds with stroke
+        	LineStyle ls = createGenericLineStyle((AbstractStrokeNode)stroke);
+            shapeBounds = (node == null) ? ShapeHelper.getBounds(shapeRecords, ls, (AbstractStrokeNode)stroke) : node.getBounds(shapeRecords, ls);        	
 
-            // Consider linestyle stroke widths with bounds calculation
-            bounds = ShapeHelper.getBounds(shapeRecords, sws.linestyles);
+            LineStyle lineStyle = createLineStyle(stroke, shapeBounds, transform);
+            sws.linestyles = new ArrayList<LineStyle>();
+            sws.linestyles.add(lineStyle);            
+        }
+        else
+        {
+        	shapeBounds = edgeBounds;
         }
 
         DefineShape defineShape4 = new DefineShape(Tag.stagDefineShape4);
         defineShape4.shapeWithStyle = sws;
-        defineShape4.bounds = bounds;
+        defineShape4.bounds = shapeBounds;
         defineShape4.edgeBounds = edgeBounds;
-        if (fill != null)
+        if ((fill != null) &&( windings.length > 0))
+        {
+        	Winding windingValue = windings[0];
             defineShape4.usesFillWindingRule = (windingValue == Winding.NON_ZERO);
-         
+        }
+        
         return defineShape4;
+    }
+    
+    protected PlaceObject placeDefineShape(AbstractShapeNode node, java.awt.Shape shape2d,
+            FillNode fill, StrokeNode stroke, GraphicContext context)
+    {
+        ShapeBuilder builder = new ShapeBuilder();
+        ShapeIterator iterator = new PathIteratorWrapper(shape2d.getPathIterator(null));
+        builder.processShape(iterator);
+        Shape shape = builder.build();
+        return placeDefineShape(node, shape.shapeRecords, fill, stroke, context);
+    }
+    
+    
+    protected PlaceObject placeDefineShape(AbstractShapeNode node, List<ShapeRecord> shapeRecords,
+            FillNode fill, StrokeNode stroke, GraphicContext context, Winding... windings )
+    {
+ 
+        if (ImageHelper.isBitmapFillWithClip(fill)) 
+        {
+
+        	BitmapFillNode fillNode = (BitmapFillNode) fill;
+
+            // Calculate the bounds of the shape outline (without strokes)
+            Rect edgeBounds = (node == null) ? ShapeHelper.getBounds(shapeRecords, null, (AbstractStrokeNode)stroke) : node.getBounds(shapeRecords, null);           
+            
+            String source = parseSource(fillNode.source);
+            if (source == null)
+            {
+                // Exception: Missing source attribute in <BitmapGraphic> or <BitmapFill>.
+                throw new FXGException(fill.getStartLine(), fill.getStartColumn(), "MissingSourceAttribute");
+            }
+            DefineBits imageTag = createDefineBits(fill, source);
+
+            // First, generate the clipping mask
+            DefineSprite clipSprite = createDefineSprite("BitmapFill_Clip");
+            spriteStack.push(clipSprite);
+            List<ShapeRecord> clipRectRecords = ShapeHelper.rectangle(0.0, 0.0, imageTag.width, imageTag.height);
+            DefineShape clipShape = createDefineShape(null, clipRectRecords, new SolidColorFillNode(), null, context.getTransform());
+            FXGMatrix bitmapMatrix = TypeHelper.bitmapFillMatrix(fillNode, imageTag, edgeBounds);
+            FXGMatrix clipMatrix = new FXGMatrix(bitmapMatrix.a, bitmapMatrix.b, bitmapMatrix.c, bitmapMatrix.d, 0, 0);
+            clipMatrix.scale(1.0/SwfConstants.TWIPS_PER_PIXEL, 1.0/SwfConstants.TWIPS_PER_PIXEL);
+            clipMatrix.translate(bitmapMatrix.tx, bitmapMatrix.ty);
+            GraphicContext clipContext = new GraphicContext();
+            clipContext.setTransform(clipMatrix);
+            placeObject(clipShape, clipContext); 
+            spriteStack.pop();
+            
+            //place the clipping mask in the imageSprite
+            clipContext.setTransform(context.getTransform());
+            PlaceObject po3clip = placeObject(clipSprite, clipContext); 
+            po3clip.setClipDepth(po3clip.depth+1);
+            
+            // Then, process the bitmap image fill
+            ShapeWithStyle sws = new ShapeWithStyle();
+            sws.shapeRecords = shapeRecords;
+
+            int lineStyleIndex = 0;
+            int fillStyle0Index = 1;
+            int fillStyle1Index = 0;
+            ShapeHelper.setStyles(shapeRecords, lineStyleIndex, fillStyle0Index, fillStyle1Index);
+
+            FillStyle fillStyle = createFillStyle(fill, edgeBounds, context.getTransform());
+            sws.fillstyles = new ArrayList<FillStyle>(1);
+            sws.fillstyles.add(fillStyle);
+
+            DefineShape imageShape = new DefineShape(Tag.stagDefineShape4);
+            imageShape.shapeWithStyle = sws;
+            imageShape.bounds = edgeBounds;
+            imageShape.edgeBounds = edgeBounds;
+            PlaceObject po3 = placeObject(imageShape, context);        
+            
+            if (stroke != null)
+            {
+                ShapeWithStyle swsStroke = new ShapeWithStyle();
+                swsStroke.shapeRecords = shapeRecords;
+
+                lineStyleIndex = 1;
+                fillStyle0Index = 0;
+                fillStyle1Index = 0;
+                ShapeHelper.setStyles(shapeRecords, lineStyleIndex, fillStyle0Index, fillStyle1Index);
+
+                // Consider linestyle stroke widths with bounds calculation               
+                AbstractStrokeNode strokeNode = (AbstractStrokeNode) stroke;
+                LineStyle ls = createGenericLineStyle(strokeNode);
+                Rect shapeBounds = (node == null ) ? ShapeHelper.getBounds(shapeRecords, ls, (AbstractStrokeNode)stroke) : node.getBounds(shapeRecords, ls);              
+                
+                LineStyle lineStyle = createLineStyle(stroke, shapeBounds, context.getTransform());
+                swsStroke.linestyles = new ArrayList<LineStyle>(1);
+                swsStroke.linestyles.add(lineStyle);
+
+                DefineShape strokeShape = new DefineShape(Tag.stagDefineShape4);
+                strokeShape.shapeWithStyle = swsStroke;
+                strokeShape.bounds = shapeBounds;
+                strokeShape.edgeBounds = edgeBounds;
+                po3 = placeObject(strokeShape, context);    
+
+             }            
+            return po3;
+            
+        }
+        else
+        {
+        	DefineShape shape = createDefineShape(node, shapeRecords, fill, stroke, context.getTransform(), windings);
+        	PlaceObject po3 = placeObject(shape, context);
+        	return po3;
+        } 
+       
     }
     
     protected FillStyle createFillStyle(FillNode fill, Rect bounds, FXGMatrix transform)
@@ -788,24 +875,25 @@ public class FXG2SWFTranscoder implements FXGTranscoder
     protected FillStyle createFillStyle(BitmapFillNode fill, Rect bounds)
     {        
         FillStyle fs = new FillStyle();
-        if (fill.repeat)
+        
+        if (ImageHelper.bitmapFillModeIsRepeat(fill))
             fs.type = FillStyle.FILL_BITS;
         else
             fs.type = FillStyle.FILL_BITS | FillStyle.FILL_BITS_CLIP;
 
         String sourceFormatted = parseSource(fill.source);
         
-        if (sourceFormatted == null && !fill.getFileVersion().equals(FXGVersion.v1_0))
+        if (sourceFormatted == null)
         {
             // Source is required after FXG 1.0
             // Exception: Missing source attribute in <BitmapGraphic> or <BitmapFill>.
             throw new FXGException(fill.getStartLine(), fill.getStartColumn(), "MissingSourceAttribute");
         }
 
-        String source = parseSource(sourceFormatted);
-        fs.bitmap = createDefineBits(fill, source, Double.NaN, Double.NaN);
-
-        fs.matrix = TypeHelper.bitmapFillMatrix(fill, bounds);
+        DefineBits img = createDefineBits(fill, sourceFormatted);  
+        fs.bitmap = img;
+        
+        fs.matrix = TypeHelper.bitmapFillMatrix(fill, img, bounds).toSWFMatrix();
 
         return fs;
     }
@@ -872,11 +960,10 @@ public class FXG2SWFTranscoder implements FXGTranscoder
             return null;
     }
 
-    protected LineStyle createLineStyle(SolidColorStrokeNode stroke)
+    private LineStyle createGenericLineStyle(AbstractStrokeNode stroke)
     {
         LineStyle ls = new LineStyle();
         ls.width = (int)StrictMath.rint(stroke.getWeight() * SwfConstants.TWIPS_PER_PIXEL);
-        ls.color = TypeHelper.colorARGB(stroke.color, stroke.alpha);
 
         int flags = 0;
         int startCapStyle = createCaps(stroke.caps);
@@ -905,77 +992,28 @@ public class FXG2SWFTranscoder implements FXGTranscoder
         ls.flags = flags;
         return ls;
     }
-
+    protected LineStyle createLineStyle(SolidColorStrokeNode stroke)
+    {
+        LineStyle ls = createGenericLineStyle(stroke);
+        ls.color = TypeHelper.colorARGB(stroke.color, stroke.alpha);
+        return ls;
+    }
+    
     protected LineStyle createLineStyle(LinearGradientStrokeNode stroke, Rect bounds, FXGMatrix transform)
     {
-        LineStyle ls = new LineStyle();
-        ls.width = (int)StrictMath.rint(stroke.getWeight() * SwfConstants.TWIPS_PER_PIXEL);
-        ls.fillStyle = createFillStyle(stroke, bounds, transform);
-
-        int flags = 0;
-        int hasFillStyle = 1; // Gradient strokes require a FillStyle
-        int startCapStyle = createCaps(stroke.caps);
-        int endCapStyle = startCapStyle;
-        int jointStyle = createJoints(stroke.joints);
-        int noHorizonalScale = 1;
-        int noVerticalScale = 1;
-
-        // First set of 8 bit flags
-        if (stroke.scaleMode == ScaleMode.VERTICAL || stroke.scaleMode == ScaleMode.NONE)
-            flags |= noHorizonalScale << 1;
-        if (stroke.scaleMode == ScaleMode.HORIZONTAL || stroke.scaleMode == ScaleMode.NONE)
-            flags |= noVerticalScale << 2;
-        flags |= hasFillStyle << 3;
-        flags |= jointStyle << 4;
-        flags |= startCapStyle << 6;
-
-        // Second set of 8 bit flags
-        flags |= endCapStyle << 8;
-
-        if (jointStyle == 2)
-        {
-            // Encoded in SWF as an 8.8 fixed point value
-            ls.miterLimit = TypeHelper.fixed8(stroke.miterLimit);
-        }
-
-        ls.flags = flags;
+        LineStyle ls = createGenericLineStyle(stroke);
+        ls.fillStyle = createFillStyle(stroke, bounds, transform);        
+        int hasFillStyle = 1;
+        ls.flags |= hasFillStyle << 3;
         return ls;
     }
 
     protected LineStyle createLineStyle(RadialGradientStrokeNode stroke, Rect edgeBounds, FXGMatrix transform)
     {
-        LineStyle ls = new LineStyle();
-        ls.width = (int)StrictMath.rint(stroke.getWeight() * SwfConstants.TWIPS_PER_PIXEL);
-        // Convert twips bounds to pixels
+        LineStyle ls = createGenericLineStyle(stroke);
         ls.fillStyle = createFillStyle(stroke, edgeBounds, transform);
-
-        int flags = 0;
-        int hasFillStyle = 1; // Gradient strokes require a FillStyle
-        int startCapStyle = createCaps(stroke.caps);
-        int endCapStyle = startCapStyle;
-        int jointStyle = createJoints(stroke.joints);
-        int noHorizonalScale = 1;
-        int noVerticalScale = 1;
-
-        // First set of 8 bit flags
-        if (stroke.scaleMode == ScaleMode.VERTICAL || stroke.scaleMode == ScaleMode.NONE)
-            flags |= noHorizonalScale << 1;
-        if (stroke.scaleMode == ScaleMode.HORIZONTAL || stroke.scaleMode == ScaleMode.NONE)
-            flags |= noVerticalScale << 2;
-        flags |= hasFillStyle << 3;
-        flags |= jointStyle << 4;
-        flags |= startCapStyle << 6;
-
-        // Second set of 8 bit flags
-        flags |= endCapStyle << 8;
-
-        if (jointStyle == 2)
-        {
-            // Encoded in SWF as an 8.8 fixed point value
-            ls.miterLimit = TypeHelper.fixed8(stroke.miterLimit);
-        }
-
-        ls.flags = flags;
+        int hasFillStyle = 1;
+        ls.flags |= hasFillStyle << 3;
         return ls;
     }
 
@@ -1307,5 +1345,18 @@ public class FXG2SWFTranscoder implements FXGTranscoder
         }
 
         return source;
+    }
+    
+    private void  markLeafNodesAsMask(GroupNode mask)
+    {
+    	Iterator<GraphicContentNode> iter = ((GroupNode) mask).children.iterator();
+    	while (iter.hasNext()) 
+    	{
+    		GraphicContentNode gcNode = iter.next();
+    		if (gcNode instanceof GroupNode)
+    			markLeafNodesAsMask((GroupNode) gcNode);
+    		else
+    			gcNode.isPartofMask = true; 
+    	}
     }
 }

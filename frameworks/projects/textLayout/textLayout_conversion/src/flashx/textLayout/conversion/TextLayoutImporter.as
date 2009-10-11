@@ -95,12 +95,11 @@ package flashx.textLayout.conversion
 		protected var bindingsArray:Array;
 		
 		static private const _formatImporter:TLFormatImporter = new TLFormatImporter(TextLayoutFormatValueHolder,TextLayoutFormat.description);
-		static private const _boundTextLayoutFormatImporter:SingletonAttributeImporter = new SingletonAttributeImporter("format");
 		static private const _idImporter:SingletonAttributeImporter = new SingletonAttributeImporter("id");
 		static private const _styleNameImporter:SingletonAttributeImporter = new SingletonAttributeImporter("styleName");
 		static private const _customFormatImporter:CustomFormatImporter = new CustomFormatImporter();
 		
-		static private const _flowElementFormatImporters:Array = [ _formatImporter,_boundTextLayoutFormatImporter,_idImporter,_styleNameImporter,_customFormatImporter ];
+		static private const _flowElementFormatImporters:Array = [ _formatImporter,_idImporter,_styleNameImporter,_customFormatImporter ];
 
 		/** Constructor */
 		public function TextLayoutImporter(textFlowConfiguration:IConfiguration)
@@ -156,7 +155,7 @@ package flashx.textLayout.conversion
 				importers = _flowElementFormatImporters;
 			// all the standard ones have to be in importers - some check needed
 			parseAttributes(xmlToParse,importers);
-			flowElem.format = extractTextFormatAttributesHelper(flowElem.format,_formatImporter,_boundTextLayoutFormatImporter) as ITextLayoutFormat;
+			flowElem.format = extractTextFormatAttributesHelper(flowElem.format,_formatImporter) as ITextLayoutFormat;
 
 			flowElem.id = _idImporter.result as String;
 			flowElem.styleName = _styleNameImporter.result as String;
@@ -184,11 +183,6 @@ package flashx.textLayout.conversion
 			if (!newFlow)
 				newFlow = new TextFlow(_textFlowConfiguration);
 	
-			// parse any TextLayoutFormats in the TextFlow			
-			var child:XML;
-			for each (child in xmlToParse..*::format)
-				parseNamedFormatDefinition(child,_formatImporter);
-
 			parseStandardFlowElementAttributes(newFlow,xmlToParse);
 			
 			// TextFlow can have CharacterFormat, ParagraphFormat and ContainerFormat children.  Filter them out here
@@ -232,7 +226,7 @@ package flashx.textLayout.conversion
 			target : new StringProperty("target",null, false, null)
 		}
 		static private const _linkFormatImporter:TLFormatImporter = new TLFormatImporter(Dictionary,_linkDescription);
-		static private const _linkElementFormatImporters:Array = [ _linkFormatImporter, _formatImporter,_boundTextLayoutFormatImporter,_idImporter,_styleNameImporter,_customFormatImporter ];
+		static private const _linkElementFormatImporters:Array = [ _linkFormatImporter, _formatImporter,_idImporter,_styleNameImporter,_customFormatImporter ];
 
 		/** Parse a LinkElement Block.
 		 * 
@@ -271,7 +265,7 @@ package flashx.textLayout.conversion
 			rotation: InlineGraphicElement.rotationPropertyDefinition }
 		
 		static private const _ilgFormatImporter:TLFormatImporter = new TLFormatImporter(Dictionary,_imageDescription);
-		static private const _ilgElementFormatImporters:Array = [ _ilgFormatImporter, _formatImporter,_boundTextLayoutFormatImporter,_idImporter,_styleNameImporter,_customFormatImporter ];
+		static private const _ilgElementFormatImporters:Array = [ _ilgFormatImporter, _formatImporter/*,_boundTextLayoutFormatImporter*/,_idImporter,_styleNameImporter,_customFormatImporter ];
 
 		public function createInlineGraphicFromXML(xmlToParse:XML):InlineGraphicElement
 		{				
@@ -295,22 +289,9 @@ package flashx.textLayout.conversion
 			return imgElem;
 		}
 	
-		public function extractTextFormatAttributesHelper(curAttrs:Object, importer:TLFormatImporter, boundName:SingletonAttributeImporter):Object
+		public function extractTextFormatAttributesHelper(curAttrs:Object, importer:TLFormatImporter):Object
 		{
-			var newAttrs:Object = extractAttributesHelper(curAttrs,importer);
-			
-			var boundAttrs:Object;
-			if (boundName.result)
-				boundAttrs = getBoundObjNamed(boundName.result as String, importer.classType);
-				
-			if (!boundAttrs)
-				return newAttrs;
-			if (!newAttrs)
-				return boundAttrs;
-				
-			var workAttrs:Object = new importer.classType(boundAttrs);
-			workAttrs.apply(newAttrs);	// newAttrs takes precedence.  bounName is lost
-			return workAttrs;
+			return extractAttributesHelper(curAttrs,importer);
 		}
 
 		protected function parseNamedFormatDefinition(xmlToParse:XML, importer:TLFormatImporter) : void
@@ -402,8 +383,27 @@ package flashx.textLayout.conversion
 		public function createDictionaryFromXML(xmlToParse:XML):Dictionary
 		{
 			var formatImporters:Array = [ _customFormatImporter ];
-			parseAttributes(xmlToParse,formatImporters);
-			return _customFormatImporter.result as Dictionary;;
+
+			// parse the TextLayoutFormat child object		
+			var formatList:XMLList = xmlToParse..*::TextLayoutFormat;
+			if (formatList.length() != 1)
+				reportError("Expected one and only one TextLayoutFormat in " + xmlToParse.name());
+			
+			var parseThis:XML = formatList.length() > 0 ? formatList[0] : xmlToParse;
+			parseAttributes(parseThis,formatImporters);
+			var styleDictionary:Dictionary = _customFormatImporter.result as Dictionary;
+
+			// Link style property values may have been brought through as literal String values. We need to convert
+			// them into typed values, so they get output as canonical translation of the value type into String. 
+			// The color property is an example, where it can get input in 3 different formats, but can only be output in one.
+			var description:Object = TextLayoutFormat.description;
+			for (var prop:String in description)
+			{
+				if (styleDictionary[prop] != undefined && (styleDictionary[prop] is String))
+					styleDictionary[prop] = description[prop].valueFromString(styleDictionary[prop])
+			}
+			
+			return styleDictionary;
 		}
 
 		static public function parseLinkNormalFormat(importFilter:BaseTextLayoutImporter, xmlToParse:XML, parent:FlowGroupElement):void

@@ -13,6 +13,7 @@ package com.adobe.internal.fxg.dom;
 
 import static com.adobe.fxg.FXGConstants.FXG_ID_ATTRIBUTE;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -89,9 +90,18 @@ public class CDATANode extends AbstractFXGNode implements TextNode
     /**
      * @return The List of child property nodes of this text node.
      */
-    public List<TextNode> getTextProperties()
+    public HashMap<String, TextNode> getTextProperties()
     {
         return null;
+    }
+
+    /**
+     * A text node may also have special child property nodes that represent
+     * complex property values that cannot be set via a simple attribute.
+     */
+    public void addTextProperty(String propertyName, TextNode node)
+    {
+        addChild(node);
     }
 
     /**

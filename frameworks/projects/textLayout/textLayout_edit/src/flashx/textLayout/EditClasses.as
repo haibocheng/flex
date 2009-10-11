@@ -12,6 +12,9 @@ package flashx.textLayout
 {
 	internal class EditClasses
 	{
+		import flash.text.ime.CompositionAttributeRange; flash.text.ime.CompositionAttributeRange;
+		import flash.text.ime.IIMEClient; flash.text.ime.IIMEClient;
+		
 		import flashx.textLayout.container.TextContainerManager; TextContainerManager;
 		
 		import flashx.textLayout.events.FlowOperationEvent; FlowOperationEvent;

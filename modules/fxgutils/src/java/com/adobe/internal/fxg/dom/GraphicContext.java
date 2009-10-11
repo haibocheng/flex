@@ -49,6 +49,11 @@ public class GraphicContext implements Cloneable
         return transform;
     }
 
+    public void setTransform(FXGMatrix matrix)
+    {
+    	transform = matrix;
+    }
+    
     public void addFilters(List<FilterNode> list)
     {
         if (filters == null)

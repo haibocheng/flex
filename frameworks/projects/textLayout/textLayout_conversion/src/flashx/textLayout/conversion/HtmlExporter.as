@@ -142,7 +142,7 @@ package flashx.textLayout.conversion
 				xml.@target = link.target;
 			else
 			{
-				// HTML_FORMAT uses _self as the default target (to replicate TextField behavior) 
+				// TEXT_FIELD_HTML_FORMAT uses _self as the default target (to replicate TextField behavior) 
 				// while the TLF object model uses null (funcionally identical to _blank). Account for this difference.
 				xml.@target = "_blank";
 			}

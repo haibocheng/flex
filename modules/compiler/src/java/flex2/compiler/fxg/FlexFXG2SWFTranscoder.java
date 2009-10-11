@@ -27,16 +27,14 @@ import com.adobe.internal.fxg.dom.TextGraphicNode;
 import com.adobe.internal.fxg.dom.TextNode;
 import com.adobe.internal.fxg.dom.richtext.BRNode;
 import com.adobe.internal.fxg.dom.richtext.DivNode;
-import com.adobe.internal.fxg.dom.richtext.FormatNode;
 import com.adobe.internal.fxg.dom.richtext.ImgNode;
-import com.adobe.internal.fxg.dom.richtext.LinkActiveFormatNode;
-import com.adobe.internal.fxg.dom.richtext.LinkHoverFormatNode;
 import com.adobe.internal.fxg.dom.richtext.LinkNode;
-import com.adobe.internal.fxg.dom.richtext.LinkNormalFormatNode;
+import com.adobe.internal.fxg.dom.richtext.TextLayoutFormatNode;
 import com.adobe.internal.fxg.dom.richtext.ParagraphNode;
 import com.adobe.internal.fxg.dom.richtext.SpanNode;
 import com.adobe.internal.fxg.dom.richtext.TCYNode;
 import com.adobe.internal.fxg.dom.richtext.TabNode;
+import com.adobe.internal.fxg.dom.types.BlendMode;
 import com.adobe.internal.fxg.dom.types.MaskType;
 
 import flash.swf.tags.DefineSprite;
@@ -65,17 +63,14 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
 
     private TypeTable typeTable;
     private Type divType;
-    private Type formatType;
     private Type imgType;
     private Type linkType;
-    private Type linkActiveType;
-    private Type linkNormalType;
-    private Type linkHoverType;
     private Type richTextType; // Note: TextGraphic and RichText use same type
     private Type paragraphType;
     private Type spanType;
     private Type tabType;
     private Type tcyType;
+    private Type textLayoutFormatType;
 
     /**
      * Construct a Flex specific FXG to SWF tag transcoder.
@@ -90,13 +85,10 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
         this.typeTable = typeTable;
         if (typeTable != null)
         {
+            textLayoutFormatType = typeTable.getType(StandardDefs.CLASS_TEXT_LAYOUT_FORMAT);
             divType = typeTable.getType(StandardDefs.CLASS_TEXT_DIV);
-            formatType = typeTable.getType(StandardDefs.CLASS_TEXT_FORMAT);
             linkType = typeTable.getType(StandardDefs.CLASS_TEXT_LINK);
             imgType = typeTable.getType(StandardDefs.CLASS_TEXT_IMG);
-            linkActiveType = typeTable.getType(StandardDefs.CLASS_TEXT_LINK_ACTIVE_FORMAT);
-            linkHoverType = typeTable.getType(StandardDefs.CLASS_TEXT_LINK_HOVER_FORMAT);
-            linkNormalType = typeTable.getType(StandardDefs.CLASS_TEXT_LINK_NORMAL_FORMAT);
             richTextType = typeTable.getType(StandardDefs.CLASS_TEXT_RICHTEXT);
             paragraphType = typeTable.getType(StandardDefs.CLASS_TEXT_PARAGRAPH);
             spanType = typeTable.getType(StandardDefs.CLASS_TEXT_SPAN);
@@ -122,22 +114,21 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
         {
             FlexGraphicNode graphicNode = (FlexGraphicNode)node;
 
-            SourceContext context = new SourceContext(packageName, className);
             graphicClass = new FXGSymbolClass();
-            graphicClass.setPackageName(context.packageName);
-            graphicClass.setClassName(context.className);
+            graphicClass.setPackageName(packageName);
+            graphicClass.setClassName(className);
 
             DefineSprite sprite = (DefineSprite)transcode(graphicNode);
             graphicClass.setSymbol(sprite);
 
             // Create a new sprite class to map to this Graphic's DefineSprite
             StringBuilder buf = new StringBuilder(512);
-            buf.append("package ").append(context.packageName).append("\n");
+            buf.append("package ").append(packageName).append("\n");
             buf.append("{\n\n");
             buf.append("import spark.core.SpriteVisualElement;\n\n");
-            buf.append("public class ").append(context.className).append(" extends SpriteVisualElement\n");
+            buf.append("public class ").append(className).append(" extends SpriteVisualElement\n");
             buf.append("{\n");
-            buf.append("    public function ").append(context.className).append("()\n");
+            buf.append("    public function ").append(className).append("()\n");
             buf.append("    {\n");
             buf.append("        super();\n");
 
@@ -188,13 +179,17 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
         MaskingNode mask = node.getMask();
         PlaceObject po3 = super.mask(node, parentSprite); 
 
-        if (node.getMaskType() == MaskType.ALPHA && mask != null)
+        if (mask != null)
         {
-            // Record the display list position that the mask was placed.
-            // The ActionScript display list is 0 based, but SWF the depth
-            // counter starts at 1, so we subtract 1.
-            int maskIndex = parentSprite.depthCounter - 1;
-            mask.setMaskIndex(maskIndex);
+            MaskType maskType = node.getMaskType(); 
+            if (maskType == MaskType.ALPHA)
+            {
+                // Record the display list position that the mask was placed.
+                // The ActionScript display list is 0 based, but SWF the depth
+                // counter starts at 1, so we subtract 1.
+                int maskIndex = parentSprite.depthCounter - 1;
+                mask.setMaskIndex(maskIndex);
+            }
         }
 
         return po3;
@@ -203,71 +198,109 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
     @Override
     protected PlaceObject graphicContentNode(GraphicContentNode node)
     {
-        if (node.getMaskType() == MaskType.ALPHA && node.mask != null)
+        PlaceObject po3 = super.graphicContentNode(node);
+
+        if (hasAdvancedGraphics(node))
         {
-            PlaceObject po3 = super.graphicContentNode(node);
-            return alphaMaskee(node, po3);
+            po3 = advancedGraphics(node, po3);
         }
 
-        return super.graphicContentNode(node);
+        return po3;
     }
 
     @Override
     protected PlaceObject group(GroupNode node)
     {
-        if (node.getMaskType() == MaskType.ALPHA && node.mask != null)
+        PlaceObject po3 = super.group(node);
+
+        if (hasAdvancedGraphics(node))
         {
-            PlaceObject po3 = super.group(node);
-            return alphaMaskee(node, po3);
+            po3 = advancedGraphics(node, po3);
         }
 
-        return super.group(node);
+        return po3;
     }
 
-    private PlaceObject alphaMaskee(MaskableNode node, PlaceObject po3)
+    private boolean hasAdvancedGraphics(MaskableNode node)
+    {
+        if (node.getMask() != null &&
+            (node.getMaskType() == MaskType.ALPHA ||
+             node.getMaskType() == MaskType.LUMINOSITY))
+        {
+            return true;
+        }
+        else if (node instanceof GraphicContentNode)
+        {
+            GraphicContentNode graphicNode = (GraphicContentNode)node;
+            if (graphicNode.blendMode.needsPixelBenderSupport())
+                return true;
+        }
+
+        return false;
+    }
+
+    private PlaceObject advancedGraphics(GraphicContentNode node, PlaceObject po3)
     {
         String className = createUniqueClassName(graphicClass.getClassName() + "_Maskee");
 
         if (po3 != null)
         {
-            int maskIndex = node.getMask().getMaskIndex();
             DefineTag symbol = po3.ref;
 
             // Create a new SymbolClass to map to this mask's
             // DefineSprite (see below)  
-            SourceContext context = new SourceContext(packageName, className);
-
             FXGSymbolClass symbolClass = new FXGSymbolClass();
-            symbolClass.setPackageName(context.packageName);
-            symbolClass.setClassName(context.className);
+            symbolClass.setPackageName(packageName);
+            symbolClass.setClassName(className);
 
             // Then record this SymbolClass with the top-level graphic
             // SymbolClass so that it will be associated with the FXG asset.
             graphicClass.addAdditionalSymbolClass(symbolClass);
 
             StringBuilder buf = new StringBuilder(512);
-            buf.append("package ").append(context.packageName).append("\n");
+            buf.append("package ").append(packageName).append("\n");
             buf.append("{\n\n");
+
+            // Determine Base Class
+            String baseClassName = null;
             if (node instanceof GroupNode)
             {
-                buf.append("import flash.display.Sprite;\n\n");
-                buf.append("public class ").append(context.className).append(" extends Sprite\n");
+                buf.append("import flash.display.Sprite;\n");
+                baseClassName = "Sprite";
             }
             else
             {
-                buf.append("import flash.display.Shape;\n\n");
-                buf.append("public class ").append(context.className).append(" extends Shape\n");
+                buf.append("import flash.display.Shape;\n");
+                baseClassName = "Shape";
             }
+
+            // Advanced BlendModes
+            String blendModeImport = generateAdvancedBlendModeImport(node.blendMode);
+            if (blendModeImport != null)
+                buf.append(blendModeImport);
+            String blendModeShader = generateAdvancedBlendMode(node.blendMode);
+
+            buf.append("public class ").append(className).append(" extends ").append(baseClassName).append("\n");
             buf.append("{\n");
-            buf.append("    public function ").append(context.className).append("()\n");
+            buf.append("    public function ").append(className).append("()\n");
             buf.append("    {\n");
             buf.append("        super();\n");
             buf.append("        this.cacheAsBitmap = true;\n");
 
-            if (node instanceof GroupNode)
-                buf.append("        this.mask = this.getChildAt(").append(maskIndex).append(");\n");
-            else
-                buf.append("        this.mask = this.parent.getChildAt(").append(maskIndex).append(");\n");
+            // Alpha Masks
+            MaskingNode maskNode = node.getMask();
+            if (maskNode != null)
+            {
+                int maskIndex = maskNode.getMaskIndex();
+                if (node instanceof GroupNode)
+                    buf.append("        this.mask = this.getChildAt(").append(maskIndex).append(");\n");
+                else
+                    buf.append("        this.mask = this.parent.getChildAt(").append(maskIndex).append(");\n");
+            }
+
+            // BlendMode Shader
+            if (blendModeShader != null)
+                buf.append(blendModeShader);
 
             buf.append("    }\n");
             buf.append("}\n"); // End class
@@ -278,6 +311,50 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
         }
 
         return po3;
+    }
+
+    private String generateAdvancedBlendModeImport(BlendMode blendMode)
+    {
+        if (blendMode == BlendMode.COLOR)
+            return "import spark.primitives.shaders.ColorShader;\n\n";
+        else if (blendMode == BlendMode.COLORBURN)
+            return "import spark.primitives.shaders.ColorBurnShader;\n\n";
+        else if (blendMode == BlendMode.COLORDODGE)
+            return "import spark.primitives.shaders.ColorDodgeShader;\n\n";
+        else if (blendMode == BlendMode.EXCLUSION)
+            return "import spark.primitives.shaders.ExclusionShader;\n\n";
+        else if (blendMode == BlendMode.HUE)
+            return "import spark.primitives.shaders.HueShader;\n\n";
+        else if (blendMode == BlendMode.LUMINOSITY)
+            return "import spark.primitives.shaders.LuminosityShader;\n\n";
+        else if (blendMode == BlendMode.SATURATION)
+            return "import spark.primitives.shaders.SaturationShader;\n\n";
+        else if (blendMode == BlendMode.SOFTLIGHT)
+            return"import spark.primitives.shaders.SoftLightShader;\n\n";
+        else
+            return null;
+    }
+
+    private String generateAdvancedBlendMode(BlendMode blendMode)
+    {
+        if (blendMode == BlendMode.COLOR)
+            return "        this.blendShader = new ColorShader();\n";
+        else if (blendMode == BlendMode.COLORBURN)
+            return "        this.blendShader = new ColorBurnShader();\n"; 
+        else if (blendMode == BlendMode.COLORDODGE)
+            return "        this.blendShader = new ColorDodgeShader();\n"; 
+        else if (blendMode == BlendMode.EXCLUSION)
+            return "        this.blendShader = new ExclusionShader();\n"; 
+        else if (blendMode == BlendMode.HUE)
+            return "        this.blendShader = new HueShader();\n"; 
+        else if (blendMode == BlendMode.LUMINOSITY)
+            return "        this.blendShader = new LuminosityShader();\n"; 
+        else if (blendMode == BlendMode.SATURATION)
+            return "        this.blendShader = new SaturationShader();\n"; 
+        else if (blendMode == BlendMode.SOFTLIGHT)
+            return "        this.blendShader = new SoftLightShader();\n";
+        else
+            return null;
     }
 
     //--------------------------------------------------------------------------
@@ -313,11 +390,10 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
             // Create a new SymbolClass to map to this TextGraphic's
             // DefineSprite (see below)  
             String className = createUniqueClassName(graphicClass.getClassName() + "_Text");
-            SourceContext context = new SourceContext(packageName, className);
 
             FXGSymbolClass spriteSymbolClass = new FXGSymbolClass();
-            spriteSymbolClass.setPackageName(context.packageName);
-            spriteSymbolClass.setClassName(context.className);
+            spriteSymbolClass.setPackageName(packageName);
+            spriteSymbolClass.setClassName(className);
 
             // Then record this SymbolClass with the top-level graphic
             // SymbolClass so that it will be associated with the FXG asset.
@@ -329,19 +405,41 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
             spriteStack.push(textSprite);
 
             StringBuilder buf = new StringBuilder(1024);
-            buf.append("package ").append(context.packageName).append("\n");
+            buf.append("package ").append(packageName).append("\n");
             buf.append("{\n\n");
             buf.append("import flashx.textLayout.elements.*;\n");
             buf.append("import flashx.textLayout.formats.TextLayoutFormat;\n");
             buf.append("import spark.components.RichText;\n");
             buf.append("import spark.core.SpriteVisualElement;\n\n");
-            buf.append("public class ").append(context.className).append(" extends SpriteVisualElement\n");
+
+            // Advanced BlendModes
+            String blendModeImport = generateAdvancedBlendModeImport(node.blendMode);
+            if (blendModeImport != null)
+                buf.append(blendModeImport);
+            String blendModeShader = generateAdvancedBlendMode(node.blendMode);
+
+            buf.append("public class ").append(className).append(" extends SpriteVisualElement\n");
             buf.append("{\n");
-            buf.append("    public function ").append(context.className).append("()\n");
+            buf.append("    public function ").append(className).append("()\n");
             buf.append("    {\n");
             buf.append("        super();\n");
+
+            // Alpha Masks
+            MaskingNode maskNode = node.getMask();
+            if (maskNode != null)
+            {
+                int maskIndex = maskNode.getMaskIndex();
+                buf.append("        this.mask = this.parent.getChildAt(").append(maskIndex).append(");\n");
+            }
+
+            // BlendMode Shader
+            if (blendModeShader != null)
+                buf.append(blendModeShader);
+
+            // Generate Text
             buf.append("        createText();\n");
-            buf.append("    }\n\n");
+            buf.append("    }\n");
+            buf.append("\n");
             buf.append("    private function createText():void\n");
             buf.append("    {\n");
             StringBuilder textSource = generateRichText(textNode);
@@ -617,59 +715,25 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
      * ActionScript code 
      */
     private void generateProperties(StringBuilder sb, String parentVar,
-            List<TextNode> properties, Variables context)
+            Map<String, TextNode> properties, Variables context)
     {
         if (properties != null)
         {
-            for (TextNode node : properties)
+            for (Map.Entry<String, TextNode> entry : properties.entrySet())
             {
-                if (node instanceof LinkActiveFormatNode)
+                String propertyName = entry.getKey();
+                TextNode node = entry.getValue();
+
+                if (node instanceof TextLayoutFormatNode)
                 {
-                    context.setVar(linkActiveType, NodeType.LINK_ACTIVE_FORMAT);
+                    context.setVar(textLayoutFormatType, NodeType.TEXT_LAYOUT_FORMAT);
                     generateTextVariable(sb, node, context);
-                    generateAssignment(sb, parentVar, "linkActiveFormat", context.elementVar);
-                }
-                else if (node instanceof LinkHoverFormatNode)
-                {
-                    context.setVar(linkHoverType, NodeType.LINK_HOVER_FORMAT);
-                    generateTextVariable(sb, node, context);
-                    generateAssignment(sb, parentVar, "linkHoverFormat", context.elementVar);
-                }
-                else if (node instanceof LinkNormalFormatNode)
-                {
-                    context.setVar(linkNormalType, NodeType.LINK_NORMAL_FORMAT);
-                    generateTextVariable(sb, node, context);
-                    generateAssignment(sb, parentVar, "linkNormalFormat", context.elementVar);
-                }
-                else if (node instanceof FormatNode)
-                {
-                    // <format> is very special as it is a local declaration
-                    // rather than a property of RichText so it is not assigned
-                    // to the parent.
-                    FormatNode formatNode = (FormatNode)node;
-                    String name = formatNode.name;
-                    if (isValidVariableName(name))
-                    {
-                        context.setVar(formatType, NodeType.FORMAT);
-                        context.elementVar = name;
-                        generateTextVariable(sb, formatNode, context);
-                    }
+                    generateAssignment(sb, parentVar, propertyName, context.elementVar);
                 }
             }
         }
     }
 
-    /**
-     * Determines whether a String is a valid ActionScript variable name.
-     * @param name - the String to test
-     * @return true if the value is valid
-     */
-    private boolean isValidVariableName(String name)
-    {
-        // FIXME: Enforce ActionScript variable naming rules.
-        return (name != null && name.length() > 0);
-    }
-    
     /**
      * Converts the attributes specified on an FXG node into ActionScript
      * property initializers.
@@ -739,21 +803,6 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
     //--------------------------------------------------------------------------
 
     /**
-     * Provides the context for a generated ActionScript source.
-     */
-    private static class SourceContext
-    {
-        private SourceContext(String packageName, String className)
-        {
-            this.packageName = packageName;
-            this.className = className;
-        }
-
-        private final String className;
-        private final String packageName;
-    }
-
-    /**
      * Text node type enumeration.
      */
     private static enum NodeType
@@ -762,14 +811,12 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
         FORMAT,
         IMG,
         LINK,
-        LINK_ACTIVE_FORMAT,
-        LINK_HOVER_FORMAT,
-        LINK_NORMAL_FORMAT,
         PARAGRAPH,
         RICHTEXT,
         SPAN,
         TAB,
-        TCY
+        TCY,
+        TEXT_LAYOUT_FORMAT
     }
 
     /**
@@ -782,14 +829,12 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
         private Variable formatVar;
         private Variable imgVar;
         private Variable linkVar;
-        private Variable linkActiveFormatVar;
-        private Variable linkHoverFormatVar;
-        private Variable linkNormalFormatVar;
         private Variable paragraphVar;
         private Variable richTextVar;
         private Variable spanVar;
         private Variable tabVar;
         private Variable tcyVar;
+        private Variable textLayoutFormatVar;
 
         private Variables()
         {
@@ -847,24 +892,6 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
                         linkVar = new Variable("LinkElement", "linkElement", "linkContent", "mxmlChildren", true);
                     return linkVar;
                 }
-                case LINK_ACTIVE_FORMAT:
-                {
-                    if (linkActiveFormatVar == null)
-                        linkActiveFormatVar = new Variable("LinkActiveFormat", "lafElement", null, null, true);
-                    return linkActiveFormatVar;
-                }
-                case LINK_HOVER_FORMAT:
-                {
-                    if (linkHoverFormatVar == null)
-                        linkHoverFormatVar = new Variable("LinkHoverFormat", "lhfElement", null, null, true);
-                    return linkHoverFormatVar;
-                }
-                case LINK_NORMAL_FORMAT:
-                {
-                    if (linkNormalFormatVar == null)
-                        linkNormalFormatVar = new Variable("LinkNormalFormat", "lnfElement", null, null, true);
-                    return linkNormalFormatVar;
-                }
                 case PARAGRAPH:
                 {
                     if (paragraphVar == null)
@@ -894,6 +921,12 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
                     if (tcyVar == null)
                         tcyVar = new Variable("TCYElement", "tcyElement", "tcyContent", "mxmlChildren", true);
                     return tcyVar;
+                }
+                case TEXT_LAYOUT_FORMAT:
+                {
+                    if (textLayoutFormatVar == null)
+                        textLayoutFormatVar = new Variable("TextLayoutFormat", "tlfElement", null, null, true);
+                    return textLayoutFormatVar;
                 }
             }
 

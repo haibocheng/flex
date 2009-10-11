@@ -3,6 +3,7 @@ package flashx.textLayout.edit
 	import flash.events.ContextMenuEvent;
 	import flash.events.Event;
 	import flash.events.FocusEvent;
+	import flash.events.IMEEvent;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.events.TextEvent;
@@ -47,6 +48,15 @@ package flashx.textLayout.edit
 		function keyUpHandler(event:KeyboardEvent):void;		
 		
 		/** 
+		* Processes a keyFocusChange event.
+		* 
+		* @playerversion Flash 10
+		* @playerversion AIR 1.5
+ 		* @langversion 3.0
+		*/	
+		function keyFocusChangeHandler(event:FocusEvent):void;
+		
+		/** 
 		 * Processes a TextEvent.
 		 * 
 		 * @playerversion Flash 10
@@ -55,6 +65,15 @@ package flashx.textLayout.edit
 		 */
 		function textInputHandler(event:TextEvent):void;
 
+		/** 
+		 * Processes an imeStartComposition event
+		 * 
+		 * @playerversion Flash 10
+		 * @playerversion AIR 1.5
+ 		 * @langversion 3.0
+		 */
+		function imeStartCompositionHandler(event:IMEEvent):void;
+		
 		/** 
 		 * Processes a mouseDown event.
 		 * 

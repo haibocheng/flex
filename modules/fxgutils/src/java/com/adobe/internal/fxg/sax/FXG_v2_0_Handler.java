@@ -46,16 +46,14 @@ import com.adobe.internal.fxg.dom.filters.GradientBevelFilterNode;
 import com.adobe.internal.fxg.dom.filters.GradientGlowFilterNode;
 import com.adobe.internal.fxg.dom.richtext.BRNode;
 import com.adobe.internal.fxg.dom.richtext.DivNode;
-import com.adobe.internal.fxg.dom.richtext.FormatNode;
 import com.adobe.internal.fxg.dom.richtext.ImgNode;
-import com.adobe.internal.fxg.dom.richtext.LinkActiveFormatNode;
-import com.adobe.internal.fxg.dom.richtext.LinkHoverFormatNode;
 import com.adobe.internal.fxg.dom.richtext.LinkNode;
-import com.adobe.internal.fxg.dom.richtext.LinkNormalFormatNode;
 import com.adobe.internal.fxg.dom.richtext.ParagraphNode;
 import com.adobe.internal.fxg.dom.richtext.SpanNode;
 import com.adobe.internal.fxg.dom.richtext.TCYNode;
 import com.adobe.internal.fxg.dom.richtext.TabNode;
+import com.adobe.internal.fxg.dom.richtext.TextLayoutFormatNode;
+import com.adobe.internal.fxg.dom.richtext.TextPropertyNode;
 import com.adobe.internal.fxg.dom.strokes.LinearGradientStrokeNode;
 import com.adobe.internal.fxg.dom.strokes.RadialGradientStrokeNode;
 import com.adobe.internal.fxg.dom.strokes.SolidColorStrokeNode;
@@ -110,20 +108,17 @@ public class FXG_v2_0_Handler extends AbstractFXGVersionHandler
     static
     {
         // RichText relevant nodes
-        DEFAULT_FXG_2_0_NODES.put(FXG_LINKACTIVEFORMAT_PROPERTY_ELEMENT, LinkActiveFormatNode.class);
-        DEFAULT_FXG_2_0_NODES.put(FXG_LINKHOVERFORMAT_PROPERTY_ELEMENT, LinkHoverFormatNode.class);
-        DEFAULT_FXG_2_0_NODES.put(FXG_LINKNORMALFORMAT_PROPERTY_ELEMENT, LinkNormalFormatNode.class);
         DEFAULT_FXG_2_0_NODES.put(FXG_A_ELEMENT, ParagraphNode.class);
         DEFAULT_FXG_2_0_NODES.put(FXG_BR_ELEMENT, BRNode.class);        
         DEFAULT_FXG_2_0_NODES.put(FXG_DIV_ELEMENT, DivNode.class);
         DEFAULT_FXG_2_0_NODES.put(FXG_IMG_ELEMENT, ImgNode.class);
-        DEFAULT_FXG_2_0_NODES.put(FXG_FORMAT_PROPERTY_ELEMENT, FormatNode.class);
         DEFAULT_FXG_2_0_NODES.put(FXG_A_ELEMENT, LinkNode.class);        
         DEFAULT_FXG_2_0_NODES.put(FXG_P_ELEMENT, ParagraphNode.class);
         DEFAULT_FXG_2_0_NODES.put(FXG_RICHTEXT_ELEMENT, RichTextNode.class);
         DEFAULT_FXG_2_0_NODES.put(FXG_SPAN_ELEMENT, SpanNode.class); 
         DEFAULT_FXG_2_0_NODES.put(FXG_TAB_ELEMENT, TabNode.class); 
         DEFAULT_FXG_2_0_NODES.put(FXG_TCY_ELEMENT, TCYNode.class); 
+        DEFAULT_FXG_2_0_NODES.put(FXG_TEXTLAYOUTFORMAT_ELEMENT, TextLayoutFormatNode.class); 
         
         DEFAULT_FXG_2_0_NODES.put(FXG_GRAPHIC_ELEMENT, GraphicNode.class);
         DEFAULT_FXG_2_0_NODES.put(FXG_DEFINITION_ELEMENT, DefinitionNode.class);
@@ -162,6 +157,9 @@ public class FXG_v2_0_Handler extends AbstractFXGVersionHandler
         DEFAULT_FXG_2_0_NODES.put(FXG_MATRIX_PROPERTY_ELEMENT, DelegateNode.class);
         DEFAULT_FXG_2_0_NODES.put(FXG_STROKE_PROPERTY_ELEMENT, DelegateNode.class);
         DEFAULT_FXG_2_0_NODES.put(FXG_TRANSFORM_PROPERTY_ELEMENT, DelegateNode.class);
+        DEFAULT_FXG_2_0_NODES.put(FXG_LINKACTIVEFORMAT_PROPERTY_ELEMENT, TextPropertyNode.class);
+        DEFAULT_FXG_2_0_NODES.put(FXG_LINKHOVERFORMAT_PROPERTY_ELEMENT, TextPropertyNode.class);
+        DEFAULT_FXG_2_0_NODES.put(FXG_LINKNORMALFORMAT_PROPERTY_ELEMENT, TextPropertyNode.class);
 
         // Special nodes
         DEFAULT_FXG_2_0_NODES.put(FXG_GROUP_DEFINITION_ELEMENT, GroupDefinitionNode.class);

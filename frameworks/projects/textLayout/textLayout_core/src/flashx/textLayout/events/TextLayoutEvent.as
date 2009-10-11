@@ -55,5 +55,10 @@ package flashx.textLayout.events
 			super(type, bubbles, cancelable);
 		}
 		
+        /** @private */
+        override public function clone():Event
+        {
+        	return new TextLayoutEvent(type, bubbles, cancelable);
+        }		
 	}
 }

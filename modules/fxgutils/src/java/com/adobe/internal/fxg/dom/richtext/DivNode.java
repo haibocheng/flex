@@ -14,7 +14,7 @@ package com.adobe.internal.fxg.dom.richtext;
 import static com.adobe.fxg.FXGConstants.*;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 import com.adobe.fxg.FXGException;
 import com.adobe.fxg.dom.FXGNode;
@@ -36,10 +36,10 @@ public class DivNode extends AbstractRichBlockTextNode
     //
     //--------------------------------------------------------------------------
 
-    // LinkFormats property
-    public LinkNormalFormatNode linkNormalFormat = null;
-    public LinkHoverFormatNode linkHoverFormat = null;
-    public LinkActiveFormatNode linkActiveFormat = null;    
+    // Link format properties
+    public TextLayoutFormatNode linkNormalFormat = null;
+    public TextLayoutFormatNode linkHoverFormat = null;
+    public TextLayoutFormatNode linkActiveFormat = null;    
 
     //--------------------------------------------------------------------------
     //
@@ -50,14 +50,85 @@ public class DivNode extends AbstractRichBlockTextNode
     /**
      * This node's child property nodes.
      */
-    protected List<TextNode> properties;
+    protected HashMap<String, TextNode> properties;
 
     /**
      * @return The List of child property nodes of this text node.
      */
-    public List<TextNode> getTextProperties()
+    public HashMap<String, TextNode> getTextProperties()
     {
         return properties;
+    }
+
+    /**
+     * A div node can also have special child property nodes that represent
+     * complex property values that cannot be set via a simple attribute.
+     */
+    public void addTextProperty(String propertyName, TextNode node)
+    {
+        if (node instanceof TextLayoutFormatNode)
+        {
+            if (FXG_LINKACTIVEFORMAT_PROPERTY_ELEMENT.equals(propertyName))
+            {
+                if (linkActiveFormat == null)
+                {
+                    linkActiveFormat = (TextLayoutFormatNode)node;
+                    linkActiveFormat.setParent(this);
+
+                    if (properties == null)
+                        properties = new HashMap<String, TextNode>(3);
+                    properties.put(propertyName, linkActiveFormat);
+                }
+                else
+                {
+                    // Exception: Multiple LinkFormat elements are not allowed.
+                    throw new FXGException(getStartLine(), getStartColumn(), "MultipleLinkFormatElements");
+                }
+            }
+            else if (FXG_LINKHOVERFORMAT_PROPERTY_ELEMENT.equals(propertyName))
+            {
+                if (linkHoverFormat == null)
+                {
+                    linkHoverFormat = (TextLayoutFormatNode)node;
+                    linkHoverFormat.setParent(this);
+
+                    if (properties == null)
+                        properties = new HashMap<String, TextNode>(3);
+                    properties.put(propertyName, linkHoverFormat);
+                }
+                else
+                {
+                    // Exception: Multiple LinkFormat elements are not allowed.
+                    throw new FXGException(getStartLine(), getStartColumn(), "MultipleLinkFormatElements");
+                }
+            }
+            else if (FXG_LINKNORMALFORMAT_PROPERTY_ELEMENT.equals(propertyName))
+            {
+                if (linkNormalFormat == null)
+                {
+                    linkNormalFormat = (TextLayoutFormatNode)node;
+                    linkNormalFormat.setParent(this);
+
+                    if (properties == null)
+                        properties = new HashMap<String, TextNode>(3);
+                    properties.put(propertyName, linkNormalFormat);
+                }
+                else
+                {
+                    // Exception: Multiple LinkFormat elements are not allowed. 
+                    throw new FXGException(getStartLine(), getStartColumn(), "MultipleLinkFormatElements");
+                }
+            }
+            else
+            {
+                // Exception: Unknown LinkFormat element. 
+                throw new FXGException(node.getStartLine(), node.getStartColumn(), "UnknownLinkFormat", propertyName);
+            }
+        }
+        else
+        {
+            addChild(node);
+        }
     }
 
     //--------------------------------------------------------------------------
@@ -77,54 +148,17 @@ public class DivNode extends AbstractRichBlockTextNode
     /**
      * Adds an FXG child node to this division node. Supported child nodes
      * include text content nodes (e.g. div, p, tcy, a, span, tab, br, and 
-     * img), and format nodes (e.g. linkNormalFormat, linkHoverFormat, and 
-     * linkActiveFormat).
+     * img).
+     * 
+     * Note that link format nodes (e.g. linkNormalFormat, linkHoverFormat, and 
+     * linkActiveFormat) are complex properties rather than child nodes.
      * 
      * @param child - a child FXG node to be added to this node.
      * @throws FXGException if the child is not supported by this node.
      */
     public void addChild(FXGNode child)
     {
-        if (child instanceof LinkNormalFormatNode)
-        {
-            if (linkNormalFormat == null)
-            {
-                linkNormalFormat = (LinkNormalFormatNode)child;
-                addProperty(linkNormalFormat);
-            }
-            else
-            {
-                // Exception: Multiple LinkFormat elements are not allowed.
-                throw new FXGException(getStartLine(), getStartColumn(), "MultipleLinkFormatElements");
-            }
-        }
-        else if (child instanceof LinkHoverFormatNode)
-        {
-            if (linkHoverFormat == null)
-            {
-                linkHoverFormat = (LinkHoverFormatNode)child;
-                addProperty(linkHoverFormat);
-            }
-            else
-            {
-                // Exception: Multiple LinkFormat elements are not allowed.
-                throw new FXGException(getStartLine(), getStartColumn(), "MultipleLinkFormatElements");
-            }
-        }
-        else if (child instanceof LinkActiveFormatNode)
-        {
-            if (linkActiveFormat == null)
-            {
-                linkActiveFormat = (LinkActiveFormatNode)child;
-                addProperty(linkActiveFormat);
-            }
-            else
-            {
-                // Exception: Multiple LinkFormat elements are not allowed. 
-                throw new FXGException(getStartLine(), getStartColumn(), "MultipleLinkFormatElements");
-            }
-        }
-        else if (child instanceof DivNode
+        if (child instanceof DivNode
                 || child instanceof ParagraphNode
                 || child instanceof TCYNode
                 || child instanceof LinkNode
@@ -150,20 +184,8 @@ public class DivNode extends AbstractRichBlockTextNode
             super.addChild(child);
             return;
         }
+
         if (child instanceof AbstractRichTextNode)
         	((AbstractRichTextNode)child).setParent(this);        
     }
-
-    /**
-     * A div can also have special child property nodes that represent
-     * complex property values that cannot be set via a simple attribute.
-     */
-    protected void addProperty(TextNode node)
-    {
-        if (properties == null)
-            properties = new ArrayList<TextNode>(3);
-
-        properties.add(node);
-    }
-
 }

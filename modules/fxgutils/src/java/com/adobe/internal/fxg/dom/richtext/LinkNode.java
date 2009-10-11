@@ -14,7 +14,7 @@ package com.adobe.internal.fxg.dom.richtext;
 import static com.adobe.fxg.FXGConstants.*;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 import com.adobe.fxg.FXGException;
 import com.adobe.fxg.dom.FXGNode;
@@ -39,29 +39,101 @@ public class LinkNode extends AbstractRichTextLeafNode
     public String href;  // Required
     public String target = "";
     
-    // LinkFormats property
-    public LinkNormalFormatNode linkNormalFormat = null;
-    public LinkHoverFormatNode linkHoverFormat = null;
-    public LinkActiveFormatNode linkActiveFormat = null;    
+    // Link format properties
+    public TextLayoutFormatNode linkNormalFormat = null;
+    public TextLayoutFormatNode linkHoverFormat = null;
+    public TextLayoutFormatNode linkActiveFormat = null;    
 
     //--------------------------------------------------------------------------
     //
-    // Text Node Attribute Helpers
+    // TextNode Helpers
     //
     //--------------------------------------------------------------------------
 
     /**
      * This node's child property nodes.
      */
-    protected List<TextNode> properties;
+    protected HashMap<String, TextNode> properties;
 
     /**
      * @return The List of child property nodes of this text node.
      */
-    public List<TextNode> getTextProperties()
+    public HashMap<String, TextNode> getTextProperties()
     {
         return properties;
     }
+
+    /**
+     * A link node can also have special child property nodes that represent
+     * complex property values that cannot be set via a simple attribute.
+     */
+    public void addTextProperty(String propertyName, TextNode node)
+    {
+        if (node instanceof TextLayoutFormatNode)
+        {
+            if (FXG_LINKACTIVEFORMAT_PROPERTY_ELEMENT.equals(propertyName))
+            {
+                if (linkActiveFormat == null)
+                {
+                    linkActiveFormat = (TextLayoutFormatNode)node;
+                    linkActiveFormat.setParent(this);
+
+                    if (properties == null)
+                        properties = new HashMap<String, TextNode>(3);
+                    properties.put(propertyName, linkActiveFormat);
+                }
+                else
+                {
+                    // Exception: Multiple LinkFormat elements are not allowed.
+                    throw new FXGException(getStartLine(), getStartColumn(), "MultipleLinkFormatElements");
+                }
+            }
+            else if (FXG_LINKHOVERFORMAT_PROPERTY_ELEMENT.equals(propertyName))
+            {
+                if (linkHoverFormat == null)
+                {
+                    linkHoverFormat = (TextLayoutFormatNode)node;
+                    linkHoverFormat.setParent(this);
+
+                    if (properties == null)
+                        properties = new HashMap<String, TextNode>(3);
+                    properties.put(propertyName, linkHoverFormat);
+                }
+                else
+                {
+                    // Exception: Multiple LinkFormat elements are not allowed.
+                    throw new FXGException(getStartLine(), getStartColumn(), "MultipleLinkFormatElements");
+                }
+            }
+            else if (FXG_LINKNORMALFORMAT_PROPERTY_ELEMENT.equals(propertyName))
+            {
+                if (linkNormalFormat == null)
+                {
+                    linkNormalFormat = (TextLayoutFormatNode)node;
+                    linkNormalFormat.setParent(this);
+
+                    if (properties == null)
+                        properties = new HashMap<String, TextNode>(3);
+                    properties.put(propertyName, linkNormalFormat);
+                }
+                else
+                {
+                    // Exception: Multiple LinkFormat elements are not allowed. 
+                    throw new FXGException(getStartLine(), getStartColumn(), "MultipleLinkFormatElements");
+                }
+            }
+            else
+            {
+                // Exception: Unknown LinkFormat element. 
+                throw new FXGException(node.getStartLine(), node.getStartColumn(), "UnknownLinkFormat", propertyName);
+            }
+        }
+        else
+        {
+            addChild(node);
+        }
+    }
+
 
     //--------------------------------------------------------------------------
     //
@@ -83,52 +155,24 @@ public class LinkNode extends AbstractRichTextLeafNode
      */
     public void addChild(FXGNode child)
     {
-        if (child instanceof LinkNormalFormatNode)
-        {
-            if (linkNormalFormat == null)
-            {
-                linkNormalFormat = (LinkNormalFormatNode)child;
-                addProperty(linkNormalFormat);
-            }
-            else
-            {
-                // Exception: Multiple LinkFormat elements are not allowed.
-                throw new FXGException(getStartLine(), getStartColumn(), "MultipleLinkFormatElements");
-            }
-        }
-        else if (child instanceof LinkHoverFormatNode)
-        {
-            if (linkHoverFormat == null)
-            {
-                linkHoverFormat = (LinkHoverFormatNode)child;
-                addProperty(linkHoverFormat);
-            }
-            else
-            {
-                // Exception: Multiple LinkFormat elements are not allowed.
-                throw new FXGException(getStartLine(), getStartColumn(), "MultipleLinkFormatElements");
-            }
-        }
-        else if (child instanceof LinkActiveFormatNode)
-        {
-            if (linkActiveFormat == null)
-            {
-                linkActiveFormat = (LinkActiveFormatNode)child;
-                addProperty(linkActiveFormat);
-            }
-            else
-            {
-                // Exception: Multiple LinkFormat elements are not allowed. 
-                throw new FXGException(getStartLine(), getStartColumn(), "MultipleLinkFormatElements");
-            }
-        }
-        else if (child instanceof SpanNode
+        if (child instanceof SpanNode
                 || child instanceof BRNode
                 || child instanceof TabNode
                 || child instanceof ImgNode
                 || child instanceof TCYNode
                 || child instanceof CDATANode)
         {
+        	/**
+        	 * When <a> has a <tcy> child, the <tcy> child is FORBIDDEN to have 
+        	 * an <a> child of its own. AND vice versa. If a <tcy> has an <a> 
+        	 * child, the <a> child is FORBIDDEN to have a <tcy> child.
+        	 */
+        	if (child instanceof TCYNode && this.parentNode instanceof TCYNode)
+        	{
+                // Exception: <tcy> element is forbidden as child of <a>, which 
+        		// is child of another <tcy>. And vice versa.
+                throw new FXGException(getStartLine(), getStartColumn(), "InvalidNestingElements");
+        	}
             if (content == null)
             {
                 content = new ArrayList<TextNode>();
@@ -140,20 +184,9 @@ public class LinkNode extends AbstractRichTextLeafNode
             super.addChild(child);
             return;
         }
+
         if (child instanceof AbstractRichTextNode)
         	((AbstractRichTextNode)child).setParent(this);                
-    }
-
-    /**
-     * A link can also have special child property nodes that represent
-     * complex property values that cannot be set via a simple attribute.
-     */
-    protected void addProperty(TextNode node)
-    {
-        if (properties == null)
-            properties = new ArrayList<TextNode>(3);
-
-        properties.add(node);
     }
 
     /**
@@ -181,6 +214,7 @@ public class LinkNode extends AbstractRichTextLeafNode
             super.setAttribute(name, value);
             return;
         }
+
         // Remember attribute was set on this node.
         rememberAttribute(name, value);        
     }

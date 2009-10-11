@@ -333,10 +333,17 @@ package flashx.textLayout.conversion
 			// link attributes only right now
 			if (key != LinkElement.LINK_NORMAL_FORMAT_NAME && key != LinkElement.LINK_ACTIVE_FORMAT_NAME && key != LinkElement.LINK_HOVER_FORMAT_NAME)
 				return null;
-			var output:XMLList = XMLList(<{key}/>);
-			output.setNamespace(flowNS);
-			exportStyles(output, styleDict);
-			return output;
+
+			// create the TextLayoutFormat element
+			var elementName:String = "TextLayoutFormat";
+			var formatXML:XML = <{elementName}/>;
+			formatXML.setNamespace(flowNS);
+			exportStyles(XMLList(formatXML), styleDict);
+
+			// create the link format element
+			var linkFormatXML:XMLList = XMLList(<{key}/>);
+			linkFormatXML.appendChild(formatXML);
+			return linkFormatXML;
 		}
 		
 		/** Helper function to export styles (core or user) in the form of xml attributes or xml children

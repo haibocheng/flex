@@ -23,4 +23,8 @@ public interface MaskableNode extends FXGNode
     public MaskingNode getMask();
 
     public MaskType getMaskType();
+    
+    public boolean getLuminosityClip();
+    
+    public boolean getLuminosityInvert();
 }

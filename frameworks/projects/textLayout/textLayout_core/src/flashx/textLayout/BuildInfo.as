@@ -26,7 +26,7 @@ package flashx.textLayout
 		 * It is static and can be called with <code>BuildInfo.kBuildNumber</code>
 		 * <p>String Format: "BuildNumber (Changelist)"</p>
 		 */
-		public static const kBuildNumber:String = "517 (719892)";
+		public static const kBuildNumber:String = "524 (722284)";
 		
 		/**
 		 * Contains the branch name. 

@@ -88,8 +88,25 @@ public abstract class AbstractStrokeNode extends AbstractFXGNode implements Stro
     	}
     	return weight;
     }
+    
+    /**
+     * Get scaleX. 
+     * @return Double.NaN as default.
+     */
+    public double getScaleX()
+    {
+        return Double.NaN;
+    }
 
-
+    /**
+     * Get scaleY. 
+     * @return Double.NaN as default.
+     */
+    public double getScaleY()
+    {
+        return Double.NaN;
+    }
+    
     //--------------------------------------------------------------------------
     //
     // FXGNode Implementation

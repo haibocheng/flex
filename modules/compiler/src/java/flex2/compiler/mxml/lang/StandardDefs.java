@@ -276,12 +276,9 @@ public abstract class StandardDefs
     public static final String CLASS_SPARK_APPLICATION = NameFormatter.toColon(PACKAGE_SPARK_COMPONENTS, "Application");
     public static final String CLASS_SPARK_SPRITEVISUALELEMENT = NameFormatter.toColon(PACKAGE_SPARK_CORE, "SpriteVisualElement");
     public static final String CLASS_TEXT_DIV = NameFormatter.toColon(PACKAGE_TEXT_ELEMENTS, "DivElement");
-    public static final String CLASS_TEXT_FORMAT = NameFormatter.toColon(PACKAGE_TEXT_FORMATS, "TextLayoutFormat");
     public static final String CLASS_TEXT_IMG = NameFormatter.toColon(PACKAGE_TEXT_ELEMENTS, "InlineGraphicElement");
     public static final String CLASS_TEXT_LINK = NameFormatter.toColon(PACKAGE_TEXT_ELEMENTS, "LinkElement");
-    public static final String CLASS_TEXT_LINK_ACTIVE_FORMAT = NameFormatter.toColon(PACKAGE_TEXT_ELEMENTS, "LinkActiveFormat");
-    public static final String CLASS_TEXT_LINK_HOVER_FORMAT = NameFormatter.toColon(PACKAGE_TEXT_ELEMENTS, "LinkHoverFormat");
-    public static final String CLASS_TEXT_LINK_NORMAL_FORMAT = NameFormatter.toColon(PACKAGE_TEXT_ELEMENTS, "LinkNormalFormat");
+    public static final String CLASS_TEXT_LAYOUT_FORMAT = NameFormatter.toColon(PACKAGE_TEXT_FORMATS, "TextLayoutFormat");
     public static final String CLASS_TEXT_RICHTEXT = NameFormatter.toColon(PACKAGE_SPARK_COMPONENTS, "RichText");
     public static final String CLASS_TEXT_PARAGRAPH = NameFormatter.toColon(PACKAGE_TEXT_ELEMENTS, "ParagraphElement");
     public static final String CLASS_TEXT_SPAN = NameFormatter.toColon(PACKAGE_TEXT_ELEMENTS, "SpanElement");

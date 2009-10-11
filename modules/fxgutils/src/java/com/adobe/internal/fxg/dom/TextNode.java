@@ -50,5 +50,12 @@ public interface TextNode extends FXGNode
     /**
      * @return The list of child property nodes of this text node.
      */
-    public List<TextNode> getTextProperties();
+    public Map<String, TextNode> getTextProperties();
+
+    /**
+     * Add a child property to this text node.
+     * @param propertyName - the property's local name
+     * @param node - the value node
+     */
+    public void addTextProperty(String propertyName, TextNode node);
 }

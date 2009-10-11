@@ -24,22 +24,6 @@ package flashx.textLayout.conversion
 	public class TextConverter
 	{
 		/** 
-		 * FXG Format.
-		 * Use the filter for importing from, or exporting to, 
-		 * a TextFlow using FXG (an XML-based graphics interchange format).
-		 * FXG will detect the following errors:
-		 * <ul>
-		 * <li>Unexpected namespace</li>
-		 * <li>Unknown element</li>
-		 * <li>Unknown attribute</li>
-		 * </ul>
-		 * @playerversion Flash 10
-		 * @playerversion AIR 1.5
-	 	 * @langversion 3.0 
-		 **/
-		public static const FXG_FORMAT:String = "fxgFormat";
-
-		/** 
 		 * HTML format.
 		 * Use this for importing from, or exporting to, a TextFlow using the HTML fomat.
 		 * The Text Layout Framework HTML supports a subset of the tags and attributes supported by
@@ -326,7 +310,7 @@ package flashx.textLayout.conversion
 		 * @playerversion AIR 1.5
 	 	 * @langversion 3.0 
 		 */
-		public static const HTML_FORMAT:String = "htmlFormat";
+		public static const TEXT_FIELD_HTML_FORMAT:String = "textFieldHTMLFormat";
 
 		/** 
 		 * Plain text format.
@@ -355,12 +339,11 @@ package flashx.textLayout.conversion
 	
 		/** 
 		 * Creates a TextFlow from source content in a specified format.
-		 * Supported formats include FXG, HTML, plain text, and TextLayout Markup.
+		 * Supported formats include HTML, plain text, and TextLayout Markup.
 		 * <p>Use one of the four static constants supplied with this class
 		 * to specify the <code>format</code> parameter:
 		 * <ul>
-		 * <li>TextConverter.FXG_FORMAT</li>
-		 * <li>TextConverter.HTML_FORMAT</li>
+		 * <li>TextConverter.TEXT_FIELD_HTML_FORMAT</li>
 		 * <li>TextConverter.PLAIN_TEXT_FORMAT</li>
 		 * <li>TextConverter.TEXT_LAYOUT_FORMAT</li>
 		 * </ul>
@@ -372,8 +355,7 @@ package flashx.textLayout.conversion
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
 	 	 * @langversion 3.0 
-		 * @see #FXG_FORMAT
-		 * @see #HTML_FORMAT
+		 * @see #TEXT_FIELD_HTML_FORMAT
 		 * @see #PLAIN_TEXT_FORMAT
 		 * @see #TEXT_LAYOUT_FORMAT
 		 */
@@ -389,8 +371,7 @@ package flashx.textLayout.conversion
 		 * <p>Use one of the four static constants supplied with this class
 		 * to specify the <code>format</code> parameter:
 		 * <ul>
-		 * <li>TextConverter.FXG_FORMAT</li>
-		 * <li>TextConverter.HTML_FORMAT</li>
+		 * <li>TextConverter.TEXT_FIELD_HTML_FORMAT</li>
 		 * <li>TextConverter.PLAIN_TEXT_FORMAT</li>
 		 * <li>TextConverter.TEXT_LAYOUT_FORMAT</li>
 		 * </ul>
@@ -399,7 +380,7 @@ package flashx.textLayout.conversion
 		 * with one of the two static constants supplied by the ConversionType class:
 		 * <ul>
 		 * <li>ConversionType.STRING_TYPE</li>
-		 * <li>ConvresionType.XML_TYPE</li>
+		 * <li>ConversionType.XML_TYPE</li>
 		 * </ul>
 		 * </p>
 		 * 
@@ -411,8 +392,7 @@ package flashx.textLayout.conversion
 		 * @param format	Output format
 		 * @param conversionType	Type of exported data
 		 * @return Object	Exported form of the TextFlow
-		 * @see #FXG_FORMAT
-		 * @see #HTML_FORMAT
+		 * @see #TEXT_FIELD_HTML_FORMAT
 		 * @see #PLAIN_TEXT_FORMAT
 		 * @see #TEXT_LAYOUT_FORMAT
 		 * @see flashx.textLayout.conversion.ConversionType
@@ -433,8 +413,7 @@ package flashx.textLayout.conversion
 		 * <p>Use one of the four static constants supplied with this class
 		 * to specify the <code>format</code> parameter:
 		 * <ul>
-		 * <li>TextConverter.FXG_FORMAT</li>
-		 * <li>TextConverter.HTML_FORMAT</li>
+		 * <li>TextConverter.TEXT_FIELD_HTML_FORMAT</li>
 		 * <li>TextConverter.PLAIN_TEXT_FORMAT</li>
 		 * <li>TextConverter.TEXT_LAYOUT_FORMAT</li>
 		 * </ul>
@@ -443,11 +422,10 @@ package flashx.textLayout.conversion
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
 	 	 * @langversion 3.0 
-		 * @param format	Format of source content.  Use constants from flashx.textLayout.conversion.TextConverter.TEXT_LAYOUT_FORMAT, PLAIN_TEXT_FORMAT, HTML_FORMAT etc.
+		 * @param format	Format of source content.  Use constants from flashx.textLayout.conversion.TextConverter.TEXT_LAYOUT_FORMAT, PLAIN_TEXT_FORMAT, TEXT_FIELD_HTML_FORMAT etc.
 		 * @param config    configuration to use during this import.  null means take the current default.
 		 * @return ITextImporter	Text filter that can import the source data
-		 * @see #FXG_FORMAT
-		 * @see #HTML_FORMAT
+		 * @see #TEXT_FIELD_HTML_FORMAT
 		 * @see #PLAIN_TEXT_FORMAT
 		 * @see #TEXT_LAYOUT_FORMAT
 		 */
@@ -455,13 +433,11 @@ package flashx.textLayout.conversion
 		{
 			switch (format)
 			{
-				case FXG_FORMAT:
-					return new FXGImporter(config);
 				case TEXT_LAYOUT_FORMAT:
 					return new TextLayoutImporter(config);
 				case PLAIN_TEXT_FORMAT:
 					return new PlainTextImporter(config);
-				case HTML_FORMAT:
+				case TEXT_FIELD_HTML_FORMAT:
 					return new HtmlImporter(config);
 			}
 			return null;
@@ -476,8 +452,7 @@ package flashx.textLayout.conversion
 		 * <p>Use one of the four static constants supplied with this class
 		 * to specify the <code>format</code> parameter:
 		 * <ul>
-		 * <li>TextConverter.FXG_FORMAT</li>
-		 * <li>TextConverter.HTML_FORMAT</li>
+		 * <li>TextConverter.TEXT_FIELD_HTML_FORMAT</li>
 		 * <li>TextConverter.PLAIN_TEXT_FORMAT</li>
 		 * <li>TextConverter.TEXT_LAYOUT_FORMAT</li>
 		 * </ul>
@@ -488,8 +463,7 @@ package flashx.textLayout.conversion
 	 	 * @langversion 3.0 
 		 * @param format	Target format for exported data
 		 * @return ITextExporter	Text filter that can export in the specified format
-		 * @see #FXG_FORMAT
-		 * @see #HTML_FORMAT
+		 * @see #TEXT_FIELD_HTML_FORMAT
 		 * @see #PLAIN_TEXT_FORMAT
 		 * @see #TEXT_LAYOUT_FORMAT
 		 */
@@ -497,13 +471,11 @@ package flashx.textLayout.conversion
 		{
 			switch (format)
 			{
-				case FXG_FORMAT:
-					return new FXGExporter();
 				case TEXT_LAYOUT_FORMAT:
 					return new TextLayoutExporter();
 				case PLAIN_TEXT_FORMAT:
 					return new PlainTextExporter();
-				case HTML_FORMAT:
+				case TEXT_FIELD_HTML_FORMAT:
 					return new HtmlExporter();
 			}
 			

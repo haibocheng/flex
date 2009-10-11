@@ -194,7 +194,7 @@ package flashx.textLayout.elements
 					// to '\t' 
 					str += String.fromCharCode(0xE000); 
 				}	
-				else
+				else if (elem != null)
 					throw new TypeError("Bad element of type "+getQualifiedClassName(elem)+" passed to SpanElement.xmlContent");
 					
 			}

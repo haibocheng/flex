@@ -40,33 +40,19 @@ kernel FxWipe
         defaultValue: 384.0;
     >;
     
-    // 0 == left->right
-    // 1 == bottom->top
-    // 2 == right->left
-    // 3 == top->bottom
-    parameter int direction<
-        minValue: 0;
-        maxValue: 3;
-        defaultValue: 0;
-    >;
-
     void
     evaluatePixel()
     {
         float2 coord = outCoord();
-        // Use src0 just to defeat the optimizer from removing the input
-        pixel4 color1 = sampleNearest(src0, coord);
-        color1 = sampleNearest(from, coord);
-        pixel4 color2 = sampleNearest(to, coord);
 
-        if (direction == 0)
-            dst = ((width * progress) < coord.x) ? color1 : color2;
-        else if (direction == 1)
-            dst = ((height * (1.0 - progress)) >= coord.y) ? color1 : color2;
-        else if (direction == 2)
-            dst = ((width * (1.0 - progress)) >= coord.x) ? color1 : color2;
+        // Use src0 in a branch we won't reach just to defeat the 
+        // optimizer from removing the input parameter
+        if ((height * progress) < coord.y) 
+            dst = sampleNearest(from, coord);
+        else if (progress < 100.0)
+            dst = sampleNearest(to, coord);
         else
-            dst = ((height * progress) < coord.y) ? color1 : color2;
+            dst = sampleNearest(src0, coord);
         // workaround for Flash filter bug that replicates last column/row
         if (coord.x >= width || coord.y >= height)
             dst.a = 0.0;

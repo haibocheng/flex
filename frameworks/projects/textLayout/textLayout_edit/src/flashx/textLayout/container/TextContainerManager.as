@@ -17,12 +17,15 @@ package flashx.textLayout.container
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.FocusEvent;
+	import flash.events.IMEEvent;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.events.TextEvent;
 	import flash.geom.Rectangle;
+	import flash.system.System;
 	import flash.text.engine.TextBlock;
 	import flash.text.engine.TextLine;
+	import flash.text.engine.TextLineValidity;	
 	import flash.ui.ContextMenu;
 	import flash.ui.Mouse;
 	import flash.ui.MouseCursor;
@@ -378,7 +381,6 @@ package flashx.textLayout.container
 			if (_container is InteractiveObject)
 			{
 				_container.doubleClickEnabled = true;
-				_container.tabEnabled = !_config.manageTabKey;
 				// so the textlines can be swapped on the first click and a double click still works
 				_container.mouseChildren = false;
 				_container.focusRect = false;
@@ -1317,7 +1319,7 @@ package flashx.textLayout.container
 			if (newState == HANDLERS_CREATION)
 			{
 				_container.addEventListener(FocusEvent.FOCUS_IN, requiredFocusInHandler);				
-				_container.addEventListener(MouseEvent.MOUSE_OVER, requiredMouseOverHandler);				
+				_container.addEventListener(MouseEvent.MOUSE_OVER, requiredMouseOverHandler);
 			}
 			else if (newState == HANDLERS_ACTIVE)
 			{
@@ -1326,7 +1328,9 @@ package flashx.textLayout.container
 				_container.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
 				_container.addEventListener(MouseEvent.MOUSE_OUT,  mouseOutHandler);
 				_container.addEventListener(MouseEvent.MOUSE_WHEEL, mouseWheelHandler);
-
+			//	_container.addEventListener(IMEEvent.IME_START_COMPOSITION, imeStartCompositionHandler);
+			// attach by literal event name to avoid Argo dependency
+				_container.addEventListener("imeStartComposition", imeStartCompositionHandler);
 				_container.contextMenu = getContextMenu();
 				if (_container.contextMenu)
 		            _container.contextMenu.addEventListener(ContextMenuEvent.MENU_SELECT, menuSelectHandler);
@@ -1354,7 +1358,7 @@ package flashx.textLayout.container
 			if (_handlersState == HANDLERS_CREATION)
 			{
 				_container.removeEventListener(FocusEvent.FOCUS_IN, requiredFocusInHandler);				
-				_container.removeEventListener(MouseEvent.MOUSE_OVER, requiredMouseOverHandler);	
+				_container.removeEventListener(MouseEvent.MOUSE_OVER, requiredMouseOverHandler);
 			}
 			else if (_handlersState == HANDLERS_ACTIVE)
 			{
@@ -1363,6 +1367,9 @@ package flashx.textLayout.container
 				_container.removeEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
 				_container.removeEventListener(MouseEvent.MOUSE_OUT,  mouseOutHandler);
 				_container.removeEventListener(MouseEvent.MOUSE_WHEEL, mouseWheelHandler);
+			//	_container.removeEventListener(IMEEvent.IME_START_COMPOSITION, imeStartCompositionHandler);
+			// detach by literal event name to avoid Argo dependency
+				_container.removeEventListener("imeStartComposition", imeStartCompositionHandler);
 				if (_container.contextMenu)	
 	            	_container.contextMenu.removeEventListener(ContextMenuEvent.MENU_SELECT, menuSelectHandler);
 		        _container.removeEventListener(Event.SELECT_ALL, editHandler);
@@ -1417,6 +1424,12 @@ package flashx.textLayout.container
 				_container.removeChildAt(0);
 				if (textLine)
 				{
+					// releasing all textLines so release each still connected textBlock
+					if (textLine.validity != TextLineValidity.INVALID && textLine.validity != TextLineValidity.STATIC)
+					{
+						var textBlock:TextBlock = textLine.textBlock;
+						textBlock.releaseLines(textBlock.firstLine,textBlock.lastLine);
+					}					
 					textLine.userData = null;	// clear any userData
 					TextLineRecycler.addLineForReuse(textLine);
 				}
@@ -1695,6 +1708,19 @@ package flashx.textLayout.container
 			if (_composeState == COMPOSE_COMPOSER)
 				getController().keyUpHandler(event);
 		}
+
+		/** @copy flashx.textLayout.container.ContainerController#keyFocusChangeHandler().
+		 * 
+		 * @playerversion Flash 10
+		 * @playerversion AIR 1.5
+ 	 	 * @langversion 3.0
+		 * 	@param	event	the FocusChange event
+		 */	
+		public function keyFocusChangeHandler(event:FocusEvent):void
+		{
+			if (_composeState == COMPOSE_COMPOSER)
+				getController().keyFocusChangeHandler(event);
+		}
 		
 		/** @copy flashx.textLayout.container.ContainerController#textInputHandler()
 		* @playerversion Flash 10
@@ -1708,6 +1734,23 @@ package flashx.textLayout.container
 				getController().textInputHandler(event);
 		}
 
+		/** Processes the <code>IME.START_COMPOSITION</code> event when the client manages events.
+		 *
+		 * @param event  The IMEEvent object.
+		 *
+		 * @playerversion Flash 10.1
+		 * @playerversion AIR 1.5
+		 * @langversion 3.0
+		 * 
+		 *
+		 * @see flash.events.IMEEvent#START_COMPOSITION IMEEvent.START_COMPOSITION
+		 */
+		public function imeStartCompositionHandler(event:IMEEvent):void
+		{
+			if (_composeState == COMPOSE_COMPOSER)
+				getController().imeStartCompositionHandler(event);
+		}
+		
 		/** @copy flashx.textLayout.container.ContainerController#mouseDownHandler()
 		* @playerversion Flash 10
 		* @playerversion AIR 1.5
@@ -1957,7 +2000,9 @@ package flashx.textLayout.container
 			if (_composeState == COMPOSE_COMPOSER)
 				getController().mouseUpSomewhere(e);
 		}
+		
 	}
+	
 }
 
 import flash.display.DisplayObject;

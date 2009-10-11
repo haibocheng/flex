@@ -165,7 +165,7 @@ package flashx.textLayout.elements
 					}
 					effectiveParent.replaceChildren(effectiveParent.numChildren, effectiveParent.numChildren, s);
 				}
-				else
+				else if (child != null)
 					throw new TypeError("Bad element of type "+getQualifiedClassName(this)+" passed to FlowGroupElement.mxmlChildren");
 			}
 		}

@@ -20,6 +20,7 @@ import static com.adobe.fxg.FXGConstants.*;
 
 import com.adobe.fxg.FXGException;
 import com.adobe.fxg.dom.FXGNode;
+import com.adobe.internal.fxg.dom.richtext.TextHelper;
 import com.adobe.internal.fxg.dom.text.BRNode;
 import com.adobe.internal.fxg.dom.CDATANode;
 import com.adobe.internal.fxg.dom.text.ParagraphNode;
@@ -28,7 +29,6 @@ import com.adobe.internal.fxg.dom.text.AbstractCharacterTextNode;
 import com.adobe.internal.fxg.dom.types.Kerning;
 import com.adobe.internal.fxg.dom.types.LineBreak;
 import com.adobe.internal.fxg.dom.types.WhiteSpaceCollapse;
-import com.adobe.internal.fxg.swf.TextHelper;
 
 /**
  * @author Peter Farland
@@ -112,9 +112,18 @@ public class TextGraphicNode extends GraphicContentNode implements TextNode
     /**
      * @return The List of child property nodes of this text node.
      */
-    public List<TextNode> getTextProperties()
+    public HashMap<String, TextNode> getTextProperties()
     {
         return null;
+    }
+
+    /**
+     * A text node may also have special child property nodes that represent
+     * complex property values that cannot be set via a simple attribute.
+     */
+    public void addTextProperty(String propertyName, TextNode node)
+    {
+        addChild(node);
     }
 
     /**
@@ -153,7 +162,7 @@ public class TextGraphicNode extends GraphicContentNode implements TextNode
             
             if (!contiguous)
             {
-            	throw new FXGException(child.getStartLine(), child.getStartColumn(), "InvalidRichTextContent");            	
+            	throw new FXGException(child.getStartLine(), child.getStartColumn(), "InvalidTextGraphicContent");            	
             }
 
             content.add((TextNode)child);
@@ -377,7 +386,6 @@ public class TextGraphicNode extends GraphicContentNode implements TextNode
         else if (FXG_BLENDMODE_ATTRIBUTE.equals(name))
         {
             blendMode = parseBlendMode(value, blendMode);
-            blendModeSet = true;
         }
         else if (FXG_MASKTYPE_ATTRIBUTE.equals(name))
         {

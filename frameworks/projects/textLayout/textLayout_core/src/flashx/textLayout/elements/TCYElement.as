@@ -59,7 +59,7 @@ package flashx.textLayout.elements
 		override tlf_internal function createContentElement():void
 		{
 			super.createContentElement();
-			groupElement.textRotation = TextRotation.ROTATE_270;
+			updateTCYRotation();
 		}
 		
 		/** @private */
@@ -106,18 +106,14 @@ package flashx.textLayout.elements
 		tlf_internal override function setParentAndRelativeStart(newParent:FlowGroupElement,newStart:int):void
 		{
 			super.setParentAndRelativeStart(newParent,newStart);
-			var contElement:ContainerFormattedElement = getAncestorWithContainer();
-			if (groupElement)
-				groupElement.textRotation = contElement && contElement.computedFormat.blockProgression == BlockProgression.RL ? TextRotation.ROTATE_270 : TextRotation.ROTATE_0;
+			updateTCYRotation();
 		}
 		
 		/** @private */
 		tlf_internal override function formatChanged(notifyModelChanged:Boolean = true):void
 		{
 			super.formatChanged(notifyModelChanged);
-			var contElement:ContainerFormattedElement = getAncestorWithContainer();
-			if (groupElement)
-				groupElement.textRotation = contElement && contElement.computedFormat.blockProgression == BlockProgression.RL ? TextRotation.ROTATE_270 : TextRotation.ROTATE_0;
+			updateTCYRotation();
 		}
 		
 		/** @private */
@@ -164,5 +160,15 @@ package flashx.textLayout.elements
 				++childCount;
 			}
 		}
+		
+		/** @private */
+		private function updateTCYRotation():void
+		{
+			var contElement:ContainerFormattedElement = getAncestorWithContainer();
+			if (groupElement)
+				groupElement.textRotation = (contElement && contElement.computedFormat.blockProgression == BlockProgression.RL) ? TextRotation.ROTATE_270 : TextRotation.ROTATE_0;	
+		}
 	}
+	
+	
 }

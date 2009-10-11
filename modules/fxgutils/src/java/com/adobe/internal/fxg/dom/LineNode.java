@@ -13,6 +13,15 @@ package com.adobe.internal.fxg.dom;
 
 import static com.adobe.fxg.FXGConstants.*;
 
+import java.util.List;
+
+import com.adobe.internal.fxg.dom.strokes.AbstractStrokeNode;
+import com.adobe.internal.fxg.swf.ShapeHelper;
+
+import flash.swf.types.LineStyle;
+import flash.swf.types.Rect;
+import flash.swf.types.ShapeRecord;
+
 /**
  * @author Peter Farland
  */
@@ -56,5 +65,13 @@ public class LineNode extends AbstractShapeNode
             yTo = parseDouble(value);
         else
             super.setAttribute(name, value);
+    }
+    
+    /**
+     * Returns the bounds of the line
+     */
+    public Rect getBounds(List<ShapeRecord> records, LineStyle ls)
+    {
+    	return ShapeHelper.getBounds(records, ls, (AbstractStrokeNode)stroke);
     }
 }

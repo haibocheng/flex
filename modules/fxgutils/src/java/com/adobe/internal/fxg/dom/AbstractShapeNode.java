@@ -11,12 +11,19 @@
 
 package com.adobe.internal.fxg.dom;
 
+import java.util.List;
+
 import com.adobe.fxg.dom.FXGNode;
+
+import flash.swf.types.LineStyle;
+import flash.swf.types.Rect;
+import flash.swf.types.ShapeRecord;
 
 /**
  * A base class for all FXG nodes that represent a stroke.
  * 
  * @author Peter Farland
+ * @author Sujata Das
  */
 public abstract class AbstractShapeNode extends GraphicContentNode
 {
@@ -43,5 +50,14 @@ public abstract class AbstractShapeNode extends GraphicContentNode
             stroke = (StrokeNode)child;
         else
             super.addChild(child);
+    }
+    
+    /**
+     * Returns the bounds of the shapes
+     * Default implementation - to be overridden by individual classes
+     */
+    public Rect getBounds(List<ShapeRecord> records, LineStyle ls)
+    {
+    	return null;
     }
 }

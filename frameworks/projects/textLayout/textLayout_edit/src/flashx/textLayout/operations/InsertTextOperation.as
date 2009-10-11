@@ -261,6 +261,8 @@ package flashx.textLayout.operations
 					return null;
 				if ((originalSelectionState.pointFormat == null) && (insertOp.originalSelectionState.pointFormat != null))
 					return null;
+				if (originalSelectionState.absoluteStart + _text.length != insertOp.originalSelectionState.absoluteStart)
+					return null;
 				if (((originalSelectionState.pointFormat == null) && (insertOp.originalSelectionState.pointFormat == null)) ||
 					(TextLayoutFormat.isEqual(originalSelectionState.pointFormat, insertOp.originalSelectionState.pointFormat)))
 					_text += insertOp.text;

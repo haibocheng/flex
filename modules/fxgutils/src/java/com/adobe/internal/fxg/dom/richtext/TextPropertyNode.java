@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 //
 //  ADOBE SYSTEMS INCORPORATED
-//  Copyright 2009 Adobe Systems Incorporated
+//  Copyright 2008 Adobe Systems Incorporated
 //  All Rights Reserved.
 //
 //  NOTICE: Adobe permits you to use, modify, and distribute this file
@@ -11,17 +11,15 @@
 
 package com.adobe.internal.fxg.dom.richtext;
 
-import static com.adobe.fxg.FXGConstants.*;
-
-
+import com.adobe.fxg.dom.FXGNode;
+import com.adobe.internal.fxg.dom.DelegateNode;
+import com.adobe.internal.fxg.dom.TextNode;
 
 /**
- * Format applied to a link when active.
  * 
- * @since 2.0
- * @author Min Plunkett
+ * @author Peter Farland
  */
-public class LinkActiveFormatNode extends AbstractRichTextLeafNode
+public class TextPropertyNode extends DelegateNode
 {
     //--------------------------------------------------------------------------
     //
@@ -29,11 +27,15 @@ public class LinkActiveFormatNode extends AbstractRichTextLeafNode
     //
     //--------------------------------------------------------------------------
 
-    /**
-     * @return The unqualified name of a linkActiveFormat node, without tag markup.
-     */
-    public String getNodeName()
+    public void addChild(FXGNode child)
     {
-        return FXG_LINKACTIVEFORMAT_PROPERTY_ELEMENT;
+        if (delegate instanceof TextNode && child instanceof TextNode)
+        {
+            ((TextNode)delegate).addTextProperty(getNodeName(), (TextNode)child);
+        }
+        else
+        {
+            super.addChild(child);
+        }
     }
 }

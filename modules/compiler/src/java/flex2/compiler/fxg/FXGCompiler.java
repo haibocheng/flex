@@ -616,7 +616,6 @@ public class FXGCompiler extends AbstractSubCompiler
                     buf.append("import flashx.textLayout.elements.ParagraphElement;\n");   
                     buf.append("import flashx.textLayout.elements.SpanElement;\n");
                 }
-                buf.append("import flashx.textLayout.formats.TextLayoutFormat;\n");
                 buf.append("import spark.components.RichText;\n");
             }
 
@@ -638,12 +637,9 @@ public class FXGCompiler extends AbstractSubCompiler
                     buf.append("    private static var _temp3:DivElement;\n");
                     buf.append("    private static var _temp4:InlineGraphicElement;\n");
                     buf.append("    private static var _temp5:LinkElement;\n");
-//                  buf.append("    private static var _temp6:LinkNormalFormat;\n");
-//                  buf.append("    private static var _temp7:LinkActiveFormat;\n");
-//                  buf.append("    private static var _temp8:LinkHoverFormat;\n");
-                    buf.append("    private static var _temp9:TabElement;\n");
-                    buf.append("    private static var _temp10:TCYElement;\n");
-                    buf.append("    private static var _temp11:TextLayoutFormat;\n");
+                    buf.append("    private static var _temp6:TabElement;\n");
+                    buf.append("    private static var _temp7:TCYElement;\n");
+                    buf.append("    private static var _temp8:TextLayoutFormat;\n");
                 }
             }
 

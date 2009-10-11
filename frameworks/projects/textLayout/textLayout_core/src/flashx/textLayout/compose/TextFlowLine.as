@@ -30,6 +30,7 @@ package flashx.textLayout.compose
 	import flashx.textLayout.elements.ContainerFormattedElement;
 	import flashx.textLayout.elements.FlowElement;
 	import flashx.textLayout.elements.FlowLeafElement;
+	import flashx.textLayout.elements.FlowValueHolder;
 	import flashx.textLayout.elements.InlineGraphicElement;
 	import flashx.textLayout.elements.ParagraphElement;
 	import flashx.textLayout.elements.SpanElement;
@@ -41,7 +42,6 @@ package flashx.textLayout.compose
 	import flashx.textLayout.formats.BlockProgression;
 	import flashx.textLayout.formats.Direction;
 	import flashx.textLayout.formats.Float;
-	import flashx.textLayout.formats.FormatValue;
 	import flashx.textLayout.formats.ITextLayoutFormat;
 	import flashx.textLayout.formats.JustificationRule;
 	import flashx.textLayout.formats.LeadingModel;
@@ -722,11 +722,20 @@ package flashx.textLayout.compose
 		{
 			CONFIG::debug { assert(elemStart == elem.getAbsoluteStart(),"bad elemStart passed to createAdornments"); } 
 			var endPos:int = _absoluteStart + _textLength;
+			
 			for (;;)
 			{
 				var format:ITextLayoutFormat = elem.computedFormat;
 				if (format.textDecoration == TextDecoration.UNDERLINE || format.lineThrough || (format.backgroundColor != BackgroundColor.TRANSPARENT && format.backgroundAlpha))
-					elem.updateAdornments(this, blockProgression);
+				{	
+					elem.updateAdornments(this, blockProgression); 
+				}
+				
+				var fvh:FlowValueHolder = elem.format as FlowValueHolder;
+				if(fvh && fvh.userStyles && fvh.userStyles.imeStatus)
+				{
+					elem.updateIMEAdornments(this, blockProgression, fvh.userStyles.imeStatus as String);
+				}
 				elemStart += elem.textLength;
 				if (elemStart >= endPos)
 					break;
@@ -1151,7 +1160,7 @@ package flashx.textLayout.compose
 			{
 				drawRect = drawRect.clone();
 				convertLineRectToContainer(drawRect, true);
-			    createSelectionRect(selObj, color, drawRect.x, drawRect.y, drawRect.width, drawRect.height);
+				createSelectionRect(selObj, color, drawRect.x, drawRect.y, drawRect.width, drawRect.height);
 			}
 		}
 		
@@ -1248,24 +1257,12 @@ package flashx.textLayout.compose
  			//If we don't, then it overlaps the line below too much OR clips the top of the glyphs.
  			if(!prevLine || prevLine.columnIndex != this.columnIndex || prevLine.controller != this.controller)
  			{
- 				//make it taller
+ 				//make it taller - this is kinda a fudge, but we have no info to determine a good top.
+ 				//if we don't do this, the selection rectangle will clip to the top of the glyphs and even
+ 				//let parts stick out a bit.  So, re-add the descent and offset the rect by 50% so that
+ 				//it appears to balance the top and bottom.
  				rectHeight += this.descent;
- 				
- 				//get the bounds for the controller and if it is bigger than controller,
- 				//shrink it
- 				var bounds:Rectangle = this.controller.getContentBounds();
- 				if(rectHeight > (bounds.height - bounds.top))
- 					rectHeight = bounds.height - bounds.top;
- 				
- 				if(this.controller.computedFormat.firstBaselineOffset == FormatValue.AUTO)
- 				{
- 					//this adjustment should only be applied to Top to bottom text (ie Roman)
- 					if(this.controller.computedFormat.blockProgression == BlockProgression.TB)
- 					{
- 						//shift it down so that the top abutts the top of the controller
- 						verticalAdj = bounds.top;
- 					}
- 				}
+ 				verticalAdj = Math.floor(this.descent/2);
  			}
  			return [rectHeight, verticalAdj];
  		}

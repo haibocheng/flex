@@ -93,12 +93,29 @@ package flashx.textLayout.compose
 		static tlf_internal function releaseParcelList(list:IParcelList):void
 		{
 			if (_sharedParcelList == null)
+			{
 				_sharedParcelList = list as ParcelList;
+				if (_sharedParcelList)
+					_sharedParcelList.releaseAnyReferences();
+			}
 		}
-		
+
 		/** Constructor. */
 		public function ParcelList()
-		{	}
+		{ _numParcels = 0;	}
+		
+		/** prevent any leaks. @private */
+		tlf_internal function releaseAnyReferences():void
+		{
+			this._flowComposer = null;
+			this._columnController = null;
+			
+			_numParcels = 0;
+			_parcelArray = null;
+			
+			if (_singleParcel)
+				_singleParcel.releaseAnyReferences();
+		}
 		
 		CONFIG::debug public function getBounds():Array
 		{
@@ -232,13 +249,6 @@ package flashx.textLayout.compose
 			_totalDepth += value;	
 		//	trace("addTotalDepth", value, "newDepth", totalDepth);
 			return _totalDepth;
-		}
-		
-		/** initializes the parcelList for creating a new set of parcels */
-		public function initialize():void
-		{
-			_numParcels = 0;
-			_parcelArray = null;
 		}
 		
 		protected function reset():void

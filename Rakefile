@@ -17,7 +17,7 @@ THIS = File.expand_path(File.dirname(__FILE__))
 # This is a special variable.
 # Because subversion 1.4 doesn't have merge tracking,
 # this will be rewritten every time you run the merge command in here
-# LAST_MERGE = 10926
+# LAST_MERGE = 10955
 LAST_MERGE_PATTERN = /\#\s*LAST_MERGE\s*\=\s*(\d+)/
 
 # Helper Methods
@@ -171,13 +171,13 @@ namespace :svn do
       puts "executing >> svn merge -r #{older}:#{r} #{TRUNK} ."
       system("svn merge -r #{older}:#{r} #{TRUNK} .")
       puts "completed merge"
-      conflicts = %x[grep -r "<<<<<<<[^<]" ./*]
-      if conflicts and conflicts.length > 0
+      conflicts = %x[grep -r "<<<<<<<[^<]" ./frameworks/projects]#.delete_if {|x| x =~ /^Binary/}
+      if conflicts and conflicts.length > 1
         puts "Please fix the conflicts,"
         puts "set the LAST_MERGE = #{r},"
         puts "and rerun 'rake svn:merge_local'"
         puts ""
-        puts conflicts.join("\n")
+        puts conflicts.is_a?(Array) ? conflicts.join("\n") : conflicts.to_s
         puts ""
         raise "exited"
       end

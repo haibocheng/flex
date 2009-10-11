@@ -60,7 +60,15 @@ package flashx.textLayout.property
 		/** @private */
 		public override function toXMLString(val:Object):String
 		{
-			return val == FormatValue.INHERIT ? String(val) : "0x" + val.toString(16);
+			// Always export in # format, to be compatible with color spec.
+			if (val == FormatValue.INHERIT)
+				return String(val);
+				
+			var result:String = val.toString(16);
+			if (result.length < 6)
+				result = "000000".substr(0, 6 - result.length) + result;
+			result = "#" + result;
+			return result;
 		}
 		
 		/** @private */

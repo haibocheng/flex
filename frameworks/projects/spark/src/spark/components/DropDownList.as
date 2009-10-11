@@ -120,6 +120,9 @@ use namespace mx_internal;
 //--------------------------------------
 
 [Exclude(name="allowMultipleSelection", kind="property")]
+[Exclude(name="dragEnabled", kind="property")]
+[Exclude(name="dragMoveEnabled", kind="property")]
+[Exclude(name="dropEnabled", kind="property")]
 [Exclude(name="selectedIndices", kind="property")]
 [Exclude(name="selectedItems", kind="property")]
 
@@ -239,8 +242,20 @@ public class DropDownList extends List
     
     private var labelChanged:Boolean = false;
     // Stores the user selected index until the dropDown closes
-    mx_internal var userProposedSelectedIndex:Number = -1;
+    
     mx_internal static var PAGE_SIZE:int = 5;
+    
+    private var _userProposedSelectedIndex:Number = -1;
+    
+    mx_internal function set userProposedSelectedIndex(value:Number):void
+    {
+        _userProposedSelectedIndex = value;
+    }
+    
+    mx_internal function get userProposedSelectedIndex():Number
+    {
+        return _userProposedSelectedIndex;
+    }
     
     //--------------------------------------------------------------------------
     //
@@ -399,6 +414,42 @@ public class DropDownList extends List
         super.dataProvider = value;
         labelChanged = true;
         invalidateProperties();
+    }
+    
+    //----------------------------------
+    //  dragEnabled
+    //----------------------------------
+
+    /**
+     *  @private
+     *  Excluded property
+     */
+    override public function set dragEnabled(value:Boolean):void
+    {
+    }
+
+    //----------------------------------
+    //  dragMoveEnabled
+    //----------------------------------
+
+    /**
+     *  @private
+     *  Excluded property
+     */
+    override public function set dragMoveEnabled(value:Boolean):void
+    {
+    }
+    
+    //----------------------------------
+    //  dropEnabled
+    //----------------------------------
+
+    /**
+     *  @private
+     *  Excluded property
+     */
+    override public function set dropEnabled(value:Boolean):void
+    {
     }
     
     //----------------------------------

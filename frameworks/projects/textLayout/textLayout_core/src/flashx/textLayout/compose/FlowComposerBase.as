@@ -140,6 +140,12 @@ package flashx.textLayout.compose
 					var textLine:TextLine = line.getTextLine(false);
 					if (textLine && !textLine.parent)
 					{
+						// releasing all textLines so release each still connected textBlock
+						if (textLine.validity != TextLineValidity.INVALID)
+						{
+							var textBlock:TextBlock = textLine.textBlock;
+							textBlock.releaseLines(textBlock.firstLine,textBlock.lastLine);
+						}
 						textLine.userData = null;
 						TextLineRecycler.addLineForReuse(textLine);
 					}
@@ -408,7 +414,7 @@ package flashx.textLayout.compose
 		 
 		public function findLineAtPosition(absolutePosition:int,preferPrevious:Boolean = false):TextFlowLine
 		{
-			return _lines[findLineIndexAtPosition(absolutePosition)];
+			return _lines[findLineIndexAtPosition(absolutePosition,preferPrevious)];
 		}
 		
 		/**

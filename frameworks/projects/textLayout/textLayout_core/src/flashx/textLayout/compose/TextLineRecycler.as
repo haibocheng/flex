@@ -45,7 +45,7 @@ package flashx.textLayout.compose
 
 		static public function addLineForReuse(textLine:TextLine):void
 		{
-			CONFIG::debug { assert(textLine.parent == null && textLine.userData == null,"textLine not ready for reuse"); }
+			CONFIG::debug { assert(textLine.parent == null && textLine.userData == null && (textLine.validity == "invalid"||textLine.validity == "static"),"textLine not ready for reuse"); }
 			if (textBlockHasRecreateTextLine)
 			{
 				CONFIG::debug 

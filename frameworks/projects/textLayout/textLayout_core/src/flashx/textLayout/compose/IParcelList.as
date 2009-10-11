@@ -30,9 +30,6 @@ package flashx.textLayout.compose
 	 */
 	public interface IParcelList  
 	{
-		/** Initialize the parcel list to be empty. */
-		function initialize():void;
-
 		/** Initialize the parcel list from the flow composer. The parcel list will
 		 * have the bounding box of the controller(s). If the controller has multiple
 		 * columns, the parcel list will have a parcel for each column. If the 

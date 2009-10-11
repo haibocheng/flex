@@ -22,7 +22,7 @@ import com.adobe.fxg.dom.FXGNode;
 import com.adobe.internal.fxg.dom.AbstractFXGNode;
 import com.adobe.internal.fxg.dom.CDATANode;
 import com.adobe.internal.fxg.dom.TextNode;
-import com.adobe.internal.fxg.swf.TextHelper;
+import com.adobe.internal.fxg.dom.richtext.TextHelper;
 
 /**
  * A base class for all FXG nodes concerned with formatted text.
@@ -96,9 +96,18 @@ public abstract class AbstractTextNode extends AbstractFXGNode implements TextNo
     /**
      * @return The List of child property nodes of this text node.
      */
-    public List<TextNode> getTextProperties()
+    public HashMap<String, TextNode> getTextProperties()
     {
         return null;
+    }
+
+    /**
+     * A text node may also have special child property nodes that represent
+     * complex property values that cannot be set via a simple attribute.
+     */
+    public void addTextProperty(String propertyName, TextNode node)
+    {
+        addChild(node);
     }
 
     /**

@@ -124,7 +124,7 @@ package flashx.textLayout.elements
 		}
 		
 		/** Returns the core styles on a FlowElement instance. Returns a copy of the core styles. 
-		 *  dictionary. 
+		 *  
 		 *
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5

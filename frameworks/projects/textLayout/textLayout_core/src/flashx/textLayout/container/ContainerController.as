@@ -19,12 +19,14 @@ package flashx.textLayout.container
 	import flash.events.ContextMenuEvent;
 	import flash.events.Event;
 	import flash.events.FocusEvent;
+	import flash.events.IMEEvent;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.events.TextEvent;
 	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import flash.system.System;
 	import flash.text.engine.TextLine;
 	import flash.text.engine.TextLineValidity;
 	import flash.ui.ContextMenu;
@@ -53,6 +55,7 @@ package flashx.textLayout.container
 	import flashx.textLayout.formats.Float;
 	import flashx.textLayout.formats.FormatValue;
 	import flashx.textLayout.formats.ITextLayoutFormat;
+	import flashx.textLayout.formats.LineBreak;
 	import flashx.textLayout.formats.TextLayoutFormat;
 	import flashx.textLayout.formats.TextLayoutFormatValueHolder;
 	import flashx.textLayout.property.Property;
@@ -718,6 +721,7 @@ package flashx.textLayout.container
 			
 			if (newScroll != oldScroll)
 			{	
+				_shapesInvalid = true;
 				_xScroll = newScroll;
 				updateForScroll();
 			}
@@ -788,6 +792,7 @@ package flashx.textLayout.container
 			
 			if (newScroll != oldScroll)
 			{			
+				_shapesInvalid = true;
 				_yScroll = newScroll;
 				updateForScroll();
 			}
@@ -1157,8 +1162,8 @@ package flashx.textLayout.container
 		 * wants those events so that clicking on a container will select the text in it.  This code
 		 * adds or updates (on size change) that background for Sprite containers only. This may cause clients problems 
 		 * - definitely no hits is a problem - add this code to explore the issues - expect feedback.  
-		 * We may have to make this configurable. */
-		private function attachTransparentBackgroundForHit(justClear:Boolean):void
+		 * We may have to make this configurable. @private */
+		tlf_internal function attachTransparentBackgroundForHit(justClear:Boolean):void
 		{
 			if (_minListenersAttached && attachTransparentBackground)
 			{
@@ -1231,13 +1236,17 @@ package flashx.textLayout.container
 		   	_container.addEventListener(MouseEvent.MOUSE_OUT, receiver.mouseOutHandler);
 			_container.addEventListener(MouseEvent.MOUSE_WHEEL, receiver.mouseWheelHandler);
 			_container.addEventListener(Event.DEACTIVATE, receiver.deactivateHandler);
-				
+		//	_container.addEventListener(IMEEvent.IME_START_COMPOSITION, receiver.imeStartCompositionHandler);
+			// attach by literal event name to avoid Argo dependency
+			_container.addEventListener("imeStartComposition", receiver.imeStartCompositionHandler);
+
 			if (_container.contextMenu)
 	        	_container.contextMenu.addEventListener(ContextMenuEvent.MENU_SELECT, receiver.menuSelectHandler);
 		   	_container.addEventListener(Event.COPY, receiver.editHandler);
 		   	_container.addEventListener(Event.SELECT_ALL, receiver.editHandler);
 		   	_container.addEventListener(Event.CUT, receiver.editHandler);
 		   	_container.addEventListener(Event.PASTE, receiver.editHandler);
+		   	_container.addEventListener(Event.CLEAR, receiver.editHandler);
 		}
 		
 	 	/** @private */
@@ -1255,13 +1264,17 @@ package flashx.textLayout.container
  			_container.removeEventListener(MouseEvent.MOUSE_OUT, receiver.mouseOutHandler);
 			_container.removeEventListener(MouseEvent.MOUSE_WHEEL, receiver.mouseWheelHandler);
 			_container.removeEventListener(Event.DEACTIVATE, receiver.deactivateHandler);
-			  				    				
+		//	_container.removeEventListener(IMEEvent.IME_START_COMPOSITION, receiver.imeStartCompositionHandler); 
+			// attach by literal event name to avoid Argo dependency
+			_container.removeEventListener("imeStartComposition", receiver.imeStartCompositionHandler); 
+
 	        if (_container.contextMenu) 
 	        	_container.contextMenu.removeEventListener(ContextMenuEvent.MENU_SELECT, receiver.menuSelectHandler);
 			_container.removeEventListener(Event.COPY, receiver.editHandler); 
 			_container.removeEventListener(Event.SELECT_ALL, receiver.editHandler);
 			_container.removeEventListener(Event.CUT, receiver.editHandler);
 			_container.removeEventListener(Event.PASTE, receiver.editHandler);
+			_container.removeEventListener(Event.CLEAR, receiver.editHandler);
 			
 			clearSelectHandlers();	
 		}
@@ -1485,6 +1498,11 @@ package flashx.textLayout.container
 			var lastColumn:int = _columnState.columnCount - 1;
 			var firstVisibleLine:TextFlowLine;
 			var lastVisibleLine:TextFlowLine;
+			
+			// no visible lines?
+			if (firstLine == flowComposer.numLines)
+				return [null,null];
+				
 			for (var lineIndex:int = firstLine; lineIndex <= lastLine; lineIndex++) 
 			{
 				var curLine:TextFlowLine = flowComposer.getLineAt(lineIndex);	
@@ -1971,6 +1989,7 @@ package flashx.textLayout.container
 			// trace("ContainerController requiredFocusInHandler adding key handlers");
   			_container.addEventListener(KeyboardEvent.KEY_DOWN, getInteractionHandler().keyDownHandler);
    			_container.addEventListener(KeyboardEvent.KEY_UP,   getInteractionHandler().keyUpHandler);		
+   			_container.addEventListener(FocusEvent.KEY_FOCUS_CHANGE,   getInteractionHandler().keyFocusChangeHandler);		
 			getInteractionHandler().focusInHandler(event);
 		}
 		
@@ -2002,6 +2021,7 @@ package flashx.textLayout.container
 			// trace("ContainerController requiredFocusOutHandler removing key handlers");
  			_container.removeEventListener(KeyboardEvent.KEY_DOWN, getInteractionHandler().keyDownHandler);
    			_container.removeEventListener(KeyboardEvent.KEY_UP,   getInteractionHandler().keyUpHandler);   			
+   			_container.removeEventListener(FocusEvent.KEY_FOCUS_CHANGE,   getInteractionHandler().keyFocusChangeHandler);   			
 			getInteractionHandler().focusOutHandler(event);
 		}
 		
@@ -2074,7 +2094,22 @@ package flashx.textLayout.container
 			if (interactionManager)
 				interactionManager.keyUpHandler(event);
 		}
-		
+
+		/** Processes the <code>FocusEvent.KEY_FOCUS_CHANGE</code> event when the client manages events.
+		 *
+		 * @param event The FocusEvent object.
+		 *
+		 * @playerversion Flash 10
+		 * @playerversion AIR 1.5
+		 * @langversion 3.0
+		 *
+		 * @see flash.events.FocusEvent#KEY_FOCUS_CHANGE FocusEvent.KEY_FOCUS_CHANGE
+		 */
+		public function keyFocusChangeHandler(event:FocusEvent):void
+		{
+			if (interactionManager)
+				interactionManager.keyFocusChangeHandler(event);
+		}		
 		/** Processes the <code>TextEvent.TEXT_INPUT</code> event when the client manages events.
 		 *
 		 * @param event  The TextEvent object.
@@ -2093,6 +2128,24 @@ package flashx.textLayout.container
 			if (interactionManager)
 				interactionManager.textInputHandler(event);
 		}
+		
+		/** Processes the <code>IMEEvent.IME_START_COMPOSITION</code> event when the client manages events.
+		 *
+		 * @param event  The IMEEvent object.
+		 *
+		 * @playerversion Flash 10
+		 * @playerversion AIR 1.5
+		 * @langversion 3.0
+		 * 
+		 * @see flash.events.IMEEvent.IME_START_COMPOSITION
+		 */
+		 
+		public function imeStartCompositionHandler(event:IMEEvent):void
+		{
+			if (interactionManager)
+				interactionManager.imeStartCompositionHandler(event);
+		}
+		
 		
 		/** 
 		 * Processes the <code>ContextMenuEvent.MENU_SELECT</code> event when the client manages events.
@@ -2155,6 +2208,12 @@ package flashx.textLayout.container
 	    		}
 	    	}
 	    
+	    /**
+		 * Indicates whether the component implementing ITextSupport supports reconversion (has editable text).
+		 *
+		 * @playerversion Flash 10.0
+		 * @langversion 3.0
+		 */ 
 	    public function get canReconvert():Boolean
 		{
 			var selMgr:ISelectionManager = interactionManager;
@@ -2164,6 +2223,15 @@ package flashx.textLayout.container
 			return selMgr.editingMode == EditingMode.READ_WRITE;
 		}
 		
+		/** 
+		 * The zero-based character index value of the first character in the current selection.
+		 * Components which wish to support inline IME or Accessibility should call into this method.
+		 *
+		 * @return the index of the character at the anchor end of the selection, or <code>-1</code> if no text is selected.
+		 * 
+		 * @playerversion Flash 10.0
+		 * @langversion 3.0
+		 */
 		public function get selectionActiveIndex():int
 		{
 			var selMgr:ISelectionManager = interactionManager;
@@ -2175,7 +2243,16 @@ package flashx.textLayout.container
 			
 			return selIndex;
 		}
-	    
+		
+	    /** 
+		 * The zero-based character index value of the last character in the current selection.
+		 * Components which wish to support inline IME or Accessibility should call into this method.
+		 *
+		 * @return the index of the character at the active end of the selection, or <code>-1</code> if no text is selected.
+		 * 
+		 * @playerversion Flash 10.0
+		 * @langversion 3.0
+		 */
 		public function get selectionAnchorIndex():int
 		{
 			var selMgr:ISelectionManager = interactionManager;
@@ -2188,47 +2265,104 @@ package flashx.textLayout.container
 			return selIndex;
 		}
 	    
+	    /** 
+		 * Gets the specified range of text from a component implementing ITextSupport.
+		 * To retrieve all text in the component, do not specify values for <code>startIndex</code> and <code>endIndex</code>.
+		 * Components which wish to support inline IME or web searchability should call into this method.
+		 * Components overriding this method should ensure that the default values of <code>-1</code> 
+		 * for <code>startIndex</code> and <code>endIndex</code> are supported.
+		 * 
+		 * @param startIndex Optional; an integer that specifies the starting location of the range of text to be retrieved.
+		 *
+		 * @param endIndex Optional; an integer that specifies the ending location of the range of text to be retrieved.
+		 * 
+		 * @return The requested text, or <code>null</code> if no text is available in the requested range
+		 * or if either or both of the indexes are invalid.  The same value should be returned 
+		 * independant of whether <code>startIndex</code> is greater or less than <code>endIndex</code>.
+		 * 
+		 * @playerversion Flash 10.0
+		 * @langversion 3.0
+		 */
 	    public function getTextInRange(startIndex:int = -1, endIndex:int = -1):String
 	    {
 	    	var text:String = "";
-	    	var childIter:int = 0;
-	    	
+	    	//don't include the final paraTerminator when determining text limits
+	    	if(startIndex < -1 || endIndex < -1 || startIndex > (this.textFlow.textLength - 1) || endIndex > (this.textFlow.textLength - 1))
+	    		return null;
+				
 	    	if(startIndex == -1 && endIndex == -1)
 	    	{
-	    		while(childIter < this.textFlow.numChildren)
+	    		var curPara:ParagraphElement = this.textFlow.getFirstLeaf().getParagraph();
+	    		while(curPara)
 	    		{
-	    			var curPara:ParagraphElement = this.textFlow.getChildAt(childIter) as ParagraphElement;
-	    			CONFIG::debug{ assert(curPara != null, "child of the text flow does not appear to be a Paragraph!"); }
 	    			text += curPara.getText();
-	    			++childIter;
+	    			curPara = curPara.getNextParagraph();
+	    			if(curPara)
+	    				text += "\n";
 	    		}
 	    		
 	    	}
 	    	else
 	    	{
-	    		var curPos:int = startIndex != -1 ? startIndex : 0;
 	    		if(endIndex == -1)
 	    			endIndex = this.textFlow.textLength;
-	    			
-	    		while(curPos < endIndex && childIter < textFlow.numChildren)
+				
+				//make sure they're in the right order
+				if(endIndex < startIndex)
+				{
+					var tempIndex:int = endIndex;
+					endIndex = startIndex;
+					startIndex = tempIndex;
+				}
+				
+	    		var curPos:int = startIndex != -1 ? startIndex : 0;
+				
+									
+	    		var rangedPara:ParagraphElement = this.textFlow.getFirstLeaf().getParagraph();
+	    		var paraStart:int = rangedPara.getAbsoluteStart();
+	    		//textLength includes the terminator, exclude it.
+    			var paraEnd:int = paraStart + rangedPara.textLength - 1;
+    			
+    			//iterate over the paragraphs until we get to the one in range
+	    		while(rangedPara && paraStart < curPos && paraEnd < curPos)
 	    		{
-	    			var rangedPara:ParagraphElement = this.textFlow.getChildAt(childIter) as ParagraphElement;
-	    			CONFIG::debug{ assert(rangedPara != null, "child of the text flow does not appear to be a Paragraph!"); }
-	    			var paraStart:int = rangedPara.getAbsoluteStart();
-	    			var paraEnd:int = paraStart + rangedPara.textLength;
-	    			if(curPos <= paraStart && paraEnd >= endIndex)
-	    			{
-		    			var relStart:int = curPos - paraStart;
-		    			var relEnd:int = relStart + (endIndex - curPos);
-		    			
-		    			if(relEnd > (paraStart + rangedPara.textLength))
-		    				relEnd = paraStart + rangedPara.textLength;
-		    			
-		    			var rangedParaText:String = rangedPara.getText();
-		    			text += rangedParaText.substr(relStart, relEnd - relStart);
-		    			
-		    			curPos += rangedPara.textLength;
-		    			++childIter;
+	    			rangedPara = rangedPara.getNextParagraph();
+	    			paraStart = paraEnd + 1;
+	    			//textLength includes the terminator, exclude it.
+	    			paraEnd = paraStart + rangedPara.textLength - 1;
+	    		}
+	    		
+	    		//we better have one!
+	    		CONFIG::debug{ assert(rangedPara != null, "failed to find a starting Paragraph for getTextInRange!"); }
+	    		
+	    		//now we'll walk the paras until we get to the end...
+	    		while(rangedPara && curPos < endIndex)
+	    		{
+	    			//convert paraStart (absolute) to a paragraph relative start
+	    			var relStart:int = curPos - paraStart;
+		    		var relEnd:int = relStart + (endIndex - curPos);
+		    		
+		    		//don't go beyond the end of the paragraph
+		    		if(relEnd > (paraStart + rangedPara.textLength))
+		    			relEnd = paraStart + rangedPara.textLength - 1;
+		    		
+		    		var rangedParaText:String = rangedPara.getText();
+		    		text += rangedParaText.substr(relStart, relEnd - relStart);
+		    		
+		    		curPos += (relEnd - relStart);
+		    		
+	    			rangedPara = rangedPara.getNextParagraph();
+	    			//no need to perform these if we don't have a paragraph
+		    		if(rangedPara != null)
+		    		{
+		    			//save on the calculation, just paraStart eq it the last paraEnd + 1
+		    			paraStart = paraEnd + 1;
+		    			paraEnd = paraStart + rangedPara.textLength;
+		    			if(curPos < endIndex)
+		    				text += "\n";
+		    				
+		    			//get beyond the para terminator
+		    			++curPos;
 		    		}
 	    		}
 	    	}
@@ -2236,15 +2370,26 @@ package flashx.textLayout.container
 	    	return text;
 	    }
 	    
+	    
+		 /** 
+		 * Sets the range of selected text in a component implementing ITextSupport.
+		 * If either of the arguments is out of bounds the selection should not be changed.
+		 * Components which wish to support inline IME should call into this method.
+		 * 
+		 * @param anchorIndex The zero-based index value of the character at the anchor end of the selection
+		 *
+		 * @param activeIndex The zero-based index value of the character at the active end of the selection.
+		 * 
+		 * @playerversion Flash 10.0
+		 * @langversion 3.0
+		 */
 	    public function selectRange(anchorIndex:int, activeIndex:int):void
 	    {
-	    	if(interactionManager && interactionManager.editingMode == EditingMode.READ_WRITE)
+	    	if(interactionManager && interactionManager.editingMode != EditingMode.READ_ONLY)
 	    	{
 		    	interactionManager.selectRange(anchorIndex, activeIndex);
 	    	}
 	    }
-	    
-	    
 	    
 		//--------------------------------------------------------------------------
 		//
@@ -2338,11 +2483,11 @@ package flashx.textLayout.container
 				if (effectiveBlockProgression == BlockProgression.TB)
 				{
 					if (x >= containerScrollRectRight)
-						x = containerScrollRectRight - w;
+						x -= w;
 				} 
 				else
 					if (y >= containerScrollRectBottom)
-						y = containerScrollRectBottom - h;
+						y -= h;
 			}
 				
 			selObj.graphics.drawRect(int(x),int(y),w,h);

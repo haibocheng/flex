@@ -199,7 +199,7 @@ package flashx.textLayout.conversion
 				linkElem.target = _linkFormatImporter.result["target"];
 			}
 			
-			// HTML_FORMAT uses _self as the default target (to replicate TextField behavior) 
+			// TEXT_FIELD_HTML_FORMAT uses _self as the default target (to replicate TextField behavior) 
 			// while the TLF object model uses null. Account for this difference.
 			if (!linkElem.target)
 				linkElem.target = "_self";

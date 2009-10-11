@@ -16,12 +16,12 @@ import static com.adobe.fxg.FXGConstants.*;
 
 
 /**
- * Format applied to a link at a normal state.
+ * TextLayoutFormat applied to a link.
  * 
  * @since 2.0
  * @author Min Plunkett
  */
-public class LinkNormalFormatNode extends AbstractRichTextLeafNode
+public class TextLayoutFormatNode extends AbstractRichTextLeafNode
 {
     //--------------------------------------------------------------------------
     //
@@ -30,10 +30,10 @@ public class LinkNormalFormatNode extends AbstractRichTextLeafNode
     //--------------------------------------------------------------------------
 
     /**
-     * @return The unqualified name of a linkNormalFormat node, without tag markup.
+     * @return The unqualified name of a TextLayoutFormat node, without tag markup.
      */
     public String getNodeName()
     {
-        return FXG_LINKNORMALFORMAT_PROPERTY_ELEMENT;
+        return FXG_TEXTLAYOUTFORMAT_ELEMENT;
     }
 }

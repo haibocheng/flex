@@ -95,6 +95,7 @@ package flashx.textLayout
 		import flashx.textLayout.formats.Float; Float;
 		import flashx.textLayout.formats.FlowElementDisplayType; FlowElementDisplayType;
 		import flashx.textLayout.formats.FormatValue; FormatValue;
+		import flashx.textLayout.formats.IMEStatus; IMEStatus;
 		import flashx.textLayout.formats.ITextLayoutFormat; ITextLayoutFormat;
 		import flashx.textLayout.formats.ITabStopFormat; ITabStopFormat;
 		import flashx.textLayout.formats.JustificationRule; JustificationRule;

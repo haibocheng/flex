@@ -32,8 +32,8 @@ package flashx.textLayout.elements
 	import flashx.textLayout.formats.BaselineShift;
 	import flashx.textLayout.formats.BlockProgression;
 	import flashx.textLayout.formats.FormatValue;
+	import flashx.textLayout.formats.IMEStatus;
 	import flashx.textLayout.formats.ITextLayoutFormat;
-	import flashx.textLayout.formats.JustificationRule;
 	import flashx.textLayout.formats.TLFTypographicCase;
 	import flashx.textLayout.formats.TextDecoration;
 	import flashx.textLayout.formats.TextLayoutFormat;
@@ -447,14 +447,14 @@ package flashx.textLayout.elements
 		}
 
 		/** 
-		 * Returns the computed character format attributes that are in effect for this element.
+		 * The computed text format attributes that are in effect for this element.
 		 * Takes into account the inheritance of attributes.
 		 *
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
 	 	 * @langversion 3.0
 	 	 *
-		 * @see flashx.textLayout.formats.ICharacterFormat
+		 * @see flashx.textLayout.formats.ITextLayoutFormat
 		 */
 		public override function get computedFormat():ITextLayoutFormat
 		{		
@@ -503,6 +503,130 @@ package flashx.textLayout.elements
 			line.calculateSelectionBounds(mainRects, startPos, endPos, blockProgression, [ line.textHeight,0]);
 			return mainRects;
 		}
+		
+		/** @private */
+		tlf_internal function updateIMEAdornments(line:TextFlowLine, blockProgression:String, imeStatus:String):void
+		{
+			trace("updateIMEAdornments - imeStatus = " + imeStatus);
+			var tLine:TextLine = line.getTextLine();
+			var spanBoundsArray:Array = getSpanBoundsOnLine(tLine, blockProgression);
+			//this is pretty much always going to have a length of 1, but just to be sure...
+			for (var i:int = 0; i < spanBoundsArray.length; i++)
+			{
+				var spanBounds:Rectangle = spanBoundsArray[i] as Rectangle;
+				var selObj:Shape = new Shape();
+				var metrics:FontMetrics = getComputedFontMetrics();
+				
+				//TODO - this is probably going to need to be overridable in the full implementation
+				selObj.alpha = 1;       				
+				selObj.graphics.beginFill(0x000000);
+				
+				var stOffset:Number = calculateStrikeThrough(tLine, blockProgression, metrics, spanBounds);
+				var ulOffset:Number = calculateUnderlineOffset(stOffset, blockProgression, metrics, tLine);
+				
+				if (blockProgression != BlockProgression.RL)
+				{
+					var left:Number = spanBounds.topLeft.x + 1;
+					var right:Number = spanBounds.topLeft.x + spanBounds.width - 1;
+					if (imeStatus == IMEStatus.RAW || imeStatus == IMEStatus.DEAD_KEY_INPUT_STATE)
+					{
+						selObj.graphics.lineStyle(1, 0x000000, selObj.alpha);
+						selObj.graphics.moveTo(left, ulOffset);
+						selObj.graphics.lineTo(right, ulOffset);
+					}
+					else if(imeStatus == IMEStatus.SELECTED)
+					{
+						selObj.graphics.lineStyle(2, 0x000000, selObj.alpha);
+						selObj.graphics.moveTo(left, ulOffset);
+						selObj.graphics.lineTo(right, ulOffset);
+					}
+					else if(imeStatus == IMEStatus.NOT_SELECTED)
+					{
+						selObj.graphics.lineStyle(1, 0x000000, selObj.alpha/2);
+						selObj.graphics.moveTo(left, ulOffset);
+						selObj.graphics.lineTo(right, ulOffset);
+					}
+					
+					addBackgroundRect (line, tLine, metrics, spanBounds, true); 
+				}
+				else
+				{
+					//is this TCY?
+					var elemIdx:int = this.getAbsoluteStart() - line.absoluteStart;
+					var top:Number = spanBounds.topLeft.y + 1;
+					var bottom:Number = spanBounds.topLeft.y + spanBounds.height - 1;
+					
+					//elemIdx can sometimes be negative if the text is being wrapped due to a
+					//resize gesture - in which case the tLine has not necessarily been updated.
+					//If the elemIdx is invalid, just treat it like it's normal ttb text - gak 07.08.08
+					if(elemIdx < 0 || tLine.atomCount <= elemIdx || tLine.getAtomTextRotation(elemIdx) != TextRotation.ROTATE_0)
+					{
+						
+						if (imeStatus == IMEStatus.RAW || imeStatus == IMEStatus.DEAD_KEY_INPUT_STATE)
+						{
+							selObj.graphics.lineStyle(1, 0x000000, selObj.alpha);
+							selObj.graphics.moveTo(ulOffset, top);
+							selObj.graphics.lineTo(ulOffset, bottom);
+						}
+						else if(imeStatus == IMEStatus.SELECTED)
+						{
+							selObj.graphics.lineStyle(2, 0x000000, selObj.alpha);
+							selObj.graphics.moveTo(ulOffset, top);
+							selObj.graphics.lineTo(ulOffset, bottom);
+						}
+						else if(imeStatus == IMEStatus.NOT_SELECTED)
+						{
+							selObj.graphics.lineStyle(1, 0x000000, selObj.alpha/2);
+							selObj.graphics.moveTo(ulOffset, top);
+							selObj.graphics.lineTo(ulOffset, bottom);
+						}
+						
+						addBackgroundRect (line, tLine, metrics, spanBounds, false);
+					}
+					else
+					{
+						//it is TCY!
+						var tcyParent:TCYElement =  this.getParentByType(TCYElement) as TCYElement;
+						CONFIG::debug{ assert(tcyParent != null, "What kind of object is this that is ROTATE_0, but not TCY?");}
+						
+						addBackgroundRect (line, tLine, metrics, spanBounds, true, true); 
+						
+						//only perform calculations for TCY adornments when we are on the last leaf.  ONLY the last leaf matters
+						if((this.getAbsoluteStart() + this.textLength) == (tcyParent.getAbsoluteStart() + tcyParent.textLength))
+						{
+							var tcyAdornBounds:Rectangle = new Rectangle();
+							tcyParent.calculateAdornmentBounds(tcyParent, tLine, blockProgression, tcyAdornBounds);
+							var baseULAdjustment:Number = metrics.underlineOffset + (metrics.underlineThickness/2);
+							top = tcyAdornBounds.top + 1;
+							bottom = tcyAdornBounds.bottom - 1;
+							if (imeStatus == IMEStatus.RAW || imeStatus == IMEStatus.DEAD_KEY_INPUT_STATE)
+							{
+								selObj.graphics.lineStyle(1, 0x000000, selObj.alpha);
+								selObj.graphics.moveTo(spanBounds.bottomRight.x + baseULAdjustment, top);
+								selObj.graphics.lineTo(spanBounds.bottomRight.x + baseULAdjustment, bottom);
+							}
+							else if(imeStatus == IMEStatus.SELECTED)
+							{
+								selObj.graphics.lineStyle(2, 0x000000, selObj.alpha);
+								selObj.graphics.moveTo(spanBounds.bottomRight.x + baseULAdjustment, top);
+								selObj.graphics.lineTo(spanBounds.bottomRight.x + baseULAdjustment, bottom);
+							}
+							else if(imeStatus == IMEStatus.NOT_SELECTED)
+							{
+								selObj.graphics.lineStyle(1, 0x000000, selObj.alpha/2);
+								selObj.graphics.moveTo(spanBounds.bottomRight.x + baseULAdjustment, top);
+								selObj.graphics.lineTo(spanBounds.bottomRight.x + baseULAdjustment, bottom);
+							}
+						}
+					}
+				}
+				
+				selObj.graphics.endFill();
+				tLine.addChild(selObj);
+			}
+		}
+		
+		
 		/** @private */
 		tlf_internal function updateAdornments(line:TextFlowLine, blockProgression:String):void
 		{
@@ -529,11 +653,8 @@ package flashx.textLayout.elements
 			selObj.alpha = Number(_computedFormat.textAlpha);       				
 						
 			selObj.graphics.beginFill(uint(_computedFormat.color));
-			//trace(spanBounds);
 			var stOffset:Number = calculateStrikeThrough(tLine, blockProgression, metrics, spanBounds);
-			//trace("stOffset =", stOffset);
 			var ulOffset:Number = calculateUnderlineOffset(stOffset, blockProgression, metrics, tLine);
-			//trace("ulOffset =", ulOffset);					
 						
 			if (blockProgression != BlockProgression.RL)
 			{
@@ -743,7 +864,7 @@ package flashx.textLayout.elements
 		
 		
 		/** @private */
-		tlf_internal function calculateStrikeThrough(tLine:TextLine, blockProgression:String, metrics:FontMetrics, spanBounds:Rectangle):Number
+		tlf_internal function calculateStrikeThrough(textLine:TextLine, blockProgression:String, metrics:FontMetrics, spanBounds:Rectangle):Number
 		{
 			var underlineAndStrikeThroughShift:int = 0;	
 			var effectiveFontSize:Number = this.getEffectiveFontSize()
@@ -771,21 +892,20 @@ package flashx.textLayout.elements
 			var alignmentBaselineString:String = this.computedFormat.alignmentBaseline;
 			
 			//this value represents the position of the baseline used to align this text
-			var alignDomBaselineAdjustment:Number = tLine.getBaselinePosition(domBaselineString);
+			var alignDomBaselineAdjustment:Number = textLine.getBaselinePosition(domBaselineString);
 			
 			//if the alignment baseline differs from the dominant, then we need to apply the delta between the
 			//dominant and the alignment to determine the line along which the glyphs are lining up...
 			if(alignmentBaselineString != flash.text.engine.TextBaseline.USE_DOMINANT_BASELINE && 
 				alignmentBaselineString != domBaselineString)
 			{
-				alignDomBaselineAdjustment = tLine.getBaselinePosition(alignmentBaselineString);
+				alignDomBaselineAdjustment = textLine.getBaselinePosition(alignmentBaselineString);
 				//take the alignmentBaseline offset and make it relative to the dominantBaseline
 			}
 			
 			
 			//first, establish the offset relative to the glyph based in fontMetrics data
-			var baseSTAdjustment:Number = metrics.strikethroughOffset + (metrics.strikethroughThickness/2);
-			var stOffset:Number = baseSTAdjustment;
+			var stOffset:Number = metrics.strikethroughOffset;
 			
 			
 			//why are we using the stOffset?  Well, the stOffset effectively tells us where the mid-point
@@ -799,34 +919,31 @@ package flashx.textLayout.elements
 				domBaselineString == flash.text.engine.TextBaseline.ASCENT)
 			{
 				stOffset *= -2;  //if the glyphs are top or ascent, then we need to invert and double the offset
+				stOffset -= (2 * metrics.strikethroughThickness);
 			}
 			else if(domBaselineString == flash.text.engine.TextBaseline.IDEOGRAPHIC_BOTTOM || 
 				domBaselineString == flash.text.engine.TextBaseline.DESCENT)
 			{
 				stOffset *= 2; //if they're bottom, then we need to simply double it
+				stOffset += (2 * metrics.strikethroughThickness);
+			}
+			else //Roman
+			{
+				stOffset -= metrics.strikethroughThickness;
 			}
 			
 			
 			//Now apply the actual dominant baseline position to the offset
-			stOffset += alignDomBaselineAdjustment - underlineAndStrikeThroughShift;
+			stOffset += (alignDomBaselineAdjustment - underlineAndStrikeThroughShift);
 			return stOffset;
 		}
 		
 		/** @private */
 		tlf_internal function calculateUnderlineOffset(stOffset:Number, blockProgression:String, metrics:FontMetrics, textLine:TextLine):Number
 		{
-			var baseULAdjustment:Number = metrics.underlineOffset + (metrics.underlineThickness/2);
-			var baseSTAdjustment:Number = metrics.strikethroughOffset + (metrics.strikethroughThickness/2);
-			var ulOffset:Number = baseULAdjustment;
+			var ulOffset:Number = metrics.underlineOffset + metrics.underlineThickness;
+			var baseSTAdjustment:Number = metrics.strikethroughOffset;
 			
-			var justRule:String = this.getParagraph().getEffectiveJustificationRule();
-			
-			//we need to add a bit of space when dealing with Asian scripts.  ASJ recommended a 1 mm space (4 Ha).
-			//by adding a pixel here, we come very close to meeting that target without making overly expensive
-			//calculations.  UL drawing was reviewed by QA and meets expectations. - gak 08.06.08
-			if(justRule == JustificationRule.EAST_ASIAN)
-				ulOffset += 1;
-				
 			//based on the stOffset - which really represents the middle of the glyph, set the ulOffset
 			//which will always be relative.  Note that simply using the alignDomBaselineAdjustment is not enough
 			if(blockProgression != BlockProgression.RL)

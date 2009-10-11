@@ -10,6 +10,8 @@
 //////////////////////////////////////////////////////////////////////////////////
 package flashx.textLayout.edit
 {
+	import flash.geom.Rectangle;
+	
 	import flashx.undo.UndoManager;
 	import flashx.textLayout.elements.FlowElement;
 	import flashx.textLayout.formats.Float;
@@ -591,6 +593,6 @@ package flashx.textLayout.edit
 		function performUndo(operation:IOperation):void;
 
 		/** @private */
-		function performRedo(operation:IOperation):void;						
+		function performRedo(operation:IOperation):void;
 	}
 }

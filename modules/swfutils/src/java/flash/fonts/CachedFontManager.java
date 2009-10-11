@@ -95,6 +95,8 @@ public abstract class CachedFontManager extends FontManager
         {
             URL location = (URL)font.source;
             fontFace = getEntryFromLocation(location, font.style, useTwips);
+            if (font.alias == null)
+                font.alias = fontFace.getFamily();
 
             if (fontFace == null)
                 FontManager.throwFontNotFound(font.alias, null, font.style, location.toString());
@@ -103,6 +105,8 @@ public abstract class CachedFontManager extends FontManager
         {
             String fontFamily = font.source.toString();
             fontFace = getEntryFromSystem(fontFamily, font.style, useTwips);
+            if (font.alias == null)
+                font.alias = fontFace.getFamily();
 
             if (fontFace == null)
                 FontManager.throwFontNotFound(font.alias, fontFamily, font.style, null);

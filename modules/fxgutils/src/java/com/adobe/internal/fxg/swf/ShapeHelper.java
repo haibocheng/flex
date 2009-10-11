@@ -15,9 +15,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.adobe.fxg.FXGException;
 import com.adobe.internal.fxg.dom.AbstractFXGNode;
+import com.adobe.internal.fxg.dom.PathNode;
+import com.adobe.internal.fxg.dom.strokes.AbstractStrokeNode;
 
 import flash.swf.SwfConstants;
+import flash.swf.builder.types.Point;
 import flash.swf.types.CurvedEdgeRecord;
 import flash.swf.types.LineStyle;
 import flash.swf.types.Rect;
@@ -30,6 +34,7 @@ import flash.swf.types.StyleChangeRecord;
  * 
  * @author Peter Farland
  * @author Sujata Das
+ * @author Min Plunkett
  */
 public class ShapeHelper implements SwfConstants
 {
@@ -495,8 +500,11 @@ public class ShapeHelper implements SwfConstants
      * @param path The path to populate.
      * @param data A condensed String representation of a path data.
      */
-    public static List<ShapeRecord> path(String data, boolean fill)
+    public static List<ShapeRecord> path(PathNode node)
     {
+    	String data = node.data;
+    	boolean fill = (node.fill != null);
+    	
         List<ShapeRecord> shapeRecords = new ArrayList<ShapeRecord>();
 
         if (data.length() == 0)
@@ -547,6 +555,9 @@ public class ShapeHelper implements SwfConstants
                 i++;
             }
 
+            if ((firstMove) && (ic != 'm') && (ic != 'M'))
+            	throw new FXGException(node.getStartLine(), node.getStartColumn(), "InvalidPathData");
+            		
             switch (ic)
             {
                 case 'm':
@@ -668,8 +679,8 @@ public class ShapeHelper implements SwfConstants
                     break;
 
                 default:
-                    // unknown identifier, throw error?
-                    return null;
+                	throw new FXGException(node.getStartLine(), node.getStartColumn(), "InvalidPathData");
+                    
             }
 
             prevX = x;
@@ -693,9 +704,11 @@ public class ShapeHelper implements SwfConstants
      * 
      * @param records
      * @param lineStyles
-     * @return
+     * @param stokeNode
+     * @param matrix
+     * @return bounding box rectangle.
      */
-    public static Rect getBounds(List<ShapeRecord> records, List<LineStyle> lineStyles)
+    public static Rect getBounds(List<ShapeRecord> records, LineStyle ls, AbstractStrokeNode strokeNode)
     {
         if (records == null || records.size() == 0)
             return new Rect();
@@ -740,12 +753,16 @@ public class ShapeHelper implements SwfConstants
             {
                 CurvedEdgeRecord cer = (CurvedEdgeRecord)r;
                 
-                Rect curvBounds = computeCurveBounds(x, y, cer);
+                Rect currRect = new Rect(x1, x2, y1, y2);
+                if (!curveControlPointInsideCurrentRect(x, y, cer, currRect))
+                {                
+                	Rect curvBounds = computeCurveBounds(x, y, cer);
                 
-                if (curvBounds.xMin < x1) x1 = curvBounds.xMin;
-                if (curvBounds.yMin < y1) y1 = curvBounds.yMin;
-                if (curvBounds.xMax > x2) x2 = curvBounds.xMax;
-                if (curvBounds.yMax > y2) y2 = curvBounds.yMax;
+                	if (curvBounds.xMin < x1) x1 = curvBounds.xMin;
+                	if (curvBounds.yMin < y1) y1 = curvBounds.yMin;
+                	if (curvBounds.xMax > x2) x2 = curvBounds.xMax;
+                	if (curvBounds.yMax > y2) y2 = curvBounds.yMax;
+                }
                                 
                 x = x + cer.controlDeltaX + cer.anchorDeltaX;
                 y = y + cer.controlDeltaY + cer.anchorDeltaY;
@@ -757,47 +774,420 @@ public class ShapeHelper implements SwfConstants
             if (x > x2) x2 = x;
             if (y > y2) y2 = y;
         }
+        
+        Rect newRect = new Rect(x1, x2, y1, y2);
 
-        // Consider maximum potential stroke width of each linestyle
-        if (lineStyles != null && lineStyles.size() > 0)
+        if (ls == null)
         {
-            Iterator<LineStyle> lineIterator = lineStyles.iterator();
-            int width = TWIPS_PER_PIXEL;
-            while (lineIterator.hasNext())
+            return newRect;
+        }
+        
+        // Inflate the bounding box from all sides with half of the stroke 
+        // weight - pathBBox.inflate(weight/2, weight/2).
+        Rect strokeExtents = getStrokeExtents(strokeNode, ls);
+
+        newRect.xMin -= strokeExtents.xMax;
+        newRect.yMin -= strokeExtents.yMax;
+        newRect.xMax += strokeExtents.xMax;
+        newRect.yMax += strokeExtents.yMax;
+        
+        // If there are less than two segments, then or joint style is not 
+        //"miterLimit" finish - return pathBBox.
+        if (records.size() < 2 || ls == null || !ls.hasMiterJoint())
+        {
+        	return newRect;
+        }
+        
+        // Use strokeExtents to get the transformed stroke weight.
+        double halfWeight = (strokeExtents.xMax - strokeExtents.xMin)/ 2;   
+        newRect = addJoint2Bounds(records, ls, strokeNode, halfWeight, newRect);
+        return newRect;
+    }
+    
+    public static Rect addJoint2Bounds(List<ShapeRecord> records, LineStyle ls, AbstractStrokeNode stroke, double halfWeight, Rect pathBBox)
+    {
+        Rect newRect = pathBBox;
+        int count = records.size();
+	    int start = 0;
+	    int end = 0;
+	    int lastMoveX = 0;
+	    int lastMoveY = 0;
+	    int lastOpenSegment = 0;
+	    int x = 0, y = 0;
+	    
+        // Add miterLimit effect to the bounds.
+	    double miterLimit = stroke.miterLimit;
+        // Miter limit is always at least 1
+        if (miterLimit < 1) miterLimit = 1;     
+        
+        int[][] cooridinates = getCoordinates(records);
+
+        while (true)
+        {
+            // Find a segment with a valid tangent or stop at a MoveSegment
+            while (start < count && !(records.get(start) instanceof StyleChangeRecord))
             {
-                LineStyle ls = lineIterator.next();
-                if (ls == null)
-                {
-                    continue;
-                }
-                else
-                {
-                    if (ls.hasMiterJoint())
-                    {
-                        double miterLimit = ((double) ls.miterLimit) / SwfConstants.FIXED_POINT_MULTIPLE_8;
-                        if (miterLimit < 1) miterLimit = 1;                      
-                        int jointwidth = (int) (ls.width * miterLimit);
-                        if (width < jointwidth)
-                            width = jointwidth;
-                    } 
-                    else
-                    {
-                        if (width < ls.width)
-                            width = ls.width;
-                    }
-                }
+//                ShapeRecord prevSegment = records.get(start-1);
+                x = cooridinates[start-1][0];
+                y = cooridinates[start-1][1];
+                if (tangentIsValid(records.get(start), x, y))
+                    break;
+        
+                start++;
             }
 
-            int stroke = (int)Math.rint(width / 2.0);
-            x1 = x1 - stroke;
-            y1 = y1 - stroke;
-            x2 = x2 + stroke;
-            y2 = y2 + stroke;
+            if (start >= count)
+                break; // No more segments with valid tangents
+
+            ShapeRecord startSegment = records.get(start);
+            if (startSegment instanceof StyleChangeRecord)
+            {
+                // remember the last move segment 
+                lastOpenSegment = start + 1;
+                lastMoveX = ((StyleChangeRecord)startSegment).moveDeltaX;
+                lastMoveY = ((StyleChangeRecord)startSegment).moveDeltaY;
+                
+                // move onto next segment:
+                start++;
+                continue;
+            }
+
+            // Does the current segment close to a previous segment and form a 
+            // joint with it? 
+            // Note, even if the segment was originally a close segment, 
+            // it may not form a joint with the segment it closes to, unless 
+            // it's followed by a MoveSegment or it's the last segment in the 
+            // sequence.
+            int startSegmentX = cooridinates[start][0];
+            int startSegmentY = cooridinates[start][1];
+//            if (startSegment instanceof StraightEdgeRecord)
+//            {
+//                startSegmentX = x + ((StraightEdgeRecord)startSegment).deltaX;
+//                startSegmentY = y + ((StraightEdgeRecord)startSegment).deltaY;
+//            }
+//            else if (startSegment instanceof CurvedEdgeRecord)
+//            {
+//                startSegmentX = x + ((CurvedEdgeRecord)startSegment).controlDeltaX + ((CurvedEdgeRecord)startSegment).anchorDeltaX;
+//                startSegmentY = y + ((CurvedEdgeRecord)startSegment).controlDeltaY + ((CurvedEdgeRecord)startSegment).anchorDeltaY;
+//            }
+            if ((start == count - 1 || records.get(start + 1) instanceof StyleChangeRecord) && 
+                    startSegmentX == lastMoveX &&
+                    startSegmentY == lastMoveY)
+            {
+                end = lastOpenSegment;
+            }
+            else
+            {
+                end = start + 1;
+            }
+            
+            // Find a segment with a valid tangent or stop at a MoveSegment 
+            while (end < count && !(records.get(end) instanceof StyleChangeRecord))
+            {       
+                if (tangentIsValid(records.get(end), startSegmentX, startSegmentY))
+                    break;
+                
+                end++;
+            }
+
+            if (end >= count)
+                break; // No more segments with valid tangents
+
+            ShapeRecord endSegment = records.get(end);
+            if (!(endSegment instanceof StyleChangeRecord))
+            {
+                newRect = addMiterLimitStrokeToBounds(
+                                            startSegment,
+                                            endSegment, 
+                                            miterLimit,
+                                            halfWeight,
+                                            newRect, x, y, startSegmentX, startSegmentY);
+            }
+
+            // Move on to the next segment, but never go back (end could be 
+            // less than start, because of implicit/explicit CloseSegments)
+            start = start > end ? start + 1 : end;
         }
 
-        return new Rect(x1, x2, y1, y2);
+        return newRect;
+    }
+    
+    private static int[][] getCoordinates(List<ShapeRecord> records)
+    {
+        int[][] coordinates = new int[records.size()][2];
+        ShapeRecord record;
+        for(int i=0; i<records.size(); i++)
+        {
+            record = records.get(i);
+            if (record instanceof StyleChangeRecord)
+            {
+                StyleChangeRecord scr = (StyleChangeRecord)record;
+                coordinates[i][0] = scr.moveDeltaX;
+                coordinates[i][1] = scr.moveDeltaY;
+            }
+            else if (record instanceof StraightEdgeRecord)
+            {
+                StraightEdgeRecord ser = (StraightEdgeRecord)record;
+                coordinates[i][0] = coordinates[i-1][0] + ser.deltaX;
+                coordinates[i][1] = coordinates[i-1][1] + ser.deltaY;
+            }
+            else if (record instanceof CurvedEdgeRecord)
+            {
+                CurvedEdgeRecord cer = (CurvedEdgeRecord)record;                    
+                coordinates[i][0] = coordinates[i-1][0] + cer.controlDeltaX + cer.anchorDeltaX;
+                coordinates[i][1] = coordinates[i-1][1] + cer.controlDeltaY + cer.anchorDeltaY;
+            }                  
+        }
+        return coordinates;
+    }
+                         
+                         
+    public static Rect addMiterLimitStrokeToBounds(ShapeRecord segment1, 
+            ShapeRecord segment2, double miterLimit, double weight, Rect pathBBox,
+            int xPrev, int yPrev, int x, int y)
+    {
+        // The tip of the joint
+        Point jointPoint = new Point(x, y);
+        
+        // End tangent for segment1:
+        Point t0 = getTangent(segment1, false /*start*/, xPrev, yPrev);
+  
+        // Start tangent for segment2:
+        Point t1 = getTangent(segment2, true /*start*/, x, y);
+   
+        // Valid tangents?
+        if (getPointLength(t0) == 0 || getPointLength(t1) == 0)
+        {
+            return pathBBox;
+        }
+
+        // The tip of the stroke lies on the bisector of the angle and lies at 
+        // a distance of weight / sin(A/2), where A is the angle between the 
+        // tangents.
+        t0 = normalize(t0, 1);
+        t0.x = -t0.x;
+        t0.y = -t0.y;
+        t1 = normalize(t1, 1);
+        
+        // Find the vector from t0 to the midPoint from t0 to t1
+        Point halfT0T1 = new Point((t1.x - t0.x) * 0.5, (t1.y - t0.y) * 0.5);
+   
+        // sin(A/2) == halfT0T1.length / t1.length()
+        double sinHalfAlpha = getPointLength(halfT0T1);
+        if (Math.abs(sinHalfAlpha) < 1.0E-9)
+        {
+            // Don't count degenerate joints that are close to 0 degrees so
+            // we avoid cases like this one L 0 0  0 50  100 0  30 0 50 0 Z
+            return pathBBox;
+        }
+
+        // Find the vector of the bisect
+        Point bisect = new Point(-0.5 * (t0.x + t1.x), -0.5 * (t0.y + t1.y));
+        double bisectLength = getPointLength(bisect);
+        if (bisectLength == 0)
+        {
+            // 180 degrees, nothing to contribute
+            return pathBBox;
+        }
+   
+        Rect newRect = pathBBox;
+        // Is there miter limit at play?
+        if (sinHalfAlpha == 0 || miterLimit < 1 / sinHalfAlpha)
+        {
+            // The miter limit is reached. Calculate two extra points that may
+            // contribute to the bounds.
+            // The points lie on the line perpendicular to the bisect and 
+            // intersecting it at offset of miterLimit * weight from the 
+            // joint tip. The points are equally offset from the bisect by a 
+            // factor of X, where X / sinAlpha == (weight / sinAlpha - 
+            // miterLimit * weight) / bisect.lenght. 
+   
+            bisect = normalize(bisect, 1);
+            halfT0T1 = normalize(halfT0T1, (weight - miterLimit * weight * sinHalfAlpha) / bisectLength);
+
+            Point pt0 = new Point(jointPoint.x + miterLimit * weight * bisect.x + halfT0T1.x,
+                   jointPoint.y + miterLimit * weight * bisect.y + halfT0T1.y);
+
+            Point pt1 = new Point(jointPoint.x + miterLimit * weight * bisect.x - halfT0T1.x,
+                   jointPoint.y + miterLimit * weight * bisect.y - halfT0T1.y);
+
+            // Add it to the rectangle:
+            newRect = rectUnion((int)StrictMath.rint(pt0.x), (int)StrictMath.rint(pt0.y), 
+                    (int)StrictMath.rint(pt0.x), (int)StrictMath.rint(pt0.y), newRect);
+            newRect = rectUnion((int)StrictMath.rint(pt1.x), (int)StrictMath.rint(pt1.y), 
+                    (int)StrictMath.rint(pt1.x), (int)StrictMath.rint(pt1.y), newRect);
+        }
+        else
+        {
+            // miter limit is not reached, add the tip of the stroke
+            bisect = normalize(bisect, 1);
+            Point strokeTip = new Point(jointPoint.x + bisect.x * weight / sinHalfAlpha,
+                   jointPoint.y + bisect.y * weight / sinHalfAlpha);
+   
+            // Add it to the rectangle:
+            newRect = rectUnion((int)StrictMath.rint(strokeTip.x), (int)StrictMath.rint(strokeTip.y), 
+                    (int)StrictMath.rint(strokeTip.x), (int)StrictMath.rint(strokeTip.y), newRect);
+        }
+        return newRect;
+    }    
+
+    /**
+     * Returns true when we have a valid tangent for curSegment. Pass 
+     * prevSegment to know what the starting point of curSegment is.
+     * @param prevSegment
+     * @param curSegment
+     * @param matrix
+     * @return true where there is a valid tangent for curSegment. Returns false
+     * otherwise.
+     */
+    private static boolean tangentIsValid(ShapeRecord curSegment, int x, int y)
+    {
+        // Check the start tangent only. If it's valid,
+        // then there is a valid end tangent as well.
+        Point tangentPoint = getTangent(curSegment, true, x, y);
+        return (tangentPoint.x != 0 || tangentPoint.y != 0);
     }
 
+    private static Point getTangent(ShapeRecord curSegment, boolean start, int x, int y)
+    {
+    	Point tangentPoint = new Point();
+    	Point pt0 = new Point(x, y);
+    	
+    	if (curSegment instanceof StraightEdgeRecord)
+    	{
+	        Point pt1 = new Point(x+((StraightEdgeRecord)curSegment).deltaX, y+((StraightEdgeRecord)curSegment).deltaY);
+	    	tangentPoint.x = pt1.x - pt0.x;
+	    	tangentPoint.y = pt1.y - pt0.y;
+    	}
+    	else if (curSegment instanceof CurvedEdgeRecord)
+    	{
+            Point pt1 = new Point(x+((CurvedEdgeRecord)curSegment).controlDeltaX, y+((CurvedEdgeRecord)curSegment).controlDeltaY);
+            Point pt2 = new Point(pt1.x+((CurvedEdgeRecord)curSegment).anchorDeltaX, pt1.y+((CurvedEdgeRecord)curSegment).anchorDeltaY);          
+	    	tangentPoint = getQTangent(pt0.x, pt0.y, pt1.x, pt1.y, pt2.x, pt2.y, start);
+    	}   	
+    	return tangentPoint;
+    }
+
+    private static Point getQTangent(double x0, double y0, double x1, double y1, double x2, double y2, boolean start)
+    {
+    	Point tangentPoint = new Point();
+		if (start)
+		{
+			if (x0 == x1 && y0 == y1)
+			{
+			    tangentPoint.x = x2 - x0;
+			    tangentPoint.y = y2 - y0;
+			}
+			else
+			{
+			    tangentPoint.x = x1 - x0;
+			    tangentPoint.y = y1 - y0;
+			}
+		}
+		else
+		{
+			if (x2 == x1 && y2 == y1)
+			{
+			    tangentPoint.x = x2 - x0;
+				tangentPoint.y = y2 - y0;
+			}
+			else
+			{
+			    tangentPoint.x = x2 - x1;
+				tangentPoint.y = y2 - y1;
+			}
+		}
+		return tangentPoint;
+	} 
+    
+    /**
+     * Normalize a point. Scales the line segment between (0,0) and the current 
+     * point to a set length. For example, if the current point is (0,5), and 
+     * you normalize it to 1, the point returned is at (0,1).
+     * 
+     * @param p
+     * @param length
+     * @return
+     */
+    public static Point normalize(Point p, double length)
+    {
+        double len = Math.sqrt(p.x * p.x + p.y * p.y);
+        length = length/len; 
+        return new Point(p.x * length, p.y * length); 
+    }
+
+    /**
+     * Get length of a point.
+     * 
+     * @param p
+     * @return length
+     */
+    public static double getPointLength(Point p)
+    {
+        double length;
+        if (p.x == 0)
+        {
+            length = p.y;
+        }
+        else
+        {
+            length = Math.sqrt(p.x*p.x + p.y*p.y);
+        }
+        return length;
+    }    
+    /**
+     *  @return Returns the union of <code>rect</code> and
+     *  <code>Rectangle(left, top, right - left, bottom - top)</code>.
+     *  Note that if rect is non-null, it will be updated to reflect the return value.  
+     */
+    private static Rect rectUnion(int left, int top, int right, int bottom, Rect rect)
+    {
+        Rect newRect = new Rect();
+        if (rect == null)
+        {
+            newRect = new Rect(left, right, top, bottom);
+            return newRect;
+        }
+        
+        newRect.xMin = Math.min(rect.xMin, left);
+        newRect.yMin = Math.min(rect.yMin, top);
+        newRect.xMax = Math.max(rect.xMax, right);
+        newRect.yMax = Math.max(rect.yMax, bottom);
+        return newRect;
+    }
+    
+    private static Rect getStrokeExtents(AbstractStrokeNode stroke, LineStyle ls )
+    {
+        // TODO (egeorgie): currently we take only scale into account,
+        // but depending on joint style, cap style, etc. we need to take
+        // the whole matrix into account as well as examine every line segment.
+        if (stroke == null)
+        {
+            return new Rect(0, 0, 0 , 0);
+        }
+        
+        int xMin, xMax, yMin, yMax;
+        // Stroke with weight 0 or scaleMode "none" is always drawn
+        // at "hairline" thickness, which is exactly one pixel.
+        int lineWidth = ls.width;   
+        if (lineWidth == 0)
+        {
+            xMin = (int)StrictMath.rint(-0.5 * TWIPS_PER_PIXEL);
+            xMax = (int)StrictMath.rint(0.5 * TWIPS_PER_PIXEL);
+            yMin = (int)StrictMath.rint(-0.5 * TWIPS_PER_PIXEL);
+            yMax = (int)StrictMath.rint(0.5 * TWIPS_PER_PIXEL);
+        }
+        else
+        {
+            xMin = (int)StrictMath.rint(-lineWidth * 0.5);
+            xMax = (int)StrictMath.rint(lineWidth * 0.5);
+            yMin = (int)StrictMath.rint(-lineWidth * 0.5);
+            yMax = (int)StrictMath.rint(lineWidth * 0.5);   
+        }
+        return new Rect(xMin, xMax, yMin, yMax);
+    }    
+    
+    
     private static Rect computeCurveBounds(int x0, int y0, CurvedEdgeRecord curve)
     {
         int x1 = x0 + curve.controlDeltaX;
@@ -859,6 +1249,25 @@ public class ShapeHelper implements SwfConstants
         return r;
     }
     
+    private static boolean curveControlPointInsideCurrentRect(int x0, int y0, CurvedEdgeRecord curve, Rect currRect)
+    {
+        int x = x0 + curve.controlDeltaX;
+        int y = y0 + curve.controlDeltaY;
+         
+        //initialize xmin, ymin, xmax, ymax to the control points of curve
+        int xmin = x0, xmax = x0;
+        int ymin = y0, ymax = y0;
+        if (x < xmin) xmin = x;
+        if (y < ymin) ymin = y;
+        if (x > xmax) xmax = x;
+        if (y > ymax) ymax = y;
+        
+        if ((currRect.xMin < xmin) && (currRect.xMax > xmax) && (currRect.yMin < ymin) && (currRect.yMax > ymax))
+            return true;
+        else
+            return false;      
+    }
+    
     //compute value for quadratic bezier curve at t
     // the quadratic bezier curve is p0*(1-t)^2 + 2*p1*(1-t)*t + p2*t^2 
     private static int computeValueForCurve(int p0, int p1, int p2, double t)
@@ -913,4 +1322,5 @@ public class ShapeHelper implements SwfConstants
         newRadius[1] = cornerRadiusY;
         return newRadius;
     }
+    
 }

@@ -110,8 +110,8 @@ public class BitmapFillNode extends AbstractFillNode
         this.matrix = matrix;
     }
     
-    public double x = 0.0;
-    public double y = 0.0;
+    public double x = Double.NaN;
+    public double y = Double.NaN;
     public boolean repeat = true;
     public double rotation = 0.0;
     public double scaleX = Double.NaN;

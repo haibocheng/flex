@@ -18,6 +18,7 @@ package flashx.textLayout.edit
 	import flash.events.ContextMenuEvent;
 	import flash.events.Event;
 	import flash.events.FocusEvent;
+	import flash.events.IMEEvent;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.events.TextEvent;
@@ -34,7 +35,6 @@ package flashx.textLayout.edit
 	import flashx.textLayout.compose.TextFlowLine;
 	import flashx.textLayout.container.ColumnState;
 	import flashx.textLayout.container.ContainerController;
-	import flashx.textLayout.debug.Debugging;
 	import flashx.textLayout.debug.assert;
 	import flashx.textLayout.elements.FlowLeafElement;
 	import flashx.textLayout.elements.InlineGraphicElement;
@@ -1022,9 +1022,9 @@ package flashx.textLayout.edit
 			//when holding down mouse and moving out of one flow and over another. Could also happen when moving over
 			//TextLines that are either non-TLF or generated from a factory. 
 			var useTargetedTextLine:Boolean = false;
-			if(target is TextLine)
+			if (target is TextLine)
 			{
-				var tfl:TextFlowLine = TextLine(target).userData;
+				var tfl:TextFlowLine = TextLine(target).userData as TextFlowLine;
 				if (tfl)
 				{
 					var para:ParagraphElement = tfl.paragraph;
@@ -1718,7 +1718,20 @@ package flashx.textLayout.edit
 		public function keyUpHandler(event:KeyboardEvent):void
 		{
 			//do nothing here
-		}		
+		}
+		
+		/** 
+		 * @copy IInteractionEventHandler#keyFocusChangeHandler()
+		 * 
+		 * @playerversion Flash 10
+		 * @playerversion AIR 1.5
+ 	 	 * @langversion 3.0
+		 * 	@param	event	the FocusChange event
+		 */	
+		public function keyFocusChangeHandler(event:FocusEvent):void
+		{
+			return;	// ignores manageTabKey if not editable
+		}	
 		
 		/** 
 		 * @copy IInteractionEventHandler#textInputHandler()
@@ -1731,6 +1744,18 @@ package flashx.textLayout.edit
 		{
 			// do nothing
 			ignoreTextEvent = false;
+		}
+
+		/** 
+		 * @copy IInteractionEventHandler#imeStartCompositionHandler()
+		 * 
+		 * @playerversion Flash 10
+		 * @playerversion AIR 1.5
+ 	 	 * @langversion 3.0
+		*/
+		public function imeStartCompositionHandler(event:IMEEvent):void
+		{
+			// Do nothing -- this is handled in the EditManager if editing is supported
 		}
 		
 		/**

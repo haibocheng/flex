@@ -230,7 +230,7 @@ package flashx.textLayout.edit
 			}
 			imgElem.source = src;
 			
-			while (curComposeNode.parent != flowBlock)
+			while (curComposeNode && curComposeNode.parent != flowBlock)
 			{
 				curComposeNode = curComposeNode.parent;
 			}

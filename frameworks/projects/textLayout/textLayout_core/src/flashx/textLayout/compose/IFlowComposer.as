@@ -180,7 +180,7 @@ package flashx.textLayout.compose
 		 * position has changed, the method returns <code>true</code>. If <code>absolutePosition</code> is greater than the length of the TextFlow 
 		 * (or not specified), then the entire flow is composed.</p>
 		 * 
-		 * @param absolutePosition compose at least up to this position in the TextFlow. By default or if absolutePosition is 0, compose to the end of the flow.
+		 * @param absolutePosition compose at least up to this position in the TextFlow. By default or if absolutePosition is past the end of the flow compose to the end of the flow.
 		 * @return true if anything changed.
 		 *
 		 * @playerversion Flash 10

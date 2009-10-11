@@ -61,6 +61,12 @@ package flashx.textLayout.compose
 		private var _fitAny:Boolean;
 		private var _composeToPosition:Boolean;
 		
+		/** prevent any leaks. @private */
+		tlf_internal function releaseAnyReferences():void
+		{
+			_controller = null;
+		}
+		
 		public function replaceBounds(r:Rectangle):void
 		{
 			this.x = r.x;

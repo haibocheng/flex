@@ -14,6 +14,7 @@ import com.adobe.internal.fxg.dom.transforms.MatrixNode;
 
 import flash.swf.SwfConstants;
 
+import flash.swf.builder.types.Point;
 import flash.swf.types.Matrix;
 import flash.swf.types.Rect;
 
@@ -25,12 +26,12 @@ import flash.swf.types.Rect;
 public class FXGMatrix
 {
 
-    private double a; //x-axis scaling
-    private double b; //x-axis skew
-    private double c; //y-axis skew
-    private double d; //y-axis scaling
-    private double tx; //x-axis translation
-    private double ty; //y-axis translation
+	public double a; //x-axis scaling
+    public double b; //x-axis skew
+    public double c; //y-axis skew
+    public double d; //y-axis scaling
+    public double tx; //x-axis translation
+    public double ty; //y-axis translation
     
     //constructor
     public FXGMatrix(double a, double b, double c, double d, double tx, double ty)
@@ -200,5 +201,18 @@ public class FXGMatrix
         node.d = this.d;
         node.tx = this.tx;
         node.ty = this.ty;
+    }
+    
+    /**
+     * Apply transform to a point.
+     * @param point - the point to be transformed.
+     * @return the transformed point.
+     */
+    public Point apply(Point point)
+    {
+        Point newPoint = new Point();
+        newPoint.x = a * point.x + c * point.y + tx * SwfConstants.TWIPS_PER_PIXEL;
+        newPoint.y = b * point.x + d * point.y + ty * SwfConstants.TWIPS_PER_PIXEL;
+        return newPoint;
     }
 }

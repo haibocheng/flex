@@ -76,15 +76,17 @@ public abstract class GraphicContentNode extends AbstractFXGNode
     public double alpha = 1.0;
     public BlendMode blendMode = BlendMode.AUTO;
     public MaskType maskType = MaskType.CLIP;
+    public boolean luminosityClip = false;
+    public boolean luminosityInvert = false;
 
     protected boolean translateSet;
     protected boolean scaleSet;
     protected boolean rotationSet;
     protected boolean alphaSet;
-    protected boolean blendModeSet;
     protected boolean maskTypeSet;
-    protected boolean luminosityClip = false;
-    protected boolean luminosityInvert = false;
+    
+    //is part of mask
+    public boolean isPartofMask = false;
 
     //--------------------------------------------------------------------------
     //
@@ -219,7 +221,6 @@ public abstract class GraphicContentNode extends AbstractFXGNode
         else if (FXG_BLENDMODE_ATTRIBUTE.equals(name))
         {
             blendMode = parseBlendMode(value, blendMode);
-            blendModeSet = true;
         }
         else if (FXG_VISIBLE_ATTRIBUTE.equals(name))
         {
@@ -271,6 +272,16 @@ public abstract class GraphicContentNode extends AbstractFXGNode
         return maskType;
     }
     
+    public boolean getLuminosityClip()
+    {
+        return luminosityClip;
+    }
+    
+    public boolean getLuminosityInvert()
+    {
+        return luminosityInvert;
+    }
+    
     //--------------------------------------------------------------------------
     //
     // Helper Methods
@@ -318,8 +329,7 @@ public abstract class GraphicContentNode extends AbstractFXGNode
             graphicContext.colorTransform.alphaMultiplier = alpha;
         }
 
-        if (blendModeSet)
-            graphicContext.blendMode = blendMode;
+        graphicContext.blendMode = blendMode;
 
         if (filters != null)
             graphicContext.addFilters(filters);

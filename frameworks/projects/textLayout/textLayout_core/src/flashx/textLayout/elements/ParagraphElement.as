@@ -348,7 +348,7 @@ package flashx.textLayout.elements
 					// Note: calling super.replaceChildren because we don't want to transfer para terminator each time
 					super.replaceChildren(numChildren, numChildren, s);
 				}
-				else
+				else if (child != null)
 					throw new TypeError("Bad element of type "+getQualifiedClassName(this)+" passed to ParagraphElement.mxmlChildren");
 			}
 			

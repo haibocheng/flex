@@ -11,21 +11,26 @@
 
 package com.adobe.internal.fxg.swf;
 
+import com.adobe.fxg.FXGVersion;
 import com.adobe.internal.fxg.dom.ScalableGradientNode;
 import com.adobe.internal.fxg.dom.fills.BitmapFillNode;
 import com.adobe.internal.fxg.dom.transforms.MatrixNode;
+import com.adobe.internal.fxg.dom.types.FillMode;
 import com.adobe.internal.fxg.types.FXGMatrix;
 
 import flash.swf.SwfConstants;
 import flash.swf.types.CXFormWithAlpha;
 import flash.swf.types.Matrix;
 import flash.swf.types.Rect;
+import flash.swf.tags.DefineBits;
+
 
 /**
  * Utilities to help create basic SWF data types.
  * 
  * @author Peter Farland
  * @author Kaushal Kantawala
+ * @author Sujata Das
  */
 public class TypeHelper
 {
@@ -227,10 +232,10 @@ public class TypeHelper
     }
 
     
-    public static Matrix bitmapFillMatrix(BitmapFillNode fill, Rect pathBounds)
+    public static FXGMatrix bitmapFillMatrix(BitmapFillNode fill, DefineBits img, Rect pathBounds)
     {
         
-        MatrixNode mtxNode = fill.getMatrix();
+        MatrixNode mtxNode = fill.matrix;
         if (mtxNode != null)
         {
             double tx = mtxNode.tx;
@@ -238,23 +243,39 @@ public class TypeHelper
             FXGMatrix fxgMtx = new FXGMatrix(mtxNode.a, mtxNode.b, mtxNode.c, mtxNode.d, 0, 0);
             fxgMtx.scale(SwfConstants.TWIPS_PER_PIXEL, SwfConstants.TWIPS_PER_PIXEL);
             fxgMtx.translate(tx, ty);
-            return fxgMtx.toSWFMatrix();
+            return fxgMtx;
         }
 
         FXGMatrix matrix = new FXGMatrix();
-        double tx = fill.x + pathBounds.xMin/(double)SwfConstants.TWIPS_PER_PIXEL;
-        double ty = fill.y + pathBounds.yMin/(double)SwfConstants.TWIPS_PER_PIXEL;
-        double scaleX = SwfConstants.TWIPS_PER_PIXEL * fill.scaleX;
-        double scaleY = SwfConstants.TWIPS_PER_PIXEL * fill.scaleY;
-        double angle = fill.rotation;
-        while (angle < 0)
-            angle += 360;
-        angle %= 360;
+        double tx;
+        double ty;
+        double scaleX;
+        double scaleY;
+        if ((fill.getFileVersion() != FXGVersion.v1_0) && (fill.fillMode.equals(FillMode.SCALE)))
+        {
+        	tx = (Double.isNaN(fill.x)) ? pathBounds.xMin/(double)SwfConstants.TWIPS_PER_PIXEL : fill.x;
+        	ty = (Double.isNaN(fill.y)) ? pathBounds.yMin/(double)SwfConstants.TWIPS_PER_PIXEL : fill.y;
+        	scaleX = (Double.isNaN(fill.getScaleX())) ? (pathBounds.getWidth()/img.width) : 
+        											SwfConstants.TWIPS_PER_PIXEL * fill.scaleX;
+        	scaleY = (Double.isNaN(fill.getScaleY())) ? (pathBounds.getHeight()/img.height) :
+        											SwfConstants.TWIPS_PER_PIXEL * fill.scaleY;
+        }
+        else
+        {
+        	tx = (Double.isNaN(fill.x)) ? pathBounds.xMin/(double)SwfConstants.TWIPS_PER_PIXEL : fill.x;
+        	ty = (Double.isNaN(fill.y)) ? pathBounds.yMin/(double)SwfConstants.TWIPS_PER_PIXEL : fill.y;
+        	scaleX = (Double.isNaN(fill.getScaleX())) ? SwfConstants.TWIPS_PER_PIXEL : SwfConstants.TWIPS_PER_PIXEL * fill.scaleX;
+        	scaleY = (Double.isNaN(fill.getScaleY())) ? SwfConstants.TWIPS_PER_PIXEL : SwfConstants.TWIPS_PER_PIXEL * fill.scaleY;   	
+        }
+    	double angle = fill.rotation;
+    	while (angle < 0)
+    		angle += 360;
+    	angle %= 360;
         matrix.scale(scaleX, scaleY);
         matrix.rotate(angle);
         matrix.translate(tx, ty);
 
-        return matrix.toSWFMatrix();
+        return matrix;
         
     }
 

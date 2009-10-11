@@ -87,6 +87,7 @@ public final class FXGConstants
     public static final String FXG_MASK_PROPERTY_ELEMENT = "mask";
     public static final String FXG_MATRIX_PROPERTY_ELEMENT = "matrix";
     public static final String FXG_STROKE_PROPERTY_ELEMENT = "stroke";
+    public static final String FXG_TEXTLAYOUTFORMAT_ELEMENT = "TextLayoutFormat";
     public static final String FXG_TRANSFORM_PROPERTY_ELEMENT = "transform";
 
     // Attributes

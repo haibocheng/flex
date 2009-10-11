@@ -154,7 +154,7 @@ use namespace tlf_internal;
 //  Styles
 //--------------------------------------
 
-//include "../styles/metadata/BasicInheritingTextStyles.as"
+include "../styles/metadata/BasicInheritingTextStyles.as"
 include "../styles/metadata/BasicNonInheritingTextStyles.as"
 include "../styles/metadata/AdvancedInheritingTextStyles.as"
 include "../styles/metadata/AdvancedNonInheritingTextStyles.as"

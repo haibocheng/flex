@@ -55,7 +55,7 @@ public class Watcher
 
     /**
      *  @private
-     *  The binding objects that are listening to this Watcher.
+     *  The Binding objects that are listening to this Watcher.
      *  The standard event mechanism isn't used because it's too heavyweight.
      */
     protected var listeners:Array;
@@ -100,7 +100,7 @@ public class Watcher
     public function addChild(child:Watcher):void
     {
         if (!children)
-            children = [ child ];
+            children = [child];
         else
             children.push(child);
 
@@ -184,6 +184,9 @@ public class Watcher
 
     /**
 	 *  @private
+	 *	
+	 *	This is a helper function.  It takes a function and wraps it
+	 *	with a try/catch block to avoid errors.
      */
     protected function wrapUpdate(wrappedFunction:Function):void
     {

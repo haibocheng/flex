@@ -1,6 +1,6 @@
 // =================================================================
 /*
- *  Copyright (c) 2009 Spark
+ *  Copyright (c) 2009
  *  Lance Pollard
  *  http://www.viatropos.com
  *  lancejpollard at gmail dot com
@@ -28,62 +28,71 @@
  */
 // =================================================================
 
-package spark.controllers.supportClasses
+package mx.controllers
 {
-	import flash.events.Event;
-	import flash.events.EventDispatcher;
+	import mx.controllers.IController;
+	import mx.controllers.supportClasses.ControllerBase;
+	import mx.core.UIComponent;
 	
-	import mx.core.IUIComponent;
-	import mx.managers.EventManager;
-	
-	import spark.controllers.IController;
-	
+	[DefaultProperty("controllers")]
 	/**
-	 *  ControllerBase is a default implementation of IController
-	 *	for SkinnableComponent (though the interface is more generic).
-	 *	
-	 *	In more sophisticated subimplementations, you can use Metadata
-	 *	to get/set values on the Component.  This means the controller
-	 *	is a space to add (attach) blocks of code to a component at runtime.
+	 *	CompositeController gives you multiple controllers
 	 */
-	public class ControllerBase extends EventDispatcher implements IController
+	public class CompositeController extends ControllerBase
 	{
-		private var _component:IUIComponent;
-		[Bindable(event="componentChange")]
-		/**
-		 *  Component we are attaching to
-		 */
-		public function get component():IUIComponent
-		{
-			return _component;
-		}
-		public function set component(value:IUIComponent):void
-		{
-			if (_component == value) 
-				return;
-			_component = value;
-			dispatchBindingEvent("componentChange");
-		}
 		
-		public function ControllerBase()
+		private var _controllers:Array;
+		[ArrayElementType("mx.controllers.IController")]
+		[Bindable(event="controllersChange")]
+		/**
+		 *  Array of controllers
+		 */
+		public function get controllers():Array
+		{
+			return _controllers;
+		}
+		public function set controllers(value:Array):void
+		{
+			if (_controllers == value) 
+				return;
+			detach(_controllers)
+			_controllers = value;
+			attach(_controllers);
+			dispatchBindingEvent("controllersChange");
+		}
+	
+		/**
+		 *	CompositeController Constructor
+		 */
+		public function CompositeController()
 		{
 			super();
 		}
 		
-		public function attach(target:Object):void
+		override public function attach(target:Object):void
 		{
-			component = target as IUIComponent;
+			if (target is UIComponent)
+				super.attach(target);
+			if (!(target is UIComponent) || !_controllers)
+				return;
+			var i:int = 0, n:int = _controllers.length;
+			for (i; i < n; i++)
+			{
+				_controllers[i].attach(component);
+			}
 		}
 		
-		public function detach(target:Object):void
+		override public function detach(target:Object):void
 		{
-			component = null;
-		}
-		
-		public function dispatchBindingEvent(type:String):void
-		{
-			if (hasEventListener(type) || EventManager.capturable(type))
-				dispatchEvent(new Event(type));
+			if (!_controllers)
+				return;
+			var i:int = 0, n:int = _controllers.length;
+			for (i; i < n; i++)
+			{
+				_controllers[i].detach(component);
+			}
+			if (target is UIComponent)
+				super.detach(target);
 		}
 	}
 }

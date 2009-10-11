@@ -53,10 +53,21 @@ public class ObjectUtil
     //--------------------------------------------------------------------------
 
 	/**
+     *  Lets you determine if an Object has any properties.
+     *	
 	 *  If the object has no properties, or the object is null,
 	 *	this will return true
-	 */
-	public static function isBlank(object:Object):Boolean
+     *
+     *  @param Object to inspect.
+     *
+     *  @return <code>true</code> if Object has no properties.
+     *  
+     *  @langversion 3.0
+     *  @playerversion Flash 9
+     *  @playerversion AIR 1.1
+     *  @productversion Flex 3
+     */
+	public static function isEmpty(object:Object):Boolean
 	{
 		if (object == null)
 			return true;

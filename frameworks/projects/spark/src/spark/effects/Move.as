@@ -123,7 +123,7 @@ public class Move extends AnimateTransform
     //----------------------------------
 
     [Inspectable(category="General", defaultValue="NaN")]
-
+	[Bindable]
     /** 
      *  Number of pixels by which to modify the y position of the target.
      *  Values can be negative.
@@ -140,7 +140,7 @@ public class Move extends AnimateTransform
     //----------------------------------
 
     [Inspectable(category="General", defaultValue="NaN")]
-
+	[Bindable]
     /** 
      *  Initial y position of the target, in pixels.
      *  If omitted, Flex uses either the value in the start view state,
@@ -159,7 +159,7 @@ public class Move extends AnimateTransform
     //----------------------------------
 
     [Inspectable(category="General", defaultValue="NaN")]
-
+	[Bindable]
     /** 
      *  Final y position of the target, in pixels.
      *  If omitted, Flex uses either the value in the end view state,
@@ -178,7 +178,7 @@ public class Move extends AnimateTransform
     //----------------------------------
 
     [Inspectable(category="General", defaultValue="NaN")]
-
+	[Bindable]
     /** 
      *  Number of pixels by which to modify the x position of the target.
      *  Values may be negative.
@@ -195,7 +195,7 @@ public class Move extends AnimateTransform
     //----------------------------------
 
     [Inspectable(category="General", defaultValue="NaN")]
-
+	[Bindable]
     /** 
      *  Initial x position of the target, in pixels.
      *  If omitted, Flex uses either the value in the starting view state,
@@ -214,7 +214,7 @@ public class Move extends AnimateTransform
     //----------------------------------
 
     [Inspectable(category="General", defaultValue="NaN")]
-
+	[Bindable]
     /** 
      *  Final x, in pixels.
      *  If omitted, Flex uses either the value in the starting state,

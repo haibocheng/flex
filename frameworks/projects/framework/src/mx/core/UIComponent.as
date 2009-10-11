@@ -5885,6 +5885,53 @@ public class UIComponent extends FlexSprite
     {
         _transitions = value;
     }
+
+	protected var controllersChanged:Boolean;
+	private var _controllers:Array;
+	[ArrayElementType("mx.controllers.IController")]
+	/**
+	 * Controller assigned to the component. To attach multiple controllers use ComplexController
+	 */
+	public function get controllers():Array
+	{
+		return _controllers;
+	}
+	public function set controllers(value:Array):void
+	{
+		if (_controllers == value)
+			return;
+		updateControllers(true);
+		_controllers = value;
+		controllersChanged = true;
+		invalidateProperties();
+	}
+	
+	protected function updateControllers(destroy:Boolean = false):void
+	{
+		if (controllersChanged)
+		{
+			controllersChanged = false;
+			updateAttachables(controllers, destroy);
+		}
+	}
+	
+	protected function updateAttachables(attachables:Array, destroy:Boolean = false):void
+	{
+		if (!attachables)
+			return;
+		var i:int = 0, n:int = attachables.length
+		if (destroy)
+		{
+			for (i; i < n; i++)
+				attachables[i].detach(this);
+		}
+		else
+		{
+			for (i; i < n; i++)
+				attachables[i].attach(this);
+		}
+	}
+		
     //--------------------------------------------------------------------------
     //
     //  Properties: Other
@@ -7549,7 +7596,8 @@ public class UIComponent extends FlexSprite
             errorStringChanged = false;
             setBorderColorForErrorString();
         }
-
+		// update controllers
+		updateControllers();
     }
 
     //--------------------------------------------------------------------------

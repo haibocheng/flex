@@ -16,6 +16,7 @@ import flash.events.Event;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 
+import mx.core.IAttachable;
 import mx.core.ILayoutElement;
 import mx.core.IVisualElement;
 import mx.core.UIComponentGlobals;
@@ -27,7 +28,6 @@ import mx.utils.OnDemandEventDispatcher;
 
 import spark.components.supportClasses.GroupBase;
 import spark.core.NavigationUnit;
-import spark.core.IAttachable;
 
 use namespace mx_internal;
 

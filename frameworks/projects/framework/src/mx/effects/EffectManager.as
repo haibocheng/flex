@@ -564,7 +564,7 @@ public class EffectManager extends EventDispatcher
      *  @private
      */
     mx_internal static function eventHandler(eventObj:Event):void
-    {   
+    {
         // If this event fired because an effect is currently playing
         // (in other words, if an effect was the source of this event),
         // then don't listen to the effect.
@@ -646,16 +646,20 @@ public class EffectManager extends EventDispatcher
         }
         else
         {
-            createAndPlayEffect(eventObj, eventObj.currentTarget);  
+			if (eventObj.type == Event.ADDED)
+				// so you can set the properties after it was added, and then
+				// the animation plays
+				UIComponent(eventObj.target).callLater(createAndPlayEffect, [eventObj, eventObj.currentTarget]);
+			else // do it immediately
+            	createAndPlayEffect(eventObj, eventObj.currentTarget);  
         }
     }
-    
+
     /**
      *  @private
      */ 
     private static function createAndPlayEffect(eventObj:Event, target:Object):void
     {
-                
         var effectInst:Effect = createEffectForType(target, eventObj.type);
         if (!effectInst)
             return;
@@ -768,7 +772,6 @@ public class EffectManager extends EventDispatcher
                             return;
                         }
                         */
-
                         otherInst.end();
                     }
                 }

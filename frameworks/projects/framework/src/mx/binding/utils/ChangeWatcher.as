@@ -18,6 +18,7 @@ import mx.core.EventPriority;
 import mx.binding.BindabilityInfo;
 import mx.events.PropertyChangeEvent;
 import mx.utils.DescribeTypeCache;
+import mx.utils.ObjectUtil;
 
 /**
  *  The ChangeWatcher class defines utility methods
@@ -173,7 +174,7 @@ public class ChangeWatcher
     public static function canWatch(host:Object, name:String,
                                     commitOnly:Boolean = false):Boolean
     {
-        return !isEmpty(getEvents(host, name, commitOnly));
+        return !ObjectUtil.isEmpty(getEvents(host, name, commitOnly));
     }
 
     /**
@@ -229,27 +230,6 @@ public class ChangeWatcher
             // but not specifically prohibited by the compiler currently.
             return {};
         }
-    }
-
-    /**
-     *  Lets you determine if an Object has any properties.
-     *
-     *  @param Object to inspect.
-     *
-     *  @return <code>true</code> if Object has no properties.
-     *  
-     *  @langversion 3.0
-     *  @playerversion Flash 9
-     *  @playerversion AIR 1.1
-     *  @productversion Flex 3
-     */
-    private static function isEmpty(obj:Object):Boolean
-    {
-        for (var p:String in obj)
-        {
-            return false;
-        }
-        return true;
     }
 
     //--------------------------------------------------------------------------
@@ -473,7 +453,7 @@ public class ChangeWatcher
      */
     public function isWatching():Boolean
     {
-        return !isEmpty(events) && (next == null || next.isWatching());
+        return !ObjectUtil.isEmpty(events) && (next == null || next.isWatching());
     }
 
     /**
@@ -546,7 +526,10 @@ public class ChangeWatcher
         }
         else
         {
-            handler(event);
+        	if (handler != null)
+	            handler(event);
+	        else
+	        	trace("warning: no handler set in ChangeWatcher for " + event);
         }
     }
 

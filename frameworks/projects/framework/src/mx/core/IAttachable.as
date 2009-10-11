@@ -1,6 +1,6 @@
 // =================================================================
 /*
- *  Copyright (c) 2009
+ *  Copyright (c) 2009 Style http://www.flexinstyle.org/
  *  Lance Pollard
  *  http://www.viatropos.com
  *  lancejpollard at gmail dot com
@@ -28,12 +28,25 @@
  */
 // =================================================================
 
-package spark.controllers
+package mx.core
 {
-	import spark.core.IAttachable;
-	
-	public interface IController extends IAttachable
+	/**
+	 *  This Interface represents a common convention for systematically
+	 *	adding and remove functional blocks of code to/from a component.
+	 *	
+	 */
+	public interface IAttachable
 	{
+		/**
+		 *  Attach gives you space to add event listeners,
+		 *	configure initial values on a target, etc.
+		 */
+		function attach(target:Object):void;
 		
+		/**
+		 *  Detach gives you space to remove event listeners,
+		 *	nullify values on a target, etc.
+		 */
+		function detach(target:Object):void;
 	}	
 }

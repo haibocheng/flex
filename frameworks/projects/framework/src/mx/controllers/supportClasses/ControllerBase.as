@@ -1,6 +1,6 @@
 // =================================================================
 /*
- *  Copyright (c) 2009 Style http://www.flexinstyle.org/
+ *  Copyright (c) 2009 Spark
  *  Lance Pollard
  *  http://www.viatropos.com
  *  lancejpollard at gmail dot com
@@ -28,55 +28,61 @@
  */
 // =================================================================
 
-package mx.managers
+package mx.controllers.supportClasses
 {
 	import flash.events.Event;
-	import flash.events.IEventDispatcher;
-	import flash.utils.Dictionary;
-		
-	/**
-	 *	EventManagerImpl
-	 *	
-	 *	API_CHANGE
-	 */
-	public class EventManagerImpl
-	{
-		private var registeredCaptures:Dictionary = new Dictionary(false);
+	import flash.events.EventDispatcher;
 	
+	import mx.controllers.IController;
+	import mx.core.UIComponent;
+	import mx.managers.EventManager;
+	
+	/**
+	 *  ControllerBase is a default implementation of IController
+	 *	for SkinnableComponent (though the interface is more generic).
+	 *	
+	 *	In more sophisticated subimplementations, you can use Metadata
+	 *	to get/set values on the Component.  This means the controller
+	 *	is a space to add (attach) blocks of code to a component at runtime.
+	 */
+	public class ControllerBase extends EventDispatcher implements IController
+	{
+		private var _component:UIComponent;
+		[Bindable(event="componentChange")]
 		/**
-		 *	EventManagerImpl Constructor
+		 *  Component we are attaching to
 		 */
-		public function EventManagerImpl()
+		public function get component():UIComponent
+		{
+			return _component;
+		}
+		public function set component(value:UIComponent):void
+		{
+			if (_component == value) 
+				return;
+			_component = value;
+			dispatchBindingEvent("componentChange");
+		}
+		
+		public function ControllerBase()
 		{
 			super();
 		}
 		
-		public function addEventListener(type:String, listener:Function,
-			useCapture:Boolean = false, priority:int = 0,
-			useWeakReference:Boolean = false):void
+		public function attach(target:Object):void
 		{
-			if (useCapture)
-			{
-				if (!registeredCaptures[type])
-					registeredCaptures[type] = 0;
-				registeredCaptures[type]++;
-			}
+			component = target as UIComponent;
 		}
 		
-		public function removeEventListener(type:String, listener:Function,
-			useCapture:Boolean = false):void
+		public function detach(target:Object):void
 		{
-			if (registeredCaptures[type])
-			{
-				registeredCaptures[type]--;
-				if (registeredCaptures[type] == 0)
-					delete registeredCaptures[type];
-			}
+			component = null;
 		}
 		
-		public function capturable(type:String):Boolean
+		public function dispatchBindingEvent(type:String):void
 		{
-			return registeredCaptures[type] != null;
+			if (hasEventListener(type) || EventManager.capturable(type))
+				dispatchEvent(new Event(type));
 		}
 	}
 }

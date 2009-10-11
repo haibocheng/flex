@@ -19,6 +19,7 @@ import mx.core.EventPriority;
 import mx.core.mx_internal;
 import mx.events.PropertyChangeEvent;
 import mx.utils.DescribeTypeCache;
+import mx.utils.ObjectUtil;
 
 use namespace mx_internal;
 
@@ -41,7 +42,7 @@ public class PropertyWatcher extends Watcher
      *  Create a PropertyWatcher
      *
      *  @param prop The name of the property to watch.
-     *  @param event The event type that indicates the property has changed.
+     *  @param event The event type that indicates the property has changed.  This is usually null
      *  @param listeners The binding objects that are listening to this Watcher.
      *  @param propertyGetter A helper function used to access non-public variables.
      *  
@@ -163,18 +164,16 @@ public class PropertyWatcher extends Watcher
      */
     override public function updateParent(parent:Object):void
     {
+		// first, remove the event listener on the parent if we have already called updateParent
         if (parentObj && parentObj is IEventDispatcher)
         {
-            for (var eventType:String in events)
-            {
+			var eventType:String;
+            for (eventType in events)
                 parentObj.removeEventListener(eventType, eventHandler);
-            }
         }
-
-        if (parent is Watcher)
-            parentObj = parent.value;
-        else
-            parentObj = parent;
+		
+		// reset/set the parent value
+        parentObj = (parent is Watcher) ? parent.value : parent;
 
         if (parentObj)
         {
@@ -188,13 +187,12 @@ public class PropertyWatcher extends Watcher
 
 				if (parentObj is IEventDispatcher)
 				{
-					var info:BindabilityInfo =
-						DescribeTypeCache.describeType(parentObj).
-						bindabilityInfo;
-
+					var info:BindabilityInfo = DescribeTypeCache.describeType(parentObj).bindabilityInfo;
+					
+					// this just gets our events for our object
 					events = info.getChangeEvents(_propertyName);
-
-					if (objectIsEmpty(events))
+					
+					if (ObjectUtil.isEmpty(events))
 					{
 						trace("warning: unable to bind to property '" +
 							  _propertyName + "' on class '" +
@@ -260,16 +258,21 @@ public class PropertyWatcher extends Watcher
 
 	/**
 	 *  @private
+	 *	
+	 *	This is called in updateParent.
+	 *	
+	 *	It will, if the parent object is present, listen for property change events on it.
+	 *	If the parent is not yet present, it will wait.
 	 */
 	private function addParentEventListeners():void
 	{
-		for (var eventType:String in events)
+		var eventType:String;
+		for (eventType in events)
 		{
 			if (eventType != "__NoChangeEvent__")
-			{
-				parentObj.addEventListener(
-					eventType, eventHandler, false, EventPriority.BINDING, true);
-			}
+				// add event listener to parent, so whenever parent property changes
+				// this updates its "value", and calls updateChildren.
+				parentObj.addEventListener(eventType, eventHandler, false, EventPriority.BINDING, true);
 		}
 	}
 
@@ -298,18 +301,6 @@ public class PropertyWatcher extends Watcher
 		return s;
 	}
 
-	/**
-	 *  @private
-	 */
-	private function objectIsEmpty(o:Object):Boolean
-	{
-		for (var p:String in o)
-		{
-			return false;
-		}
-		return true;
-	}
-
     /**
      *  Gets the actual property then updates
 	 *  the Watcher's children appropriately.
@@ -330,13 +321,9 @@ public class PropertyWatcher extends Watcher
             else
             {
                 if (propertyGetter != null)
-                {
                     value = propertyGetter.apply(parentObj, [ _propertyName ]);
-                }
                 else
-                {
                     value = parentObj[_propertyName];
-                }
             }
         }
         else
@@ -367,13 +354,10 @@ public class PropertyWatcher extends Watcher
         if (event is PropertyChangeEvent)
         {
             var propName:Object = PropertyChangeEvent(event).property;
-
             if (propName != _propertyName)
                 return;
         }
-
 		wrapUpdate(updateProperty);
-
         notifyListeners(events[event.type]);
     }
 }

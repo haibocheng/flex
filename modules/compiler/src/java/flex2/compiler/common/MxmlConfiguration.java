@@ -140,10 +140,9 @@ public class MxmlConfiguration
 			}
 		}
 
-		if (major <= 3)
+        if (major <= 3)
         {
-		    qualifiedTypeSelectors = false;
-            
+            qualifiedTypeSelectors = false;            
         }
 	}
 

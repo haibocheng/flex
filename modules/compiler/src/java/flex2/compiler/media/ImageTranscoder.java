@@ -27,13 +27,17 @@ import java.util.ArrayList;
 import java.util.Map;
 
 /**
- * Transcodes images into DefineBits for embedding
+ * Transcodes images into Define tags for embedding.  For images with
+ * Slice 9 or smoothing, we use a DefineSprite tags, which wraps a
+ * DefineShape tag.  Otherwise, we use a DefineBits tag.
  *
  * @author Paul Reilly
  * @author Clement Wong
  */
 public abstract class ImageTranscoder extends AbstractTranscoder
 {
+    public static final String SMOOTHING = "smoothing";
+
     public ImageTranscoder(String[] mimeTypes, Class defineTag, boolean cacheTags)
     {
         super( mimeTypes, defineTag, cacheTags );
@@ -41,10 +45,11 @@ public abstract class ImageTranscoder extends AbstractTranscoder
 
     public boolean isSupportedAttribute( String attr )
     {
-        return (AbstractTranscoder.SCALE9BOTTOM.equals( attr )
-                || AbstractTranscoder.SCALE9LEFT.equals( attr )
-                || AbstractTranscoder.SCALE9RIGHT.equals( attr )
-                || AbstractTranscoder.SCALE9TOP.equals( attr ));
+        return (SCALE9BOTTOM.equals(attr) ||
+                SCALE9LEFT.equals(attr) ||
+                SCALE9RIGHT.equals(attr) ||
+                SCALE9TOP.equals(attr) ||
+                SMOOTHING.equals(attr));
     }
 
     public abstract ImageInfo getImage( VirtualFile source, Map<String, Object> args ) throws TranscoderException;
@@ -60,6 +65,7 @@ public abstract class ImageTranscoder extends AbstractTranscoder
         String newName = (String) args.get( Transcoder.NEWNAME );
 
         ImageInfo info = getImage( results.assetSource, args );
+
         if (args.containsKey(SCALE9LEFT) || args.containsKey(SCALE9RIGHT) || args.containsKey(SCALE9TOP) || args.containsKey(SCALE9BOTTOM))
         {
             if (args.get(SCALE9LEFT)==null || args.get(SCALE9RIGHT)==null || args.get(SCALE9TOP)==null || args.get(SCALE9BOTTOM)==null)
@@ -68,11 +74,19 @@ public abstract class ImageTranscoder extends AbstractTranscoder
             }
             results.defineTag = buildSlicedSprite( newName, info, args );
         }
+        else if (args.containsKey(SMOOTHING) && Boolean.parseBoolean((String) args.get(SMOOTHING)))
+        {
+            // We wrap the Shape in a Sprite, because the framework
+            // doesn't support Shape based assets yet.  It supports
+            // Sprite assets, though.
+            results.defineTag = buildSmoothingSprite(newName, info);
+        }
         else
         {
-            //results.defineTag = buildSprite( newName, info );
+            // We use a just a bitmap for this case, to be more lightweight.
             results.defineTag = buildBitmap( newName, info );
         }
+
         if (generateSource)
             generateSource(results, className, args);
 
@@ -160,6 +174,39 @@ public abstract class ImageTranscoder extends AbstractTranscoder
         return shape;
     }
 
+    /**
+     * Generates a Shape with with a JPEG fillstyle and smoothing.
+     */
+    private static DefineShape generateSmoothingShape(ImageInfo imageInfo)
+    {
+        DefineShape shape = new DefineShape(TagValues.stagDefineShape);
+        shape.bounds = new Rect(0, imageInfo.width * 20, 0, imageInfo.height * 20);
+        shape.edgeBounds = shape.bounds;
+        shape.shapeWithStyle = new ShapeWithStyle();
+        shape.shapeWithStyle.shapeRecords = new ArrayList<ShapeRecord>();
+        shape.shapeWithStyle.fillstyles = new ArrayList<FillStyle>();
+        shape.shapeWithStyle.linestyles = new ArrayList<LineStyle>();
+
+        Matrix matrix = new Matrix();
+        matrix.setScale(20,20);
+
+        FillStyle fillStyle = new FillStyle(FillStyle.FILL_BITS | FillStyle.FILL_BITS_CLIP, matrix, imageInfo.defineBits);
+        shape.shapeWithStyle.fillstyles.add(fillStyle);
+
+        StyleChangeRecord startStyle = new StyleChangeRecord();
+        // We use fillstyle1, because it matches what FlashAuthoring generates.
+        startStyle.setFillStyle1(1);
+        startStyle.setMove(imageInfo.width * 20, imageInfo.height * 20);
+        shape.shapeWithStyle.shapeRecords.add(startStyle);
+
+        // border
+        shape.shapeWithStyle.shapeRecords.add( new StraightEdgeRecord(-1 * imageInfo.width * 20, 0));
+        shape.shapeWithStyle.shapeRecords.add( new StraightEdgeRecord(0, -1 * imageInfo.height * 20));
+        shape.shapeWithStyle.shapeRecords.add( new StraightEdgeRecord(imageInfo.width * 20, 0));
+        shape.shapeWithStyle.shapeRecords.add( new StraightEdgeRecord(0, imageInfo.height * 20));
+
+        return shape;
+    }
 
     private static void addEdgesWithFill( DefineShape shape, int[][] coords, int left, int right )
     {
@@ -182,6 +229,10 @@ public abstract class ImageTranscoder extends AbstractTranscoder
         return imageInfo.defineBits;
     }
 
+    /**
+     * This was used in the past by doTranscode() for bitmaps, but it
+     * wasn't necessary, so we use buildBitmap() now.
+     */
     public static DefineSprite buildSprite(String name, ImageInfo imageInfo)
 	{
         DefineSprite sprite = new DefineSprite( name );
@@ -210,7 +261,21 @@ public abstract class ImageTranscoder extends AbstractTranscoder
         po.setMatrix(tm);
         sprite.tagList.placeObject( po );
         return sprite;
+    }
 
+    /**
+     * Wraps the Shape from generateSmoothingShape() in a Sprite.
+     */
+    public static DefineSprite buildSmoothingSprite(String name, ImageInfo imageInfo) throws TranscoderException
+    {
+        DefineSprite sprite = new DefineSprite(name);
+        DefineShape shape = generateSmoothingShape(imageInfo);
+        PlaceObject placeObject = new PlaceObject(shape, 10);
+        Matrix matrix = new Matrix();
+        matrix.setScale(1,1);
+        placeObject.setMatrix(matrix);
+        sprite.tagList.placeObject(placeObject);
+        return sprite;
     }
 
     public String getAssociatedClass(DefineTag tag)
@@ -220,6 +285,7 @@ public abstract class ImageTranscoder extends AbstractTranscoder
             StandardDefs standardDefs = ThreadLocalToolkit.getStandardDefs();
             return standardDefs.getCorePackage() + ".BitmapAsset";
         }
+
         return super.getAssociatedClass(tag);
     }
 

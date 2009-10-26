@@ -177,7 +177,7 @@ public class DValue implements Value
 	{
 		// see if we support an id concept
 		if (m_value instanceof Long)
-			return ((Long)m_value).intValue();
+			return ((Long)m_value).longValue();
 		else
 			return Value.UNKNOWN_ID;
 	}

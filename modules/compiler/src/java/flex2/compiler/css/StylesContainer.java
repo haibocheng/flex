@@ -41,7 +41,6 @@ import flex2.compiler.util.VelocityManager;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -306,14 +305,14 @@ public class StylesContainer extends StyleModule
 
                     if (type.isExcludedStyle(stylePropertyName))
                     {
-                        ThreadLocalToolkit.log(new ExcludedStyleProperty(getPathForReporting(styleDef),
+                        ThreadLocalToolkit.log(new ExcludedStyleProperty(styleProperty.getPath(),
                                                                          styleProperty.getLineNumber(),
                                                                          stylePropertyName,
                                                                          typeName));
                     }
                     else if (styleThemes != null)
                     {
-                        ThreadLocalToolkit.log(new InvalidStyleTheme(getPathForReporting(styleDef),
+                        ThreadLocalToolkit.log(new InvalidStyleTheme(styleProperty.getPath(),
                                                                      styleProperty.getLineNumber(),
                                                                      stylePropertyName,
                                                                      typeName,
@@ -321,11 +320,10 @@ public class StylesContainer extends StyleModule
                     }
                     else if (mxmlDocument != null)
                     {
-                        ThreadLocalToolkit.log(new InvalidStyleProperty(getPathForReporting(styleDef),
+                        ThreadLocalToolkit.log(new InvalidStyleProperty(styleProperty.getPath(),
                                                                         styleProperty.getLineNumber(),
                                                                         stylePropertyName,
-                                                                        typeName,
-                                                                        themeNamesString));
+                                                                        typeName));
                     }
                 }
             }
@@ -365,7 +363,7 @@ public class StylesContainer extends StyleModule
         }
         else
         {
-            styleDef = new StyleDef(subject, isTypeSelector, mxmlDocument,
+            styleDef = new StyleDef(subject, isTypeSelector, mxmlDocument, mxmlConfiguration,
                     compilationUnit.getSource(), lineNumber, perCompileData);
             styleDefs.put(subject, styleDef);
         }
@@ -423,7 +421,8 @@ public class StylesContainer extends StyleModule
             if (isLocal && !StyleDef.GLOBAL.equals(styleDefKey))
                 localStyleTypeNames.add(subject);
 
-            styleDef = new StyleDef(subject, mxmlDocument, getSource(), lineNumber, perCompileData);
+            styleDef = new StyleDef(subject, mxmlDocument, mxmlConfiguration, 
+            		                getSource(), lineNumber, perCompileData);
             styleDefs.put(styleDefKey, styleDef);
         }
 
@@ -796,16 +795,14 @@ public class StylesContainer extends StyleModule
         private static final long serialVersionUID = -655374071288180326L;
         public String stylePropertyName;
         public String typeName;
-        public String themeNames;
 
         public InvalidStyleProperty(String path, int line, String stylePropertyName,
-                                    String typeName, String themeNames)
+                                    String typeName)
         {
             this.path = path;
             this.line = line;
             this.stylePropertyName = stylePropertyName;
             this.typeName = typeName;
-            this.themeNames = themeNames;
         }
     }
 

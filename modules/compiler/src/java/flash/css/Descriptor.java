@@ -31,6 +31,7 @@ public class Descriptor
 	{
 		this.name = name;
 		this.value = lexicalUnit;
+        assert path != null;
         this.path = path;
 
         if (lexicalUnit instanceof CSSLexicalUnit)

@@ -18,7 +18,7 @@ import flash.events.Event;
 import flash.events.EventDispatcher;
 import flash.events.FocusEvent;
 import flash.system.ApplicationDomain;
-import flash.utils.Dictionary;
+import flash.utils.*;
 
 import mx.core.EventPriority;
 import mx.core.FlexGlobals;
@@ -588,7 +588,8 @@ public class EffectManager extends EventDispatcher
         }
         
         // Only trigger the event for added and removed if the current target is the same as the target. 
-        if ((eventObj.type == Event.ADDED || eventObj.type == Event.REMOVED) && eventObj.target != eventObj.currentTarget)
+        if ((eventObj.type == Event.ADDED || eventObj.type == Event.REMOVED) &&
+			eventObj.target != eventObj.currentTarget)
             return;
             
         if (eventObj.type == Event.REMOVED)
@@ -646,12 +647,7 @@ public class EffectManager extends EventDispatcher
         }
         else
         {
-			if (eventObj.type == Event.ADDED)
-				// so you can set the properties after it was added, and then
-				// the animation plays
-				UIComponent(eventObj.target).callLater(createAndPlayEffect, [eventObj, eventObj.currentTarget]);
-			else // do it immediately
-            	createAndPlayEffect(eventObj, eventObj.currentTarget);  
+			createAndPlayEffect(eventObj, eventObj.currentTarget);  
         }
     }
 
@@ -660,6 +656,7 @@ public class EffectManager extends EventDispatcher
      */ 
     private static function createAndPlayEffect(eventObj:Event, target:Object):void
     {
+		removeIt = true;
         var effectInst:Effect = createEffectForType(target, eventObj.type);
         if (!effectInst)
             return;
@@ -772,7 +769,8 @@ public class EffectManager extends EventDispatcher
                             return;
                         }
                         */
-                        otherInst.end();
+						removeIt = !(otherInst.triggerEvent && otherInst.triggerEvent.type == Event.REMOVED);
+						otherInst.end();
                     }
                 }
             }
@@ -803,6 +801,7 @@ public class EffectManager extends EventDispatcher
             UIComponent.suspendBackgroundProcessing();
     }
 
+	private static var removeIt:Boolean = false;
     /**
      *  @private
      *  Delayed function call when effect is triggered by "removed" event
@@ -850,7 +849,7 @@ public class EffectManager extends EventDispatcher
             effectInst.target.setVisible(false, true);          
         }
         
-        if (effectInst.triggerEvent && effectInst.triggerEvent.type == Event.REMOVED)
+        if (removeIt && effectInst.triggerEvent && effectInst.triggerEvent.type == Event.REMOVED)
         {
             var targ:DisplayObject = effectInst.target as DisplayObject;
             

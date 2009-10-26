@@ -782,29 +782,35 @@ public final class TagDecoder
 
         int numGlyphs = r.readUI16();
 
-        // skip offset table
+        long[] offsets = new long[numGlyphs];
         for (int i = 0; i < numGlyphs; i++)
         {
             if (t.wideOffsets)
-                r.readUI32();
+                offsets[i] = r.readUI32();
             else
-                r.readUI16();
+                offsets[i] = r.readUI16();
         }
 
+        long codeTableOffset = 0;
         if (numGlyphs > 0)
         {
-	        // skip codeTableOffset
 	        if (t.wideOffsets)
-	            r.readUI32();
+	            codeTableOffset = r.readUI32();
 	        else
-	            r.readUI16();
+	            codeTableOffset = r.readUI16();
         }
 
         t.glyphShapeTable = new Shape[numGlyphs];
 
         for (int i = 0; i < numGlyphs; i++)
         {
-            t.glyphShapeTable[i] = decodeShape(stagDefineShape3);
+            int glyphLength;
+            if (i < (numGlyphs - 1))
+                glyphLength = (int)(offsets[i+1] - offsets[i]);
+            else
+                glyphLength = (int)(codeTableOffset - offsets[i]);
+
+            t.glyphShapeTable[i] = decodeGlyph(stagDefineShape3, glyphLength);
         }
 
         t.codeTable = new char[numGlyphs];
@@ -2514,6 +2520,29 @@ public final class TagDecoder
 
         // resulting format is 0x00RRGGBB
         return color;
+    }
+
+    private Shape decodeGlyph(int shape, int count) throws IOException
+    {
+        Shape s1 = new Shape();
+
+        r.syncBits();
+
+        // SDK-18153 - Hack to work around third-party generated SWFs that
+        // do not include at least one shape record in glyph SHAPE.
+        if (count > 0)
+        {
+            // we use int[1] so we can pass numBits by reference
+            int[] numFillBits = new int[] { r.readUBits(4) };
+            int[] numLineBits = new int[] { r.readUBits(4) };
+
+            if (count > 1)
+            {
+                s1.shapeRecords = decodeShapeRecords(shape, numFillBits, numLineBits);
+            }
+        }
+
+        return s1;
     }
 
     private Shape decodeShape(int shape) throws IOException

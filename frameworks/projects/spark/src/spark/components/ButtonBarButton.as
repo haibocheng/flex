@@ -120,6 +120,25 @@ public class ButtonBarButton extends ToggleButton implements IItemRenderer
         drawFocus(value);
     }
 
+	//----------------------------------
+	//  dragging
+	//----------------------------------
+
+	/**
+	 *  @private  
+	 */
+	public function get dragging():Boolean
+	{
+		return false;
+	}
+
+	/**
+	 *  @private  
+	 */
+	public function set dragging(value:Boolean):void
+	{
+	}
+
     //----------------------------------
     //  data
     //----------------------------------
@@ -143,6 +162,33 @@ public class ButtonBarButton extends ToggleButton implements IItemRenderer
     public function set data(value:Object):void
     {
          content = value;
+    }
+    
+    //----------------------------------
+    //  index
+    //----------------------------------
+    /**
+     *  @private
+     *  storage for the index property 
+     */    
+    private var _index:int;
+    
+    /**
+     *  @inheritDoc 
+     *
+     *  @default false
+     */    
+    public function get index():int
+    {
+        return _index;
+    }
+    
+    /**
+     *  @private
+     */    
+    public function set index(value:int):void
+    {
+        _index = value;
     }
     
     //----------------------------------

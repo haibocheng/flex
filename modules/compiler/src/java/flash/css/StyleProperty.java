@@ -15,13 +15,21 @@ public class StyleProperty
 {
     private String name;
     private Object value;
+    private String path;
     private int lineNumber;
 
-    public StyleProperty(String name, Object value, int lineNumber)
+    public StyleProperty(String name, Object value, String path, int lineNumber)
     {
         this.name = name;
         this.value = value;
+        assert path != null;
+        this.path = path;
         this.lineNumber = lineNumber;
+    }
+
+    public String getPath()
+    {
+        return path;
     }
 
     public int getLineNumber()

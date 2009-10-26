@@ -524,14 +524,14 @@ package flashx.textLayout.compose
 			var sm:ISelectionManager = textFlow.interactionManager;
 			if (sm)
 				sm.flushPendingOperations();
-			composeToController(index);
+			var startController:ContainerController = _composing ? null : internalCompose(-1, index);	
 			var shapesDamaged:Boolean = areShapesDamaged();
 			if (shapesDamaged)
 				updateCompositionShapes();
 
 			if (sm)
 				sm.refreshSelection();
-			releaseLines();
+			releaseLines(startController);
 			return shapesDamaged;
 		}
 		
@@ -636,11 +636,12 @@ package flashx.textLayout.compose
 		tlf_internal function releaseComposeState(state:ComposeState):void
 		{ ComposeState.releaseComposeState(state); }
 		
-		/** @private */
-		tlf_internal function callTheComposer(composeToPosition:int, controllerEndIndex:int):Boolean
-		{				
+		/** @private Return the first damaged controller */
+		tlf_internal function callTheComposer(composeToPosition:int, controllerEndIndex:int):ContainerController
+		{
+			
 			if (_damageAbsoluteStart == rootElement.getAbsoluteStart()+rootElement.textLength)
-				return true;
+				return getControllerAt(numControllers-1);;
 				
 			var state:ComposeState = getComposeState();
 			
@@ -651,13 +652,14 @@ package flashx.textLayout.compose
 			
 			// make sure there is an empty TextFlowLine covering any trailing content
 			finalizeLinesAfterCompose();
+			var startController:ContainerController = state.startController;
 			
 			releaseComposeState(state);
 							
 			textFlow.dispatchEvent(new CompositionCompleteEvent(CompositionCompleteEvent.COMPOSITION_COMPLETE,false,false,textFlow, 0,lastComposedPosition));
 
 			CONFIG::debug { textFlow.debugCheckTextFlow(); }
-			return true;
+			return startController;
 		}
 		
 		private var lastBPDirectionScrollPosition:Number = Number.NEGATIVE_INFINITY;
@@ -668,14 +670,16 @@ package flashx.textLayout.compose
 		}
 		
 		/** Bottleneck function for all types of compose. Does the work of compose, no matter how it is called. @private */
-		private function internalCompose(composeToPosition:int = -1, composeToControllerIndex:int = -1):Boolean
+		private function internalCompose(composeToPosition:int = -1, composeToControllerIndex:int = -1):ContainerController
 		{
 			var sm:ISelectionManager = textFlow.interactionManager;
 			if (sm)
 				sm.flushPendingOperations();
 
 			if (composeToControllerIndex == -1 && composeToPosition >= 0 && damageAbsoluteStart >= composeToPosition)
-				return false;
+				return null;
+				
+			// trace("internalCompose: damageAbsoluteStart",damageAbsoluteStart);
 			
 			var lastController:ContainerController;
 			var bp:String;
@@ -689,7 +693,7 @@ package flashx.textLayout.compose
 				{
 					bp = rootElement.computedFormat.blockProgression
 					if (getBPDirectionScrollPosition(bp,lastController) == this.lastBPDirectionScrollPosition && damageAbsoluteStart >= lastVisibleLine.absoluteStart+lastVisibleLine.textLength)
-						return false;
+						return null;
 				}
 			}
 			lastBPDirectionScrollPosition = Number.NEGATIVE_INFINITY;
@@ -698,26 +702,30 @@ package flashx.textLayout.compose
 				
 			_composing = true;
 			
-			try
+			var startController:ContainerController;
+			
+			//try
 			{	
 				var cont:ContainerController;	// scratch
 				if (textFlow && numControllers != 0)
 				{
 					if (preCompose())
 					{
-						if (callTheComposer(composeToPosition, composeToControllerIndex))
+						startController = callTheComposer(composeToPosition, composeToControllerIndex);
+						if (startController)
 						{
-							for each (cont in _controllerList)
-								cont.shapesInvalid = true;
+							var idx:int = this.getControllerIndex(startController);
+							while (idx < numControllers)
+								getControllerAt(idx++).shapesInvalid = true;
 						}
 					}
 				}
 			}
-			catch (e:Error)
+			/* catch (e:Error)
 			{
 				_composing = false;
 				throw(e);
-			}
+			} */
 			_composing = false;
 			
 			if (lastController)
@@ -725,7 +733,7 @@ package flashx.textLayout.compose
 				lastBPDirectionScrollPosition = getBPDirectionScrollPosition(bp,lastController);
 			}
 			
-			return true;
+			return startController;
 		}
 		
 		
@@ -799,14 +807,14 @@ package flashx.textLayout.compose
 		 * if necessary. Iterates through the lines, looking for lines that do not have a valid parent. If all the
 		 * lines in a paragraph have no parent, we call the paragraph's TextBlock.releaseLines(). 
 		 */
-		private function releaseLines():void
+		private function releaseLines(startController:ContainerController):void
 		{
 			var textBlock:TextBlock;
 
 			var currentParagraph:ParagraphElement = null;
 			var inUse:Boolean = false;
 			var lastLine:int = lines.length;
-			for (var lineIndex:int = 0; lineIndex < lastLine; lineIndex++)
+			for (var lineIndex:int = startController ? findLineIndexAtPosition(startController.absoluteStart) : 0; lineIndex < lastLine; lineIndex++)
 			{
 				var line:TextFlowLine = lines[lineIndex];
 				var paragraph:ParagraphElement = line.paragraph;

@@ -231,7 +231,7 @@ package flashx.textLayout.conversion
 			return newName;
 		}
 		
-		protected function get formatDescription():Object
+		override protected function get formatDescription():Object
 		{
 			return _formatDescription;
 		}		

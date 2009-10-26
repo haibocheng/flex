@@ -1,8 +1,8 @@
 //========================================================================================
 //  $File: //a3t/argon/dev/textLayout_core/src/flashx/textLayout/factory/TextLineFactoryBase.as $
-//  $DateTime: 2009/09/22 13:41:56 $
-//  $Revision: #11 $
-//  $Change: 719892 $
+//  $DateTime: 2009/10/09 16:06:56 $
+//  $Revision: #12 $
+//  $Change: 722888 $
 //  
 //  ADOBE CONFIDENTIAL
 //  
@@ -409,14 +409,14 @@ use namespace tlf_internal;
 
 class FactoryDisplayComposer extends StandardFlowComposer
 {
-	tlf_internal override function callTheComposer(absoluteEndPosition:int, controllerEndIndex:int):Boolean
+	tlf_internal override function callTheComposer(absoluteEndPosition:int, controllerEndIndex:int):ContainerController
 	{
 		// always do a full compose
 		clearCompositionResults();
 		
 		var state:SimpleCompose = TextLineFactoryBase._factoryComposer;
 		state.composeTextFlow(textFlow, -1, -1);
-		return true;
+		return getControllerAt(0);
 	}
 		
 	/** Returns true if composition is necessary, false otherwise */

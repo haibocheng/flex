@@ -25,6 +25,8 @@ public interface FXGResourceResolver
 	
 	void setRootPath(String dir);
 
+	String resolve(String path);
+	
 	InputStream openStream(String path) throws IOException;
 
 	InputStream openStream(URL url) throws IOException;

@@ -20,11 +20,8 @@ import flash.swf.tags.DefineTag;
  */
 public class MorphFillStyle
 {
-    public boolean hasBitmapId()
-    {
-        return type == 0x40 || type == 0x41;
-    }
-
+    public static final int FILL_BITS = 0x40;
+    
 	public int type;
     /** colors as ints: 0xAARRGGBB */
 	public int startColor;
@@ -38,7 +35,12 @@ public class MorphFillStyle
 
 	// MorphFillStyle for DefineMorphShape2
 	public int ratio1, ratio2;
-	
+
+    public boolean hasBitmapId()
+    {
+        return ((type & FILL_BITS) != 0);
+    }
+
     public boolean equals(Object object)
     {
         boolean isEqual = false;

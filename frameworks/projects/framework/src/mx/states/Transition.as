@@ -204,6 +204,64 @@ public class Transition
      *  @productversion Flex 3
      */
 	public var autoReverse:Boolean = false;
+	
+    /**
+     *  @private
+     *  Find the appropriate transition to play between two states.
+     */
+	public static function getTransition(transitions:Array, oldState:String, newState:String):Transition
+    {
+        var result:Transition = null;   // Current candidate
+        var priority:int = 0;           // Priority     fromState   toState
+                                        //    1             *           *
+                                        //    2           match         *
+                                        //    3             *         match
+                                        //    4           match       match
+
+        if (!transitions)
+            return null;
+
+        if (!oldState)
+            oldState = "";
+
+        if (!newState)
+            newState = "";
+
+        for (var i:int = 0; i < transitions.length; i++)
+        {
+            var t:Transition = transitions[i];
+
+            if (t.fromState == "*" && t.toState == "*" && priority < 1)
+            {
+                result = t;
+                priority = 1;
+            }
+            else if (t.fromState == oldState && t.toState == "*" && priority < 2)
+            {
+                result = t;
+                priority = 2;
+            }
+            else if (t.fromState == "*" && t.toState == newState && priority < 3)
+            {
+                result = t;
+                priority = 3;
+            }
+            else if (t.fromState == oldState && t.toState == newState && priority < 4)
+            {
+                result = t;
+                priority = 4;
+
+                // Can't get any higher than this, let's go.
+                break;
+            }
+        }
+        // If Transition does not contain an effect, then don't return it
+        // because there is no transition effect to run
+        if (result && !result.effect)
+            result = null;
+
+        return result;
+    }
 }
 
 }

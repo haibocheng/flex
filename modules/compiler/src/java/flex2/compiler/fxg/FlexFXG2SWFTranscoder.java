@@ -11,6 +11,7 @@
 
 package flex2.compiler.fxg;
 
+import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -85,7 +86,6 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
         this.typeTable = typeTable;
         if (typeTable != null)
         {
-            textLayoutFormatType = typeTable.getType(StandardDefs.CLASS_TEXT_LAYOUT_FORMAT);
             divType = typeTable.getType(StandardDefs.CLASS_TEXT_DIV);
             linkType = typeTable.getType(StandardDefs.CLASS_TEXT_LINK);
             imgType = typeTable.getType(StandardDefs.CLASS_TEXT_IMG);
@@ -94,6 +94,7 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
             spanType = typeTable.getType(StandardDefs.CLASS_TEXT_SPAN);
             tabType = typeTable.getType(StandardDefs.CLASS_TEXT_TAB);
             tcyType = typeTable.getType(StandardDefs.CLASS_TEXT_TCY);
+            textLayoutFormatType = typeTable.getType(StandardDefs.CLASS_TEXT_LAYOUT_FORMAT);
         }
     }
 
@@ -190,6 +191,51 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
                 int maskIndex = parentSprite.depthCounter - 1;
                 mask.setMaskIndex(maskIndex);
             }
+            else if (maskType == MaskType.LUMINOSITY)
+            {
+                // Create a new SymbolClass to map to this mask's
+                // DefineSprite (see below)  
+                String className = createUniqueName(graphicClass.getClassName() + "_Mask");
+                FXGSymbolClass symbolClass = new FXGSymbolClass();
+                symbolClass.setPackageName(packageName);
+                symbolClass.setClassName(className);
+
+                // Then record this SymbolClass with the top-level graphic
+                // SymbolClass so that it will be associated with the FXG asset.
+                graphicClass.addAdditionalSymbolClass(symbolClass);
+
+                // Calculate luminosity mode
+                int mode = 0;
+
+                if (node.getLuminosityClip())
+                    mode += 2;
+
+                if (node.getLuminosityInvert())
+                    mode += 1;
+
+                StringBuilder buf = new StringBuilder(768);
+                buf.append("package ").append(packageName).append("\n");
+                buf.append("{\n\n");
+                buf.append("import flash.display.Sprite;\n");
+                buf.append("import spark.filters.ShaderFilter;\n");
+                buf.append("import spark.primitives.shaders.LuminosityMaskShader;\n\n");
+                buf.append("public class ").append(className).append(" extends Sprite\n");
+                buf.append("{\n");
+                buf.append("    public function ").append(className).append("()\n");
+                buf.append("    {\n");
+                buf.append("        super();\n");
+                buf.append("        this.cacheAsBitmap = true;\n");
+                buf.append("        var shader:LuminosityMaskShader = new LuminosityMaskShader();\n");
+                buf.append("        shader.mode = ").append(mode).append(";\n");
+                buf.append("        var filter:ShaderFilter = new ShaderFilter(shader);\n");
+                buf.append("        this.filters = [filter.clone()];\n");
+                buf.append("    }\n");
+                buf.append("}\n"); // End class
+                buf.append("}\n"); // End package
+
+                symbolClass.setGeneratedSource(buf.toString());
+                symbolClass.setSymbol(po3.ref);
+            }
         }
 
         return po3;
@@ -200,7 +246,9 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
     {
         PlaceObject po3 = super.graphicContentNode(node);
 
-        if (hasAdvancedGraphics(node))
+        // We skip text nodes because they already generate a symbol class
+        // and will handle advanced graphics there.
+        if (!(node instanceof TextNode) && hasAdvancedGraphics(node))
         {
             po3 = advancedGraphics(node, po3);
         }
@@ -241,14 +289,19 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
 
     private PlaceObject advancedGraphics(GraphicContentNode node, PlaceObject po3)
     {
-        String className = createUniqueClassName(graphicClass.getClassName() + "_Maskee");
-
         if (po3 != null)
         {
             DefineTag symbol = po3.ref;
+            MaskingNode maskNode = node.getMask();
 
             // Create a new SymbolClass to map to this mask's
-            // DefineSprite (see below)  
+            // DefineSprite (see below)
+            String className = graphicClass.getClassName();
+            if (maskNode != null)
+                className += "_Maskee";
+
+            className = createUniqueName(className);
+
             FXGSymbolClass symbolClass = new FXGSymbolClass();
             symbolClass.setPackageName(packageName);
             symbolClass.setClassName(className);
@@ -275,11 +328,12 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
             }
 
             // Advanced BlendModes
-            String blendModeImport = generateAdvancedBlendModeImport(node.blendMode);
+            String blendModeImport = generateBlendModeImport(node.blendMode);
             if (blendModeImport != null)
                 buf.append(blendModeImport);
-            String blendModeShader = generateAdvancedBlendMode(node.blendMode);
+            String blendModeShader = generateBlendMode(node.blendMode);
 
+            // Class Definition and Constructor
             buf.append("public class ").append(className).append(" extends ").append(baseClassName).append("\n");
             buf.append("{\n");
             buf.append("    public function ").append(className).append("()\n");
@@ -287,8 +341,7 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
             buf.append("        super();\n");
             buf.append("        this.cacheAsBitmap = true;\n");
 
-            // Alpha Masks
-            MaskingNode maskNode = node.getMask();
+            // Alpha and Luminosity Masks
             if (maskNode != null)
             {
                 int maskIndex = maskNode.getMaskIndex();
@@ -302,7 +355,7 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
             if (blendModeShader != null)
                 buf.append(blendModeShader);
 
-            buf.append("    }\n");
+            buf.append("    }\n"); // End constructor
             buf.append("}\n"); // End class
             buf.append("}\n"); // End package
 
@@ -313,7 +366,7 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
         return po3;
     }
 
-    private String generateAdvancedBlendModeImport(BlendMode blendMode)
+    private String generateBlendModeImport(BlendMode blendMode)
     {
         if (blendMode == BlendMode.COLOR)
             return "import spark.primitives.shaders.ColorShader;\n\n";
@@ -335,7 +388,7 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
             return null;
     }
 
-    private String generateAdvancedBlendMode(BlendMode blendMode)
+    private String generateBlendMode(BlendMode blendMode)
     {
         if (blendMode == BlendMode.COLOR)
             return "        this.blendShader = new ColorShader();\n";
@@ -389,7 +442,7 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
 
             // Create a new SymbolClass to map to this TextGraphic's
             // DefineSprite (see below)  
-            String className = createUniqueClassName(graphicClass.getClassName() + "_Text");
+            String className = createUniqueName(graphicClass.getClassName() + "_Text");
 
             FXGSymbolClass spriteSymbolClass = new FXGSymbolClass();
             spriteSymbolClass.setPackageName(packageName);
@@ -413,10 +466,10 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
             buf.append("import spark.core.SpriteVisualElement;\n\n");
 
             // Advanced BlendModes
-            String blendModeImport = generateAdvancedBlendModeImport(node.blendMode);
+            String blendModeImport = generateBlendModeImport(node.blendMode);
             if (blendModeImport != null)
                 buf.append(blendModeImport);
-            String blendModeShader = generateAdvancedBlendMode(node.blendMode);
+            String blendModeShader = generateBlendMode(node.blendMode);
 
             buf.append("public class ").append(className).append(" extends SpriteVisualElement\n");
             buf.append("{\n");
@@ -424,9 +477,14 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
             buf.append("    {\n");
             buf.append("        super();\n");
 
+            if (hasAdvancedGraphics(node))
+                buf.append("        this.cacheAsBitmap = true;\n");
+
             // Alpha Masks
             MaskingNode maskNode = node.getMask();
-            if (maskNode != null)
+            if (maskNode != null &&
+                    (node.getMaskType() == MaskType.ALPHA ||
+                     node.getMaskType() == MaskType.LUMINOSITY))
             {
                 int maskIndex = maskNode.getMaskIndex();
                 buf.append("        this.mask = this.parent.getChildAt(").append(maskIndex).append(");\n");
@@ -442,9 +500,16 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
             buf.append("\n");
             buf.append("    private function createText():void\n");
             buf.append("    {\n");
-            StringBuilder textSource = generateRichText(textNode);
-            buf.append(textSource);
+
+            SourceContext textSource = generateRichText(textNode);
+            if (textSource.functionBuffer != null)
+                buf.append(textSource.functionBuffer.toString());
+
             buf.append("    }\n");
+
+            if (textSource.classBuffer != null)
+                buf.append(textSource.classBuffer.toString());
+
             buf.append("}\n"); // End class
             buf.append("}\n"); // End package
 
@@ -459,12 +524,13 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
     }
 
     /**
-     * Generates a unique class name by appending a random number to the given
-     * base name.
-     * @param baseName the base of the generated class name 
-     * @return the unique class name
+     * Generates a unique name by appending a random number to the given base
+     * name.
+     * 
+     * @param baseName the base of the generated name 
+     * @return the unique name
      */
-    private String createUniqueClassName(String baseName)
+    private String createUniqueName(String baseName)
     {
         int r = random.nextInt();
         String suffix = Integer.toString(r);
@@ -487,105 +553,84 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
      * child nodes.
      * 
      * @param node The TextGraphic node to process.
-     * @param textGraphicCounter Used to generate a unique variable name for
-     * each instance of RichText.
      * 
-     * @return Returns the code generation buffer as a StringBuilder.
+     * @return Returns the code generation buffers (for the function and
+     * potentially class scopes).
      */
-    private StringBuilder generateRichText(TextNode textNode)
+    private SourceContext generateRichText(TextNode textNode)
     {
-        // Generate ActionScript equivalent of tag markup...
-        StringBuilder sb = new StringBuilder();
+        // Generate ActionScript equivalent of tag markup. We use 1024
+        // characters of generated code is sufficient for the initial size of
+        // the function scope buffer. We use 0 characters for the class scope
+        // buffer until we encounter the special case of:
+        //     <img source="@Embed('...')">
+        // which involves generating class member variables to embed images.
+        SourceContext srcContext = new SourceContext(1024, 0);
+        StringBuilder buf = srcContext.functionBuffer;
 
-        Variables context = new Variables();
-        context.setVar(richTextType, NodeType.RICHTEXT);
-        String elementVar = context.elementVar;
+        Variables varContext = new Variables();
+        varContext.setVar(richTextType, NodeType.RICHTEXT);
+        String elementVar = varContext.elementVar;
 
-        generateTextVariable(sb, textNode, context);
+        generateTextVariable(textNode, srcContext, varContext);
 
-        sb.append("        addChild(").append(elementVar).append(");\r\n");
+        buf.append("        addChild(").append(elementVar).append(");\r\n");
 		
-        sb.append("        ").append(elementVar).append(".regenerateStyleCache(true);\r\n");
-        sb.append("        ").append(elementVar).append(".stylesInitialized();\r\n");
-        sb.append("        ").append(elementVar).append(".validateProperties();\r\n");
-        sb.append("        ").append(elementVar).append(".validateSize();\r\n");
-        sb.append("        ").append(elementVar).append(".setLayoutBoundsSize(NaN, NaN);\r\n");
-        sb.append("        ").append(elementVar).append(".validateDisplayList();\r\n");
+        buf.append("        ").append(elementVar).append(".regenerateStyleCache(true);\r\n");
+        buf.append("        ").append(elementVar).append(".stylesInitialized();\r\n");
+        buf.append("        ").append(elementVar).append(".validateProperties();\r\n");
+        buf.append("        ").append(elementVar).append(".validateSize();\r\n");
+        buf.append("        ").append(elementVar).append(".setLayoutBoundsSize(NaN, NaN);\r\n");
+        buf.append("        ").append(elementVar).append(".validateDisplayList();\r\n");
 
-        return sb;
-    }
-
-    /**
-     * Generates ActionScript to push a child onto an Array:
-     * <pre>
-     * someContent.push(someChildElement);
-     * </pre>
-     */
-    private void generatePushChild(StringBuilder sb, String contentVar, String childElementVar)
-    {
-        sb.append("        ").append(contentVar).append(".push(").append(childElementVar).append(");\r\n");
-    }
-
-    /**
-     * Generates an ActionScript property assignment:
-     * <pre>
-     * someElement.mxmlChildren = someContent;
-     * </pre>
-     * @param sb
-     * @param elementVar
-     * @param propertyVar
-     * @param valueVar
-     */
-    private void generateAssignment(StringBuilder sb, String elementVar, String propertyVar, String valueVar)
-    {
-        sb.append("        ").append(elementVar).append(".").append(propertyVar).append(" = ").append(valueVar).append(";\r\n");
+        return srcContext;
     }
 
     /**
      * Generates ActionScript to initialize a variable for a given text node,
      * populates any specified attributes as properties or styles, and
      * recursively processes any text child nodes.
-     * 
-     * @param sb - the generated ActionScript buffer 
      * @param textNode - the current text node
-     * @param context - the current generated ActionScript variable context 
+     * @param srcContext - the current code generation buffers
+     * @param varContext - the current generated ActionScript variable context 
      */
-    private void generateTextVariable(StringBuilder sb, TextNode textNode,
-            Variables context)
+    private void generateTextVariable(TextNode textNode,
+            SourceContext srcContext, Variables varContext)
     {
+        StringBuilder buf = srcContext.functionBuffer;
         Map<String, String> attributes = textNode.getTextAttributes();
         List<TextNode> children = textNode.getTextChildren();
 
-        String parentVar = context.elementVar;
-        String contentVar = context.contentVar;
-        String parentClass = context.elementClass;
-        String parentChildrenVar = context.elementChildrenVar;
-        Type type = context.type;
+        String currentVar = varContext.elementVar;
+        String contentVar = varContext.contentVar;
+        String parentClass = varContext.elementClass;
+        String parentChildrenVar = varContext.elementChildrenVar;
+        Type type = varContext.type;
 
-        if (!context.varDeclared)
+        if (!varContext.varDeclared)
         {
             // var someElement:SomeElement = new SomeElement();
-            sb.append("        var ").append(parentVar).append(":").append(parentClass).append(" = new ").append(parentClass).append("();\r\n");
+            buf.append("        var ").append(currentVar).append(":").append(parentClass).append(" = new ").append(parentClass).append("();\r\n");
 
             // var someContent:Array = [];
             if (contentVar != null)
-                sb.append("        var ").append(contentVar).append(":Array = [];\r\n");
+                buf.append("        var ").append(contentVar).append(":Array = [];\r\n");
         }
         else
         {
             // someElement = new SomeElement();
-            sb.append("        ").append(parentVar).append(" = new ").append(parentClass).append("();\r\n");
+            buf.append("        ").append(currentVar).append(" = new ").append(parentClass).append("();\r\n");
 
             // someContent = [];
             if (contentVar != null)
-                sb.append("        ").append(contentVar).append(" = [];\r\n");
+                buf.append("        ").append(contentVar).append(" = [];\r\n");
         }
 
         // Attributes
-        generateAttributes(type, attributes, sb, parentVar);
+        generateAttributes(textNode, type, attributes, srcContext, currentVar);
 
         // Properties
-        generateProperties(sb, parentVar, textNode.getTextProperties(), context);
+        generateProperties(srcContext, currentVar, textNode.getTextProperties(), varContext);
 
         // Child Nodes
         if (children != null && children.size() > 0)
@@ -599,97 +644,97 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
                 // FXG 2.0
                 if (child instanceof RichTextNode)
                 {
-                    context.setVar(richTextType, NodeType.RICHTEXT);
-                    elementVar = context.elementVar;
-                    generateTextVariable(sb, child, context);
-                    generatePushChild(sb, contentVar, elementVar);
+                    varContext.setVar(richTextType, NodeType.RICHTEXT);
+                    elementVar = varContext.elementVar;
+                    generateTextVariable(child, srcContext, varContext);
+                    buf.append("        ").append(contentVar).append(".push(").append(elementVar).append(");\r\n");
                 }
                 else if (child instanceof ParagraphNode)
                 {
-                    context.setVar(paragraphType, NodeType.PARAGRAPH);
-                    elementVar = context.elementVar;
-                    generateTextVariable(sb, child, context);
-                    generatePushChild(sb, contentVar, elementVar);
+                    varContext.setVar(paragraphType, NodeType.PARAGRAPH);
+                    elementVar = varContext.elementVar;
+                    generateTextVariable(child, srcContext, varContext);
+                    buf.append("        ").append(contentVar).append(".push(").append(elementVar).append(");\r\n");
                 }
                 else if (child instanceof SpanNode)
                 {
-                    context.setVar(spanType, NodeType.SPAN);
-                    elementVar = context.elementVar;
-                    generateTextVariable(sb, child, context);
-                    generatePushChild(sb, contentVar, elementVar);
+                    varContext.setVar(spanType, NodeType.SPAN);
+                    elementVar = varContext.elementVar;
+                    generateTextVariable(child, srcContext, varContext);
+                    buf.append("        ").append(contentVar).append(".push(").append(elementVar).append(");\r\n");
                 }
                 else if (child instanceof DivNode)
                 {
-                    context.setVar(divType, NodeType.DIV);
-                    elementVar = context.elementVar;
-                    generateTextVariable(sb, child, context);
-                    generatePushChild(sb, contentVar, elementVar);
+                    varContext.setVar(divType, NodeType.DIV);
+                    elementVar = varContext.elementVar;
+                    generateTextVariable(child, srcContext, varContext);
+                    buf.append("        ").append(contentVar).append(".push(").append(elementVar).append(");\r\n");
                 }
                 else if (child instanceof CDATANode)
                 {
                     // someContent.push("some text");
                     String text = formatString(((CDATANode)child).content);
-                    sb.append("        ").append(contentVar).append(".push(").append(text).append(");\r\n");
+                    buf.append("        ").append(contentVar).append(".push(").append(text).append(");\r\n");
                 }
                 else if (child instanceof BRNode)
                 {
                     // someContent.push(new BreakElement());
-                    sb.append("        ").append(contentVar).append(".push(new BreakElement());\r\n");
+                    buf.append("        ").append(contentVar).append(".push(new BreakElement());\r\n");
                 }
                 else if (child instanceof ImgNode)
                 {
-                    context.setVar(imgType, NodeType.IMG);
-                    elementVar = context.elementVar;
-                    generateTextVariable(sb, child, context);
-                    generatePushChild(sb, contentVar, elementVar);
+                    varContext.setVar(imgType, NodeType.IMG);
+                    elementVar = varContext.elementVar;
+                    generateTextVariable(child, srcContext, varContext);
+                    buf.append("        ").append(contentVar).append(".push(").append(elementVar).append(");\r\n");
                 }
                 else if (child instanceof LinkNode)
                 {
-                    context.setVar(linkType, NodeType.LINK);
-                    elementVar = context.elementVar;
-                    generateTextVariable(sb, child, context);
-                    generatePushChild(sb, contentVar, elementVar);
+                    varContext.setVar(linkType, NodeType.LINK);
+                    elementVar = varContext.elementVar;
+                    generateTextVariable(child, srcContext, varContext);
+                    buf.append("        ").append(contentVar).append(".push(").append(elementVar).append(");\r\n");
                 }
                 else if (child instanceof TabNode)
                 {
-                    context.setVar(tabType, NodeType.TAB);
-                    elementVar = context.elementVar;
-                    generateTextVariable(sb, child, context);
-                    generatePushChild(sb, contentVar, elementVar);
+                    varContext.setVar(tabType, NodeType.TAB);
+                    elementVar = varContext.elementVar;
+                    generateTextVariable(child, srcContext, varContext);
+                    buf.append("        ").append(contentVar).append(".push(").append(elementVar).append(");\r\n");
                 }
                 else if (child instanceof TCYNode)
                 {
-                    context.setVar(tcyType, NodeType.TCY);
-                    elementVar = context.elementVar;
-                    generateTextVariable(sb, child, context);
-                    generatePushChild(sb, contentVar, elementVar);
+                    varContext.setVar(tcyType, NodeType.TCY);
+                    elementVar = varContext.elementVar;
+                    generateTextVariable(child, srcContext, varContext);
+                    buf.append("        ").append(contentVar).append(".push(").append(elementVar).append(");\r\n");
                 }
                 // FXG 1.0
                 else if (child instanceof TextGraphicNode)
                 {
-                    context.setVar(richTextType, NodeType.RICHTEXT);
-                    elementVar = context.elementVar;
-                    generateTextVariable(sb, child, context);
-                    generatePushChild(sb, contentVar, elementVar);
+                    varContext.setVar(richTextType, NodeType.RICHTEXT);
+                    elementVar = varContext.elementVar;
+                    generateTextVariable(child, srcContext, varContext);
+                    buf.append("        ").append(contentVar).append(".push(").append(elementVar).append(");\r\n");
                 }
                 else if (child instanceof com.adobe.internal.fxg.dom.text.ParagraphNode)
                 {
-                    context.setVar(paragraphType, NodeType.PARAGRAPH);
-                    elementVar = context.elementVar;
-                    generateTextVariable(sb, child, context);
-                    generatePushChild(sb, contentVar, elementVar);
+                    varContext.setVar(paragraphType, NodeType.PARAGRAPH);
+                    elementVar = varContext.elementVar;
+                    generateTextVariable(child, srcContext, varContext);
+                    buf.append("        ").append(contentVar).append(".push(").append(elementVar).append(");\r\n");
                 }
                 else if (child instanceof com.adobe.internal.fxg.dom.text.SpanNode)
                 {
-                    context.setVar(spanType, NodeType.SPAN);
-                    elementVar = context.elementVar;
-                    generateTextVariable(sb, child, context);
-                    generatePushChild(sb, contentVar, elementVar);
+                    varContext.setVar(spanType, NodeType.SPAN);
+                    elementVar = varContext.elementVar;
+                    generateTextVariable(child, srcContext, varContext);
+                    buf.append("        ").append(contentVar).append(".push(").append(elementVar).append(");\r\n");
                 }
                 else if (child instanceof com.adobe.internal.fxg.dom.text.BRNode)
                 {
                     // e.g. someContent.push(new BreakElement());
-                    sb.append("        ").append(contentVar).append(".push(new BreakElement());\r\n");
+                    buf.append("        ").append(contentVar).append(".push(new BreakElement());\r\n");
                 }
                 else
                 {
@@ -700,7 +745,7 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
 
         // e.g. someElement.mxmlChildren = someContent;
         if (parentChildrenVar != null && contentVar != null)
-            generateAssignment(sb, parentVar, parentChildrenVar, contentVar);
+            buf.append("        ").append(currentVar).append(".").append(parentChildrenVar).append(" = ").append(contentVar).append(";\r\n");
     }
 
     /**
@@ -708,17 +753,19 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
      * complex property values. It also generates the property assignment 
      * statement.
      * 
-     * @param sb - the ActionScript code generation buffer.
+     * @param srcContext - the ActionScript source code generation buffers.
      * @param parentVar - the parent variable that declares the properties
      * @param properties - the text property nodes 
-     * @param context - the current context for generating variables in
+     * @param varContext - the current context for generating variables in
      * ActionScript code 
      */
-    private void generateProperties(StringBuilder sb, String parentVar,
-            Map<String, TextNode> properties, Variables context)
+    private void generateProperties(SourceContext srcContext, String parentVar,
+            Map<String, TextNode> properties, Variables varContext)
     {
         if (properties != null)
         {
+            StringBuilder buf = srcContext.functionBuffer;
+
             for (Map.Entry<String, TextNode> entry : properties.entrySet())
             {
                 String propertyName = entry.getKey();
@@ -726,9 +773,9 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
 
                 if (node instanceof TextLayoutFormatNode)
                 {
-                    context.setVar(textLayoutFormatType, NodeType.TEXT_LAYOUT_FORMAT);
-                    generateTextVariable(sb, node, context);
-                    generateAssignment(sb, parentVar, propertyName, context.elementVar);
+                    varContext.setVar(textLayoutFormatType, NodeType.TEXT_LAYOUT_FORMAT);
+                    generateTextVariable(node, srcContext, varContext);
+                    buf.append("        ").append(parentVar).append(".").append(propertyName).append(" = ").append(varContext.elementVar).append(";\r\n");
                 }
             }
         }
@@ -740,15 +787,50 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
      * 
      * @param type The ActionScript type for this node.
      * @param attributes The Map of attributes specified on this node.
-     * @param sb The code generation buffer.
+     * @param srcContext The source code generation buffers.
      * @param variableName The ActionScript variable name representing the
      * instance of this node.
      */
-    private void generateAttributes(Type type, Map<String, String> attributes,
-            StringBuilder sb, String variableName)
+    private void generateAttributes(TextNode node, Type type, Map<String, String> attributes,
+            SourceContext srcContext, String variableName)
     {
         if (attributes != null)
         {
+            StringBuilder buf = srcContext.functionBuffer;
+
+            // HACK: Handle <img source="@Embed('xyz.jpg')" /> as a special case
+            if (node instanceof ImgNode)
+            {
+                String imgSource = attributes.get("source");
+                imgSource = parseSource(imgSource);
+                if (imgSource != null)
+                {
+                    // Resolve relative file path
+                    File f = new File(imgSource);
+                    if (!f.isAbsolute() && resourceResolver != null)
+                    {
+                        String resolvedPath = resourceResolver.resolve(imgSource);
+                        if (resolvedPath != null)
+                            imgSource = resolvedPath;
+                    }
+                    imgSource = imgSource.replace('\\', '/');
+
+                    // Generate [Embed] for the image.
+                    if (srcContext.classBuffer == null)
+                        srcContext.classBuffer = new StringBuilder(128);
+                    StringBuilder classBuf = srcContext.classBuffer;
+                    String imgVar = createUniqueName("img");
+                    classBuf.append("\n");
+                    classBuf.append("    [Embed(source=\"").append(imgSource).append("\")]\n");
+                    classBuf.append("    private static var ").append(imgVar).append(":Class;\n");
+
+                    // Generate source attribute assignment
+                    buf.append("        ").append(variableName).append(".source = ").append(imgVar).append(";\n");
+
+                    attributes.remove("source");
+                }
+            }
+
             for (Map.Entry<String, String> entry : attributes.entrySet())
             {
                 String attribName = entry.getKey();
@@ -776,7 +858,7 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
                 }
 
                 if (thisAttrib != null)
-                    sb.append("        " + variableName + '.' + thisAttrib + ";\r\n");
+                    buf.append("        " + variableName + '.' + thisAttrib + ";\r\n");
             }
         }
     }
@@ -819,6 +901,32 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
         TEXT_LAYOUT_FORMAT
     }
 
+    /**
+     * Provides a context to the current ActionScript generation buffers.
+     * Multiple buffers allow code to be generated in different parts of an
+     * ActionScript file, such as generating a class scope member while 
+     * generating a function scope.
+     */
+    private static class SourceContext
+    {
+        /**
+         * Constructor.
+         * @param functionSize - Initial function buffer size.
+         * @param classSize - Initial class buffer size.
+         */
+        private SourceContext(int functionSize, int classSize)
+        {
+            if (functionSize > 0)
+                functionBuffer = new StringBuilder(functionSize);
+
+            if (classSize > 0)
+                classBuffer = new StringBuilder(classSize);
+        }
+
+        private StringBuilder functionBuffer;
+        private StringBuilder classBuffer;
+    }
+    
     /**
      * Provides a context of variables in use for ActionScript source
      * generation of a text node and its children.

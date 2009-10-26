@@ -45,8 +45,20 @@ public class DefineMorphShape extends DefineTag
         // This is yucky.
         List<Tag> refs = new LinkedList<Tag>();
 
-        startEdges.getReferenceList( refs );
-        endEdges.getReferenceList( refs );
+        startEdges.getReferenceList(refs);
+        endEdges.getReferenceList(refs);
+
+        if (fillStyles != null)
+        {
+            for (int i = 0; i < fillStyles.length; i++)
+            {
+                MorphFillStyle style = fillStyles[i];
+                if (style != null && style.hasBitmapId() && style.bitmap != null)
+                {
+                    refs.add(style.bitmap);
+                }
+            }
+        }
 
         return refs.iterator();
     }

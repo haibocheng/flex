@@ -573,35 +573,6 @@ public class CompilerConfiguration implements As3Configuration,
     }
 
     //
-    // 'compiler.create-style-manager' option
-    //
-
-    // Allow the user to decide if the compiled application/module should have its
-    // own style manager.
-    private boolean createStyleManager = false;
-
-    public boolean getCreateStyleManager()
-    {
-        return createStyleManager;
-    }
-
-    public void cfgCreateStyleManager( ConfigurationValue cv, boolean createStyleManager )
-    {
-        this.createStyleManager = createStyleManager;
-    }
-
-    public static ConfigurationInfo getCreateStyleManagerInfo()
-    {
-        return new AdvancedConfigurationInfo()
-        {
-            public boolean isHidden()
-            {
-                return true;
-            }
-        };
-    }
-
-    //
     // 'compiler.debug' option
     //
 
@@ -2970,6 +2941,74 @@ public class CompilerConfiguration implements As3Configuration,
     {
         return this.extensionsConfig;
     }
+
+    //
+    // 'compiler.create-style-manager' option
+    //
+
+    // Allow the user to decide if the compiled application/module should have its
+    // own style manager.
+    private boolean createStyleManager = false;
+
+    public boolean getCreateStyleManager()
+    {
+        return createStyleManager;
+    }
+
+    public void cfgCreateStyleManager( ConfigurationValue cv, boolean createStyleManager )
+    {
+        this.createStyleManager = createStyleManager;
+    }
+
+    public static ConfigurationInfo getCreateStyleManagerInfo()
+    {
+        return new AdvancedConfigurationInfo()
+        {
+            public boolean isHidden()
+            {
+                return true;
+            }
+        };
+    }
+
+    //
+    // 'compiler.allow-duplicate-style-declaration' option
+    //
+
+    // If true, a style manager will add style declarations to the local
+    // style manager without checking to see if the parent already
+    // has the same style selector with the same properties. If false,
+    // a style manager will check the parent to make sure a style
+    // with the same properties does not already exist before adding
+    // one locally.
+	// If there is no local style manager created for this application, 
+    // then don't check for duplicates. Just use the old "selector exists" test. 
+    private boolean allowDuplicateDefaultStyleDeclarations = false;
+
+    public boolean getAllowDuplicateDefaultStyleDeclarations()
+    {
+    	if (getCreateStyleManager())
+    		return allowDuplicateDefaultStyleDeclarations;
+    	else
+    		return true;
+    }
+
+    public void cfgAllowDuplicateDefaultStyleDeclarations( ConfigurationValue cv, boolean allowDuplicateDefaultStyleDeclarations)
+    {
+        this.allowDuplicateDefaultStyleDeclarations = allowDuplicateDefaultStyleDeclarations;
+    }
+
+    public static ConfigurationInfo getAllowDuplicateDefaultStyleDeclarationsInfo()
+    {
+        return new AdvancedConfigurationInfo()
+        {
+			public boolean isHidden()
+            {
+                return true;
+            }
+        };
+    }
+
     
     @Override
     public Object clone()
@@ -2977,4 +3016,7 @@ public class CompilerConfiguration implements As3Configuration,
     {
         return super.clone();
     }
+    
+    
+    
 }

@@ -180,6 +180,7 @@ public abstract class StandardDefs
     public final String INTERFACE_IGRAPHICELEMENT = NameFormatter.toColon(PACKAGE_SPARK_CORE, "IGraphicElement");
     public final String INTERFACE_IFACTORY = NameFormatter.toColon(getCorePackage(), "IFactory");
     public final String INTERFACE_IFLEXDISPLAYOBJECT = NameFormatter.toColon(getCorePackage(), "IFlexDisplayObject");
+    public final String INTERFACE_IFLEXMODULE = NameFormatter.toColon(getCorePackage(), "IFlexModule");
     public final String INTERFACE_IFOCUSMANAGERCONTAINER = NameFormatter.toColon(getManagersPackage(), "IFocusManagerContainer");
     public final String INTERFACE_IID = NameFormatter.toColon(getCorePackage(), "IID");
     public final String INTERFACE_IINVALIDATING = NameFormatter.toColon(getCorePackage(), "IInvalidating");
@@ -704,6 +705,15 @@ public abstract class StandardDefs
         assert type != null;
         return type.isAssignableTo(INTERFACE_INAVIGATORCONTENT) || type.isAssignableTo(CLASS_REPEATER);
     }
+
+    /**
+    *
+    */
+   public boolean isIFlexModule(Type type)
+   {
+       assert type != null;
+       return type.isAssignableTo(INTERFACE_IFLEXMODULE);
+   }
 
     /**
      *

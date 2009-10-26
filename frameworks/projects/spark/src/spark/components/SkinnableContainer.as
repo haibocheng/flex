@@ -261,8 +261,8 @@ public class SkinnableContainer extends SkinnableContainerBase
     //
     //--------------------------------------------------------------------------
     
+    [Bindable(event="contentGroupChange")]
     [SkinPart(required="false")]
-    
     /**
      *  A required skin part that defines the Group where the content 
      *  children get pushed into and laid out.
@@ -272,7 +272,7 @@ public class SkinnableContainer extends SkinnableContainerBase
      *  @playerversion AIR 1.5
      *  @productversion Flex 4
      */
-    public var contentGroup:Group;
+	public var contentGroup:Group;
     
     /**
      *  @private
@@ -787,6 +787,7 @@ public class SkinnableContainer extends SkinnableContainerBase
                 
                 _placeHolderGroup = null;
             }
+			dispatchBindingEvent("contentGroupChange");
         }
     }
 

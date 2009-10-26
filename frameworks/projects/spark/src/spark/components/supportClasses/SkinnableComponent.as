@@ -425,7 +425,7 @@ public class SkinnableComponent extends UIComponent
     {
         if (skin)
             skin.setActualSize(unscaledWidth, unscaledHeight);
-     }
+    }
 
     /**
      *  @private

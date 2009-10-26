@@ -259,8 +259,11 @@ public class DMessage
 			throw new ArrayIndexOutOfBoundsException(m_content.length-m_index+" < "+bytes); //$NON-NLS-1$
 
 		long value = 0;
-		for (int i=0; i<bytes; ++i)
-			value |= (m_content[m_index++] & 0xff) << (8*i);
+		for (int i=0; i<bytes; ++i) {
+			long byteValue = m_content[m_index++] & 0xff;
+			long byteValueShifted = byteValue << (8*i);
+			value |= byteValueShifted;
+		}
 
 		debugAppendNumber(value, bytes);
 		return value;

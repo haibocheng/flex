@@ -37,6 +37,12 @@ import mx.managers.IFocusManagerComponent;
 
 use namespace mx_internal;  //ListBase and List share selection properties that are mx_internal
 
+//--------------------------------------
+//  Other metadata
+//--------------------------------------
+
+[AccessibilityClass(implementation="spark.accessibility.ButtonBarAccImpl")]
+
 [IconFile("ButtonBar.png")]
 
 /**
@@ -103,10 +109,16 @@ public class ButtonBar extends ListBase implements IFocusManagerComponent
 
     //--------------------------------------------------------------------------
     //
-    //  Constants
+    //  Class mixins
     //
     //--------------------------------------------------------------------------
-    
+
+    /**
+     *  @private
+     *  Placeholder for mixin by ButtonBarAccImpl.
+     */
+    mx_internal static var createAccessibilityImplementation:Function;
+
     //--------------------------------------------------------------------------
     //
     //  Constructor
@@ -124,6 +136,7 @@ public class ButtonBar extends ListBase implements IFocusManagerComponent
     public function ButtonBar()
     {
         super();
+
         itemRendererFunction = defaultButtonBarItemRendererFunction;
         
         tabChildren = false;
@@ -201,27 +214,11 @@ public class ButtonBar extends ListBase implements IFocusManagerComponent
      */
     public var middleButton:IFactory;
 
-    
     //--------------------------------------------------------------------------
     //
-    //  Overridden Properties
+    //  Overridden properties
     //
     //--------------------------------------------------------------------------
-
-    private var requireSelectionChanging:Boolean;
-    
-    //----------------------------------
-    //  requireSelection
-    //---------------------------------- 
-    
-    /**
-     *  @private
-     */
-    override public function set requireSelection(value:Boolean):void
-    {
-        super.requireSelection = value;
-        requireSelectionChanging = true;
-    }
 
     //----------------------------------
     //  dataProvider
@@ -254,34 +251,39 @@ public class ButtonBar extends ListBase implements IFocusManagerComponent
                 selectedIndex = ISelectableList(dataProvider).selectedIndex;
     }
 
+    //----------------------------------
+    //  requireSelection
+    //---------------------------------- 
+    
     /**
      *  @private
      */
-    private function navigationChangeHandler(event:Event):void
+    private var requireSelectionChanging:Boolean;
+    
+    /**
+     *  @private
+     */
+    override public function set requireSelection(value:Boolean):void
     {
-        if (ISelectableList(dataProvider).selectedIndex != selectedIndex)
-            selectedIndex = ISelectableList(dataProvider).selectedIndex;
+        super.requireSelection = value;
+        requireSelectionChanging = true;
     }
 
+    //--------------------------------------------------------------------------
+    //
+    //  Overridden methods
+    //
+    //--------------------------------------------------------------------------
+
     /**
      *  @private
+     *  Called by the initialize() method of UIComponent
+     *  to hook in the accessibility code.
      */
-    private function resetCollectionChangeHandler(event:Event):void
+    override protected function initializeAccessibility():void
     {
-        if (event is CollectionEvent)
-        {
-            var ce:CollectionEvent = CollectionEvent(event);
-
-            if (ce.kind == CollectionEventKind.ADD || 
-                ce.kind == CollectionEventKind.REMOVE)
-            {
-                // force reset here so first/middle/last skins
-                // get reassigned
-                ce = new CollectionEvent(CollectionEvent.COLLECTION_CHANGE);
-                ce.kind = CollectionEventKind.RESET;
-                dataProvider.dispatchEvent(ce);
-            }
-        }
+        if (createAccessibilityImplementation != null)
+            createAccessibilityImplementation(this);
     }
 
     /**
@@ -305,35 +307,6 @@ public class ButtonBar extends ListBase implements IFocusManagerComponent
         }
     }
     
-    /**
-     *  @private
-     */
-    override public function drawFocus(isFocused:Boolean):void
-    {
-        adjustLayering(caretIndex);
-        drawButtonFocus(caretIndex, isFocused);
-    }
-
-
-    /**
-     *  @private
-     */
-    override protected function itemSelected(index:int, selected:Boolean):void
-    {
-        super.itemSelected(index, selected);
-        
-        var renderer:IItemRenderer = 
-            dataGroup.getElementAt(index) as IItemRenderer;
-        
-        if (renderer)
-        {
-            setCurrentCaretIndex(index);
-            renderer.selected = selected;
-        }
-        if (dataProvider is ISelectableList && selected)
-            ISelectableList(dataProvider).selectedIndex = index;
-    }
-        
     /**
      *  @private
      */
@@ -367,6 +340,35 @@ public class ButtonBar extends ListBase implements IFocusManagerComponent
 
     /**
      *  @private
+     */
+    override public function drawFocus(isFocused:Boolean):void
+    {
+        adjustLayering(caretIndex);
+        drawButtonFocus(caretIndex, isFocused);
+    }
+
+
+    /**
+     *  @private
+     */
+    override protected function itemSelected(index:int, selected:Boolean):void
+    {
+        super.itemSelected(index, selected);
+        
+        var renderer:IItemRenderer = 
+            dataGroup.getElementAt(index) as IItemRenderer;
+        
+        if (renderer)
+        {
+            setCurrentCaretIndex(index);
+            renderer.selected = selected;
+        }
+        if (dataProvider is ISelectableList && selected)
+            ISelectableList(dataProvider).selectedIndex = index;
+    }
+        
+    /**
+     *  @private
      *  button bar always keeps something under the caret so don't let it
      *  become -1
      */
@@ -380,11 +382,14 @@ public class ButtonBar extends ListBase implements IFocusManagerComponent
 
     //--------------------------------------------------------------------------
     //
-    //  Private Methods
+    //  Methods
     //
     //--------------------------------------------------------------------------
 
-    private function defaultButtonBarItemRendererFunction(data:Object):IFactory
+    /**
+	 *  @private
+	 */
+	private function defaultButtonBarItemRendererFunction(data:Object):IFactory
     {
         var i:int = dataProvider.getItemIndex(data);
         if (i == 0)
@@ -397,13 +402,81 @@ public class ButtonBar extends ListBase implements IFocusManagerComponent
         return middleButton;
     }
 
-    
+
+    /**
+     *  @private
+     */
+    private function drawButtonFocus(index:int, focused:Boolean):void
+    {
+        var n:int = dataProvider ? dataProvider.length : 0;
+        if (n > 0 && index < n)
+        {
+            var renderer:IItemRenderer = 
+                dataGroup.getElementAt(index) as IItemRenderer;
+            if (renderer)
+                renderer.showsCaret = focused;
+        }
+    }
+
+    /**
+     *  @private
+     *  Attempt to lift the focused button above the others
+     *  so that the focus ring can show.
+     */
+    private function adjustLayering(caretIndex:int):void
+    {
+        var n:int = dataProvider ? dataProvider.length : 0;
+        for (var i:int = 0; i < n; i++)
+        {
+            var renderer:IVisualElement = IVisualElement(dataGroup.getElementAt(i));
+            // renderer may not exist in commitProps
+            // should get called again when we get focus
+            if (renderer)
+            {
+                if (i == caretIndex)
+                    renderer.depth = 1;
+                else
+                    renderer.depth = 0;
+            }
+        }
+    }
+
     //--------------------------------------------------------------------------
     //
-    //  Event Handlers
+    //  Event handlers
     //
     //--------------------------------------------------------------------------
     
+    /**
+     *  @private
+     */
+    private function navigationChangeHandler(event:Event):void
+    {
+        if (ISelectableList(dataProvider).selectedIndex != selectedIndex)
+            selectedIndex = ISelectableList(dataProvider).selectedIndex;
+    }
+
+    /**
+     *  @private
+     */
+    private function resetCollectionChangeHandler(event:Event):void
+    {
+        if (event is CollectionEvent)
+        {
+            var ce:CollectionEvent = CollectionEvent(event);
+
+            if (ce.kind == CollectionEventKind.ADD || 
+                ce.kind == CollectionEventKind.REMOVE)
+            {
+                // force reset here so first/middle/last skins
+                // get reassigned
+                ce = new CollectionEvent(CollectionEvent.COLLECTION_CHANGE);
+                ce.kind = CollectionEventKind.RESET;
+                dataProvider.dispatchEvent(ce);
+            }
+        }
+    }
+
     /**
      *  @private
      *  Called when an item has been added to this component.
@@ -441,8 +514,11 @@ public class ButtonBar extends ListBase implements IFocusManagerComponent
      */
     private function item_clickHandler(event:MouseEvent):void
     {
-        var newIndex:int = dataGroup.getElementIndex(
-                            event.currentTarget as IVisualElement);
+        var newIndex:int
+        if (event.currentTarget is IItemRenderer)
+            newIndex = IItemRenderer(event.currentTarget).index;
+        else
+            newIndex = dataGroup.getElementIndex(event.currentTarget as IVisualElement);
 
         var currentRenderer:IItemRenderer;
         if (caretIndex >= 0 && !inKeyUpHandler) // don't remove caret when keybd nav
@@ -469,29 +545,6 @@ public class ButtonBar extends ListBase implements IFocusManagerComponent
     private function caretChangeHandler(event:Event):void
     {
         adjustLayering(caretIndex);
-    }
-
-    /**
-     *  @private
-     *  Attempt to lift the focused button above the others
-     *  so that the focus ring can show.
-     */
-    private function adjustLayering(caretIndex:int):void
-    {
-        var n:int = dataProvider ? dataProvider.length : 0;
-        for (var i:int = 0; i < n; i++)
-        {
-            var renderer:IVisualElement = IVisualElement(dataGroup.getElementAt(i));
-            // renderer may not exist in commitProps
-            // should get called again when we get focus
-            if (renderer)
-            {
-                if (i == caretIndex)
-                    renderer.depth = 1;
-                else
-                    renderer.depth = 0;
-            }
-        }
     }
 
     /**
@@ -601,21 +654,6 @@ public class ButtonBar extends ListBase implements IFocusManagerComponent
         }
 
         inKeyUpHandler = false;
-    }
-
-    /**
-     *  @private
-     */
-    private function drawButtonFocus(index:int, focused:Boolean):void
-    {
-        var n:int = dataProvider ? dataProvider.length : 0;
-        if (n > 0 && index < n)
-        {
-            var renderer:IItemRenderer = 
-                dataGroup.getElementAt(index) as IItemRenderer;
-            if (renderer)
-                renderer.showsCaret = focused;
-        }
     }
 }
 

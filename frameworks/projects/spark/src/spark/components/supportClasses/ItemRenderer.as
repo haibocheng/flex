@@ -17,13 +17,10 @@ import flash.geom.Point;
 
 import mx.core.mx_internal;
 import mx.events.FlexEvent;
-import mx.styles.StyleManager;
 
-import spark.components.DataGroup;
-import spark.components.Group;
+import spark.components.DataRenderer;
 import spark.components.IItemRenderer;
-import spark.components.DataRenderer; 
-import spark.components.supportClasses.TextBase;
+import spark.components.ResizeMode;
 
 use namespace mx_internal; 
 
@@ -103,12 +100,7 @@ public class ItemRenderer extends DataRenderer implements IItemRenderer
             // translate these colors into uints
             styleManager.getColorNames(alternatingColors);
             
-            if (parent is GroupBase)
-                idx = GroupBase(parent).getElementIndex(this);
-            else
-                idx = parent.getChildIndex(this);
-             
-            return alternatingColors[idx % alternatingColors.length];
+            return alternatingColors[index % alternatingColors.length];
         }
         
         return getStyle("contentBackgroundColor");
@@ -152,6 +144,69 @@ public class ItemRenderer extends DataRenderer implements IItemRenderer
     //  Public Properties 
     //
     //--------------------------------------------------------------------------
+    
+    //----------------------------------
+    //  handleHighlightBackground
+    //----------------------------------
+    
+    /**
+     *  @private
+     *  storage for the handleHighlightBackground property 
+     */ 
+    private var _handleHighlightBackground:Boolean = false;
+    
+    /**
+     *  Whether the item renderer should handle drawing the 
+     *  selection/highlight background.
+     * 
+     *  <p>If set to <code>true</code>, the background for 
+     *  the item renderer is automatically drawn, and it 
+     *  depends on the styles that are set (<code>contentBackgroundColor</code>, 
+     *  <code>alternatingItemColor</code>, <code>rollOverColor</code>, 
+     *  <code>selectionColor</code>) 
+     *  and the state that the item renderer is in (normal, 
+     *  selected, or hovered).</p>
+     * 
+     *  @default false
+     */
+    public function get handleHighlightBackground():Boolean
+    {
+        return _handleHighlightBackground;
+    }
+    
+    /**
+     *  @private
+     */
+    public function set handleHighlightBackground(value:Boolean):void
+    {
+        if (_handleHighlightBackground == value)
+            return;
+        
+        _handleHighlightBackground = value;
+        
+        if (_handleHighlightBackground)
+        {
+            redrawRequested = true;
+            super.$invalidateDisplayList();
+        }
+    }
+    
+    /**
+     *  @private
+     */    
+    override public function set index(value:int):void
+    {
+		if (super.index == value)
+			return;
+		super.index = value;
+		
+        dispatchBindingEvent("contentBackgroundColorChanged");
+        if (handleHighlightBackground)
+        {
+            redrawRequested = true;
+            super.$invalidateDisplayList();
+        }
+    }
     
     //----------------------------------
     //  labelDisplay
@@ -229,13 +284,49 @@ public class ItemRenderer extends DataRenderer implements IItemRenderer
         if (value != _selected)
         {
             _selected = value;
-            setCurrentState(getCurrentRendererState(), playTransitions); 
+            setCurrentState(getCurrentRendererState(), playTransitions);
+            if (handleHighlightBackground)
+            {
+                redrawRequested = true;
+                super.$invalidateDisplayList();
+            }
         }
     }
        
     //----------------------------------
+    //  dragging
+    //----------------------------------
+    
+    /**
+     *  @private
+     *  Storage for the dragging property. 
+     */
+    private var _dragging:Boolean = false;
+
+    /**
+     *  @inheritDoc  
+     */
+    public function get dragging():Boolean
+    {
+        return _dragging;
+    }
+
+    /**
+     *  @private  
+     */
+    public function set dragging(value:Boolean):void
+    {
+        if (value != _dragging)
+        {
+            _dragging = value;
+            setCurrentState(getCurrentRendererState(), playTransitions);
+        }
+    }
+
+    //----------------------------------
     //  label
     //----------------------------------
+
     [Bindable("textChanged")]
     
     /**
@@ -316,8 +407,11 @@ public class ItemRenderer extends DataRenderer implements IItemRenderer
      */
     protected function getCurrentRendererState():String
     {
+        if (dragging && hasState("dragging"))
+            return "dragging";
+
         if (selected && showsCaret && hasState("selectedAndShowsCaret"))
-           return "selectedAndShowsCaret";
+            return "selectedAndShowsCaret";
             
         if (hovered && showsCaret && hasState("hoveredAndShowsCaret"))
             return "hoveredAndShowsCaret";
@@ -334,9 +428,9 @@ public class ItemRenderer extends DataRenderer implements IItemRenderer
         if (hasState("normal"))    
             return "normal";
         
-        //If none of the above states are defined in the item renderer,
-        //we return the empty string. This means the user-defined renderer
-        //will display but essentially be non-interactive visually. 
+        // If none of the above states are defined in the item renderer,
+        // we return the empty string. This means the user-defined renderer
+        // will display but essentially be non-interactive visually. 
         return null;
     }
     
@@ -378,16 +472,72 @@ public class ItemRenderer extends DataRenderer implements IItemRenderer
         {
             conditionalEventDispatch("contentBackgroundColorChanged");
         }
-        
-        if (allStyles || styleName == "rollOverColor")
+    }
+    
+    /**
+     *  @private
+     */
+    override protected function renderBackgroundFill():void
+    {
+        // if handleHighlightBackground is set to true, we always 
+        // draw a background and don't need to worry about mouseEnabledWhereTransparent.
+        // However, if it's false, then we should just let super.renderBackgroundFill()
+        // do its job.
+        if (!handleHighlightBackground)
         {
-            conditionalEventDispatch("rollOverColorChanged");
+            super.renderBackgroundFill();
+            return;
         }
         
-        if (allStyles || styleName == "selectionColor")
+        // TODO (rfrishbe): Would be good to remove this duplicate code with the 
+        // super.renderBackgroundFill() version
+        var w:Number = (resizeMode == ResizeMode.SCALE) ? measuredWidth : unscaledWidth;
+        var h:Number = (resizeMode == ResizeMode.SCALE) ? measuredHeight : unscaledHeight;
+        
+        if (isNaN(w) || isNaN(h))
+            return;
+        
+        graphics.clear();
+        
+        var backgroundColor:uint;
+        
+        if (selected)
+            backgroundColor = getStyle("selectionColor");
+        else if (hovered)
+            backgroundColor = getStyle("rollOverColor");
+        else
         {
-            conditionalEventDispatch("selectionColorChanged");
+            var alternatingColors:Array = getStyle("alternatingItemColors");
+            
+            if (alternatingColors && alternatingColors.length > 0)
+            {
+                // translate these colors into uints
+                styleManager.getColorNames(alternatingColors);
+                
+                backgroundColor = alternatingColors[index % alternatingColors.length];
+            }
+            
+            backgroundColor = getStyle("contentBackgroundColor");
         }
+        graphics.beginFill(backgroundColor, 1);
+        
+        if (layout && layout.useVirtualLayout)
+            graphics.drawRect(horizontalScrollPosition, verticalScrollPosition, w, h);
+        else
+        {
+            const tileSize:int = 4096;
+            const maxX:int = Math.round(Math.max(w, contentWidth));
+            const maxY:int = Math.round(Math.max(h, contentHeight));
+            for (var x:int = 0; x < maxX; x += tileSize)
+                for (var y:int = 0; y < maxY; y += tileSize)
+                {
+                    var tileWidth:int = Math.min(maxX - x, tileSize);
+                    var tileHeight:int = Math.min(maxY - y, tileSize);
+                    graphics.drawRect(x, y, tileWidth, tileHeight); 
+                }
+        }
+        
+        graphics.endFill();
     }
     
     //--------------------------------------------------------------------------
@@ -430,7 +580,12 @@ public class ItemRenderer extends DataRenderer implements IItemRenderer
         if (!anyButtonDown(event))
         {
             hovered = true;
-            setCurrentState(getCurrentRendererState(), playTransitions); 
+            setCurrentState(getCurrentRendererState(), playTransitions);
+            if (handleHighlightBackground)
+            {
+                redrawRequested = true;
+                super.$invalidateDisplayList();
+            }
         }
     }
     
@@ -441,7 +596,12 @@ public class ItemRenderer extends DataRenderer implements IItemRenderer
     protected function itemRenderer_rollOutHandler(event:MouseEvent):void
     {
         hovered = false;
-        setCurrentState(getCurrentRendererState(), playTransitions); 
+        setCurrentState(getCurrentRendererState(), playTransitions);
+        if (handleHighlightBackground)
+        {
+            redrawRequested = true;
+            super.$invalidateDisplayList();
+        }
     }
 
 }

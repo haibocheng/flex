@@ -312,6 +312,7 @@ public class FrameworkSwcDependencyRules implements DependencyRules {
 		dataObjects.add("mx.states:Transition");
 		
 		dataObjects.add("mx.styles:CSSStyleDeclaration");
+		dataObjects.add("mx.styles:CSSMergedStyleDeclaration");
 		
 		dataObjects.add("mx.validators:ValidationResult");
 	}

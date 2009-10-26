@@ -108,6 +108,17 @@ include "../styles/metadata/TextStyles.as"
 [Style(name="backgroundColor", type="uint", format="Color", inherit="no", theme="halo")]
 
 /**
+ *  Alpha of the border.
+ *  @default 1
+ *  
+ *  @langversion 3.0
+ *  @playerversion Flash 10
+ *  @playerversion AIR 1.5
+ *  @productversion Flex 4
+ */
+[Style(name="borderAlpha", type="Number", inherit="no", theme="spark")]
+
+/**
  *  Color of the border.
  *  The following controls support this style: Button, CheckBox,
  *  ComboBox, MenuBar,
@@ -121,7 +132,7 @@ include "../styles/metadata/TextStyles.as"
  *  @playerversion AIR 1.1
  *  @productversion Flex 3
  */
-[Style(name="borderColor", type="uint", format="Color", inherit="no", theme="halo")]
+[Style(name="borderColor", type="uint", format="Color", inherit="no", theme="halo, spark")]
 
 /**
  *  Bounding box thickness.
@@ -134,6 +145,18 @@ include "../styles/metadata/TextStyles.as"
  *  @productversion Flex 3
  */
 [Style(name="borderThickness", type="Number", format="Length", inherit="no", theme="halo")]
+
+/**
+ *  Visibility of the border.
+ *
+ *  @default 1
+ *  
+ *  @langversion 3.0
+ *  @playerversion Flash 10
+ *  @playerversion AIR 1.5
+ *  @productversion Flex 4
+ */
+[Style(name="borderVisible", type="Boolean", inherit="no", theme="spark")]
 
 /**
  *  The alpha of the content background for this component.
@@ -2488,7 +2511,16 @@ public class DateChooser extends UIComponent implements IFocusManagerComponent, 
         var borderThickness:Number = getStyle("borderThickness");
         var cornerRadius:Number = getStyle("cornerRadius");
         var borderColor:Number = getStyle("borderColor");
+        var borderAlpha:Number = getStyle("borderAlpha");
 
+        if (FlexVersion.compatibilityVersion >= FlexVersion.VERSION_4_0)
+        {
+            // Need to simulate borderVisible by setting borderThickness
+            // to 0. 
+            if (getStyle("borderVisible") == false)
+                borderThickness = 0;
+        }
+        
         var w:Number = unscaledWidth - borderThickness*2;
         var h:Number = unscaledHeight - borderThickness*2;
         
@@ -2547,9 +2579,13 @@ public class DateChooser extends UIComponent implements IFocusManagerComponent, 
         if (FlexVersion.compatibilityVersion < FlexVersion.VERSION_4_0)
             borderContext.beginFill(borderColor);
         else
-            borderContext.beginFill(borderColor, enabled ? 1 : 0.5);
+            borderContext.beginFill(borderColor, enabled ? borderAlpha : borderAlpha / 2);
         borderContext.drawRoundRect(0, 0, unscaledWidth, unscaledHeight, 
                         cornerRadius * 2, cornerRadius * 2);
+        borderContext.drawRoundRect(borderThickness, borderThickness, 
+                                    unscaledWidth - borderThickness * 2,
+                                    unscaledHeight - borderThickness * 2,
+                                    cornerRadius * 2, cornerRadius * 2);
         borderContext.endFill();
         
         // Here we attempt to detect that we are using a spark skin on our
@@ -2580,7 +2616,11 @@ public class DateChooser extends UIComponent implements IFocusManagerComponent, 
             bgColor = 0xFFFFFF;
             
         var bgAlpha:Number = 1;
-        bgAlpha = getStyle("backgroundAlpha");
+        if (!isSpark || FlexVersion.compatibilityVersion < FlexVersion.VERSION_4_0)
+            bgAlpha = getStyle("backgroundAlpha");
+        else
+            bgAlpha = getStyle("contentBackgroundAlpha");
+        
         borderContext.beginFill(bgColor, bgAlpha);
         borderContext.drawRoundRect(borderThickness, borderThickness, w, h, 
                         cornerRadius > 0 ? (cornerRadius - 1) * 2 : 0,
@@ -2631,7 +2671,7 @@ public class DateChooser extends UIComponent implements IFocusManagerComponent, 
         if (FlexVersion.compatibilityVersion < FlexVersion.VERSION_4_0)
             borderContext.lineStyle(borderThickness, borderColor);
         else
-            borderContext.lineStyle(borderThickness, borderColor, enabled ? 1 : 0.5);
+            borderContext.lineStyle(borderThickness, borderColor, enabled ? borderAlpha : borderAlpha / 2);
         
         borderContext.moveTo(borderThickness, headerHeight + borderThickness);
         borderContext.lineTo(w + borderThickness, headerHeight + borderThickness);

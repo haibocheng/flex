@@ -93,7 +93,10 @@ package flashx.textLayout.compose
 			vjBeginLineIndex = 0;
 			vjParcel = parcelList.currentParcel;	
 			vjDisableThisParcel = false;
-			vjType = vjParcel ? vjParcel.controller.computedFormat.verticalAlign : VerticalAlign.TOP;		
+			vjType = vjParcel ? vjParcel.controller.computedFormat.verticalAlign : VerticalAlign.TOP;
+			
+			_startController = composer.getControllerAt(0);
+            _startComposePosition = 0;
 		}
 
 		/** @private */
@@ -150,6 +153,17 @@ package flashx.textLayout.compose
 			return _textFlow;
 		}
 		
+		/** @private */
+		protected override function composeParagraphElement(elem:ParagraphElement, absStart:int):Boolean
+		{
+			_curParaElement  = elem;
+			_curParaStart    = absStart;
+			_curParaFormat = elem.computedFormat;
+			CONFIG::debug { assert(_curParaStart == elem.getAbsoluteStart(),"composeParagraphElement: bad start"); }
+			_curElement 	 = elem.getFirstLeaf();
+			_curElementStart = _curParaStart;
+			return composeParagraphElementIntoLines();
+		}		
 		/** @private */
 		protected override function composeNextLine():TextFlowLine
 		{

@@ -153,4 +153,10 @@ public interface MxmlConfiguration
 	boolean getGenerateAbstractSyntaxTree();
 
     Set<String> getThemeNames();
+	
+    /**
+     * Allow a style manager to have the same style declarations as
+     * their parent.
+     */
+	boolean getAllowDuplicateDefaultStyleDeclarations();
 }

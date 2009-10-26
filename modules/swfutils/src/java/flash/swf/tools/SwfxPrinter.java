@@ -1294,16 +1294,53 @@ public final class SwfxPrinter extends TagHandler
 			
 			close(tag);
 		}
+
+        public void defineBitsJPEG3(DefineBitsJPEG3 tag)
+        {
+            open(tag);
+            out.print(" id='" + id(tag) + "'");
+
+            if (external)
+            {
+                String path = externalDirectory
+                    + externalPrefix
+                    + "image"
+                    + dict.getId(tag)
+                    + ".jpg";
 		
-		public void defineBitsJPEG3(DefineBitsJPEG3 tag)
-		{
-			// We don't support
-			// FIXME
-			open(tag);
-			out.print(" id='" + id(tag) + "'");
-			close();
-		}
-		
+                out.println(" src='" + path + "' />");
+
+                try
+                {
+                    FileOutputStream image = new FileOutputStream(path, false);
+                    SwfImageUtils.JPEG jpeg = null;
+
+                    if (tag.jpegTables != null)
+                    {
+                        jpeg = new SwfImageUtils.JPEG(tag.jpegTables.data, tag.data);
+                    }
+                    else
+                    {
+                        jpeg = new SwfImageUtils.JPEG(tag.data, true);
+                    }
+
+                    jpeg.write(image);
+                    image.close();
+                }
+                catch (IOException e)
+                {
+                    out.println("<!-- error: unable to write external asset file " + path + "-->");
+                }
+            }
+            else
+            {
+                out.print(" encoding='base64'");
+                end();
+                outputBase64(tag.data);
+                close(tag);
+            }
+        }
+
 		public void defineBitsLossless2(DefineBitsLossless tag)
 		{
 			open(tag);

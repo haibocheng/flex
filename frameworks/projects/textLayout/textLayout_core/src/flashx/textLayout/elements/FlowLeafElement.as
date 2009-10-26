@@ -507,81 +507,57 @@ package flashx.textLayout.elements
 		/** @private */
 		tlf_internal function updateIMEAdornments(line:TextFlowLine, blockProgression:String, imeStatus:String):void
 		{
-			trace("updateIMEAdornments - imeStatus = " + imeStatus);
 			var tLine:TextLine = line.getTextLine();
+			var metrics:FontMetrics = getComputedFontMetrics();
 			var spanBoundsArray:Array = getSpanBoundsOnLine(tLine, blockProgression);
 			//this is pretty much always going to have a length of 1, but just to be sure...
 			for (var i:int = 0; i < spanBoundsArray.length; i++)
 			{
+				//setup ime variables
+				var imeLineThickness:int = 1;
+				var imeLineColor:uint = 0x000000;
+				var imeLineStartX:Number = 0;
+				var imeLineStartY:Number = 0;
+				var imeLineEndX:Number = 0;
+				var imeLineEndY:Number = 0;
+				
+				//selected text draws with 2 px
+				if(imeStatus == IMEStatus.SELECTED_CONVERTED || imeStatus == IMEStatus.SELECTED_RAW)
+				{
+					imeLineThickness = 2;
+				}
+				//Raw or deadkey text draws with grey
+				if(imeStatus == IMEStatus.SELECTED_RAW || imeStatus == IMEStatus.NOT_SELECTED_RAW
+					|| imeStatus == IMEStatus.DEAD_KEY_INPUT_STATE)
+				{
+					imeLineColor = 0xA6A6A6;
+				}
+				
 				var spanBounds:Rectangle = spanBoundsArray[i] as Rectangle;
-				var selObj:Shape = new Shape();
-				var metrics:FontMetrics = getComputedFontMetrics();
-				
-				//TODO - this is probably going to need to be overridable in the full implementation
-				selObj.alpha = 1;       				
-				selObj.graphics.beginFill(0x000000);
-				
 				var stOffset:Number = calculateStrikeThrough(tLine, blockProgression, metrics, spanBounds);
 				var ulOffset:Number = calculateUnderlineOffset(stOffset, blockProgression, metrics, tLine);
 				
 				if (blockProgression != BlockProgression.RL)
 				{
-					var left:Number = spanBounds.topLeft.x + 1;
-					var right:Number = spanBounds.topLeft.x + spanBounds.width - 1;
-					if (imeStatus == IMEStatus.RAW || imeStatus == IMEStatus.DEAD_KEY_INPUT_STATE)
-					{
-						selObj.graphics.lineStyle(1, 0x000000, selObj.alpha);
-						selObj.graphics.moveTo(left, ulOffset);
-						selObj.graphics.lineTo(right, ulOffset);
-					}
-					else if(imeStatus == IMEStatus.SELECTED)
-					{
-						selObj.graphics.lineStyle(2, 0x000000, selObj.alpha);
-						selObj.graphics.moveTo(left, ulOffset);
-						selObj.graphics.lineTo(right, ulOffset);
-					}
-					else if(imeStatus == IMEStatus.NOT_SELECTED)
-					{
-						selObj.graphics.lineStyle(1, 0x000000, selObj.alpha/2);
-						selObj.graphics.moveTo(left, ulOffset);
-						selObj.graphics.lineTo(right, ulOffset);
-					}
-					
-					addBackgroundRect (line, tLine, metrics, spanBounds, true); 
+					imeLineStartX = spanBounds.topLeft.x + 1;
+					imeLineEndX = spanBounds.topLeft.x + spanBounds.width - 1;
+					imeLineStartY = ulOffset;
+					imeLineEndY = ulOffset;
 				}
 				else
 				{
 					//is this TCY?
 					var elemIdx:int = this.getAbsoluteStart() - line.absoluteStart;
-					var top:Number = spanBounds.topLeft.y + 1;
-					var bottom:Number = spanBounds.topLeft.y + spanBounds.height - 1;
+					imeLineStartY = spanBounds.topLeft.y + 1;
+					imeLineEndY = spanBounds.topLeft.y + spanBounds.height - 1;
 					
 					//elemIdx can sometimes be negative if the text is being wrapped due to a
 					//resize gesture - in which case the tLine has not necessarily been updated.
 					//If the elemIdx is invalid, just treat it like it's normal ttb text - gak 07.08.08
 					if(elemIdx < 0 || tLine.atomCount <= elemIdx || tLine.getAtomTextRotation(elemIdx) != TextRotation.ROTATE_0)
 					{
-						
-						if (imeStatus == IMEStatus.RAW || imeStatus == IMEStatus.DEAD_KEY_INPUT_STATE)
-						{
-							selObj.graphics.lineStyle(1, 0x000000, selObj.alpha);
-							selObj.graphics.moveTo(ulOffset, top);
-							selObj.graphics.lineTo(ulOffset, bottom);
-						}
-						else if(imeStatus == IMEStatus.SELECTED)
-						{
-							selObj.graphics.lineStyle(2, 0x000000, selObj.alpha);
-							selObj.graphics.moveTo(ulOffset, top);
-							selObj.graphics.lineTo(ulOffset, bottom);
-						}
-						else if(imeStatus == IMEStatus.NOT_SELECTED)
-						{
-							selObj.graphics.lineStyle(1, 0x000000, selObj.alpha/2);
-							selObj.graphics.moveTo(ulOffset, top);
-							selObj.graphics.lineTo(ulOffset, bottom);
-						}
-						
-						addBackgroundRect (line, tLine, metrics, spanBounds, false);
+						imeLineStartX = ulOffset;
+						imeLineEndX = ulOffset;
 					}
 					else
 					{
@@ -589,37 +565,30 @@ package flashx.textLayout.elements
 						var tcyParent:TCYElement =  this.getParentByType(TCYElement) as TCYElement;
 						CONFIG::debug{ assert(tcyParent != null, "What kind of object is this that is ROTATE_0, but not TCY?");}
 						
-						addBackgroundRect (line, tLine, metrics, spanBounds, true, true); 
-						
 						//only perform calculations for TCY adornments when we are on the last leaf.  ONLY the last leaf matters
 						if((this.getAbsoluteStart() + this.textLength) == (tcyParent.getAbsoluteStart() + tcyParent.textLength))
 						{
 							var tcyAdornBounds:Rectangle = new Rectangle();
 							tcyParent.calculateAdornmentBounds(tcyParent, tLine, blockProgression, tcyAdornBounds);
 							var baseULAdjustment:Number = metrics.underlineOffset + (metrics.underlineThickness/2);
-							top = tcyAdornBounds.top + 1;
-							bottom = tcyAdornBounds.bottom - 1;
-							if (imeStatus == IMEStatus.RAW || imeStatus == IMEStatus.DEAD_KEY_INPUT_STATE)
-							{
-								selObj.graphics.lineStyle(1, 0x000000, selObj.alpha);
-								selObj.graphics.moveTo(spanBounds.bottomRight.x + baseULAdjustment, top);
-								selObj.graphics.lineTo(spanBounds.bottomRight.x + baseULAdjustment, bottom);
-							}
-							else if(imeStatus == IMEStatus.SELECTED)
-							{
-								selObj.graphics.lineStyle(2, 0x000000, selObj.alpha);
-								selObj.graphics.moveTo(spanBounds.bottomRight.x + baseULAdjustment, top);
-								selObj.graphics.lineTo(spanBounds.bottomRight.x + baseULAdjustment, bottom);
-							}
-							else if(imeStatus == IMEStatus.NOT_SELECTED)
-							{
-								selObj.graphics.lineStyle(1, 0x000000, selObj.alpha/2);
-								selObj.graphics.moveTo(spanBounds.bottomRight.x + baseULAdjustment, top);
-								selObj.graphics.lineTo(spanBounds.bottomRight.x + baseULAdjustment, bottom);
-							}
+							
+							imeLineStartY = tcyAdornBounds.top + 1;
+							imeLineEndY = tcyAdornBounds.bottom - 1;
+							imeLineStartX = spanBounds.bottomRight.x + baseULAdjustment;
+							imeLineEndX = spanBounds.bottomRight.x + baseULAdjustment;
 						}
 					}
 				}
+				
+				//Build the shape
+				var selObj:Shape = new Shape();
+				//TODO - this is probably going to need to be overridable in the full implementation
+				selObj.alpha = 1;       				
+				selObj.graphics.beginFill(imeLineColor);
+				
+				selObj.graphics.lineStyle(imeLineThickness, imeLineColor, selObj.alpha);
+				selObj.graphics.moveTo(imeLineStartX, imeLineStartY);
+				selObj.graphics.lineTo(imeLineEndX, imeLineEndY);
 				
 				selObj.graphics.endFill();
 				tLine.addChild(selObj);

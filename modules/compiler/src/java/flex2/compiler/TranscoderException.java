@@ -66,5 +66,4 @@ public class TranscoderException extends CompilerMessage.CompilerError implement
         public String tag;
         public String transcoder;
     }
-
 }

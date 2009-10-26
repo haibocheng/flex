@@ -3054,7 +3054,7 @@ public class UIComponent extends FlexSprite
      */
     private var _designLayer:DesignLayer;
     
-    [Inspectable (environment='none')]
+    [Inspectable(environment='none')]
     
     /**
      *  @copy mx.core.IVisualElement#designLayer
@@ -5900,9 +5900,10 @@ public class UIComponent extends FlexSprite
 	{
 		if (_controllers == value)
 			return;
-		updateControllers(true);
+		updateAttachables(_controllers, true);
 		_controllers = value;
 		controllersChanged = true;
+		updateControllers();
 		invalidateProperties();
 	}
 	
@@ -5919,17 +5920,33 @@ public class UIComponent extends FlexSprite
 	{
 		if (!attachables)
 			return;
+		var attachable:IAttachable;
 		var i:int = 0, n:int = attachables.length
 		if (destroy)
 		{
 			for (i; i < n; i++)
-				attachables[i].detach(this);
+			{
+				attachable = attachables[i] as IAttachable;
+				if (attachable)
+					attachable.detach(this);
+			}
 		}
 		else
 		{
 			for (i; i < n; i++)
-				attachables[i].attach(this);
+			{
+				attachable = attachables[i] as IAttachable;
+				if (attachable)
+					attachable.attach(this);
+			}
 		}
+	}
+	
+	public function addAttachable(attachables:Array, attachable:IAttachable):void
+	{
+		attachables ||= [];
+		attachables.push(attachable);
+		attachable.attach(this);
 	}
 		
     //--------------------------------------------------------------------------
@@ -9389,8 +9406,7 @@ public class UIComponent extends FlexSprite
         // Only change if the requested state is different. Since the root
         // state can be either null or "", we need to add additional check
         // to make sure we're not going from null to "" or vice-versa.
-        if (stateName != currentState &&
-            !(isBaseState(stateName) && isBaseState(currentState)))
+        if (stateName != currentState && !(isBaseState(stateName) && isBaseState(currentState)))
         {
             requestedCurrentState = stateName;
             // Don't play transition if we're just getting started
@@ -9455,7 +9471,7 @@ public class UIComponent extends FlexSprite
     {
         var nextTransition:Transition =
             playStateTransition ?
-            getTransition(_currentState, requestedCurrentState) :
+            Transition.getTransition(transitions, _currentState, requestedCurrentState) :
             null;
         var commonBaseState:String = findCommonBaseState(_currentState, requestedCurrentState);
         var oldState:String = _currentState ? _currentState : "";
@@ -9757,63 +9773,6 @@ public class UIComponent extends FlexSprite
         }
     }
 
-    /**
-     *  @private
-     *  Find the appropriate transition to play between two states.
-     */
-    private function getTransition(oldState:String, newState:String):Transition
-    {
-        var result:Transition = null;   // Current candidate
-        var priority:int = 0;           // Priority     fromState   toState
-                                        //    1             *           *
-                                        //    2           match         *
-                                        //    3             *         match
-                                        //    4           match       match
-
-        if (!transitions)
-            return null;
-
-        if (!oldState)
-            oldState = "";
-
-        if (!newState)
-            newState = "";
-
-        for (var i:int = 0; i < transitions.length; i++)
-        {
-            var t:Transition = transitions[i];
-
-            if (t.fromState == "*" && t.toState == "*" && priority < 1)
-            {
-                result = t;
-                priority = 1;
-            }
-            else if (t.fromState == oldState && t.toState == "*" && priority < 2)
-            {
-                result = t;
-                priority = 2;
-            }
-            else if (t.fromState == "*" && t.toState == newState && priority < 3)
-            {
-                result = t;
-                priority = 3;
-            }
-            else if (t.fromState == oldState && t.toState == newState && priority < 4)
-            {
-                result = t;
-                priority = 4;
-
-                // Can't get any higher than this, let's go.
-                break;
-            }
-        }
-        // If Transition does not contain an effect, then don't return it
-        // because there is no transition effect to run
-        if (result && !result.effect)
-            result = null;
-
-        return result;
-    }
 
     //--------------------------------------------------------------------------
     //
@@ -10183,7 +10142,7 @@ public class UIComponent extends FlexSprite
             {
                 var classSelector:Object =
                     styleName is String ?
-                    styleManager.getStyleDeclaration("." + styleName) :
+                    styleManager.getMergedStyleDeclaration("." + styleName) :
                     styleName;
 
                 if (classSelector)
@@ -12311,30 +12270,41 @@ public class UIComponent extends FlexSprite
     }
 
     /**
-     *  FIXME (chaase) : FLEXDOCS-1031
+     * A utility method to transform a point specified in the local
+     * coordinates of this object to its location in the object's parent's 
+     * coordinates. The pre-layout and post-layout result will be set on 
+     * the <code>position</code> and <code>postLayoutPosition</code>
+     * parameters, if they are non-null.
+     * 
+     * @param localPosition The point to be transformed, specified in the
+     * local coordinates of the object.
+     * @position A Vector3D point that will hold the pre-layout
+     * result. If null, the parameter is ignored.
+     * @postLayoutPosition A Vector3D point that will hold the post-layout
+     * result. If null, the parameter is ignored.
      * 
      *  @langversion 3.0
      *  @playerversion Flash 10
      *  @playerversion AIR 1.5
      *  @productversion Flex 4
      */
-    public function transformPointToParent(transformCenter:Vector3D,
+    public function transformPointToParent(localPosition:Vector3D,
                                            position:Vector3D, 
                                            postLayoutPosition:Vector3D):void
     {
         if (_layoutFeatures != null)
         {
-            _layoutFeatures.transformPointToParent(true, transformCenter,
+            _layoutFeatures.transformPointToParent(true, localPosition,
                 position, postLayoutPosition);
         }
         else
         {
             if (xformPt == null)
                 xformPt = new Point();
-            if (transformCenter)
+            if (localPosition)
             {
-                xformPt.x = transformCenter.x;
-                xformPt.y = transformCenter.y;
+                xformPt.x = localPosition.x;
+                xformPt.y = localPosition.y;
             }
             else
             {
@@ -12723,6 +12693,15 @@ public class UIComponent extends FlexSprite
             return super.transform.matrix;
         }
     }
+	
+	/**
+	 *  This returns a rectangle of the layout-adjusted bounds of the component
+	 */
+	public function getLayoutBounds():Rectangle
+	{
+		return new Rectangle(getLayoutBoundsX(), getLayoutBoundsY(),
+			getLayoutBoundsWidth(), getLayoutBoundsHeight());
+	}
 
     /**
      *  @inheritDoc

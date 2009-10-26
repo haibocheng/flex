@@ -47,6 +47,15 @@ public class FileResolver implements FXGResourceResolver
         rootPath = dir;
     }
 
+    public String resolve(String path)
+    {
+        File file = new File(path);
+        if (!file.isAbsolute())
+            file = new File(rootPath, path);
+
+        return file.getAbsolutePath();
+    }
+    
     public InputStream openStream(String path) throws IOException
     {
         File file = new File(path);

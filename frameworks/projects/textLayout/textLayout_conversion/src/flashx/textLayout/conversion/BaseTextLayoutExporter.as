@@ -338,7 +338,7 @@ package flashx.textLayout.conversion
 			var elementName:String = "TextLayoutFormat";
 			var formatXML:XML = <{elementName}/>;
 			formatXML.setNamespace(flowNS);
-			exportStyles(XMLList(formatXML), styleDict);
+			exportStyles(XMLList(formatXML), styleDict, formatDescription);
 
 			// create the link format element
 			var linkFormatXML:XMLList = XMLList(<{key}/>);
@@ -407,5 +407,11 @@ package flashx.textLayout.conversion
 		{
 			return _ns;
 		}
+
+		protected function get formatDescription():Object
+		{
+			return null;
+		}		
+
 	}
 }

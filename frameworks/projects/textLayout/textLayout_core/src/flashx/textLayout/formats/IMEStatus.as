@@ -33,32 +33,43 @@ package flashx.textLayout.formats
 		
 		// Following are all the possible values of imeStatus property:
 		
-		/** Raw - text has not yet been converted.
+		/** Selected raw - text has not been converted and is the current clause in the IME session
 		 *
 		 * @playerversion Flash 10
 	 	 * @playerversion AIR 1.5
 	 	 * @langversion 3.0
 	 	 */
 	 	 
-		public static const RAW:String = "raw";
+		public static const SELECTED_RAW:String = "selectedRaw";
 
-		/** Selected - text has been converted and is the current clause in the IME session
+		/** Selected coverted - text has been converted and is the current clause in the IME session
 		 *
 		 * @playerversion Flash 10
 	 	 * @playerversion AIR 1.5
 	 	 * @langversion 3.0
 	 	 */
 	 	 
-		public static const SELECTED:String = "selected";
+		public static const SELECTED_CONVERTED:String = "selectedConverted";
 
-		/** Not selected - text has been converted and is not part of the current clause in the IME session
+		/** Not selected raw - text has not been converted and is not part of the current clause 
+		 *  in the IME session
 		 *
 		 * @playerversion Flash 10
 	 	 * @playerversion AIR 1.5
 	 	 * @langversion 3.0
 	 	 */
 	 	 
-		public static const NOT_SELECTED:String = "notSelected";
+		public static const NOT_SELECTED_RAW:String = "notSelectedRaw";
+		
+		/** Not selected converted - text has been converted and is not part of the current clause 
+		 * 	in the IME session
+		 *
+		 * @playerversion Flash 10
+	 	 * @playerversion AIR 1.5
+	 	 * @langversion 3.0
+	 	 */
+	 	 
+		public static const NOT_SELECTED_CONVERTED:String = "notSelectedConverted";
 
 		/** Dead key input state - in the process of entering a multi-key character, such as an accented char
 		 *

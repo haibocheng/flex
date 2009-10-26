@@ -86,7 +86,8 @@ package flashx.textLayout.container
 	{		
 		private var _textFlowCache:TextFlow;
 		private var _rootElement:ContainerFormattedElement;
-				
+		
+		private var _absoluteStart:int;
 		private var _textLength:int;
 		
 		private var _container:Sprite;
@@ -417,6 +418,7 @@ package flashx.textLayout.container
 				_rootElement = value;
 				_textFlowCache = null;
 				_textLength = 0;
+				_absoluteStart = -1;
 				attachContainer();
 				if (_rootElement)
 					formatChanged();
@@ -457,14 +459,21 @@ package flashx.textLayout.container
 		 
 		public function get absoluteStart():int
 		{
-			var rslt:int = _rootElement.getAbsoluteStart();
+			if (_absoluteStart != -1)
+				return _absoluteStart;
+				
+			var rslt:int = 0;
 			var composer:IFlowComposer = flowComposer;
 			if (composer)
 			{
 				var stopIdx:int = composer.getControllerIndex(this);
-				for (var idx:int = 0; idx < stopIdx; idx++)
-					rslt += composer.getControllerAt(idx).textLength;
+				if (stopIdx != 0)
+				{
+					var prevController:ContainerController = composer.getControllerAt(stopIdx-1);
+					rslt = prevController.absoluteStart + prevController.textLength;
+				}
 			}
+			_absoluteStart = rslt;
 				
 			return rslt;
 		}
@@ -485,7 +494,28 @@ package flashx.textLayout.container
 		}
 		/** @private */
 		tlf_internal function setTextLengthOnly(numChars:int):void
-		{ _textLength = numChars; }
+		{ 
+			if (_textLength != numChars)
+			{
+				_textLength = numChars; 
+				// all following containers must have absoluteStart invalidated
+				if (_absoluteStart != -1)
+				{
+					var composer:IFlowComposer = flowComposer;
+					if (composer)
+					{
+						var idx:int = composer.getControllerIndex(this)+1;
+						while (idx < flowComposer.numControllers)
+						{
+							var controller:ContainerController = composer.getControllerAt(idx++);
+							if (controller._absoluteStart == -1)
+								break;
+							controller._absoluteStart = -1;
+						}
+					}
+				}
+			}
+		}
 		
 		/** @private */
 		tlf_internal function setTextLength(numChars:int):void
@@ -513,7 +543,7 @@ package flashx.textLayout.container
 				}
 			}
 
-			_textLength = numChars; 
+			setTextLengthOnly(numChars); 
 			CONFIG::debug
 			{
 				if (Debugging.debugOn && textFlow)
@@ -528,7 +558,7 @@ package flashx.textLayout.container
 		tlf_internal function updateLength(pos:int, lengthToAdd:int):void
 		{
 			CONFIG::debug { assert(_textLength+lengthToAdd >= 0,"bad set textLength"); }
-			_textLength += lengthToAdd;
+			setTextLengthOnly(_textLength + lengthToAdd);
 		}
 
 		/** 
@@ -1236,8 +1266,8 @@ package flashx.textLayout.container
 		   	_container.addEventListener(MouseEvent.MOUSE_OUT, receiver.mouseOutHandler);
 			_container.addEventListener(MouseEvent.MOUSE_WHEEL, receiver.mouseWheelHandler);
 			_container.addEventListener(Event.DEACTIVATE, receiver.deactivateHandler);
-		//	_container.addEventListener(IMEEvent.IME_START_COMPOSITION, receiver.imeStartCompositionHandler);
 			// attach by literal event name to avoid Argo dependency
+			// normally this would be IMEEvent.START_COMPOSITION
 			_container.addEventListener("imeStartComposition", receiver.imeStartCompositionHandler);
 
 			if (_container.contextMenu)

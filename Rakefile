@@ -17,7 +17,7 @@ THIS = File.expand_path(File.dirname(__FILE__))
 # This is a special variable.
 # Because subversion 1.4 doesn't have merge tracking,
 # this will be rewritten every time you run the merge command in here
-# LAST_MERGE = 10955
+# LAST_MERGE = 11081
 LAST_MERGE_PATTERN = /\#\s*LAST_MERGE\s*\=\s*(\d+)/
 
 # Helper Methods

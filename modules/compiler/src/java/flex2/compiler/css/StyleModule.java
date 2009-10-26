@@ -440,7 +440,7 @@ public class StyleModule
 
         if (styleDef == null)
         {
-            styleDef = new StyleDef(subject, isTypeSelector, null, source, lineNumber, perCompileData);
+            styleDef = new StyleDef(subject, isTypeSelector, null, null, source, lineNumber, perCompileData);
             styleDefs.put(subject, styleDef);
         }
 
@@ -483,7 +483,7 @@ public class StyleModule
         }
         else
         {
-            styleDef = new StyleDef(subject, null, source, lineNumber, perCompileData);
+            styleDef = new StyleDef(subject, null, null, source, lineNumber, perCompileData);
             styleDefs.put(styleDefKey, styleDef);
         }
 
@@ -787,7 +787,8 @@ public class StyleModule
             }
 
             embedParams.put( Transcoder.LINE, Integer.toString(styleDeclaration.getLineNumber()) );
-            AtEmbed atEmbed = AtEmbed.create(propName, fontFaceRule.getStyleDeclaration().getLineNumber(), embedParams, false);
+            AtEmbed atEmbed = AtEmbed.create(propName, source, styleDeclaration.getPath(),
+                                             styleDeclaration.getLineNumber(), embedParams, false);
             addAtEmbed(atEmbed);
         }
         else if (Trace.font)

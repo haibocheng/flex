@@ -20,13 +20,8 @@ package flashx.textLayout.edit
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.system.Capabilities;
-	import flash.system.IME;
-	import flash.system.System;
 	import flash.text.engine.TextLine;
-	import flash.text.ime.CompositionAttributeRange;
-	import flash.text.ime.IIMEClient;
 	import flash.ui.Keyboard;
-	import flash.utils.getQualifiedClassName;
 	
 	import flashx.textLayout.compose.TextLineRecycler;
 	import flashx.textLayout.container.ContainerController;
@@ -84,7 +79,7 @@ package flashx.textLayout.edit
 	 * @playerversion AIR 1.5
  	 * @langversion 3.0
 	 */			
-	public class EditManager extends SelectionManager implements IEditManager, IIMEClient
+	public class EditManager extends SelectionManager implements IEditManager
 	{
 		 /**
 		 *  To minimize expensive recompositions during fast typing, inserts
@@ -106,6 +101,8 @@ package flashx.textLayout.edit
 		 */
 		private var _undoManager:flashx.undo.IUndoManager;
 		
+		private var _imeSession:IMEClient;
+		
 		/** 
 		 * Indicates whether overwrite mode is on or off.
 		 * 
@@ -117,14 +114,6 @@ package flashx.textLayout.edit
  	 	 * @langversion 3.0
 		*/		
 		public static var overwriteMode:Boolean = false;
-		
-		/** Maintain position of text we've inserted while in the middle of processing IME. */
-		private var _imeAnchorPosition:int;		// start of IME text
-		private var _imeLength:int;				// length of IME text
-		private var _imeOperation:IOperation;	// IME in-progress edits
-
-		/** True if we're in the middle of an IME input. */
-		private var _inIME:Boolean;
 		
 		/** 
 		 * Creates an EditManager object.
@@ -146,8 +135,6 @@ package flashx.textLayout.edit
 		{
 			super();
 			_undoManager = undoManager;
-			_imeAnchorPosition = -1;
-			_inIME = false;
 		}
 
 		/**  
@@ -334,13 +321,18 @@ package flashx.textLayout.edit
 		override public function imeStartCompositionHandler(event:IMEEvent):void
 		{
 			//trace("start IME session");
-			CONFIG::debug{ assert(!_inIME, "IME reentrant!"); }
-			// Coded to avoid dependency on Argo (10.1)
-			if (event && !(event["imeClient"]))
-				event["imeClient"] = Object(this);
-			_imeAnchorPosition = anchorPosition;
-			_imeLength = 0;
-			_inIME = true;
+			CONFIG::debug{ assert(!_imeSession, "IME session already in progress: IME not reentrant!"); }
+			// Coded to avoid dependency on Argo (10.1). 
+			if (!(event["imeClient"]))
+			{
+				_imeSession = new IMEClient(this);
+				event["imeClient"] = _imeSession;
+			}
+		}
+		
+		tlf_internal function endIMESession():void
+		{
+			_imeSession = null;
 		}
 		
 			// We track the nesting level of the doOperation, because in finalize we need to know if
@@ -448,7 +440,7 @@ package flashx.textLayout.edit
 			var success:Boolean = false;
 			
 			// tell any listeners about the operation
-			if (!_inIME)
+			if (!_imeSession)
 			{
 				var opEvent:FlowOperationEvent = new FlowOperationEvent(FlowOperationEvent.FLOW_OPERATION_BEGIN,false,true,op,null);
 				textFlow.dispatchEvent(opEvent);
@@ -492,14 +484,15 @@ package flashx.textLayout.edit
 			
 			// operation completed - send event whether it succeeded or not.
 			// client can check generation number for changes
-			if (!_inIME)
+			if (!_imeSession)
 			{
 				opEvent = new FlowOperationEvent(FlowOperationEvent.FLOW_OPERATION_END,false,true,op,opError);
 				textFlow.dispatchEvent(opEvent);
-				if (opError && !opEvent.isDefaultPrevented())
-					throw (opError);
 			}
 
+			if (opError && (!opEvent || !opEvent.isDefaultPrevented()))
+				throw (opError);
+				
 			// If we fired off any subsidiary operations, create a composite operation to hold them all
 		 	if (captureOperations.length - captureStart > 1)
 		 	{
@@ -563,7 +556,7 @@ package flashx.textLayout.edit
 			if ((!operation) || (operation.textFlow != textFlow)) 
 				return;			
 			// tell any listeners about the operation
-			if (!_inIME)
+			if (!_imeSession)
 			{
 				var undoPsuedoOp:UndoOperation = new UndoOperation(operation);
 				var opEvent:FlowOperationEvent = new FlowOperationEvent(FlowOperationEvent.FLOW_OPERATION_BEGIN,false,true,undoPsuedoOp,null);
@@ -607,7 +600,7 @@ package flashx.textLayout.edit
 			}
 				
 			// tell user its complete and give them a chance to cancel the rethrow
-			if (!_inIME)
+			if (!_imeSession)
 			{
 				opEvent = new FlowOperationEvent(FlowOperationEvent.FLOW_OPERATION_END,false,true,undoPsuedoOp,opError);
 				textFlow.dispatchEvent(opEvent);
@@ -640,7 +633,7 @@ package flashx.textLayout.edit
 			if ((!op) || (op.textFlow != textFlow)) 
 				return;
 			// tell any listeners about the operation
-			if (!_inIME)
+			if (!_imeSession)
 			{
 				var redoPsuedoOp:RedoOperation = new RedoOperation(op);
 				var opEvent:FlowOperationEvent = new FlowOperationEvent(FlowOperationEvent.FLOW_OPERATION_BEGIN,false,true,redoPsuedoOp,null);
@@ -684,7 +677,7 @@ package flashx.textLayout.edit
 			}
 				
 			// tell user its complete and give them a chance to cancel the rethrow
-			if (!_inIME)
+			if (!_imeSession)
 			{
 				opEvent = new FlowOperationEvent(FlowOperationEvent.FLOW_OPERATION_END,false,true,redoPsuedoOp,opError);
 				textFlow.dispatchEvent(opEvent);
@@ -1319,176 +1312,12 @@ package flashx.textLayout.edit
 		 */
 		tlf_internal override function selectionChanged(doDispatchEvent:Boolean = true, resetPointFormat:Boolean=true):void
 		{	
-			// If we're in the middle of an IME session, and change the selection to something outside the session, abort the 
-			// session. If we just moved the selection within the session, we tell the IME about the changes.
-			if (_inIME)
-			{
-				if (absoluteStart > _imeAnchorPosition + _imeLength || absoluteEnd < _imeAnchorPosition)
-				{
-					//trace("selection changed to out of IME session");
-					compositionAbandoned();
-				}
-				else 
-				{
-					//trace("selection changed within IME session");
-				//	var imeCompositionSelectionChanged:Function = IME["compositionSelectionChanged"];
-				//	if (IME["compositionSelectionChanged"] !== undefined)
-				// 		imeCompositionSelectionChanged();
-				}
-			}
+			if (_imeSession)
+				_imeSession.selectionChanged();
 			
 			super.selectionChanged(doDispatchEvent, resetPointFormat);
 		}
 
 
-		private function doIMEStyleOperation(imeValue:String, relativeStart:int, relativeEnd:int):void
-		{
-    		var selState:SelectionState = new SelectionState(textFlow, _imeAnchorPosition + relativeStart, _imeAnchorPosition + relativeEnd);
-    		var leaf:FlowLeafElement = textFlow.findLeaf(selState.absoluteStart);
-    		var leafAbsoluteStart:int = leaf.getAbsoluteStart();
-    		//trace(IMEStatus.IME_STATUS, imeValue, relativeStart, relativeEnd);
-			doOperation(new ApplyElementUserStyleOperation(selState, leaf, IMEStatus.IME_STATUS, imeValue, selState.absoluteStart - leafAbsoluteStart, selState.absoluteEnd - leafAbsoluteStart));
-		}
-		
-		private function doIMEClauseOperation(imeClause:int, relativeStart:int, relativeEnd:int):void
-		{
-    		var selState:SelectionState = new SelectionState(textFlow, _imeAnchorPosition + relativeStart, _imeAnchorPosition + relativeEnd);
-    		var leaf:FlowLeafElement = textFlow.findLeaf(selState.absoluteStart);
-    		var leafAbsoluteStart:int = leaf.getAbsoluteStart();
-			doOperation(new ApplyElementUserStyleOperation(selState, leaf, IMEStatus.IME_CLAUSE, imeClause.toString(), selState.absoluteStart - leafAbsoluteStart, selState.absoluteEnd - leafAbsoluteStart));
-		}
-		
-		private function doIMEUpdateOperation(text:String, attributes:Vector.<CompositionAttributeRange>):void
-		{
-		    var imeValue:String;
-		    
-			// Currently we're replacing the entire string each time, might be we could use the compositionStartIndex, endIndex &
-			// only update what changed.
-	    	var selState:SelectionState = new SelectionState(textFlow, _imeAnchorPosition, _imeAnchorPosition + _imeLength);
-				
-			beginCompositeOperation();
-
-			var insertOp:InsertTextOperation = new InsertTextOperation(selState, text);
-	    	_imeLength = text.length;
-			doOperation(insertOp);
-			
-			if (attributes && attributes.length > 0)
-			{
-				var attrLen:int = attributes.length;
-				for (var i:int = 0; i < attrLen; i++)
-				{
-					var attrRange:CompositionAttributeRange = attributes[i];
-					CONFIG::debug { assert(	attrRange != null, "found null attribute range in vector"); }				
-		    		var leaf:FlowLeafElement = textFlow.findLeaf(_imeAnchorPosition + attrRange.relativeStart);
-					CONFIG::debug { assert(	leaf != null, "found null FlowLeafELement at" + (_imeAnchorPosition + attrRange.relativeStart).toString()); }						    		
-		    		var leafAbsoluteStart:int = leaf.getAbsoluteStart();
-		    		if (!attrRange.converted)
-		    			imeValue = IMEStatus.RAW;
-		    		else if (!attrRange.selected)
-		    			imeValue = IMEStatus.NOT_SELECTED;
-		    		else
-		    			imeValue = IMEStatus.SELECTED;
-		    		doIMEClauseOperation(i, attrRange.relativeStart, attrRange.relativeEnd);
-		    		doIMEStyleOperation(imeValue, attrRange.relativeStart, attrRange.relativeEnd);
-				}
-			}
-			else // composing accented characters
-			{	
-				imeValue = IMEStatus.DEAD_KEY_INPUT_STATE;
-		    	doIMEClauseOperation(i, 0, _imeLength);
-		    	doIMEStyleOperation(imeValue, 0, _imeLength);
-			}
-
-			endCompositeOperation();
-		}
-		
-		// IME-related functions
-		public function updateComposition(text:String, attributes:Vector.<CompositionAttributeRange>, compositionStartIndex:int, compositionEndIndex:int):void
-	    {
-	    	CONFIG::debug { assert(_inIME, "updateComposition called when there is no open IME session"); }
-	    	if (!_inIME)
-	    		return;
-	    	//trace("EditManager.updateComposition called, ", _imeAnchorPosition, _imeAnchorPosition + _imeLength, "textLength", text.length, "subRange", compositionStartIndex, compositionEndIndex);
-			
-			// Undo the previous interim ime operation, if there is one. Otherwise let the update IME operation handle the delete.
-			// Doing it via undo keeps the undo stack in sync. 
-			if (_imeOperation)
-			{
-				//trace("Undoing previous IME operation");
-				CONFIG::debug { assert(_undoManager.peekUndo() == _imeOperation, "Unexpected operation in undo stack at end of IME update"); }
-				undo();
-				_imeLength = 0; // prevent double deletion
-			}
-			doIMEUpdateOperation(text, attributes);
-			_imeOperation = undoManager ? undoManager.peekUndo() : null;
-			CONFIG::debug { assert (!undoManager || (_imeOperation && (_imeOperation is CompositeOperation)), "expecting IME op on top of undo stack"); }
-	    }
-	    
-	    public function confirmComposition(text:String = null, preserveSelection:Boolean = false):void
-		{
-	    //	var selState:SelectionState = new SelectionState(textFlow, _imeAnchorPosition, _imeAnchorPosition + _imeLength);
-	    //	var deleteTextOp:DeleteTextOperation = new DeleteTextOperation(selState);
-	    //	doOperation(deleteTextOp);
-			endIMESession();
-		}
-		
-		private function compositionAbandoned():void
-		{
-			//trace("CompositionAbandoned");
-			// In Argo we could just do this:
-			// IME.compositionAbandoned();
-			// but for support in Astro/Squirt where this API is undefined we do this:
-			var imeCompositionAbandoned:Function = IME["compositionAbandoned"];
-			if (IME["compositionAbandoned"] !== undefined)
-				imeCompositionAbandoned();
-			endIMESession();
-		}
-		
-		private function endIMESession():void
-		{
-			// Undo the IME operation. We're going to re-add the text, without all the special attributes, as part of handling
-			// the textInput event that comes next.
-			if (_undoManager && _imeOperation)
-			{
-				//trace("undoing imeOperation at end of IME session");
-				CONFIG::debug { assert(_undoManager.peekUndo() == _imeOperation, "Unexpected operation in undo stack at end of IME session"); }
-				undo();
-				CONFIG::debug { assert(_undoManager.peekRedo() == _imeOperation, "Unexpected operation in redo stack at end of IME session"); }
-				_undoManager.popRedo();
-			}
-
-			// Clear IME state
-			_imeAnchorPosition = -1;
-			_imeLength = 0;
-			_inIME = false;
-			_imeOperation = null;
-		}
-		
-		public function getTextBounds(startIndex:int, endIndex:int):Rectangle
-		{
-			var boundsResult:Array = GeometryUtil.getHighlightBounds(new TextRange(textFlow, _imeAnchorPosition + startIndex, _imeAnchorPosition + endIndex));
-		    var bounds:Rectangle = boundsResult[0].rect; 
-		    var textLine:TextLine = boundsResult[0].textLine; 
-		    var resultTopLeft:Point = textLine.localToGlobal(bounds.topLeft);
-		    var resultBottomRight:Point = textLine.localToGlobal(bounds.bottomRight);
-		   // trace("getTextBounds returning", resultTopLeft.x, resultTopLeft.y, resultBottomRight.x - resultTopLeft.x, resultBottomRight.y - resultTopLeft.y);
-		    return new Rectangle(resultTopLeft.x, resultTopLeft.y, resultBottomRight.x - resultTopLeft.x, resultBottomRight.y - resultTopLeft.y);
-		}
-		
-		public function get compositionStartIndex():int
-		{
-			return _imeAnchorPosition;
-		}
-		
-		public function get compositionEndIndex():int
-		{
-			return _imeAnchorPosition + _imeLength;
-		}
-		
-		public function get verticalTextLayout():Boolean
-		{
-			return textFlow.computedFormat.blockProgression == BlockProgression.RL;
-		}
-		
 	}
 }

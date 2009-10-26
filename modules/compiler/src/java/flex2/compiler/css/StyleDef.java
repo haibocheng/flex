@@ -16,6 +16,7 @@ import flash.css.StyleDeclaration;
 import flash.css.StyleProperty;
 import flash.css.StyleSelector;
 import flex2.compiler.Source;
+import flex2.compiler.mxml.MxmlConfiguration;
 import flex2.compiler.mxml.lang.FrameworkDefs;
 import flex2.compiler.mxml.reflect.Type;
 import flex2.compiler.mxml.rep.AtEmbed;
@@ -81,6 +82,7 @@ public class StyleDef
     private Map<String, StyleProperty> styles = new HashMap<String, StyleProperty>();
 
     private MxmlDocument mxmlDocument;
+    private MxmlConfiguration mxmlConfiguration;	// may be null if passed in from a StyleModule
     private Source source;
     private int lineNumber;
     private ContextStatics perCompileData;
@@ -94,12 +96,14 @@ public class StyleDef
     // Flex 4 Constructor
     StyleDef(String subject,
             MxmlDocument mxmlDocument,
+            MxmlConfiguration mxmlConfiguration,
             Source source,
             int lineNumber,
             ContextStatics perCompileData)
    {
        this.subject = subject;
        this.mxmlDocument = mxmlDocument;
+       this.mxmlConfiguration = mxmlConfiguration;
        this.source = source;
        this.lineNumber = lineNumber;
        this.perCompileData = perCompileData;
@@ -111,6 +115,7 @@ public class StyleDef
     StyleDef(String name,
              boolean isTypeSelector,
              MxmlDocument mxmlDocument,
+             MxmlConfiguration mxmlConfiguration,
              Source source,
              int lineNumber,
              ContextStatics perCompileData)
@@ -118,6 +123,7 @@ public class StyleDef
         this.subject = name;
         this.isTypeSelector = isTypeSelector;
         this.mxmlDocument = mxmlDocument;
+        this.mxmlConfiguration = mxmlConfiguration;
         this.source = source;
         this.lineNumber = lineNumber;
         this.perCompileData = perCompileData;
@@ -204,6 +210,19 @@ public class StyleDef
         advanced = value;
     }
 
+    /**
+     * 
+     * @return true if a style manager will store style declarations that are 
+     * the same as its parent style manager.
+     */
+    public boolean getAllowDuplicateDefaultStyleDeclarations()
+    {
+    	if (mxmlConfiguration != null)
+    		return mxmlConfiguration.getAllowDuplicateDefaultStyleDeclarations();
+    	
+    	return false;	// default value
+    }
+    
     public Set<AtEmbed> getAtEmbeds()
     {
         Set<AtEmbed> result = new HashSet<AtEmbed>();
@@ -481,6 +500,7 @@ public class StyleDef
         String fontFamily = descriptor.getIdentAsString();
         StyleProperty stylesProperty = new StyleProperty(propertyName,
                                                          "\"" + fontFamily + "\"",
+                                                         descriptor.getPath(),
                                                          descriptor.getLineNumber());
         properties.put(propertyName, stylesProperty);
     }
@@ -500,6 +520,7 @@ public class StyleDef
         if (value != null)
         {
             StyleProperty styleProperty = new StyleProperty(propertyName, value,
+                                                            descriptor.getPath(),
                                                             descriptor.getLineNumber());
             properties.put(propertyName, styleProperty);
         }

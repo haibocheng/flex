@@ -419,6 +419,7 @@ public class ComponentBuilder extends AbstractBuilder
                 	else
                 	{
                 		component.ensureDeclaration();
+                		component.ensureBindable();
                 		super.invoke(type, namespace, statefulName[0], statefulName[1]);
                 	}
                 } 
@@ -699,6 +700,7 @@ public class ComponentBuilder extends AbstractBuilder
                         if ((statefulName != null) && document.validateState(statefulName[1], child.beginLine))
                         {
                             component.ensureDeclaration();
+                            component.ensureBindable();
                             invoke(this.parentType, namespace, statefulName[0], statefulName[1]);
                         }
                     } 

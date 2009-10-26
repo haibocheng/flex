@@ -113,7 +113,7 @@ public class InterfaceGenerator extends AbstractGenerator
         StatementListNode statementList = null;
         String className = docInfo.getClassName();
         FunctionDefinitionNode constructor =
-            AbstractSyntaxTreeUtil.generateConstructor(context, className, false, null, -1);
+            AbstractSyntaxTreeUtil.generateConstructor(context, className, null, false, null, -1);
         statementList = nodeFactory.statementList(statementList, constructor);
 
         statementList = generateInstanceVariables(statementList);

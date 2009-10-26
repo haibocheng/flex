@@ -67,7 +67,11 @@ package flashx.textLayout.compose
 		static tlf_internal function releaseComposeState(state:ComposeState):void
 		{
 			if (_sharedComposeState == null)
-				_sharedComposeState = state as ComposeState;
+			{
+				_sharedComposeState = state;
+				if (_sharedComposeState)
+					_sharedComposeState.releaseAnyReferences();
+			}
 		}
 
 		/** Constructor. */
@@ -96,6 +100,17 @@ package flashx.textLayout.compose
 			vjDisableThisParcel = false;
 			
 			return super.composeTextFlow(textFlow, composeToPosition, controllerEndIndex);
+		}
+		
+		protected override function initializeForComposer(composer:IFlowComposer,composeToPosition:int,controllerEndIndex:int):void
+		{
+			super.initializeForComposer(composer,composeToPosition,controllerEndIndex);
+			           
+            // skip any containers before damageAbsoluteStart
+            var firstDamagedLine:int = composer.findLineIndexAtPosition(composer.damageAbsoluteStart,false);
+            var tfl:TextFlowLine = composer.getLineAt(firstDamagedLine);
+            _startController = tfl && tfl.controller ? tfl.controller : composer.getControllerAt(0);
+            _startComposePosition = _startController.absoluteStart;
 		}
 		
 		/** @private */
@@ -215,6 +230,31 @@ package flashx.textLayout.compose
 			_curLineIndex++;
 			
 			commitLastLineState (curLine);
+		}
+		
+		protected override function composeParagraphElement(elem:ParagraphElement, absStart:int):Boolean
+		{
+			_curParaElement  = elem;
+			_curParaStart    = absStart;
+			_curParaFormat = elem.computedFormat;
+			CONFIG::debug { assert(_curParaStart == elem.getAbsoluteStart(),"composeParagraphElement: bad start"); }
+			if (_startComposePosition == 0)
+			{
+				_curElement 	 = elem.getFirstLeaf();
+				_curElementStart = _curParaStart;
+			}
+			else 
+			{
+				CONFIG::debug { assert(absStart <= _startComposePosition && absStart+elem.textLength > _startComposePosition,"bad call to composeParagraphElement"); }
+				_curElement = elem.findLeaf(_startComposePosition-absStart);
+				_curElementStart = _curElement.getAbsoluteStart();
+				_curElementOffset = _startComposePosition-_curElementStart;
+				_curLineIndex = _flowComposer.findLineIndexAtPosition(_curElementStart + _curElementOffset);
+				// next time we are all postioned
+				_startComposePosition = 0;
+			}
+
+			return composeParagraphElementIntoLines();
 		}
 		
 		/** @private */

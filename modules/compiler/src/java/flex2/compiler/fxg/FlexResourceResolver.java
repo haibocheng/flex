@@ -44,6 +44,15 @@ public class FlexResourceResolver implements FXGResourceResolver
         rootPath = dir;
     }
 
+    public String resolve(String relative)
+    {
+        VirtualFile f = resolver.resolve(relative);
+        if (f != null)
+            return f.getName();
+
+        return null; 
+    }
+    
     public InputStream openStream(String path) throws IOException
     {
         VirtualFile f = resolver.resolve(path);

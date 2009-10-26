@@ -53,9 +53,6 @@ package flashx.textLayout.container
 		private var _inputColumnGap:Number;
 		private var _inputColumnCount:Object
 		
-		// are the calculated columns out of date?
-		private var _columnsOutOfDate:Boolean;
-		
 		// Generated column information		
 		private var _columnWidth:Number;	
 		private var _columnCount:int;		

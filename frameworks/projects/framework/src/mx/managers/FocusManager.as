@@ -2059,7 +2059,7 @@ public class FocusManager extends EventDispatcher implements IFocusManager
 		var sm:ISystemManager = form.systemManager;
         var o:DisplayObject = getTopLevelFocusTarget(
             InteractiveObject(event.target));
-
+		
         if (!o)
             return;
 

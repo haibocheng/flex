@@ -20,6 +20,10 @@ import spark.layouts.supportClasses.LayoutBase;
 
 use namespace mx_internal;
 
+//--------------------------------------
+//  Styles
+//--------------------------------------
+
 /**
  *  The alpha of the border for this component.
  * 
@@ -70,6 +74,12 @@ use namespace mx_internal;
  */
 [Style(name="dropShadowVisible", type="Boolean", inherit="no", theme="spark")]
 
+//--------------------------------------
+//  Other metadata
+//--------------------------------------
+
+[AccessibilityClass(implementation="spark.accessibility.PanelAccImpl")]
+
 [IconFile("Panel.png")]
 
 /**
@@ -108,7 +118,7 @@ public class Panel extends SkinnableContainer
 {
     include "../core/Version.as";
 
-    //--------------------------------------------------------------------------
+	//--------------------------------------------------------------------------
     //
     //  Class constants
     //
@@ -128,6 +138,18 @@ public class Panel extends SkinnableContainer
      *  @private
      */
     mx_internal static const VISIBLE_PROPERTY_FLAG:uint = 1 << 2;
+
+    //--------------------------------------------------------------------------
+    //
+    //  Class mixins
+    //
+    //--------------------------------------------------------------------------
+    
+    /**
+     *  @private
+     *  Placeholder for mixin by PanelAccImpl.
+     */
+    mx_internal static var createAccessibilityImplementation:Function;
 
     //--------------------------------------------------------------------------
     //
@@ -154,7 +176,7 @@ public class Panel extends SkinnableContainer
     
     //--------------------------------------------------------------------------
     //
-    //  Properties 
+    //  Variables 
     //
     //--------------------------------------------------------------------------
 
@@ -177,6 +199,12 @@ public class Panel extends SkinnableContainer
      */
     mx_internal var controlBarGroupProperties:Object = { visible: true };
 
+    //--------------------------------------------------------------------------
+    //
+    //  Skin parts 
+    //
+    //--------------------------------------------------------------------------
+
     //----------------------------------
     //  controlBarGroup
     //---------------------------------- 
@@ -197,6 +225,49 @@ public class Panel extends SkinnableContainer
      *  @productversion Flex 4
      */
     public var controlBarGroup:Group;
+
+    //----------------------------------
+    //  titleField
+    //---------------------------------- 
+    
+    [SkinPart(required="false")]
+
+    /**
+     *  The skin part that defines the appearance of the 
+     *  title text in the container.
+     *
+     *  @see spark.skins.spark.PanelSkin
+     *  
+     *  @langversion 3.0
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
+     */
+    public var titleDisplay:TextBase;
+
+    //--------------------------------------------------------------------------
+    //
+    //  Overridden properties: UIComponent
+    //
+    //--------------------------------------------------------------------------
+
+    //----------------------------------
+    //  baselinePosition
+    //----------------------------------
+
+    /**
+     *  @private
+     */
+    override public function get baselinePosition():Number
+    {
+        return getBaselinePositionForPart(titleDisplay);
+    } 
+    
+    //--------------------------------------------------------------------------
+    //
+    //  Properties
+    //
+    //--------------------------------------------------------------------------
 
     //----------------------------------
     //  controlBarContent
@@ -257,7 +328,10 @@ public class Panel extends SkinnableContainer
             : controlBarGroupProperties.layout;
     }
 
-    public function set controlBarLayout(value:LayoutBase):void
+    /**
+	 *  @private
+	 */
+	public function set controlBarLayout(value:LayoutBase):void
     {
         if (controlBarGroup)
         {
@@ -294,6 +368,9 @@ public class Panel extends SkinnableContainer
             : controlBarGroupProperties.visible;
     }
 
+    /**
+	 *  @private
+	 */
     public function set controlBarVisible(value:Boolean):void
     {
         if (controlBarGroup)
@@ -311,33 +388,21 @@ public class Panel extends SkinnableContainer
     }
 
     //----------------------------------
-    //  titleField
-    //---------------------------------- 
-    
-    [SkinPart(required="false")]
-
-    /**
-     *  The skin part that defines the appearance of the 
-     *  title text in the container.
-     *
-     *  @see spark.skins.spark.PanelSkin
-     *  
-     *  @langversion 3.0
-     *  @playerversion Flash 10
-     *  @playerversion AIR 1.5
-     *  @productversion Flex 4
-     */
-    public var titleDisplay:TextBase;
-
-    //----------------------------------
     //  title
     //----------------------------------
 
-    private var titleChanged:Boolean;
-
+    /**
+	 *  @private
+	 */
     private var _title:String = "";
     
+    /**
+	 *  @private
+	 */
+    private var titleChanged:Boolean;
+
     [Bindable]
+
     /**
      *  Title or caption displayed in the title bar. 
      *
@@ -366,22 +431,19 @@ public class Panel extends SkinnableContainer
 
     //--------------------------------------------------------------------------
     //
-    //  Overridden properties: UIComponent
+    //  Overridden methods
     //
     //--------------------------------------------------------------------------
-
-    //----------------------------------
-    //  baselinePosition
-    //----------------------------------
 
     /**
      *  @private
      */
-    override public function get baselinePosition():Number
+    override protected function initializeAccessibility():void
     {
-        return getBaselinePositionForPart(titleDisplay);
-    } 
-    
+        if (Panel.createAccessibilityImplementation != null)
+            Panel.createAccessibilityImplementation(this);
+    }
+
     /**
      *  @private
      */

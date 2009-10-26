@@ -832,7 +832,15 @@ public class Parser implements ExtendedParser, Localizable {
                 else if ("*".equals(name))
                     uri = null; // All namespaces, including no namespace
                 else
+                {
                     uri = (String)namespaces.get(name);
+                    
+                    if (uri == null)
+                    {
+                        // Don't use reportError() here, because it advances too far.
+                        errorHandler.error(createCSSParseException("unresolved.namespace"));
+                    }
+                }
 
                 next();
                 name = scanner.getStringValue();

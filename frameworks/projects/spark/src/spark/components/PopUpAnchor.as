@@ -490,7 +490,8 @@ public class PopUpAnchor extends UIComponent
             return;
 
 		// parent isn't null if you run removeEffect!
-        if (DisplayObject(popUp).parent == null && displayPopUp)
+		// DisplayObject(popUp).parent == null && 
+        if (displayPopUp)
         {
 			var popUpParent:Sprite;
 			var centered:Boolean = (popUpPosition == PopUpPosition.GLOBAL_CENTER)
@@ -532,6 +533,7 @@ public class PopUpAnchor extends UIComponent
     private function removeAndResetPopUp():void
     {
         PopUpManager.removePopUp(popUp);
+
         popUpIsDisplayed = false;
         
         if (popUp is UIComponent && !popUpWidthMatchesAnchorWidth)
@@ -546,7 +548,7 @@ public class PopUpAnchor extends UIComponent
             _popUp = null;
             popUpFactory.reset();
         }*/
-    }
+	}
     
     /**
      *  @private Get the concatenated matrix from the PopUpAnchor to the popUp parent 
@@ -557,7 +559,7 @@ public class PopUpAnchor extends UIComponent
         // and subtract out the popUp parent's concatenatedMatrix
         var matrix:Matrix = systemManager.getSandboxRoot().transform.concatenatedMatrix;
         matrix.invert();
-        matrix.concat($transform.concatenatedMatrix);
+        matrix.concat(MatrixUtil.getConcatenatedMatrix(this));
         
         return matrix;
     }

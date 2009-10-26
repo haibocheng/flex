@@ -113,6 +113,10 @@ public class DataRenderer extends Group implements IDataRenderer
 
         dispatchEvent(new FlexEvent(FlexEvent.DATA_CHANGE));
     }
+    
+    //----------------------------------
+    //  index
+    //----------------------------------
 
 	private var _index:int = -1;
 	[Bindable(event="indexChange")]

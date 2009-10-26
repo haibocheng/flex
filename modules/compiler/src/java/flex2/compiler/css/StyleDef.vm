@@ -20,6 +20,9 @@ import mx.styles.CSSSelector;
 #end
 import mx.styles.CSSStyleDeclaration;
 import mx.styles.IStyleManager2;
+#if (!$styleDef.allowDuplicateDefaultStyleDeclarations)      
+import mx.utils.ObjectUtil;
+#end
 ##
 ## imports
 ##
@@ -74,17 +77,26 @@ public class _${styleDef.typeName}Style
         var condition:CSSCondition = null;
         var selector:CSSSelector = null;
         var style:CSSStyleDeclaration;
+#if (!$styleDef.allowDuplicateDefaultStyleDeclarations)      
+        var mergedStyle:CSSStyleDeclaration;
+#end
+        
 #foreach ($styleDecl in $styleDef.declarations)
 #set ($selector = $styleDecl.selector)
         selector = null;
         conditions = null;
 #selectorAncestor($selector)
         // $selector.toString()
+#if ($styleDef.allowDuplicateDefaultStyleDeclarations)      
         style = styleManager.getStyleDeclaration("$selector.toString()");
         if (!style)
         {
             style = new CSSStyleDeclaration(selector, styleManager);
         }
+#else
+        mergedStyle = styleManager.getMergedStyleDeclaration("$selector.toString()");
+        style = new CSSStyleDeclaration(selector, styleManager, mergedStyle == null);
+#end
 
         if (style.defaultFactory == null)
         {
@@ -107,6 +119,12 @@ public class _${styleDef.typeName}Style
 #end
 #end
 
+#if (!$styleDef.allowDuplicateDefaultStyleDeclarations)      
+        if (mergedStyle != null &&  mergedStyle.defaultFactory() != null &&
+            !ObjectUtil.compare(new style.defaultFactory(), new mergedStyle.defaultFactory()))
+            styleManager.setStyleDeclaration(style.mx_internal::selectorString, style, false);
+#end
+
 #end
 ##
 ## End Advanced Flex 4 StyleDeclarations
@@ -115,6 +133,9 @@ public class _${styleDef.typeName}Style
 ##
 ## Start Legacy Flex 3 StyleDeclarations
 ##
+
+#if ($styleDef.allowDuplicateDefaultStyleDeclarations)
+
 #if ($styleDef.isTypeSelector())
         var style:CSSStyleDeclaration = styleManager.getStyleDeclaration("${styleDef.typeName}");
 #else
@@ -130,6 +151,17 @@ public class _${styleDef.typeName}Style
             styleManager.setStyleDeclaration(".${styleDef.typeName}", style, false);
 #end
         }
+
+#else
+
+#if ($styleDef.isTypeSelector())
+        var mergedStyle:CSSStyleDeclaration = styleManager.getStyleDeclaration("${styleDef.typeName}");
+#else
+        var mergedStyle:CSSStyleDeclaration = styleManager.getStyleDeclaration(".${styleDef.typeName}");
+#end
+
+        var style:CSSStyleDeclaration = new CSSStyleDeclaration(null, styleManager);
+#end
 
         if (style.defaultFactory == null)
         {
@@ -150,6 +182,17 @@ public class _${styleDef.typeName}Style
 #foreach ($effectStyle in $styleDef.effectStyles)
         effects.push("${effectStyle}");
 #end
+#end
+
+#if (!$styleDef.allowDuplicateDefaultStyleDeclarations)
+
+        if (mergedStyle == null || !mergedStyle.mx_internal::equals(style))
+#end
+
+#if ($styleDef.isTypeSelector() || $styleDef.subject == "global" || $styleDef.subject == "*")
+	        styleManager.setStyleDeclaration("${styleDef.typeName}", style, false);
+#else
+            styleManager.setStyleDeclaration(".${styleDef.typeName}", style, false);
 #end
 
 ##

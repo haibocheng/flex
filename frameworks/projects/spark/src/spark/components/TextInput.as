@@ -11,6 +11,7 @@
 
 package spark.components
 {
+
 import flash.events.Event;
 import flash.events.FocusEvent;
 
@@ -75,6 +76,8 @@ use namespace mx_internal;
 //--------------------------------------
 //  Other metadata
 //--------------------------------------
+
+[AccessibilityClass(implementation="spark.accessibility.TextInputAccImpl")]
 
 [DefaultProperty("text")]
 
@@ -203,6 +206,18 @@ public class TextInput extends SkinnableTextBase
 
     //--------------------------------------------------------------------------
     //
+    //  Class mixins
+    //
+    //--------------------------------------------------------------------------
+
+    /**
+     *  @private
+     *  Placeholder for mixin by TextInputAccImpl.
+     */
+    mx_internal static var createAccessibilityImplementation:Function;
+
+    //--------------------------------------------------------------------------
+    //
     //  Constructor
     //
     //--------------------------------------------------------------------------
@@ -306,6 +321,16 @@ public class TextInput extends SkinnableTextBase
     /**
      *  @private
      */
+    override protected function initializeAccessibility():void
+    {
+        if (TextInput.createAccessibilityImplementation != null)
+            TextInput.createAccessibilityImplementation(this);
+    }
+
+
+    /**
+     *  @private
+     */
     override protected function partAdded(partName:String, instance:Object):void
     {
         super.partAdded(partName, instance);
@@ -321,4 +346,3 @@ public class TextInput extends SkinnableTextBase
 }
 
 }
-

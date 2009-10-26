@@ -225,11 +225,7 @@ public class NodeMagic
         else if (attrsNode instanceof LiteralStringNode)
         {
             LiteralStringNode literalString = (LiteralStringNode) attrsNode;
-
-            if (literalString.value.length() > 0)
-            {
-                list.add(literalString.value);
-            }
+            list.add(literalString.value);
         }
         else if (attrsNode instanceof IdentifierNode)
         {

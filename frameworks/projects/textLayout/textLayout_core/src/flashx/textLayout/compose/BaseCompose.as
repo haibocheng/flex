@@ -92,6 +92,12 @@ package flashx.textLayout.compose
 		/** position to stop composing at */
 		protected var _stopComposePos:int;
 		
+		/** First damaged controller to begin composing */
+		protected var _startController:ContainerController;
+		/** Beginning composition position.  Note this gets cleared once its been passed */
+		protected var _startComposePosition:int;
+
+		
 		// scratch line slugs
 		static protected var _candidateLineSlug:Rectangle = new Rectangle();
 		static protected var _lineSlug:Rectangle = new Rectangle();
@@ -116,6 +122,22 @@ package flashx.textLayout.compose
 		protected function releaseParcelList(list:IParcelList):void
 		{ }
 		
+		/** Starting controller for skipping ahead */
+		public function get startController():ContainerController
+		{ return _startController; }
+		
+		/** prevent any leaks. @private */
+		tlf_internal function releaseAnyReferences():void
+		{
+			_curParaElement = null;
+			_curParaFormat = null;
+			_flowComposer = null;
+			_parcelList = null;
+			_rootElement = null;
+			_startController = null;
+			_textFlow = null;
+		}
+	
 		/** Initialize for a composition that will compose up through the controllerEndIndex, or all the way to the end of the flow
 		 * @param composer
 		 * @param composeToPosition 	-1 means not specified.  0 means request to compose nothing, >0 specifies a position to force compose to
@@ -165,10 +187,21 @@ package flashx.textLayout.compose
 		
 		private function composeBlockElement(elem:FlowGroupElement,absStart:int):Boolean
 		{	
-			// Compose all the children, until all the containers are filled, or if we're on the last container, we've hit the stop compose text index 
-			for (var idx:int = 0; idx < elem.numChildren && (absStart <= _stopComposePos || ! parcelList.atLast()); idx++)
+			// Compose all the children, until all the containers are filled, or if we're on the last container, we've hit the stop compose text index
+			var idx:int;
+			if (_startComposePosition != 0)
+			{
+				idx = elem.findChildIndexAtPosition(_startComposePosition-absStart);
+				CONFIG::debug { assert(idx != -1,"Bad _startComposePosition to index in composeBlockElement"); }
+				absStart += elem.getChildAt(idx).parentRelativeStart;
+			}
+			else
+				idx = 0;
+				
+			for (; idx < elem.numChildren && (absStart <= _stopComposePos || ! parcelList.atLast()); idx++)
 			{
 				var child:FlowElement = elem.getChildAt(idx);
+
 				var para:ParagraphElement = child as ParagraphElement;
 				if (para)
 				{
@@ -185,19 +218,25 @@ package flashx.textLayout.compose
 					composeFloat(ContainerFormattedElement(child),_parcelList.controller);
 					if (_parcelList.atEnd())
 						return false;
-
- 					CONFIG::debug { assert(child.getAbsoluteStart() + child.textLength - _parcelList.controller.absoluteStart >= 0, "frame has negative composition"); }
+		 			CONFIG::debug { assert(child.getAbsoluteStart() + child.textLength - _parcelList.controller.absoluteStart >= 0, "frame has negative composition"); }
 				}
 				else 
 				{
 					if (!composeBlockElement(FlowGroupElement(child),absStart))
 						return false;
 				}
+					
 				absStart += child.textLength;
 			}
 			return true;
 		}
 		
+		// TODO: move somewhere reasonable
+
+		private static function doNothingOnParcelChange(newParcel:Parcel):void
+		{ }
+
+
 		/**
 		 * Compose the flow into the text container. Starts at the root element,
 		 * and composes elements until either there are no more elements, or the
@@ -210,6 +249,7 @@ package flashx.textLayout.compose
 			_textFlow = textFlow;
 			_releaseLineCreationData = textFlow.configuration.releaseLineCreationData && ParagraphElement.textBlockHasReleaseLineCreationData;
 			
+			// must setup _startController and _startComposePosition
 			initializeForComposer(textFlow.flowComposer, composeToPosition, controllerEndIndex);
 
 			_flowComposer = _textFlow.flowComposer as StandardFlowComposer;
@@ -221,7 +261,16 @@ package flashx.textLayout.compose
             
             _curParcel = null;
             resetControllerBounds();
-
+            
+            if (_startController != _flowComposer.getControllerAt(0))
+            {
+            	var cacheNotify:Function = _parcelList.notifyOnParcelChange;
+            	_parcelList.notifyOnParcelChange =  doNothingOnParcelChange;
+            	// skip parcels until the first one in startController
+            	while(_parcelList.currentParcel.controller != _startController)
+            		_parcelList.next();
+            	_parcelList.notifyOnParcelChange =  cacheNotify;
+            }
 				
             parcelHasChanged(_parcelList.currentParcel);		// force start of composition acccounting initialization
 				
@@ -259,18 +308,16 @@ package flashx.textLayout.compose
 		{
 			composeBlockElement(composeRoot,absStart);
 		}
-	
+		
 		protected function composeParagraphElement(elem:ParagraphElement,absStart:int):Boolean
 		{
+			CONFIG::debug { assert(false,"MISSING OVERRIDE"); }
+			return false;
+		}
+
+		protected function composeParagraphElementIntoLines():Boolean
+		{
 			var curLine:TextFlowLine;
-			
-			_curParaElement  = elem;
-			_curParaStart    = absStart;
-			CONFIG::debug { assert(_curParaStart == elem.getAbsoluteStart(),"composeParagraphElement: bad start"); }
-			_curParaFormat = elem.computedFormat;
-			
-			_curElement 	 = elem.getFirstLeaf();
-			_curElementStart = _curParaStart;
 			
 			// loop creating lines
 			for (;;)
@@ -965,7 +1012,12 @@ package flashx.textLayout.compose
 				resetControllerBounds();
 
 				if (_flowComposer.numControllers > 1)
-					clearControllers(oldController, newController);
+				{
+					if (oldController == null && _startController)
+						clearControllers(_startController, newController);
+					else
+						clearControllers(oldController, newController);
+				}
  				// Parcel list will set totalDepth to newController's paddingTop
  			}
  			_curParcel = newParcel;

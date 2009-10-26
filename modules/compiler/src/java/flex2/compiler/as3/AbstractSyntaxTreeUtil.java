@@ -173,6 +173,7 @@ public class AbstractSyntaxTreeUtil
     }
 
     public static FunctionDefinitionNode generateConstructor(Context context, String className,
+    														 ParameterListNode parameterList,
                                                              boolean generateSuperCall,
                                                              StatementListNode statementList,
                                                              int position)
@@ -181,7 +182,7 @@ public class AbstractSyntaxTreeUtil
         AttributeListNode attributeList = generatePublicAttribute(nodeFactory);
         IdentifierNode identifier = nodeFactory.identifier(className);
         FunctionNameNode functionName = nodeFactory.functionName(Tokens.EMPTY_TOKEN, identifier);
-        FunctionSignatureNode functionSignature = nodeFactory.functionSignature(null, null);
+        FunctionSignatureNode functionSignature = nodeFactory.functionSignature(parameterList, null);
         functionSignature.no_anno = true;
 
         if (generateSuperCall)
@@ -687,7 +688,7 @@ public class AbstractSyntaxTreeUtil
     public static Node generatePrivateVariable(NodeFactory nodeFactory,
                                                TypeExpressionNode typeExpression,
                                                String name,
-                                               MemberExpressionNode initializer)
+                                               Node initializer)
     {
         AttributeListNode attributeList = generatePrivateAttribute(nodeFactory);
         int kind = Tokens.VAR_TOKEN;

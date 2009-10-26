@@ -17,6 +17,8 @@ import flex2.compiler.CompilationUnit;
 import flex2.compiler.CompilerBenchmarkHelper;
 import flex2.compiler.Source;
 import flex2.compiler.SymbolTable;
+import flex2.compiler.abc.AbcClass;
+import flex2.compiler.abc.MetaData;
 import flex2.compiler.as3.reflect.TypeTable;
 import flex2.compiler.as3.reflect.NodeMagic;
 import flex2.compiler.css.StyleConflictException;
@@ -27,6 +29,7 @@ import flex2.compiler.util.MimeMappings;
 import flex2.compiler.util.MultiName;
 import flex2.compiler.util.MultiNameMap;
 import flex2.compiler.util.Name;
+import flex2.compiler.util.NameFormatter;
 import flex2.compiler.util.QName;
 import flex2.compiler.util.QNameList;
 import flex2.compiler.util.QNameSet;
@@ -735,7 +738,7 @@ public class As3Compiler extends AbstractSubCompiler implements flex2.compiler.S
         for (Iterator i = classMap.keySet().iterator(); i.hasNext();)
         {
             String className = (String) i.next();
-            flex2.compiler.abc.AbcClass c = (flex2.compiler.abc.AbcClass) classMap.get(className);
+            AbcClass c = (AbcClass) classMap.get(className);
             symbolTable.registerClass(className, c);
             unit.classTable.put(className, c);
         }
@@ -1219,55 +1222,41 @@ public class As3Compiler extends AbstractSubCompiler implements flex2.compiler.S
 		{
 		    QName qName = (QName) it.next();
 
-		    flex2.compiler.abc.AbcClass c = typeTable.getClass( qName.toString() );
+		    AbcClass c = typeTable.getClass( qName.toString() );
 		    if (c == null)
 		        continue;
 		    getParentLoader(unit, typeTable, c);
 		}
 	}
 
-	private static void getParentLoader(CompilationUnit u, TypeTable typeTable, flex2.compiler.abc.AbcClass c)
+	private static void getParentLoader(CompilationUnit u, TypeTable typeTable, AbcClass c)
 	{
-	    flex2.compiler.abc.AbcClass sc = typeTable.getClass( c.getSuperTypeName() );
-	    if (sc == null)
-	        return;
+        String superTypeName = c.getSuperTypeName();
 
-	    List inherited = sc.getMetaData( "Frame", true );
-	    String inheritedLoaderClass = null;
-	    for (Iterator it = inherited.iterator(); it.hasNext();)
-	    {
-	        flex2.compiler.abc.MetaData md = (flex2.compiler.abc.MetaData) it.next();
+        if (superTypeName != null)
+        {
+            AbcClass sc = typeTable.getClass( NameFormatter.toColon(superTypeName) );
 
-	        String lc = md.getValue( "factoryClass" );
-	        if (lc != null)
-	        {
-	            inheritedLoaderClass = NodeMagic.normalizeClassName( lc );
-	            break;
-	        }
-	    }
+            if (sc != null)
+            {
+                List inherited = sc.getMetaData( "Frame", true );
+                String inheritedLoaderClass = null;
 
-		/* C: not doing anything to evaluate u.loaderClassBase...
-	    List local = c.getMetaData( "Frame", false );
-	    String localLoaderClass = null;
-	    for (Iterator it = local.iterator(); it.hasNext();)
-	    {
-	        flex2.compiler.abc.MetaData md = (flex2.compiler.abc.MetaData) it.next();
+                for (Iterator it = inherited.iterator(); it.hasNext();)
+                {
+                    MetaData md = (MetaData) it.next();
 
-	        String lc = md.getValue( "factoryClass" );
-	        if (lc != null)
-	        {
-	            localLoaderClass = normalizeClassName( lc );
-	            break;
-	        }
-	    }
-	    */
+                    String lc = md.getValue( "factoryClass" );
+                    if (lc != null)
+                    {
+                        inheritedLoaderClass = NodeMagic.normalizeClassName( lc );
+                        break;
+                    }
+                }
 
-	    u.loaderClassBase = inheritedLoaderClass;
-
-		/* C: not doing anything to evaluate u.loaderClassBase...
-	    if (inheritedLoaderClass != null)
-	        System.err.println(c.getName() + " local loader = " + localLoaderClass + " inherited loader = " + inheritedLoaderClass );
-	    */
+                u.loaderClassBase = inheritedLoaderClass;
+            }
+        }
 	}
 
 	private void processCoachSettings()

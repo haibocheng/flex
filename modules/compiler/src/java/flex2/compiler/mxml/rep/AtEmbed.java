@@ -198,9 +198,20 @@ public class AtEmbed implements LineNumberMapped
 	/**
 	 *
 	 */
-	public static AtEmbed create(String baseName, int beginLine, Map<String, Object> attrs, boolean strType)
+	public static AtEmbed create(String baseName, Source source, String path, int beginLine,
+                                 Map<String, Object> attrs, boolean strType)
 	{
 		String embedName = AtEmbed.createMangledName(baseName, attrs.hashCode());
+        String sourceValue = (String) attrs.get(Transcoder.SOURCE);
+
+        /*
+        if ((sourceValue != null) &&
+            !tokenizeAndResolveSource(sourceValue, attrs, source, sourceValue, path, beginLine))
+        {
+            logInvalidEmbed(sourceValue, path, beginLine);            
+        }
+        */
+
 		return new AtEmbed(embedName, beginLine, attrs, strType);
 	}
 
@@ -366,7 +377,14 @@ public class AtEmbed implements LineNumberMapped
 
         context.addSinglePathResolver(ThreadLocalToolkit.getPathResolver());
 
-        return context.resolve(sourcePath);
+        VirtualFile result = context.resolve(sourcePath);
+
+        if (result == null)
+        {
+            result = source.resolve(sourcePath);
+        }
+
+        return result;
 	}
 
     private static boolean tokenizeAndResolveSource(String sourceValue, Map<String, Object> values, Source source,
@@ -395,6 +413,7 @@ public class AtEmbed implements LineNumberMapped
         else
         {
             logInvalidEmbed(value, path, line);
+            result = false;
         }
 
         return result;

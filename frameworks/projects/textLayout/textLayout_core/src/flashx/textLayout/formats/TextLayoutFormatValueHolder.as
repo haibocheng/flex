@@ -1,8 +1,8 @@
 //========================================================================================
 //  $File: //a3t/argon/dev/textLayout_core/src/flashx/textLayout/formats/TextLayoutFormatValueHolder.as $
-//  $DateTime: 2009/08/31 15:29:53 $
-//  $Revision: #17 $
-//  $Change: 716623 $
+//  $DateTime: 2009/10/19 15:47:10 $
+//  $Revision: #18 $
+//  $Change: 723534 $
 //  
 //  ADOBE CONFIDENTIAL
 //  
@@ -785,7 +785,7 @@ package flashx.textLayout.formats
 		 * TextLayoutFormat:
 		 *  The name of the font to use, or a comma-separated list of font names. The Flash runtime renders the element with the first available font in the list. For example Arial, Helvetica, _sans causes the player to search for Arial, then Helvetica if Arial is not found, then _sans if neither is found.
 		 * <p>Default value is undefined indicating not set.</p>
-		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of Times New Roman.</p>
+		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of Arial.</p>
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5

@@ -69,6 +69,10 @@ public class ListItemDragProxy extends Group
         var dataGroup:DataGroup = list.dataGroup;
         if (!dataGroup)
             return;
+		
+		// Make sure we inherit styles from the drag initiator, as those styles
+		// may be affecting the appearance of the item renderers.
+		this.styleName = list;
         
         // Generate a dragImage
         // FIXME (egeorgie): do we need to set the image size here?
@@ -120,8 +124,8 @@ public class ListItemDragProxy extends Group
                 }
             }
             
-            var clone:IVisualElement = cloneItemRenderer(IItemRenderer(element), list);
-            // FIXME (egeorgie): update the clone's state to "dragging" 
+            var clone:IItemRenderer = cloneItemRenderer(IItemRenderer(element), list);
+            clone.dragging = true; 
 
             // Add the clone as a child
             clone.x -= offsetX;

@@ -316,7 +316,7 @@ public final class DataBindingExtension implements Extension
         InheritanceNode inheritance = nodeFactory.inheritance(null, interfaces);
 
         FunctionDefinitionNode constructorFunctionDefinition =
-            AbstractSyntaxTreeUtil.generateConstructor(cx, name, true, null, -1);
+            AbstractSyntaxTreeUtil.generateConstructor(cx, name, null, true, null, -1);
         StatementListNode statementList = nodeFactory.statementList(null, constructorFunctionDefinition);
 
         FunctionCommonNode initFunctionCommon = generateInitFunctionCommon(nodeFactory, cx, dataBindingInfo);

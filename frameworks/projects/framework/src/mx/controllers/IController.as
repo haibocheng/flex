@@ -34,6 +34,7 @@ package mx.controllers
 	
 	public interface IController extends IAttachable
 	{
-		
+		function get name():String;
+		function set name(value:String):void;
 	}	
 }

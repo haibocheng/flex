@@ -17,15 +17,16 @@ import flash.display.DisplayObject;
 import flash.display.Graphics;
 import flash.display.Shape;
 import flash.events.Event;
-import flash.filters.DropShadowFilter;
 import flash.geom.Matrix;
 import flash.geom.Rectangle;
 import flash.utils.getTimer;
+
 import mx.controls.SWFLoader;
 import mx.core.Container;
 import mx.core.FlexShape;
 import mx.core.IInvalidating;
 import mx.core.IUIComponent;
+import mx.core.IVisualElementContainer;
 import mx.core.mx_internal;
 import mx.effects.EffectInstance;
 import mx.effects.EffectManager;
@@ -756,7 +757,9 @@ public class MaskEffectInstance extends EffectInstance
 			// to the "allChildren" collection so it doesn't get
 			// treated as a content child.
 			if (target is Container)
-				target.rawChildren.addChild(effectMask); 
+				target.rawChildren.addChild(effectMask);
+			else if (target is IVisualElementContainer)
+				target.mx_internal::$addChild(effectMask);
 			else
 				target.addChild(effectMask); 
 
@@ -1069,6 +1072,8 @@ public class MaskEffectInstance extends EffectInstance
 					
 			if (target is Container)
 				target.rawChildren.removeChild(effectMask); 
+			else if (target is IVisualElementContainer)
+				target.mx_internal::$removeChild(effectMask);
 			else
 				target.removeChild(effectMask); 	
 				

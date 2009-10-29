@@ -2864,7 +2864,7 @@ public class Tree extends List implements IIMESupport
         treeListData.item = item;
         treeListData.icon = itemToIcon(item);
     }
-
+	
     //--------------------------------------------------------------------------
     //
     //  Overridden event handlers

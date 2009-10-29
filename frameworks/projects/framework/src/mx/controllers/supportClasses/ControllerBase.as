@@ -32,6 +32,7 @@ package mx.controllers.supportClasses
 {
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
+	import flash.utils.getQualifiedClassName;
 	
 	import mx.controllers.IController;
 	import mx.core.UIComponent;
@@ -62,6 +63,25 @@ package mx.controllers.supportClasses
 				return;
 			_component = value;
 			dispatchBindingEvent("componentChange");
+		}
+		
+		private var _name:String;
+		[Bindable(event="nameChange")]
+		/**
+		 *  Name of the controller, defaults to the class name
+		 */
+		public function get name():String
+		{
+			if (!_name)
+				_name = getQualifiedClassName(this);
+			return _name;
+		}
+		public function set name(value:String):void
+		{
+			if (_name == value) 
+				return;
+			_name = value;
+			dispatchBindingEvent("nameChange");
 		}
 		
 		public function ControllerBase()

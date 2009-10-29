@@ -5948,6 +5948,32 @@ public class UIComponent extends FlexSprite
 		attachables.push(attachable);
 		attachable.attach(this);
 	}
+	
+	public function hasController(name:String):Boolean
+	{
+		if (!controllers || controllers.length == 0)
+			return false;
+		var i:int = 0, n:int = controllers.length;
+		for (i; i < n; i++)
+		{
+			if (controllers[i].name == name)
+				return true;
+		}
+		return false;
+	}
+	
+	public function getControllerByName(name:String):IAttachable
+	{
+		if (!controllers || controllers.length == 0)
+			return null;
+		var i:int = 0, n:int = controllers.length;
+		for (i; i < n; i++)
+		{
+			if (controllers[i].name == name)
+				return controllers[i];
+		}
+		return null;
+	}
 		
     //--------------------------------------------------------------------------
     //

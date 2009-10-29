@@ -433,6 +433,14 @@ public class ItemRenderer extends DataRenderer implements IItemRenderer
         // will display but essentially be non-interactive visually. 
         return null;
     }
+
+	/**
+	 *  Need a way to get the skinstate outside this class
+	 */
+	mx_internal function getCurrentRendererStateInternal():String
+	{
+		return getCurrentRendererState();
+	}
     
     //--------------------------------------------------------------------------
     //

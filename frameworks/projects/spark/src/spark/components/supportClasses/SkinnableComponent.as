@@ -19,7 +19,6 @@ import flash.events.Event;
 import flash.geom.Point;
 import flash.utils.*;
 
-import mx.controllers.IController;
 import mx.core.IFactory;
 import mx.core.ILayoutElement;
 import mx.core.IVisualElement;
@@ -145,27 +144,6 @@ public class SkinnableComponent extends UIComponent
     //  Properties
     //
     //--------------------------------------------------------------------------
-
-	private var _controller:IController;
-	[Bindable(event="controllerChange")]
-	/**
-	 *  Controllers used for adding behaviors to this object
-	 */
-	public function get controller():IController
-	{
-		return _controller;
-	}
-	public function set controller(value:IController):void
-	{
-		if (_controller == value) 
-			return;
-		if (_controller)
-			_controller.detach(this);
-		_controller = value;
-		if (_controller)
-			_controller.attach(this);
-		dispatchBindingEvent("controllerChange");
-	}
     
     /**
      * @private 
@@ -509,6 +487,14 @@ public class SkinnableComponent extends UIComponent
     {
         return null; 
     }
+	
+	/**
+	 *  Need a way to get the currentSkinState
+	 */
+	mx_internal function getCurrentSkinStateInternal():String
+	{
+		return getCurrentSkinState();
+	}
     
     /**
      *  Marks the component so that the new state of the skin will get set

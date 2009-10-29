@@ -1753,7 +1753,7 @@ public class List extends ListBase implements IFocusManagerComponent
      *  @private
      *  Called when an item has been added to this component.
      */
-    private function dataGroup_rendererAddHandler(event:RendererExistenceEvent):void
+    protected function dataGroup_rendererAddHandler(event:RendererExistenceEvent):void
     {
         var index:int = event.index;
         var renderer:IVisualElement = event.renderer;
@@ -1768,7 +1768,7 @@ public class List extends ListBase implements IFocusManagerComponent
      *  @private
      *  Called when an item has been removed from this component.
      */
-    private function dataGroup_rendererRemoveHandler(event:RendererExistenceEvent):void
+    protected function dataGroup_rendererRemoveHandler(event:RendererExistenceEvent):void
     {
         var index:int = event.index;
         var renderer:Object = event.renderer;

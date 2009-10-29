@@ -21,6 +21,7 @@ import mx.core.IFactory;
 import mx.core.IInvalidating;
 import mx.core.ILayoutElement;
 import mx.core.IVisualElement;
+import mx.core.IVisualElementContainer;
 import mx.core.mx_internal;
 import mx.events.CollectionEvent;
 import mx.events.CollectionEventKind;
@@ -972,16 +973,7 @@ public class DataGroup extends GroupBase
             var item:Object = dataProvider.getItemAt(index);
             if ((item != elt) && (elt is IDataRenderer))
             {
-                // IDataRenderer(elt).data = null;  see https://bugs.adobe.com/jira/browse/SDK-20962
-                elt.includeInLayout = false;
-                elt.visible = false;
-                
-                // Reset back to (0,0), otherwise when the element is reused
-                // it will be validated at its last layout size which causes
-                // problems with text reflow.
-                elt.setLayoutBoundsSize(0, 0, false);
-                
-                freeRenderers.push(elt);
+				addFreeRenderer(elt);
             }
             else if (elt)
             {
@@ -1015,6 +1007,23 @@ public class DataGroup extends GroupBase
         if (depthSortRequired)
             manageDisplayObjectLayers();
     }
+
+	public function addFreeRenderer(element:IVisualElement):void
+	{
+		var parent:Object = element.parent;
+		if (parent is DataGroup)
+			DataGroup(parent)._removeChild(element as DisplayObject);
+         // IDataRenderer(elt).data = null;  see https://bugs.adobe.com/jira/browse/SDK-20962
+         element.includeInLayout = false;
+         element.visible = false;
+         
+         // Reset back to (0,0), otherwise when the element is reused
+         // it will be validated at its last layout size which causes
+         // problems with text reflow.
+         element.setLayoutBoundsSize(0, 0, false);
+         
+         freeRenderers.push(element);
+	}
     
     /**
      *  @private
@@ -1358,7 +1367,7 @@ public class DataGroup extends GroupBase
             IDataRenderer(myItemRenderer).data = null;
         
         var child:DisplayObject = myItemRenderer as DisplayObject;
-        if (child)
+        if (child && child.parent == this)
             super.removeChild(child);
         
         invalidateSize();

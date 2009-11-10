@@ -574,7 +574,8 @@ public class DataGroup extends GroupBase
                 for (var i:int = freeRenderers.length - 1; i >= 0; i--)
                 {
                     var myItemRenderer:IVisualElement = freeRenderers.pop() as IVisualElement;
-                    super.removeChild(myItemRenderer as DisplayObject);
+                    if (myItemRenderer.parent == this)
+	                    super.removeChild(myItemRenderer as DisplayObject);
                 }
             }
         }

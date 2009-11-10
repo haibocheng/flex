@@ -115,7 +115,7 @@ public class VerticalLayout extends LayoutBase
      *  useVirtualLayout=true.   See updateLLV(), resetCachedVirtualLayoutState(),
      *  etc.
      */
-    private var llv:LinearLayoutVector = new LinearLayoutVector();
+    protected var llv:LinearLayoutVector = new LinearLayoutVector();
     
     //--------------------------------------------------------------------------
     //
@@ -253,7 +253,7 @@ public class VerticalLayout extends LayoutBase
      *  Sets the <code>rowCount</code> property and dispatches a
      *  PropertyChangeEvent.
      */
-    private function setRowCount(value:int):void
+    protected function setRowCount(value:int):void
     {
         if (_rowCount == value)
             return;
@@ -675,7 +675,7 @@ public class VerticalLayout extends LayoutBase
      *  
      *  @private
      */
-    private function setIndexInView(firstIndex:int, lastIndex:int):void
+    protected function setIndexInView(firstIndex:int, lastIndex:int):void
     {
         if ((_firstIndexInView == firstIndex) && (_lastIndexInView == lastIndex))
             return;
@@ -951,7 +951,7 @@ public class VerticalLayout extends LayoutBase
      * 
      *  Returns null if no such element can be found.
      */
-    private function findLayoutElementBounds(g:GroupBase, i:int, dir:int, r:Rectangle):Rectangle
+    protected function findLayoutElementBounds(g:GroupBase, i:int, dir:int, r:Rectangle):Rectangle
     {
         var n:int = g.numElements;
 
@@ -1014,7 +1014,7 @@ public class VerticalLayout extends LayoutBase
      * 
      *  If requestedRowCount is -1, we measure all of the layout elements.
      */
-    private function measureReal(layoutTarget:GroupBase):void
+    protected function measureReal(layoutTarget:GroupBase):void
     {
         var layoutEltCount:int = layoutTarget.numElements;
         var reqEltCount:int = requestedRowCount; // -1 means "all elements"
@@ -1082,7 +1082,7 @@ public class VerticalLayout extends LayoutBase
      *  for the possibility that the typicalLayoutElement has changed, or
      *  something that its preferred size depends on has changed.
      */
-    private function updateLLV(layoutTarget:GroupBase):void
+    protected function updateLLV(layoutTarget:GroupBase):void
     {
         var typicalElt:ILayoutElement = typicalLayoutElement;
         if (typicalElt)
@@ -1130,7 +1130,7 @@ public class VerticalLayout extends LayoutBase
      *  llv's defaultMajorSize, minorSize, and minMinorSize 
      *  are based on typicalLayoutElement.
      */
-    private function measureVirtual(layoutTarget:GroupBase):void
+    protected function measureVirtual(layoutTarget:GroupBase):void
     {
         var eltCount:uint = layoutTarget.numElements;
         var measuredEltCount:int = (requestedRowCount != -1) ? requestedRowCount : eltCount;
@@ -1380,7 +1380,7 @@ public class VerticalLayout extends LayoutBase
      * 
      *  Used only for virtual layout.
      */
-    private function calculateElementWidth(elt:ILayoutElement, targetWidth:Number, containerWidth:Number):Number
+    protected function calculateElementWidth(elt:ILayoutElement, targetWidth:Number, containerWidth:Number):Number
     {
        // If percentWidth is specified then the element's width is the percentage
        // of targetWidth clipped to min/maxWidth and to (upper limit) targetWidth.
@@ -1390,7 +1390,7 @@ public class VerticalLayout extends LayoutBase
           var width:Number = percentWidth * 0.01 * targetWidth;
           return Math.min(targetWidth, Math.min(elt.getMaxBoundsWidth(), Math.max(elt.getMinBoundsWidth(), width)));
        }
-       switch(horizontalAlign)
+       switch (horizontalAlign)
        {
            case HorizontalAlign.JUSTIFY: 
                return targetWidth;
@@ -1405,9 +1405,9 @@ public class VerticalLayout extends LayoutBase
      * 
      *  Used only for virtual layout.
      */
-    private function calculateElementX(elt:ILayoutElement, eltWidth:Number, containerWidth:Number):Number
+    protected function calculateElementX(elt:ILayoutElement, eltWidth:Number, containerWidth:Number):Number
     {
-       switch(horizontalAlign)
+       switch (horizontalAlign)
        {
            case HorizontalAlign.CENTER: 
                return Math.round((containerWidth - eltWidth) * 0.5);
@@ -1461,7 +1461,7 @@ public class VerticalLayout extends LayoutBase
      *  for the initial layout and then, if it has changed, we loop through 
      *  the layout items again and fix up the x/width values.
      */
-    private function updateDisplayListVirtual():void
+    protected function updateDisplayListVirtual():void
     {
         var layoutTarget:GroupBase = target; 
         var eltCount:int = layoutTarget.numElements;
@@ -1540,11 +1540,10 @@ public class VerticalLayout extends LayoutBase
         layoutTarget.setContentSize(paddedContentWidth, paddedContentHeight);
     }
     
-
     /**
      *  @private
      */
-    private function updateDisplayListReal():void
+    protected function updateDisplayListReal():void
     {
         var layoutTarget:GroupBase = target;
         var targetWidth:Number = Math.max(0, layoutTarget.width - paddingLeft - paddingRight);
@@ -1775,7 +1774,7 @@ public class VerticalLayout extends LayoutBase
      *  to ensure that the elements are re-arranged with the new setting and the
      *  target's default size is recomputed.</p> 
      */
-    private function invalidateTargetSizeAndDisplayList():void
+    public function invalidateTargetSizeAndDisplayList():void
     {
         var g:GroupBase = target;
         if (!g)

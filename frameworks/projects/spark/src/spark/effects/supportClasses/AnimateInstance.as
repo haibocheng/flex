@@ -116,8 +116,7 @@ public class AnimateInstance extends EffectInstance implements IAnimationTarget
      *  @private
      *  Used for accessing localized Error messages.
      */
-    private var resourceManager:IResourceManager =
-                                    ResourceManager.getInstance();
+    private var resourceManager:IResourceManager = ResourceManager.getInstance();
     
     /**
      * @private

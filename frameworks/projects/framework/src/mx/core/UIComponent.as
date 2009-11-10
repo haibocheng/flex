@@ -7624,10 +7624,10 @@ public class UIComponent extends FlexSprite
             oldScaleY = scaleY;
         }
 
-        if (x != oldX || y != oldY)
+        if (Number(x.toFixed(3)) != Number(oldX.toFixed(3)) || Number(y.toFixed(3)) != Number(oldY.toFixed(3)))
         {
-            if (parent && parent is UIComponent)
-                UIComponent(parent).childXYChanged();
+//            if (parent && parent is UIComponent)
+//                UIComponent(parent).childXYChanged();
             dispatchMoveEvent();
         }
 
@@ -12238,8 +12238,8 @@ public class UIComponent extends FlexSprite
             _layoutFeatures.transformAround(transformCenter, scale, rotation,
                 translation, postLayoutScale, postLayoutRotation,
                 postLayoutTranslation);
-            invalidateTransform();      
-            invalidateParentSizeAndDisplayList();
+            invalidateTransform();
+           	//invalidateParentSizeAndDisplayList();
             if (prevX != _layoutFeatures.layoutX)
                 dispatchBindingEvent("xChanged");
             if (prevY != _layoutFeatures.layoutY)

@@ -656,59 +656,45 @@ public class DragProxy extends UIComponent
 	 *  @playerversion AIR 1.1
 	 *  @productversion Flex 3
 	 */
-	private static function getObjectsUnderPoint(obj:DisplayObject, pt:Point, arr:Array):void
+	private static function getObjectsUnderPoint(target:DisplayObject, point:Point, matches:Array):void
 	{
-		if (!obj.visible)
+		if (!target.visible)
 			return;
 
-        if ((obj is UIComponent) && !UIComponent(obj).$visible)
+		if ((target is UIComponent) && !UIComponent(target).$visible)
 			return;
 
-		if (obj.hitTestPoint(pt.x, pt.y, true))
+		if (target.hitTestPoint(point.x, point.y, true))
 		{
-			if (obj is InteractiveObject && InteractiveObject(obj).mouseEnabled)
-				arr.push(obj);
-			if (obj is DisplayObjectContainer)
+			if (target is InteractiveObject && InteractiveObject(target).mouseEnabled)
+				matches.push(target);
+			
+			if (!(target is DisplayObjectContainer))
+				return;
+				
+			var parent:Object = target;
+			
+			if (!parent.mouseChildren)
+				return;
+				
+			// we use this test so we can test in other application domains
+			if ("rawChildren" in parent)
+				parent = parent["rawChildren"];
+				
+			var i:int = 0;
+			var n:int = parent.numChildren;
+			var child:DisplayObject;
+			for (i = 0; i < n; i++)
 			{
-				var doc:DisplayObjectContainer = obj as DisplayObjectContainer;
-				if (doc.mouseChildren)
+				try
 				{
-					// we use this test so we can test in other application domains
-					if ("rawChildren" in doc)
-					{
-						var rc:Object = doc["rawChildren"];
-						n = rc.numChildren;
-						for (i = 0; i < n; i++)
-						{
-							try
-							{
-								getObjectsUnderPoint(rc.getChildAt(i), pt, arr);
-							}
-							catch (e:Error)
-							{
-								//another sandbox?
-							}
-						}
-					}
-					else
-					{
-						if (doc.numChildren)
-						{
-							var n:int = doc.numChildren;
-							for (var i:int = 0; i < n; i++)
-							{
-								try
-								{
-									var child:DisplayObject = doc.getChildAt(i);
-									getObjectsUnderPoint(child, pt, arr);
-								}
-								catch (e:Error)
-								{
-									//another sandbox?
-								}
-							}
-						}
-					}
+					child = parent.getChildAt(i) as DisplayObject;
+					if (child)
+						getObjectsUnderPoint(child, point, matches);
+				}
+				catch (e:Error)
+				{
+					//another sandbox?
 				}
 			}
 		}

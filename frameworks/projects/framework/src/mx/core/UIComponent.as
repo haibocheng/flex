@@ -45,6 +45,7 @@ import flash.utils.getQualifiedClassName;
 import mx.automation.IAutomationObject;
 import mx.binding.BindingManager;
 import mx.controls.IFlexContextMenu;
+import mx.controllers.supportClasses.ControllerBase; ControllerBase;
 import mx.effects.EffectManager;
 import mx.effects.IEffect;
 import mx.effects.IEffectInstance;

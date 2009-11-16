@@ -48,6 +48,7 @@ import static com.adobe.fxg.FXGConstants.FXG_JUSTIFICATIONRULE_AUTO_VALUE;
 import static com.adobe.fxg.FXGConstants.FXG_JUSTIFICATIONRULE_EASTASIAN_VALUE;
 import static com.adobe.fxg.FXGConstants.FXG_JUSTIFICATIONRULE_SPACE_VALUE;
 import static com.adobe.fxg.FXGConstants.FXG_JUSTIFICATIONSTYLE_AUTO_VALUE;
+import static com.adobe.fxg.FXGConstants.FXG_JUSTIFICATIONSTYLE_PRIORITIZELEASTADJUSTMENT_VALUE;
 import static com.adobe.fxg.FXGConstants.FXG_JUSTIFICATIONSTYLE_PUSHINKINSOKU_VALUE;
 import static com.adobe.fxg.FXGConstants.FXG_JUSTIFICATIONSTYLE_PUSHOUTONLY_VALUE;
 import static com.adobe.fxg.FXGConstants.FXG_KERNING_AUTO_VALUE;
@@ -535,7 +536,7 @@ public class TextHelper
     {
         if (FXG_JUSTIFICATIONSTYLE_AUTO_VALUE.equals(value))
             return JustificationStyle.AUTO;
-        else if (FXG_JUSTIFICATIONSTYLE_AUTO_VALUE.equals(value))
+        else if (FXG_JUSTIFICATIONSTYLE_PRIORITIZELEASTADJUSTMENT_VALUE.equals(value))
             return JustificationStyle.PRIORITIZELEASTADJUSTMENT;
         else if (FXG_JUSTIFICATIONSTYLE_PUSHINKINSOKU_VALUE.equals(value))
             return JustificationStyle.PUSHINKINSOKU;

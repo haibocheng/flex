@@ -18,7 +18,6 @@ import spark.components.SkinnableContainer;
 
 /**
  *  Background image of a container.  
- *  This can be an absolute or relative URL or class.  
  *  You can have both a <code>backgroundColor</code> and a
  *  <code>backgroundImage</code> set at the same time. 
  *  The background image is displayed on top of the background color.
@@ -187,6 +186,7 @@ import spark.components.SkinnableContainer;
  *  </pre>
  * 
  *  @see spark.skins.spark.BorderSkin
+ *  @includeExample examples/BorderExample.mxml
  * 
  *  @langversion 3.0
  *  @playerversion Flash 10

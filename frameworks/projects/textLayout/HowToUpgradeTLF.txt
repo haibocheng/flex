@@ -1,0 +1,35 @@
+To update our version of TLF do the following:
+
+NOTE ***The signed rsl, textLayout_1.0.0.buildnum.swz should not be put in svn.***
+
+1. From the TLF build, unzip openSource\textLayout.zip to 
+   ${FLEX_SDK}\frameworks\projects\textLayout.
+
+2. Check to see if there are any new files or removed files and update svn 
+   accordingly.
+
+3. From ${FLEX_SDK}\frameworks\projects\textLayout run ant to make sure sources
+   build.  This must be done before step 4 which will replace the swc you just
+   built with the version from the TLF build.
+
+4. From the TLF build, copy textLayout\libs\textLayout.swc to 
+   ${FLEX_SDK}\frameworks\libs
+
+5. From the TLF build, copy the unsigned rsl, 
+   textLayout\rsl\textLayout_1.0.0.buildnum.swf to ${FLEX_SDK}\frameworks\rsls
+
+6. Add this rsl to svn.  Delete the previous version of the rsl from svn.
+
+7. Edit ${FLEX_SDK}\frameworks\flex-config.xml and update the buildnum to match 
+   the swf from the step above.
+
+    <runtime-shared-library-path>
+        <path-element>libs/textLayout.swc</path-element>
+        <rsl-url>textLayout_1.0.0.547.swf</rsl-url>     <== update build number
+        <policy-file-url></policy-file-url>
+    </runtime-shared-library-path>
+
+8. Edit ${FLEX_SDK}\frameworks\air-config.xml and do the same edit.
+
+9. Commit all the changes.
+

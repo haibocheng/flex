@@ -187,12 +187,12 @@ public final class NodeFactory implements ErrorConstants
 		{
 			node = this.memberExpression(null, this.setExpression(lhs, this.argumentList(null, rhs),is_constinit));
 		}
-// Appears unused....		
-//		if (cx.scriptAssistParsing){
-//			MemberExpressionNode exprNode = (MemberExpressionNode)node;
-//			if (exprNode != null && (prevOp != op))
-//				exprNode.setOrigToken(prevOp);
-//		}
+		// required by flash pro
+		if (cx.scriptAssistParsing){
+			MemberExpressionNode exprNode = (MemberExpressionNode)node;
+			if (exprNode != null && (prevOp != op))
+				exprNode.setOrigToken(prevOp);
+		}
 		node.setPositionNonterminal(lhs, pos);
 		return node;
 	}
@@ -612,6 +612,8 @@ public final class NodeFactory implements ErrorConstants
 	        if( vard != null )
 	        {
 	            StatementListNode stmtlist = this.statementList(this.statementList(null,vard),node);
+	            if ( stmtlist != null )
+	            	stmtlist.is_loop = true;
 	            node = stmtlist;
 	        }
 	
@@ -928,11 +930,13 @@ public final class NodeFactory implements ErrorConstants
     public Node applyTypeExpr(Node expr, ListNode typeArgs, int pos)
     {
         Node node;
+        
+        assert(expr != null);
 
         // If it is a member expression, then extract the expression inside the selector
         // and place it in the new call expression.
 
-        if (expr != null && expr.isMemberExpression())
+        if (expr.isMemberExpression())
         {
             // Put the apply expression in the slot of the member expr.
             // ISSUE: generalize this code for converting one selector to another.
@@ -957,13 +961,18 @@ public final class NodeFactory implements ErrorConstants
                 node = apply;
             }
         }
-        else
+        else if ( expr.isIdentifier() )
         {
+        	//  A Vector literal.
             ApplyTypeExprNode apply;
             apply = new ApplyTypeExprNode(expr, typeArgs);
             apply.setRValue(true);
             apply.setPositionNonterminal(expr, pos);
             node = apply;
+        }
+        else
+        {
+        	node = this.error(pos, kError_Parser_keywordInsteadOfTypeExpr, expr.toString());
         }
 
         return node;

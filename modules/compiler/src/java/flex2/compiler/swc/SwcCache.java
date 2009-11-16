@@ -61,9 +61,9 @@ public class SwcCache
     // changed from private to protected to support Flash Authoring - jkamerer 2007.07.30
     protected boolean useCache = true;
 
-	// changed from private to protected to support Flash Authoring - jkamerer 2007.07.30
-	protected boolean lazyRead = true;
-
+    // changed from private to protected to support Flash Authoring - jkamerer 2007.07.30
+    protected boolean lazyRead = true;
+    
     /**
      * Loads the current path SWCs and returns a SwcGroup. There will be one SwcGroup per compile,
      * and this is the piece that the compiler will mostly deal with for SWCs.
@@ -128,7 +128,7 @@ public class SwcCache
         {
             if (! swc.save())
             {
-	            return false;
+                return false;
             }
 
             if (Trace.swc)
@@ -148,25 +148,25 @@ public class SwcCache
             {
                 e.printStackTrace();
             }
-	        if (e instanceof SwcException)
-	        {
-	        	throw (SwcException) e;
-	        }
-	        else
-	        {
-	        	SwcException ex = new SwcException.SwcNotExported(swc.getLocation(), e);
-	        	ThreadLocalToolkit.log(ex);
-	        	throw ex;
-	        }
+            if (e instanceof SwcException)
+            {
+                throw (SwcException) e;
+            }
+            else
+            {
+                SwcException ex = new SwcException.SwcNotExported(swc.getLocation(), e);
+                ThreadLocalToolkit.log(ex);
+                throw ex;
+            }
         }
-	    return true;
+        return true;
     }
 
     // changed from private to protected to support Flash Authoring - jkamerer 2007.07.30
     protected Map<String, Swc> getSwcs(String path)
     {
         Map<String, Swc> map = new LinkedHashMap<String, Swc>();
-		File f = new File(path);
+        File f = new File(path);
         if (!f.exists())
         {
             throw new SwcException.SwcNotFound(path);
@@ -201,7 +201,7 @@ public class SwcCache
                         Swc swc = getSwc( file );
                         if (swc != null)
                         {
-	                        map.put( swc.getLocation(), swc );
+                            map.put( swc.getLocation(), swc );
                         }
                     }
                 }
@@ -240,7 +240,7 @@ public class SwcCache
 
                 SwcArchive archive = file.isDirectory()?
                         (SwcArchive) new SwcDirectoryArchive( location ) :
-	                    lazyRead ? new SwcLazyReadArchive( location ) : new SwcDynamicArchive( location );
+                        lazyRead ? new SwcLazyReadArchive( location ) : new SwcDynamicArchive( location );
 
                 swc = new Swc( archive, true );
                 swc.setLastModified(fileLastModified);
@@ -265,15 +265,15 @@ public class SwcCache
             {
                 e.printStackTrace();
             }
-	        SwcException.SwcNotLoaded ex = new SwcException.SwcNotLoaded(file.getName(), e);
-	        ThreadLocalToolkit.log(ex);
-	        throw ex;
+            SwcException.SwcNotLoaded ex = new SwcException.SwcNotLoaded(file.getName(), e);
+            ThreadLocalToolkit.log(ex);
+            throw ex;
         }
         return swc;
     }
 
     public void setLastModified(String location, long lastModified)
-	{
+    {
         Swc swc = (Swc) swcLRUCache.get(location);
     
         if (swc != null)
@@ -282,9 +282,9 @@ public class SwcCache
         }
     }
 
-	public void setLazyRead(boolean lazyRead)
+    public void setLazyRead(boolean lazyRead)
     {
-		this.lazyRead = lazyRead;
+        this.lazyRead = lazyRead;
     }
     
     static class SwcLRUCache extends LRUCache

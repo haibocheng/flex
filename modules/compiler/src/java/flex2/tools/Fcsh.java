@@ -910,6 +910,7 @@ public class Fcsh extends Tool
 
             // load SWCs
             s.swcCache = new SwcCache();
+            
             CompilerSwcContext swcContext = new CompilerSwcContext(true);
             swcContext.load( compilerConfig.getLibraryPath(),
                              Configuration.getAllExcludedLibraries(compilerConfig, configuration),
@@ -1138,6 +1139,7 @@ public class Fcsh extends Tool
 
             // load SWCs
             s.swcCache = new SwcCache();
+            
             CompilerSwcContext swcContext = new CompilerSwcContext(true);
             // for compc the theme and include-libraries values have been purposely not passed in below.
             // This is done because the theme attribute doesn't make sense and the include-libraries value

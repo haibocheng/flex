@@ -171,8 +171,8 @@ public class FXGMatrix
         sm.scaleY =  (int) (d * SwfConstants.FIXED_POINT_MULTIPLE);
         sm.rotateSkew0 = (int) (b * SwfConstants.FIXED_POINT_MULTIPLE);
         sm.rotateSkew1 =  (int) (c * SwfConstants.FIXED_POINT_MULTIPLE);
-        sm.translateX = (int) tx * SwfConstants.TWIPS_PER_PIXEL;
-        sm.translateY = (int) ty * SwfConstants.TWIPS_PER_PIXEL;
+        sm.translateX = (int) (tx * SwfConstants.TWIPS_PER_PIXEL);
+        sm.translateY = (int) (ty * SwfConstants.TWIPS_PER_PIXEL);
         
         return sm;        
     }

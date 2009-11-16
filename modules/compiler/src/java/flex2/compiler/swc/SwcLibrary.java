@@ -200,9 +200,16 @@ public class SwcLibrary
     void getSymbolClasses(String def, Set<String> symbolClasses)
     {
     	// getSymbol() converts def from a.b:C to a.b.C
-    	DefineTag t = getSymbol(def);    	
-    	if (t != null)
+    	DefineTag t = getSymbol(def);   
+    	HashSet<Tag> visited = new HashSet<Tag>();
+    	getReferencedSymbolClasses(t, symbolClasses, visited);
+    }
+    
+    void getReferencedSymbolClasses(Tag t, Set<String> symbolClasses, HashSet<Tag> visited)
+    {
+    	if (t != null && !visited.contains(t))
     	{
+    		visited.add(t);
     		for (Iterator i = t.getReferences(); i != null && i.hasNext(); )
     		{
     		    Tag r = (Tag)i.next();
@@ -217,8 +224,9 @@ public class SwcLibrary
 						}
 					}
     			}
+    			getReferencedSymbolClasses(r, symbolClasses, visited);
     		}
-    	}
+    	}	
     }
     
     /**

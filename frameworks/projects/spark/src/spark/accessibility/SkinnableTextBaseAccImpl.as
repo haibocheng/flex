@@ -52,11 +52,6 @@ public class SkinnableTextBaseAccImpl extends AccImpl
     /**
      *  @private
      */
-    private static const EVENT_OBJECT_FOCUS:uint = 0x8005;
-
-    /**
-     *  @private
-     */
     private static const EVENT_OBJECT_VALUECHANGE:uint = 0x800E;
 
     //--------------------------------------------------------------------------
@@ -119,7 +114,6 @@ public class SkinnableTextBaseAccImpl extends AccImpl
         super(master);
 
         role = 0x2a; // ROLE_SYSTEM_TEXT
-        master.addEventListener(FocusEvent.FOCUS_IN, focusInHandler);
     }
 
     //--------------------------------------------------------------------------
@@ -221,16 +215,5 @@ public class SkinnableTextBaseAccImpl extends AccImpl
         return "";
     }
 
-    /**
-     *  @private
-     *
-     */
-    private function focusInHandler(event:Event):void
-    {
-        Accessibility.sendEvent(master, 0, EVENT_OBJECT_FOCUS);
-    }
-
-
 }
-
 }

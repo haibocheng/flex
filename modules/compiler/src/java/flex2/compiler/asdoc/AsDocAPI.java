@@ -268,6 +268,7 @@ public class AsDocAPI
 		// load SWCs
 		CompilerSwcContext swcContext = new CompilerSwcContext();
 		SwcCache cache = new SwcCache();
+		
 		// lazy read should only be set by mxmlc/compc/asdoc
 		cache.setLazyRead(true);
 		// for asdoc the theme and include-libraries values have been purposely not passed in below.

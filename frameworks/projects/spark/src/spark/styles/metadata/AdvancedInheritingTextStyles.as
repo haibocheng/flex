@@ -57,7 +57,7 @@
  *  @playerversion AIR 1.5
  *  @productversion Flex 4
  */
-[Style(name="paragraphEndIndent", type="Number", format="length", inherit="yes")]
+[Style(name="paragraphEndIndent", type="Number", format="length", inherit="yes", minValue="0.0")]
 
 /**
  *  @copy flashx.textLayout.formats.ITextLayoutFormat#paragraphSpaceAfter
@@ -67,7 +67,7 @@
  *  @playerversion AIR 1.5
  *  @productversion Flex 4
  */
-[Style(name="paragraphSpaceAfter", type="Number", format="length", inherit="yes")]
+[Style(name="paragraphSpaceAfter", type="Number", format="length", inherit="yes", minValue="0.0")]
 
 /**
  *  @copy flashx.textLayout.formats.ITextLayoutFormat#paragraphSpaceBefore
@@ -77,10 +77,10 @@
  *  @playerversion AIR 1.5
  *  @productversion Flex 4
  */
-[Style(name="paragraphSpaceBefore", type="Number", format="length", inherit="yes")]
+[Style(name="paragraphSpaceBefore", type="Number", format="length", inherit="yes", minValue="0.0")]
 
 /**
- *  @copy flashx.textLayout.formats.paragraphStartIndent
+ *  @copy flashx.textLayout.formats.ITextLayoutFormat#paragraphStartIndent
  *  
  *  @langversion 3.0
  *  @playerversion Flash 10
@@ -107,7 +107,7 @@
  *  @playerversion AIR 1.5
  *  @productversion Flex 4
  */
-[Style(name="textIndent", type="Number", format="Length", inherit="yes")]
+[Style(name="textIndent", type="Number", format="Length", inherit="yes", minValue="0.0")]
 
 /**
  *  @copy flashx.textLayout.formats.ITextLayoutFormat#textRotation

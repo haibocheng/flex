@@ -20,13 +20,14 @@ import flash.events.TimerEvent;
 import flash.ui.Keyboard;
 import flash.utils.Timer;
 
-import spark.components.supportClasses.SkinnableComponent;
 import mx.core.mx_internal;
 import mx.events.FlexEvent;
 import mx.events.SandboxMouseEvent;
-import spark.components.supportClasses.TextBase;
 import mx.managers.IFocusManagerComponent;
 import mx.utils.StringUtil;
+
+import spark.components.supportClasses.SkinnableComponent;
+import spark.components.supportClasses.TextBase;
 
 use namespace mx_internal;
 
@@ -44,7 +45,7 @@ include "../../styles/metadata/BasicInheritingTextStyles.as"
  *  @playerversion AIR 1.5
  *  @productversion Flex 4
  */
-[Style(name="cornerRadius", type="Number", format="Length", inherit="no", theme="spark")]
+[Style(name="cornerRadius", type="Number", format="Length", inherit="no", theme="spark", minValue="0.0")]
 
 /**
  *  The alpha of the focus ring for this component.
@@ -54,10 +55,12 @@ include "../../styles/metadata/BasicInheritingTextStyles.as"
  *  @playerversion AIR 1.5
  *  @productversion Flex 4
  */
-[Style(name="focusAlpha", type="Number", inherit="no", theme="spark")]
+[Style(name="focusAlpha", type="Number", inherit="no", theme="spark", minValue="0.0", maxValue="1.0")]
 
 /**
- *  @copy spark.components.supportClasses.GroupBase#focusColor
+ *  @copy spark.components.supportClasses.GroupBase#style:focusColor
+ *   
+ *  @default 0x70B2EE
  *  
  *  @langversion 3.0
  *  @playerversion Flash 10
@@ -78,7 +81,7 @@ include "../../styles/metadata/BasicInheritingTextStyles.as"
  *  @playerversion AIR 1.5
  *  @productversion Flex 4
  */
-[Style(name="repeatDelay", type="Number", format="Time", inherit="no")]
+[Style(name="repeatDelay", type="Number", format="Time", inherit="no", minValue="0.0")]
 
 /**
  *  Number of milliseconds between <code>buttonDown</code> events
@@ -91,7 +94,7 @@ include "../../styles/metadata/BasicInheritingTextStyles.as"
  *  @playerversion AIR 1.5
  *  @productversion Flex 4
  */
-[Style(name="repeatInterval", type="Number", format="Time", inherit="no")]
+[Style(name="repeatInterval", type="Number", format="Time", inherit="no", minValueExclusive="0.0")]
 
 //--------------------------------------
 //  Events
@@ -367,12 +370,6 @@ public class ButtonBase extends SkinnableComponent implements IFocusManagerCompo
     override public function set toolTip(value:String):void
     {
         super.toolTip = value;
-        
-        // If explicit tooltip is cleared, we need to make sure our
-        // updateDisplayList is called, so that we add automatic tooltip
-        // in case the label is truncated.
-        if (_explicitToolTip && !value)
-            invalidateDisplayList();
 
         _explicitToolTip = value != null;
     }
@@ -519,7 +516,7 @@ public class ButtonBase extends SkinnableComponent implements IFocusManagerCompo
     /**
      *  @private
      */
-	private var _keepDown:Boolean = false;
+    private var _keepDown:Boolean = false;
     
     /**
      *  @private
@@ -716,7 +713,7 @@ public class ButtonBase extends SkinnableComponent implements IFocusManagerCompo
     //
     //--------------------------------------------------------------------------
     
-	/**
+    /**
      *  @private
      */
     override protected function initializeAccessibility():void
@@ -750,27 +747,6 @@ public class ButtonBase extends SkinnableComponent implements IFocusManagerCompo
         }
     }
 
-    
-    /**
-     *  @private
-     */
-    override protected function updateDisplayList(unscaledWidth:Number,
-                                                  unscaledHeight:Number):void
-    {
-        super.updateDisplayList(unscaledWidth, unscaledHeight);
-
-        // Bail out if we don't have a label or the tooltip is explicitly set.
-        if (!labelDisplay || _explicitToolTip)
-            return;
-
-        // Check if the label text is truncated
-        labelDisplay.validateNow();
-        var isTruncated:Boolean = labelDisplay.isTruncated;
-        
-        // If the label is truncated, show the whole label string as a tooltip
-        super.toolTip = isTruncated ? labelDisplay.text : null;
-    } 
-
     /**
      *  @private
      */
@@ -778,9 +754,29 @@ public class ButtonBase extends SkinnableComponent implements IFocusManagerCompo
     {
         super.partAdded(partName, instance);
         
-        // Push down to the part only if the label was explicitly set
-        if (_content !== undefined && instance == labelDisplay)
-            labelDisplay.text = label;
+        if (instance == labelDisplay)
+        {
+            labelDisplay.addEventListener("isTruncatedChanged",
+                                          labelDisplay_isTruncatedChangedHandler);
+            
+            // Push down to the part only if the label was explicitly set
+            if (_content !== undefined)
+                labelDisplay.text = label;
+        }
+    }
+    
+    /**
+     *  @private
+     */
+    override protected function partRemoved(partName:String, instance:Object):void
+    {
+        super.partRemoved(partName, instance);
+        
+        if (instance == labelDisplay)
+        {
+            labelDisplay.removeEventListener("isTruncatedChanged",
+                                             labelDisplay_isTruncatedChangedHandler);
+        }
     }
 
     /**
@@ -828,10 +824,10 @@ public class ButtonBase extends SkinnableComponent implements IFocusManagerCompo
     private function addSystemMouseHandlers():void
     {
         systemManager.getSandboxRoot().addEventListener(
-			MouseEvent.MOUSE_UP, mouseEventHandler, true /* useCapture */);
+            MouseEvent.MOUSE_UP, mouseEventHandler, true /* useCapture */);
 
         systemManager.getSandboxRoot().addEventListener(
-			SandboxMouseEvent.MOUSE_UP_SOMEWHERE, mouseEventHandler);             
+            SandboxMouseEvent.MOUSE_UP_SOMEWHERE, mouseEventHandler);             
     }
 
     /**
@@ -842,10 +838,10 @@ public class ButtonBase extends SkinnableComponent implements IFocusManagerCompo
     private function removeSystemMouseHandlers():void
     {
         systemManager.getSandboxRoot().removeEventListener(
-			MouseEvent.MOUSE_UP, mouseEventHandler, true /* useCapture */);
+            MouseEvent.MOUSE_UP, mouseEventHandler, true /* useCapture */);
 
         systemManager.getSandboxRoot().removeEventListener(
-			SandboxMouseEvent.MOUSE_UP_SOMEWHERE, mouseEventHandler);
+            SandboxMouseEvent.MOUSE_UP_SOMEWHERE, mouseEventHandler);
     }
     
     /**
@@ -1081,6 +1077,21 @@ public class ButtonBase extends SkinnableComponent implements IFocusManagerCompo
     private function autoRepeat_timerHandler(event:TimerEvent):void
     {
         dispatchEvent(new FlexEvent(FlexEvent.BUTTON_DOWN));
+    }
+    
+    /**
+     *  @private
+     */
+    private function labelDisplay_isTruncatedChangedHandler(event:Event):void
+    {
+        if (_explicitToolTip)
+            return;
+        
+        var isTruncated:Boolean = labelDisplay.isTruncated;
+        
+        // If the label is truncated, show the whole label string as a tooltip.
+        // We set super.toolTip to avoid setting our own _explicitToolTip.
+        super.toolTip = isTruncated ? labelDisplay.text : null;
     }
 }
 

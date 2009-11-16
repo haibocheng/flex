@@ -51,7 +51,7 @@ use namespace mx_internal;
  *  @playerversion AIR 1.5
  *  @productversion Flex 4
  */
-[Style(name="backgroundAlpha", type="Number", inherit="no")]
+[Style(name="backgroundAlpha", type="Number", inherit="no", minValue="0.0", maxValue="1.0")]
 
 /**
  *  The color of the background of the entire
@@ -70,12 +70,17 @@ use namespace mx_internal;
  */
 [Style(name="backgroundColor", type="uint", format="Color", inherit="no")]
 
+ //--------------------------------------------------------------------------
+ // Other metadata for accessibility API
+ //-------------------------------------------------------------------------
+[AccessibilityClass(implementation="spark.accessibility.TextBaseAccImpl")]  
+
 /**
- *  The base class for Spark Text controls such as Label and RichText
+ *  The base class for Spark text controls such as Label and RichText
  *  which display text using CSS styles for the default format.
  *
  *  <p>In addition to adding a <code>text</code> property,
- *  it also adds <code>maxDisplayedLines</code>
+ *  this class also adds the <code>maxDisplayedLines</code>
  *  and <code>isTruncated</code> properties to support truncation.</p>
  *
  *  @langversion 3.0
@@ -83,8 +88,10 @@ use namespace mx_internal;
  *  @playerversion AIR 1.5
  *  @productversion Flex 4
  */
+
 public class TextBase extends UIComponent
 {
+
     include "../../core/Version.as";
 
     //--------------------------------------------------------------------------
@@ -102,6 +109,23 @@ public class TextBase extends UIComponent
      *  and updates it when the locale changes.
      */ 
     mx_internal static var truncationIndicatorResource:String;
+
+    /**
+     *  @private
+     *  Mixins for accessibility
+     */
+    mx_internal static var createAccessibilityImplementation:Function;		
+
+    /**
+     *  @private
+     *  Accessibility initialization function
+     */
+   
+    override protected function initializeAccessibility():void
+    {
+      if (TextBase.createAccessibilityImplementation != null)
+        TextBase.createAccessibilityImplementation(this);
+    }
 
     //--------------------------------------------------------------------------
     //
@@ -265,7 +289,7 @@ public class TextBase extends UIComponent
      *  @private
 	 *  Storage for the isTruncated property.
      */
-	mx_internal var _isTruncated:Boolean = false;
+    private var _isTruncated:Boolean = false;
         
     /**
 	 *  A read-only property reporting whether the text has been truncated.
@@ -306,6 +330,19 @@ public class TextBase extends UIComponent
 		return Boolean(_isTruncated);
     }
     
+    /**
+     *  @private
+     *  Dispatch an "isTruncatedChanged" event when the property is set.
+     */
+    mx_internal function setIsTruncated(value:Boolean):void
+    {
+        if (_isTruncated != value)
+        {
+            _isTruncated = value;
+            dispatchEvent(new Event("isTruncatedChanged"));
+        }
+    }
+    
     //----------------------------------
 	//  maxDisplayedLines
     //----------------------------------
@@ -314,6 +351,8 @@ public class TextBase extends UIComponent
      *  @private
      */
 	private var _maxDisplayedLines:int = 0;
+    
+    [Inspectable(minValue="-1")]
     
     /**
      *  An integer which determines whether, and where,
@@ -752,7 +791,7 @@ public class TextBase extends UIComponent
 	    _composeWidth = width;
 	    _composeHeight = height;
 	    
-	    _isTruncated = false;
+	    setIsTruncated(false);
 	    
 	    return false;
 	}

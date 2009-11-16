@@ -183,7 +183,8 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
         if (mask != null)
         {
             MaskType maskType = node.getMaskType(); 
-            if (maskType == MaskType.ALPHA)
+
+            if (maskType != MaskType.CLIP)
             {
                 // Record the display list position that the mask was placed.
                 // The ActionScript display list is 0 based, but SWF the depth
@@ -191,7 +192,8 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
                 int maskIndex = parentSprite.depthCounter - 1;
                 mask.setMaskIndex(maskIndex);
             }
-            else if (maskType == MaskType.LUMINOSITY)
+
+            if (maskType == MaskType.LUMINOSITY)
             {
                 // Create a new SymbolClass to map to this mask's
                 // DefineSprite (see below)  
@@ -218,7 +220,7 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
                 buf.append("{\n\n");
                 buf.append("import flash.display.Sprite;\n");
                 buf.append("import spark.filters.ShaderFilter;\n");
-                buf.append("import spark.primitives.shaders.LuminosityMaskShader;\n\n");
+                buf.append("import mx.graphics.shaderClasses.LuminosityMaskShader;\n\n");
                 buf.append("public class ").append(className).append(" extends Sprite\n");
                 buf.append("{\n");
                 buf.append("    public function ").append(className).append("()\n");
@@ -369,21 +371,21 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
     private String generateBlendModeImport(BlendMode blendMode)
     {
         if (blendMode == BlendMode.COLOR)
-            return "import spark.primitives.shaders.ColorShader;\n\n";
+            return "import mx.graphics.shaderClasses.ColorShader;\n\n";
         else if (blendMode == BlendMode.COLORBURN)
-            return "import spark.primitives.shaders.ColorBurnShader;\n\n";
+            return "import mx.graphics.shaderClasses.ColorBurnShader;\n\n";
         else if (blendMode == BlendMode.COLORDODGE)
-            return "import spark.primitives.shaders.ColorDodgeShader;\n\n";
+            return "import mx.graphics.shaderClasses.ColorDodgeShader;\n\n";
         else if (blendMode == BlendMode.EXCLUSION)
-            return "import spark.primitives.shaders.ExclusionShader;\n\n";
+            return "import mx.graphics.shaderClasses.ExclusionShader;\n\n";
         else if (blendMode == BlendMode.HUE)
-            return "import spark.primitives.shaders.HueShader;\n\n";
+            return "import mx.graphics.shaderClasses.HueShader;\n\n";
         else if (blendMode == BlendMode.LUMINOSITY)
-            return "import spark.primitives.shaders.LuminosityShader;\n\n";
+            return "import mx.graphics.shaderClasses.LuminosityShader;\n\n";
         else if (blendMode == BlendMode.SATURATION)
-            return "import spark.primitives.shaders.SaturationShader;\n\n";
+            return "import mx.graphics.shaderClasses.SaturationShader;\n\n";
         else if (blendMode == BlendMode.SOFTLIGHT)
-            return"import spark.primitives.shaders.SoftLightShader;\n\n";
+            return"import mx.graphics.shaderClasses.SoftLightShader;\n\n";
         else
             return null;
     }
@@ -460,8 +462,10 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
             StringBuilder buf = new StringBuilder(1024);
             buf.append("package ").append(packageName).append("\n");
             buf.append("{\n\n");
+            buf.append("import flash.events.Event;\n");
             buf.append("import flashx.textLayout.elements.*;\n");
             buf.append("import flashx.textLayout.formats.TextLayoutFormat;\n");
+            buf.append("import mx.core.IFlexModuleFactory;\n");
             buf.append("import spark.components.RichText;\n");
             buf.append("import spark.core.SpriteVisualElement;\n\n");
 
@@ -498,6 +502,9 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
             buf.append("        createText();\n");
             buf.append("    }\n");
             buf.append("\n");
+            
+            buf.append("    private var _richTextComponent:RichText;\n\n");
+
             buf.append("    private function createText():void\n");
             buf.append("    {\n");
 
@@ -510,6 +517,8 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
             if (textSource.classBuffer != null)
                 buf.append(textSource.classBuffer.toString());
 
+            buf.append(generateModuleFactoryOverride("_richTextComponent"));
+            
             buf.append("}\n"); // End class
             buf.append("}\n"); // End package
 
@@ -574,16 +583,55 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
 
         generateTextVariable(textNode, srcContext, varContext);
 
+        buf.append("        _richTextComponent = ").append(elementVar).append(";\r\n");
         buf.append("        addChild(").append(elementVar).append(");\r\n");
 		
+        buf.append("        var addHandler:Function = function(event:Event):void\r\n");
+        buf.append("        {\r\n");
+        buf.append("            removeEventListener(Event.ADDED_TO_STAGE, addHandler);\r\n\r\n");
+
+        buf.append("            // If we don't have a module factory by now then use the root\r\n");
+        buf.append("            if (moduleFactory == null && root is IFlexModuleFactory)\r\n");
+        buf.append("                moduleFactory = IFlexModuleFactory(root);\r\n");
+
+        buf.append("        };\r\n");
+        buf.append("        addEventListener(Event.ADDED_TO_STAGE, addHandler);\r\n");
+
+
+        return srcContext;
+    }
+    
+    /**
+     * Create a module factory override so we do not try to use a RichText's styles until we 
+     * have a module factory. The module factory will tell us which style manager to use.
+     * 
+     * @param elementVar
+     * @return
+     */
+    private String generateModuleFactoryOverride(String elementVar)
+    {
+        StringBuilder buf = new StringBuilder();
+
+        buf.append("\r\n    /**\r\n");
+        buf.append("     *  @private\r\n");
+        buf.append("     *  Create a module factory override so we do not try to use a RichText's\r\n");
+        buf.append("     *  styles until we have a module factory. The module factory will tell us\r\n");
+        buf.append("     *  which style manager to use.\r\n");
+        buf.append("     */\r\n");
+        buf.append("    override public function set moduleFactory(factory:IFlexModuleFactory):void\r\n");
+        buf.append("    {\r\n");
+        buf.append("        super.moduleFactory = factory;\r\n");
         buf.append("        ").append(elementVar).append(".regenerateStyleCache(true);\r\n");
+        buf.append("        ").append(elementVar).append(".styleChanged(null);\r\n");        
         buf.append("        ").append(elementVar).append(".stylesInitialized();\r\n");
         buf.append("        ").append(elementVar).append(".validateProperties();\r\n");
         buf.append("        ").append(elementVar).append(".validateSize();\r\n");
         buf.append("        ").append(elementVar).append(".setLayoutBoundsSize(NaN, NaN);\r\n");
         buf.append("        ").append(elementVar).append(".validateDisplayList();\r\n");
-
-        return srcContext;
+        buf.append("        invalidateSize();\r\n");
+        buf.append("    }\r\n");
+        
+        return buf.toString();
     }
 
     /**

@@ -16,9 +16,11 @@ import java.util.Arrays;
 import flash.swf.TagHandler;
 
 /**
+ * Represents a SWF DefineFont4 tag.
+ * 
  * @author Peter Farland
  */
-public class DefineFont4 extends DefineFont
+public class DefineFont4 extends DefineFont implements Cloneable
 {
     /**
      * Constructor.
@@ -85,6 +87,22 @@ public class DefineFont4 extends DefineFont
     // Utility Methods
     //
     //--------------------------------------------------------------------------
+
+    /**
+     * @return a shallow copy of this DefineFont4 instance.
+     */
+    public Object clone()
+    {
+        DefineFont4 copy = new DefineFont4();
+        copy.hasFontData = hasFontData;
+        copy.smallText = smallText;
+        copy.italic = italic;
+        copy.bold = bold;
+        copy.langCode = langCode;
+        copy.fontName = fontName;
+        copy.data = data;
+        return copy;
+    }
 
     /**
      * Tests whether this DefineFont4 tag is equivalent to another DefineFont4

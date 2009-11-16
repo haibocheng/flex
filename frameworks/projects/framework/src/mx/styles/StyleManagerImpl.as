@@ -89,6 +89,7 @@ public class StyleManagerImpl implements IStyleManager2
             blockProgression: true,
             borderStyle: true,
             borderThickness: true,
+            breakOpportunity : true,
             cffHinting: true,
             columnCount: true,
             columnGap: true,
@@ -114,6 +115,7 @@ public class StyleManagerImpl implements IStyleManager2
             justificationStyle: true,
             kerning: true,
             leading: true,
+            leadingModel: true,
             letterSpacing: true,
             ligatureLevel: true,
             lineBreak: true,
@@ -128,12 +130,20 @@ public class StyleManagerImpl implements IStyleManager2
             paddingLeft: true,
             paddingRight: true,
             paddingTop: true,
+            paragraphEndIndent: true,
+            paragraphStartIndent: true,
+            paragraphSpaceAfter: true,
+            paragraphSpaceBefore: true,            
             renderingMode: true,
             strokeWidth: true,
             tabHeight: true,
             tabWidth: true,
+            tabStops: true,
             textAlign: true,
             textAlignLast: true,
+            textDecoration: true,
+            textIndent: true,
+            textJustify: true,
             textRotation: true,
             tracking: true,
             trackingLeft: true,
@@ -947,11 +957,18 @@ public class StyleManagerImpl implements IStyleManager2
             decls = _subjects[styleDeclaration.subject] as Array;
             if (decls)
             {
-                for (i = 0; i < decls.length; i++)
+                // Work from the back of the array so we can remove elements
+                // as we go.
+                for (i = decls.length - 1; i >= 0; i--)
                 {
                     decl = decls[i];
                     if (decl && decl.selectorString == selector)
-                        delete decls[i];
+                    {
+                        if (decls.length == 1)
+                            delete _subjects[styleDeclaration.subject];
+                        else
+                            decls.splice(i, 1);
+                    }
                 }
             }
         }
@@ -965,13 +982,18 @@ public class StyleManagerImpl implements IStyleManager2
             {
                 if (decls)
                 {
-                    for (i = 0; i < decls.length; i++)
+                    // Work from the back of the array so we can remove elements
+                    // as we go.
+                    for (i = decls.length - 1; i >= 0; i--)
                     {
                         decl = decls[i];
                         if (decl && decl.selectorString == selector)
                         {
                             matchingSubject = true;
-                            delete decls[i];
+                            if (decls.length == 1)
+                                delete _subjects[styleDeclaration.subject];
+                            else
+                                decls.splice(i, 1);
                         }
                     }
 
@@ -1405,10 +1427,12 @@ public class StyleManagerImpl implements IStyleManager2
 	 */
 	public function loadStyleDeclarations(
 						url:String, update:Boolean = true,
-                        trustContent:Boolean = false):
+                        trustContent:Boolean = false,
+                        applicationDomain:ApplicationDomain = null,
+                        securityDomain:SecurityDomain = null):
 						IEventDispatcher
 	{
-		return loadStyleDeclarations2(url, update);
+		return loadStyleDeclarations2(url, update, applicationDomain, securityDomain);
 	}
 
     /**
@@ -1437,16 +1461,16 @@ public class StyleManagerImpl implements IStyleManager2
 						IEventDispatcher
     {
         var module:IModuleInfo = ModuleManager.getModule(url);
-
+        var thisStyleManager:IStyleManager2 = this;
+        
         var readyHandler:Function = function(moduleEvent:ModuleEvent):void
         {
             var styleModule:IStyleModule =
                 IStyleModule(moduleEvent.module.factory.create());
             
             // Register the style module to use this style manager.
-            moduleEvent.module.factory.registerImplementation("mx.styles::IStyleManager2", instance);
-            if ("setStyleDeclarations" in styleModule)
-                styleModule["setStyleDeclarations"](instance);
+            moduleEvent.module.factory.registerImplementation("mx.styles::IStyleManager2", thisStyleManager);
+            styleModule.setStyleDeclarations(thisStyleManager);
             styleModules[moduleEvent.module.url].styleModule = styleModule;
             
             if (update)

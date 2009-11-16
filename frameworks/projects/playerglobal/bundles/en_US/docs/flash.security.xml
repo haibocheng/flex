@@ -1,0 +1,653 @@
+ 
+<apiPackage id="flash.security"><apiName>flash.security</apiName><apiDetail/><apiClassifier id="flash.security:XMLSignatureValidator"><apiName>XMLSignatureValidator</apiName><shortdesc>
+	 The XMLSignatureValidator class validates whether an XML 
+	 signature file is well formed, unmodified, and, optionally, whether 
+	 it is signed using a key linked to a trusted digital certificate.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.events:EventDispatcher</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 The XMLSignatureValidator class validates whether an XML 
+	 signature file is well formed, unmodified, and, optionally, whether 
+	 it is signed using a key linked to a trusted digital certificate.
+	 
+	 <p>XMLSignatureValidator implements a subset of the 
+	 W3C Recommendation for XML-Signature Syntax and Processing and
+	 should not be considered a conforming implementation.
+ 	 The supported subset of the recommendation includes:</p>
+	 <ul>
+	  <li>All of the core signature syntax except KeyInfo element.</li>
+	  <li>The KeyInfo element only supports the X509Data element.</li>
+	  <li>The X509Data element only supports the X509Certificate element.</li>
+	  <li>The SHA256 digest method algorithm.</li>
+	  <li>The PKCS1 signing algorithm.</li>
+	  <li>The "Canonical XML without comments" Canonicalization Method and Transform algorithm.</li>
+	  <li>The Manifest element in additional signature syntax.</li>
+	 </ul>
+	 
+	 <p>You must provide an IURIDereferencer implementation in order to verify an XML signature. This
+	 implementation class is responsible for resolving the URIs specified in the SignedInfo 
+	 elements of the signature file and returning the referenced data in an object, such 
+	 as a ByteArray, that implements the IDataInput interface.</p>
+	 
+	 <p>In order to verify that the signing certificate chains to a trusted certificate, either 
+	 the XML signature must contain the certificates required to build the chain in X509Certificate 
+	 elements, or you must supply the certificates required to build the chain using the 
+	 <codeph>addCertificate()</codeph> method.</p>
+	 
+	 <p><b>To verify an XMLSignature:</b></p>
+	 <ol>
+	 <li>Create an instance of the XMLSignatureValidator class.</li>
+	 <li>Set the <codeph>uriDereferencer</codeph> property of the instance to an instance of your
+	 IURIDereferencer implementation class.</li>
+	 <li>Supply DER-encoded certificates for building the certificate trust chain, if desired, 
+	 using the <codeph>addCertificate()</codeph> method.</li>
+	 <li>Call the XMLSignatureValidator <codeph>verify</codeph> method, passing in the signature to
+	 be verified.</li>
+	 <li>Check the <codeph>validityStatus</codeph> property after the XMLSignatureValidator object 
+	 dispatches a complete event.</li>  
+	 </ol>
+	 
+	 <p><b>About signature status:</b></p>
+	 <p>The validity of an XML signature can be valid, invalid, or unknown. The overall
+	 status depends on the verification status of the individual components of the signature file:</p>
+	 <ul>
+	 <li><codeph>digestStatus</codeph> — The validity of the cryptographic of the signature computed over
+	 the SignedInfo element. Can be <codeph>valid</codeph>, <codeph>invalid</codeph>, or <codeph>unknown</codeph>.</li>
+	 <li><codeph>identityStatus</codeph> — The validity of the signing certificate. If the certificate has 
+	 expired, has been revoked, or altered, the status is <codeph>invalid</codeph>. If the certificate cannot be chained 
+	 to a trusted root certificate, the status is <codeph>unknown</codeph>. The certificate is not checked if the  
+	 digest is invalid. If not checked, the status will be reported as <codeph>unknown</codeph>.</li>
+	 <li><codeph>referencesStatus</codeph> — The validity of the data addressed by the references in the
+	 SignedInfo element of the signature file. Can be <codeph>valid</codeph>, <codeph>invalid</codeph>, or
+	 <codeph>unknown</codeph>. The references are not checked if the digest or certificate is invalid.
+	 Reference checking can also be skipped based on the setting of the <codeph>referencesValidationSetting</codeph> property. 
+	 If not checked, the status will be reported as <codeph>unknown</codeph>.</li>
+	 </ul>
+	 <p>The signature validity reported by the <codeph>validityStatus</codeph> property can be:</p>
+	 <ul>
+	 <li><codeph>valid</codeph> — If <codeph>referencesStatus</codeph>, <codeph>digestStatus</codeph>, and 
+	 <codeph>identityStatus</codeph> are all <codeph>valid</codeph>.</li>
+	 <li><codeph>invalid</codeph> — If any individual status is <codeph>invalid</codeph>.</li>
+	 <li><codeph>unknown</codeph> — If <codeph>referencesStatus</codeph>,  <codeph>digestStatus</codeph>, or 
+	 <codeph>identityStatus</codeph> is <codeph>unknown</codeph>.</li>
+	 </ul>
+	 
+	 <p><b>Canonicalization limitations:</b></p>
+	 <p>The XML engine in AIR does not always produce the expected XML string when canonicalizing an XML document.
+	 For this reason, it is recommended that you avoid putting inter-element whitespace in enveloped or detached signature
+	 documents and do not redefine namespaces inside a signature document. In both cases, AIR may not recreate the document
+	 with the same character sequence as the original and, therefore, validation will fail.</p>
+	   
+	 </apiDesc><example conref="examples\XMLSignatureValidatorExample.as"> The following example loads and verifies a file containing an XML signature. 
+ 
+ To use this example, you must implement an IURIDereferencer appropriate for the signatures
+ to be validated (replacing the SignedMessageDereferencer class used in the example).  
+ Run the example by calling <codeph>SignatureValidatorExample.validateSignature( signatureFile )</codeph>,
+ passing in the file referencing the XML signature document to validate.
+ 
+<codeblock>
+import flash.events.Event;
+import flash.filesystem.File;
+import flash.filesystem.FileStream;
+import flash.security.ReferencesValidationSetting;
+import flash.security.XMLSignatureValidator; 
+
+import com.example.SignedMessageDereferencer; //A custom class implementing IURIDereferencer
+
+public class SignatureValidatorExample{ 
+    private var xmlSig:XML;
+    private const signatureNS:Namespace = new Namespace( "http://www.w3.org/2000/09/xmldsig#" );
+    
+    public static function validateSignature( signatureFile:File ):void{
+        try{
+            //Set up the XMLSignatureValidator
+            var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+            verifier.addEventListener( Event.COMPLETE, verificationComplete );
+            verifier.uriDereferencer = new SignedMessageDereferencer();
+            verifier.referencesValidationSetting = ReferencesValidationSetting.VALID_OR_UNKNOWN_IDENTITY;
+    
+            //Load the signed document
+            var sigFileStream:FileStream = new FileStream();
+            sigFileStream.open( signatureFile, FileMode.READ );
+            var xmlDoc:XML = XML( sigFileStream.readUTFBytes(sigFileStream.bytesAvailable) );
+            
+            //Get the last Signature element in the document
+            if( xmlDoc.name().localName != "Signature" ){
+                var signatureList:XMLList = xmlDoc..signatureNS::Signature;
+                xmlSig = XML( signatureList[ signatureList.length()-1 ] );
+            } else{
+                xmlSig = xmlDoc;
+            }
+    
+            //Validate the signature
+            verifier.verify( xmlSig );
+            
+        }catch (e:Error){
+            statusDisplay.text = "Verification error.\n" + e;
+        }
+    }
+    
+    private static function verificationComplete(event:Event):void{
+        trace( "Signature Validity: " + verifier.validityStatus );
+        trace( "Digest validity: " + verifier.digestStatus );
+        trace( "Certificate validity: " + verifier.identityStatus );
+        trace( "Data validity: " + verifier.referencesStatus );
+    }
+}
+</codeblock></example></apiClassifierDetail><related-links><link href="flash.security.xml#IURIDereferencer"><linktext>IURIDereferencer</linktext></link><link href="http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/"><linktext>XML-Signature Syntax and Processing</linktext></link><link href="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"><linktext>Canonical XML</linktext></link><link href="http://www.ietf.org/rfc/rfc2437.txt"><linktext>PKCS #1</linktext></link></related-links><adobeApiEvent id="flash.security:XMLSignatureValidator_flash.events.ErrorEvent.ERROR_error"><apiName>error</apiName><shortdesc>
+	 Dispatched if verification cannot complete because of errors.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.ErrorEvent.ERROR</apiEventType><adobeApiEventClassifier>flash.events.ErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 Dispatched if verification cannot complete because of errors. 
+	 
+	 </apiDesc><example conref="examples\XMLSignatureValidator.error.1.as"> The following example listens for the error event dispatched by an XMLSignatureValidator
+ object and traces the error message:
+<codeblock>
+private function verificationError(event:ErrorEvent):void{
+    trace("Verification error: " + event.text);                
+}
+</codeblock></example></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.security:XMLSignatureValidator_flash.events.Event.COMPLETE_complete"><apiName>complete</apiName><shortdesc>
+	 Dispatched when verification is complete.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.COMPLETE</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 Dispatched when verification is complete.
+	 
+	 <p>A <codeph>complete</codeph> event does not imply that the
+	 signature is valid. Check the <codeph>validityStatus</codeph> property of
+	 the XMLSignatureValidator object to 
+	 determine the outcome of the signature verification.</p>
+	 
+	 </apiDesc><example conref="examples\XMLSignatureValidator.complete.1.as"> The following example listens for the complete event dispatched by an XMLSignatureValidator
+ object and traces the validation results:
+<codeblock>
+private function verificationComplete(event:Event):void{
+    var validator:XMLSignatureValidator = event.target as XMLSignatureValidator;
+    trace("Digest status: " + validator.digestStatus);
+    trace("Identity status: " + validator.identityStatus);
+    trace("Reference status: " + validator.referencesStatus);
+    trace("Signature status: " + validator.validityStatus);    
+}
+</codeblock></example></adobeApiEventDetail><related-links><link href="flash.security.xml#XMLSignatureValidator/validityStatus"><linktext>validityStatus</linktext></link></related-links></adobeApiEvent><apiConstructor id="flash.security:XMLSignatureValidator:XMLSignatureValidator"><apiName>XMLSignatureValidator</apiName><shortdesc>
+		 Creates an XMLSignatureValidator object.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/></apiConstructorDef><apiDesc>
+		 Creates an XMLSignatureValidator object.
+		 
+		 <p>You must set the <codeph>uriDereferencer</codeph> property before calling the <codeph>verify()</codeph>
+		 method of the new object.</p>
+		 
+		 </apiDesc><example conref="examples\XMLSignatureValidator.constructor.1.as"> The following example creates and sets up a new XMLSignatureValidator object:
+<codeblock> 
+import com.example.EnvelopedDereferencer; //Your custom IURIDereferencer implementation
+
+//Create the object
+var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+
+//Provide the IURIDerferencer
+verifier.uriDereferencer = new EnvelopedDereferencer(xmlDoc);
+
+//Set validation options
+verifier.referencesValidationSetting = ReferencesValidationSetting.VALID_OR_UNKNOWN_IDENTITY;
+verifier.revocationCheckSetting = RevocationCheckSettings.NEVER;
+verifier.useSystemTrustStore = true;
+
+//Add listeners to handle results
+verifier.addEventListener(Event.COMPLETE, verificationComplete);
+verifier.addEventListener(ErrorEvent.ERROR, verificationError);
+</codeblock></example></apiConstructorDetail><related-links><link href="flash.security.xml#XMLSignatureValidator/uriDereferencer"><linktext>uriDereferencer</linktext></link></related-links></apiConstructor><apiOperation id="flash.security:XMLSignatureValidator:addCertificate"><apiName>addCertificate</apiName><shortdesc>
+	   Adds an x509 certificate for chain building.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>If called while a signature is being validated.
+	   
+	   </apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException><apiReturn><apiType value="any"/></apiReturn><apiParam><apiItemName>cert</apiItemName><apiOperationClassifier>flash.utils:ByteArray</apiOperationClassifier><apiDesc>A ByteArray object containing a DER-encoded x509 digital certificate.
+	   </apiDesc></apiParam><apiParam><apiItemName>trusted</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiDesc>Set to <codeph>true</codeph> to designate this certificate as a trust anchor.
+	   </apiDesc></apiParam></apiOperationDef><apiDesc>
+	   Adds an x509 certificate for chain building. 
+	   
+	   <p>The certificate added must be a DER-encoded x509 certificate.</p>
+	   
+	   <p>If the <codeph>trusted</codeph> parameter is <codeph>true</codeph>, the 
+	   certificate is considered a trust anchor.</p>
+	   
+	   <p><b>Note:</b> An XML signature may include certificates for building 
+	   the signer's certificate chain. The XMLSignatureValidator class uses 
+	   these certificates for chain building, but not as trusted roots (by default).</p>
+	   
+	   </apiDesc><example conref="examples\XMLSignatureValidator.addCertificate.1.as"> The following example loads a certificate from the file system
+ and adds it as a trusted anchor.
+<codeblock>
+ import flash.utils.ByteArray;
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+ var certificate:ByteArray = new ByteArray();
+ 
+ var certFile:File = new File("certificate.cer");
+ var certFileStream:FileStream = new FileStream();
+ certFileStream.open(certFile, FileMode.READ);
+ certFileStream.readBytes(certificate, 0, certFileStream.bytesAvailable);
+
+ verifier.addCertificate(certificate, true);
+</codeblock></example></apiOperationDetail></apiOperation><apiOperation id="flash.security:XMLSignatureValidator:verify"><apiName>verify</apiName><shortdesc>
+		Verifies the specified signature.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>If called while a signature is being validated. 
+		 </apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException><apiException><apiDesc>If other errors are encountered, such as non-well-formed XML or
+		 unsupported elements in the signature file. 
+		</apiDesc><apiItemName>Error</apiItemName><apiOperationClassifier>Error</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>signature</apiItemName><apiOperationClassifier>XML</apiOperationClassifier><apiDesc>The XML signature to verify.
+		</apiDesc></apiParam></apiOperationDef><apiDesc>
+		Verifies the specified signature. 
+		
+		<p>Verification is asynchronous. The XMLSignatureValidator object dispatches 
+		a <codeph>complete</codeph> event when verification completes successfully or 
+		an <codeph>error</codeph> event if verification cannot complete because of errors.</p> 
+		
+		<p>The verification process cannot be cancelled. While a verification process is under way, 
+		subsequent calls to the <codeph>verify()</codeph> method fail. After the current verification 
+		check is complete, you can call the <codeph>verify()</codeph> method again.</p> 
+		
+		<p><b>Note:</b> Because the XMLSignatureValidator only implements a subset of the 
+		 W3C recommendation for XML Signature Syntax and Processing, not all valid 
+		 XML signatures can be verified.</p>
+		 
+		 
+		</apiDesc><example conref="examples\XMLSignatureValidator.verify.1.as"> The following example reads a file containing an XML signature and validates it by
+ calling the <codeph>verify()</codeph> method.
+ (The example assumes that the IURIDereferencer implementation is appropriate for the signature.)
+<codeblock>
+import flash.filesystem.File;
+import flash.filesystem.FileStream;
+import com.example.SignedMessageDereferencer; //Your IURIDereferencer implementation
+ 
+const xmlSignatureNS:Namespace = new Namespace( "http://www.w3.org/2000/09/xmldsig#" );
+
+var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+verifier.uriDereferencer = new SignedMessageDereferencer();
+
+var signatureFile:File = new File( "path/to/XMLSignatureDocument.xml" );
+var sigFileStream:FileStream = new FileStream();
+sigFileStream.open( signatureFile, FileMode.READ );
+
+var xmlDoc:XML = XML( sigFileStream.readUTFBytes(sigFileStream.bytesAvailable) );
+var xmlSig:XML = XML( xmlDoc..xmlSignatureNS::Signature );
+
+verifier.verify( xmlSig );
+</codeblock></example></apiOperationDetail><adobeApiEvent id="flash.security:XMLSignatureValidator:verify_complete"><apiName>complete</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>Dispatched when verification completes successfully.
+		</apiDesc></adobeApiEventDetail><shortdesc>Dispatched when verification completes successfully.</shortdesc></adobeApiEvent><adobeApiEvent id="flash.security:XMLSignatureValidator:verify_error"><apiName>error</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:ErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>Dispatched if the verification of references encounters an error. 
+		</apiDesc></adobeApiEventDetail><shortdesc>Dispatched if the verification of references encounters an error.</shortdesc></adobeApiEvent></apiOperation><apiValue id="flash.security:XMLSignatureValidator:digestStatus:get"><apiName>digestStatus</apiName><shortdesc>
+	    The validity status of the cryptographic signature computed over the 
+	    SignedInfo element.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier><apiException><apiDesc>If accessed while a signature is being validated.
+		 
+		 </apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	    The validity status of the cryptographic signature computed over the 
+	    <codeph>SignedInfo</codeph> element.
+	    
+	    <p>The status is:</p>
+	    <ul>
+	    <li><codeph>valid</codeph> — If signature is cryptographically valid.</li>
+	    <li><codeph>invalid</codeph> — If the digest has been altered after signing.</li>
+	    <li><codeph>unknown</codeph> — If the <codeph>verify()</codeph> method has not
+	    been called.</li>
+		</ul>
+		
+		 <p><b>Note:</b> If the <codeph>digestStatus</codeph> is invalid, the <codeph>identityStatus</codeph>
+		 and <codeph>referencesStatus</codeph> are not checked and will be reported as <codeph>unknown</codeph>.</p>
+		 
+		 </apiDesc><example conref="examples\XMLSignature.digestStatus.1.as"/></apiValueDetail></apiValue><apiValue id="flash.security:XMLSignatureValidator:identityStatus:get"><apiName>identityStatus</apiName><shortdesc>
+	    The validity status of the signing certificate.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier><apiException><apiDesc>If accessed while a signature is being validated.
+ 		</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	    The validity status of the signing certificate. 
+	    
+	    <p>The status can be:</p>
+	    <ul>
+	    <li><codeph>valid</codeph> — The certificate has not expired, has not failed a revocation check and chains
+	    to a trusted root certificate.</li>
+	    <li><codeph>unknown</codeph> — The certificate has not expired and has not failed a revocation check, 
+	    but does not chain to a trusted root certificate. A status of <codeph>unknown</codeph> will also
+	    be reported when the status has not been verified, either because the <codeph>verify()</codeph> method has not
+	    been called or because the cryptographic signature of the SignedInfo element (<codeph>digestStatus</codeph>)
+	    is invalid.</li>
+	    <li><codeph>invalid</codeph> — The certificate has expired or fails a revocation check.</li>
+	    </ul>
+	    <p>The certificates added using the <codeph>addCertificate()</codeph> method 
+	    and the settings of the <codeph>revocationCheckSetting</codeph> and the <codeph>useSystemTrustStore</codeph>
+	    properties can change whether a certificate is considered valid.</p>
+	    
+		<p><b>Note:</b> If the <codeph>identityStatus</codeph> is invalid, the <codeph>referencesStatus</codeph> is not checked 
+		 and will be reported as <codeph>unknown</codeph>. In addition, references are not checked when the <codeph>identityStatus</codeph>
+		 is unknown unless the <codeph>referencesValidationSetting</codeph> is <codeph>validOrUnknownIdentity</codeph></p>
+		
+ 		</apiDesc><example conref="examples\XMLSignatureValidator.identityStatus.1.as"> The following example gets the result of validating the signing certificate 
+ (after a signature has been validated):
+<codeblock>
+ import flash.security.XMLSignatureValidator;
+ 
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+ //validate a signature...
+  
+ var identityResult:String = verifier.identityStatus;
+</codeblock></example></apiValueDetail><related-links><link href="flash.security.xml#XMLSignatureValidator/addCertificate()"><linktext>addCertificate()</linktext></link><link href="flash.security.xml#XMLSignatureValidator/revocationCheckSetting"><linktext>revocationCheckSetting</linktext></link><link href="flash.security.xml#XMLSignatureValidator/useSystemTrustStore"><linktext>useSystemTrustStore</linktext></link><link href="flash.security.xml#XMLSignatureValidator/referencesValidationSetting"><linktext>referencesValidationSetting</linktext></link></related-links></apiValue><apiValue id="flash.security:XMLSignatureValidator:referencesStatus:get"><apiName>referencesStatus</apiName><shortdesc>
+	    The validity status of the data in the references in the SignedInfo 
+	    element.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier><apiException><apiDesc>If accessed while a signature is being validated.
+ 		</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	    The validity status of the data in the references in the <codeph>SignedInfo</codeph> 
+	    element.
+	    
+	    <p>The status can be:</p>
+	    <ul>
+	    <li><codeph>valid</codeph> — If all references are valid.</li>
+	    <li><codeph>invalid</codeph> — If any reference is invalid.</li>
+	    <li><codeph>unknown</codeph> — If not verified. 
+	    References can remain unverified in the following circumstances:
+	    <ul> 
+	    	<li>the <codeph>verify()</codeph> method has not been called</li>
+	    	<li>the cryptographic signature of the SignedInfo element (<codeph>digestStatus</codeph>) is invalid.</li>
+	    	<li>the signing certificate (<codeph>identityStatus</codeph>) is invalid</li>
+	    	<li><codeph>referencesValidationSetting</codeph> is <codeph>validIdentity</codeph> (which is the default setting) and 
+	    	the <codeph>identityStatus</codeph> of the signing certificate is unknown.</li>
+	    	<li>the <codeph>referencesValidationSetting</codeph> is <codeph>never</codeph>.</li>
+	    </ul>
+	    </li>
+		</ul>
+		
+		 <p><b>Important:</b> External resources are not validated unless they are referenced directly 
+		 in a SignedInfo element within the signature document. External resources referred to by a secondary
+		 reference are not validated. For example, if an XML signature signs a manifest element, only 
+		 the integrity of the manifest element itself is verified. The files listed in the manifest are not
+		 checked.</p>
+		 
+		</apiDesc><example conref="examples\XMLSignatureValidator.referencesStatus.1.as"> The following example gets the result of validating the references in the signature 
+ (after a signature has been validated):
+<codeblock>
+ import flash.security.XMLSignatureValidator;
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+ //validate a signature...
+  
+ var dataResult:String = verifier.referencesStatus;
+</codeblock></example></apiValueDetail><related-links><link href="flash.security.xml#XMLSignatureValidator/referencesValidationSetting"><linktext>referencesValidationSetting</linktext></link></related-links></apiValue><apiValue id="flash.security:XMLSignatureValidator:referencesValidationSetting:set"><apiName>referencesValidationSetting</apiName><shortdesc>
+	    Specifies the conditions under which references are checked.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>String</apiValueClassifier><apiException><apiDesc>If set while a signature is being validated.
+		 </apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException><apiException><apiDesc>if the <codeph>setting</codeph> parameter contains a value not defined in the ReferencesValidationSetting class.
+		 
+		</apiDesc><apiItemName>ArgumentError</apiItemName><apiOperationClassifier>ArgumentError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	    Specifies the conditions under which references are checked.
+		
+		 <p>Use constants defined in the ReferencesValidationSetting class to set this property. The
+		 settings include:</p>
+		 <ul>	
+		 <li><codeph>ReferencesValidationSetting.VALID_IDENTITY</codeph> — Check references only
+		 if the signing certificate is valid and chains to a trusted root. This is the default setting.</li>
+		 <li><codeph>ReferencesValidationSetting.VALID_OR_UNKNOWN_IDENTITY</codeph> — Check references
+		 if the signing certificate is valid, even if it does not chain to a trusted root.</li>
+		 <li><codeph>ReferencesValidationSetting.NEVER</codeph> — Never check references.</li> 
+		 </ul>
+		 
+		 <p>
+		 Use the default, <codeph>validIdentity</codeph>, setting with signatures signed with a commercial certificate or when you
+		 supply your own certificate as a trust anchor with the <codeph>addCertificate()</codeph> method. This
+		 setting avoids the overhead of checking reference validity when the signed document will be rejected anyway.
+		 </p>
+		 <p>
+		 Use the <codeph>validOrUnknownIdentity</codeph> setting with signatures signed with self-signed certificates. This setting allows you to
+		 validate that the signed data has not been altered, but does not provide any assurances about the identity
+		 of the signer. 
+		 </p>
+		 <p>
+		 Use the <codeph>never</codeph> setting to avoid the overhead of validating references when such validation is not important in the
+		 context of your application.
+		 </p>
+		 </apiDesc><example conref="examples\XMLSignatureValidator.referencesValidationSetting.1.as"> The following example sets the XMLSignatureValidator object to check references only
+ if the signing certificate chains to a trust anchor:
+<codeblock>
+ import flash.security.ReferencesValidationSetting;
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator(); 
+ verifier.referencesValidationSetting = ReferencesValidationSetting.VALID_OR_UNKNOWN_IDENTITY;
+</codeblock></example></apiValueDetail><related-links><link href="flash.security.xml#ReferencesValidationSetting"><linktext>ReferencesValidationSetting</linktext></link></related-links></apiValue><apiValue id="flash.security:XMLSignatureValidator:revocationCheckSetting:set"><apiName>revocationCheckSetting</apiName><shortdesc>
+	    Specifies how certificate revocation is checked.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>String</apiValueClassifier><apiException><apiDesc>If set while a signature is being validated.
+		</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	    Specifies how certificate revocation is checked.
+		
+		 <p>Use constants defined in the RevocationSettings class to set this property. The
+		 settings include:</p>
+		 <ul>	
+		 <li><codeph>RevocationCheckSettings.NEVER</codeph> — Do not check certificate revocation.</li>
+		 <li><codeph>RevocationCheckSettings.BEST_EFFORT</codeph> — Check certificate revocation, 
+		 if revocation information is available and the revocation status can be obtained. 
+		 If revocation status cannot be positively determined, the certificate is not rejected.</li>
+		 <li><codeph>RevocationCheckSettings.REQUIRED_IF_AVAILABLE</codeph> — If the certificate includes 
+		 revocation information, the revocation status must be positively determined to validate 
+		 the certificate.</li> 
+		 <li><codeph>RevocationCheckSettings.ALWAYS_REQUIRED</codeph> — Always check certificate revocation. 
+		 Certificates without revocation information are rejected.</li>
+		 </ul>
+		 
+		 </apiDesc><example conref="examples\XMLSignature.revocationCheckSetting.1.as"/></apiValueDetail><related-links><link href="flash.security.xml#RevocationCheckSettings"><linktext>RevocationCheckSettings</linktext></link></related-links></apiValue><apiValue id="flash.security:XMLSignatureValidator:signerCN:get"><apiName>signerCN</apiName><shortdesc>
+	   The Common Name field of the signing certificate.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	   The Common Name field of the signing certificate.  
+	   
+	   </apiDesc><example conref="examples\XMLSignatureValidator.signerCN.1.as"> The following example reads the common name of the signing certificate 
+ (after a signature has been validated):
+<codeblock>
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+ //validate a signature...
+  
+ var commonName:String = verifier.signerCN;
+</codeblock></example></apiValueDetail></apiValue><apiValue id="flash.security:XMLSignatureValidator:signerDN:get"><apiName>signerDN</apiName><shortdesc>
+	   The Distinguished Name field of the signing certificate.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	   The Distinguished Name field of the signing certificate.  
+	   
+	   </apiDesc><example conref="examples\XMLSignatureValidator.signerDN.1.as"> The following example reads the distinguished name of the signing certificate 
+ (after a signature has been validated):
+<codeblock>
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+ //validate a signature...
+  
+ var distinguishedName:String = verifier.signerDN;
+</codeblock></example></apiValueDetail></apiValue><apiValue id="flash.security:XMLSignatureValidator:signerExtendedKeyUsages:get"><apiName>signerExtendedKeyUsages</apiName><shortdesc>
+	   An array containing the Extended Key Usages OIDs listed in the signing certificate.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Array</apiValueClassifier><apiException><apiDesc>If accessed while a signature is being validated.
+	   
+	   </apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	   An array containing the Extended Key Usages OIDs listed in the signing certificate.
+	   
+	   <p>Each extended key usage is reported in numeric OID form.</p>
+	   
+	   </apiDesc><example conref="examples\XMLSignatureValidator.signerExtendedKeyUsages.1.as"> The following example reads the extended key OIDs of the signing certificate 
+ (after a signature has been validated):
+<codeblock>
+ import flash.security.XMLSignatureValidator;
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+ //validate a signature...
+  
+ var extendedKeyOIDs:Array = verifier.signerExtendedKeyUsages;
+</codeblock></example></apiValueDetail></apiValue><apiValue id="flash.security:XMLSignatureValidator:signerTrustSettings:get"><apiName>signerTrustSettings</apiName><shortdesc>
+		An array containing the trust settings of the signing certificate.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Array</apiValueClassifier><apiException><apiDesc>If accessed while a signature is being validated.
+		
+		</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+		An array containing the trust settings of the signing certificate.
+		
+		<p>Trust settings are derived from the system and the key usage OIDs embedded in 
+		the certificate. Constants for the strings representing the recognized trust settings 
+		are defined in the SignerTrustSettings class.</p>
+		 
+		 <p>The <codeph>signerTrustSettings</codeph> array of an <codeph>unknown</codeph> or
+		 <codeph>invalid</codeph> certificate is empty.</p>
+		
+		<p>Modifying the array does not change the certificate trust settings. </p>
+		
+  	    </apiDesc><example conref="examples\XMLSignatureValidator.signerTrustSettings.1.as"> The following example reads the trust settings of the signing certificate 
+ (after a signature has been validated):
+<codeblock>
+ import flash.security.XMLSignatureValidator;
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+ //validate a signature...
+  
+ var certificateTrustedFor:Array = verifier.signerTrustSettings;
+</codeblock></example></apiValueDetail><related-links><link href="flash.security.xml#SignerTrustSettings"><linktext>SignerTrustSettings</linktext></link></related-links></apiValue><apiValue id="flash.security:XMLSignatureValidator:uriDereferencer:set"><apiName>uriDereferencer</apiName><shortdesc>
+	     The IURIDereferencer implementation.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>flash.security:IURIDereferencer</apiValueClassifier><apiException><apiDesc>If set while a signature is being validated.
+		 </apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	     The IURIDereferencer implementation.
+		 
+		 <p>An IURIDereferencer implementation must be provided before attempting to
+		 verify a signature.</p>
+		 
+		 </apiDesc><example conref="examples\XMLSignatureValidator.uriDereferencer.1.as"> The following example creates an instance of SignedMessageDereferencer, which implements
+ the IURIDereferencer interface, and sets it as the dereferencer to use for signature validation:
+<codeblock>
+ import com.example.SignedMessageDereferencer; //A custom class implementing IURIDereferencer
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator(); 
+ verifier.uriDereferencer = new SignedMessageDereferencer();
+</codeblock></example></apiValueDetail><related-links><link href="flash.security.xml#IURIDereferencer"><linktext>IURIDereferencer</linktext></link></related-links></apiValue><apiValue id="flash.security:XMLSignatureValidator:useSystemTrustStore:set"><apiName>useSystemTrustStore</apiName><shortdesc>
+	    Specifies that certificates in the system trust store are used for chain building.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier><apiException><apiDesc>If set while a signature is being validated.
+		 
+		 </apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	    Specifies that certificates in the system trust store are used for chain building.
+	    
+	    <p>If <codeph>true</codeph>, then the trust anchors in the system trust store 
+	    are used as trusted roots. The system trust store is not used by default.</p>
+		
+		</apiDesc><example conref="examples\XMLSignatureValidator.useSystemTrustStore.1.as"> The following example creates an XMLSignatureValidator instance and sets it to use the
+ system repository of trusted certificates when validating an XML signature:
+<codeblock>
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator(); 
+ verifier.useSystemTrustStore = true;
+</codeblock></example></apiValueDetail></apiValue><apiValue id="flash.security:XMLSignatureValidator:validityStatus:get"><apiName>validityStatus</apiName><shortdesc>
+	    The validity status of a verified XML signature.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier><apiException><apiDesc>If accessed while a signature is being validated.
+		
+		</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	    The validity status of a verified XML signature.
+	    
+		<p>The XML signature is verified by validating the the cryptographic signature of the SignedInfo element, 
+		the signing certificate, and the data addressed by the references in the SignedInfo element. 
+		The validity of each of these elements is reported individually by the <codeph>digestStatus</codeph>, 
+		<codeph>identityStatus()</codeph>, and <codeph>referencesStatus</codeph> properties, respectively.</p>
+		
+	    <p>The validity of an XML signature can be valid, invalid, or unknown. The overall
+	    status depends on the verification status of the individual components of the signature file:</p>
+	    <ul>
+	    <li><codeph>digestStatus</codeph> — The validity of the cryptographic signature computed over
+	    the SignedInfo element.</li>
+	    <li><codeph>identityStatus</codeph> — The validity of the signing certificate.</li>
+	    <li><codeph>referencesStatus</codeph> — The validity of the digest of the references in the
+	    signature SignedInfo element.</li>
+	    </ul>
+	    <p>The signature validity reported by the <codeph>validityStatus</codeph> property can be:</p>
+	    <ul>
+	    <li><codeph>valid</codeph> — If <codeph>referencesStatus</codeph>, <codeph>digestStatus</codeph>, and 
+	    <codeph>identityStatus</codeph> are all <codeph>valid</codeph>.</li>
+	    <li><codeph>invalid</codeph> — If any individual status is <codeph>invalid</codeph>.</li>
+	    <li><codeph>unknown</codeph> — If any individual status is <codeph>unknown</codeph>.</li>
+	    </ul>
+		
+		</apiDesc><example conref="examples\XMLSignatureValidator.validityStatus.1.as"> The following example gets the result of validating the XML signature 
+<codeblock>
+ import flash.security.XMLSignatureValidator;
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+ //validate the signature...
+  
+ var validationResult:String = verifier.validityStatus;
+</codeblock></example></apiValueDetail><related-links><link href="flash.security.xml#XMLSignatureValidator/digestStatus"><linktext>digestStatus</linktext></link><link href="flash.security.xml#XMLSignatureValidator/identityStatus"><linktext>identityStatus</linktext></link><link href="flash.security.xml#XMLSignatureValidator/referencesStatus"><linktext>referencesStatus</linktext></link><link href="flash.security.xml#SignatureStatus"><linktext>SignatureStatus</linktext></link></related-links></apiValue></apiClassifier><apiClassifier id="flash.security:IURIDereferencer"><apiName>IURIDereferencer</apiName><shortdesc>
+	IURIDereferencer defines an interface for objects that resolve 
+	URIs in an XML signature.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiInterface/><apiAccess value="public"/><apiStatic/><apiBaseClassifier></apiBaseClassifier></apiClassifierDef><apiDesc>
+	IURIDereferencer defines an interface for objects that resolve 
+	URIs in an XML signature.
+	 
+	<p>The IURIDereferencer implementation is responsible for resolving the 
+	URIs specified in the SignedInfo elements of an XML signature file and 
+	returning the referenced data in an object, such as a ByteArray, that implements 
+	the IDataInput interface. <ph platform="javascript">In order to use the 
+	IURIDereferencer interface, you must create an ActionScript class that implements
+	the interface. In JavaScript, you can use a <codeph>script</codeph> tag to load 
+	a SWF file that contains that ActionScript class.</ph></p>
+	
+	<p>The interface has	one method: <codeph>dereference()</codeph>. 
+	A typical implementation might also require a method for passing
+	the XML signature object containing the URIs to be resolved to
+	the dereferencer.</p> 
+	 
+	 <p>The IURIDereferencer interface is used with the 
+	XMLSignatureValidator class.</p>
+	
+	</apiDesc><example conref="examples\IURIDereferencerExample.as"/></apiClassifierDetail><related-links><link href="flash.security.xml#XMLSignatureValidator"><linktext>XMLSignatureValidator</linktext></link><link href="flash.security.xml#XMLSignatureValidator/uriDereferencer"><linktext>XMLSignatureValidator.uriDereferencer</linktext></link></related-links><apiOperation id="flash.security:IURIDereferencer:flash.security:IURIDereferencer:dereference"><apiName>dereference</apiName><shortdesc>
+		Resolves and dereferences the specified URI.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>The data referenced by the URI.
+		</apiDesc><apiOperationClassifier>flash.utils:IDataInput</apiOperationClassifier></apiReturn><apiParam><apiItemName>uri</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>The URI to dereference.
+		</apiDesc></apiParam></apiOperationDef><apiDesc>
+		Resolves and dereferences the specified URI.
+		
+		</apiDesc></apiOperationDetail></apiOperation></apiClassifier><apiClassifier id="flash.security:SignerTrustSettings"><apiName>SignerTrustSettings</apiName><shortdesc>
+	The SignerTrustSettings class defines constants used with the 
+	SignerTrustSettings property of an XMLSignatureValidator object.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	The SignerTrustSettings class defines constants used with the 
+	<codeph>SignerTrustSettings</codeph> property of an XMLSignatureValidator object.
+	
+	</apiDesc></apiClassifierDetail><related-links><link href="flash.security.xml#XMLSignatureValidator/signerTrustSettings"><linktext>XMLSignatureValidator.signerTrustSettings</linktext></link></related-links><apiValue id="flash.security:SignerTrustSettings:CODE_SIGNING"><apiName>CODE_SIGNING</apiName><shortdesc> 
+	   The certificate is trusted for code signing.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>codeSigning</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	   The certificate is trusted for code signing. This implies that
+	   the certificate chains to a trusted root, the root is trusted for
+	   code signing, and the signing certificate has the CodeSigning
+	   OID in its Extended Key Usage extension.
+	   
+	   </apiDesc></apiValueDetail></apiValue><apiValue id="flash.security:SignerTrustSettings:PLAYLIST_SIGNING"><apiName>PLAYLIST_SIGNING</apiName><shortdesc> 
+	   The certificate is trusted for signing playlists.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>playlistSigning</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	   The certificate is trusted for signing playlists. This implies that
+	   the certificate chains to a trusted root and has the 
+	   playlist signing OID in its Extended Key Usage extension.
+	   
+	   </apiDesc></apiValueDetail></apiValue><apiValue id="flash.security:SignerTrustSettings:SIGNING"><apiName>SIGNING</apiName><shortdesc> 
+	  The certificate is trusted for signing in general.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>signing</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	  The certificate is trusted for signing in general. 
+	  
+	  </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.security:SignatureStatus"><apiName>SignatureStatus</apiName><shortdesc>
+	The SignatureStatus class defines constants used by the validityStatus 
+	property of an XMLSignatureValidator object.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	The SignatureStatus class defines constants used by the <codeph>validityStatus</codeph> 
+	property of an XMLSignatureValidator object.
+	
+	</apiDesc></apiClassifierDetail><related-links><link href="flash.security.xml#XMLSignatureValidator/validityStatus"><linktext>XMLSignatureValidator.validityStatus</linktext></link></related-links><apiValue id="flash.security:SignatureStatus:INVALID"><apiName>INVALID</apiName><shortdesc> 
+	Invalid status.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>invalid</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	Invalid status.
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.security:SignatureStatus:UNKNOWN"><apiName>UNKNOWN</apiName><shortdesc> 
+	Unknown status.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>unknown</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	Unknown status.
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.security:SignatureStatus:VALID"><apiName>VALID</apiName><shortdesc> 
+	Valid status.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>valid</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	Valid status.
+	
+	</apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.security:ReferencesValidationSetting"><apiName>ReferencesValidationSetting</apiName><shortdesc>
+	The ReferencesValidationSetting class defines constants used by the referencesValidationSetting 
+	property of an XMLSignatureValidator object.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	The ReferencesValidationSetting class defines constants used by the <codeph>referencesValidationSetting</codeph> 
+	property of an XMLSignatureValidator object.
+	
+	</apiDesc></apiClassifierDetail><related-links><link href="flash.security.xml#XMLSignatureValidator/ReferencesValidationSetting"><linktext>XMLSignatureValidator.ReferencesValidationSetting</linktext></link></related-links><apiValue id="flash.security:ReferencesValidationSetting:NEVER"><apiName>NEVER</apiName><shortdesc> 
+	Never check references.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>never</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	Never check references.
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.security:ReferencesValidationSetting:VALID_IDENTITY"><apiName>VALID_IDENTITY</apiName><shortdesc> 
+	Only check references if the signing certificate is valid and trusted.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>validIdentity</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	Only check references if the signing certificate is valid and trusted.
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.security:ReferencesValidationSetting:VALID_OR_UNKNOWN_IDENTITY"><apiName>VALID_OR_UNKNOWN_IDENTITY</apiName><shortdesc> 
+	Check references even if the signing certificate is untrusted (does not chain to a known trusted root).</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>validOrUnknownIdentity</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	Check references even if the signing certificate is untrusted (does not chain to a known trusted root).
+	
+	</apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.security:RevocationCheckSettings"><apiName>RevocationCheckSettings</apiName><shortdesc>
+	The RevocationCheckSettings class defines constants used by the 
+	revocationCheckSetting property of an XMLSignatureValidator object.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	The RevocationCheckSettings class defines constants used by the 
+	<codeph>revocationCheckSetting</codeph> property of an XMLSignatureValidator object.
+	
+	</apiDesc></apiClassifierDetail><related-links><link href="flash.security.xml#XMLSignatureValidator/revocationCheckSetting"><linktext>XMLSignatureValidator.revocationCheckSetting</linktext></link></related-links><apiValue id="flash.security:RevocationCheckSettings:ALWAYS_REQUIRED"><apiName>ALWAYS_REQUIRED</apiName><shortdesc>
+		Always check certificate revocation.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>alwaysRequired</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		Always check certificate revocation. Certificates without revocation information are rejected.
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="flash.security:RevocationCheckSettings:BEST_EFFORT"><apiName>BEST_EFFORT</apiName><shortdesc>
+		Check certificate revocation, if revocation information is available and the revocation status 
+		can be obtained.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>bestEffort</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		Check certificate revocation, if revocation information is available and the revocation status 
+		can be obtained. If revocation status cannot be positively determined, the certificate is not rejected.
+		</apiDesc></apiValueDetail></apiValue><apiValue id="flash.security:RevocationCheckSettings:NEVER"><apiName>NEVER</apiName><shortdesc>
+		Do not check certificate revocation.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>never</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		Do not check certificate revocation.
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="flash.security:RevocationCheckSettings:REQUIRED_IF_AVAILABLE"><apiName>REQUIRED_IF_AVAILABLE</apiName><shortdesc>
+		Check certificate revocation if the certificate includes revocation information.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>requiredIfInfoAvailable</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		Check certificate revocation if the certificate includes revocation information. If the information 
+		is available, but revocation status cannot be positively determined, the certificate is rejected.
+		
+		</apiDesc></apiValueDetail></apiValue></apiClassifier></apiPackage>

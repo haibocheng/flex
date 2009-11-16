@@ -139,7 +139,7 @@ use namespace mx_internal;  // for mx_internal property contentChangeDelta
  *  @playerversion AIR 1.5
  *  @productversion Flex 4
  */
-public class DataGroup extends GroupBase 
+public class DataGroup extends GroupBase implements IItemRendererOwner
 {
     /**
      *  Constructor.
@@ -152,6 +152,8 @@ public class DataGroup extends GroupBase
     public function DataGroup()
     {
         super();
+        
+        _rendererUpdateDelegate = this;
     }
     
     /**
@@ -244,7 +246,7 @@ public class DataGroup extends GroupBase
         }
 
         super.addChild(obj);
-        updateRenderer(renderer, 0, _typicalItem);
+        setUpItemRenderer(renderer, 0, _typicalItem);
         if (obj is IInvalidating)
             IInvalidating(obj).validateNow();
         setTypicalLayoutElement(renderer);
@@ -615,19 +617,19 @@ public class DataGroup extends GroupBase
     }
     
     /**
-     *  @private 
+     *  @inheritDoc
+     * 
      *  Given a data item, return the toString() representation 
      *  of the data item for an item renderer to display. Null 
      *  data items return the empty string. 
-     *
      */
-    private function itemToLabel(item:Object):String
+    public function itemToLabel(item:Object):String
     {
         if (item !== null)
             return item.toString();
         return " ";
     }
-    
+	
     //--------------------------------------------------------------------------
     //
     //  Item -> Renderer mapping
@@ -751,7 +753,7 @@ public class DataGroup extends GroupBase
             initializeTypicalItem();
         }
     }
-    
+
     /**
      *  @private
      *  True if we are updating a renderer currently. 
@@ -770,14 +772,16 @@ public class DataGroup extends GroupBase
     /**
      *  @private 
      *  Sets the renderer's data, owner and label properties. 
-     *  Then, gives the "true" owner a chance to call update the 
-     *  renderer if this DataGroup is not the owner. "True" owners 
-     *  would use their impl of updateRenderer to clear out stale 
-     *  properties for when the renderer is being recycled, and set
-     *  new properties like owner, label, selected, etc. 
-     * 
+     *  It does this by calling rendererUpdateDelegate.updateRenderer().
+     *  By default, rendererUpdateDelegate points to ourselves, but if 
+     *  the "true owner" of the item renderer is a List, then the 
+     *  rendererUpdateDelegate points to that object.  The 
+     *  rendererUpdateDelegate.updateRenderer() call is in charge of 
+     *  setting all the properties on the renderer, like owner, itemIndex, 
+     *  data, selected, etc...  Note that data should be the last property 
+     *  set in this lifecycle.
      */
-    private function updateRenderer(renderer:IVisualElement, index:int, data:Object):void
+    private function setUpItemRenderer(renderer:IVisualElement, itemIndex:int, data:Object):void
     {
         if (!renderer)
            return;
@@ -786,35 +790,40 @@ public class DataGroup extends GroupBase
         // so we can ignore any collectionChange.UPDATE events
         renderersBeingUpdated = true;
         
-        // Set the data    
-        if ((renderer is IDataRenderer) && (renderer !== data))
-            IDataRenderer(renderer).data = data;
-        
-        // Newly created renderer with no owner, set owner to this     
-        if (!renderer.owner)
-            renderer.owner = this; 
-        
-        // Set the index
-        if (renderer is IItemRenderer)
-            IItemRenderer(renderer).index = index;
-        
-        // If a delegate is specified defer to the rendererUpdateDelegate
-        // to update the renderer.
-        if (_rendererUpdateDelegate)
-            _rendererUpdateDelegate.updateRenderer(renderer);
-
-        // Else if we're the owner, set the label to the toString()
-        // of the data 
-        else if (renderer.owner == this && renderer is IItemRenderer)
-            IItemRenderer(renderer).label = itemToLabel(data);
+        // Defer to the rendererUpdateDelegate
+        // to update the renderer.  By default, the delegate is DataGroup
+        _rendererUpdateDelegate.updateRenderer(renderer, itemIndex, data);
         
         // technically if this got called "recursively", this renderersBeingUpdated flag
         // would be prematurely set to false, but in most cases, this check should be 
         // good enough.
         renderersBeingUpdated = false;
     }
-
     
+    /**
+     *  @inheritDoc
+     */
+    public function updateRenderer(renderer:IVisualElement, itemIndex:int, data:Object):void
+    {
+        // set the owner
+        renderer.owner = this;
+        
+        // Set the index
+        if (renderer is IItemRenderer)
+            IItemRenderer(renderer).itemIndex = itemIndex;
+
+        // set the label to the toString() of the data 
+        if (renderer is IItemRenderer)
+            IItemRenderer(renderer).label = itemToLabel(data);
+        
+        // always set the data last
+        if ((renderer is IDataRenderer) && (renderer !== data))
+            IDataRenderer(renderer).data = data;
+    }
+    
+    /**
+     *  @private
+     */
     private function manageDisplayObjectLayers():void
     {
         // itemRenderers should be both DisplayObjects and IVisualElements
@@ -1068,7 +1077,7 @@ public class DataGroup extends GroupBase
      */
     override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
     {
-        renderBackgroundFill();
+        drawBackground();
 
         if (layout && layout.useVirtualLayout)
         {
@@ -1187,7 +1196,7 @@ public class DataGroup extends GroupBase
             
             if (createdIR || recycledIR) 
             {
-                updateRenderer(elt, index, item);
+                setUpItemRenderer(elt, index, item);
                 if (!isNaN(eltWidth) || !isNaN(eltHeight))
                 {
                     // If we're going to set the width or height of this
@@ -1267,7 +1276,7 @@ public class DataGroup extends GroupBase
                 renderer = indexToRenderer[i] as IItemRenderer;
                 
                 if (renderer)
-                    renderer.index = i;
+                    renderer.itemIndex = i;
                 // TODO (rfrishbe): could make this more optimal by only re-computing a subset of the visible
                 // item renderers, but it's probably not worth it
             }
@@ -1314,7 +1323,7 @@ public class DataGroup extends GroupBase
         var myItemRenderer:IVisualElement = createRendererForItem(item);
         indexToRenderer.splice(index, 0, myItemRenderer);
         addItemRendererToDisplayList(myItemRenderer as DisplayObject, index);
-        updateRenderer(myItemRenderer, index, item);
+        setUpItemRenderer(myItemRenderer, index, item);
         dispatchEvent(new RendererExistenceEvent(
                       RendererExistenceEvent.RENDERER_ADD, false, false, 
                       myItemRenderer, index, item));
@@ -1498,7 +1507,7 @@ public class DataGroup extends GroupBase
                     {
                         var index:int = dataProvider.getItemIndex(pe.source);
                         var renderer:IVisualElement = indexToRenderer[index];
-                        updateRenderer(renderer, index, pe.source); 
+                        setUpItemRenderer(renderer, index, pe.source); 
                     }
                 }
                 break;

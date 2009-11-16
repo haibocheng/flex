@@ -210,7 +210,9 @@ include "../styles/metadata/TextStyles.as"
 
 /**
  *  Width of the arrow button in pixels.
- *  @default 22
+ *  
+ *  The default value for the Halo theme is 22.
+ *  The default value for the Spark theme is 18.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -238,7 +240,8 @@ include "../styles/metadata/TextStyles.as"
  *  The length of the transition when the drop-down list closes, in milliseconds.
  *  The default transition has the drop-down slide up into the ComboBox.
  *
- *  @default 250
+ *  The default value for the Halo theme is 250.
+ *  The default value for the Spark theme is 50.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -279,7 +282,7 @@ include "../styles/metadata/TextStyles.as"
  *  allows you to control the appearance of the drop-down list or its item
  *  renderers.
  * 
- * [deprecated]
+ *  [deprecated]
  *
  *  @default "comboDropDown"
  *  
@@ -308,7 +311,8 @@ include "../styles/metadata/TextStyles.as"
  *  Length of the transition when the drop-down list opens, in milliseconds.
  *  The default transition has the drop-down slide down from the ComboBox.
  *
- *  @default 250
+ *  The default value for the Halo theme is 250.
+ *  The default value for the Spark theme is 0.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -337,7 +341,8 @@ include "../styles/metadata/TextStyles.as"
  *  <code>paddingTop</code> and <code>paddingBottom</code> affect the size 
  *  of the ComboBox control, but do not affect the position of the editable text field.
  *  
- *  @default 0 
+ *  The default value for the Halo theme is 0.
+ *  The default value for the Spark theme is -2.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -353,7 +358,8 @@ include "../styles/metadata/TextStyles.as"
  *  <code>paddingTop</code> and <code>paddingBottom</code> affect the size 
  *  of the ComboBox control, but do not affect the position of the editable text field.
  *  
- *  @default 0
+ *  The default value for the Halo theme is 0.
+ *  The default value for the Spark theme is -1.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -364,7 +370,10 @@ include "../styles/metadata/TextStyles.as"
 
 /**
  *  The rollOverColor of the drop-down list.
-
+ *  
+ *  The default value for the Halo theme is <code>0xB2E1FF</code>.
+ *  The default value for the Spark theme is <code>0xCEDBEF</code>.
+ * 
  *  @see mx.controls.List
  *  
  *  @langversion 3.0
@@ -376,7 +385,10 @@ include "../styles/metadata/TextStyles.as"
 
 /**
  *  The selectionColor of the drop-down list.
-
+ *  
+ *  The default value for the Halo theme is <code>0x7FCEFF</code>.
+ *  The default value for the Spark theme is <code>0xA8C6EE</code>.
+ * 
  *  @see mx.controls.List
  *  
  *  @langversion 3.0
@@ -417,7 +429,8 @@ include "../styles/metadata/TextStyles.as"
 /**
  *  The textRollOverColor of the drop-down list.
  * 
- *  @default #2B333C
+ *  The default value for the Halo theme is <code>0x2B333C</code>.
+ *  The default value for the Spark theme is <code>0x000000</code>.
  *  
  *  @see mx.controls.List
  *  
@@ -431,7 +444,9 @@ include "../styles/metadata/TextStyles.as"
 /**
  *  The textSelectedColor of the drop-down list.
  * 
- *  @default #2B333C
+ *  The default value for the Halo theme is <code>0x2B333C</code>.
+ *  The default value for the Spark theme is <code>0x000000</code>.
+ * 
  *  @see mx.controls.List
  *  
  *  @langversion 3.0
@@ -696,7 +711,7 @@ public class ComboBox extends ComboBase
     /**
      *  @private
      */
-    private var bRemoveDropdown:Boolean = false;
+    private var bRemoveDropdown:Boolean = true;
 
     /**
      *  @private
@@ -1434,9 +1449,9 @@ public class ComboBox extends ComboBase
         {
             destroyDropdown();
         }
-        else if (!_showingDropdown && inTween)
+        else if (_showingDropdown)
         {
-            bRemoveDropdown = true;
+            bRemoveDropdown = false;
         }
 
         var ddw:Number = preferredDropdownWidth;
@@ -1543,8 +1558,11 @@ public class ComboBox extends ComboBase
      *  @playerversion AIR 1.1
      *  @productversion Flex 3
      */
-    public function itemToLabel(item:Object):String
+    public function itemToLabel(item:Object, ...rest):String
     {
+        // rest args are needed in case dropdown is some other thing like DataGrid
+        // that has multiple arguments to labelFunction
+
         // we need to check for null explicitly otherwise
         // a numeric zero will not get properly converted to a string.
         // (do not use !item)
@@ -1702,9 +1720,9 @@ public class ComboBox extends ComboBase
             systemManager.addEventListener(Event.RESIZE, stage_resizeHandler, false, 0, true);
         }
         
-		var m:Matrix = transform.concatenatedMatrix;
-		_dropdown.scaleX = m.a; //scale x
-		_dropdown.scaleY = m.d; //scale y
+        var m:Matrix = transform.concatenatedMatrix;
+        _dropdown.scaleX = m.a; //scale x
+        _dropdown.scaleY = m.d; //scale y
 
         return _dropdown;
     }
@@ -1864,7 +1882,6 @@ public class ComboBox extends ComboBase
             tween.endTween();
         
         displayDropdown(false, null, false);
-
     }
 
     //--------------------------------------------------------------------------
@@ -1893,8 +1910,8 @@ public class ComboBox extends ComboBase
                 // Special case: Empty dataProvider.
                 if (!selectedIndexChanged && !selectedItemChanged)
                 {
-                	if (super.selectedIndex != -1)
-                    	super.selectedIndex = -1;
+                    if (super.selectedIndex != -1)
+                        super.selectedIndex = -1;
                     implicitSelectedIndex = true;
                     invalidateDisplayList();
                 }
@@ -2034,7 +2051,8 @@ public class ComboBox extends ComboBase
         // the dropdown and then click outside the application.
 
         // If the dropdown is open...
-        if (_showingDropdown && _dropdown && event.target == this)
+        if (_showingDropdown && _dropdown &&
+            this.contains(DisplayObject(event.target)))
         {
             // If focus is moving outside the dropdown...
             if (!event.relatedObject ||
@@ -2241,20 +2259,21 @@ public class ComboBox extends ComboBase
             inTween = false;
             _dropdown.enabled = true;
             _dropdown.visible = _showingDropdown;
+            
+            if (bRemoveDropdown)
+            {
+                _dropdown.removeEventListener(FlexMouseEvent.MOUSE_DOWN_OUTSIDE, dropdown_mouseOutsideHandler);
+                _dropdown.removeEventListener(FlexMouseEvent.MOUSE_WHEEL_OUTSIDE, dropdown_mouseOutsideHandler);
+                _dropdown.removeEventListener(SandboxMouseEvent.MOUSE_DOWN_SOMEWHERE, dropdown_mouseOutsideHandler);
+                _dropdown.removeEventListener(SandboxMouseEvent.MOUSE_WHEEL_SOMEWHERE, dropdown_mouseOutsideHandler);
+                
+                PopUpManager.removePopUp(_dropdown);
+                _dropdown = null;
+            }
         }
-
-        if (bRemoveDropdown)
-        {
-            _dropdown.removeEventListener(FlexMouseEvent.MOUSE_DOWN_OUTSIDE, dropdown_mouseOutsideHandler);
-            _dropdown.removeEventListener(FlexMouseEvent.MOUSE_WHEEL_OUTSIDE, dropdown_mouseOutsideHandler);
-            _dropdown.removeEventListener(SandboxMouseEvent.MOUSE_DOWN_SOMEWHERE, dropdown_mouseOutsideHandler);
-            _dropdown.removeEventListener(SandboxMouseEvent.MOUSE_WHEEL_SOMEWHERE, dropdown_mouseOutsideHandler);
-
-            PopUpManager.removePopUp(_dropdown);
-            _dropdown = null;
-            bRemoveDropdown = false;
-        }
-
+        
+        bRemoveDropdown = true;
+        
         UIComponent.resumeBackgroundProcessing();
         var cbdEvent:DropdownEvent =
             new DropdownEvent(_showingDropdown ? DropdownEvent.OPEN : DropdownEvent.CLOSE);

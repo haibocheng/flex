@@ -47,6 +47,7 @@ import mx.managers.IActiveWindowManager;
 import mx.managers.ICursorManager;
 import mx.managers.ISystemManager;
 import mx.managers.NativeDragManagerImpl;
+import mx.managers.SystemManagerGlobals;
 import mx.managers.WindowedSystemManager;
 import mx.managers.systemClasses.ActiveWindowManager;
 import mx.styles.CSSStyleDeclaration;
@@ -62,20 +63,11 @@ use namespace mx_internal;
 //--------------------------------------
 
 /**
- *  The background color of the application. This color is used as the stage color for the
- *  application and the background color for the HTML embed tag.
+ *  Alpha level of the color defined by the <code>backgroundColor</code>
+ *  property.
  *   
- *  @langversion 3.0
- *  @playerversion Flash 10
- *  @playerversion AIR 1.5
- *  @productversion Flex 4
- */
-[Style(name="backgroundColor", type="uint", format="Color", inherit="no")]
-
-/**
- *  The background color of the application. This color is used as the stage color for the
- *  application and the background color for the HTML embed tag.
- *   
+ *  @default 1.0
+ * 
  *  @langversion 3.0
  *  @playerversion Flash 10
  *  @playerversion AIR 1.5
@@ -84,8 +76,21 @@ use namespace mx_internal;
 [Style(name="backgroundAlpha", type="Number", inherit="no")]
 
 /**
+ *  The background color of the application. This color is used as the stage color for the
+ *  application and the background color for the HTML embed tag.
+ *   
+ *  @default 0xFFFFFF
+ * 
+ *  @langversion 3.0
+ *  @playerversion Flash 10
+ *  @playerversion AIR 1.5
+ *  @productversion Flex 4
+ */
+[Style(name="backgroundColor", type="uint", format="Color", inherit="no")]
+
+/**
  *  Provides a margin of error around a window's border so a resize
- *  and be more easily started. A click on a window is considered a
+ *  can be more easily started. A click on a window is considered a
  *  click on the window's border if the click occurs with the resizeAffordance
  *  number of pixels from the outside edge of the window.
  *  
@@ -331,6 +336,8 @@ use namespace mx_internal;
 //  Other metadata
 //--------------------------------------
 
+[AccessibilityClass(implementation="spark.accessibility.WindowAccImpl")]
+
 /**
  *  The frameworks must be initialized by WindowedSystemManager.
  *  This factoryClass will be automatically subclassed by any
@@ -448,6 +455,18 @@ use namespace mx_internal;
 public class Window extends SkinnableContainer implements IWindow
 {
     include "../../mx/core/Version.as";
+
+    //--------------------------------------------------------------------------
+    //
+    //  Class mixins
+    //
+    //--------------------------------------------------------------------------
+
+    /**
+     *  @private
+     *  Placeholder for mixin by WindowAccImpl.
+     */
+    mx_internal static var createAccessibilityImplementation:Function;
 
     //--------------------------------------------------------------------------
     //
@@ -1256,8 +1275,20 @@ public class Window extends SkinnableContainer implements IWindow
      */
     public function set menu(value:FlexNativeMenu):void
     {
+        if (_menu)
+        {
+            _menu.automationParent = null;
+            _menu.automationOwner = null;
+        }
+        
         _menu = value;
         menuChanged = true;
+        
+        if (_menu)
+        {
+            menu.automationParent = this;
+            menu.automationOwner = this;
+        }
     }
     
     //----------------------------------
@@ -1673,68 +1704,18 @@ public class Window extends SkinnableContainer implements IWindow
     
     //--------------------------------------------------------------------------
     //
-    //  Overridden methods: SkinnableContainer
-    //
-    //--------------------------------------------------------------------------
-    
-    /**
-     *  @private
-     */
-    override protected function partAdded(partName:String, instance:Object):void
-    {
-        super.partAdded(partName, instance);
-        
-        if (instance == statusBar)
-        {
-            statusBar.visible = _showStatusBar;
-            statusBar.includeInLayout = _showStatusBar;
-            showStatusBarChanged = false;
-        }
-        else if (instance == titleBar)
-        {
-            if (!nativeWindow.closed)
-            {
-                // If the initial title is the default and the native window is set
-                // from the initial window settings, 
-                // then use the initial window settings title.
-                if (_title == "" && systemManager.stage.nativeWindow.title != null)
-                    _title = systemManager.stage.nativeWindow.title;
-                else
-                    systemManager.stage.nativeWindow.title = _title;                
-            }
-
-            titleBar.title = _title;
-            titleChanged = false;
-        }
-        else if (instance == statusText)
-        {
-            statusText.text = status;
-            statusChanged = false;    
-        }
-        else if (instance == gripper)
-        {
-            gripper.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
-        }
-    }
-    
-    /**
-     *  @private
-     */
-    override protected function partRemoved(partName:String, instance:Object):void
-    {
-        super.partRemoved(partName, instance);
-        
-        if (instance == gripper)
-        {
-            gripper.removeEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
-        }
-    }
-
-    //--------------------------------------------------------------------------
-    //
     //  Overridden methods: UIComponent
     //
     //--------------------------------------------------------------------------
+
+    /**
+     *  @private
+     */
+    override protected function initializeAccessibility():void
+    {
+        if (Window.createAccessibilityImplementation != null)
+            Window.createAccessibilityImplementation(this);
+    }
 
     /**
      *  @private
@@ -1759,6 +1740,10 @@ public class Window extends SkinnableContainer implements IWindow
         {
             flagForOpen = false;
             
+            // Set up our module factory if we don't have one.
+            if (moduleFactory == null)
+                moduleFactory = SystemManagerGlobals.topLevelSystemManagers[0];
+
             var init:NativeWindowInitOptions = new NativeWindowInitOptions();
             init.maximizable = _maximizable;
             init.minimizable = _minimizable;
@@ -1938,6 +1923,65 @@ public class Window extends SkinnableContainer implements IWindow
             tmp.x = x;
             tmp.y = y;
             nativeWindow.bounds = tmp;
+        }
+    }
+
+    //--------------------------------------------------------------------------
+    //
+    //  Overridden methods: SkinnableContainer
+    //
+    //--------------------------------------------------------------------------
+    
+    /**
+     *  @private
+     */
+    override protected function partAdded(partName:String, instance:Object):void
+    {
+        super.partAdded(partName, instance);
+        
+        if (instance == statusBar)
+        {
+            statusBar.visible = _showStatusBar;
+            statusBar.includeInLayout = _showStatusBar;
+            showStatusBarChanged = false;
+        }
+        else if (instance == titleBar)
+        {
+            if (!nativeWindow.closed)
+            {
+                // If the initial title is the default and the native window is set
+                // from the initial window settings, 
+                // then use the initial window settings title.
+                if (_title == "" && systemManager.stage.nativeWindow.title != null)
+                    _title = systemManager.stage.nativeWindow.title;
+                else
+                    systemManager.stage.nativeWindow.title = _title;                
+            }
+
+            titleBar.title = _title;
+            titleChanged = false;
+        }
+        else if (instance == statusText)
+        {
+            statusText.text = status;
+            statusChanged = false;    
+        }
+        else if (instance == gripper)
+        {
+            gripper.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
+        }
+    }
+    
+    /**
+     *  @private
+     */
+    override protected function partRemoved(partName:String, instance:Object):void
+    {
+        super.partRemoved(partName, instance);
+        
+        if (instance == gripper)
+        {
+            gripper.removeEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
         }
     }
 

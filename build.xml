@@ -17,15 +17,15 @@
 
 	<property file="${FLEX_HOME}/local.properties"/>
 	<property file="${FLEX_HOME}/build.properties"/>
-	<property file="${FLEX_HOME}/frameworks/projects/textLayout/tlf.properties"/>
 	<property environment="env"/>
 	<property name="debug" value="true"/>
 	<property name="strict" value="true"/>
 	<property name="javac.src" value="1.5"/>
 	<property name="build.number" value="0"/>
 	<property name="target.player" value="10"/>
-
-
+	<!-- if needed, the tlf.build.number value can be found in frameworks/projects/textLayout/src/flashx/textLayout/BuildInfo.as -->
+	<property name="tlf.build.number" value="1.0.0"/>
+	
     <condition property="flash.player" value="${basedir}/in/player/${target.player}/win/FlashPlayer.exe">
         <os family="windows"/>
     </condition>
@@ -107,8 +107,10 @@
 	</target>
 
 	<target name="frameworks-rsls-clean">
-		<delete dir="${basedir}/frameworks/tlf_tmp" includeEmptyDirs="true" quiet="true" failonerror="false"/>
-		<delete dir="${basedir}/frameworks/rsls" includeEmptyDirs="true" quiet="true"/>
+		<delete dir="${basedir}/frameworks/rsls" includeEmptyDirs="true" quiet="true">
+			<!--<exclude name="osmf_*"/>-->
+			<exclude name="textLayout_*"/>
+		</delete>
 	</target>
 
 	<target name="webapps-clean">
@@ -272,11 +274,12 @@
 	-->
 
 <target name="frameworks-rsls" description="Build signed framework RSLs">
-
+	
 		<macrodef name="create-rsl">
 			<attribute name="rsl-dir"/>
 			<attribute name="swc-dir"/>
 			<attribute name="swc-name"/>
+			<attribute name="build-number"/>
 
 			<sequential>
 				<unzip src="@{swc-dir}/@{swc-name}.swc"
@@ -288,38 +291,39 @@
 				<!-- optimize out metadata but keep debug info for the unsigned RSL -->
 				<java jar="${basedir}/lib/optimizer.jar" fork="true" failonerror="true">
 					<jvmarg line="-ea -DAS3 -DAVMPLUS -Dflexlib=${basedir}/frameworks -Xms32m -Xmx384m -Dsun.io.useCanonCaches=false"/>
-	<arg line="'@{rsl-dir}/library.swf' --output '@{rsl-dir}/@{swc-name}_${release.version}.${build.number}.swf' --keep-as3-metadata='Bindable,Managed,ChangeEvent,NonCommittingChangeEvent,Transient,SkinPart' --debug='true' "/>				</java>
+					<arg line="'@{rsl-dir}/library.swf' --output '@{rsl-dir}/@{swc-name}_@{build-number}.swf' --keep-as3-metadata='Bindable,Managed,ChangeEvent,NonCommittingChangeEvent,Transient,SkinPart' --debug='true' "/>	
+				</java>
 				<java jar="${basedir}/lib/digest.jar" fork="true" failonerror="true">
 					<jvmarg line="-ea -DAS3 -DAVMPLUS -Xms32m -Xmx384m -Dsun.io.useCanonCaches=false"/>
-					<arg line="--digest.rsl-file '@{rsl-dir}/@{swc-name}_${release.version}.${build.number}.swf' --digest.swc-path  '@{swc-dir}/@{swc-name}.swc' --digest.signed=false"/>
+					<arg line="--digest.rsl-file '@{rsl-dir}/@{swc-name}_@{build-number}.swf' --digest.swc-path  '@{swc-dir}/@{swc-name}.swc' --digest.signed=false"/>
 				</java>
 
 				<!-- optimize out debug and metadata for the signed RSL -->
 				<java jar="${basedir}/lib/optimizer.jar" fork="true" failonerror="true">
 					<jvmarg line="-ea -DAS3 -DAVMPLUS -Dflexlib=${basedir}/frameworks -Xms32m -Xmx384m -Dsun.io.useCanonCaches=false"/>
-	<arg line="'@{rsl-dir}/library.swf' --output '@{rsl-dir}/@{swc-name}_${release.version}.${build.number}.swz' --keep-as3-metadata='Bindable,Managed,ChangeEvent,NonCommittingChangeEvent,Transient,SkinPart' "/>				</java>
+	<arg line="'@{rsl-dir}/library.swf' --output '@{rsl-dir}/@{swc-name}_@{build-number}.swz' --keep-as3-metadata='Bindable,Managed,ChangeEvent,NonCommittingChangeEvent,Transient,SkinPart' "/>				</java>
 				<java jar="${basedir}/lib/digest.jar" fork="true" failonerror="true">
 					<jvmarg line="-ea -DAS3 -DAVMPLUS -Xms32m -Xmx384m -Dsun.io.useCanonCaches=false"/>
-					<arg line="--digest.rsl-file  '@{rsl-dir}/@{swc-name}_${release.version}.${build.number}.swz' --digest.swc-path  '@{swc-dir}/@{swc-name}.swc' --digest.signed=true"/>
+					<arg line="--digest.rsl-file  '@{rsl-dir}/@{swc-name}_@{build-number}.swz' --digest.swc-path  '@{swc-dir}/@{swc-name}.swc' --digest.signed=true"/>
 				</java>
-				<delete file="@{rsl-dir}/@{swc-name}_${release.version}.${build.number}.swz"/>
+				<delete file="@{rsl-dir}/@{swc-name}_@{build-number}.swz"/>
 				<delete file="@{rsl-dir}/library.swf"/>
 			</sequential>
 		</macrodef>
 
 		<!-- framework RSL -->
-		<create-rsl rsl-dir="${basedir}/frameworks/rsls" swc-dir="${basedir}/frameworks/libs" swc-name="framework"/>
+		<create-rsl rsl-dir="${basedir}/frameworks/rsls" swc-dir="${basedir}/frameworks/libs" swc-name="framework" build-number="${release.version}.${build.number}"/>
 
 		<!-- rpc RSL -->
-		<create-rsl rsl-dir="${basedir}/frameworks/rsls" swc-dir="${basedir}/frameworks/libs" swc-name="rpc"/>
+		<create-rsl rsl-dir="${basedir}/frameworks/rsls" swc-dir="${basedir}/frameworks/libs" swc-name="rpc" build-number="${release.version}.${build.number}"/>
 
 		<!-- Spark -->
-		<create-rsl rsl-dir="${basedir}/frameworks/rsls" swc-dir="${basedir}/frameworks/libs" swc-name="spark"/>
+		<create-rsl rsl-dir="${basedir}/frameworks/rsls" swc-dir="${basedir}/frameworks/libs" swc-name="spark" build-number="${release.version}.${build.number}"/>
 
-		<!-- textLayout RSL -->
-		<create-rsl rsl-dir="${basedir}/frameworks/rsls" swc-dir="${basedir}/frameworks/libs" swc-name="textLayout"/>
-
-	</target>
+        <!-- osmf RSL -->
+		<create-rsl rsl-dir="${basedir}/frameworks/rsls" swc-dir="${basedir}/frameworks/libs" swc-name="osmf" build-number="${release.version}.${build.number}"/>
+        
+		</target>
 
     <!--
 		Build webapps - must be done after modules and frameworks
@@ -490,7 +494,7 @@ zip -yrq ../out/flex_sdk_4 * -x /zip_pkg.sh
 				<include name="macFonts.ser"/>
 				<include name="mxml-manifest.xml"/>
 				<include name="spark-manifest.xml"/>
-				<include name="halo-manifest.xml"/>
+				<include name="mx-manifest.xml"/>
 				<include name="mxml-2009-manifest.xml"/>
 				<include name="winFonts.ser"/>
 			</fileset>
@@ -528,6 +532,7 @@ zip -yrq ../out/flex_sdk_4 * -x /zip_pkg.sh
 				<include name="flex.swc"/>
 				<include name="spark.swc"/>
 				<include name="framework.swc"/>
+                <include name="osmf.swc"/>
 				<include name="player/9/playerglobal.swc"/>
                 <include name="player/10/playerglobal.swc"/>
 				<include name="rpc.swc"/>
@@ -737,7 +742,7 @@ zip -yrq ../out/flex_sdk_4 * -x /zip_pkg.sh
 				<include name="macFonts.ser"/>
 				<include name="mxml-manifest.xml"/>
 				<include name="spark-manifest.xml"/>
-				<include name="halo-manifest.xml"/>
+				<include name="mx-manifest.xml"/>
 				<include name="mxml-2009-manifest.xml"/>
 				<include name="winFonts.ser"/>
 				<include name="projects/airframework/**"/>
@@ -1147,7 +1152,7 @@ zip -yrq ../out/flex_sdk_4 * -x /zip_pkg.sh
 
 	<target name="basictests" depends="load-task" description="run basic tests using mustella">
 
-	<!-- compile the basic tests -->
+            <!-- compile the basic tests -->
 		<mxmlc fork="true"
 			   file="${basedir}/frameworks/tests/basicTests/BasicTests.mxml">
 			<jvmarg line="${mxmlc.jvm.args}"/>
@@ -1155,6 +1160,13 @@ zip -yrq ../out/flex_sdk_4 * -x /zip_pkg.sh
 				<include name="mustella/mustella.swc"/>
 			</library-path>
 		</mxmlc>
+
+		<!-- compile supporting swfs for basic tests -->
+		<mxmlc fork="true"
+			   file="${basedir}/frameworks/tests/basicTests/spark/views/StyleManagerModuleTest.mxml">
+			<jvmarg line="${mxmlc.jvm.args}"/>
+		</mxmlc>
+
 		<!-- run the component smoke  -->
 		<echo message="launching player and swf"/>
 		<exec executable="${flash.player}" dir="${basedir}/frameworks" failonerror="true">

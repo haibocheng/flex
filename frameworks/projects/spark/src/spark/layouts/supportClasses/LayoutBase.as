@@ -20,7 +20,6 @@ import flash.utils.Timer;
 
 import mx.core.IAttachable;
 import mx.core.ILayoutElement;
-import mx.core.IVisualElement;
 import mx.core.UIComponentGlobals;
 import mx.core.mx_internal;
 import mx.events.DragEvent;
@@ -29,8 +28,8 @@ import mx.managers.DragManager;
 import mx.managers.ILayoutManagerClient;
 import mx.utils.OnDemandEventDispatcher;
 
-import spark.components.Group;
 import spark.components.supportClasses.GroupBase;
+import spark.components.supportClasses.OverlayDepth;
 import spark.core.NavigationUnit;
 
 use namespace mx_internal;
@@ -63,10 +62,12 @@ use namespace mx_internal;
  *  &lt;s:LayoutBase 
  *    <strong>Properties</strong>
  *    clipAndEnableScrolling="false"
+ *    dropIndicator="<i>defined by the skin class</i>"
  *    horizontalScrollPosition="0"
  *    target="null"
  *    typicalLayoutElement="null"
  *    useVirtualLayout="false"
+ *    verticalScrollPosition="0"
  *  /&gt;
  *  </pre>
  *
@@ -190,9 +191,8 @@ public class LayoutBase extends OnDemandEventDispatcher
      *  measured size properties based on the <code>typicalLayoutElement</code> and other
      *  cached layout information, not by measuring elements.</p>
      * 
-     *  <p>Containers cooperate with <code>useVirtualLayout</code> = <code>true</code> layouts by 
-     *  recycling item renderers that were previously constructed in response to calls to
-     *  the <code>getVirtualLayoutElement()</code> method by are no longer in use.
+     *  <p>Containers cooperate with layouts that have <code>useVirtualLayout</code> = <code>true</code> by 
+     *  recycling item renderers that were previously constructed, but are no longer in use.
      *  An item is considered to be no longer in use if its index is not
      *  within the range of <code>getVirtualElementAt()</code> indices requested during
      *  the container's most recent <code>updateDisplayList()</code> invocation.</p>
@@ -261,7 +261,7 @@ public class LayoutBase extends OnDemandEventDispatcher
     private var _horizontalScrollPosition:Number = 0;
     
     [Bindable]
-    [Inspectable(category="General")]
+    [Inspectable(category="General", minValue="0.0")]
     
     /**
      *  @copy spark.core.IViewport#horizontalScrollPosition
@@ -297,10 +297,12 @@ public class LayoutBase extends OnDemandEventDispatcher
     private var _verticalScrollPosition:Number = 0;
     
     [Bindable]
-    [Inspectable(category="General")]    
+    [Inspectable(category="General", minValue="0.0")]    
     
     /**
      *  @copy spark.core.IViewport#verticalScrollPosition
+     *
+     *  @default 0
      *  
      *  @langversion 3.0
      *  @playerversion Flash 10
@@ -479,18 +481,18 @@ public class LayoutBase extends OnDemandEventDispatcher
     private var _dropIndicator:DisplayObject;
     
     /**
-     *  The <code>DisplayObject</code> this layout uses for
-     *  drop indicator during drag and drop operation.
+     *  The <code>DisplayObject</code> that this layout uses for
+     *  the drop indicator during a drag-and-drop operation.
      *
-     *  Typically developers don't set this property directly,
-     *  but instead rely on the List's default <code>DragEvent</code>
-     *  handlers.
+     *  Typically you do not set this property directly,
+     *  but instead define a <code>dropIndicator</code> skin part in the 
+     *  skin class of the drop target.
      * 
-     *  <p>The <code>List</code> sets this property in response to a
+     *  <p>The List control sets this property in response to a
      *  <code>DragEvent.DRAG_ENTER</code> event.
-     *  The <code>List</code> initializes this property with an
+     *  The List initializes this property with an
      *  instance of its <code>dropIndicator</code> skin part.
-     *  The <code>List</code> clears this property in response to a
+     *  The List clears this property in response to a
      *  <code>DragEvent.DRAG_EXIT</code> event.</p>
      *  
      *  @langversion 3.0
@@ -509,21 +511,22 @@ public class LayoutBase extends OnDemandEventDispatcher
     public function set dropIndicator(value:DisplayObject):void
     {
         if (_dropIndicator)
-            // FIXME (egeorgie): use the overlay APIs instead.
-            target.$removeChild(_dropIndicator);
+            target.overlay.removeDisplayObject(_dropIndicator);
         
         _dropIndicator = value;
         
         if (_dropIndicator)
         {
             _dropIndicator.visible = false;
-            // FIXME (egeorgie): use the overlay APIs instead.
-            target.addingChild(_dropIndicator);
-            target.$addChild(_dropIndicator);
-            target.childAdded(_dropIndicator);
-            
+            target.overlay.addDisplayObject(_dropIndicator, OverlayDepth.DROP_INDICATOR);
+
             if (_dropIndicator is ILayoutManagerClient)
-                UIComponentGlobals.layoutManager.validateClient(ILayoutManagerClient(_dropIndicator), true);             
+                UIComponentGlobals.layoutManager.validateClient(ILayoutManagerClient(_dropIndicator), true);
+
+            // Set includeInLayout to false, otherwise it'll still invalidate
+            // the parent Group layout as we size and position the indicator.
+            if (_dropIndicator is ILayoutElement)
+                ILayoutElement(_dropIndicator).includeInLayout = false;
         }
     }
     
@@ -843,7 +846,7 @@ public class LayoutBase extends OnDemandEventDispatcher
      *  @playerversion AIR 1.5
      *  @productversion Flex 4
      */
-    protected function getElementBounds(index:int):Rectangle
+    public function getElementBounds(index:int):Rectangle
     {
         var g:GroupBase = target;
         if (!g)
@@ -1379,17 +1382,37 @@ public class LayoutBase extends OnDemandEventDispatcher
     */
     public function getScrollPositionDeltaToElement(index:int):Point
     {
+        return getScrollPositionDeltaToElementHelper(index);
+    }
+    
+    
+    /**
+     *  @private 
+     *  For the offset properties, a value of NaN means don't offset from that edge. A value
+     *  of 0 means to put the element flush against that edge.
+     * 
+     *  @param topOffset Number of pixels to position the element below the top edge.
+     *  @param bottomOffset Number of pixels to position the element above the bottom edge.
+     *  @param leftOffset Number of pixels to position the element to the right of the left edge.
+     *  @param rightOffset Number of pixels to position the element to the left of the right edge.
+     */ 
+    mx_internal function getScrollPositionDeltaToElementHelper(index:int, topOffset:Number = NaN, 
+                                                               bottomOffset:Number = NaN, 
+                                                               leftOffset:Number = NaN,
+                                                               rightOffset:Number = NaN):Point
+    {
         var elementR:Rectangle = getElementBounds(index);
         if (!elementR)
-           return null;
+            return null;
         
         var scrollR:Rectangle = getScrollRect();
         if (!scrollR || !target.clipAndEnableScrolling)
-           return null;
+            return null;
         
-        if (scrollR.containsRect(elementR) || elementR.containsRect(scrollR))
-           return null;
-           
+        if (isNaN(topOffset) && isNaN(bottomOffset) && isNaN(leftOffset) && isNaN(rightOffset) &&
+            (scrollR.containsRect(elementR) || elementR.containsRect(scrollR)))
+            return null;
+        
         var dxl:Number = elementR.left - scrollR.left;     // left justify element
         var dxr:Number = elementR.right - scrollR.right;   // right justify element
         var dyt:Number = elementR.top - scrollR.top;       // top justify element
@@ -1398,22 +1421,31 @@ public class LayoutBase extends OnDemandEventDispatcher
         // minimize the scroll
         var dx:Number = (Math.abs(dxl) < Math.abs(dxr)) ? dxl : dxr;
         var dy:Number = (Math.abs(dyt) < Math.abs(dyb)) ? dyt : dyb;
-                
+        
+        if (!isNaN(topOffset))
+            dy = dyt + topOffset;
+        else if (!isNaN(bottomOffset))
+            dy = dyb - bottomOffset;
+        
+        if (!isNaN(leftOffset))
+            dx = dxl + leftOffset;
+        else if (!isNaN(rightOffset))
+            dx = dxr - rightOffset;
+        
         // scrollR "contains"  elementR in just one dimension
         if ((elementR.left >= scrollR.left) && (elementR.right <= scrollR.right))
-           dx = 0;
+            dx = 0;
         else if ((elementR.bottom <= scrollR.bottom) && (elementR.top >= scrollR.top))
-           dy = 0;
-           
+            dy = 0;
+        
         // elementR "contains" scrollR in just one dimension
         if ((elementR.left <= scrollR.left) && (elementR.right >= scrollR.right))
-           dx = 0;
+            dx = 0;
         else if ((elementR.bottom >= scrollR.bottom) && (elementR.top <= scrollR.top))
             dy = 0;
-           
+        
         return new Point(dx, dy);
     }
-     
     //--------------------------------------------------------------------------
     //
     //  Drop methods
@@ -1423,22 +1455,24 @@ public class LayoutBase extends OnDemandEventDispatcher
     private var _dragScrollTimer:Timer;
     private var _dragScrollDelta:Point;
     private var _dragScrollEvent:DragEvent;
-    mx_internal var dragScrollRegionSize:Number = 20;
+    mx_internal var dragScrollRegionSizeHorizontal:Number = 20;
+	mx_internal var dragScrollRegionSizeVertical:Number = 20;
     mx_internal var dragScrollSpeed:Number = 5;
+	mx_internal var dragScrollInitialDelay:int = 250;
     mx_internal var dragScrollInterval:int = 32;
     mx_internal var dragScrollHidesIndicator:Boolean = false;
     
     /**
-     *  Calculates the <code>LayoutDragEventDropLocation</code> for
+     *  Calculates the drop location in the data provider of the drop target for
      *  the specified <code>dragEvent</code>.
      *
-     *  @param dragEvent The dragEvent dispatched by the DragManager.
+     *  @param dragEvent The drag event dispatched by the DragManager.
      *
      *  @return Returns the drop location for this event, or null if the drop 
      *  operation is not available.
      * 
-     *  @see #showDropIndicator
-     *  @see #hideDropIndicator
+     *  @see #showDropIndicator()
+     *  @see #hideDropIndicator()
      *  
      *  @langversion 3.0
      *  @playerversion Flash 10
@@ -1462,18 +1496,17 @@ public class LayoutBase extends OnDemandEventDispatcher
     }
     
     /**
-     *  Sizes, positions and parents the dropIndicator based on the specified
-     *  dropLocation.
+     *  Sizes, positions and parents the drop indicator based on the specified
+     *  drop location. Use the <code>calculateDropLocation()</code> method
+     *  to obtain the DropLocation object.
      *
-     *  Starts/stops drag-scrolling when necessary conditions are met.
+     *  <p>Starts/stops drag-scrolling when necessary conditions are met.</p>
      * 
-     *  @param dropLocation <p>Specifies the location where to show the indicator.
-     *  Drop location is obtained through the computeDropLocation() method.</p>
+     *  @param dropLocation Specifies the location where to show the drop indicator.
+     *  Drop location is obtained through the <code>computeDropLocation()</code> method.
      *
      *  @see #dropIndicator 
-     *  @see #hideDropIndicator
-     *  @see #getDragEventContext
-     *  @see #dropIndicator
+     *  @see #hideDropIndicator()
      *  
      *  @langversion 3.0
      *  @playerversion Flash 10
@@ -1541,10 +1574,11 @@ public class LayoutBase extends OnDemandEventDispatcher
     }
     
     /**
-     *  Hides the previously shown <code>dropIndicator</code>,
-     *  removes it from the display list and also stops the drag-scrolling.
+     *  Hides the previously shown drop indicator, 
+     *  created by the <code>showDropIndicator()</code> method,
+     *  removes it from the display list and also stops the drag scrolling.
      *
-     *  @see #showDropIndicator
+     *  @see #showDropIndicator()
      *  @see #dropIndicator
      *  
      *  @langversion 3.0
@@ -1566,16 +1600,16 @@ public class LayoutBase extends OnDemandEventDispatcher
      * 
      *  Called by the <code>calculatedDropLocation()</code> method.
      *
-     *  @param x The x coordinate of the drag and drop gesture, in target's
+     *  @param x The x coordinate of the drag and drop gesture, in 
      *  local coordinates.
      * 
-     *  @param y The y coordinate of the drag and drop gesture, in target's
-     *  local coordinates.
+     *  @param y The y coordinate of the drag and drop gesture, in  
+     *  the drop target's local coordinates.
      *
      *  @return The drop index or -1 if the drop operation is not available
      *  at the specified coordinates.
      * 
-     *  @see #calculateDropLocation
+     *  @see #calculateDropLocation()
      *  
      *  @langversion 3.0
      *  @playerversion Flash 10
@@ -1589,20 +1623,20 @@ public class LayoutBase extends OnDemandEventDispatcher
     }
     
     /**
-     *  Calculates the bounds for the drop indicator UI that provides visual feedback
+     *  Calculates the bounds for the drop indicator that provides visual feedback
      *  to the user of where the items will be inserted at the end of a drag and drop
      *  gesture.
      * 
      *  Called by the <code>showDropIndicator()</code> method.
      * 
-     *  @param dropLocation A valid <code>DropLocation</code> previously calculated
-     *  through the <code>calculateDropLocation</code> method.
+     *  @param dropLocation A valid DropLocation object previously returned 
+     *  by the <code>calculateDropLocation()</code> method.
      * 
      *  @return The bounds for the drop indicator or null.
      * 
      *  @see spark.layouts.supportClasses.DropLocation
-     *  @see #calculateDropIndex
-     *  @see #calculateDragScrollDelta
+     *  @see #calculateDropIndex()
+     *  @see #calculateDragScrollDelta()
      *  
      *  @langversion 3.0
      *  @playerversion Flash 10
@@ -1618,23 +1652,21 @@ public class LayoutBase extends OnDemandEventDispatcher
      *  Calculates how much to scroll for the specified <code>dropLocation</code>
      *  during a drag and drop gesture.
      *
-     *  Called by the <code>showDropIndicator()</code> method to figure out the
+     *  Called by the <code>showDropIndicator()</code> method to calculate the scroll 
      *  during drag-scrolling.
      *
-     *  @param context A valid <code>LayoutDragEventContext</code> previously obtained
-     *  through the <code>getDragEventContext</code> method.
+     *  @param context A valid DropLocation object previously obtained
+     *  by calling the <code>calculateDropLocation()</code> method.
      *
-     *  @param scrollDelta The <code>Point</code> to be filled with the computed scroll delta.
+     *  @param timeInterval The interval, in milliseconds, between two consecutive drag-scrolls.
      *
-     *  @param timeInterval The interval in milliseconds between two consecutive drag-scrolls.
-     *
-     *  @param timeElapsed The duration in milliseconds since the drag scrolling start.
+     *  @param timeElapsed The duration, in milliseconds, since the drag scrolling start.
      *
      *  @return How much to drag scroll, or null if drag-scrolling is not needed.
      *
      *  @see spark.layouts.supportClasses.DropLocation 
-     *  @see #calculateDropIndex
-     *  @see #calculateDropIndicatorBounds
+     *  @see #calculateDropIndex()
+     *  @see #calculateDropIndicatorBounds()
      *  
      *  @langversion 3.0
      *  @playerversion Flash 10
@@ -1651,17 +1683,20 @@ public class LayoutBase extends OnDemandEventDispatcher
         if (!scrollRect)
             return null;
 
-        // Make sure that the drag-scrolling regions don't overlap 
-        var horizontalRegionSize:Number = Math.min(dragScrollRegionSize, layoutTarget.width);
-        var verticalRegionSize:Number = Math.min(dragScrollRegionSize, layoutTarget.height);
-
-        var x:Number = dropLocation.dropPoint.x;
-        var y:Number = dropLocation.dropPoint.y;
-        
-        // Return early if the mouse is outside of the drag-scroll region.
-        if (scrollRect.left + horizontalRegionSize < x && x < scrollRect.right - horizontalRegionSize &&
-            scrollRect.top + verticalRegionSize < y && y < scrollRect.bottom - verticalRegionSize )
-            return null;
+		// Make sure that the drag-scrolling regions don't overlap 
+		var x:Number = dropLocation.dropPoint.x;
+		var y:Number = dropLocation.dropPoint.y;
+		
+		var horizontalRegionSize:Number = Math.min(dragScrollRegionSizeHorizontal, layoutTarget.width/2);
+		var verticalRegionSize:Number = Math.min(dragScrollRegionSizeVertical, layoutTarget.height/2);
+		// Return early if the mouse is outside of the drag-scroll region.
+		if (scrollRect.left + horizontalRegionSize < x && x < scrollRect.right - horizontalRegionSize &&
+			scrollRect.top + verticalRegionSize < y && y < scrollRect.bottom - verticalRegionSize )
+			return null;
+		
+		if (timeElapsed < dragScrollInitialDelay)
+			return new Point(); // Return zero point to continue firing events, but not actually scroll.
+		timeElapsed -= dragScrollInitialDelay;
 
         // Speedup based on time elapsed
         var timeSpeedUp:Number = Math.min(timeElapsed, 2000) / 2000;
@@ -1760,8 +1795,22 @@ public class LayoutBase extends OnDemandEventDispatcher
         
         // Re-dispatch the event so that the drag initiator handles it as if
         // the DragProxy is dispatching in response to user input.
-        var dragEvent:DragEvent = _dragScrollEvent;
-        dragEvent.target.dispatchEvent(dragEvent);
+		// Always switch over to DRAG_OVER, don't re-dispatch DRAG_ENTER
+		var dragEvent:DragEvent = new DragEvent(DragEvent.DRAG_OVER,
+											    _dragScrollEvent.bubbles,
+												_dragScrollEvent.cancelable, 
+												_dragScrollEvent.dragInitiator, 
+												_dragScrollEvent.dragSource, 
+												_dragScrollEvent.action, 
+												_dragScrollEvent.ctrlKey, 
+												_dragScrollEvent.altKey, 
+												_dragScrollEvent.shiftKey);
+		
+		dragEvent.draggedItem = _dragScrollEvent.draggedItem;
+		dragEvent.localX = _dragScrollEvent.localX;
+		dragEvent.localY = _dragScrollEvent.localY;
+		dragEvent.relatedObject = _dragScrollEvent.relatedObject;
+        _dragScrollEvent.target.dispatchEvent(dragEvent);
     }
     
     /**

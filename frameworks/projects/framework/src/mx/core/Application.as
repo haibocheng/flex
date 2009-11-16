@@ -421,7 +421,7 @@ public class Application extends LayoutContainer
     // allowed on the <mx:Application> tag. These attributes affect the MXML
     // compiler, but they aren't actually used in the runtime framework.
     // The declarations appear here in order to provide metadata about these
-    // attributes for FlexBuilder.
+    // attributes for Flash Builder.
 
     //----------------------------------
     //  frameRate
@@ -978,6 +978,26 @@ public class Application extends LayoutContainer
     //--------------------------------------------------------------------------
 
     /**
+     *  @private 
+     */
+    override protected function invalidateParentSizeAndDisplayList():void
+    {
+        if (!includeInLayout)
+            return;
+
+        var p:IInvalidating = parent as IInvalidating;
+        if (!p)
+        {
+            if (parent is ISystemManager)
+                ISystemManager(parent).invalidateParentSizeAndDisplayList();
+
+            return;
+        }
+
+        super.invalidateParentSizeAndDisplayList();
+    }
+
+    /**
      *  @private
      */
     override public function initialize():void
@@ -1335,7 +1355,7 @@ public class Application extends LayoutContainer
         // nothing to init
         if (flexContextMenu != null)
         {
-            // make sure we set it back on systemManager b/c it may have been overriden by now
+            // make sure we set it back on systemManager b/c it may have been overridden by now
             if (systemManager is InteractiveObject)
                 InteractiveObject(systemManager).contextMenu = contextMenu;
             return;

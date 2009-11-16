@@ -13,6 +13,9 @@ package com.adobe.internal.fxg.dom.richtext;
 
 import static com.adobe.fxg.FXGConstants.*;
 
+import com.adobe.fxg.FXGException;
+import com.adobe.fxg.dom.FXGNode;
+
 /**
  * Represents a &lt;br /&gt; child tag of FXG &lt;RichText&gt; content. A
  * &lt;br /&gt; tag acts as a line separator for text content.
@@ -37,4 +40,16 @@ public class BRNode extends AbstractRichTextLeafNode
     {
         return FXG_BR_ELEMENT;
     }
+    
+    /**
+     * BR node doesn't allow any children. Throws an exception when adding an 
+     * FXG child node to this br node.
+     *
+     * @param child - a child FXG node to be added to this node.
+     * @throws FXGException if the child is not supported by this node.
+     */
+    public void addChild(FXGNode child)
+    {
+        super.addChild(child);       
+    }    
 }

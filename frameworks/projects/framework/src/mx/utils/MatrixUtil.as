@@ -14,8 +14,12 @@ package mx.utils
 
 import flash.display.DisplayObject;
 import flash.geom.Matrix;
+import flash.geom.Matrix3D;
+import flash.geom.PerspectiveProjection;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import flash.geom.Utils3D;
+import flash.geom.Vector3D;
 import flash.utils.getDefinitionByName;
 
 [ExcludeClass]
@@ -425,6 +429,56 @@ public final class MatrixUtil
 	}
 	
 	/**
+	 *  Returns the axis aligned bounding box <code>bounds</code> transformed
+	 *  with <code>matrix</code> and then projected with <code>projection</code>.
+	 * 
+	 *  @param bounds The bounds, in child coordinates, to be transformed and projected.
+	 *  @param matrix <p>The transformation matrix. Note that the method will clobber the
+	 *  original matrix values.</p>
+	 *  @param projection The projection.
+	 *  @return Returns the <code>bounds</code> parameter that has been updated with the
+	 *  transformed and projected bounds.
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 9
+	 *  @playerversion AIR 1.1
+	 *  @productversion Flex 3
+	 */
+	public static function projectBounds(bounds:Rectangle,
+										 matrix:Matrix3D, 
+										 projection:PerspectiveProjection):Rectangle
+	{
+		// Setup the matrix
+		var centerX:Number = projection.projectionCenter.x;
+		var centerY:Number = projection.projectionCenter.y;
+		matrix.appendTranslation(-centerX, -centerY, projection.focalLength);
+		matrix.append(projection.toMatrix3D());
+
+		// Project the corner points
+		var pt1:Vector3D = new Vector3D(bounds.left, bounds.top, 0); 
+		var pt2:Vector3D = new Vector3D(bounds.right, bounds.top, 0) 
+		var pt3:Vector3D = new Vector3D(bounds.left, bounds.bottom, 0);
+		var pt4:Vector3D = new Vector3D(bounds.right, bounds.bottom, 0);
+		pt1 = Utils3D.projectVector(matrix, pt1);
+		pt2 = Utils3D.projectVector(matrix, pt2);
+		pt3 = Utils3D.projectVector(matrix, pt3);
+		pt4 = Utils3D.projectVector(matrix, pt4);
+
+		// Find the bounding box in 2D
+		var maxX:Number = Math.max(Math.max(pt1.x, pt2.x), Math.max(pt3.x, pt4.x));
+		var minX:Number = Math.min(Math.min(pt1.x, pt2.x), Math.min(pt3.x, pt4.x));
+		var maxY:Number = Math.max(Math.max(pt1.y, pt2.y), Math.max(pt3.y, pt4.y));
+		var minY:Number = Math.min(Math.min(pt1.y, pt2.y), Math.min(pt3.y, pt4.y));
+
+		// Add back the projection center
+		bounds.x = minX + centerX;
+		bounds.y = minY + centerY;
+		bounds.width = maxX - minX;
+		bounds.height = maxY - minY;
+		return bounds;
+	}
+	
+	/**
 	 *  @param matrix
 	 *  @return Returns true when <code>pt == matrix.DeltaTransformPoint(pt)</code>
 	 *  for any <code>pt:Point</code> (<code>matrix</code> is identity matrix,
@@ -437,10 +491,8 @@ public final class MatrixUtil
 	 */
 	public static function isDeltaIdentity(matrix:Matrix):Boolean
 	{
-	    if (matrix.a == 1 && matrix.d == 1 &&
-	    	matrix.b == 0 && matrix.c == 0)
-            return true;
-        return false;
+	    return (matrix.a == 1 && matrix.d == 1 &&
+	    	    matrix.b == 0 && matrix.c == 0);
     }
     
     /**
@@ -865,7 +917,7 @@ public final class MatrixUtil
     /**
      *  Finds a solution (x,y) for the equation abs(a*x + c*y) = w such that
      *  abs(b*x +d*y) is minimized.
-     *  If there is infinate number of solutions, x and y are picked to be
+     *  If there is infinite number of solutions, x and y are picked to be
      *  as close as possible.
      * 
      *  Doesn't handle cases where <code>a</code> or <code>c</code> are zero.
@@ -928,9 +980,9 @@ public final class MatrixUtil
             // "make x and y as close as possible": y = w / ( a + c );  
             // "minimize abs(bx + dy)": y = b * w / det    
             // "preserve aspect ratio": y = w / ( a * preferredX / preferredY + c );
-            if (det == 0)
+            if (Math.abs(det) < 1.0e-9)
             {
-                // There is infinate number of solutions, lets pick x == y
+                // There is infinite number of solutions, lets pick x == y
                 y = w / ( a + c );
             }
             else
@@ -982,9 +1034,9 @@ public final class MatrixUtil
             // "make x and y as close as possible": y = -w / ( a + c );  
             // "minimize abs(bx + dy)": y = -b * w / det    
             // "preserve aspect ratio": y = w / ( a * preferredX / preferredY + c );
-            if (det == 0)
+            if (Math.abs(det) < 1.0e-9)
             {
-                // There is infinate number of solutions, lets pick x == y
+                // There is infinite number of solutions, lets pick x == y
                 y = -w / ( a + c );
             }
             else
@@ -1013,7 +1065,7 @@ public final class MatrixUtil
      *  x and y are restricted by <code>minX</code>, <code>maxX</code> and
      *  <code>minY</code>, <code>maxY</code>.
      * 
-     *  When there is infinate number of solutions, the function will
+     *  When there is infinite number of solutions, the function will
      *  calculate x and y to be as close as possible.
      * 
      *  The functon assumes <code>minX >= 0</code> and <code>minY >= 0</code>
@@ -1112,7 +1164,7 @@ public final class MatrixUtil
         
         // Calculate the determinant of the system
         const det:Number = a * d1 - b * c1;
-        if (det == 0)
+        if (Math.abs(det) < 1.0e-9)
         {
             // No solution in these cases since the matrix
             // collapses all points into a line.
@@ -1179,6 +1231,66 @@ public final class MatrixUtil
         return null; // No solution.
     }
 
+    /**
+     *  Determine if two Matrix instances are equal.
+     *  
+     *  @return true if the matrices are equal.
+     *  
+     *  @langversion 3.0
+     *  @playerversion Flash 9
+     *  @playerversion AIR 1.1
+     *  @productversion Flex 3
+     */
+    public static function isEqual(m1:Matrix, m2:Matrix):Boolean
+    {
+        return ((m1 && m2 && 
+            m1.a == m2.a &&
+            m1.b == m2.b &&
+            m1.c == m2.c &&
+            m1.d == m2.d &&
+            m1.tx == m2.tx &&
+            m1.ty == m2.ty) || 
+            (!m1 && !m2));
+    }
+    
+    /**
+     *  Determine if two Matrix3D instances are equal.
+     *  
+     *  @return true if the matrices are equal.
+     *  
+     *  @langversion 3.0
+     *  @playerversion Flash 9
+     *  @playerversion AIR 1.1
+     *  @productversion Flex 3
+     */
+    public static function isEqual3D(m1:Matrix3D, m2:Matrix3D):Boolean
+    {
+        if (m1 && m2 && m1.rawData.length == m2.rawData.length)
+        {
+            var r1:Vector.<Number> = m1.rawData;
+            var r2:Vector.<Number> = m2.rawData;
+            
+            return (r1[0] == r2[0] &&
+                    r1[1] == r2[1] &&
+                    r1[2] == r2[2] &&
+                    r1[3] == r2[3] &&
+                    r1[4] == r2[4] &&
+                    r1[5] == r2[5] &&
+                    r1[6] == r2[6] &&
+                    r1[7] == r2[7] &&
+                    r1[8] == r2[8] &&
+                    r1[9] == r2[9] &&
+                    r1[10] == r2[10] &&
+                    r1[11] == r2[11] &&
+                    r1[12] == r2[12] &&
+                    r1[13] == r2[13] &&
+                    r1[14] == r2[14] &&
+                    r1[15] == r2[15]);
+        }
+
+        return (!m1 && !m2);
+    }
+    
     /**
      *  Calculates (x,y) such as to satisfy the linear system:
      *  | a * x + c * y = m

@@ -48,7 +48,7 @@ include "../../styles/metadata/SelectionFormatTextStyles.as"
  *  @playerversion AIR 1.5
  *  @productversion Flex 4
  */
-[Style(name="borderAlpha", type="Number", inherit="no", theme="spark")]
+[Style(name="borderAlpha", type="Number", inherit="no", theme="spark", minValue="0.0", maxValue="1.0")]
 
 /**
  *  The color of the border for this component.
@@ -78,7 +78,7 @@ include "../../styles/metadata/SelectionFormatTextStyles.as"
  *  @playerversion AIR 1.5
  *  @productversion Flex 4
  */
-[Style(name="contentBackgroundAlpha", type="Number", inherit="yes", theme="spark")]
+[Style(name="contentBackgroundAlpha", type="Number", inherit="yes", theme="spark", minValue="0.0", maxValue="1.0")]
 
 /**
  *  @copy spark.components.supportClasses.GroupBase#contentBackgroundColor
@@ -98,7 +98,7 @@ include "../../styles/metadata/SelectionFormatTextStyles.as"
  *  @playerversion AIR 1.5
  *  @productversion Flex 4
  */
-[Style(name="focusAlpha", type="Number", inherit="no", theme="spark")]
+[Style(name="focusAlpha", type="Number", inherit="no", theme="spark", minValue="0.0", maxValue="1.0")]
 
 /**
  *  @copy spark.components.supportClasses.GroupBase#focusColor
@@ -527,6 +527,8 @@ public class SkinnableTextBase extends SkinnableComponent
     //----------------------------------
     //  maxChars
     //----------------------------------
+    
+    [Inspectable(minValue="0.0")]    
 
     /**
      *  @copy spark.components.RichEditableText#maxChars
@@ -707,6 +709,8 @@ public class SkinnableTextBase extends SkinnableComponent
     /**
      *  @copy spark.components.RichEditableText#selectionHighlighting
      *  
+     *  @default TextSelectionHighlighting.WHEN_FOCUSED
+     *  
      *  @langversion 3.0
      *  @playerversion Flash 10
      *  @playerversion AIR 1.5
@@ -878,13 +882,13 @@ public class SkinnableTextBase extends SkinnableComponent
         }
     }
     
-	/**
-	 *  @private
-	 */
-	override protected function getCurrentSkinState():String
-	{
+    /**
+     *  @private
+     */
+    override protected function getCurrentSkinState():String
+    {
         return enabled ? "normal" : "disabled";
-	}
+    }
 
     /**
      *  @private

@@ -94,19 +94,21 @@ public class CatalogWriter
 	// changed from private to protected to support Flash Authoring - jkamerer 2007.07.30
 	protected void writeVersions() throws IOException
 	{
-		/*System.out.println("CatalogWriter.writeVersions: versions.getLibVersion = " + versions.getLibVersion() +
-				", versions.getFlexVersion() = " + versions.getFlexVersion() +
-				", versions.getFlexBuild() = " + versions.getFlexBuild());*/
+        /*System.out.println("CatalogWriter.writeVersions: versions.getLibVersion = " + versions.getLibVersion() +
+                ", versions.getFlexVersion() = " + versions.getFlexVersion() +
+                ", versions.getFlexBuild() = " + versions.getFlexBuild());*/
 
-		writer.write("  <versions>" + ls);
-		writer.write("    <swc ");
-		writeAttribute("version", "" + versions.getLibVersion(), "versions", true, writer);
-		writer.write("/>" + ls);
-		writer.write("    <flex ");
-		writeAttribute("version", "" + versions.getFlexVersion(), "versions", true, writer);
-		writeAttribute("build", "" + versions.getFlexBuild(), "versions", true, writer);
-		writer.write("/>" + ls);
-	    writer.write("  </versions>" + ls);
+        writer.write("  <versions>" + ls);
+        writer.write("    <swc ");
+        writeAttribute("version", "" + versions.getLibVersion(), "versions", true, writer);
+        writer.write("/>" + ls);
+        writer.write("    <flex ");
+        writeAttribute("version", "" + versions.getFlexVersion(), "versions", true, writer);
+        writeAttribute("build", "" + versions.getFlexBuild(), "versions", true, writer);
+        writeAttribute("minimumSupportedVersion", "" + versions.getMinimumVersionString(), "versions", true, writer);
+        
+        writer.write("/>" + ls);
+        writer.write("  </versions>" + ls);
 	}
 
     // changed from private to protected to support Flash Authoring - jkamerer 2007.07.30

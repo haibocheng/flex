@@ -187,6 +187,14 @@ public class FXGSAXScanner extends DefaultHandler
             node.setDocumentNode(root);
         }
         
+        // Set node name if it is a delegate node. This allows proper error 
+        // message to be reported.
+        if (node instanceof DelegateNode)
+        {
+            DelegateNode propertyNode = (DelegateNode)node;
+            propertyNode.setName(localName);
+        }
+        
         // Set attributes on the current node
         for (int i = 0; i < attributes.getLength(); i++)
         {
@@ -206,7 +214,6 @@ public class FXGSAXScanner extends DefaultHandler
             if (node instanceof DelegateNode)
             {
                 DelegateNode propertyNode = (DelegateNode)node;
-                propertyNode.setName(localName);
                 propertyNode.setDelegate(parent);
             }
             else

@@ -42,6 +42,7 @@ import flex2.compiler.swc.Swc;
 import flex2.compiler.swc.SwcScript;
 import flex2.compiler.util.CompilerMessage;
 import flex2.compiler.util.MimeMappings;
+import flex2.compiler.util.Name;
 import flex2.compiler.util.NameFormatter;
 import flex2.compiler.util.NameMappings;
 import flex2.compiler.util.QName;
@@ -133,6 +134,9 @@ public class PreLink implements flex2.compiler.PreLink
             sources.add(resources.addResource(extraSource));
         }
 
+        CompilerConfiguration compilerConfiguration = configuration.getCompilerConfiguration();
+        int compatibilityVersion = compilerConfiguration.getCompatibilityVersion();
+
         for (int i = 0, length = units.size(); i < length; i++)
         {
             CompilationUnit u = (CompilationUnit) units.get(i);
@@ -159,7 +163,42 @@ public class PreLink implements flex2.compiler.PreLink
                 if (rootStylesContainer != null)
                 {
                     rootStylesContainer.validate(symbolTable, nameMappings, u.getStandardDefs(),
-                                                 configuration.getCompilerConfiguration().getThemeNames());
+                                                 compilerConfiguration.getThemeNames());
+                }
+            }
+
+            // Only check the dependencies of hand written compilation units.
+            if (!u.getSource().isSwcScriptOwner() && compilerConfiguration.enableSwcVersionFiltering())
+            {
+                Set<Name> dependencies = new HashSet<Name>();
+                dependencies.addAll(u.inheritance);
+                dependencies.addAll(u.namespaces);
+                dependencies.addAll(u.expressions);
+                dependencies.addAll(u.types);
+
+                for (Name name : dependencies)
+                {
+                    // All names should be uniquely qualified at this point.
+                    Source dependent = symbolTable.findSourceByQName((QName) name);
+
+                    if (dependent.isSwcScriptOwner())
+                    {
+                        SwcScript swcScript = (SwcScript) dependent.getOwner();
+                        Swc swc = swcScript.getLibrary().getSwc();
+                        
+                        // Make sure each dependency's minimum
+                        // supported version is less than or equal to
+                        // the compatibility version.
+                        if (compatibilityVersion < swc.getVersions().getMinimumVersion())
+                        {
+                            DependencyNotCompatible message =
+                                new DependencyNotCompatible(swcScript.getName().replace('/', '.'),
+                                                            swc.getLocation(),
+                                                            swc.getVersions().getMinimumVersionString(),
+                                                            compilerConfiguration.getCompatibilityVersionString());
+                            ThreadLocalToolkit.log(message, u.getSource());
+                        }
+                    }
                 }
             }
 
@@ -270,7 +309,9 @@ public class PreLink implements flex2.compiler.PreLink
                             LinkState state = new LinkState(linkables, new HashSet(), configuration.getIncludes(), new HashSet<String>());
 
                             // C: generate style classes for components which we want to link in.
-                            List styleSources = stylesContainer.processDependencies(state.getDefNames(), resources);
+                            List styleSources = stylesContainer.processDependencies(state.getDefNames(), resources, 
+                                                                                    u.getSource().getRelativePath().replace('/', '.'),
+                                                                                    u.getSource().getShortName());
 
                             // put all the names into sourceSet
                             Set<String> sourceSet = new HashSet<String>(sources.size());
@@ -705,7 +746,7 @@ public class PreLink implements flex2.compiler.PreLink
             sb.append("       styleManager = StyleManagerImpl.getInstance();\n");
             sb.append("       fbs.registerImplementation(\"mx.styles::IStyleManager2\", styleManager);\n");
         }
-        else if (!configuration.getCompilerConfiguration().getCreateStyleManager())
+        else if (!configuration.getCompilerConfiguration().getIsolateStyles())
         {
             // If this module factory is not creating its own style factory, then use its parent if available.
             // Fall back to using the top level style manager.
@@ -843,7 +884,7 @@ public class PreLink implements flex2.compiler.PreLink
             String code = codegenFlexInit(flexInitClass, accessibilityList, remoteClassAliases,
                                           effectTriggers, inheritingStyles, configuration);
             String name = flexInitClass + "-generated.as";
-
+            
             if (configuration.getCompilerConfiguration().keepGeneratedActionScript())
             {
                 saveGenerated(name, code, configuration.getCompilerConfiguration().getGeneratedDirectory());
@@ -1080,6 +1121,10 @@ public class PreLink implements flex2.compiler.PreLink
         {
             Configuration.RslPathInfo info = (Configuration.RslPathInfo)iter.next();
 
+            // skip if the associated swc is filtered from our context
+            if (swcContext.getSwc(info.getSwcVirtualFile().getName()) == null)
+                continue;
+            
             // write array of rsl urls
             buf.append("{\"rsls\":[");
             for (Iterator iter2 = info.getRslUrls().iterator(); iter2.hasNext();)
@@ -1137,12 +1182,6 @@ public class PreLink implements flex2.compiler.PreLink
                                      StringBuilder buf) {
         // get the swc for current rsl
         Swc swc = swcContext.getSwc(info.getSwcVirtualFile().getName());
-
-        if (swc == null)
-        {
-            throw new IllegalStateException("codegenCdRslList: swc not resolved, " +
-                                            info.getSwcPath());
-        }
 
         // write digest for each rsl in the list
         boolean secureRsls = configuration.getVerifyDigests();
@@ -2106,6 +2145,25 @@ public class PreLink implements flex2.compiler.PreLink
     }
 
     // error messages
+
+    public static class DependencyNotCompatible extends CompilerMessage.CompilerError
+    {
+        private static final long serialVersionUID = -917715346261180364L;
+
+        public String definition;
+        public String swc;
+        public String swcMinimumVersion;
+        public String compatibilityVersion;
+
+        public DependencyNotCompatible(String definition, String swc,
+                                       String swcMinimumVersion, String compatibilityVersion)
+        {
+            this.definition = definition;
+            this.swc = swc;
+            this.swcMinimumVersion = swcMinimumVersion;
+            this.compatibilityVersion = compatibilityVersion;
+        }
+    }
 
     public static class NoExternalVisibleDefinition extends CompilerMessage.CompilerError
     {

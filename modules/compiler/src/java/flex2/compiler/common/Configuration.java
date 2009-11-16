@@ -1780,6 +1780,19 @@ public class Configuration implements LinkerConfiguration, Cloneable
 		return compiler.getCompatibilityVersion();
 	}
 
+    /**
+     * The minimum supported library version specified in the configuration.
+     */
+    public String getMinimumSupportedVersionString()
+    {
+        return compiler.getMinimumSupportedVersionString();
+    }
+
+    public int getMinimumSupportedVersion()
+    {
+        return compiler.getMinimumSupportedVersion();
+    }
+    
     public boolean getQualifiedTypeSelectors()
     {
         return compiler.getQualifiedTypeSelectors();

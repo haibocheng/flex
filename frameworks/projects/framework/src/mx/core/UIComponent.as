@@ -12,12 +12,16 @@
 package mx.core
 {
 
+import flash.accessibility.Accessibility;
+import flash.accessibility.AccessibilityProperties;
+import flash.display.BlendMode; 
 import flash.display.DisplayObject;
 import flash.display.DisplayObjectContainer;
 import flash.display.GradientType;
 import flash.display.Graphics;
 import flash.display.InteractiveObject;
 import flash.display.Loader;
+import flash.display.Shader; 
 import flash.display.Sprite;
 import flash.display.Stage;
 import flash.events.Event;
@@ -58,6 +62,14 @@ import mx.filters.IBitmapFilter;
 import mx.geom.RoundedRectangle;
 import mx.geom.Transform;
 import mx.geom.TransformOffsets;
+import mx.graphics.shaderClasses.ColorBurnShader;
+import mx.graphics.shaderClasses.ColorDodgeShader;
+import mx.graphics.shaderClasses.ColorShader;
+import mx.graphics.shaderClasses.ExclusionShader;
+import mx.graphics.shaderClasses.HueShader;
+import mx.graphics.shaderClasses.LuminosityShader;
+import mx.graphics.shaderClasses.SaturationShader;
+import mx.graphics.shaderClasses.SoftLightShader;
 import mx.managers.CursorManager;
 import mx.managers.EventManager;
 import mx.managers.ICursorManager;
@@ -805,7 +817,8 @@ include "../styles/metadata/AnchorStyles.as";
  *  Flex also sets the <code>borderColor</code> style of the component to this
  *  <code>errorColor</code> on a validation failure.
  *
- *  @default 0xFF0000
+ *  The default value for the Halo theme is <code>0xFF0000</code>.
+ *  The default value for the Spark theme is <code>0xFE0000</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -851,7 +864,7 @@ include "../styles/metadata/AnchorStyles.as";
  *  @playerversion AIR 1.1
  *  @productversion Flex 3
  */
-[Style(name="focusThickness", type="Number", format="Length", inherit="no")]
+[Style(name="focusThickness", type="Number", format="Length", inherit="no", minValue="0.0")]
 
 /**
  *  Theme color of a component. This property controls the appearance of highlights,
@@ -1042,6 +1055,10 @@ include "../styles/metadata/AnchorStyles.as";
  *  <pre>
  *  &lt;mx:<i>tagname</i>
  *   <b>Properties </b>
+ *    accessibilityDescription="null"
+ *    accessibilityName="null"
+ *    accessibilityShortcut="null"
+ *    accessibilitySilent="true|false"
  *    automationName="null"
  *    cachePolicy="auto|on|off"
  *    currentState="null"
@@ -1482,6 +1499,13 @@ public class UIComponent extends FlexSprite
 
     /**
      *  @private
+     *  hold the setStyles() calls that have been deferred untils a moduleFactory
+     *  is set.
+     */
+    private var deferredSetStyles:Object;
+    
+    /**
+     *  @private
      *  There is a bug (139381) where we occasionally get callLaterDispatcher()
      *  even though we didn't expect it.
      *  That causes us to do a removeEventListener() twice,
@@ -1512,7 +1536,6 @@ public class UIComponent extends FlexSprite
     private var transitionFromState:String;
     private var transitionToState:String;
     
-
     //--------------------------------------------------------------------------
     //
     //  Variables: Creation
@@ -1646,7 +1669,132 @@ public class UIComponent extends FlexSprite
         _updateCompletePendingFlag = value;
     }
 
-    //--------------------------------------------------------------------------
+	//------------------------------------------------------------------------
+    //
+    //  Properties: Accessibility
+    //
+    //------------------------------------------------------------------------
+
+	/**
+     *  @public
+	 *  A convenience accessor for the 'silent' property
+	 *  in this UIComponent's accessibilityProperties object.
+	 *
+	 *  Note that accessibilityEnabled has the opposite sense from silent;
+	 *  accessibilityEnabled is true when silent is false and vice versa.
+	 *
+	 *  The getter simply returns accessibilityProperties.silent,
+	 *  or true if accessibilityProperties is null.
+	 *  The setter first checks whether accessibilityProperties is null, and if it is,
+	 *  sets it to a new AccessibilityProperties instance;
+	 *  then it sets accessibilityProperties.silent.
+	 *
+     *  @langversion 3.0
+	 *  @playerversion Flash 9
+	 *  @playerversion AIR 1.1
+     *  @productversion Flex 3
+	 */
+	public function get accessibilityEnabled():Boolean
+    {
+      return accessibilityProperties ? !accessibilityProperties.silent : true;
+	}
+		
+	public function set accessibilityEnabled(value:Boolean):void
+    {
+	  if (!accessibilityProperties) 
+        accessibilityProperties = new AccessibilityProperties();
+   	  accessibilityProperties.silent = !value;
+      Accessibility.updateProperties();
+	}
+
+	/**
+     *  @public
+	 *  A convenience accessor for the 'name' property
+	 *  in this UIComponent's accessibilityProperties object.
+	 *
+	 *  The getter simply returns accessibilityProperties.name,
+	 *  or "" if accessibilityProperties is null.
+	 *  The setter first checks whether accessibilityProperties is null, and if it is,
+	 *  sets it to a new AccessibilityProperties instance;
+	 *  then it sets accessibilityProperties.name.
+	 *
+	 *  @langversion 3.0
+	 *  @playerversion Flash 9
+	 *  @playerversion AIR 1.1
+	 *  @productversion Flex 3
+ 	 */
+	public function get accessibilityName():String
+    {
+	  return accessibilityProperties ? accessibilityProperties.name : "";
+	}
+	
+    public function set accessibilityName(value:String):void 
+    {
+	  if (!accessibilityProperties)
+	    accessibilityProperties = new AccessibilityProperties();
+ 	  accessibilityProperties.name = value;
+      Accessibility.updateProperties();
+	}
+
+	/**
+	 *  @public
+	 *  A convenience accessor for the 'description' property
+	 *  in this UIComponent's accessibilityProperties object.
+	 *
+	 *  The getter simply returns accessibilityProperties.description,
+	 *  or "" if accessibilityProperties is null.
+	 *  The setter first checks whether accessibilityProperties is null, and if it is,
+	 *  sets it to a new AccessibilityProperties instance;
+	 *  then it sets accessibilityProperties.description.
+	 *
+  	 *  @langversion 3.0
+	 *  @playerversion Flash 9
+	 *  @playerversion AIR 1.1
+	 *  @productversion Flex 3
+	 */
+	public function get accessibilityDescription():String 
+    {
+	  return accessibilityProperties ? accessibilityProperties.description : "";
+	}
+
+	public function set accessibilityDescription(value:String):void
+    {
+	  if (!accessibilityProperties)
+		accessibilityProperties = new AccessibilityProperties();
+   	  accessibilityProperties.description = value;
+      Accessibility.updateProperties();
+	}
+
+	/**
+	 *  @public
+	 *  A convenience accessor for the 'shortcut' property
+	 *  in this UIComponent's accessibilityProperties object.
+	 *
+	 *  The getter simply returns accessibilityProperties.shortcut,
+	 *  or "" if accessibilityProperties is null.
+	 *  The setter first checks whether accessibilityProperties is null, and if it is,
+	 *  sets it to a new AccessibilityProperties instance;
+	 *  then it sets accessibilityProperties.shortcut.
+	 *
+	 *  @langversion 3.0
+	 *  @playerversion Flash 9
+	 *  @playerversion AIR 1.1
+	 *  @productversion Flex 3
+	 */
+	public function get accessibilityShortcut():String
+    {
+	  return accessibilityProperties ? accessibilityProperties.shortcut : "";
+	}
+	
+    public function set accessibilityShortcut(value:String):void
+    {
+   	  if (!accessibilityProperties)
+	    accessibilityProperties = new AccessibilityProperties();
+	  accessibilityProperties.shortcut = value;
+      Accessibility.updateProperties();
+	}
+
+//--------------------------------------------------------------------------
     //
     //  Variables: Invalidation
     //
@@ -1789,20 +1937,20 @@ public class UIComponent extends FlexSprite
      *  @private
      *  Sprite used to display an overlay.
      */
-    mx_internal var overlay:UIComponent;
+    mx_internal var effectOverlay:UIComponent;
 
     /**
      *  @private
      *  Color used for overlay.
      */
-    mx_internal var overlayColor:uint;
+    mx_internal var effectOverlayColor:uint;
 
     /**
      *  @private
      *  Counter to keep track of the number of current users
      *  of the overlay.
      */
-    mx_internal var overlayReferenceCount:int = 0;
+    mx_internal var effectOverlayReferenceCount:int = 0;
 
     //--------------------------------------------------------------------------
     //
@@ -2017,12 +2165,19 @@ public class UIComponent extends FlexSprite
     {
         if (z == value)
             return;
+
+        // validateMatrix when switching between 2D/3D, works around player bug
+        // see sdk-23421 
+        var was3D:Boolean = is3D;
         if (_layoutFeatures == null)
             initAdvancedLayoutFeatures();
 
         _layoutFeatures.layoutZ = value;
         invalidateTransform();
         invalidateProperties();
+
+        if (was3D != is3D)
+            validateMatrix();
         dispatchBindingEvent("zChanged");
     }
 
@@ -2256,12 +2411,17 @@ public class UIComponent extends FlexSprite
         if (rotationX == value)
             return;
 
+        // validateMatrix when switching between 2D/3D, works around player bug
+        // see sdk-23421 
+        var was3D:Boolean = is3D;
         if (_layoutFeatures == null)
             initAdvancedLayoutFeatures();
         _layoutFeatures.layoutRotationX = value;
         invalidateTransform();
         invalidateProperties();
         invalidateParentSizeAndDisplayList();
+        if (was3D != is3D)
+            validateMatrix();
     }
 
     /**
@@ -2290,12 +2450,17 @@ public class UIComponent extends FlexSprite
         if (rotationY == value)
             return;
 
+        // validateMatrix when switching between 2D/3D, works around player bug
+        // see sdk-23421 
+        var was3D:Boolean = is3D;
         if (_layoutFeatures == null)
             initAdvancedLayoutFeatures();
         _layoutFeatures.layoutRotationY = value;
         invalidateTransform();
         invalidateProperties();
         invalidateParentSizeAndDisplayList();
+        if (was3D != is3D)
+            validateMatrix();
     }
                                 
     //----------------------------------
@@ -2696,6 +2861,10 @@ public class UIComponent extends FlexSprite
     {
         if (scaleZ == value)
             return;
+
+        // validateMatrix when switching between 2D/3D, works around player bug
+        // see sdk-23421 
+        var was3D:Boolean = is3D;
         if (_layoutFeatures == null)
             initAdvancedLayoutFeatures();
 
@@ -2704,6 +2873,8 @@ public class UIComponent extends FlexSprite
         invalidateTransform();
         invalidateProperties();
         invalidateParentSizeAndDisplayList();
+        if (was3D != is3D)
+            validateMatrix();
         dispatchBindingEvent("scaleZChanged");
     }
 
@@ -2845,7 +3016,7 @@ public class UIComponent extends FlexSprite
     private var _alpha:Number = 1.0;
     
     [Bindable("alphaChanged")]
-    [Inspectable(defaultValue="1.0", category="General", verbose="1")]
+    [Inspectable(defaultValue="1.0", category="General", verbose="1", minValue="0.0", maxValue="1.0")]
 
     /**
      *  @private
@@ -2872,6 +3043,53 @@ public class UIComponent extends FlexSprite
             $alpha = value;
 
             dispatchBindingEvent("alphaChanged");
+        }
+    }
+    
+    //----------------------------------
+    //  blendMode
+    //----------------------------------
+    
+    /**
+     *  @private
+     *  Storage for the blendMode property.
+     */
+    private var _blendMode:String = BlendMode.NORMAL; 
+    private var blendShaderChanged:Boolean; 
+    private var blendModeChanged:Boolean; 
+    
+    [Inspectable(category="General", enumeration="add,alpha,darken,difference,erase,hardlight,invert,layer,lighten,multiply,normal,subtract,screen,overlay,colordodge,colorburn,exclusion,softlight,hue,saturation,color,luminosity", defaultValue="normal")]
+    
+    /**
+     *  @private
+     */
+    override public function get blendMode():String
+    {
+        return _blendMode; 
+    }
+    
+    /**
+     *  @private
+     */
+    override public function set blendMode(value:String):void
+    { 
+        if (_blendMode != value)
+        {
+            _blendMode = value;
+            blendModeChanged = true; 
+            
+            // If one of the non-native Flash blendModes is set, 
+            // record the new value and set the appropriate 
+            // blendShader on the display object. 
+            if (value == "colordodge" || 
+                value =="colorburn" || value =="exclusion" || 
+                value =="softlight" || value =="hue" || 
+                value =="saturation" || value =="color" ||
+                value =="luminosity")
+            {
+                blendShaderChanged = true;
+            }
+            invalidateProperties();     
         }
     }
 
@@ -3115,6 +3333,43 @@ public class UIComponent extends FlexSprite
     mx_internal final function set $alpha(value:Number):void
     {
         super.alpha = value;
+    }
+    
+    //----------------------------------
+    //  $blendMode
+    //----------------------------------
+    
+    /**
+     *  @private
+     *  This property allows access to the Player's native implementation
+     *  of the 'blendMode' property, which can be useful since components
+     *  can override 'alpha' and thereby hide the native implementation.
+     *  Note that this "base property" is final and cannot be overridden,
+     *  so you can count on it to reflect what is happening at the player level.
+     */
+    mx_internal final function get $blendMode():String
+    {
+        return super.blendMode;
+    }
+    
+    /**
+     *  @private
+     */
+    mx_internal final function set $blendMode(value:String):void
+    {
+        super.blendMode = value;
+    }
+    
+    //----------------------------------
+    //  $blendShader
+    //----------------------------------
+    
+    /**
+     *  @private
+     */
+    mx_internal final function set $blendShader(value:Shader):void
+    {
+        super.blendShader = value;
     }
     
     //----------------------------------
@@ -4042,7 +4297,7 @@ public class UIComponent extends FlexSprite
         var n:int = numChildren;
         for (var i:int = 0; i < n; i++)
         {
-            var child:UIComponent = getChildAt(i) as UIComponent;
+            var child:IFlexModule = getChildAt(i) as IFlexModule;
             if (!child)
                 continue;
 
@@ -4053,6 +4308,8 @@ public class UIComponent extends FlexSprite
         }
 
         _moduleFactory = factory;
+
+        setDeferredStyles();
     }
 
     //--------------------------------------------------------------------------
@@ -6584,7 +6841,7 @@ public class UIComponent extends FlexSprite
             formerParent.removeChild(child);
 
         // If there is an overlay, place the child underneath it.
-        var index:int = overlayReferenceCount && child != overlay ?
+        var index:int = effectOverlayReferenceCount && child != effectOverlay ?
                         Math.max(0, super.numChildren - 1) :
                         super.numChildren;
 
@@ -6624,7 +6881,7 @@ public class UIComponent extends FlexSprite
             formerParent.removeChild(child);
 
         // If there is an overlay, place the child underneath it.
-        if (overlayReferenceCount && child != overlay)
+        if (effectOverlayReferenceCount && child != effectOverlay)
              index = Math.min(index, Math.max(0, super.numChildren - 1));
 
         addingChild(child);
@@ -6673,7 +6930,7 @@ public class UIComponent extends FlexSprite
                                            newIndex:int):void
     {
         // Place the child underneath the overlay.
-        if (overlayReferenceCount && child != overlay)
+        if (effectOverlayReferenceCount && child != effectOverlay)
             newIndex = Math.min(newIndex, Math.max(0, super.numChildren - 2));
 
         super.setChildIndex(child, newIndex);
@@ -6857,16 +7114,16 @@ public class UIComponent extends FlexSprite
         }
 
         // Propagate moduleFactory to the child, but don't overwrite an existing moduleFactory.
-        if (child is UIComponent && UIComponent(child).moduleFactory == null)
+        if (child is IFlexModule && IFlexModule(child).moduleFactory == null)
         {
             if (moduleFactory != null)
-                UIComponent(child).moduleFactory = moduleFactory;
+                IFlexModule(child).moduleFactory = moduleFactory;
 
             else if (document is IFlexModule && document.moduleFactory != null)
-                UIComponent(child).moduleFactory = document.moduleFactory;
+                IFlexModule(child).moduleFactory = document.moduleFactory;
 
-            else if (parent is UIComponent && UIComponent(parent).moduleFactory != null)
-                UIComponent(child).moduleFactory = UIComponent(parent).moduleFactory;
+            else if (parent is IFlexModule && IFlexModule(parent).moduleFactory != null)
+                IFlexModule(child).moduleFactory = IFlexModule(parent).moduleFactory;
         }
 
         // Set the font context in non-UIComponent children.
@@ -7619,9 +7876,18 @@ public class UIComponent extends FlexSprite
                 _currentStateDeferred = null;
                 currentState = newState;
             }
-
+           
             oldScaleX = scaleX;
             oldScaleY = scaleY;
+        }
+        
+        // Typically state changes occur immediately, but during
+        // component initialization we defer until commitProperties to 
+        // reduce a bit of the startup noise.
+        if (_currentStateChanged && !initialized)
+        {
+            _currentStateChanged = false;
+            commitCurrentState();
         }
 
         if (Number(x.toFixed(3)) != Number(oldX.toFixed(3)) || Number(y.toFixed(3)) != Number(oldY.toFixed(3)))
@@ -7639,8 +7905,70 @@ public class UIComponent extends FlexSprite
             errorStringChanged = false;
             setBorderColorForErrorString();
         }
-		// update controllers
-		updateControllers();
+
+        if (blendModeChanged)
+        {
+            blendModeChanged = false; 
+            
+            if (!blendShaderChanged)
+            {
+                $blendMode = _blendMode; 
+            }
+            else
+            {
+                // The graphic element's blendMode was set to a non-Flash 
+                // blendMode. We mimic the look by instantiating the 
+                // appropriate shader class and setting the blendShader
+                // property on the displayObject. 
+                blendShaderChanged = false; 
+                
+                $blendMode = BlendMode.NORMAL; 
+                
+                switch(_blendMode)
+                {
+                    case "color": 
+                    {
+                        $blendShader = new ColorShader();
+                        break; 
+                    }
+                    case "colordodge":
+                    {
+                        $blendShader = new ColorDodgeShader();
+                        break; 
+                    }
+                    case "colorburn":
+                    {
+                        $blendShader = new ColorBurnShader();
+                        break; 
+                    }
+                    case "exclusion":
+                    {
+                        $blendShader = new ExclusionShader();
+                        break; 
+                    }
+                    case "hue":
+                    {
+                        $blendShader = new HueShader();
+                        break; 
+                    }
+                    case "luminosity":
+                    {
+                        $blendShader = new LuminosityShader();
+                        break; 
+                    }
+                    case "saturation": 
+                    {
+                        $blendShader = new SaturationShader();
+                        break; 
+                    }
+                    case "softlight":
+                    {
+                        $blendShader = new SoftLightShader();
+                        break; 
+                    }
+                }        
+            }
+        }
     }
 
     //--------------------------------------------------------------------------
@@ -9029,8 +9357,11 @@ public class UIComponent extends FlexSprite
 
         if (UIComponentGlobals.nextFocusObject)
             return UIComponentGlobals.nextFocusObject;
-
-        return sm.stage.focus;
+        
+        if (sm.stage)
+            return sm.stage.focus;
+        
+        return null;
     }
 
     /**
@@ -9449,13 +9780,7 @@ public class UIComponent extends FlexSprite
             else
             {
                 _currentStateChanged = true;
-
-                // We need to wait until we're fully initialized before commiting
-                // the current state. Otherwise children may not be created
-                // (if we're inside a deferred instantiation container), or
-                // bindings may not be fired yet.
-                addEventListener(FlexEvent.CREATION_COMPLETE,
-                                 creationCompleteHandler);
+                invalidateProperties();
             }
         }
     }
@@ -10031,6 +10356,18 @@ public class UIComponent extends FlexSprite
      */
     public function getStyle(styleProp:String):*
     {
+        // If our style proto chain hasn't been set up yet, return any locally declared
+        // styles. This way any style set before we are added to the display list
+        // is correctly returned.
+        if (_inheritingStyles == StyleProtoChain.STYLE_UNINITIALIZED)
+        {
+            if (deferredSetStyles)
+                return this.deferredSetStyles[styleProp];
+            
+            if (styleDeclaration)
+                return styleDeclaration.getStyle(styleProp); 
+        }
+        
         return styleManager.inheritingStyles[styleProp] ?
                _inheritingStyles[styleProp] :
                _nonInheritingStyles[styleProp];
@@ -10055,7 +10392,35 @@ public class UIComponent extends FlexSprite
      */
     public function setStyle(styleProp:String, newValue:*):void
     {
-        StyleProtoChain.setStyle(this, styleProp, newValue);
+        // If there is no module factory then defer the set
+        // style until a module factory is set.
+        if (moduleFactory)
+        {
+            StyleProtoChain.setStyle(this, styleProp, newValue);
+        }
+        else
+        {
+            if (!deferredSetStyles)
+                deferredSetStyles = new Object();
+            deferredSetStyles[styleProp] = newValue;
+        }   
+    }
+
+    
+    /**
+     *  @private
+     *  Set style that were deferred because a module factory was not
+     *  set yet.
+     */
+    private function setDeferredStyles():void
+    {
+        if (!deferredSetStyles)
+            return;
+        
+        for (var styleProp:String in deferredSetStyles)
+            StyleProtoChain.setStyle(this, styleProp, deferredSetStyles[styleProp]);
+        
+        deferredSetStyles = null;
     }
 
     /**
@@ -10373,35 +10738,35 @@ public class UIComponent extends FlexSprite
     mx_internal function addOverlay(color:uint,
                                targetArea:RoundedRectangle = null):void
     {
-        if (!overlay)
+        if (!effectOverlay)
         {
-            overlayColor = color;
-            overlay = new UIComponent();
-            overlay.name = "overlay";
+            effectOverlayColor = color;
+			effectOverlay = new UIComponent();
+			effectOverlay.name = "overlay";
             // Have to set visibility immediately
             // to make sure we avoid flicker
-            overlay.$visible = true;
+			effectOverlay.$visible = true;
 
-            fillOverlay(overlay, color, targetArea);
+            fillOverlay(effectOverlay, color, targetArea);
 
             attachOverlay();
 
             if (!targetArea)
                 addEventListener(ResizeEvent.RESIZE, overlay_resizeHandler);
 
-            overlay.x = 0;
-            overlay.y = 0;
+			effectOverlay.x = 0;
+			effectOverlay.y = 0;
 
             invalidateDisplayList();
 
-            overlayReferenceCount = 1;
+            effectOverlayReferenceCount = 1;
         }
         else
         {
-            overlayReferenceCount++;
+            effectOverlayReferenceCount++;
         }
 
-        dispatchEvent(new ChildExistenceChangedEvent(ChildExistenceChangedEvent.OVERLAY_CREATED, true, false, overlay));
+        dispatchEvent(new ChildExistenceChangedEvent(ChildExistenceChangedEvent.OVERLAY_CREATED, true, false, effectOverlay));
     }
 
     /**
@@ -10416,7 +10781,7 @@ public class UIComponent extends FlexSprite
      */
     protected function attachOverlay():void
     {
-        addChild(overlay);
+        addChild(effectOverlay);
     }
 
     /**
@@ -10452,14 +10817,14 @@ public class UIComponent extends FlexSprite
      */
     mx_internal function removeOverlay():void
     {
-        if (overlayReferenceCount > 0 && --overlayReferenceCount == 0 && overlay)
+        if (effectOverlayReferenceCount > 0 && --effectOverlayReferenceCount == 0 && effectOverlay)
         {
             removeEventListener(ResizeEvent.RESIZE, overlay_resizeHandler);
 
             if (super.getChildByName("overlay"))
-                $removeChild(overlay);
+                $removeChild(effectOverlay);
 
-            overlay = null;
+			effectOverlay = null;
         }
     }
     /**
@@ -10469,7 +10834,7 @@ public class UIComponent extends FlexSprite
      */
     private function overlay_resizeHandler(event:Event):void
     {
-        fillOverlay(overlay, overlayColor, null);
+        fillOverlay(effectOverlay, effectOverlayColor, null);
     }
 
     /**
@@ -10984,34 +11349,6 @@ public class UIComponent extends FlexSprite
         }
 
         // trace("  <<calllaterdispatcher2 " + this);
-    }
-
-    /**
-     *  @private
-     *  Event handler called when creation is complete and we have a pending
-     *  current state change. We commit the current state change here instead
-     *  of inside commitProperties since the state may have bindings to children
-     *  that have not been created yet if we are inside a deferred instantiation
-     *  container.
-     */
-    private function creationCompleteHandler(event:FlexEvent):void
-    {
-        if (_currentStateChanged)
-        {
-            _currentStateChanged = false;
-            commitCurrentState();
-
-            // Need to call validateNow() to avoid screen flicker. This handler
-            // is called immediately before the component is displayed, and
-            // changing states takes a frame to commit the changes, which
-            // results in the base state flashing quickly on the screen before
-            // the desired state is entered.
-            var newState:State = getState(currentState);
-            if (newState && newState.overrides.length > 0)
-                validateNow();
-        }
-
-        removeEventListener(FlexEvent.CREATION_COMPLETE, creationCompleteHandler);
     }
 
     //--------------------------------------------------------------------------
@@ -12049,6 +12386,10 @@ public class UIComponent extends FlexSprite
         var ct:ColorTransform = value.colorTransform;
         var pp:PerspectiveProjection = value.perspectiveProjection;
         
+        // validateMatrix when switching between 2D/3D, works around player bug
+        // see sdk-23421 
+        var was3D:Boolean = is3D;
+
         var mxTransform:mx.geom.Transform = value as mx.geom.Transform;
         if (mxTransform)
         {
@@ -12070,6 +12411,8 @@ public class UIComponent extends FlexSprite
         super.transform.perspectiveProjection = pp;
         if (maintainProjectionCenter)
             invalidateDisplayList(); 
+        if (was3D != is3D)
+            validateMatrix();
     }
     
     /**
@@ -12090,6 +12433,10 @@ public class UIComponent extends FlexSprite
      */
     public function set postLayoutTransformOffsets(value:TransformOffsets):void
     {
+        // validateMatrix when switching between 2D/3D, works around player bug
+        // see sdk-23421 
+        var was3D:Boolean = is3D;
+
         if (_layoutFeatures == null)
             initAdvancedLayoutFeatures();
         
@@ -12098,6 +12445,8 @@ public class UIComponent extends FlexSprite
         _layoutFeatures.postLayoutTransformOffsets = value;
         if (_layoutFeatures.postLayoutTransformOffsets != null)
             _layoutFeatures.postLayoutTransformOffsets.addEventListener(Event.CHANGE,transformOffsetsChangedHandler);
+        if (was3D != is3D)
+            validateMatrix();
     }
 
     /**
@@ -12142,7 +12491,14 @@ public class UIComponent extends FlexSprite
      */
     public function setLayoutMatrix(value:Matrix, invalidateLayout:Boolean):void
     {
+        var previousMatrix:Matrix = _layoutFeatures ? 
+            _layoutFeatures.layoutMatrix : super.transform.matrix;
+                            
+        // validateMatrix when switching between 2D/3D, works around player bug
+        // see sdk-23421 
+        var was3D:Boolean = is3D;
         _hasComplexLayoutMatrix = true;
+        
         if (_layoutFeatures == null)
         {
             // flash will make a copy of this on assignment.
@@ -12156,10 +12512,23 @@ public class UIComponent extends FlexSprite
             invalidateTransform();
         }
         
+        // Early exit if possible. We don't want to invalidate unnecessarily.
+        // We need to do the check here, after our new value has been applied
+        // because our matrix components are rounded upon being applied to a
+        // DisplayObject.
+        if (MatrixUtil.isEqual(previousMatrix, _layoutFeatures ? 
+            _layoutFeatures.layoutMatrix : super.transform.matrix))
+        {    
+            return;
+        } 
+        
         invalidateProperties();
 
         if (invalidateLayout)
             invalidateParentSizeAndDisplayList();
+
+        if (was3D != is3D)
+            validateMatrix();
     }
 
     /**
@@ -12173,6 +12542,14 @@ public class UIComponent extends FlexSprite
      */
     public function setLayoutMatrix3D(value:Matrix3D, invalidateLayout:Boolean):void
     {
+        // Early exit if possible. We don't want to invalidate unnecessarily.
+        if (_layoutFeatures && MatrixUtil.isEqual3D(_layoutFeatures.layoutMatrix3D, value))
+            return;
+        
+        // validateMatrix when switching between 2D/3D, works around player bug
+        // see sdk-23421 
+        var was3D:Boolean = is3D;
+
         if (_layoutFeatures == null)
             initAdvancedLayoutFeatures();
         // layout features will internally make a copy of this matrix rather than
@@ -12184,6 +12561,9 @@ public class UIComponent extends FlexSprite
 
         if (invalidateLayout)
             invalidateParentSizeAndDisplayList();
+
+        if (was3D != is3D)
+            validateMatrix();
     }
 
     private static var xformPt:Point;

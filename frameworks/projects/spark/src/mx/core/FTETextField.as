@@ -784,7 +784,12 @@ public class FTETextField extends Sprite
 		
 		// The border and background need to be redrawn.
 		setFlag(FLAG_GRAPHICS_INVALID);
-		
+        
+        // The border increases the width and height by 1 pixel, so if there
+        // is a scrollRect, it has to be modified as well.
+        if (testFlag(FLAG_TEXT_SET | FLAG_HTML_TEXT_SET))
+            setFlag(FLAG_TEXT_LINES_INVALID);
+            
 		invalidate();
 	}
 	
@@ -2453,6 +2458,15 @@ public class FTETextField extends Sprite
 				r.top = 0;
 				r.right = _width;
 				r.bottom = _height;
+                
+                // Expand scrollRect by one pixel so the bottom and right
+                // borders are not cliped.  See note below.
+                if (testFlag(FLAG_GRAPHICS_INVALID) && border)
+                {
+                    r.width++;
+                    r.height++;
+                }
+
 				scrollRect = r;
 			}
 			else 
@@ -2606,7 +2620,7 @@ public class FTETextField extends Sprite
 			
 			i = j + 1;
 		}
-		while (j != n);
+		while (j < n);
 		
 		// At this point, all TextLines have been composed
 		// and have the correct spacing, but are all left-aligned
@@ -2704,7 +2718,15 @@ public class FTETextField extends Sprite
 		var nextTextLine:TextLine;
 		var nextY:int = paragraphY;
 		var textLine:TextLine;
-		
+        
+        // TextField seems to do this.  You can see it with wordWrap and 
+        // indent > width or when rightMargin > width.  In the former case,
+        // the first line is visually empty but contains a character which is 
+        // clipped and the second line starts with the second letter.  
+        // The clipped first line serves as a placeholder so that the rest
+        // of the lines which may be visible are composed.
+		var fitSomething:Boolean = true;
+        
 		// Generate TextLines, stopping when we run out of text
 		// or reach the bottom of the requested bounds.
 		// In this loop the lines are positioned within the rectangle
@@ -2726,16 +2748,10 @@ public class FTETextField extends Sprite
                 
                 maxLineWidth = 
                     maxLineWidthBeforeIndent - totalIndent - rightMargin;
-                            
-                // If right margin larger than width, make 1
-                // character wide to match TextField behavior.  This isn't
-                // an exact match since sometimes 2 characters can fit within
-                // the width.
-                if (rightMargin && maxLineWidth < elementFormat.fontSize)
-                    maxLineWidth = elementFormat.fontSize;
-                else if (maxLineWidth < 0)
-                    maxLineWidth = 0;
-                else if (maxLineWidth > TextLine.MAX_LINE_WIDTH)
+
+                // Stay within the bounds to avoid exception.  Since 
+                // fitSomething is true it is okay if maxLineWidth is < 0.
+                if (maxLineWidth > TextLine.MAX_LINE_WIDTH)
                     maxLineWidth = TextLine.MAX_LINE_WIDTH;
             }        
 
@@ -2746,12 +2762,12 @@ public class FTETextField extends Sprite
 				{
 					nextTextLine = fontContext.callInContext(
 						textBlock["recreateTextLine"], textBlock,
-						[ recycleLine, textLine, maxLineWidth ]);		
+						[ recycleLine, textLine, maxLineWidth, 0.0, fitSomething ]);		
 				}        
 				else
 				{
 					nextTextLine = recreateTextLine(
-						recycleLine, textLine, maxLineWidth);
+						recycleLine, textLine, maxLineWidth, 0.0, fitSomething);
 				}  
 			}
 			else
@@ -2760,12 +2776,12 @@ public class FTETextField extends Sprite
 				{
 					nextTextLine = fontContext.callInContext(
 						textBlock.createTextLine, textBlock,
-						[ textLine, maxLineWidth ]);
+						[ textLine, maxLineWidth, 0.0, fitSomething ]);
 				}
 				else
 				{
 					nextTextLine = textBlock.createTextLine(
-						textLine, maxLineWidth);
+						textLine, maxLineWidth, 0.0, fitSomething);
 				}
 			}
 			
@@ -2824,7 +2840,10 @@ public class FTETextField extends Sprite
 	 */
 	private function alignTextLines(innerWidth:Number):void
 	{
-        var alignWidth:Number = isNaN(innerWidth) ? _textWidth : innerWidth;
+        // This is only the case when we are auto sizing.  In this case
+        // we don't want to do any alignment.
+        if (isNaN(innerWidth))
+            innerWidth = 0;
     
         var rightMargin:Number = Number(_defaultTextFormat.rightMargin);        
 
@@ -2853,20 +2872,24 @@ public class FTETextField extends Sprite
         {
             var textLine:TextLine = TextLine(getChildAt(i));
             
-            // Adjust text width to include indents and margins so that
-            // autoSize will be correct.
-            var width:Number = textLine.x + textLine.textWidth;
-            if (autoSize == TextFieldAutoSize.NONE || !wordWrap) 
-                 width += rightMargin;
+            var width:Number = textLine.x + textLine.textWidth + rightMargin;
             
             // Only align if there is width to do so.
-            if (leftAligned || width > alignWidth)
+            if (leftAligned || width > innerWidth)
                 textLine.x += leftOffset;
             else if (centerAligned)
                 textLine.x += centerOffset - width / 2;
             else if (rightAligned)
                 textLine.x += rightOffset - width;
-            
+                                    
+            // Text width should include indents and margins so that
+            // autoSize will be correct.  A negative rightMargin increases
+            // the width for the purposes of alignment only.  
+            // The text still needs to be clipped based on its actual width.
+            width = rightMargin > 0 ?
+                    textLine.x + textLine.textWidth + rightMargin :
+                    textLine.x + textLine.textWidth;
+                        
             _textWidth = Math.max(_textWidth, width);
             
             textLine.y += PADDING_TOP;
@@ -3136,7 +3159,7 @@ class FTETextFieldHostFormat implements ITextLayoutFormat
 	
 	public function get color():*
 	{
-		textField._defaultTextFormat.color;
+		return textField._defaultTextFormat.color;
 	}
 	
 	public function get columnCount():*

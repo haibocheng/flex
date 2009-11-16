@@ -788,7 +788,7 @@ public class Library implements Builder, Cloneable
         {
             data.swcCache = new SwcCache();
         }
-
+        
         CompilerSwcContext swcContext = new CompilerSwcContext(true);
         try
         {

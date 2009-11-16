@@ -16,7 +16,7 @@
 
     <!--  STEP 1: Add a state for your test here -->
     <mx:states>
-        <mx:State name="basicTest" />
+	  <mx:State name="basicTest" />
         <mx:State name="haloButtonTest" />
         <mx:State name="haloCheckBoxTest" />
         <mx:State name="haloRadioButtonTest" />
@@ -42,6 +42,7 @@
         <mx:State name="haloAlertTest" />
         <mx:State name="haloRPCDataBindingTest" />
         <mx:State name="haloCollectionTest" />
+		<mx:State name="sparkListDragDropTest" />
         <mx:State name="sparkBorderTest" />
         <mx:State name="sparkButtonTest" />
         <mx:State name="sparkCheckBoxTest" />
@@ -49,6 +50,7 @@
         <mx:State name="sparkRadioButtonTest" />
         <mx:State name="sparkTextInputTest" />
         <mx:State name="sparkTextAreaTest" />
+        <mx:State name="sparkComboBoxTest" />
         <mx:State name="sparkDropDownListTest" />
         <mx:State name="sparkNumericStepperTest" />
         <mx:State name="sparkSliderTest" />
@@ -59,9 +61,11 @@
         <mx:State name="sparkButtonBarTest" />
         <mx:State name="sparkTileGroupTest" />
         <mx:State name="sparkTitleWindowTest" />
+        <mx:State name="mxItemRendererTest" />
         <mx:State name="graphicsTagsTest" />
         <mx:State name="fxgCompileTest" />
         <mx:State name="designLayerTest" />
+        <mx:State name="styleManagerTest" />
     </mx:states>
     
     <!--  STEP 2: Add an mxml component with the widgets for your test here -->
@@ -89,7 +93,9 @@
     <haloviews:AccordionTests id="haloAccordionTests" includeIn="haloAccordionTest" />    
     <haloviews:AlertTests id="haloAlertTests" includeIn="haloAlertTest" />    
     <haloviews:RPCDataBindingTests id="haloRPCDataBindingTests" includeIn="haloRPCDataBindingTest" />    
-    <haloviews:CollectionTests id="haloCollectionTests" includeIn="haloCollectionTest" /> 
+    <haloviews:CollectionTests id="haloCollectionTests" includeIn="haloCollectionTest" />
+	<sparkviews:ListDragDropTests id="sparkListDragDropTests" includeIn="sparkListDragDropTest" />
+    <haloviews:MXItemRendererTests id="mxItemRendererTests" includeIn="mxItemRendererTest" /> 
     <sparkviews:BorderTests id="sparkBorderTests" includeIn="sparkBorderTest" />    
     <sparkviews:ButtonTests id="sparkButtonTests" includeIn="sparkButtonTest" />    
     <sparkviews:CheckBoxTests id="sparkCheckBoxTests" includeIn="sparkCheckBoxTest" />    
@@ -97,6 +103,7 @@
     <sparkviews:RadioButtonTests id="sparkRadioButtonTests" includeIn="sparkRadioButtonTest" />    
     <sparkviews:TextInputTests id="sparkTextInputTests" includeIn="sparkTextInputTest" />    
     <sparkviews:TextAreaTests id="sparkTextAreaTests" includeIn="sparkTextAreaTest" />    
+    <sparkviews:ComboBoxTests id="sparkComboBoxTests" includeIn="sparkComboBoxTest" />
     <sparkviews:DropDownListTests id="sparkDropDownListTests" includeIn="sparkDropDownListTest" />    
     <sparkviews:NumericStepperTests id="sparkNumericStepperTests" includeIn="sparkNumericStepperTest" />    
     <sparkviews:SliderTests id="sparkSliderTests" includeIn="sparkSliderTest" />    
@@ -110,7 +117,24 @@
     <sparkviews:TitleWindowTests id="sparkTitleWindowTests" includeIn="sparkTitleWindowTest" />    
     <graphicsviews:GraphicsTagsTests id="graphicsTagsTests" includeIn="graphicsTagsTest" />    
     <fxgviews:FXGCompileTests id="fxgCompileTests" includeIn="fxgCompileTest" />    
+    <sparkviews:StyleManagerTests id="styleManagerTests" includeIn="styleManagerTest" />
 
     <!--  STEP 3: Add the testscript to BasicTests-config.xml -->
+    
+    <!--  STEP 4 (Optional): Debug your state without running tests.
+          a. Rename BasicTests-config.xml to BasicTests-config.sav
+          b. Uncomment the block of components below.
+          c. Re-run basic tests or compile BasicTests.mxml at the command line and run BasicTests.swf.
+          d. Enter the name of the state you want to debug.
+    -->
 
+    <!--
+    <s:Group >
+        <s:layout>
+            <s:HorizontalLayout paddingTop="10" />
+        </s:layout>
+        <mx:Label text="Enter the new state:" />
+        <mx:TextInput id="newStateInput" text="" enter="{currentState=newStateInput.text}" />
+    </s:Group>
+    -->    
 </mx:Application>

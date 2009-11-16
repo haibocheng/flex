@@ -26,6 +26,7 @@ import flash.text.TextFormat;
 import flash.text.engine.ElementFormat;
 import flash.text.engine.FontDescription;
 import flash.text.engine.FontLookup;
+import flash.text.engine.ITextSupport;
 import flash.text.engine.TextBlock;
 import flash.text.engine.TextElement;
 import flash.text.engine.TextLine;
@@ -44,6 +45,7 @@ import flashx.textLayout.edit.ISelectionManager;
 import flashx.textLayout.edit.SelectionManager;
 import flashx.textLayout.edit.SelectionState;
 import flashx.textLayout.elements.Configuration;
+import flashx.textLayout.elements.GlobalSettings;
 import flashx.textLayout.elements.InlineGraphicElementStatus;
 import flashx.textLayout.elements.TextFlow;
 import flashx.textLayout.events.CompositionCompleteEvent;
@@ -81,13 +83,12 @@ import mx.resources.ResourceManager;
 import mx.utils.ObjectUtil;
 import mx.utils.StringUtil;
 
-import spark.components.TextSelectionHighlighting;
+import spark.components.supportClasses.RichEditableTextContainerManager;
+import spark.components.supportClasses.RichEditableTextEditManager;
 import spark.core.CSSTextLayoutFormat;
 import spark.core.IViewport;
 import spark.core.NavigationUnit;
 import spark.events.TextOperationEvent;
-import spark.components.supportClasses.RichEditableTextContainerManager;
-import spark.components.supportClasses.RichEditableTextEditManager;
 import spark.utils.TextUtil;
 
 use namespace mx_internal;
@@ -192,9 +193,16 @@ include "../styles/metadata/SelectionFormatTextStyles.as"
 [Style(name="backgroundColor", type="uint", format="Color", inherit="no")]
 
 //--------------------------------------
+//  Excluded APIs
+//--------------------------------------
+
+[Exclude(name="baseColor", kind="style")]
+
+//--------------------------------------
 //  Other metadata
 //--------------------------------------
 
+[AccessibilityClass(implementation="spark.accessibility.RichEditableTextAccImpl")]
 [DefaultProperty("content")]
 [IconFile("RichEditableText.png")]
 [DefaultTriggerEvent("change")]
@@ -377,10 +385,22 @@ include "../styles/metadata/SelectionFormatTextStyles.as"
  *  @productversion Flex 4
  */
 public class RichEditableText extends UIComponent
-    implements IViewport, IFocusManagerComponent, IIMESupport
+    implements IFocusManagerComponent, IIMESupport, ITextSupport, IViewport
 {
     include "../core/Version.as";
-        
+    
+    //--------------------------------------------------------------------------
+    //
+    //  Class mixins
+    //
+    //--------------------------------------------------------------------------
+
+    /**
+     *  @private
+     *  Placeholder for mixin by RichEditableTextAccImpl.
+     */
+    mx_internal static var createAccessibilityImplementation:Function;
+
     //--------------------------------------------------------------------------
     //
     //  Class initialization
@@ -403,6 +423,13 @@ public class RichEditableText extends UIComponent
         if (classInitialized)
             return;
 
+		/**
+		 *  Set the TLF hook used for localizing runtime error messages.
+		 *  TLF itself has English-only messages,
+		 *  but higher layers like Flex can provide localized versions.
+		 */
+		GlobalSettings.getResourceStringFunction = TextUtil.getResourceString;
+		
         staticConfiguration = 
             Configuration(TextContainerManager.defaultConfiguration).clone();
         staticConfiguration.manageEnterKey = false; // default is true
@@ -590,12 +617,14 @@ public class RichEditableText extends UIComponent
 
     /**
      *  @private
-     *  This object determines the default text formatting used
-     *  by this component, based on its CSS styles.
-     *  It is set to null by stylesInitialized() and styleChanged(),
-     *  and recreated whenever necessary in commitProperties().
+     *  The hostFormat object in the _textContainerManager determines the 
+     *  default text formatting used by this component, based on its CSS styles. 
+     *  This flag is used by updateStylesIfChanged() determine when the object 
+     *  must be reinitialized.  It is set in stylesInitialized() and 
+     *  styleChanged(), and cleared in commitProperties().  After 
+     *  initialization, the hostFormat object should never be null.
      */
-    private var hostFormat:ITextLayoutFormat;
+    private var hostFormatChanged:Boolean;
 
     /**
      *  @private
@@ -664,6 +693,18 @@ public class RichEditableText extends UIComponent
      */
     mx_internal var embeddedFontContext:IFlexModuleFactory;
 
+    /**
+     *  @private
+     *  The TLF edit manager will batch all inserted text until the next
+     *  enter frame event.  This includes text inserted via the GUI as well
+     *  as api calls to EditManager.insertText().  Set this to false if you
+     *  want every keystroke to be inserted into the text immediately which will
+     *  result in a TextOperationEvent.CHANGE event for each character.  One
+     *  place this is needed is for the type-ahead feature of the editable combo
+     *  box.
+     */
+    mx_internal var batchTextInput:Boolean = true;
+    
     /**
      *  @private
      *  True if we've seen a MOUSE_DOWN event and haven't seen the 
@@ -790,6 +831,8 @@ public class RichEditableText extends UIComponent
     {
         super.explicitWidth = value;
 
+        widthConstraint = NaN;
+                
         // Because of autoSizing, the size and display might be impacted.
         invalidateSize();
         invalidateDisplayList();
@@ -823,6 +866,8 @@ public class RichEditableText extends UIComponent
     override public function set percentWidth(value:Number):void
     {
         super.percentWidth = value;
+
+        widthConstraint = NaN;
 
         // If we were autoSizing and now we are not we need to remeasure.
         invalidateSize();
@@ -1072,7 +1117,19 @@ public class RichEditableText extends UIComponent
     //
     //--------------------------------------------------------------------------
 
-        
+    //----------------------------------
+    //  canReconvert
+    //----------------------------------
+
+	/**
+	 *  @private
+	 *  FIXME (gosmith)
+	 */
+	public function get canReconvert():Boolean
+	{
+		return enabled && editable;
+	}
+
     //----------------------------------
     //  content
     //----------------------------------
@@ -1601,6 +1658,34 @@ public class RichEditableText extends UIComponent
     }
 
     //----------------------------------
+    //  selectionActiveIndex
+    //----------------------------------
+
+	/**
+	 *  @private
+	 *  FIXME (gosmith): ITextSupport needs to rename its
+	 *  selectionActiveIndex to selectionActivePosition.
+	 */
+	public function get selectionActiveIndex():int
+	{
+		return _selectionActivePosition;
+	}
+
+    //----------------------------------
+    //  selectionAnchorIndex
+    //----------------------------------
+
+	/**
+	 *  @private
+	 *  FIXME (gosmith): ITextSupport needs to rename its
+	 *  selectionAnchorIndex to selectionAnchorPosition.
+	 */
+	public function get selectionAnchorIndex():int
+	{
+		return _selectionAnchorPosition;
+	}
+
+    //----------------------------------
     //  selectionActivePosition
     //----------------------------------
 
@@ -2112,6 +2197,8 @@ public class RichEditableText extends UIComponent
         _widthInChars = value;
         widthInCharsChanged = true;
         
+        widthConstraint = NaN;
+        
         invalidateProperties();
         invalidateSize();
         invalidateDisplayList();
@@ -2122,6 +2209,15 @@ public class RichEditableText extends UIComponent
     //  Overridden Methods: UIComponent
     //
     //--------------------------------------------------------------------------
+
+    /**
+     *  @private
+     */
+    override protected function initializeAccessibility():void
+    {
+        if (RichEditableText.createAccessibilityImplementation != null)
+            RichEditableText.createAccessibilityImplementation(this);
+    }
 
     /**
      *  @private
@@ -2178,39 +2274,9 @@ public class RichEditableText extends UIComponent
     override protected function commitProperties():void
     {
         super.commitProperties();
-
-        if (!hostFormat)
-        {
-            // If the CSS styles for this component specify an embedded font,
-            // embeddedFontContext will be set to the module factory that
-            // should create TextLines (since they must be created in the
-            // SWF where the embedded font is.)
-            // Otherwise, this will be null.
-            embeddedFontContext = getEmbeddedFontContext();
-
-            _textContainerManager.swfContext =
-				ISWFContext(embeddedFontContext);                       
-
-            _textContainerManager.hostFormat =
-            hostFormat = new CSSTextLayoutFormat(this);
-            // Note: CSSTextLayoutFormat has special processing
-            // for the fontLookup style. If it is "auto",
-            // the fontLookup format is set to either
-            // "device" or "embedded" depending on whether
-            // embeddedFontContext is null or non-null.
-        }
         
-        if (selectionFormatsChanged)
-        {
-            _textContainerManager.invalidateSelectionFormats();
-            
-            selectionFormatsChanged = false;
-        }
+        updateStylesIfChanged();
 
-        // If fontMetrics changed, recalculate the ascent, and descent.
-        if (isNaN(ascent) || isNaN(descent))
-            calculateFontMetrics();    
-    
         // EditingMode needs to be current before attempting to set a
         // selection below.
         if (enabledChanged || selectableChanged || editableChanged)
@@ -2234,17 +2300,7 @@ public class RichEditableText extends UIComponent
             // Otherwise the StringTextLineFactory will put
             // all of the lines into a single paragraph
             // and FTE performance will degrade on a large paragraph.
-            
-            // If we have focus, then we need to immediately create a 
-            // TextFlow so the interaction manager will be created and 
-            // editing/selection can be done without having to mouse click 
-            // or mouse hover over this field.  Normally this is done in our 
-            // focusIn handler by making sure there is a selection.  Test this
-            // by clicking an arrow in the NumericStepper and then entering
-            // a number without clicking on the input field first.    
-                        
-            if (_text.indexOf("\n") != -1 || _text.indexOf("\r") != -1 ||
-                getFocus() == this)
+            if (_text.indexOf("\n") != -1 || _text.indexOf("\r") != -1)
             {
                 _textFlow = staticPlainTextImporter.importToFlow(_text);
                 _textContainerManager.setTextFlow(_textFlow);
@@ -2270,20 +2326,7 @@ public class RichEditableText extends UIComponent
         if (textChanged || textFlowChanged || contentChanged)
         {
             lastGeneration = _textFlow ? _textFlow.generation : 0;
-            
-            // If the text, textFlow or content changed, there is no selection.
-            // If we already have focus, set the selection to 0,0 so there is
-            // an insertion point.  Since the text was changed programatically
-            // the caller should set the selection to the desired position.
-            if (getFocus() == this && editingMode != EditingMode.READ_ONLY)
-            {
-                var selectionManager:ISelectionManager = getSelectionManager();
-                selectionManager.selectRange(0, 0);        
-                if (!selectionManager.focused)
-                    selectionManager.focusInHandler(null);
-                releaseSelectionManager();            
-            }
-                
+
             // Handle the case where the initial text, textFlow or content 
             // is displayed as a password.
             if (displayAsPassword)
@@ -2323,7 +2366,7 @@ public class RichEditableText extends UIComponent
             if (editingMode != EditingMode.READ_ONLY)
             {
                 // Must preserve the selection, if there was one.
-                selectionManager = getSelectionManager();
+                var selectionManager:ISelectionManager = getSelectionManager();
                 
                 // The visible selection will be refreshed during the update.
                 selectionManager.selectRange(oldAnchorPosition, oldActivePosition);        
@@ -2386,16 +2429,17 @@ public class RichEditableText extends UIComponent
      */
     override protected function measure():void 
     {
+        // Don't want to trigger a another remeasure when we modify the
+        // textContainerManager or compose the text.
+        ignoreDamageEvent = true;
+        
         super.measure();
-                 
-        // ScrollerLayout.measure() has heuristics for figuring out whether to
-        // use the actual content size or the preferred size when there are
-        // automatic scroll bars.  Force it to use the preferredSizes until
-        // the content sizes have been updated to accurate values.  This
-        // comes into play when remeasuring to reduce either the width/height.
-        _contentWidth = 0;
-        _contentHeight = 0;
 
+        // Styles can be changed in event handlers while in the middle
+        // of the component lifecycle.  Make sure they are not stale when
+        // composing text.
+        updateStylesIfChanged();
+                 
         // percentWidth and/or percentHeight will come back in as constraints
         // on the remeasure if we're autoSizing.
                           
@@ -2524,7 +2568,9 @@ public class RichEditableText extends UIComponent
              
              invalidateDisplayList();     
         }
-                                                            
+                                   
+        ignoreDamageEvent = false;
+        
         //trace("measure", measuredWidth, measuredHeight, "autoSize", autoSize);
     }
 
@@ -2536,6 +2582,11 @@ public class RichEditableText extends UIComponent
     {
         //trace("updateDisplayList", unscaledWidth, unscaledHeight, "autoSize", autoSize);
         
+        // Styles can be changed in event handlers while in the middle
+        // of the component lifecycle.  Make sure they are not stale when
+        // composing text.
+        updateStylesIfChanged();
+
         // Check if the auto-size text is constrained in some way and needs
         // to be remeasured.  If one of the dimension changes, the text may
         // compose differently and have a different size which the layout 
@@ -2570,9 +2621,6 @@ public class RichEditableText extends UIComponent
                                                 _selectionActivePosition);
             scrollAfterUpdate = false;                                                
         }
-                                                
-        widthConstraint = NaN;
-        heightConstraint = NaN;                   
     }
 
     /**
@@ -2589,7 +2637,8 @@ public class RichEditableText extends UIComponent
         
         ascent = NaN;
         descent = NaN;
-        hostFormat = null;
+
+        hostFormatChanged = true;
     }
 
     /**
@@ -2604,21 +2653,16 @@ public class RichEditableText extends UIComponent
     {
         super.styleChanged(styleProp);
 
-        if (styleProp == null || styleProp == "styleName" ||
-            styleProp == "fontFamily" || styleProp == "fontSize")
-        {
-            ascent = NaN;
-            descent = NaN;
-        }
-
         // If null or "styleName" is passed it indicates that
         // multiple styles may have changed.  Otherwise it is a single style
         // so mark whether it is the selectionFormat that changed or the
         // hostFormat that changed.
         if (styleProp == null || styleProp == "styleName")
         {
-            hostFormat = null;
+            hostFormatChanged = true;
             selectionFormatsChanged = true;
+            ascent = NaN;
+            descent = NaN;
         }
         else if (styleProp == "focusedTextSelectionColor" || 
                  styleProp == "unfocusedTextSelectionColor" ||
@@ -2628,7 +2672,14 @@ public class RichEditableText extends UIComponent
         }
         else
         {
-            hostFormat = null;
+            hostFormatChanged = true;
+            
+            if (styleProp.indexOf("font") == 0 || styleProp == "cffHinting")
+            {
+                // Regenerate font swfContext and metrics as well.
+                ascent = NaN;
+                descent = NaN;
+            }
         }
 
         // Need to create new format(s).
@@ -3129,6 +3180,50 @@ public class RichEditableText extends UIComponent
 
     /**
      *  @private
+     */
+    private function updateStylesIfChanged():void
+    {
+
+        if (hostFormatChanged)
+        {
+            // Side-effect is it marks the text as damaged.
+            _textContainerManager.hostFormat = new CSSTextLayoutFormat(this);
+                         
+            hostFormatChanged = false;
+        }
+        
+        if (isNaN(ascent) || isNaN(descent))
+        {
+            // If the CSS styles for this component specify an embedded font,
+            // embeddedFontContext will be set to the module factory that
+            // should create TextLines (since they must be created in the
+            // SWF where the embedded font is.)
+            // Otherwise, this will be null.
+            embeddedFontContext = getEmbeddedFontContext();
+            
+            _textContainerManager.swfContext =
+                ISWFContext(embeddedFontContext);                       
+
+            // Note: CSSTextLayoutFormat has special processing
+            // for the fontLookup style. If it is "auto",
+            // the fontLookup format is set to either
+            // "device" or "embedded" depending on whether
+            // embeddedFontContext is null or non-null.
+
+            // Recalcuate the ascent and descent.
+            calculateFontMetrics();    
+        }
+        
+        if (selectionFormatsChanged)
+        {
+            _textContainerManager.invalidateSelectionFormats();
+            
+            selectionFormatsChanged = false;
+        }
+    }
+    
+    /**
+     *  @private
      *  Uses the component's CSS styles to determine the module factory
      *  that should creates its TextLines.
      */
@@ -3249,8 +3344,11 @@ public class RichEditableText extends UIComponent
      */
     mx_internal function isMeasureFixed():Boolean
     {
-        if (!hostFormat || hostFormat.blockProgression != BlockProgression.TB)
+        if (_textContainerManager.hostFormat.blockProgression != 
+            BlockProgression.TB)
+        {
             return true;
+        }
             
         // Is there some sort of width and some sort of height?
         return  (!isNaN(explicitWidth) || !isNaN(_widthInChars) ||
@@ -3267,9 +3365,6 @@ public class RichEditableText extends UIComponent
      */
     private function measureTextSize(composeWidth:Number):Rectangle
     {             
-        // Don't want to trigger a another remeasure when we compose the text.
-        ignoreDamageEvent = true;
-
         // Adjust for explicit min/maxWidth so the measurement is accurate.
         if (isNaN(explicitWidth))
         {
@@ -3305,9 +3400,7 @@ public class RichEditableText extends UIComponent
             // is a place to put the insertion cursor.
             bounds.width = bounds.width + getStyle("fontSize");
        }
-       
-       ignoreDamageEvent = false;
-       
+
        //trace("measureTextSize", composeWidth, "->", bounds.width, bounds.height);
         
        return bounds;
@@ -3330,6 +3423,9 @@ public class RichEditableText extends UIComponent
         // remeasure which will reset autoSize.
         autoSize = false;
         
+        widthConstraint = NaN;
+        heightConstraint = NaN;
+        
         if (width != measuredWidth)
         {
             // Do we have a constrained width and an explicit height?
@@ -3342,7 +3438,7 @@ public class RichEditableText extends UIComponent
                 return false;
                                        
             // No reflow for explicit lineBreak
-            if (hostFormat.lineBreak == "explicit")
+            if (_textContainerManager.hostFormat.lineBreak == "explicit")
                 return false;
 
             widthConstraint = width;
@@ -3629,6 +3725,16 @@ public class RichEditableText extends UIComponent
         
         dispatchChangeAndChangingEvents = true;
     }
+
+	/**
+	 *  @private
+	 *  FIXME (gosmith).
+	 */
+	public function getTextInRange(startIndex:int = -1,
+								   endIndex:int = -1):String
+	{
+		return null;
+	}
             
     //--------------------------------------------------------------------------
     //
@@ -3933,7 +4039,8 @@ public class RichEditableText extends UIComponent
         //    set swfContext
         //    updateContainer or compose: always if TextFlowFactory, sometimes 
         //        if flowComposer
-
+        // or the textFlow can be modified directly.
+        
         // If no changes, don't recompose/update.  The TextFlowFactory 
         // createTextLines dispatches damage events every time the textFlow
         // is composed, even if there are no changes. 
@@ -3960,15 +4067,10 @@ public class RichEditableText extends UIComponent
         
         // We don't need to call invalidateProperties()
         // because the hostFormat and the _textFlow are still valid.
-        
-        // We don't need to call invalidateSize() for isMeasureFixed()
-        // because the width and height are still valid.  For the other cases,
-        // our override of EditManager.updateAllContainers(), will invalidate
-        // the size, if the content size has actually changed.
-            
-        // Style change by changing textFlow directly could change size.
-        if (_textContainerManager.hostFormat != _textFlow.hostFormat)
-            invalidateSize();
+                
+        // If the textFlow content is modified directly or if there is a style 
+        // change by changing the textFlow directly the size could change.
+        invalidateSize();
             
         invalidateDisplayList();
     }

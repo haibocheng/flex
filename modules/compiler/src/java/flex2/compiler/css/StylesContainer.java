@@ -41,6 +41,7 @@ import flex2.compiler.util.VelocityManager;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -66,7 +67,9 @@ public class StylesContainer extends StyleModule
 {
 	private static final String TEMPLATE_PATH = "flex2/compiler/css/";
 	private static final String ATEMBEDS_KEY = "atEmbeds";
-    private static final String STYLEDEF_KEY = "styleDef";
+    private static final String CLASSNAME_KEY = "className";
+    //private static final String PACKAGENAME_KEY = "packageName"; TODO: get packageName working
+    private static final String STYLEDEFLIST_KEY = "styleDefList";
 
     private static final String _FONTFACERULES = "_FontFaceRules";
 
@@ -75,7 +78,8 @@ public class StylesContainer extends StyleModule
     protected CompilationUnit compilationUnit;
     protected Set<String> localStyleTypeNames = new HashSet<String>();
     protected List<VirtualFile> implicitIncludes = new ArrayList<VirtualFile>();
-
+    protected StyleDefList lastStyleDefList;      // prevent generating the styles source unnecessarily
+    
     /**
      * Called by PreLink to load style declarations from defaults.css and
      * themes from SWCs.
@@ -133,12 +137,24 @@ public class StylesContainer extends StyleModule
     //--------------------------------------------------------------------------
 
     /**
-     * Generate style classes for components which we want to link in.
+     * Generate style classes for components which we want to link in. Called
+     * from PreLink.processMainUnit() Update for Flex4: Put all the style defs
+     * in one class instead of one class for each style def.
      * 
-     * Called from PreLink.processMainUnit()
+     * @param defNames
+     * @param resources
+     * @param packageName - package the className lives in. May be null for the default package.
+     * @param className - name of the application class with the package. This
+     * becomes the base of the generated style class name. If the class name if
+     * null, then no sources will be generated.
+     * @return
      */
-    public List<Source> processDependencies(Set<String> defNames, ResourceContainer resources)
+    public List<Source> processDependencies(Set<String> defNames, ResourceContainer resources, 
+                                            String packageName, String className)
     {
+        if (className == null)
+            return Collections.emptyList();
+
         List<Source> extraSources = new ArrayList<Source>();
 
         if (!fontFaceRules.isEmpty())
@@ -162,6 +178,7 @@ public class StylesContainer extends StyleModule
                 processedDefNames.add(defName.replaceFirst(".*:", ""));
         }
 
+        StyleDefList filteredStyleDefs = new StyleDefList();
         Iterator<Entry<String, StyleDef>> iterator = styleDefs.entrySet().iterator();
         while (iterator.hasNext())
         {
@@ -169,20 +186,28 @@ public class StylesContainer extends StyleModule
             String styleName = entry.getKey();
             StyleDef styleDef = entry.getValue();
             String typeName = StyleDef.dehyphenize(styleName);
-
-            if (!styleDef.isTypeSelector() ||
+            
+            if (!styleDef.isTypeSelector() || 
                 (processedDefNames.contains(typeName) ||
-                 mxmlConfiguration.keepAllTypeSelectors()) ||
+                mxmlConfiguration.keepAllTypeSelectors()) || 
                 styleName.equals(StyleDef.GLOBAL))
             {
-                String className = "_" + StyleDef.createTypeName(typeName) + "Style";
-                // C: mixins in the generated FlexInit class are referred to by
-                // "name". that's why extraClasses is necessary.
-                compilationUnit.extraClasses.add(className);
-                compilationUnit.mixins.add(className);
-
-                extraSources.add(generateStyleSource(styleDef, resources));
+                filteredStyleDefs.add(styleDef);
             }
+        }
+
+        if (filteredStyleDefs.size() > 0)
+        {
+            className = "_" + className + "_Styles";
+
+//            TODO: Get package name working.
+//            String qualifiedClassName = className;
+//            if (packageName != null && packageName.length() > 0)
+//                qualifiedClassName = packageName + "." + className;
+            
+            compilationUnit.extraClasses.add(className);
+            compilationUnit.mixins.add(className);
+            extraSources.add(generateStyleSource(filteredStyleDefs, resources, packageName, className));
         }
 
         return extraSources;
@@ -523,7 +548,7 @@ public class StylesContainer extends StyleModule
 			return null;
 		}
 
-	    return resources.addResource(createSource(genFileName, out));
+	    return resources.addResource(createSource(genFileName, out, Long.MAX_VALUE));
     }
 
     //--------------------------------------------------------------------------
@@ -532,7 +557,7 @@ public class StylesContainer extends StyleModule
     //
     //--------------------------------------------------------------------------
 
-    private Source createSource(String fileName, SourceCodeBuffer sourceCodeBuffer)
+    private Source createSource(String fileName, SourceCodeBuffer sourceCodeBuffer, long lastModifiedTime)
     {
         Source result = null;
 
@@ -552,7 +577,7 @@ public class StylesContainer extends StyleModule
                 }
             }
 
-            VirtualFile genFile = new TextFile(sourceCode, fileName, null, MimeMappings.AS, Long.MAX_VALUE);
+            VirtualFile genFile = new TextFile(sourceCode, fileName, null, MimeMappings.AS, lastModifiedTime);
             String shortName = fileName.substring(0, fileName.lastIndexOf('.'));
 
             result = new Source(genFile, "", shortName, null, false, false, false);
@@ -570,9 +595,10 @@ public class StylesContainer extends StyleModule
         return result;
     }
 
-    private Source generateStyleSource(StyleDef styleDef, ResourceContainer resources)
+    private Source generateStyleSource(StyleDefList styleDefList, ResourceContainer resources, 
+                                       String packageName, String className)
     {
-	    String genFileName = generateStyleSourceName(styleDef);
+	    String genFileName = generateStyleSourceName(packageName, className);
 	    Source styleSource = resources.findSource(genFileName);
 	    
 	    if (styleSource != null)
@@ -584,13 +610,20 @@ public class StylesContainer extends StyleModule
 	    	}
 	    	else 
 	    	{
-	    		// C: it is safe to return because this method deals with per-app styles, like defaults.css and themes.
-	    		//    ResourceContainer will not have anything if any of the theme files is touched.
-	    		return styleSource;
+	    	    // If the styles are the same as the last time we generated the source then return
+	    	    // the existing source. We can get called here multiple times while compiling the same file 
+	    	    // so this check keeps us from generating the same source each time. We will always generate
+	    	    // a new style file the first time we are called here because lastStyleDefList will be null.
+	    	    if (lastStyleDefList != null && lastStyleDefList.getStyleDefs().equals(styleDefList.getStyleDefs()))
+	    	    {
+	                return styleSource;	    	        
+	    	    }
 	    	}
 	    }
 
-		//	load template
+	    lastStyleDefList = styleDefList;
+	    
+	    //	load template
 
 	    Template template;
         StandardDefs standardDefs = ThreadLocalToolkit.getStandardDefs();
@@ -612,7 +645,9 @@ public class StylesContainer extends StyleModule
 		{
 			VelocityUtil util = new VelocityUtil(TEMPLATE_PATH, mxmlConfiguration.debug(), out, null);
 			VelocityContext vc = VelocityManager.getCodeGenContext(util);
-			vc.put(STYLEDEF_KEY, styleDef);
+			vc.put(STYLEDEFLIST_KEY, styleDefList);
+            // vc.put(PACKAGENAME_KEY, packageName); TODO: get packagename working
+			vc.put(CLASSNAME_KEY, className);
 			template.merge(vc, out);
 		}
 		catch (Exception e)
@@ -622,24 +657,30 @@ public class StylesContainer extends StyleModule
 			return null;
 		}
 
-	    return resources.addResource(createSource(genFileName, out));
+        // Set a last modified time so the old compilation unit will be thrown 
+		// out when we add our new source.
+	    return resources.addResource(createSource(genFileName, out, System.currentTimeMillis()));
     }
 
-    private String generateStyleSourceName(StyleDef styleDef)
+    private String generateStyleSourceName(String packageName, String className)
     {
         String genFileName;
         String genDir = mxmlConfiguration.getGeneratedDirectory();
-        String fileName = styleDef.getTypeName();
-        if (StyleDef.UNIVERSAL.equals(fileName))
-            fileName = StyleDef.GLOBAL;
 
         if (genDir != null)
         {
-            genFileName = genDir + File.separatorChar + "_" + fileName + "Style.as";
+            genFileName = genDir + File.separatorChar + className + ".as";
+//                          TODO: get packageName working            
+//                          File.separatorChar + 
+//                          packageName.replace('.', File.separatorChar ) +
+//                          File.separatorChar + className + ".as";
         }
         else
         {
-            genFileName = "_" + fileName + "Style.as";
+            genFileName = className + ".as";
+//              TODO: get packageName working            
+//                packageName.replace('.', File.separatorChar) +
+//                          File.separatorChar + className + ".as";
         }
 
         return genFileName;
@@ -763,6 +804,89 @@ public class StylesContainer extends StyleModule
         }
 
         return compilationUnit.getSource().getName();
+    }
+
+    /**
+     * Simple class that contains a list of StyleDefs. This class is only used
+     * to temporary contain a list of style defs that we will pass to the
+     * StyleDef velocity template to generate the style code. The StyleDef
+     * template now generates code for a list of styles in one class instead of
+     * a class for every style. The API is minimal to just add entries to the
+     * list and to satisfy the needs of StyleDef.vm. For example the is an "add"
+     * method but no "remove" or "clear". This is because the whole list is
+     * garbage collected after it is used.
+     */
+    public class StyleDefList
+    {
+        List<StyleDef> styleDefs;
+
+        public StyleDefList()
+        {
+            styleDefs = new ArrayList<StyleDef>();
+        }
+
+        public List<StyleDef> getStyleDefs()
+        {
+            return styleDefs;
+        }
+
+        public void add(StyleDef styleDef)
+        {
+            styleDefs.add(styleDef);
+        }
+
+        public int size()
+        {
+            return styleDefs.size();
+        }
+
+        public boolean isAdvanced()
+        {
+            for (StyleDef styleDef : styleDefs)
+            {
+                if (styleDef.isAdvanced())
+                    return true;
+            }
+
+            return false;
+        }
+
+        public boolean getAllowDuplicateDefaultStyleDeclarations()
+        {
+            for (StyleDef styleDef : styleDefs)
+            {
+                if (styleDef.getAllowDuplicateDefaultStyleDeclarations())
+                    return true;
+            }
+
+            return false;
+        }
+        
+        /**
+         * @return imports with duplicates removed. 
+         */
+        public Set<Import> getImports()
+        {
+            Set<Import> result = new HashSet<Import>();
+
+            for (StyleDef styleDef : styleDefs)
+                result.addAll(styleDef.getImports());
+            
+            return result;            
+        }
+
+        /**
+         * @return AtEmbeds with duplicates removed.
+         */
+        public Set<AtEmbed> getAtEmbeds()
+        {
+            Set<AtEmbed> result = new HashSet<AtEmbed>();
+
+            for (StyleDef styleDef : styleDefs)
+                result.addAll(styleDef.getAtEmbeds());
+            
+            return result;            
+        }        
     }
     
     public static class DefaultCSSFileNotFound extends CompilerWarning

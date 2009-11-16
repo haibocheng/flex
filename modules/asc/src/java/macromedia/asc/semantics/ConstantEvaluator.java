@@ -1185,7 +1185,8 @@ public final class ConstantEvaluator extends Emitter implements Evaluator, Error
                 TypeInfo[] actual = new TypeInfo[]{null};
                 node.base = cx.coerce(node.base,actual,cx.noType().getDefaultTypeInfo(),false,true);
                 type = cx.noType().getDefaultTypeInfo();
-                node.ref.setBase(type.getPrototype());
+                if ( node.ref != null )
+                    node.ref.setBase(type.getPrototype());
             }
             else
                 type = base.getType(cx);
@@ -2600,20 +2601,22 @@ public final class ConstantEvaluator extends Emitter implements Evaluator, Error
             type = cx.noType().getDefaultTypeInfo();
         }
 
-        if( node.initializer != null && slot != null && (node.kind == CONST_TOKEN || // only class member's
-                slot.declaredBy.builder instanceof InstanceBuilder ||
-                slot.declaredBy.builder instanceof ClassBuilder ) )
+        // NOTE the effect of this code is that const vars (global, static, and instance) get
+        // initialized when the frame is created before their initializers actually occur in
+        // the statement list. This is akin to hoisting functions in local blocks (but ironically
+        // local consts are not hoisted in the same way)
+        if( node.initializer != null && slot != null && node.kind == CONST_TOKEN)
         {
-        	if( cx.statics.es4_nullability && cx.scope().builder instanceof InstanceBuilder )
-        	{
-        		// Initializers for instance variables should not have access to this.
-        		cx.scope().setInitOnly(true);
-        	}
+            if( cx.statics.es4_nullability && cx.scope().builder instanceof InstanceBuilder )
+            {
+                // Initializers for instance variables should not have access to this.
+                cx.scope().setInitOnly(true);
+            }
             Value val = node.initializer.evaluate(cx,this);
-        	if( cx.statics.es4_nullability && cx.scope().builder instanceof InstanceBuilder )
-        	{
-        		cx.scope().setInitOnly(false);
-        	}
+            if( cx.statics.es4_nullability && cx.scope().builder instanceof InstanceBuilder )
+            {
+                cx.scope().setInitOnly(false);
+            }
             val = val != null ? val.getValue(cx) : null;
             if( val instanceof ObjectValue && ((ObjectValue)val).hasValue())
             {

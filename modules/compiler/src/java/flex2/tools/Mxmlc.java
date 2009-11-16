@@ -148,6 +148,7 @@ public final class Mxmlc extends Tool
             // load SWCs
             CompilerSwcContext swcContext = new CompilerSwcContext();
             SwcCache cache = new SwcCache();
+            
             // lazy read should only be set by mxmlc/compc
             cache.setLazyRead(true);
 

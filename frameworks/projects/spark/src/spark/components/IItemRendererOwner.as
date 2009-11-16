@@ -39,7 +39,7 @@ public interface IItemRendererOwner
      *  The String is written to the <code>labelText</code>
      *  property of the item renderer.
      *
-     *  @param item The date item to display.
+     *  @param item The data item to display.
      *
      *  @return The String for display in an item renderer.
      *  
@@ -52,17 +52,22 @@ public interface IItemRendererOwner
     
     /**
      *  Updates the renderer for re-use. This first prepares the item
-     *  renderer for re-use by clearning out any stale properties
-     *  as well as updating it with new properties.    
+     *  renderer for re-use by cleaning out any stale properties
+     *  as well as updating it with new properties.
+     * 
+     *  <p>The last thing this method should do is set the data property 
+     *  on the renderer.</p>    
      *
      *  @param renderer The item renderer.
+     *  @param itemIndex The index of the data in the data provider
+     *  @param data The data object this item renderer is representing
      *  
      *  @langversion 3.0
      *  @playerversion Flash 10
      *  @playerversion AIR 1.5
      *  @productversion Flex 4
      */
-    function updateRenderer(renderer:IVisualElement):void;  
+    function updateRenderer(renderer:IVisualElement, itemIndex:int, data:Object):void;  
 
 }   
 }

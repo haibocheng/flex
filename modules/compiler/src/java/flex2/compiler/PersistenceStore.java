@@ -11,9 +11,34 @@
 
 package flex2.compiler;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.RandomAccessFile;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
+
+import macromedia.asc.util.IntegerPool;
 import flash.fonts.FontManager;
 import flash.localization.LocalizationManager;
-import flash.swf.*;
+import flash.swf.CompressionLevel;
+import flash.swf.Frame;
+import flash.swf.Movie;
+import flash.swf.MovieDecoder;
+import flash.swf.MovieEncoder;
+import flash.swf.Tag;
+import flash.swf.TagDecoder;
+import flash.swf.TagEncoder;
 import flash.swf.tags.DefineFont;
 import flash.swf.tags.DefineTag;
 import flash.swf.types.Rect;
@@ -23,14 +48,12 @@ import flex2.compiler.io.DeletedFile;
 import flex2.compiler.io.FileUtil;
 import flex2.compiler.io.ResourceFile;
 import flex2.compiler.io.VirtualFile;
-import flex2.compiler.util.*;
-import flex2.compiler.ResourceBundlePath;
-
-import java.io.*;
-import java.util.*;
-import java.util.Map.Entry;
-
-import macromedia.asc.util.IntegerPool;
+import flex2.compiler.util.CompilerMessage;
+import flex2.compiler.util.LocalLogger;
+import flex2.compiler.util.MultiName;
+import flex2.compiler.util.QName;
+import flex2.compiler.util.ThreadLocalToolkit;
+import flex2.compiler.util.LocalLogger.Warning;
 
 /**
  * @author Clement Wong
@@ -39,7 +62,7 @@ final class PersistenceStore
 {
 	// C: If you update the encoding/decoding algorithm, please increment the minor version by 1. Thanks.
 	private static final int major_version = 4;
-	private static final int minor_version = 3;
+	private static final int minor_version = 4;
 
 	PersistenceStore(Configuration configuration, RandomAccessFile file)
 	{
@@ -62,6 +85,136 @@ final class PersistenceStore
 	private final ArrayKey key;
     private final FontManager fontManager;
 
+    /**
+     * An input stream that reads from another input stream, but sets a
+     * limit on how much data it will read.
+     * 
+     * <p>Calls to close() do not close the parent InputStream.
+     */
+    private static class SizeLimitingInputStream extends InputStream {
+		private InputStream in;
+		private int max;
+
+    	public SizeLimitingInputStream(InputStream in, int max) {
+    		this.in = in;
+    		this.max = max;
+    	}
+
+		@Override
+		public int read() throws IOException {
+			if (max == 0)
+				return -1;
+			--max;
+			return in.read();
+		}
+
+    	@Override
+		public int read(byte[] b, int off, int len) throws IOException {
+    		len = Math.min(len, max);
+    		max -= len;
+    		return in.read(b, off, len);
+		}
+
+		@Override
+		public int read(byte[] b) throws IOException {
+			return read(b, 0, b.length);
+		}
+
+		@Override
+		public int available() throws IOException {
+			return Math.min(max, in.available());
+		}
+
+		@Override
+		public void close() throws IOException {
+			// ignore
+		}
+
+		@Override
+		public synchronized void mark(int readLimit) {
+			in.mark(readLimit);
+		}
+
+		@Override
+		public boolean markSupported() {
+			return false;
+		}
+
+		@Override
+		public synchronized void reset() throws IOException {
+			in.reset();
+		}
+
+		@Override
+		public long skip(long n) throws IOException {
+			n = Math.min(n, max);
+			max -= n;
+			return in.skip(n);
+		}
+
+		/**
+		 * Skips forward to the end of the size limit that had been
+		 * specified when this SizeLimitingInputStream was created.
+		 */
+		public void skipToEnd() throws IOException {
+			skip(max);
+		}
+    }
+
+    /**
+     * An InputStream that reads from a RandomAccessFile.  Calls to close()
+     * do not close the parent RandomAccessFile.
+     */
+    private static class RandomAccessFileInputStream extends InputStream {
+		private RandomAccessFile raf;
+
+    	public RandomAccessFileInputStream(RandomAccessFile raf) {
+    		this.raf = raf;
+    	}
+
+		@Override
+		public int read() throws IOException {
+			return raf.read();
+		}
+
+    	@Override
+		public int read(byte[] b, int off, int len) throws IOException {
+    		return raf.read(b, off, len);
+		}
+
+		@Override
+		public int read(byte[] b) throws IOException {
+			return raf.read(b);
+		}
+    }
+
+    /**
+     * An OutputStream that writes to a RandomAccessFile.  Calls to close()
+     * do not close the parent RandomAccessFile.
+     */
+    private static class RandomAccessFileOutputStream extends OutputStream {
+		private RandomAccessFile raf;
+
+		public RandomAccessFileOutputStream(RandomAccessFile raf) {
+    		this.raf = raf;
+    	}
+
+		@Override
+		public void write(int b) throws IOException {
+			raf.write(b);
+		}
+
+		@Override
+		public void write(byte[] b, int off, int len) throws IOException {
+			raf.write(b, off, len);
+		}
+
+    	@Override
+		public void write(byte[] b) throws IOException {
+    		raf.write(b);
+		}
+    }
+   
 	int write(FileSpec fileSpec,
 			  SourceList sourceList,
 			  SourcePath sourcePath,
@@ -78,47 +231,55 @@ final class PersistenceStore
 	          Map<String, Long> archiveFileChecksums,
 	          String description) throws IOException
 	{
-	    Map<Object, Integer> pool = new HashMap<Object,Integer>();
+	    Map<Object, Integer> pool = new HashMap<Object, Integer>();
 
-		ByteArrayOutputStream fs = new ByteArrayOutputStream();
-		ByteArrayOutputStream sl = new ByteArrayOutputStream();
-		ByteArrayOutputStream sp = new ByteArrayOutputStream();
-		ByteArrayOutputStream rbp = new ByteArrayOutputStream();
-		ByteArrayOutputStream src = new ByteArrayOutputStream();
-		ByteArrayOutputStream cu = new ByteArrayOutputStream();
-		ByteArrayOutputStream cp = new ByteArrayOutputStream();
-		ByteArrayOutputStream h = new ByteArrayOutputStream();
-		ByteArrayOutputStream s = new ByteArrayOutputStream();
-		ByteArrayOutputStream cs1 = new ByteArrayOutputStream();
-		ByteArrayOutputStream cs2 = new ByteArrayOutputStream();
-        ByteArrayOutputStream af = new ByteArrayOutputStream();
+		BufferedOutputStream out = new BufferedOutputStream(new RandomAccessFileOutputStream(file));
 
-		writeHeader(checksum, cmd_checksum, linker_checksum, swc_checksum, description, h);
-		if (fileSpec != null)
-		{
-			writeFileSpec(fileSpec, pool, fs);
-		}
-		if (sourceList != null)
-		{
-			writeSourceList(sourceList, pool, sl);
-		}
-		if (sourcePath != null)
-		{
-			writeSourcePath(sourcePath, pool, sp);
-		}
+		writeHeader(checksum, cmd_checksum, linker_checksum, swc_checksum, description, out);
+
+		out.flush();
+		long offsetOfPointerToConstantPool = file.getFilePointer();
+		file.writeLong(0); // a dummy value for the pointer to the constant pool; will be replaced later
+
+		writeFileSpec(fileSpec, pool, out);
+
+		writeSourceList(sourceList, pool, out);
+
+		writeSourcePath(sourcePath, pool, out);
+
 		// C: There is no need to have writeResourceContainer() because it has nothing we need to persist.
 		// writeResourceContainer(resources, pool);
-		if (bundlePath != null)
-		{
-			writeResourceBundlePath(bundlePath, pool, rbp);
-		}
+
+		writeResourceBundlePath(bundlePath, pool, out);
 
 		int count = (sources == null) ? 0 : sources.size();
+		writeU32(out, count);
 		if (sources != null)
 		{
-			writeSourceNames(sources, pool, s);
+			writeSourceNames(sources, pool, out);
 		}
-		
+
+		int defCount = swcDefSignatureChecksums == null ? 0 : swcDefSignatureChecksums.size();
+		writeU32(out, defCount);
+		if (swcDefSignatureChecksums != null)
+		{
+			writeSwcDefSignatureChecksums(swcDefSignatureChecksums, pool, out);
+		}
+
+		int fileCount = swcFileChecksums == null ? 0 : swcFileChecksums.size();
+		writeU32(out, fileCount);
+		if (swcFileChecksums != null)
+		{
+			writeFileChecksums(swcFileChecksums, pool, out);
+		}
+
+		int archiveFileCount = archiveFileChecksums == null ? 0 : archiveFileChecksums.size();
+		writeU32(out, archiveFileCount);
+		if (archiveFileChecksums != null)
+		{
+			writeFileChecksums(archiveFileChecksums, pool, out);
+		}
+
 		Collection<Source>  c1 = fileSpec   == null ? Collections.<Source>emptyList()        : fileSpec.sources();
 		Collection<Source>  c2 = sourceList == null ? Collections.<Source>emptyList()        : sourceList.sources();
 		Map<String, Source> c3 = sourcePath == null ? Collections.<String, Source>emptyMap() : sourcePath.sources();
@@ -127,89 +288,47 @@ final class PersistenceStore
 
 		int totalCount = c1.size() + c2.size() + c3.size() + c4.size() + c5.size();
 
-		writeCompilationUnits(c1, pool, src, cu);
-		writeCompilationUnits(c2, pool, src, cu);
-		writeCompilationUnits(c3.values(), pool, src, cu);
-		writeCompilationUnits(c5.values(), pool, src, cu);
-		writeCompilationUnits(c4, pool, src, cu);
+		writeU32(out, totalCount);
+		writeCompilationUnits(c1,          pool, out);
+		writeCompilationUnits(c2,          pool, out);
+		writeCompilationUnits(c3.values(), pool, out);
+		writeCompilationUnits(c5.values(), pool, out);
+		writeCompilationUnits(c4,          pool, out);
 
-		if (swcDefSignatureChecksums != null)
-		{
-			writeSwcDefSignatureChecksums(swcDefSignatureChecksums, pool, cs1);
-		}
-		
-		if (swcFileChecksums != null)
-		{
-			writeFileChecksums(swcFileChecksums, pool, cs2);
-		}
-		
-		if (archiveFileChecksums != null)
-		{
-		    writeFileChecksums(archiveFileChecksums, pool, af);
-		}
-		
-		writeConstantPool(pool, cp);
+		// go back to near the beginning, and write out the location of the constant pool
+		out.flush();
+		long offsetOfConstantPool = file.getFilePointer();
+		file.seek(offsetOfPointerToConstantPool);
+		file.writeLong(offsetOfConstantPool);
+		file.seek(offsetOfConstantPool);
 
-		file.write(h.toByteArray());
+		writeConstantPool(pool, out);
 
-		file.writeInt(cp.size());
-		file.write(cp.toByteArray());
-		
-		file.writeInt(fs.size());
-		file.write(fs.toByteArray());
-
-		file.writeInt(sl.size());
-		file.write(sl.toByteArray());
-
-		file.writeInt(sp.size());
-		file.write(sp.toByteArray());
-
-		file.writeInt(rbp.size());
-		file.write(rbp.toByteArray());
-
-		file.writeInt(count);
-		file.write(s.toByteArray());
-
-		file.writeInt(swcDefSignatureChecksums == null ? 0 : swcDefSignatureChecksums.size());
-		file.write(cs1.toByteArray());
-
-		file.writeInt(swcFileChecksums == null ? 0 : swcFileChecksums.size());
-		file.write(cs2.toByteArray());
-
-        file.writeInt(archiveFileChecksums == null ? 0 : archiveFileChecksums.size());
-        file.write(af.toByteArray());
-
-		file.writeInt(totalCount);
-		file.writeInt(src.size());
-		file.writeInt(cu.size());
-
-		file.write(src.toByteArray());
-		file.write(cu.toByteArray());
-
+		out.flush();
 		return totalCount;
 	}
 
 	private void writeSwcDefSignatureChecksums(Map<QName, Long> swcDefSignatureChecksums,
 											   Map<Object, Integer> pool,
-											   OutputStream cs1) throws IOException
+											   OutputStream out) throws IOException
 	{
-		for (Iterator i = swcDefSignatureChecksums.keySet().iterator(); i.hasNext(); )
+		for (Iterator<QName> i = swcDefSignatureChecksums.keySet().iterator(); i.hasNext(); )
 		{
-			QName qName = (QName) i.next();
-			Long ts = (Long) swcDefSignatureChecksums.get(qName);
-			writeU32(cs1, addQName(pool, qName));
-			writeLong(cs1, ts.longValue());
+			QName qName = i.next();
+			Long ts = swcDefSignatureChecksums.get(qName);
+			writeU32(out, addQName(pool, qName));
+			writeLong(out, ts.longValue());
 		}
 	}
 
-    private void writeFileChecksums(Map m, Map<Object, Integer> pool, OutputStream os) throws IOException
+    private void writeFileChecksums(Map<String, Long> m, Map<Object, Integer> pool, OutputStream out) throws IOException
 	{
-        for (Iterator i = m.keySet().iterator(); i.hasNext();)
+        for (Iterator<String> i = m.keySet().iterator(); i.hasNext();)
 		{
-			String fileName = (String) i.next();
-            Long ts = (Long) m.get(fileName);
-            writeU32(os, addString(pool, fileName));
-            writeLong(os, ts.longValue());
+			String fileName = i.next();
+            Long ts = m.get(fileName);
+            writeU32(out, addString(pool, fileName));
+            writeLong(out, ts.longValue());
 		}
 	}
 
@@ -235,15 +354,15 @@ final class PersistenceStore
 
 	private void writeConstantPool(Map<Object, Integer> pool, OutputStream out) throws IOException
 	{
-        // invert the map and sort the pool Objects on Integer
-        final TreeMap<Integer, Object> sortedPool = new TreeMap<Integer, Object>();
-        for (Entry<Object, Integer> e : pool.entrySet())
-        {
-            sortedPool.put(e.getValue(), e.getKey());
-        }
+		// invert the map
+		Object[] values = new Object[pool.size()];
+		for (Map.Entry<Object, Integer> entry: pool.entrySet()) {
+			int index = entry.getValue();
+			values[index] = entry.getKey();
+		}
 
-        writeU32(out, sortedPool.size());
-        for (Object value : sortedPool.values())
+        writeU32(out, pool.size());
+        for (Object value : values)
         {
 			if (value instanceof String)
 			{
@@ -355,310 +474,326 @@ final class PersistenceStore
 		}
 	}
 
-	private void writeFileSpec(FileSpec fileSpec, Map<Object, Integer> pool, OutputStream fs) throws IOException
+	private void writeFileSpec(FileSpec fileSpec, Map<Object, Integer> pool, OutputStream out) throws IOException
 	{
+		writeU8(out, fileSpec != null ? 1 : 0);
+		if (fileSpec == null)
+			return;
+
 		String[] mimeTypes = fileSpec.getMimeTypes();
-		Collection sources = fileSpec.sources();
+		Collection<Source> sources = fileSpec.sources();
 
-		writeU32(fs, mimeTypes.length);
+		writeU32(out, mimeTypes.length);
 
 		for (int i = 0, length = mimeTypes.length; i < length; i++)
 		{
-			writeU32(fs, addString(pool, mimeTypes[i]));
+			writeU32(out, addString(pool, mimeTypes[i]));
 		}
 
-		writeU32(fs, sources.size());
+		writeU32(out, sources.size());
 
-		for (Iterator i = sources.iterator(); i.hasNext();)
+		for (Iterator<Source> i = sources.iterator(); i.hasNext();)
 		{
-			Source s = (Source) i.next();
-			writeU32(fs, addString(pool, s.getName()));
+			Source s = i.next();
+			writeU32(out, addString(pool, s.getName()));
 		}
 	}
 
-	private void writeSourceList(SourceList sourceList, Map<Object, Integer> pool, OutputStream sl) throws IOException
+	private void writeSourceList(SourceList sourceList, Map<Object, Integer> pool, OutputStream out) throws IOException
 	{
+		writeU8(out, sourceList != null ? 1 : 0);
+		if (sourceList == null)
+			return;
+
 		String[] mimeTypes = sourceList.getMimeTypes();
-		List paths = sourceList.getPaths();
-		Collection sources = sourceList.sources();
+		List<File> paths = sourceList.getPaths();
+		Collection<Source> sources = sourceList.sources();
 
-		writeU32(sl, mimeTypes.length);
+		writeU32(out, mimeTypes.length);
 
 		for (int i = 0, length = mimeTypes.length; i < length; i++)
 		{
-			writeU32(sl, addString(pool, mimeTypes[i]));
+			writeU32(out, addString(pool, mimeTypes[i]));
 		}
 
-		writeU32(sl, paths.size());
+		writeU32(out, paths.size());
 
 		for (int i = 0, length = paths.size(); i < length; i++)
 		{
-			writeU32(sl, addString(pool, FileUtil.getCanonicalPath((File) paths.get(i))));
+			writeU32(out, addString(pool, FileUtil.getCanonicalPath(paths.get(i))));
 		}
 
-		writeU32(sl, sources.size());
+		writeU32(out, sources.size());
 
-		for (Iterator i = sources.iterator(); i.hasNext();)
+		for (Iterator<Source> i = sources.iterator(); i.hasNext();)
 		{
-			Source s = (Source) i.next();
-			writeU32(sl, addString(pool, s.getName()));
+			Source s = i.next();
+			writeU32(out, addString(pool, s.getName()));
 		}
 	}
 
-	private void writeSourcePath(SourcePath sourcePath, Map<Object, Integer> pool, OutputStream sp) throws IOException
+	private void writeSourcePath(SourcePath sourcePath, Map<Object, Integer> pool, OutputStream out) throws IOException
 	{
+		writeU8(out, sourcePath != null ? 1 : 0);
+		if (sourcePath == null)
+			return;
+
 		String[] mimeTypes = sourcePath.getMimeTypes();
-		List paths = sourcePath.getPaths();
-		Map sources = sourcePath.sources();
+		List<File> paths = sourcePath.getPaths();
+		Map<String, Source> sources = sourcePath.sources();
 
-		writeU32(sp, mimeTypes.length);
+		writeU32(out, mimeTypes.length);
 
 		for (int i = 0, length = mimeTypes.length; i < length; i++)
 		{
-			writeU32(sp, addString(pool, mimeTypes[i]));
+			writeU32(out, addString(pool, mimeTypes[i]));
 		}
 
-		writeU32(sp, paths.size());
+		writeU32(out, paths.size());
 
 		for (int i = 0, length = paths.size(); i < length; i++)
 		{
-			writeU32(sp, addString(pool, FileUtil.getCanonicalPath((File) paths.get(i))));
+			writeU32(out, addString(pool, FileUtil.getCanonicalPath(paths.get(i))));
 		}
 
-		writeU32(sp, sources.size());
+		writeU32(out, sources.size());
 
-		for (Iterator i = sources.keySet().iterator(); i.hasNext();)
+		for (Iterator<String> i = sources.keySet().iterator(); i.hasNext();)
 		{
-			String className = (String) i.next();
-			Source s = (Source) sources.get(className);
+			String className = i.next();
+			Source s = sources.get(className);
 
-			writeU32(sp, addString(pool, className));
-			writeU32(sp, addString(pool, s.getName()));
+			writeU32(out, addString(pool, className));
+			writeU32(out, addString(pool, s.getName()));
 		}
 	}
 
-	private void writeResourceBundlePath(ResourceBundlePath bundlePath, Map<Object, Integer> pool, OutputStream sp) throws IOException
+	private void writeResourceBundlePath(ResourceBundlePath bundlePath, Map<Object, Integer> pool, OutputStream out) throws IOException
 	{
+		writeU8(out, bundlePath != null ? 1 : 0);
+		if (bundlePath == null)
+			return;
+
 		String[] mimeTypes = bundlePath.getMimeTypes();
 		String[] locales = bundlePath.getLocales();
-		Map rbDirectories = bundlePath.getResourceBundlePaths();
-		Map sources = bundlePath.sources();
+		Map<String, List<File>> rbDirectories = bundlePath.getResourceBundlePaths();
+		Map<String, Source> sources = bundlePath.sources();
 
-		writeU32(sp, mimeTypes.length);
+		writeU32(out, mimeTypes.length);
 
 		for (int i = 0, length = mimeTypes.length; i < length; i++)
 		{
-			writeU32(sp, addString(pool, mimeTypes[i]));
+			writeU32(out, addString(pool, mimeTypes[i]));
 		}
 		
-		writeU32(sp, locales == null ? 0 : locales.length);
+		writeU32(out, locales == null ? 0 : locales.length);
 
 		for (int i = 0, length = locales == null ? 0 : locales.length; i < length; i++)
 		{
-			writeU32(sp, addString(pool, locales[i]));
+			writeU32(out, addString(pool, locales[i]));
 			
-			List paths = (List) rbDirectories.get(locales[i]);
+			List<File> paths = rbDirectories.get(locales[i]);
 			
-			writeU32(sp, paths == null ? 0 : paths.size());
+			writeU32(out, paths == null ? 0 : paths.size());
 
 			for (int j = 0, size = paths.size(); j < size; j++)
 			{
-				writeU32(sp, addString(pool, FileUtil.getCanonicalPath((File) paths.get(j))));
+				writeU32(out, addString(pool, FileUtil.getCanonicalPath(paths.get(j))));
 			}
 		}
 
-		writeU32(sp, sources.size());
+		writeU32(out, sources.size());
 
-		for (Iterator i = sources.keySet().iterator(); i.hasNext();)
+		for (Iterator<String> i = sources.keySet().iterator(); i.hasNext();)
 		{
-			String bundleName = (String) i.next();
-			Source s = (Source) sources.get(bundleName);
+			String bundleName = i.next();
+			Source s = sources.get(bundleName);
 
-			writeU32(sp, addString(pool, bundleName));
-			writeU32(sp, addString(pool, s.getName()));
+			writeU32(out, addString(pool, bundleName));
+			writeU32(out, addString(pool, s.getName()));
 			
 			ResourceFile rf = (ResourceFile) s.getBackingFile();
 			VirtualFile[] rFiles = rf.getResourceFiles();
 			VirtualFile[] rRoots = rf.getResourcePathRoots();
 			
-			writeU32(sp, rFiles.length);			
+			writeU32(out, rFiles.length);			
 			for (int j = 0, size = rFiles.length; j < size; j++)
 			{
-				writeU32(sp, addString(pool, rFiles[j] != null ? rFiles[j].getName() : "null"));
-				writeU32(sp, addString(pool, rRoots[j] != null ? rRoots[j].getName() : "null"));
+				writeU32(out, addString(pool, rFiles[j] != null ? rFiles[j].getName() : "null"));
+				writeU32(out, addString(pool, rRoots[j] != null ? rRoots[j].getName() : "null"));
 			}
 		}
 	}
 
-	private void writeCompilationUnits(Collection<Source> sources, Map<Object, Integer> pool, OutputStream src, OutputStream cu) throws IOException
+	private void writeCompilationUnits(Collection<Source> sources, Map<Object, Integer> pool, OutputStream out) throws IOException
 	{
 		for (Source s : sources)
         {
-			writeSource(s, pool, src);
+			writeSource(s, pool, out);
 
 			CompilationUnit u = s.getCompilationUnit();
 			if (u != null)
 			{
-				writeCompilationUnit(u, pool, cu);
+				writeCompilationUnit(u, pool, out);
 			}
 		}
 	}
 
-	private void writeSource(Source s, Map<Object, Integer> pool, OutputStream src) throws IOException
+	private void writeSource(Source s, Map<Object, Integer> pool, OutputStream out) throws IOException
 	{
 	    final CompilationUnit unit = s.getCompilationUnit();
 	    final boolean hasUnit = (unit != null);
 
-        writeU32(src, addString(pool, s.getName()));
-		writeU32(src, addString(pool, s.getRelativePath()));
-		writeU32(src, addString(pool, s.getShortName()));
+        writeU32(out, addString(pool, s.getName()));
+		writeU32(out, addString(pool, s.getRelativePath()));
+		writeU32(out, addString(pool, s.getShortName()));
 		if (s.isFileSpecOwner())
 		{
-			writeU8(src, 0);
+			writeU8(out, 0);
 		}
 		else if (s.isSourceListOwner())
 		{
-			writeU8(src, 1);
-			writeU32(src, addString(pool, s.getPathRoot().getName()));
+			writeU8(out, 1);
+			writeU32(out, addString(pool, s.getPathRoot().getName()));
 		}
 		else if (s.isSourcePathOwner())
 		{
-			writeU8(src, 2);
-			writeU32(src, addString(pool, s.getPathRoot().getName()));
+			writeU8(out, 2);
+			writeU32(out, addString(pool, s.getPathRoot().getName()));
 		}
 		else if (s.isResourceContainerOwner())
 		{
-			writeU8(src, 3);
+			writeU8(out, 3);
 		}
 		else //if (s.isResourceBundlePathOwner())
 		{
-			writeU8(src, 4);
-			writeU32(src, addString(pool, s.getPathRoot().getName()));
+			writeU8(out, 4);
+			writeU32(out, addString(pool, s.getPathRoot().getName()));
 		}
 
-		writeU8(src, s.isInternal() ? 1 : 0);
-		writeU8(src, s.isRoot() ? 1 : 0);
-		writeU8(src, s.isDebuggable() ? 1 : 0);
-        writeU8(src, hasUnit ? 1 : 0);
-		writeLong(src, s.getFileTime());
+		writeU8(out, s.isInternal() ? 1 : 0);
+		writeU8(out, s.isRoot() ? 1 : 0);
+		writeU8(out, s.isDebuggable() ? 1 : 0);
+        writeU8(out, hasUnit ? 1 : 0);
+		writeLong(out, s.getFileTime());
 
         // signatures
         {
     		final boolean hasSignatureChecksum = hasUnit && unit.hasSignatureChecksum();
-            writeU8(src, (hasSignatureChecksum ? 1 : 0));
+            writeU8(out, (hasSignatureChecksum ? 1 : 0));
             if (hasSignatureChecksum)
             {
                 final Long signatureChecksum = unit.getSignatureChecksum();
-                writeLong(src, signatureChecksum.longValue());
+                writeLong(out, signatureChecksum.longValue());
                 // SignatureExtension.debug("WRITE     CRC32: " + signatureChecksum + "\t--> " + s.getName());
             }
         }
 
-		writeU32(src, s.getFileIncludeSize());
-		for (Iterator j = s.getFileIncludes(); j.hasNext();)
+		writeU32(out, s.getFileIncludeSize());
+		for (Iterator<VirtualFile> j = s.getFileIncludes(); j.hasNext();)
 		{
-			VirtualFile f = (VirtualFile) j.next();
+			VirtualFile f = j.next();
 
-			writeU32(src, addString(pool, f.getName()));
-			writeLong(src, s.getFileIncludeTime(f));
+			writeU32(out, addString(pool, f.getName()));
+			writeLong(out, s.getFileIncludeTime(f));
 		}
 
-		List warnings = null;
+		List<Warning> warnings = null;
 		if (s.getLogger() != null && (warnings = s.getLogger().getWarnings()) != null)
 		{
-			writeU32(src, warnings.size());
+			writeU32(out, warnings.size());
 		}
 		else
 		{
-			writeU32(src, 0);
+			writeU32(out, 0);
 		}
 
 		for (int i = 0, size = warnings == null ? 0 : warnings.size(); i < size; i++)
 		{
-			LocalLogger.Warning w = (LocalLogger.Warning) warnings.get(i);
-			writeU32(src, addString(pool, w.path == null ? "" : w.path));
-			writeU32(src, addString(pool, w.warning == null ? "" : w.warning));
-			writeU32(src, addString(pool, w.source == null ? "" : w.source));
-			writeU32(src, w.line == null ? -1 : w.line.intValue());
-			writeU32(src, w.col == null ? -1 : w.col.intValue());
-			writeU32(src, w.errorCode == null ? -1 : w.errorCode.intValue());
+			LocalLogger.Warning w = warnings.get(i);
+			writeU32(out, addString(pool, w.path == null ? "" : w.path));
+			writeU32(out, addString(pool, w.warning == null ? "" : w.warning));
+			writeU32(out, addString(pool, w.source == null ? "" : w.source));
+			writeU32(out, w.line == null ? -1 : w.line.intValue());
+			writeU32(out, w.col == null ? -1 : w.col.intValue());
+			writeU32(out, w.errorCode == null ? -1 : w.errorCode.intValue());
 		}
 	}
 
-	private void writeCompilationUnit(CompilationUnit u, Map<Object, Integer> pool, OutputStream cu) throws IOException
+	private void writeCompilationUnit(CompilationUnit u, Map<Object, Integer> pool, OutputStream out) throws IOException
 	{
-		writeU32(cu, addBytes(pool, u.bytes.toByteArray()));
-		writeU32(cu, u.getWorkflow());
-		writeU32(cu, u.getState());
+		writeU32(out, addBytes(pool, u.bytes.toByteArray()));
+		writeU32(out, u.getWorkflow());
+		writeU32(out, u.getState());
 
-		writeU32(cu, u.topLevelDefinitions.size());
+		writeU32(out, u.topLevelDefinitions.size());
 
-		for (Iterator i = u.topLevelDefinitions.iterator(); i.hasNext();)
+		for (Iterator<QName> i = u.topLevelDefinitions.iterator(); i.hasNext();)
 		{
-			writeU32(cu, addQName(pool, (QName) i.next()));
+			writeU32(out, addQName(pool, i.next()));
 		}
 
-		writeU32(cu, u.inheritanceHistory.size());
+		writeU32(out, u.inheritanceHistory.size());
 
 		for (MultiName multiName : u.inheritanceHistory.keySet())
 		{
 			QName qName = u.inheritanceHistory.get(multiName);
 
-			writeU32(cu, addMultiName(pool, multiName));
-			writeU32(cu, addQName(pool, qName));
+			writeU32(out, addMultiName(pool, multiName));
+			writeU32(out, addQName(pool, qName));
 		}
 
-		writeU32(cu, u.typeHistory.size());
+		writeU32(out, u.typeHistory.size());
 
 		for (MultiName multiName : u.typeHistory.keySet())
 		{
 			QName qName = u.typeHistory.get(multiName);
 
-			writeU32(cu, addMultiName(pool, multiName));
-			writeU32(cu, addQName(pool, qName));
+			writeU32(out, addMultiName(pool, multiName));
+			writeU32(out, addQName(pool, qName));
 		}
 
-		writeU32(cu, u.namespaceHistory.size());
+		writeU32(out, u.namespaceHistory.size());
 
 		for (MultiName multiName : u.namespaceHistory.keySet())
 		{
 			QName qName = u.namespaceHistory.get(multiName);
 
-			writeU32(cu, addMultiName(pool, multiName));
-			writeU32(cu, addQName(pool, qName));
+			writeU32(out, addMultiName(pool, multiName));
+			writeU32(out, addQName(pool, qName));
 		}
 
-		writeU32(cu, u.expressionHistory.size());
+		writeU32(out, u.expressionHistory.size());
 
 		for (MultiName multiName : u.expressionHistory.keySet())
 		{
 			QName qName = u.expressionHistory.get(multiName);
 
-			writeU32(cu, addMultiName(pool, multiName));
-			writeU32(cu, addQName(pool, qName));
+			writeU32(out, addMultiName(pool, multiName));
+			writeU32(out, addQName(pool, qName));
 		}
 
 		if (u.auxGenerateInfo != null && u.auxGenerateInfo.size() > 0)
 		{
-			writeU8(cu, 1);
+			writeU8(out, 1);
 
 			String baseLoaderClass = (String) u.auxGenerateInfo.get( "baseLoaderClass");
-			writeU32(cu, addString(pool, baseLoaderClass == null ? "" : baseLoaderClass));
+			writeU32(out, addString(pool, baseLoaderClass == null ? "" : baseLoaderClass));
 
 			String generateLoaderClass = (String) u.auxGenerateInfo.get( "generateLoaderClass");
-			writeU32(cu, addString(pool, generateLoaderClass == null ? "" : generateLoaderClass));
+			writeU32(out, addString(pool, generateLoaderClass == null ? "" : generateLoaderClass));
 
 			String className = (String) u.auxGenerateInfo.get( "windowClass");
-			writeU32(cu, addString(pool, className == null ? "" : className));
+			writeU32(out, addString(pool, className == null ? "" : className));
 
 			String preLoader = (String) u.auxGenerateInfo.get( "preloaderClass");
-			writeU32(cu, addString(pool, preLoader == null ? "" : preLoader));
+			writeU32(out, addString(pool, preLoader == null ? "" : preLoader));
 
 			Boolean usePreloader = (Boolean) u.auxGenerateInfo.get( "usePreloader");
-			writeU8(cu, usePreloader.booleanValue() ? 1 : 0);
+			writeU8(out, usePreloader.booleanValue() ? 1 : 0);
 
 			Map rootAttributeMap = (Map) u.auxGenerateInfo.get( "rootAttributes");
-			writeU32(cu, rootAttributeMap.size());
+			writeU32(out, rootAttributeMap.size());
 
 			for (Iterator i = rootAttributeMap.keySet().iterator(); i.hasNext();)
 			{
@@ -667,8 +802,8 @@ final class PersistenceStore
 
 				if (value != null)
 				{
-					writeU32(cu, addString(pool, key));
-					writeU32(cu, addString(pool, value));
+					writeU32(out, addString(pool, key));
+					writeU32(out, addString(pool, value));
 				}
 				else
 				{
@@ -678,17 +813,17 @@ final class PersistenceStore
 		}
 		else
 		{
-			writeU8(cu, 0);
+			writeU8(out, 0);
 		}
 
-		writeAssets(u, pool, cu);
+		writeAssets(u, pool, out);
 	}
 
-	private void writeAssets(CompilationUnit u, Map<Object, Integer> pool, OutputStream cu) throws IOException
+	private void writeAssets(CompilationUnit u, Map<Object, Integer> pool, OutputStream out) throws IOException
 	{
         if (u.hasAssets())
         {
-            writeU32(cu, u.getAssets().count());
+            writeU32(out, u.getAssets().count());
 
 			Movie movie = new Movie();
 			movie.version = configuration.getTargetPlayerMajorVersion();
@@ -700,24 +835,24 @@ final class PersistenceStore
 			movie.frames = new ArrayList<Frame>();
 			movie.frames.add(frame);
 
-			writeU32(cu, u.getAssets().count());
+			writeU32(out, u.getAssets().count());
 
-			for (Iterator i = u.getAssets().iterator(); i.hasNext();)
+			for (Iterator<Entry<String, AssetInfo>> i = u.getAssets().iterator(); i.hasNext();)
 			{
-				Entry entry = (Entry) i.next();
-				String className = (String) entry.getKey();
-				AssetInfo assetInfo = (AssetInfo) entry.getValue();
+				Entry<String, AssetInfo> entry = i.next();
+				String className = entry.getKey();
+				AssetInfo assetInfo = entry.getValue();
 				
-				writeU32(cu, addString(pool, className));
+				writeU32(out, addString(pool, className));
 				if (assetInfo.getPath() != null)
 				{
-					writeU32(cu, addString(pool, assetInfo.getPath().getName()));
+					writeU32(out, addString(pool, assetInfo.getPath().getName()));
 				}
 				else
 				{
-					writeU32(cu, addString(pool, ""));
+					writeU32(out, addString(pool, ""));
 				}
-				writeLong(cu, assetInfo.getCreationTime());
+				writeLong(out, assetInfo.getCreationTime());
 
 				DefineTag asset = assetInfo.getDefineTag();
 				frame.addSymbolClass(className, asset);
@@ -729,19 +864,25 @@ final class PersistenceStore
 			}
 
 			TagEncoder handler = new TagEncoder();
+			handler.setCompressionLevel(CompressionLevel.BestSpeed);
 			MovieEncoder encoder = new MovieEncoder(handler);
 
 			encoder.export(movie);
 
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			handler.writeTo(baos);
-
-			writeU32(cu, baos.size());
-			writeBytes(cu, baos.toByteArray());
+			// Hack: Nasty hard-coded knowledge that 'out' refers to the same file as 'file'
+			writeU32(out, 0);
+			out.flush();
+			long before = file.getFilePointer();
+			handler.writeTo(out);
+			out.flush();
+			long after = file.getFilePointer();
+			file.seek(before - 4);
+			file.writeInt((int)(after - before));
+			file.seek(after);
 		}
         else
         {
-            writeU32(cu, 0);
+            writeU32(out, 0);
         }
 	}
 
@@ -849,7 +990,10 @@ final class PersistenceStore
 
 	private Object[] readConstantPool() throws IOException
 	{
-		readU32(); // skip size
+		// Read the offset of the constant pool and seek there
+		long constantPoolOffset = file.readLong();
+		long startingOffset = file.getFilePointer();
+		file.seek(constantPoolOffset);
 
 		Object[] pool = new Object[readU32()];
 
@@ -897,6 +1041,10 @@ final class PersistenceStore
 				assert false;
 			}
 		}
+
+		// Now that we've read the constant pool from near the end of the file,
+		// seek back to where everything else is
+		file.seek(startingOffset);
 
 		return pool;
 	}
@@ -956,13 +1104,13 @@ final class PersistenceStore
 
 	private boolean readFileSpec(Object[] pool, FileSpec fileSpec) throws IOException
 	{
-		int size = readU32();
-		if (size > 0 && fileSpec == null)
+		boolean fileSpecDataExists = readU8()==1 ? true : false;
+		if (fileSpecDataExists && fileSpec == null)
 		{
 			LocalizationManager l10n = ThreadLocalToolkit.getLocalizationManager();
 			throw new IOException(l10n.getLocalizedTextString(new NoFileSpec()));
 		}
-		else if (size == 0)
+		else if (!fileSpecDataExists)
 		{
 			return true;
 		}
@@ -1002,14 +1150,14 @@ final class PersistenceStore
 			return false;
 		}
 
-		Collection c = fileSpec.sources();
+		Collection<Source> c = fileSpec.sources();
 
 		if (c.size() == sources.length)
 		{
-			Iterator it = c.iterator();
+			Iterator<Source> it = c.iterator();
 			for (int i = 0; it.hasNext() && i < sources.length; i++)
 			{
-				Source s = (Source) it.next();
+				Source s = it.next();
 				if (!s.getName().equals(sources[i]))
 				{
 					return false;
@@ -1026,13 +1174,13 @@ final class PersistenceStore
 
 	private boolean readSourceList(Object[] pool, SourceList sourceList) throws IOException
 	{
-		int size = readU32();
-		if (size > 0 && sourceList == null)
+		boolean sourceListDataExists = readU8()==1 ? true : false;
+		if (sourceListDataExists && sourceList == null)
 		{
 			LocalizationManager l10n = ThreadLocalToolkit.getLocalizationManager();
 			throw new IOException(l10n.getLocalizedTextString(new NoSourceList()));
 		}
-		else if (size == 0)
+		else if (!sourceListDataExists)
 		{
 			return true;
 		}
@@ -1081,14 +1229,14 @@ final class PersistenceStore
 			return false;
 		}
 
-		Collection c = sourceList.sources();
+		Collection<Source> c = sourceList.sources();
 
 		if (c.size() == sources.length)
 		{
-			Iterator it = c.iterator();
+			Iterator<Source> it = c.iterator();
 			for (int i = 0; it.hasNext() && i < sources.length; i++)
 			{
-				Source s = (Source) it.next();
+				Source s = it.next();
 				if (!s.getName().equals(sources[i]))
 				{
 					return false;
@@ -1105,13 +1253,13 @@ final class PersistenceStore
 
 	private boolean readSourcePath(Object[] pool, SourcePath sourcePath) throws IOException
 	{
-		int size = readU32();
-		if (size > 0 && sourcePath == null)
+		boolean sourcePathDataExists = readU8()==1 ? true : false;
+		if (sourcePathDataExists && sourcePath == null)
 		{
 			LocalizationManager l10n = ThreadLocalToolkit.getLocalizationManager();
 			throw new IOException(l10n.getLocalizedTextString(new NoSourcePath()));
 		}
-		else if (size == 0)
+		else if (!sourcePathDataExists)
 		{
 			return true;
 		}
@@ -1163,13 +1311,13 @@ final class PersistenceStore
 			return false;
 		}
 
-		List targetPaths = sourcePath.getPaths();
+		List<File> targetPaths = sourcePath.getPaths();
 
 		if ((length = targetPaths.size()) == paths.length)
 		{
 			for (int i = 0; i < length; i++)
 			{
-				if (!paths[i].equals(FileUtil.getCanonicalPath((File) targetPaths.get(i))))
+				if (!paths[i].equals(FileUtil.getCanonicalPath(targetPaths.get(i))))
 				{
 					return false;
 				}
@@ -1198,17 +1346,18 @@ final class PersistenceStore
 
     private boolean readResourceBundlePath(Object[] pool, ResourceBundlePath bundlePath) throws IOException
 	{
-		int size = readU32();
-		if (size > 0 && bundlePath == null)
+    	boolean resourceBundlePathDataExists = readU8()==1 ? true : false;
+		if (resourceBundlePathDataExists && bundlePath == null)
 		{
 			LocalizationManager l10n = ThreadLocalToolkit.getLocalizationManager();
 			throw new IOException(l10n.getLocalizedTextString(new NoSourcePath()));
 		}
-		else if (size == 0)
+		else if (!resourceBundlePathDataExists)
 		{
 			return true;
 		}
 
+		int size;
 		int length = readU32();
 		String[] mimeTypes = new String[length];
 
@@ -1304,20 +1453,20 @@ final class PersistenceStore
 			return false;
 		}
 
-		Map targetRBDirectories = bundlePath.getResourceBundlePaths();
+		Map<String, List<File>> targetRBDirectories = bundlePath.getResourceBundlePaths();
 		
 		if ((size = targetRBDirectories.size()) == rbDirectories.size())
 		{
 			for (int i = 0; i < size; i++)
 			{
-				List targetPaths = (List) targetRBDirectories.get(targetLocales[i]);
+				List<File> targetPaths = targetRBDirectories.get(targetLocales[i]);
 				String[] paths = rbDirectories.get(locales[i]);
 				
 				if ((length = targetPaths.size()) == paths.length)
 				{
 					for (int j = 0; j < length; j++)
 					{
-						if (!paths[j].equals(FileUtil.getCanonicalPath((File) targetPaths.get(j))))
+						if (!paths[j].equals(FileUtil.getCanonicalPath(targetPaths.get(j))))
 						{
 							return false;
 						}
@@ -1355,15 +1504,14 @@ final class PersistenceStore
 	                                 ResourceContainer resources, ResourceBundlePath bundlePath,
 	                                 List<Object> sources, List<CompilationUnit> units, Map<String, Object> owners) throws IOException
 	{
-		int src_count = readU32(), src_size = readU32(), cu_size = readU32();
+		int src_count = readU32();
 
-		ByteArrayInputStream src_in = new ByteArrayInputStream(readBytes(src_size));
-		ByteArrayInputStream cu_in = new ByteArrayInputStream(readBytes(cu_size));
+		RandomAccessFileInputStream in = new RandomAccessFileInputStream(file);
 
 		Map m = sourcePath.sources();
         Map<String, String> mappings = new HashMap<String, String>();
         Map<String, Object> rbMappings = new HashMap<String, Object>();
-		
+
 		for (Iterator i = m.keySet().iterator(); i.hasNext();)
 		{
 			String className = (String) i.next();
@@ -1390,9 +1538,9 @@ final class PersistenceStore
 
 		for (int i = 0; i < src_count; i++)
 		{
-			readCompilationUnit(pool, mappings, rbMappings, src_in, cu_in, fileSpec, sourceList, sourcePath, resources, bundlePath, owners);
+			readCompilationUnit(pool, mappings, rbMappings, in, fileSpec, sourceList, sourcePath, resources, bundlePath, owners);
 		}
-		
+
 		for (int i = 0, len = sources == null ? 0 : sources.size(); i < len; i++)
 		{
 			String n = (String) sources.get(i);
@@ -1408,17 +1556,17 @@ final class PersistenceStore
 		return src_count;
 	}
 
-	private void readCompilationUnit(Object[] pool, Map<String, String> mappings, Map<String, Object> rbMappings, InputStream src_in, InputStream cu_in,
+	private void readCompilationUnit(Object[] pool, Map<String, String> mappings, Map<String, Object> rbMappings, InputStream in,
 	                                 FileSpec fileSpec, SourceList sourceList, SourcePath sourcePath,
 	                                 ResourceContainer resources, ResourceBundlePath bundlePath, Map<String, Object> owners)
 	    throws IOException
 	{
 		PathResolver resolver = ThreadLocalToolkit.getPathResolver();
 
-		String name = (String) pool[readU32(src_in)];
-		String relativePath = (String) pool[readU32(src_in)];
-		String shortName = (String) pool[readU32(src_in)];
-		int owner = readU8(src_in);
+		String name = (String) pool[readU32(in)];
+		String relativePath = (String) pool[readU32(in)];
+		String shortName = (String) pool[readU32(in)];
+		int owner = readU8(in);
 
 		VirtualFile pathRoot = null;
 		// 1 == SourceList
@@ -1429,33 +1577,33 @@ final class PersistenceStore
 			// C: Unfortunately, PathResolver itself is not a complete solution. For each type
 			//    of VirtualFile, there must be a mechanism to recognize the name format and
 			//    construct an appropriate VirtualFile instance.
-			pathRoot = resolver.resolve((String) pool[readU32(src_in)]);
+			pathRoot = resolver.resolve((String) pool[readU32(in)]);
 		}
 
-		boolean isInternal = (readU8(src_in) == 1);
-		boolean isRoot = (readU8(src_in) == 1);
-		boolean isDebuggable = (readU8(src_in) == 1);
-		boolean hasUnit = (readU8(src_in) == 1);
-		long fileTime = readLong(src_in);
+		boolean isInternal = (readU8(in) == 1);
+		boolean isRoot = (readU8(in) == 1);
+		boolean isDebuggable = (readU8(in) == 1);
+		boolean hasUnit = (readU8(in) == 1);
+		long fileTime = readLong(in);
         
-        final boolean hasSignatureChecksum = (readU8(src_in) == 1);
+        final boolean hasSignatureChecksum = (readU8(in) == 1);
         Long signatureChecksum = null;
         if (hasSignatureChecksum)
         {
             assert hasUnit;
-            signatureChecksum = new Long(readLong(src_in));
+            signatureChecksum = new Long(readLong(in));
             // SignatureExtension.debug("READ      CRC32: " + signatureChecksum + "\t--> " + name);
         }
 
-		int size = readU32(src_in);
-        Set<VirtualFile> includes = new HashSet<VirtualFile>(1);
-		Map<VirtualFile, Long> includeTimes = new HashMap<VirtualFile, Long>(1);
+		int size = readU32(in);
+        Set<VirtualFile> includes = new HashSet<VirtualFile>(size);
+		Map<VirtualFile, Long> includeTimes = new HashMap<VirtualFile, Long>(size);
 
 		for (int i = 0; i < size; i++)
 		{
-			String fileName = (String) pool[readU32(src_in)];
+			String fileName = (String) pool[readU32(in)];
 			VirtualFile f = resolver.resolve(fileName);
-			long ts = readLong(src_in);
+			long ts = readLong(in);
 
 			if (f == null)
 			{
@@ -1467,29 +1615,29 @@ final class PersistenceStore
 			includeTimes.put(f, new Long(ts));
 		}
 
-		size = readU32(src_in);
+		size = readU32(in);
 		LocalLogger logger = size == 0 ? null : new LocalLogger(null);
 
 		for (int i = 0; i < size; i++)
 		{
-			String path = (String) pool[readU32(src_in)];
+			String path = (String) pool[readU32(in)];
 			if (path.length() == 0)
 			{
 				path = null;
 			}
-			String warning = (String) pool[readU32(src_in)];
+			String warning = (String) pool[readU32(in)];
 			if (warning.length() == 0)
 			{
 				warning = null;
 			}
-			String source = (String) pool[readU32(src_in)];
+			String source = (String) pool[readU32(in)];
 			if (source.length() == 0)
 			{
 				source = null;
 			}
-			int line = readU32(src_in);
-			int col = readU32(src_in);
-			int errorCode = readU32(src_in);
+			int line = readU32(in);
+			int col = readU32(in);
+			int errorCode = readU32(in);
 
 			logger.recordWarning(path,
 			                     line == -1 ? null : IntegerPool.getNumber(line),
@@ -1500,15 +1648,15 @@ final class PersistenceStore
 		}
 
 
-		byte[] abc = (hasUnit) ? (byte[]) pool[readU32(cu_in)] : null;
+		byte[] abc = (hasUnit) ? (byte[]) pool[readU32(in)] : null;
 		Source s = null;
 
 		if (owner == 0) // FileSpec
 		{
-			Collection c = fileSpec.sources();
-			for (Iterator i = c.iterator(); i.hasNext();)
+			Collection<Source> c = fileSpec.sources();
+			for (Iterator<Source> i = c.iterator(); i.hasNext();)
 			{
-				s = (Source) i.next();
+				s = i.next();
 				if (s.getName().equals(name))
 				{
 					Source.populateSource(s, fileTime, pathRoot, relativePath, shortName, fileSpec, isInternal, isRoot, isDebuggable,
@@ -1519,10 +1667,10 @@ final class PersistenceStore
 		}
 		else if (owner == 1) // SourceList
 		{
-			Collection c = sourceList.sources();
-			for (Iterator i = c.iterator(); i.hasNext();)
+			Collection<Source> c = sourceList.sources();
+			for (Iterator<Source> i = c.iterator(); i.hasNext();)
 			{
-				s = (Source) i.next();
+				s = i.next();
 				if (s.getName().equals(name))
 				{
 					Source.populateSource(s, fileTime, pathRoot, relativePath, shortName, sourceList, isInternal, isRoot, isDebuggable,
@@ -1627,85 +1775,85 @@ final class PersistenceStore
             u.setSignatureChecksum(signatureChecksum);
 
 			u.bytes.addAll(abc);
-			u.setWorkflow(readU32(cu_in));
-			u.setState(readU32(cu_in));
+			u.setWorkflow(readU32(in));
+			u.setState(readU32(in));
 
-			size = readU32(cu_in);
+			size = readU32(in);
 			for (int i = 0; i < size; i++)
 			{
-				u.topLevelDefinitions.add((QName) pool[readU32(cu_in)]);
+				u.topLevelDefinitions.add((QName) pool[readU32(in)]);
 			}
 
-			size = readU32(cu_in);
+			size = readU32(in);
 			for (int i = 0; i < size; i++)
 			{
-				MultiName mName = (MultiName) pool[readU32(cu_in)];
-				QName qName = (QName) pool[readU32(cu_in)];
+				MultiName mName = (MultiName) pool[readU32(in)];
+				QName qName = (QName) pool[readU32(in)];
 				u.inheritanceHistory.put(mName, qName);
 				u.inheritance.add(qName);
 			}
 
-			size = readU32(cu_in);
+			size = readU32(in);
 			for (int i = 0; i < size; i++)
 			{
-				MultiName mName = (MultiName) pool[readU32(cu_in)];
-				QName qName = (QName) pool[readU32(cu_in)];
+				MultiName mName = (MultiName) pool[readU32(in)];
+				QName qName = (QName) pool[readU32(in)];
 				u.typeHistory.put(mName, qName);
 				u.types.add(qName);
 			}
 
-			size = readU32(cu_in);
+			size = readU32(in);
 			for (int i = 0; i < size; i++)
 			{
-				MultiName mName = (MultiName) pool[readU32(cu_in)];
-				QName qName = (QName) pool[readU32(cu_in)];
+				MultiName mName = (MultiName) pool[readU32(in)];
+				QName qName = (QName) pool[readU32(in)];
 				u.namespaceHistory.put(mName, qName);
 				u.namespaces.add(qName);
 			}
 
-			size = readU32(cu_in);
+			size = readU32(in);
 			for (int i = 0; i < size; i++)
 			{
-				MultiName mName = (MultiName) pool[readU32(cu_in)];
-				QName qName = (QName) pool[readU32(cu_in)];
+				MultiName mName = (MultiName) pool[readU32(in)];
+				QName qName = (QName) pool[readU32(in)];
 				u.expressionHistory.put(mName, qName);
 				u.expressions.add(qName);
 			}
 
-			boolean hasAuxGenerateInfo = readU8(cu_in) == 1;
+			boolean hasAuxGenerateInfo = readU8(in) == 1;
 
 			if (hasAuxGenerateInfo)
 			{
 				u.auxGenerateInfo = new HashMap<String, Object>();
 
-				String baseLoaderClass = (String) pool[readU32(cu_in)];
+				String baseLoaderClass = (String) pool[readU32(in)];
 				u.auxGenerateInfo.put("baseLoaderClass", baseLoaderClass.length() > 0 ? baseLoaderClass : null);
 
-				String generateLoaderClass = (String) pool[readU32(cu_in)];
+				String generateLoaderClass = (String) pool[readU32(in)];
 				u.auxGenerateInfo.put("generateLoaderClass", generateLoaderClass.length() > 0 ? generateLoaderClass : null);
 
-				String className = (String) pool[readU32(cu_in)];
+				String className = (String) pool[readU32(in)];
 				u.auxGenerateInfo.put("windowClass", className.length() > 0 ? className : null);
 
-				String preLoader = (String) pool[readU32(cu_in)];
+				String preLoader = (String) pool[readU32(in)];
 				u.auxGenerateInfo.put("preloaderClass", preLoader.length() > 0 ? preLoader : null);
 
-				u.auxGenerateInfo.put("usePreloader", new Boolean(readU8(cu_in) == 1));
+				u.auxGenerateInfo.put("usePreloader", new Boolean(readU8(in) == 1));
 
 				Map<String, String> rootAttributeMap = new HashMap<String, String>();
 				u.auxGenerateInfo.put("rootAttributes", rootAttributeMap);
 
-				size = readU32(cu_in);
+				size = readU32(in);
 				for (int i = 0; i < size; i++)
 				{
-					String key = (String) pool[readU32(cu_in)];
-					String value = (String) pool[readU32(cu_in)];
+					String key = (String) pool[readU32(in)];
+					String value = (String) pool[readU32(in)];
 
 					rootAttributeMap.put(key, value);
 				}
 			}
 
-			readAssets(pool, u, cu_in);
+			readAssets(pool, u, in);
 		}
 		
 		if (s != null)
@@ -1729,20 +1877,20 @@ final class PersistenceStore
 		}
 	}
 
-	private void readAssets(final Object[] pool, final CompilationUnit u, final InputStream cu_in) throws IOException
+	private void readAssets(final Object[] pool, final CompilationUnit u, final InputStream in) throws IOException
 	{
-		int size = readU32(cu_in);
+		int size = readU32(in);
 		if (size > 0)
 		{
-			int assetCount = readU32(cu_in);
+			int assetCount = readU32(in);
 			final Map<String, AssetInfo> assets = new HashMap<String, AssetInfo>();
 
 			PathResolver resolver = ThreadLocalToolkit.getPathResolver();
 
 			for (int i = 0; i < assetCount; i++)
 			{
-				String className = (String) pool[readU32(cu_in)];
-				String pathName = (String) pool[readU32(cu_in)];
+				String className = (String) pool[readU32(in)];
+				String pathName = (String) pool[readU32(in)];
 
 				VirtualFile f = null;
 				if (pathName.length() == 0)
@@ -1758,16 +1906,20 @@ final class PersistenceStore
 					}
 				}
 
-				assets.put(className, new AssetInfo(null, f, readLong(cu_in), null));
+				assets.put(className, new AssetInfo(null, f, readLong(in), null));
 			}
 
-			int swfSize = readU32(cu_in);
-			ByteArrayInputStream in = new ByteArrayInputStream(readBytes(cu_in, swfSize));
+			int swfSize = readU32(in);
+			SizeLimitingInputStream in2 = new SizeLimitingInputStream(in, swfSize);
 
 			Movie movie = new Movie();
 			MovieDecoder movieDecoder = new MovieDecoder(movie);
-			TagDecoder tagDecoder = new TagDecoder(in);
+			TagDecoder tagDecoder = new TagDecoder(in2);
 			tagDecoder.parse(movieDecoder);
+
+			// For some reason, sometimes the process of decoding the movie does not read
+			// all that bytes that had been written previously.  So, skip to the end.
+			in2.skipToEnd();
 
 			for (Frame frame : movie.frames)
             {
@@ -2007,6 +2159,7 @@ final class PersistenceStore
 
 		private String[] a1;
 
+		@Override
 		public boolean equals(Object obj)
 		{
 			if (obj == this)
@@ -2043,6 +2196,7 @@ final class PersistenceStore
 			}
 		}
 
+		@Override
 		public int hashCode()
 		{
 			int c = 0;

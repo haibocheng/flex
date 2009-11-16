@@ -192,6 +192,7 @@ public class Compc extends Tool
         // load SWCs
         CompilerSwcContext swcContext = new CompilerSwcContext();
         SwcCache cache = new SwcCache();
+        
         // lazy read should only be set by mxmlc/compc
         cache.setLazyRead(true);
         // for compc the theme and include-libraries values have been purposely not passed in below.

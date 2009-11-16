@@ -512,6 +512,15 @@ class ModuleInfo extends EventDispatcher
      */
     public function resurrect():void
     {
+        // If the module is not ready then don't try to resurrect it.
+        // You can only resurrect a module that is in the ready state.
+        // We return here and do not destroy the current state because
+        // we may have started loading a module that is not yet ready.
+        if (!_ready)
+            return;
+        
+        //trace("Module[", url, "] resurrect");
+        
         if (!factoryInfo && limbo)
         {
             //trace("trying to resurrect ", _url, "...");
@@ -632,6 +641,7 @@ class ModuleInfo extends EventDispatcher
 
         limbo = null;
         factoryInfo = null;
+        parentModuleFactory = null;
         _loaded = false;
         _setup = false;
         _ready = false;

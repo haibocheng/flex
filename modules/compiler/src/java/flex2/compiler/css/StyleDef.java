@@ -476,8 +476,28 @@ public class StyleDef
         if ((parameter.charAt(0) == '"') && (parameter.indexOf('"', 1) == parameter.length() - 1))
         {
             String substring = parameter.substring(1, parameter.length() - 1);
-            result = new Reference(substring, styleSheetPath, line);
-            result.setClassReference(isClassReference);
+
+            if (!isClassReference && (mxmlDocument == null))
+            {
+                PropertyReferenceRequiresDocument propertyReferenceRequiresDocument =
+                    new PropertyReferenceRequiresDocument();
+                propertyReferenceRequiresDocument.path = styleSheetPath;
+                propertyReferenceRequiresDocument.line = line;
+                ThreadLocalToolkit.log(propertyReferenceRequiresDocument);
+            }
+            else if (!isClassReference && mxmlDocument.getRoot().getType().getProperty(substring) == null)
+            {
+                InvalidPropertyReference invalidPropertyReference =
+                    new InvalidPropertyReference(substring);
+                invalidPropertyReference.path = styleSheetPath;
+                invalidPropertyReference.line = line;
+                ThreadLocalToolkit.log(invalidPropertyReference);
+            }
+            else
+            {
+                result = new Reference(substring, styleSheetPath, line);
+                result.setClassReference(isClassReference);
+            }
         }
 		else if (parameter.equals("null"))
 		{
@@ -604,6 +624,26 @@ public class StyleDef
             {
                 type = "Property";
             }
+        }
+    }
+
+    public static class InvalidPropertyReference extends CompilerError
+    {
+        private static final long serialVersionUID = 3730898410175891395L;
+        public String value;
+
+        public InvalidPropertyReference(String value)
+        {
+            this.value = value;
+        }
+    }
+
+    public static class PropertyReferenceRequiresDocument extends CompilerError
+    {
+        private static final long serialVersionUID = 3730898410175891396L;
+
+        public PropertyReferenceRequiresDocument()
+        {
         }
     }
 }

@@ -17,7 +17,7 @@
 
 	<property file="${FLEX_HOME}/build.properties"/>
 
-	<target name="main" depends="clean,prepare,javascript,tlf,framework,spark,sparkskins,rpc,airframework,flex,flash_integration,utilities,halo,wireframe,updateAIR" description="Clean build of all SWCs"/>
+	<target name="main" depends="clean,prepare,javascript,osmf,framework,spark,sparkskins,rpc,airframework,flex,flash_integration,utilities,halo,wireframe,updateAIR" description="Clean build of all SWCs"/>
 
 	<target name="doc" >
 		<ant dir="${basedir}/projects/framework" target="doc" />
@@ -28,7 +28,7 @@
 		<ant dir="${basedir}/projects/flex" target="doc" />
 		<ant dir="${basedir}/projects/utilities" target="doc" />
 		<ant dir="${basedir}/projects/halo" target="doc" />
-		<ant dir="${basedir}/projects/textLayout" target="doc" />
+        <ant dir="${basedir}/projects/osmf" target="doc" />
 		<ant dir="${basedir}/projects/wireframe" target="doc" />
 		<ant dir="${basedir}/projects/flash-integration" target="doc" />
 	</target>
@@ -64,11 +64,16 @@
 	<target name="flash_integration" description="Clean build of FlexComponentBase.swc">
 		<ant dir="${basedir}/projects/flash-integration"/>
 	</target>
+    
+    <target name="osmf" description="Clean build of osmf.swc">
+		<ant dir="${basedir}/projects/osmf"/>
+	</target>
 
     <target name="rpc" description="Clean build of rpc.swc">
 		<ant dir="${basedir}/projects/rpc"/>
     </target>
 
+	<!-- For debugging only.  For release, we distribute the swc built by the TLF team. -->
 	<target name="tlf" description="Clean build of textLayout.swc">
 		<ant dir="${basedir}/projects/textLayout"/>
 	</target>
@@ -101,7 +106,7 @@
 		<ant dir="${basedir}/projects/framework" target="clean"/>
 		<ant dir="${basedir}/projects/airframework" target="clean"/>
 		<ant dir="${basedir}/projects/flex" target="clean"/>
-		<ant dir="${basedir}/projects/textLayout" target="clean"/>
+        <ant dir="${basedir}/projects/osmf" target="clean"/>
 		<ant dir="${basedir}/projects/spark" target="clean"/>
 		<ant dir="${basedir}/projects/sparkskins" target="clean"/>
 		<ant dir="${basedir}/projects/utilities" target="clean"/>
@@ -139,7 +144,7 @@ tar -xjf "AIR Integration Kit.tbz2"
 	</target>
 	
 	<target name="compile" description="Builds all SWCs but not their resource bundles">
-		<ant dir="${basedir}/projects/tlf" target="compile"/>
+        <ant dir="${basedir}/projects/osmf" target="compile"/>
 		<ant dir="${basedir}/projects/framework" target="compile"/>
 		<ant dir="${basedir}/projects/airframework" target="compile"/>
 		<ant dir="${basedir}/projects/flex" target="compile"/>
@@ -156,6 +161,7 @@ tar -xjf "AIR Integration Kit.tbz2"
 		<ant dir="${basedir}/projects/airframework" target="other.locales"/>
 		<ant dir="${basedir}/projects/spark" target="other.locales"/>
 		<ant dir="${basedir}/projects/rpc" target="other.locales"/>
+		<ant dir="${basedir}/projects/playerglobal" target="other.locales" />
 	</target>
 
     <target name="updateAIR" description="Rebuild a AIK SWC and SWF that depend on Flex" >

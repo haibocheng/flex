@@ -204,13 +204,11 @@ public class AtEmbed implements LineNumberMapped
 		String embedName = AtEmbed.createMangledName(baseName, attrs.hashCode());
         String sourceValue = (String) attrs.get(Transcoder.SOURCE);
 
-        /*
         if ((sourceValue != null) &&
             !tokenizeAndResolveSource(sourceValue, attrs, source, sourceValue, path, beginLine))
         {
             logInvalidEmbed(sourceValue, path, beginLine);            
         }
-        */
 
 		return new AtEmbed(embedName, beginLine, attrs, strType);
 	}

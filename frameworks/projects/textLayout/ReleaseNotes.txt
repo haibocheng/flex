@@ -1,3 +1,82 @@
+﻿Build 550
+	* Introduced a new leading model APPROXIMATE_TEXTFIELD which approximates the line spacing behavior of TextField
+	* Changed HTML importer so that it does not address the mismatch between TextField and TLF defaults. The client can do so through textFlowInitialFormat 
+	* Fix 2472647 HTML exporter should display nicely formatted #RRGGBB color values
+	* Fix 2472526 textFlowInitialFormat not being honored by the HTML importer
+Build 549
+	* Fix 2474053 RTE when using END key when there is an IMG at the end of a TextFlow
+	* PARB Changes
+	+ GlobalConfiguration changes
+	- renamed to GlobalSettings
+	- getString renamed to getResourceStringFunction
+	- fontMapper renamed to fontMapperFunction
+	+ Configuration and IConfiguration changes
+	- inlineGraphicResolver renamed to inlineGraphicResolverFunction
+Build 548
+	* Fix 2477763 Inserting link to text that is not displayed fails.
+	* Fix 2477778 Undo or redo on TextFlow with no controllers causes exception
+	* Fix (flex issue - no bug #) Make TCM.setText and TCM.setTextFlow focus preserving by calling focusHandler when _hasFocus is true
+	* Fix 2412959 No Operation to "undefine" a format.
+	- added operations UndefineFormatOperation and UndefineFormatOnElementOperation
+	- added IEditManager APIs undefineFormat and undefineFormatOnElement
+	* Fix 2475201 Increase maximum allowed values for trackingLeft and trackingRight 
+Build 547
+	* Fix 2474050 Underline adornment should be on right when locale is Chinese.
+	* Fix 2472372 Adornments are lost when lines scroll out of view.
+	* Fix 2462178 [SDK-23782] TLF error messages shoud be localizable
+	* Fix 2476491 Hitting a select all with more than one container, and then typing sometimes makes text go to the wrong container.
+Build 546
+	* Fix for 2469708, data binding issue with TLF SpanElement since 0-length spans are pruned from ParagraphElement. Solution is to not merge spans, links, or tcy elements that were added via set mxmlChildren, since they may have data binding applied. Note that zero-length elements left in the text may cause problems when editing; inserted text may appear in the wrong format, for example. This seems preferable to not supporting the feature. 
+Build 545
+	* Fix 2469183 paddingRight not applied in contentBounds in vertical measured text
+	* Fix 2458351 [SDK-23668] TextFlow class marked as final
+	* Fix 2464448 Rename package flash.textLayout.acc flash.textLayout.accessibility
+	* Fix 2365702 [SDK-22011] Setting TextFlow attributes with out of range values should generate an RTE
+	 -When an error is detected the format will no longer be changed.
+	 -A number or int format setting will be in error if parseFloat (or parseInt) returns NaN.
+	 - Out of range number or int properties will be an error
+	 - Invalid enumeration settings will be an error
+	 - Property class will have a global “errorCallback” function.  This will default to throwing on error. 
+	 - The TLF ITextImporter implementers (for HTML and TLF markup) have a throwOnError setting.  If false the change will be to collect the errors in the errors array along with the other import errors as currently done.  If true then the importer will throw on the first error.  During an import the importers may temporarily replace the errorCallback function
+	 - Clients may replace the global errorCallback function.
+	 - Properties now treat null as undefined - this is to support flex data binding which sets properties to null with great frequency
+	* Extended fix for 2365702 to HTML markup attributes that don't directly map to TLF formats. Also ensured malformed tags and text in HTML markup are not silently ignored.
+Build 544
+	* Fix underline offset for small point sizes.
+Build 541
+	* Fix 2448613 Perform truncation even if using explicit lineBreak, or measuring width
+Build 540
+	* Fix 2469885 Linked Containers Update Failures With Large Changes
+Build 539
+	* Fix 2468477 SelectionManager.menuSelectHandler should update menu.clipboardItems.delete based on the editingMode.
+	* Fix Additional memory leak - the shared TextFlowTetLineFactory was holding on to references to the last flow composed
+	* Fix 1874257 Typing always causes a redraw of the entire container
+	- ContainerController no longer updates transparent background or scrollRect unless they have changed.
+Build 538
+	* Fix 2400856 Underline truncated on vertical orientation with default baseline shift.
+	* Fix 2467390 composeToController always returns true and is not functioning
+	* Fix 2448945 Changing character properties after entering text edit mode can produce mixed results unexpectedly in TLF Text containers.
+Build 537
+	* Fix 2464521 New paragraph always has default formatting when typing "Enter" at the start of a paragraph
+	* Revised HTML importer/exporter to be more compatible with TextField.htmlText. It is more tolerant of malformed input, adds support for some new attributes (letterspacing, kerning, leading, tabstops etc.),
+	  and relative font sizes, handles children of unknown elements (instead of completely stripping them out), preserves whitespace, accounts for the difference between TextField and TLF defaults 
+	  (e.g., "Times Roman" vs. "Arial" fontFamily), and exports markup that is similar to that returned by TextField.htmlText.
+Build 536
+	* Fix 2350091 Tab stop positions shift when center and right aligning paragraphs.
+	- in FlashPlayer 10.1 and later ONLY a TextLine with tabs on it will not be center or non-start aligned
+	- this allows client to setup tabs with alignment as needed and for tabs in all lines to line up
+Build 535
+	* Fix 2457166 - Underline & strikethru adornments re-added to reused lines.  Adornments are now only added to damaged or new lines.
+	* Fix 2363026 - Request to make dominant Baseline Auto value resolution for 270 Rotated text be Ideographic Center. 
+	* Fix 2347988 - TCY canceled overriding image with TCY by text.
+	* Fix 2384296 ContentBounds Incorrect for right/center aligned text in narrow containers with explicit lineBreaks
+Build 534
+	* Fix infinite loop deleting and pasting text in multiple containers.
+	* Fix 2460189 ContentBounds Incorrect for left/start/center aligned text in containers of RL content with "toFit" lineBreaks
+Build 533
+	* Fix Modifying InlineGraphic with source set to a DisplayObject doesn't update
+Build 532
+	* Fix for 2445788 - getTextInRange did not properly return text when text spanned multiple paragraphs.  New code performs proper calculations and returns expected text.
 Build 531
 	* Fix for 2458403 - TLF default TextLayoutFormat fontFamily is now Arial rather than Times New Roman.
 Build 530

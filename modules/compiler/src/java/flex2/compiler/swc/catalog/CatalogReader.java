@@ -193,7 +193,8 @@ public class CatalogReader
 		        Attributes attrib = context.getCurrentAttributes();
 		        versions.setFlexVersion(readAttribute("version", attrib, true));
 			    versions.setFlexBuild(readAttribute("build", attrib, false));
-
+			    versions.setMinimumVersion(readAttribute("minimumSupportedVersion", attrib, false));
+			    
 				/*System.out.println("VersionReader.readElement: versions.getFlexVersion() = " + versions.getFlexVersion() +
 						", versions.getFlexBuild() = " + versions.getFlexBuild());*/
 

@@ -1010,7 +1010,7 @@ public class Application implements Builder
         {
             data.swcCache = new SwcCache();
         }
-
+        
         CompilerSwcContext swcContext = new CompilerSwcContext(true);
         try
         {

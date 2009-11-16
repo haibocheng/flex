@@ -170,7 +170,8 @@ public final class SymbolTable
 
 	private static final NoType NoTypeClass = new NoType();
 
-	public SymbolTable(boolean bang, int dialect, boolean suppressWarnings, int targetAVM, ObjectList<String> use_namespaces)
+	public SymbolTable(boolean bang, int dialect, boolean suppressWarnings, boolean debug,
+                       int targetAVM, ObjectList<String> use_namespaces)
 	{
 		classTable = new HashMap<String, AbcClass>(300);
 		styles = new Styles();
@@ -181,6 +182,12 @@ public final class SymbolTable
 		perCompileData.languageID = Context.getLanguageID(Locale.getDefault().getCountry().toUpperCase());
         perCompileData.setAbcVersion(targetAVM);
         
+        if (!debug)
+        {
+            // Leave out trace() statements when emitting bytecode
+            //perCompileData.omitTrace = true;
+        }
+
         // set up use_namespaces anytime before parsing begins
         assert use_namespaces != null;
         perCompileData.use_namespaces.addAll(use_namespaces);
@@ -234,6 +241,8 @@ public final class SymbolTable
 
 	// C: please see CompilerConfiguration.suppressWarningsInIncremental
 	private boolean suppressWarnings;
+	// See CompilerConfiguration.cfgDebug().
+    private boolean debug;
 	
 	private final Map<String, QName[]> rbNames;
 	private final Map<String, Source> rbNameTable;
@@ -455,6 +464,7 @@ public final class SymbolTable
                       configuration.getCompilerConfiguration().strict(),
                       configuration.getCompilerConfiguration().dialect(),
                       configuration.getCompilerConfiguration().suppressWarningsInIncremental(),
+                      configuration.getCompilerConfiguration().generateDebugTags(),
                       configuration.getTargetPlayerTargetAVM(),
                       configuration.getTargetPlayerRequiredUseNamespaces());
     }

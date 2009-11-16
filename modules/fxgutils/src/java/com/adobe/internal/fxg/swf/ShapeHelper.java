@@ -70,8 +70,7 @@ public class ShapeHelper implements SwfConstants
     public static List<ShapeRecord> implicitClosepath(double startX, double startY, double endX, double endY)
     {
         List<ShapeRecord> shapeRecords = new ArrayList<ShapeRecord>();
-        StyleChangeRecord scr = new StyleChangeRecord();
-        scr.setMove((int)startX*TWIPS_PER_PIXEL, (int)startY*TWIPS_PER_PIXEL);
+        StyleChangeRecord scr = move(startX, startY);
         scr.setLinestyle(0);
         shapeRecords.add(scr);
         shapeRecords.add(straightEdge(startX, startY, endX, endY));
@@ -574,7 +573,10 @@ public class ShapeHelper implements SwfConstants
                         //add an implicit closepath, if needed
                         if (fill && (Math.abs(prevX-lastMoveX) > AbstractFXGNode.EPSILON || Math.abs(prevY-lastMoveY) > AbstractFXGNode.EPSILON)) 
                         {
-                           shapeRecords.addAll(implicitClosepath(prevX, prevY, lastMoveX, lastMoveY));
+                            if (node.stroke == null)
+                                shapeRecords.add(straightEdge(prevX, prevY, lastMoveX, lastMoveY));
+                            else
+                                shapeRecords.addAll(implicitClosepath(prevX, prevY, lastMoveX, lastMoveY));
                         }
                         x = Double.parseDouble(args[i++]) + (relative ? prevX : 0);
                         y = Double.parseDouble(args[i++]) + (relative ? prevY : 0);
@@ -691,7 +693,10 @@ public class ShapeHelper implements SwfConstants
         //do an implicit closepath, if needed
         if (fill && (Math.abs(prevX-lastMoveX) > AbstractFXGNode.EPSILON) || (Math.abs(prevY-lastMoveY) > AbstractFXGNode.EPSILON))  
         {
-            shapeRecords.addAll(implicitClosepath(prevX, prevY, lastMoveX, lastMoveY));
+            if (node.stroke == null)
+                shapeRecords.add(straightEdge(prevX, prevY, lastMoveX, lastMoveY));
+            else
+                shapeRecords.addAll(implicitClosepath(prevX, prevY, lastMoveX, lastMoveY));
         }
         return shapeRecords;
     }
@@ -827,7 +832,6 @@ public class ShapeHelper implements SwfConstants
             // Find a segment with a valid tangent or stop at a MoveSegment
             while (start < count && !(records.get(start) instanceof StyleChangeRecord))
             {
-//                ShapeRecord prevSegment = records.get(start-1);
                 x = cooridinates[start-1][0];
                 y = cooridinates[start-1][1];
                 if (tangentIsValid(records.get(start), x, y))
@@ -860,16 +864,6 @@ public class ShapeHelper implements SwfConstants
             // sequence.
             int startSegmentX = cooridinates[start][0];
             int startSegmentY = cooridinates[start][1];
-//            if (startSegment instanceof StraightEdgeRecord)
-//            {
-//                startSegmentX = x + ((StraightEdgeRecord)startSegment).deltaX;
-//                startSegmentY = y + ((StraightEdgeRecord)startSegment).deltaY;
-//            }
-//            else if (startSegment instanceof CurvedEdgeRecord)
-//            {
-//                startSegmentX = x + ((CurvedEdgeRecord)startSegment).controlDeltaX + ((CurvedEdgeRecord)startSegment).anchorDeltaX;
-//                startSegmentY = y + ((CurvedEdgeRecord)startSegment).controlDeltaY + ((CurvedEdgeRecord)startSegment).anchorDeltaY;
-//            }
             if ((start == count - 1 || records.get(start + 1) instanceof StyleChangeRecord) && 
                     startSegmentX == lastMoveX &&
                     startSegmentY == lastMoveY)
@@ -948,6 +942,14 @@ public class ShapeHelper implements SwfConstants
     {
         // The tip of the joint
         Point jointPoint = new Point(x, y);
+        
+        //If a joint lies miterLimit*strokeWeight/2 away from pathBox, 
+        //it is considered an inner joint and has no effect on bounds. So stop  
+        //processing in this case.        
+        if (isInnerJoint(jointPoint, pathBBox, miterLimit, weight))
+        {
+            return pathBBox;
+        }
         
         // End tangent for segment1:
         Point t0 = getTangent(segment1, false /*start*/, xPrev, yPrev);
@@ -1029,8 +1031,33 @@ public class ShapeHelper implements SwfConstants
                     (int)StrictMath.rint(strokeTip.x), (int)StrictMath.rint(strokeTip.y), newRect);
         }
         return newRect;
-    }    
-
+    } 
+    
+    /**
+     * Returns true when a joint is an inner joint (lies  
+     * miterLimit*strokeWeight/2 away from pathBox).
+     * @param jointPoint
+     * @param miterLimit
+     * @param weight
+     * @return
+     */
+    private static boolean isInnerJoint(Point jointPoint, Rect pathBBox, double miterLimit, double weight)
+    {
+        //If a joint lies miterLimit*strokeWeight/2 away from pathBox, 
+        //it is considered an inner joint and has no effect on bounds.              
+        if ((jointPoint.x - pathBBox.xMin)>miterLimit*weight/2 &&
+                (pathBBox.xMax - jointPoint.x)>miterLimit*weight/2 &&
+                (jointPoint.y - pathBBox.yMin)>miterLimit*weight/2 &&
+                (pathBBox.yMax - jointPoint.y)>miterLimit*weight/2)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    
     /**
      * Returns true when we have a valid tangent for curSegment. Pass 
      * prevSegment to know what the starting point of curSegment is.

@@ -109,3 +109,19 @@ and a FlashPlayerTrust file must allow local SWFs to access local files.
 To build and test the SDK, execute
 
     ant main checkintests
+
+h2. Workflow
+
+# Make changes ONLY to the frameworks/projects directory (where the ActionScript source code is).  If you want to make changes to the modules directory for the compiler, good luck remembering what you've done!
+# Merge with the trunk at least once a week:
+## svn merge http://opensource.adobe.com/svn/opensource/flex/sdk/trunk http://opensource.adobe.com/svn/opensource/flex/sdk/sandbox/viatropos/trunk
+*** This command merges your remote repository with the trunk
+## svn merge -r currentRevision:HEAD http://opensource.adobe.com/svn/opensource/flex/sdk/trunk .
+*** This merges the trunk with your local repository
+# You will likely have a lot of merge conflicts, so find them with this command:
+grep -r "<<<<<<<[^<]" ./frameworks/projects
+# Delete the left and right conflict files, and fix anything.  If you know you didn't touch that file, just go to the adobe site and grab the source for that file and copy/paste it.
+# svn update
+** This updates you with YOUR REMOTE REPOSITORY, so make sure you have merged your remote repository with the trunk
+# If you keep getting errors, and they're not in the frameworks/projects directory, just delete the whole directory from the root (say the "modules" directory), and do "svn checkout ...." from the trunk.
+# svn commit

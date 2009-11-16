@@ -1053,9 +1053,8 @@ public class InterfaceCompiler extends flex2.compiler.AbstractSubCompiler implem
         private DocumentInfo docInfo;
         private ClassInfo baseClassInfo;
         private int repeaterNum;
-        private int inlineComponentCount;
-        private int libraryDefinitionCount;
-        private Set<String> inlineComponentClassNames = new HashSet<String>();
+        private int innerClassCount = 0;
+        private Set<String> innerClassNames = new HashSet<String>();
         private Set<String> bogusImports = new HashSet<String>();
     	private Set<DesignLayerNode> declaredLayers = new HashSet<DesignLayerNode>();
 
@@ -1158,17 +1157,17 @@ public class InterfaceCompiler extends flex2.compiler.AbstractSubCompiler implem
 
         public void analyze(XMLNode node)
         {
-            //  auto-import XMLUtil in generated source, if we're using XML tags
-            docInfo.addImportName(NameFormatter.toDot(standardDefs.CLASS_XMLLIST), node.beginLine);
+            if (!node.isE4X())
+            {
+                //  auto-import XMLUtil in generated source, if we're using XML tags with e4x=false.
+                docInfo.addImportName(NameFormatter.toDot(standardDefs.CLASS_XMLUTIL), node.beginLine);
+            }
 
             registerVariableForId(node, NameFormatter.toDot(standardDefs.getXmlBackingClassName(node.isE4X())));
         }
 
         public void analyze(XMLListNode node)
         {
-            //  auto-import XMLUtil in generated source, if we're using XML tags
-            docInfo.addImportName(NameFormatter.toDot(standardDefs.CLASS_XMLLIST), node.beginLine);
-
             registerVariableForId(node, NameFormatter.toDot(standardDefs.CLASS_XMLLIST));
         }
 
@@ -1398,35 +1397,12 @@ public class InterfaceCompiler extends flex2.compiler.AbstractSubCompiler implem
             Node componentRoot = (Node) node.getChildAt(0);
 
             //  TODO central place for MXML language constants
-            String className = (String)node.getAttributeValue(InlineComponentNode.CLASS_NAME_ATTR);
-            if (className != null)
-            {
-                //  user-specified class name - must be unqualified
-                if (!TextParser.isValidIdentifier(className))
-                {
-                    log(node.getLineNumber(InlineComponentNode.CLASS_NAME_ATTR), new ClassNameInvalidActionScriptIdentifier());
-                    className = null;   //  let compiler proceed with generated classname
-                }
-                else if (inlineComponentClassNames.contains(className))
-                {
-                    log(node.getLineNumber(InlineComponentNode.CLASS_NAME_ATTR), new ClassNameSpecifiedMoreThanOnce());
-                    className = null;   //  let compiler proceed with generated classname
-                }
-                else
-                {
-                    inlineComponentClassNames.add(className);
-                }
-            }
-
-            if (className == null)
-            {
-                // Create a unique class name.
-                //  TODO add hash to avoid collisions with user-defined classes?
-                className = docInfo.getClassName() + "_inlineComponent" + (++inlineComponentCount);
-            }
+            String className = getInnerClassName(node.getAttribute(InlineComponentNode.CLASS_NAME_ATTR));
 
             //  qualify inline component classname with specifying component's package
             QName classQName = new QName(docInfo.getPackageName(), className);
+
+            docInfo.addImportName(NameFormatter.toDot(classQName), node.beginLine);
 
             //  save classname to the inline component node
             //  TODO ideally, we could just convert this in-place to a ClassNode for downstream processing
@@ -1434,9 +1410,10 @@ public class InterfaceCompiler extends flex2.compiler.AbstractSubCompiler implem
             node.setClassQName(classQName);
 
             // Create a new Source for the node.
-            VirtualFile virtualFile = new TextFile("", className, unit.getSource().getName(), unit.getSource().getParent(),
+            VirtualFile virtualFile = new TextFile("", unit.getSource().getName() + "$" + className,
+                                                   unit.getSource().getName(), unit.getSource().getParent(),
                                                    MimeMappings.MXML, unit.getSource().getLastModified());
-            Source source = new Source(virtualFile, unit.getSource(), false, false);
+            Source source = new Source(virtualFile, unit.getSource(), className, false, false);
 
             // Set the Source's syntax tree to the DocumentNode
             // equivalent of the grandchild, so that the text
@@ -1480,25 +1457,15 @@ public class InterfaceCompiler extends flex2.compiler.AbstractSubCompiler implem
         {
             MetaDataNode inlineExcludeNode =
             	new MetaDataNode(componentRoot.getNamespace(), componentRoot.getLocalPart(), 0);
-            
-            inlineExcludeNode.beginLine = componentRoot.beginLine;
-            inlineExcludeNode.beginColumn = componentRoot.beginColumn;
-            inlineExcludeNode.endLine = componentRoot.endLine;
-            inlineExcludeNode.endColumn = componentRoot.endColumn;
+
             inlineExcludeNode.image = componentRoot.image;
             
         	CDATANode excludeTextNode = new CDATANode();
             excludeTextNode.image = "[ExcludeClass]";
             
-            excludeTextNode.beginLine = componentRoot.beginLine;
-            excludeTextNode.beginColumn = componentRoot.beginColumn;
-            excludeTextNode.endLine = componentRoot.endLine;
-            excludeTextNode.endColumn = componentRoot.endColumn;
-            
             inlineExcludeNode.addChild(excludeTextNode);
             inlineDocumentNode.addChild(inlineExcludeNode);
         }
-        
         
         /**
          * A Library Definition - equivalent to an inline private class
@@ -1508,16 +1475,13 @@ public class InterfaceCompiler extends flex2.compiler.AbstractSubCompiler implem
         private void createDefinitionUnit(DefinitionNode node)
         {
             Node definitionRoot = (Node) node.getChildAt(0);
-
-            String nameAttr = (String)node.getAttributeValue(DefinitionNode.DEFINITION_NAME_ATTR);
-
-            String className = docInfo.getClassName() + "_definition" + (++libraryDefinitionCount);
+            String className = getInnerClassName(node.getAttribute(DefinitionNode.DEFINITION_NAME_ATTR));
 
             // Qualify definition classname with language namespace
             QName classQName = new QName(docInfo.getPackageName(), className);
 
             // Register the local class mapping...
-            docInfo.addLocalClass(node.getNamespace(), nameAttr, classQName.toString());
+            docInfo.addLocalClass(node.getNamespace(), className, classQName.toString());
 
             // save classname to the inline component node
             // TODO ideally, we could just convert this in-place to a ClassNode for downstream processing
@@ -1525,9 +1489,10 @@ public class InterfaceCompiler extends flex2.compiler.AbstractSubCompiler implem
             node.setName(classQName);
 
             // Create a new Source for the node.
-            VirtualFile virtualFile = new TextFile("", className, unit.getSource().getName(), unit.getSource().getParent(),
+            VirtualFile virtualFile = new TextFile("", unit.getSource().getName() + "$" + className,
+                                                   unit.getSource().getName(), unit.getSource().getParent(),
                                                   MimeMappings.MXML, unit.getSource().getLastModified());
-            Source source = new Source(virtualFile, unit.getSource(), false, false);
+            Source source = new Source(virtualFile, unit.getSource(), className, false, false);
 
             // Set the Source's syntax tree to the DocumentNode
             // equivalent of the grandchild, so that the text
@@ -1556,6 +1521,39 @@ public class InterfaceCompiler extends flex2.compiler.AbstractSubCompiler implem
             source.addSourceFragment(AttrInlineComponentSyntaxTree, definitionDocumentNode, null);
 
             unit.addGeneratedSource(classQName, source);
+        }
+
+        private String getInnerClassName(Attribute attribute)
+        {
+            String result = null;
+
+            if (attribute != null)
+            {
+                result = (String) attribute.getValue();
+
+                //  user-specified class name - must be unqualified
+                if (!TextParser.isValidIdentifier(result))
+                {
+                    log(attribute.getLine(), new ClassNameInvalidActionScriptIdentifier());
+                    result = null;   //  let compiler proceed with generated classname
+                }
+                else if (innerClassNames.contains(result))
+                {
+                    log(attribute.getLine(), new ClassNameSpecifiedMoreThanOnce());
+                    result = null;   //  let compiler proceed with generated classname
+                }
+                else
+                {
+                    innerClassNames.add(result);
+                }
+            }
+
+            if (result == null)
+            {
+                result = docInfo.getClassName() + "InnerClass" + (++innerClassCount);
+            }
+            
+            return result;
         }
 
         /**
@@ -1683,7 +1681,10 @@ public class InterfaceCompiler extends flex2.compiler.AbstractSubCompiler implem
 
         public void analyze(XMLNode node)
         {
-            requestType(standardDefs.CLASS_XMLUTIL, node);
+            if (!node.isE4X())
+            {
+                requestType(standardDefs.CLASS_XMLUTIL, node);
+            }
             requestType(standardDefs.getXmlBackingClassName(node.isE4X()), node);
         }
 

@@ -40,7 +40,7 @@ public class FontDescription
     public int style;
 
     /**
-     * The unicode characters to include in the DefineFont, or pass null to
+     * The Unicode characters to include in the DefineFont, or pass null to
      * include all available characters.
      */
     public String unicodeRanges;
@@ -56,4 +56,68 @@ public class FontDescription
      * (if supported).
      */
     public boolean compactFontFormat;
+
+    /**
+     * Tests whether another FontDescription describes the same font.
+     * 
+     * Note that the alias is not considered in the comparison.
+     * 
+     * @param value Another FontDescription instance to test for equality.
+     * @return
+     */
+    public boolean equals(Object value)
+    {
+        if (this == value)
+        {
+            return true;
+        }
+        else if (value != null && value instanceof FontDescription)
+        {
+            FontDescription other = (FontDescription)value;
+
+            if (style != other.style)
+                return false;
+            
+            if (compactFontFormat != other.compactFontFormat)
+                return false;
+
+            if (advancedAntiAliasing != other.advancedAntiAliasing)
+                return false;
+
+            if (unicodeRanges == null && other.unicodeRanges != null)
+                return false;
+
+            if (source == null && other.source != null)
+                return false;
+
+            if (unicodeRanges != null && !unicodeRanges.equals(other.unicodeRanges))
+                return false;
+
+            if (source != null && !source.equals(other.source))
+                return false;
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Computes a hash code for this FontDescription instance. Note that the
+     * alias is not considered in calculating a hash code.
+     * 
+     * @return a hash code based on all fields used to describe the font. 
+     */
+    public int hashCode()
+    {
+        int result = style;
+
+        if (source != null)
+            result ^= source.hashCode();
+
+        if (unicodeRanges != null)
+            result ^= unicodeRanges.hashCode();
+
+        return result;
+    }
 }

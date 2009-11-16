@@ -131,12 +131,16 @@ $str
  *#
 #macro (emitComponentInitializers_1)
 
+#if (!$doc.isIFlexModule)
+
         // our style settings
 #emitComponentStyleSettings()
 
 #if ($doc.stylesContainer.styleDefs.size() > 0 || $doc.isFlexApplication)
         // ambient styles
         mx_internal::_${doc.className}_StylesInit();
+#end
+
 #end
         // layer initializers
 #emitInitializers("        " $doc.designLayerPropertyInitializerIterator "this")
@@ -152,6 +156,24 @@ $str
 
         // events
 #emitInitializers("        " $doc.root.eventInitializerIterator "this")
+
+#end
+
+#**
+ *
+ *  emitComponentStyleInitializers
+ *  initializers that run in the module factory override of a IFlexModule object.
+ *
+ *#
+#macro (emitComponentStyleInitializers)
+
+        // our style settings
+#emitComponentStyleSettings()
+
+#if ($doc.stylesContainer.styleDefs.size() > 0 || $doc.isFlexApplication)
+        // ambient styles
+        mx_internal::_${doc.className}_StylesInit();
+#end
 
 #end
 
@@ -254,7 +276,7 @@ $str
 #macro (emitStylesInitFunc $fname)
 #trace("	//	initialize style defs for $doc.className")
 
-	mx_internal static var ${fname}_done:Boolean = false;
+	mx_internal var ${fname}_done:Boolean = false;
 
 	mx_internal function $fname():void
 	{
@@ -406,7 +428,7 @@ $str
                 return (result == undefined ? null : String(result));
 #elseif (${bindingExpression.getDestinationTypeName(true)} == "Array")
 #embedText("                var result:* = $bindingExpression.sourceExpression;" $bindingExpression.xmlLineNumber)
-                return ((result is Array) || (result is flash.utils.Proxy) ? result : [result]);
+                return (!result || (result is Array) || (result is flash.utils.Proxy) ? result : [result]);
 #else
 #embedText("                return $bindingExpression.repeatableSourceExpression;" $bindingExpression.xmlLineNumber)
 #end
@@ -435,7 +457,7 @@ $str
                 return (result == undefined ? null : String(result));
 #elseif (${bindingExpression.getDestinationTypeName(true)} == "Array")
 #embedText("                var result:* = $bindingExpression.sourceExpression;" $bindingExpression.xmlLineNumber)
-                return ((result is Array) || (result is flash.utils.Proxy) ? result : [result]);
+                return (!result || (result is Array) || (result is flash.utils.Proxy) ? result : [result]);
 #else
 #if (${bindingExpression.getTwoWayCounterpart()})
         	${bindingExpression.getTwoWayCounterpart().getNamespaceDeclarations()}

@@ -24,6 +24,8 @@ import spark.components.Group;
 import spark.effects.animation.Animation;
 import spark.effects.animation.Keyframe;
 import spark.effects.animation.MotionPath;
+import spark.effects.easing.IEaser;
+import spark.effects.easing.Sine;
 
 use namespace mx_internal;
 
@@ -231,7 +233,7 @@ public class AnimateTransformInstance extends AnimateInstance
     /**
      * @private
      * 
-     * This function is overriden to prevent starting the single instance more
+     * This function is overridden to prevent starting the single instance more
      * than once. It will be called whenever any of the transform effects are
      * played, but it should only actually start the instance the first time.
      */
@@ -521,12 +523,58 @@ public class AnimateTransformInstance extends AnimateInstance
         }
         for (s in autoProps)
         {
-            var mp:MotionPath = new MotionPath(s);
-            mp.keyframes = new <Keyframe>[new Keyframe(0, null), 
-                new Keyframe(duration, null)];
-            mp.scaleKeyframes(duration);
             if (!motionPaths)
                 motionPaths = new Vector.<MotionPath>();
+            var autoPropsEaser:IEaser;
+            if (!autoPropsEaser)
+            {
+                // Attempt to use the same easer used in the existing keyframes. Assume that
+                // The first set of keyframes ends with the same easing that is applied elsewhere
+                // in this motion path. If that doesn't work, use the default for the SDK (Sine(.5))
+                if (motionPaths.length > 0 &&
+                    motionPaths[0] && motionPaths[0].keyframes && 
+                    motionPaths[0].keyframes.length > 0 &&
+                    motionPaths[0].keyframes[motionPaths[0].keyframes.length-1])
+                {
+                    autoPropsEaser = motionPaths[0].keyframes[motionPaths[0].keyframes.length-1].easer;
+                }
+                else
+                {
+                    autoPropsEaser = new Sine(.5);
+                }
+            }
+            var mp:MotionPath = new MotionPath(s);
+            var mpDone:Boolean = false;
+            if (s.indexOf("postLayoutTranslation") == 0)
+            {
+                // Special-case postLayoutTranslation: use any existing pre-layout values
+                var preLayoutProp:String = (s == "postLayoutTranslationX") ? 
+                    "translationX" :
+                    (s == "postLayoutTranslationY") ?
+                    "translationY" :
+                    "translationZ";
+                for (var k:int = 0; k < motionPaths.length; ++k)
+                {
+                    var preLayoutMP:MotionPath = motionPaths[k];
+                    if (preLayoutMP.property == preLayoutProp)
+                    {
+                        mp.keyframes = new Vector.<Keyframe>(preLayoutMP.keyframes.length);
+                        for (var m:int = 0; m < mp.keyframes.length; ++m)
+                        {
+                            mp.keyframes[m] = preLayoutMP.keyframes[m].clone();
+                        }
+                        mpDone = true;
+                        break;
+                    }
+                }
+            }
+            if (!mpDone)
+            {
+                mp.keyframes = new <Keyframe>[new Keyframe(0, null), 
+                    new Keyframe(duration, null)];
+                mp.keyframes[1].easer = autoPropsEaser;
+                mp.scaleKeyframes(duration);
+            }
             motionPaths.push(mp);
         }
         if (propertyChanges && !disableLayout)

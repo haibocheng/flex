@@ -28,4 +28,5 @@ public interface MXMLNamespaces
 
     public static final String SPARK_NAMESPACE = "library://ns.adobe.com/flex/spark";
     public static final String HALO_NAMESPACE = "library://ns.adobe.com/flex/halo";
+    public static final String MX_NAMESPACE = "library://ns.adobe.com/flex/mx";
 }

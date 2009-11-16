@@ -45,7 +45,10 @@ public class BitmapGraphicNode extends GraphicContentNode
      */
     public String getNodeName()
     {
-        return FXG_BITMAPGRAPHIC_ELEMENT;
+    	if (this.getFileVersion().equals(FXGVersion.v1_0) )
+    		return FXG_BITMAPGRAPHIC_ELEMENT;
+    	else
+    		return FXG_BITMAPIMAGE_ELEMENT;
     }
 
     @Override

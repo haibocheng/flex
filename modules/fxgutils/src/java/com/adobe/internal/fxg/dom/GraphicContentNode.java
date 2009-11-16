@@ -84,9 +84,9 @@ public abstract class GraphicContentNode extends AbstractFXGNode
     protected boolean rotationSet;
     protected boolean alphaSet;
     protected boolean maskTypeSet;
-    
-    //is part of mask
-    public boolean isPartofMask = false;
+
+    //is part of clip mask
+    public boolean isPartofClipMask = false;
 
     //--------------------------------------------------------------------------
     //

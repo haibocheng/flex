@@ -171,8 +171,12 @@ public class InterfaceGenerator extends AbstractGenerator
             result = nodeFactory.statementList(result, bindableMetaData);
 
             DocumentInfo.VarDecl varDecl = iterator.next();
+
+            int position = AbstractSyntaxTreeUtil.lineNumberToPosition(nodeFactory, varDecl.line);
+
             TypeExpressionNode typeExpression =
-                AbstractSyntaxTreeUtil.generateTypeExpression(nodeFactory, varDecl.className, true);
+                AbstractSyntaxTreeUtil.generateTypeExpression(nodeFactory, varDecl.className,
+                                                              true, position);
             Node variableDefinition =
                 AbstractSyntaxTreeUtil.generatePublicVariable(context, typeExpression, varDecl.name);
             result = nodeFactory.statementList(result, variableDefinition);

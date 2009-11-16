@@ -16,6 +16,7 @@ import flash.display.BlendMode;
 import flash.display.DisplayObject;
 import flash.geom.Rectangle;
 
+import mx.core.IFlexModule;
 import mx.core.IFontContextComponent;
 import mx.core.IUIComponent;
 import mx.core.IUITextField;
@@ -24,6 +25,14 @@ import mx.core.IVisualElementContainer;
 import mx.core.UIComponent;
 import mx.core.mx_internal;
 import mx.events.FlexEvent;
+import mx.graphics.shaderClasses.ColorBurnShader;
+import mx.graphics.shaderClasses.ColorDodgeShader;
+import mx.graphics.shaderClasses.ColorShader;
+import mx.graphics.shaderClasses.ExclusionShader;
+import mx.graphics.shaderClasses.HueShader;
+import mx.graphics.shaderClasses.LuminosityShader;
+import mx.graphics.shaderClasses.SaturationShader;
+import mx.graphics.shaderClasses.SoftLightShader;
 import mx.styles.ISimpleStyleClient;
 import mx.styles.IStyleClient;
 import mx.styles.StyleProtoChain;
@@ -33,15 +42,6 @@ import spark.core.DisplayObjectSharingMode;
 import spark.core.IGraphicElement;
 import spark.core.ISharedDisplayObject;
 import spark.events.ElementExistenceEvent;
-import spark.components.supportClasses.TextBase;
-import spark.primitives.shaders.ColorBurnShader;
-import spark.primitives.shaders.ColorDodgeShader;
-import spark.primitives.shaders.ColorShader;
-import spark.primitives.shaders.ExclusionShader;
-import spark.primitives.shaders.HueShader;
-import spark.primitives.shaders.LuminosityShader;
-import spark.primitives.shaders.SaturationShader;
-import spark.primitives.shaders.SoftLightShader;
 
 use namespace mx_internal;
 
@@ -124,7 +124,7 @@ use namespace mx_internal;
  * 
  *  <pre>
  *  alpha
- *  blendMode other than BlendMode.NORMAL
+ *  blendMode other than BlendMode.NORMAL or "auto"
  *  colorTransform
  *  filters
  *  mask
@@ -293,19 +293,17 @@ public class Group extends GroupBase implements IVisualElementContainer, IShared
         if (super.alpha == value)
             return;
         
-        if (value > 0 && value < 1 && !blendModeExplicitlySet && _blendMode == "auto")
+        if (_blendMode == "auto")
         {
-            _blendMode = BlendMode.LAYER;
-            blendModeChanged = true;
-            invalidateDisplayObjectOrdering();
-            invalidateProperties();
-        }
-        else if ((value == 1 || value == 0) && !blendModeExplicitlySet && _blendMode == "auto")
-        {
-            _blendMode = BlendMode.NORMAL;
-            blendModeChanged = true;
-            invalidateDisplayObjectOrdering();
-            invalidateProperties();
+            // if alpha changes from an opaque/transparent (1/0) and translucent
+            // (0 < value < 1), then trigger a blendMode change
+            if ((value > 0 && value < 1 && (super.alpha == 0 || super.alpha == 1)) ||
+                ((value == 0 || value == 1) && (super.alpha > 0 && super.alpha < 1)))
+            {
+                blendModeChanged = true;
+                invalidateDisplayObjectOrdering();
+                invalidateProperties();
+            }
         }
         
         super.alpha = value;
@@ -321,8 +319,7 @@ public class Group extends GroupBase implements IVisualElementContainer, IShared
      */
     private var _blendMode:String = "auto";  
     private var blendModeChanged:Boolean;
-	private var blendShaderChanged:Boolean;
-    private var blendModeExplicitlySet:Boolean;
+    private var blendShaderChanged:Boolean;
 
     [Inspectable(category="General", enumeration="auto,add,alpha,darken,difference,erase,hardlight,invert,layer,lighten,multiply,normal,subtract,screen,overlay,colordodge,colorburn,exclusion,softlight,hue,saturation,color,luminosity", defaultValue="auto")]
 
@@ -334,6 +331,13 @@ public class Group extends GroupBase implements IVisualElementContainer, IShared
      *  If you attempt to set this property to an invalid value, 
      *  Flash Player or Adobe AIR sets the value to <code>BlendMode.NORMAL</code>. 
      *
+     *  <p>A value of "auto" (the default) is specific to Group's use of 
+     *  blendMode and indicates that the underlying blendMode should be 
+     *  <code>BlendMode.NORMAL</code> except when <code>alpha</code> is not
+     *  equal to either 0 or 1, when it will be set to <code>BlendMode.LAYER</code>. 
+     *  This behavior ensures that groups will have correct
+     *  compositing of their graphic objects when the group is translucent.</p>
+     * 
      *  @default "auto"
      *
      *  @see flash.display.DisplayObject#blendMode
@@ -354,58 +358,39 @@ public class Group extends GroupBase implements IVisualElementContainer, IShared
      */
     override public function set blendMode(value:String):void
     {
-        if (blendModeExplicitlySet && value == _blendMode)
+        if (value == _blendMode)
             return;
         
-    	//The default blendMode in FXG is 'auto'. There are only
+        invalidateProperties();
+        blendModeChanged = true;
+        
+        //The default blendMode in FXG is 'auto'. There are only
         //certain cases where this results in a rendering difference,
         //one being when the alpha of the Group is > 0 and < 1. In that
         //case we set the blendMode to layer to avoid the performance
         //overhead that comes with a non-normal blendMode. 
         
-        if (alpha > 0 && alpha < 1 && !blendModeExplicitlySet && value == "auto")
+        if (value == "auto")
         {
-            if (_blendMode != BlendMode.LAYER)
+            _blendMode = value;
+            if (((alpha > 0 && alpha < 1) && super.blendMode != BlendMode.LAYER) ||
+                ((alpha == 1 || alpha == 0) && super.blendMode != BlendMode.NORMAL) )
             {
-                _blendMode = BlendMode.LAYER;
-                blendModeChanged = true;
                 invalidateDisplayObjectOrdering();
-                invalidateProperties();
             }
         }
-        else if ((alpha == 1 || alpha == 0) && !blendModeExplicitlySet && value == "auto")
-        {
-            if (_blendMode != BlendMode.NORMAL)
-            {
-                _blendMode = BlendMode.NORMAL;
-                blendModeChanged = true;
-                invalidateDisplayObjectOrdering();
-                invalidateProperties();
-            }
-        }
-
         else 
         {
-			var oldValue:String = _blendMode;
-			_blendMode = value;
-			
-			// If one of the non-native Flash blendModes is set, 
-			// record the new value and set the appropriate 
-			// blendShader on the display object. 
-			if (value == "colordodge" || 
-				value =="colorburn" || value =="exclusion" || 
-				value =="softlight" || value =="hue" || 
-				value =="saturation" || value =="color" 
-				|| value =="luminosity")
-			{
-				blendModeExplicitlySet = true;
-				blendShaderChanged = true;
-			}
-			else
-			{
-            	blendModeExplicitlySet = true;
-            	blendModeChanged = true;
-			}
+            var oldValue:String = _blendMode;
+            _blendMode = value;
+            
+            // If one of the non-native Flash blendModes is set, 
+            // record the new value and set the appropriate 
+            // blendShader on the display object. 
+            if (isAIMBlendMode(value))
+            {
+                blendShaderChanged = true;
+            }
         
             // Only need to re-do display object assignment if blendmode was normal
             // and is changing to something else, or the blend mode was something else 
@@ -417,7 +402,6 @@ public class Group extends GroupBase implements IVisualElementContainer, IShared
                 invalidateDisplayObjectOrdering();
             }
         
-            invalidateProperties();
         }
     }
 
@@ -746,70 +730,83 @@ public class Group extends GroupBase implements IVisualElementContainer, IShared
      */ 
     override protected function commitProperties():void
     {
-        super.commitProperties();
-        
-        if (blendModeChanged && !blendShaderChanged)
+        if (blendModeChanged)
         {
             blendModeChanged = false;
-            if (_blendMode == "auto" && alpha < 1 && alpha > 0)
-                super.blendMode = BlendMode.LAYER;
-            else if (_blendMode == "auto" && alpha == 1 || alpha == 0)
-                super.blendMode = BlendMode.NORMAL;
+            
+            // Figure out the correct blendMode value
+            // to set. 
+            if (_blendMode == "auto")
+            {
+                if (alpha == 0 || alpha == 1) 
+                    super.blendMode = BlendMode.NORMAL;
+                else
+                    super.blendMode = BlendMode.LAYER;
+            }
+            else if (!isAIMBlendMode(_blendMode))
+            {
+                super.blendMode = _blendMode;
+            }
+                // The blendMode is neither a native value, 
+                // or the 'auto' value so lets set blendMode 
+                // to normal.  
             else 
-                super.blendMode = _blendMode; 			
+                super.blendMode = "normal"; 
+            
+            if (blendShaderChanged) 
+            {
+                // The graphic element's blendMode was set to a non-Flash 
+                // blendMode. We mimic the look by instantiating the 
+                // appropriate shader class and setting the blendShader
+                // property on the displayObject. 
+                blendShaderChanged = false; 
+                switch(_blendMode)
+                {
+                    case "color": 
+                    {
+                        super.blendShader = new ColorShader();
+                        break; 
+                    }
+                    case "colordodge":
+                    {
+                        super.blendShader = new ColorDodgeShader();
+                        break; 
+                    }
+                    case "colorburn":
+                    {
+                        super.blendShader = new ColorBurnShader();
+                        break; 
+                    }
+                    case "exclusion":
+                    {
+                        super.blendShader = new ExclusionShader();
+                        break; 
+                    }
+                    case "hue":
+                    {
+                        super.blendShader = new HueShader();
+                        break; 
+                    }
+                    case "luminosity":
+                    {
+                        super.blendShader = new LuminosityShader();
+                        break; 
+                    }
+                    case "saturation": 
+                    {
+                        super.blendShader = new SaturationShader();
+                        break; 
+                    }
+                    case "softlight":
+                    {
+                        super.blendShader = new SoftLightShader();
+                        break; 
+                    }
+                }
+            }
         }
-		
-		if (blendShaderChanged)
-		{
-			// The graphic element's blendMode was set to a non-Flash 
-			// blendMode. We mimic the look by instantiating the 
-			// appropriate shader class and setting the blendShader
-			// property on the displayObject. 
-			blendShaderChanged = false; 
-			switch(_blendMode)
-			{
-				case "color": 
-				{
-					super.blendShader = new ColorShader();
-					break; 
-				}
-				case "colordodge":
-				{
-					super.blendShader = new ColorDodgeShader();
-					break; 
-				}
-				case "colorburn":
-				{
-					super.blendShader = new ColorBurnShader();
-					break; 
-				}
-				case "exclusion":
-				{
-					super.blendShader = new ExclusionShader();
-					break; 
-				}
-				case "hue":
-				{
-					super.blendShader = new HueShader();
-					break; 
-				}
-				case "luminosity":
-				{
-					super.blendShader = new LuminosityShader();
-					break; 
-				}
-				case "saturation": 
-				{
-					super.blendShader = new SaturationShader();
-					break; 
-				}
-				case "softlight":
-				{
-					super.blendShader = new SoftLightShader();
-					break; 
-				}
-			}
-		}
+        
+        super.commitProperties();
         
         if (needsDisplayObjectAssignment)
         {
@@ -898,7 +895,7 @@ public class Group extends GroupBase implements IVisualElementContainer, IShared
         if (sharedDisplayObject.redrawRequested)
         {
             graphics.clear();
-            renderBackgroundFill();
+            drawBackground();
             
             // If a scaleGrid is set, make sure the extent of the groups bounds are filled so
             // the player will scale our contents as expected. 
@@ -970,6 +967,7 @@ public class Group extends GroupBase implements IVisualElementContainer, IShared
         
             if (isValidScaleGrid())
             {
+                // FIXME (egeorgie): how about overlays in this case? Should we care about those?
                 if (numChildren > 0)
                     throw new Error(resourceManager.getString("components", "scaleGridGroupError"));
 
@@ -1091,6 +1089,20 @@ public class Group extends GroupBase implements IVisualElementContainer, IShared
             
         if (index < 0 || index > maxIndex)
             throw new RangeError(resourceManager.getString("components", "indexOutOfRange", [index]));
+    }
+    
+    /**
+     * @private
+     */
+    private function isAIMBlendMode(value:String):Boolean
+    {
+        if (value == "colordodge" || 
+            value =="colorburn" || value =="exclusion" || 
+            value =="softlight" || value =="hue" || 
+            value =="saturation" || value =="color" ||
+            value =="luminosity")
+            return true; 
+        else return false; 
     }
  
     /**
@@ -1343,6 +1355,20 @@ public class Group extends GroupBase implements IVisualElementContainer, IShared
         if (element.depth != 0)
             invalidateLayering();
 
+        // Set the moduleFactory to the child, but don't overwrite an existing moduleFactory.
+        // Propagate moduleFactory to the child, but don't overwrite an existing moduleFactory.
+        if (element is IFlexModule && IFlexModule(element).moduleFactory == null)
+        {
+            if (moduleFactory != null)
+                IFlexModule(element).moduleFactory = moduleFactory;
+                
+            else if (document is IFlexModule && document.moduleFactory != null)
+                IFlexModule(element).moduleFactory = document.moduleFactory;
+                
+            else if (parent is IFlexModule && IFlexModule(element).moduleFactory != null)
+                IFlexModule(element).moduleFactory = IFlexModule(parent).moduleFactory;
+        }
+        
         // Set the font context in non-UIComponent children.
         // UIComponent children use moduleFactory.
         if (element is IFontContextComponent && !(element is UIComponent) &&
@@ -1770,10 +1796,11 @@ public class Group extends GroupBase implements IVisualElementContainer, IShared
      */ 
     private function addDisplayObjectToDisplayList(child:DisplayObject, index:int = -1):void
     {
+        var overlayCount:int = _overlay ? _overlay.numDisplayObjects : 0;
         if (child.parent == this)
-            super.setChildIndex(child, index != -1 ? index : super.numChildren - 1);
+            super.setChildIndex(child, index != -1 ? index : super.numChildren - 1 - overlayCount);
         else
-            super.addChildAt(child, index != -1 ? index : super.numChildren);
+            super.addChildAt(child, index != -1 ? index : super.numChildren - overlayCount);
     }
 
     /**

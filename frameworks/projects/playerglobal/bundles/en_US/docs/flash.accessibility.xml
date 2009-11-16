@@ -1,0 +1,1078 @@
+ 
+<apiPackage id="flash.accessibility"><apiName>flash.accessibility</apiName><apiDetail/><apiClassifier id="flash.accessibility:AccessibilityImplementation"><apiName>AccessibilityImplementation</apiName><shortdesc>
+ The AccessibilityImplementation class is the base class in Flash Player
+ that allows for the implementation of accessibility in components.</shortdesc><prolog><asMetadata/></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ The AccessibilityImplementation class is the base class in Flash Player
+ that allows for the implementation of accessibility in components. 
+ This class enables communication between a component and a screen reader. 
+ Screen readers are used to translate screen content into synthesized speech 
+ or braille for visually impaired users.
+ 
+ <p>The AccessibilityImplementation class provides a set of methods that allow a component
+ developer to make information about system roles, object based events, and states available
+ to assistive technology.</p>
+ 
+ <p>Adobe Flash Player uses Microsoft Active Accessibility (MSAA), which provides a descriptive
+ and standardized way for applications and screen readers to communicate. For more information
+ on how the Flash Player works with MSAA, see the accessibility chapter in <i>Using Flex SDK</i>.</p>
+ 
+ <p>The methods of the AccessibilityImplementation class are a subset of the 
+ <xref href="http://msdn.microsoft.com/en-us/library/ms696097(VS.85).aspx">IAccessible</xref> interface
+ for a component instance.</p>
+ 
+ <p>The way that an AccessibilityImplementation implements the IAccessible interface, 
+ and the events that it sends, depend on the kind of component being implemented.</p>
+ 
+ <p>Do not directly instantiate AccessibilityImplementation by calling its constructor.
+ Instead, create new accessibility implementations by extending the Flex mx.accessibility.AccImpl
+ class for each new component. See the accessibility chapter in <i>Using Flex SDK</i>.</p>
+ </apiDesc></apiClassifierDetail><apiConstructor id="flash.accessibility:AccessibilityImplementation:AccessibilityImplementation"><apiName>AccessibilityImplementation</apiName><shortdesc>
+	 Do not directly instantiate AccessibilityImplementation by calling its constructor.</shortdesc><prolog/><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/></apiConstructorDef><apiDesc>
+	 Do not directly instantiate AccessibilityImplementation by calling its constructor.
+ 	 Instead, create new accessibility implementations by extending the Flex mx.accessibility.AccImpl
+	 class for each new component.
+	 
+	 </apiDesc></apiConstructorDetail><related-links><link href=""><linktext>The mx.accessibility.AccImpl class in Flex (\sdks\4.0.0\frameworks\projects\framework\src\mx\accessibility\AccImpl.as)</linktext></link></related-links></apiConstructor><apiOperation id="flash.accessibility:AccessibilityImplementation:accDoDefaultAction"><apiName>accDoDefaultAction</apiName><shortdesc>
+	 An IAccessible method that performs the default action associated with the component
+	 that this AccessibilityImplementation represents or of one of its child elements.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>childID</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiDesc>An unsigned integer corresponding to one of the component's child elements,
+	 as defined by <codeph>getChildIDArray()</codeph>.
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 An IAccessible method that performs the default action associated with the component
+	 that this AccessibilityImplementation represents or of one of its child elements.
+	 
+	 <p>Implement this method only if the AccessibilityImplementation represents a UI element
+	 that has a default action in the MSAA model.</p>
+	 
+	 <p>If you are implementing <codeph>accDoDefaultAction()</codeph> only for the AccessibilityImplementation
+	 itself, or only for its child elements, you will need in some cases to indicate that there
+	 is no default action for the particular childID that was passed. 
+	 Do this by setting the <codeph>errno</codeph> property to <codeph>E_MEMBERNOTFOUND</codeph>.</p>
+	 
+	 </apiDesc><example>Following is an example showing how this method is implemented to perform
+	 the appropriate default action in 
+	 the Flex mx.accessibility.ListBaseAccImpl class, the ListBase Accessibility Implementation. 
+	 For the ListBase and classes that inherit from it,
+	 performing the default action "Double Click" for one of its child list item elements 
+	 selects that element.
+	 <codeblock rev="3.0">
+	 override public function accDoDefaultAction(childID:uint):void
+	 {
+	 	if (childID &gt; 0)
+	 		ListBase(master).selectedIndex = childID - 1;
+	 }</codeblock>
+	 </example></apiOperationDetail></apiOperation><apiOperation id="flash.accessibility:AccessibilityImplementation:accLocation"><apiName>accLocation</apiName><shortdesc>
+	 MSAA method for returning a DisplayObject or Rectangle
+	 specifying the bounding box of a child element in the AccessibilityImplementation.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc><codeph>DisplayObject</codeph> or <codeph>Rectangle</codeph> specifying the bounding box
+	 of the child element specified by <codeph>childID</codeph> parameter.
+	 
+	 
+	 </apiDesc><apiType value="any"/></apiReturn><apiParam><apiItemName>childID</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiDesc>An unsigned integer corresponding to one of the component's child elements
+	 as defined by <codeph>getChildIDArray()</codeph>.
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 MSAA method for returning a <codeph>DisplayObject</codeph> or <codeph>Rectangle</codeph>
+	 specifying the bounding box of a child element in the AccessibilityImplementation.
+	 
+	 <p>This method is never called with a <codeph>childID</codeph> of zero. 
+	 If your AccessibilityImplementation will never contain child elements, you should not implement 
+	 this method. If your AccessibilityImplementation can contain child elements, 
+	 this method is mandatory.</p>
+	 
+	 <p>You can usually satisfy the requirements of this method by returning an 
+	 object that represents the child element itself. This works as long as the 
+	 child element is a <codeph>DisplayObject</codeph>. 
+	 In these cases, simply return the <codeph>DisplayObject</codeph> that corresponds to 
+	 the instance name associated with the relevant visual object in display list.</p>	
+	 
+	 <p>If a child element does not qualify for the technique described above, 
+	 you may do the bounding-box math yourself and return a <codeph>Rectangle</codeph> with:
+	 <codeph>x</codeph>, <codeph>y</codeph>, <codeph>width</codeph>, and <codeph>height</codeph> properties. 
+	 The <codeph>x</codeph> and <codeph>y</codeph> members specify the upper-left corner of the bounding box, and 
+	 the <codeph>width</codeph> and <codeph>height</codeph> members specify its size. All four members 
+	 should be in units of Stage pixels, and relative to the origin of the component 
+	 that the AccessibilityImplementation represents. The <codeph>x</codeph> and <codeph>y</codeph> properties may have 
+	 negative values, since the origin of a <codeph>DisplayObject</codeph> is not necessarily in its 
+	 upper-left corner.</p>
+	 
+	 <p>If the child element specified by <codeph>childID</codeph> is not visible (that is, <codeph>get_accState</codeph> 
+	 for that child would return a value including <codeph>STATE_SYSTEM_INVISIBLE</codeph>), you 
+	 may return <codeph>null</codeph> from <codeph>accLocation</codeph>. You can also 
+	 return a <codeph>Rectangle</codeph> representing the coordinates where the child element would 
+	 appear if it were visible.</p>
+	 
+	 </apiDesc><example>The following example shows how this method is implemented to return the location
+	 of a given child element in 
+	 the Flex mx.accessibility.ListBaseAccImpl class, the ListBase accessibility implementation.
+	 <codeblock rev="3.0">
+	 override public function accLocation(childID:uint):*
+	 
+	 {
+	 	var listBase:ListBase = ListBase(master);
+	 
+	 	var index:uint = childID - 1;
+	 	
+	 	if (index &amp;lt; listBase.verticalScrollPosition ||
+	 		index &amp;gt;= listBase.verticalScrollPosition + listBase.rowCount)
+	 	{
+	 		return null;
+	 	}
+	 	var item:Object = getItemAt(index);
+	 
+	 	return listBase.itemToItemRenderer(item);
+	 }
+	 </codeblock>
+	 
+	 </example></apiOperationDetail><related-links><link href="flash.display.xml#DisplayObject"><linktext>flash.display.DisplayObject</linktext></link><link href="flash.geom.xml#Rectangle"><linktext>flash.geom.Rectangle</linktext></link><link href="flash.accessibility.xml#AccessibilityImplementation/getChildIDArray()"><linktext>getChildIDArray()</linktext></link><link href="http://msdn.microsoft.com/en-us/library/ms696118(VS.85).aspx"><linktext>Microsoft Accessibility Developer Center: IAccessible::accLocation</linktext></link></related-links></apiOperation><apiOperation id="flash.accessibility:AccessibilityImplementation:accSelect"><apiName>accSelect</apiName><shortdesc>
+	 IAccessible method for altering the selection in the component 
+	 that this AccessibilityImplementation represents.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>selFlag</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiDesc>A bitfield consisting of one or more selection flag constants to indicate
+	 how the item is selected or takes focus.  
+	 </apiDesc></apiParam><apiParam><apiItemName>childID</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiDesc>An unsigned integer corresponding to one of the component's child elements
+	 as defined by <codeph>getChildIDArray()</codeph>.
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 IAccessible method for altering the selection in the component 
+	 that this AccessibilityImplementation represents. 
+	 
+	 <p>The <codeph>childID</codeph> parameter will always be nonzero. This method 
+	 always applies to a child element rather than the overall component; 
+	 Flash Player manages the selection of the overall component itself.</p>
+	 
+	 <p>The <codeph>selFlag</codeph> parameter is a bitfield consisting of one or more selection flag constants
+	 that allows an MSAA client to indicate how the item referenced by the <codeph>childID</codeph> 
+	 should be selected or take focus. What follows are descriptions of the selection flag constants
+	 and what they communicate to the accessibility implementation.  
+	 As a practical matter, most implementations of this method in accessibility implementations
+	 that inherit from the Flex mx.accessibility.ListBaseAccImpl class 
+	 ignore the <codeph>selFlag</codeph> constant and instead rely on the component's keyboard selection behavior
+	 to handle multi-selection.</p>
+	 
+	 <p>The <codeph>selFlag</codeph> parameter may or may not contain the <codeph>SELFLAG_TAKEFOCUS</codeph> 
+	 flag. If it does, you should set the child focus to the specified <codeph>childID</codeph>, 
+	 and, unless <codeph>SELFLAG_EXTENDSELECTION</codeph> is also present, make that child element 
+	 the selection anchor. Otherwise, the child focus and selection anchor should 
+	 remain unmodified, despite the fact that additional flags described below 
+	 may modify the selection.</p>
+	 
+	 <p>The <codeph>selFlag</codeph> argument will always contain one of the following four 
+	 flags, which indicate what kind of selection modification is desired:</p>
+	 <ul>
+	 <li><p><codeph>SELFLAG_TAKESELECTION</codeph>: Clear any existing selection, and set the selection 
+	 to the specified <codeph>childID</codeph>.</p>
+	 </li>
+	 <li><p><codeph>SELFLAG_EXTENDSELECTION</codeph>: Calculate the range of child elements between 
+	 and including the selection anchor and the specified <codeph>childID</codeph>. If 
+	 <codeph>SELFLAG_ADDSELECTION</codeph> is present, add all of these child elements to the 
+	 selection. If <codeph>SELFLAG_REMOVESELECTION</codeph> is present, remove all of these child 
+	 elements from the selection. If neither <codeph>SELFLAG_ADDSELECTION</codeph> nor <codeph>SELFLAG_REMOVESELECTION</codeph> 
+	 is present, all of these child elements should take on the selection anchor's 
+	 selection state: if the selection anchor is selected, add these child elements 
+	 to the selection; otherwise remove them from the selection.</p>
+	 </li>
+	 <li><p><codeph>SELFLAG_ADDSELECTION</codeph> (without <codeph>SELFLAG_EXTENDSELECTION</codeph>): Add the specified 
+	 <codeph>childID</codeph> to the selection.</p>
+	 </li>
+	 <li><p><codeph>SELFLAG_REMOVESELECTION</codeph> (without <codeph>SELFLAG_EXTENDSELECTION</codeph>): Remove the 
+	 specified <codeph>childID</codeph> from the selection.</p></li>
+	 </ul>
+	 
+	 <p>Note that for a non-multi-selectable component, the only valid <codeph>selFlag</codeph> 
+	 parameter values are <codeph>SELFLAG_TAKEFOCUS</codeph> and <codeph>SELFLAG_TAKESELECTION</codeph>.
+	 You could in theory 
+	 also choose to support <codeph>SELFLAG_REMOVESELECTION</codeph> for a non-multi-selectable 
+	 component that allowed the user to force a <codeph>null</codeph> selection, but in practice 
+	 most non-multi-selectable components do not work this way, and MSAA clients 
+	 may not attempt this type of operation.</p>
+	 
+	 <p>If you encounter flags that seem invalid, set <codeph>errno</codeph> to <codeph>E_INVALIDARG</codeph>.</p>
+	 <p>Finally, note that when <codeph>accSelect</codeph> is called, Flash Player 
+	 ensures that it has <i>host focus</i> (the window focus of its container 
+	 application), and that your component has focus within Flash Player.</p>
+	 
+	 </apiDesc><example>The following example shows how this method is implemented to select a child
+	 item in the Flex mx.accessibility.ListBaseAccImpl class, the ListBase accessibility implementation.
+	 <codeblock rev="3.0">override public function accSelect(selFlag:uint, childID:uint):void
+	 {
+	 	
+	 	var listBase:ListBase = ListBase(master);
+	 	
+	 	var index:uint = childID - 1;
+	 	
+	 	if (index &amp;gt;= 0 &amp;&amp; index &amp;lt; listBase.dataProvider.length)
+	 		listBase.selectedIndex = index;
+	 }
+	 </codeblock>
+	 	
+	 </example></apiOperationDetail><related-links><link href="flash.accessibility.xml#AccessibilityImplementation/getChildIDArray()"><linktext>getChildIDArray()</linktext></link><link href="http://msdn.microsoft.com/en-us/library/ms697291(VS.85).aspx"><linktext>Microsoft Accessibility Developer Center: IAccessible::accSelect</linktext></link></related-links></apiOperation><apiOperation id="flash.accessibility:AccessibilityImplementation:getChildIDArray"><apiName>getChildIDArray</apiName><shortdesc>
+	 Returns an array containing the unsigned integer IDs of all child elements
+	 in the AccessibilityImplementation.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Array containing the unsigned integer IDs of all child elements in the AccessibilityImplementation.
+	 
+	 </apiDesc><apiOperationClassifier>Array</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 Returns an array containing the unsigned integer IDs of all child elements
+	 in the AccessibilityImplementation. 
+	 
+	 <p>The length of the array may be zero. The IDs in the array should 
+	 appear in the same logical order as the child elements they represent. If your 
+	 AccessibilityImplementation can contain child elements, this method is mandatory; otherwise, do
+	 not implement it.</p>
+	 
+	 <p>In assigning child IDs to your child elements, use any scheme that
+	 preserves uniqueness within each instance of your AccessibilityImplementation. Child IDs need not 
+	 be contiguous, and their ordering need not match the logical ordering of the 
+	 child elements. You should arrange so as to <i>not</i> reuse child IDs; if a child 
+	 element is deleted, its ID should never be used again for the lifetime of 
+	 that AccessibilityImplementation instance. Be aware that, due to implementation choices in the Flash 
+	 player code, undesirable behavior can result if you use child IDs that exceed 
+	 one million.</p>
+	 
+	 </apiDesc><example>The following example shows how this method is implemented to return an array
+	 of childIDs in the Flex mx.accessibility.ListBaseAccImpl class, 
+	 the ListBase Accessibility Implementation.
+	 
+	 <codeblock rev="3.0">
+	 override public function getChildIDArray():Array
+	 {
+	 	var childIDs:Array = [];
+	 
+	 	if (ListBase(master).dataProvider)
+	 	{
+	 		var n:uint = ListBase(master).dataProvider.length;
+	 		for (var i:int = 0; i &amp;lt; n; i++)
+	 		{
+	 			childIDs[i] = i + 1;
+	 		}
+	 	}
+	 	return childIDs;
+	 }
+	 </codeblock>
+	 
+	 </example></apiOperationDetail></apiOperation><apiOperation id="flash.accessibility:AccessibilityImplementation:get_accDefaultAction"><apiName>get_accDefaultAction</apiName><shortdesc>
+	 MSAA method for returning the default action of the component
+	 that this AccessibilityImplementation represents or of one of its child elements.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>The default action string specified in the MSAA model for the AccessibilityImplementation
+	 or for one of its child elements. 
+	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn><apiParam><apiItemName>childID</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiDesc>An unsigned integer corresponding to one of the component's child elements,
+	 as defined by <codeph>getChildIDArray()</codeph>.
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 MSAA method for returning the default action of the component
+	 that this AccessibilityImplementation represents or of one of its child elements.
+	 
+	 <p>Implement this method only if the AccessibilityImplementation represents a UI element
+	 that has a default action in the MSAA model; be sure to return the exact string 
+	 that the MSAA model specifies.  
+	 For example, the default action string for a Button component is "Press."</p>
+	 
+	 <p>If you are implementing <codeph>get_accDefaultAction</codeph> only for the 
+	 AccessibilityImplementation itself, or only for its child elements, 
+	 you will need in some cases to indicate that there is no default action 
+	 for the particular <codeph>childID</codeph> that was passed. 
+	 Do this by simply returning <codeph>null</codeph>.</p>
+	 
+	 </apiDesc><example>The following example shows how this method is implemented to return
+	 the appropriate default actions in the Flex mx.accessibility.ListBaseAccImpl class,
+	 the ListBase accessibility implementation.
+	 <codeblock rev="3.0">override public function get_accDefaultAction(childID:uint):String
+	 {
+	 	if (childID == 0)
+	 		return null;
+	 
+	 	return "Double Click";
+	 }</codeblock>
+	  
+	 </example></apiOperationDetail><related-links><link href="flash.accessibility.xml#AccessibilityImplementation/getChildIDArray()"><linktext>getChildIDArray()</linktext></link><link href="http://msdn.microsoft.com/en-us/library/ms696144(VS.85).aspx"><linktext>Microsoft Accessibility Developer Center: IAccessible::get_accDefaultAction</linktext></link></related-links></apiOperation><apiOperation id="flash.accessibility:AccessibilityImplementation:get_accFocus"><apiName>get_accFocus</apiName><shortdesc>
+	 MSAA method for returning the unsigned integer ID of the child element, if any, 
+	 that has child focus within the component.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>The unsigned integer ID of the child element, if any, that has child focus within the component.
+	 
+	 </apiDesc><apiOperationClassifier>uint</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 MSAA method for returning the unsigned integer ID of the child element, if any, 
+	 that has child focus within the component. If no child has child focus, the method returns zero.
+	 
+	 </apiDesc><example>The following example shows how this method is implemented to return the focused childID in
+	 the Flex mx.accessibility.ListBaseAccImpl class, the ListBase accessibility implementation.
+	 
+	 <codeblock rev="3.0">override public function get_accFocus():uint
+	 {
+	 var index:uint = ListBase(master).selectedIndex;
+	 
+	 return index &gt;= 0 ? index + 1 : 0;
+	 }</codeblock>
+	 
+	 </example></apiOperationDetail><related-links><link href="flash.accessibility.xml#AccessibilityImplementation/getChildIDArray()"><linktext>getChildIDArray()</linktext></link><link href="http://msdn.microsoft.com/en-us/library/ms696150(VS.85).aspx"><linktext>Microsoft Accessibility Developer Center: IAccessible::get_accFocus</linktext></link></related-links></apiOperation><apiOperation id="flash.accessibility:AccessibilityImplementation:get_accName"><apiName>get_accName</apiName><shortdesc>
+	 MSAA method for returning the name for the component
+	 that this AccessibilityImplementation represents or for one of its child elements.</shortdesc><prolog><asCustoms><helpid>3000
+	 
+	 </helpid></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Name of the component or one of its child elements.
+	 
+	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn><apiParam><apiItemName>childID</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiDesc>An unsigned integer corresponding to one of the component's child elements
+	 as defined by <codeph>getChildIDArray()</codeph>.
+	 
+	 </apiDesc></apiParam><apiTipTexts><apiTipText>Returns the name of the component
+	  </apiTipText></apiTipTexts></apiOperationDef><apiDesc>
+	 MSAA method for returning the name for the component
+	 that this AccessibilityImplementation represents or for one of its child elements.
+	 
+	 <p>In the case of the AccessibilityImplementation itself (<codeph>childID == 0</codeph>), 
+	 if this method is not implemented, or does not return a value, Flash Player 
+	 uses the <codeph>AccessibilityProperties.name</codeph> property value, if it is present.</p>
+	 
+	 <p>For AccessibilityImplementations that can have child elements, this method must be implemented,
+	 and must return a string value when <codeph>childID</codeph> is nonzero.</p>
+	 
+	 <p>Depending on the type of user interface element, names in MSAA mean one of two different 
+	 things: an author-assigned name, or the actual text content of the element. 
+	 Usually, an AccessibilityImplementation itself will fall into the former category. 
+	 Its <codeph>name</codeph> property is an author-assigned name. Child elements 
+	 always fall into the second category. Their names indicate their text content.</p>
+	 
+	 <p>When the <codeph>name</codeph> property of an AccessibilityImplementation has the meaning
+	 of an author-assigned name, there are two ways in which components can acquire names from authors.
+	 The first entails names present within the component itself; for example, a checkbox 
+	 component might include a text label that serves as its name. The second—a fallback from
+	 the first—entails names specified in the UI and ending 
+	 up in <codeph>AccessibilityProperties.name</codeph>. This fallback option allows users to specify 
+	 names just as they would for any other Sprite or MovieClip.</p>
+	 
+	 <p>This leaves three possibilities for the AccessibilityImplementation itself (<codeph>childID == zero</codeph>):</p>
+	 <ul>
+	 <li><p><b>Author-assigned name within component.</b> The <codeph>get_accName</codeph> method 
+	 should be implemented and should return a string value that contains the 
+	 AccessibilityImplementation's name when <codeph>childID</codeph> is zero. If <codeph>childID</codeph> is zero but the 
+	 AccessibilityImplementation has no name, <codeph>get_accName</codeph> should return an empty string to prevent 
+	 the player from falling back to the <codeph>AccessibilityProperties.name</codeph> property.</p>
+	 </li>
+	 <li><p><b>Author-assigned name from UI.</b> If the AccessibilityImplementation can have child 
+	 elements, the <codeph>get_accName</codeph> method should be implemented but should not return a value when
+	 <codeph>childID</codeph> is zero. If the AccessibilityImplementation will never have child elements, 
+     	 <codeph>get_accName</codeph> should not be implemented.</p>
+     	 </li>
+     	 <li><p><b>Name signifying content.</b> The <codeph>get_accName</codeph> method should be 
+     	 implemented and should return an appropriate string value when <codeph>childID</codeph> 
+     	 is zero. If <codeph>childId</codeph> is zero but the AccessibilityImplementation has no content, 
+	 <codeph>get_accName</codeph> should return an empty string to prevent the player from falling back to 
+     	 the <codeph>AccessibilityProperties.name</codeph> property.</p>
+     	 </li>
+	 </ul>
+     	 <p>Note that for child elements (if the AccessibilityImplementation can have them), the third case 
+     	 always applies. The <codeph>get_accName</codeph> method should be implemented and should 
+     	 return an appropriate string value when <codeph>childID</codeph> is nonzero. </p>
+     	 
+     	 </apiDesc><example>The following example shows how this method is implemented in 
+	 the Flex mx.accessibility.AccImpl class,
+	 the base accessibility implementation in Flex.
+	 <codeblock rev="3.0">override public function get_accName(childID:uint):String
+	 {
+	 	// Start with the name of the component's parent form 
+	  	// if the component is contained within a form
+	 	var accName:String = UIComponentAccImpl.getFormName(master);
+	 
+	 	// If the element requested is the component itself, 
+	 	// append the value of any assigned accessibilityProperties.name	
+	 	if (childID == 0 &amp;&amp; master.accessibilityProperties 
+	 		&amp;&amp; master.accessibilityProperties.name 
+	 			&amp;&amp; master.accessibilityProperties.name != "")
+	 		accName += master.accessibilityProperties.name + " ";
+	 
+	 	// Append the value of the childIDs name 
+	 // returned by the component-specific override 
+	 // of the mx.accessibility.AccImpl.getName() utility function,
+	 	// and append the component's status returned by the 
+	 // component-specific override of the 
+	 // mx.accessibility.AccImpl.getStatusName() utility function
+	 	accName += getName(childID) + getStatusName();
+	 
+	 // Return the assembled String if it is neither empty nor null, 
+	 // otherwise return null
+	 	return (accName != null &amp;&amp; accName != "") ? accName : null;
+	 }</codeblock>
+	 
+	 
+	  </example></apiOperationDetail><related-links><link href="flash.accessibility.xml#AccessibilityImplementation/getChildIDArray()"><linktext>getChildIDArray()</linktext></link><link href="flash.accessibility.xml#AccessibilityProperties"><linktext>flash.accessibility.AccessibilityProperties</linktext></link><link href="flash.accessibility.xml#AccessibilityProperties/name"><linktext>flash.accessibility.AccessibilityProperties.name</linktext></link><link href=""><linktext>Flex mx.accessibility.AccImpl.get_accName() method</linktext></link><link href=""><linktext>Flex mx.accessibility.AccImpl.getName() method</linktext></link><link href=""><linktext>Flex mx.accessibility.AccImpl.getStatusName() method</linktext></link><link href="http://msdn.microsoft.com/en-us/library/ms696177(VS.85).aspx"><linktext>Microsoft Accessibility Developer Center: IAccessible::get_accName</linktext></link></related-links></apiOperation><apiOperation id="flash.accessibility:AccessibilityImplementation:get_accRole"><apiName>get_accRole</apiName><shortdesc>
+	 MSAA method for returning the system role for the component
+	 that this AccessibilityImplementation represents or for one of its child elements.</shortdesc><prolog><asCustoms><helpid>3000
+	  
+	 </helpid></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Error code <xref href="../../runtimeErrors.html#2143">2143</xref>, AccessibilityImplementation.get_accRole() must be overridden from its default.
+	 </apiDesc><apiItemName>Error</apiItemName><apiOperationClassifier>Error</apiOperationClassifier></apiException><apiReturn><apiDesc>System role associated with the component. 
+	  
+	 </apiDesc><apiOperationClassifier>uint</apiOperationClassifier></apiReturn><apiParam><apiItemName>childID</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiDesc>An unsigned integer corresponding to one of the component's
+	 child elements as defined by <codeph>getChildIDArray()</codeph>.
+	 
+	 </apiDesc></apiParam><apiTipTexts><apiTipText>Returns the system role for the component
+	 </apiTipText></apiTipTexts></apiOperationDef><apiDesc>
+	 MSAA method for returning the system role for the component
+	 that this AccessibilityImplementation represents or for one of its child elements.
+	 System roles are predefined for all the components in MSAA.	 
+	 
+	 </apiDesc><example>The following example shows how this method is implemented to return
+	 the appropriate system role constant for the component itself or for one of its list items
+	 in the Flex mx.accessibility.ListBaseAccImpl class,
+	 the ListBase accessibility implementation.
+	 <codeblock rev="3.0">override public function get_accRole(childID:uint):uint
+	 {
+	 	if (childID == 0)
+	 		return role;
+	 		
+	 	return ROLE_SYSTEM_LISTITEM;
+	 }</codeblock>
+	 
+	  </example></apiOperationDetail><related-links><link href="flash.accessibility.xml#AccessibilityImplementation/getChildIDArray()"><linktext>getChildIDArray()</linktext></link><link href="../../accessibilityImplementationConstants.html#roles"><linktext>AccessibilityImplementation Constants: Object Role Constants</linktext></link><link href="http://msdn.microsoft.com/en-us/library/ms696113(VS.85).aspx"><linktext>Microsoft Accessibility Developer Center: IAccessible::get_accRole</linktext></link></related-links></apiOperation><apiOperation id="flash.accessibility:AccessibilityImplementation:get_accSelection"><apiName>get_accSelection</apiName><shortdesc>
+	 MSAA method for returning an array containing the IDs of all child elements that are selected.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>An array of the IDs of all child elements that are selected.
+	 
+	 </apiDesc><apiOperationClassifier>Array</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 MSAA method for returning an array containing the IDs of all child elements that are selected. 
+	 The returned array may contain zero, one, or more IDs, all unsigned integers.
+	 
+	 </apiDesc><example>The following example shows how this method is implemented to return the selected childIDs in
+	 the Flex mx.accessibility.ListBaseAccImpl class, the ListBase accessibility implementation.
+	 
+	 <codeblock rev="3.0">
+	 override public function get_accSelection():Array
+	 {
+	 	var accSelection:Array = [];
+	 
+	 	var selectedIndices:Array = ListBase(master).selectedIndices;
+	 	
+	 	var n:int = selectedIndices.length;
+	 	for (var i:int = 0; i &amp;lt; n; i++)
+	 	{
+	 		accSelection[i] = selectedIndices[i] + 1;
+	 	}
+	 	
+	 	return accSelection;
+	 }
+	 </codeblock>
+	 
+	 
+	 </example></apiOperationDetail><related-links><link href="flash.accessibility.xml#AccessibilityImplementation/getChildIDArray()"><linktext>getChildIDArray()</linktext></link><link href="http://msdn.microsoft.com/en-us/library/ms696179(VS.85).aspx"><linktext>Microsoft Accessibility Developer Center: IAccessible::get_accSelection</linktext></link></related-links></apiOperation><apiOperation id="flash.accessibility:AccessibilityImplementation:get_accState"><apiName>get_accState</apiName><shortdesc>
+	 IAccessible method for returning the current runtime state of the component that this 
+	 AccessibilityImplementation represents or of one of its child elements.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Error code <xref href="../../runtimeErrors.html#2144">2144</xref>, AccessibilityImplementation.get_accState() must be overridden from its default.
+	 </apiDesc><apiItemName>Error</apiItemName><apiOperationClassifier>Error</apiOperationClassifier></apiException><apiReturn><apiDesc>A combination of zero, one, or more of the system state constants. 
+	 Multiple constants are assembled into a bitfield using <codeph>|</codeph>, the bitwise OR operator. 
+	 
+	 
+	 </apiDesc><apiOperationClassifier>uint</apiOperationClassifier></apiReturn><apiParam><apiItemName>childID</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiDesc>An unsigned integer corresponding to one of the component's child elements
+	 as defined by <codeph>getChildIDArray()</codeph>.
+	 
+	 </apiDesc></apiParam><apiTipTexts><apiTipText>Returns the state of the component
+	 
+	 </apiTipText></apiTipTexts></apiOperationDef><apiDesc>
+	 IAccessible method for returning the current runtime state of the component that this 
+	 AccessibilityImplementation represents or of one of its child elements.
+	 
+	 <p>This method must return a combination of zero, one, or more of the predefined
+	 <xref href="../../accessibilityImplementationConstants.html">object state constants</xref> for components in MSAA. 
+	 When more than one state applies, the state constants should be combined into a bitfield
+	 using <codeph>|</codeph>, the bitwise OR operator.</p>
+	 
+	 <p>To indicate that none of the state constants currently applies, this method should return zero.</p>
+	 
+	 <p>You should not need to track or report the STATE_SYSTEM_FOCUSABLE or STATE_SYSTEM_FOCUSED states. 
+	 Flash Player handles these states automatically.</p>
+	 
+	 </apiDesc><example>The following example shows how this method is implemented to combine 
+	 more than one state constant in 
+	 mx.accessibility.ListBaseAccImpl, the Flex ListBase Accessibility Implementation.
+	 
+	 <codeblock rev="3.0">
+	 override public function get_accState(childID:uint):uint
+	 {
+	 	var accState:uint = getState(childID);
+	 
+	 	if (childID &amp;gt; 0) 
+	 	{
+	 		var listBase:ListBase = ListBase(master);
+	 
+	 		var index:uint = childID - 1;
+	 
+	 		// For returning states (OffScreen and Invisible)
+	 		// when the list Item is not in the displayed rows.
+	 		if (index &amp;lt; listBase.verticalScrollPosition ||
+	 			index &amp;gt;= listBase.verticalScrollPosition + listBase.rowCount)
+	 		{
+	 			accState |= (STATE_SYSTEM_OFFSCREEN |
+	 						 STATE_SYSTEM_INVISIBLE);
+	 		}
+	 		else
+	 		{
+	 			accState |= STATE_SYSTEM_SELECTABLE;
+	 
+	 			var item:Object = getItemAt(index);
+	 
+	 			var renderer:IListItemRenderer =
+	 				listBase.itemToItemRenderer(item);
+	 
+	 			if (renderer != null &amp;&amp; listBase.isItemSelected(renderer.data))
+	 				accState |= STATE_SYSTEM_SELECTED | STATE_SYSTEM_FOCUSED;
+	 		}
+	 	}
+	 
+	 	return accState;
+	 }</codeblock>
+	 
+	  </example></apiOperationDetail><related-links><link href="flash.accessibility.xml#AccessibilityImplementation/getChildIDArray()"><linktext>getChildIDArray()</linktext></link><link href="../../accessibilityImplementationConstants.html#states"><linktext>AccessibilityImplementation Constants: Object State Constants</linktext></link><link href="http://msdn.microsoft.com/en-us/library/ms696191(VS.85).aspx"><linktext>Microsoft Accessibility Developer Center: IAccessible::get_accState</linktext></link></related-links></apiOperation><apiOperation id="flash.accessibility:AccessibilityImplementation:get_accValue"><apiName>get_accValue</apiName><shortdesc>
+	 MSAA method for returning the runtime value of the component that this
+	 AccessibilityImplementation represents or of one of its child elements.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>A string representing the runtime value of the component of of one of its child elements.
+	  
+	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn><apiParam><apiItemName>childID</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiDesc>An unsigned integer corresponding to one of the component's child elements
+	 as defined by <codeph>getChildIDArray()</codeph>.
+	 
+	 </apiDesc></apiParam><apiTipTexts><apiTipText>Returns the value of the component
+	 
+	 </apiTipText></apiTipTexts></apiOperationDef><apiDesc>
+	 MSAA method for returning the runtime value of the component that this
+	 AccessibilityImplementation represents or of one of its child elements.
+	 
+	 <p>Implement this method only if your AccessibilityImplementation represents a UI element
+	 that has a value in the MSAA model. Be aware that some UI elements that have an apparent 'value' 
+	 actually expose this value by different means, such as 
+	 <codeph>get_accName</codeph> (text, for example), 
+	 <codeph>get_accState</codeph> (check boxes, for example), or <codeph>get_accSelection</codeph> 
+	 (list boxes, for example).</p>
+	 
+	 <p>If you are implementing <codeph>get_accValue</codeph> only for the AccessibilityImplementation itself, or 
+	 only for its child elements, you will need in some cases to indicate that 
+	 there is no concept of value for the particular <codeph>childID</codeph> that was passed. 
+	 Do this by simply returning <codeph>null</codeph>.</p>
+	 
+	 </apiDesc><example>The following example shows how this method is implemented to return the appropriate value based on
+	 the component's <codeph>selectedIndex</codeph> value in the Flex mx.accessibility.ListBaseAccImpl class,
+	 the ListBase accessibility implementation.
+	 
+	 <codeblock rev="3.0">override public function get_accValue(childID:uint):String
+	 {
+	 	var accValue:String;
+	 	
+	 	var listBase:ListBase = ListBase(master);
+	 	
+	 	var index:int = listBase.selectedIndex;
+	 	if (childID == 0)
+	 	{
+	 		if (index &gt; -1)
+	 		{
+	 			var item:Object = getItemAt(index);
+	 
+	 			if (item is String)
+	 			{
+	 				accValue = item + " " + (index + 1) + " of " + listBase.dataProvider.length;
+	 			}
+	 			else
+	 			{
+	 				accValue = listBase.itemToLabel(item) + " " + (index + 1) +
+	 						   " of " + listBase.dataProvider.length;
+	 			}
+	 		}
+	 	}
+	 
+	 	return accValue;
+	 }</codeblock>
+	 
+	 </example></apiOperationDetail><related-links><link href="flash.accessibility.xml#AccessibilityImplementation/getChildIDArray()"><linktext>getChildIDArray()</linktext></link><link href="http://msdn.microsoft.com/en-us/library/ms697312(VS.85).aspx"><linktext>Microsoft Accessibility Developer Center: IAccessible::get_accValue</linktext></link></related-links></apiOperation><apiValue id="flash.accessibility:AccessibilityImplementation:errno"><apiName>errno</apiName><shortdesc>
+	 Errors are indicated out-of-band, rather than in return values.</shortdesc><prolog/><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>uint</apiValueClassifier></apiValueDef><apiDesc>
+	 Errors are indicated out-of-band, rather than in return values. 
+	 To indicate an error, set the <codeph>errno</codeph> property to one of the error codes
+	 documented in the AccessibilityImplementation Constants appendix. 
+	 This causes your return value to be ignored. The <codeph>errno</codeph> property
+	 of your AccessibilityImplementation is always cleared (set to zero) by the player
+	 before any AccessibilityImplementation method is called.
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="../../accessibilityImplementationConstants.html"><linktext>AccessibilityImplementation Constants</linktext></link></related-links></apiValue><apiValue id="flash.accessibility:AccessibilityImplementation:stub"><apiName>stub</apiName><shortdesc>
+	 If a component is released without an ActionScript accessibility implementation,
+	 it is strongly suggested that a component accessibility stub be included.</shortdesc><prolog/><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	 If a component is released without an ActionScript accessibility implementation,
+	 it is strongly suggested that a component accessibility stub be included. 
+	 This stub causes Flash Player, for accessibility purposes, to treat the component
+	 as a simple graphic rather than exposing the internal structure of buttons,
+	 textfields, and so on, within the component. 
+	 
+	 <p>To create a Flex component accessibility stub,
+	 subclass the mx.accessibility.AccImpl class, overriding the property stub
+	 with a value of <codeph>true</codeph>.</p> 
+	 
+	 </apiDesc></apiValueDetail><related-links><link href=""><linktext>The mx.accessibility.AccImpl class in Flex (\sdks\4.0.0\frameworks\projects\framework\src\mx\accessibility\AccImpl.as)</linktext></link></related-links></apiValue></apiClassifier><apiClassifier id="flash.accessibility:AccessibilityProperties"><apiName>AccessibilityProperties</apiName><shortdesc>
+ The AccessibilityProperties class lets you control the presentation of Flash objects to accessibility
+ aids, such as screen readers.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ The AccessibilityProperties class lets you control the presentation of Flash objects to accessibility
+ aids, such as screen readers.
+ 
+ <p>You can attach an AccessibilityProperties object to any display object, but Flash Player will read
+ your AccessibilityProperties object only for certain kinds of objects: entire
+ SWF files (as represented by <codeph>DisplayObject.root</codeph>), container objects
+ (<codeph>DisplayObjectContainer</codeph> and subclasses), buttons
+ (<codeph>SimpleButton</codeph> and subclasses), and text (<codeph>TextField</codeph> and subclasses).</p>
+ 
+ <p>The <codeph>name</codeph> property of these objects is the most important property to specify because
+ accessibility aids provide the names of objects to users as a basic means of navigation.  Do not
+ confuse <codeph>AccessibilityProperties.name</codeph> with <codeph>DisplayObject.name</codeph>; these are
+ separate and unrelated.  The <codeph>AccessibilityProperties.name</codeph> property is a name 
+ that is read aloud by the accessibility aids, whereas <codeph>DisplayObject.name</codeph> is essentially a
+ variable name visible only to ActionScript code.</p>
+ 
+ <p product="flash">The properties of <codeph>AccessibilityProperties</codeph> objects override
+ the corresponding settings available in the Accessibility panel during authoring.</p>
+ 
+ <p>To determine whether Flash Player is running in an environment that supports accessibility aids, use 
+ the <codeph>Capabilities.hasAccessibility</codeph> property.  If you modify AccessibilityProperties
+ objects, you need to call the <codeph>Accessibility.updateProperties()</codeph> method for the changes to
+ take effect.</p>
+ 
+ 
+ </apiDesc><example conref="examples\AccessibilityPropertiesExample.as"> The following example uses the <codeph>AccessibilityExample</codeph>,
+ <codeph>CustomAccessibleButton</codeph>, <codeph>CustomSimpleButton</codeph>, and <codeph>ButtonDisplayState</codeph> classes
+ to create an accessibility-compliant menu that works with common screen readers. The main
+ functionality of the <codeph>AccessibilityProperties</codeph> class is as follows:
+ 
+ <ol TYPE="1">
+    <li> Call <codeph>configureAssets</codeph>, which creates a custom button and sets its label and 
+ description. These are the values that the screen reader conveys to the end user.</li>        
+    <li>Call <codeph>setTimeOut()</codeph> to ensure that Flash Player has enough time to detect the 
+ screen reader before updating the properties.</li>
+    </ol>
+ 
+ <p><b>Note:</b> Call <codeph>setTimeout()</codeph> before checking <codeph>Accessibility.active</codeph>.
+ to give Flash Player the 2 seconds it needs to connect to a screen reader,
+ if one is available. If you do not provide a sufficient delay time, the <codeph>setTimeout</codeph> call might return <codeph>false</codeph>, even
+ if a screen reader is available.</p>
+ 
+ <p>The following example processes the <codeph>Accessibility.updateProperties()</codeph>
+ method only if the call to <codeph>Accessibility.active</codeph> returns <codeph>true</codeph>, which 
+ occurs only if Flash Player is currently connected to an active screen reader. If <codeph>updateProperties</codeph>
+ is called without an active screen reader, it throws an <codeph>IllegalOperationError</codeph> exception.</p>
+<codeblock>
+package {
+    import flash.display.Sprite;
+    import flash.accessibility.Accessibility;
+    import flash.utils.setTimeout;
+    
+    public class AccessibilityPropertiesExample extends Sprite {
+        public static const BUTTON_WIDTH:uint = 90;
+        public static const BUTTON_HEIGHT:uint = 20;
+        
+        private var gutter:uint = 5;
+        private var menuLabels:Array = new Array("PROJECTS", "PORTFOLIO", "CONTACT");
+        private var menuDescriptions:Array = new Array("Learn more about our projects"
+                                                     , "See our portfolio"
+                                                     , "Get in touch with our team");
+        
+        public function AccessibilityPropertiesExample() {
+            configureAssets();
+            setTimeout(updateAccessibility, 2000); 
+        }
+        
+        private function updateAccessibility():void {
+            trace("Accessibility.active: " + Accessibility.active);
+            if(Accessibility.active) {
+                Accessibility.updateProperties();
+            }
+        }
+        
+        private function configureAssets():void {
+            var child:CustomAccessibleButton;
+            for(var i:uint; i &lt; menuLabels.length; i++) {
+                child = new CustomAccessibleButton();
+                child.y = (numChildren * (BUTTON_HEIGHT + gutter));
+                child.setLabel(menuLabels[i]);
+                child.setDescription(menuDescriptions[i]);
+                addChild(child);
+            }
+        }
+    }
+
+
+import flash.accessibility.AccessibilityProperties;
+import flash.display.Shape;
+import flash.display.SimpleButton;
+import flash.display.Sprite;
+import flash.events.Event;
+import flash.text.TextFormat;
+import flash.text.TextField;
+    
+class CustomAccessibleButton extends Sprite {
+    private var button:SimpleButton;
+    private var label1:TextField;
+    private var description:String;
+    private var _name:String;
+        
+    public function CustomAccessibleButton(_width:uint = 0, _height:uint = 0) {
+        _width = (_width == 0) ? AccessibilityPropertiesExample.BUTTON_WIDTH : _width;
+        _height = (_height == 0) ? AccessibilityPropertiesExample.BUTTON_HEIGHT : _height;
+            
+        button = buildButton(_width, _height);
+        label1 = buildLabel(_width, _height);
+            
+        addEventListener(Event.ADDED, addedHandler);
+    }
+        
+    private function addedHandler(event:Event):void {
+        trace("addedHandler: " + name);
+        var accessProps:AccessibilityProperties = new AccessibilityProperties();
+        accessProps.name = this._name;
+        accessProps.description = description;
+        accessibilityProperties = accessProps;
+        removeEventListener(Event.ADDED, addedHandler);
+    }
+        
+    private function buildButton(_width:uint, _height:uint):SimpleButton {
+        var child:SimpleButton = new CustomSimpleButton(_width, _height);
+        addChild(child);
+        return child;
+    }
+
+    private function buildLabel(_width:uint, _height:uint):TextField {
+        var format:TextFormat = new TextFormat();
+        format.font = "Verdana";
+        format.size = 11;
+        format.color = 0xFFFFFF;
+        format.align = TextFormatAlign.CENTER;
+        format.bold = true;
+            
+        var child:TextField = new TextField();
+        child.y = 1;
+        child.width = _width;
+        child.height = _height;
+        child.selectable = false;
+        child.defaultTextFormat = format;
+        child.mouseEnabled = false;
+            
+        addChild(child);
+        return child;
+    }
+        
+    public function setLabel(text:String):void {
+        label1.text = text;
+        this._name = text;
+    }
+        
+    public function setDescription(text:String):void {
+        description = text;
+    }
+}
+    
+class CustomSimpleButton extends SimpleButton {
+    private var upColor:uint = 0xFFCC00;
+    private var overColor:uint = 0xCCFF00;
+    private var downColor:uint = 0x00CCFF;
+
+    public function CustomSimpleButton(_width:uint, _height:uint) {
+        downState = new ButtonDisplayState(downColor, _width, _height);
+        overState = new ButtonDisplayState(overColor, _width, _height);
+        upState = new ButtonDisplayState(upColor, _width, _height);
+        hitTestState = new ButtonDisplayState(upColor, _width, _height);
+        useHandCursor = true;
+    }        
+}
+
+class ButtonDisplayState extends Shape {
+    private var bgColor:uint;
+    private var _width:uint;
+    private var _height:uint;
+
+    public function ButtonDisplayState(bgColor:uint, _width:uint, _height:uint) {
+        this.bgColor = bgColor;
+        this._width = _width;
+        this._height = _height;
+        draw();
+    }
+
+    private function draw():void {
+        graphics.beginFill(bgColor);
+        graphics.drawRect(0, 0, _width, _height);
+        graphics.endFill();
+    }
+}
+}
+</codeblock></example></apiClassifierDetail><related-links><link href="flash.accessibility.xml#Accessibility/updateProperties()"><linktext>flash.accessibility.Accessibility.updateProperties()</linktext></link><link href="flash.display.xml#DisplayObject/accessibilityProperties"><linktext>flash.display.DisplayObject.accessibilityProperties</linktext></link><link href="flash.display.xml#InteractiveObject/tabIndex"><linktext>flash.display.InteractiveObject.tabIndex</linktext></link><link href="flash.system.xml#Capabilities/hasAccessibility"><linktext>flash.system.Capabilities.hasAccessibility</linktext></link></related-links><apiConstructor id="flash.accessibility:AccessibilityProperties:AccessibilityProperties"><apiName>AccessibilityProperties</apiName><shortdesc>
+	 Creates a new AccessibilityProperties object.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/></apiConstructorDef><apiDesc>
+	 Creates a new AccessibilityProperties object.
+     </apiDesc></apiConstructorDetail></apiConstructor><apiValue id="flash.accessibility:AccessibilityProperties:description"><apiName>description</apiName><shortdesc>
+	 Provides a description for this display object in the accessible presentation.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 Provides a description for this display object in the accessible presentation.
+	 If you have a lot of information to present about the object, it is
+	 best to choose a concise name and put most of your content in the
+	 <codeph>description</codeph> property. 
+     Applies to whole SWF files, containers, buttons, and text. The default value
+     is an empty string.
+     <p product="flash">Corresponds to the Description field in the Accessibility panel.</p>
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.accessibility:AccessibilityProperties:forceSimple"><apiName>forceSimple</apiName><shortdesc>
+	 If true, causes Flash Player to exclude child objects within this
+	 display object from the accessible presentation.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	 If <codeph>true</codeph>, causes Flash Player to exclude child objects within this
+	 display object from the accessible presentation.  
+	 The default is <codeph>false</codeph>. Applies to whole SWF files and containers.
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.accessibility:AccessibilityProperties:name"><apiName>name</apiName><shortdesc>
+	 Provides a name for this display object in the accessible presentation.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 Provides a name for this display object in the accessible presentation. 
+	 Applies to whole SWF files, containers, buttons, and text.  Do not confuse with
+     <codeph>DisplayObject.name</codeph>, which is unrelated. The default value
+     is an empty string.
+     <p product="flash">Corresponds to the Name field in the Accessibility panel.</p>
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.accessibility:AccessibilityProperties:noAutoLabeling"><apiName>noAutoLabeling</apiName><shortdesc>
+	 If true, disables the Flash Player default auto-labeling system.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	 If <codeph>true</codeph>, disables the Flash Player default auto-labeling system.
+	 Auto-labeling causes text objects inside buttons to be treated as button names,
+	 and text objects near text fields to be treated as text field names.
+	 The default is <codeph>false</codeph>. Applies only to whole SWF files.
+     <p>The <codeph>noAutoLabeling</codeph> property value is ignored unless you specify it before the
+     first time an accessibility aid examines your SWF file. If you plan to set 
+     <codeph>noAutoLabeling</codeph> to <codeph>true</codeph>, you should do so as early as 
+     possible in your code.</p>
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.accessibility:AccessibilityProperties:shortcut"><apiName>shortcut</apiName><shortdesc>
+	 Indicates a keyboard shortcut associated with this display object.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 Indicates a keyboard shortcut associated with this display object. 
+	 Supply this string only for UI controls that you have associated with a shortcut key. 
+     Applies to containers, buttons, and text.  The default value
+     is an empty string.
+	 
+	 <p><b>Note</b>: Assigning this property does not automatically assign the specified key
+	 combination to this object; you must do that yourself, for example, by
+	 listening for a <codeph>KeyboardEvent</codeph>.</p>
+	 
+	 <p>The syntax for this string uses long names for modifier keys, and
+	 the plus(+) character to indicate key combination. Examples of valid strings are
+	 "Ctrl+F", "Ctrl+Shift+Z", and so on.</p>
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.accessibility:AccessibilityProperties:silent"><apiName>silent</apiName><shortdesc>
+	 If true, excludes this display object from accessible presentation.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	 If <codeph>true</codeph>, excludes this display object from accessible presentation.
+	 The default is <codeph>false</codeph>. Applies to whole SWF files, containers, buttons, and text.
+     </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.accessibility:Accessibility"><apiName>Accessibility</apiName><shortdesc>
+ The Accessibility class manages communication with screen readers.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>Accessibility, Accessibility object, built-in class
+ </keyword></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ The Accessibility class manages communication with screen readers. Screen readers are a 
+ type of assistive technology for visually impaired users that provides an audio version of 
+ screen content. The methods of the Accessibility class are static—that is, you don't 
+ have to create an instance of the class to use its methods.
+ 
+ <p>To get and set accessible properties for a specific object, such as a button, movie 
+ clip, or text field, use the <codeph>DisplayObject.accessibilityProperties</codeph> property. 
+ To determine whether the player is running in an environment that supports accessibility aids, use 
+ the <codeph>Capabilities.hasAccessibility</codeph> property. </p>
+ 
+ </apiDesc><example conref="examples\AccessibilityExample.as"> The following example uses <codeph>AccessibilityExample</codeph>,
+ <codeph>CustomAccessibleButton</codeph>, <codeph>CustomSimpleButton</codeph>, and 
+ <codeph>ButtonDisplayState</codeph> sample classes to create an accessibility-compliant 
+ menu that works with most screen readers. The example carries out the following tasks:
+ <ol>
+    <li>It traces the <codeph>Accessibility.active</codeph> property to determine whether a screen
+ reader is currently active and the player is communicating with it.</li>
+    <li>If the <codeph>active</codeph> property returns <codeph>true</codeph>, the example calls the
+ <codeph>updateProperties()</codeph> method to apply the accessibility changes made to the buttons in 
+ this example.</li>
+    <li>The example calls the <codeph>flash.utils.setTimeout()</codeph> method, specifying that the <codeph>updateAccessibility()</codeph> closure method
+     should be called after 2 seconds.</li>
+ </ol>
+ 
+ <p><b>Note: </b>Call <codeph>setTimeout()</codeph> before checking <codeph>Accessibility.active</codeph> 
+ to give Flash Player the 2 seconds it needs to connect to a screen reader if one is available. 
+ If you do not supply a sufficient delay time, the <codeph>setTimeout</codeph> call might return <codeph>false</codeph> even if a screen reader is available.
+ </p>
+ <p>The following example processes the <codeph>Accessibility.updateProperties()</codeph> 
+ method only if the call to <codeph>Accessibility.active</codeph> returns <codeph>true</codeph>, which occurs 
+ only if Flash Player is currently connected to an active screen reader. If <codeph>updateProperties</codeph>
+ is called without an active screen reader, it throws an <codeph>IllegalOperationError</codeph> exception.</p>
+<codeblock>
+package {
+    import flash.display.Sprite;
+    import flash.accessibility.Accessibility;
+    import flash.utils.setTimeout;
+    
+    public class AccessibilityExample extends Sprite {
+        public static const BUTTON_WIDTH:uint = 90;
+        public static const BUTTON_HEIGHT:uint = 20;
+        
+        private var gutter:uint = 5;
+        private var menuLabels:Array = new Array("PROJECTS", "PORTFOLIO", "CONTACT");
+        private var menuDescriptions:Array = new Array("Learn more about our projects"
+                                                     , "See our portfolio"
+                                                     , "Get in touch with our team");
+        
+        public function AccessibilityExample() {
+            configureAssets();
+            setTimeout(updateAccessibility, 2000); 
+        }
+        
+        private function updateAccessibility():void {
+            trace("Accessibility.active: " + Accessibility.active);
+            if(Accessibility.active) {
+                Accessibility.updateProperties();
+            }
+        }
+        
+        private function configureAssets():void {
+            var child:CustomAccessibleButton;
+            for(var i:uint; i &lt; menuLabels.length; i++) {
+                child = new CustomAccessibleButton();
+                child.y = (numChildren * (BUTTON_HEIGHT + gutter));
+                child.setLabel(menuLabels[i]);
+                child.setDescription(menuDescriptions[i]);
+                addChild(child);
+            }
+        }
+    }
+}
+    
+import flash.accessibility.AccessibilityProperties;
+import flash.display.Shape;
+import flash.display.SimpleButton;
+import flash.display.Sprite;
+import flash.events.Event;
+import flash.text.TextFormat;
+import flash.text.TextField;
+
+
+class CustomAccessibleButton extends Sprite {
+    private var button:SimpleButton;
+    private var label:TextField;
+    private var description:String;
+    private var _name:String;
+        
+    public function CustomAccessibleButton(_width:uint = 0, _height:uint = 0) {
+        _width = (_width == 0) ? AccessibilityExample.BUTTON_WIDTH : _width;
+        _height = (_height == 0) ? AccessibilityExample.BUTTON_HEIGHT : _height;
+        
+        button = buildButton(_width, _height);
+        label = buildLabel(_width, _height);
+            
+        addEventListener(Event.ADDED, addedHandler);
+    }
+        
+    private function addedHandler(event:Event):void {
+        trace("addedHandler: " + this._name);
+        var accessProps:AccessibilityProperties = new AccessibilityProperties();
+        accessProps.name = this._name;
+        accessProps.description = description;
+        accessibilityProperties = accessProps;
+        removeEventListener(Event.ADDED, addedHandler);
+    }
+        
+    private function buildButton(_width:uint, _height:uint):SimpleButton {
+        var child:SimpleButton = new CustomSimpleButton(_width, _height);
+        addChild(child);
+        return child;
+    }
+
+    private function buildLabel(_width:uint, _height:uint):TextField {
+        var format:TextFormat = new TextFormat();
+        format.font = "Verdana";
+        format.size = 11;
+        format.color = 0xFFFFFF;
+        format.align = TextFormatAlign.CENTER;
+        format.bold = true;
+        
+        var child:TextField = new TextField();
+        child.y = 1;
+        child.width = _width;
+        child.height = _height;
+        child.selectable = false;
+        child.defaultTextFormat = format;
+        child.mouseEnabled = false;
+            
+        addChild(child);
+        return child;
+    }
+        
+    public function setLabel(text:String):void {
+        label.text = text;
+        this._name = text;
+    }
+        
+    public function setDescription(text:String):void {
+        description = text;
+    }
+}
+    
+class CustomSimpleButton extends SimpleButton {
+    private var upColor:uint = 0xFFCC00;
+    private var overColor:uint = 0xCCFF00;
+    private var downColor:uint = 0x00CCFF;
+
+    public function CustomSimpleButton(_width:uint, _height:uint) {
+        downState = new ButtonDisplayState(downColor, _width, _height);
+        overState = new ButtonDisplayState(overColor, _width, _height);
+        upState = new ButtonDisplayState(upColor, _width, _height);
+        hitTestState = new ButtonDisplayState(upColor, _width, _height);
+        useHandCursor = true;
+    }        
+}
+
+class ButtonDisplayState extends Shape {
+    private var bgColor:uint;
+    private var _width:uint;
+    private var _height:uint;
+
+    public function ButtonDisplayState(bgColor:uint, _width:uint, _height:uint) {
+        this.bgColor = bgColor;
+        this._width = _width;
+        this._height = _height;
+        draw();
+    }
+
+    private function draw():void {
+        graphics.beginFill(bgColor);
+        graphics.drawRect(0, 0, _width, _height);
+        graphics.endFill();
+    }
+}
+</codeblock></example></apiClassifierDetail><related-links><link href="flash.display.xml#DisplayObject/accessibilityProperties"><linktext>flash.display.DisplayObject.accessibilityProperties</linktext></link><link href="flash.system.xml#Capabilities/hasAccessibility"><linktext>flash.system.Capabilities.hasAccessibility</linktext></link><link href="flash.net.xml#Socket"><linktext>Socket</linktext></link></related-links><apiOperation id="flash.accessibility:Accessibility:sendEvent"><apiName>sendEvent</apiName><shortdesc>
+	 
+	 Sends an event to the Microsoft Active Accessibility API.</shortdesc><prolog><asCustoms><nonHTML>A Boolean value indicating whether the event is one of the standard event types
+	 that can be generated from an HTML form. When set to true, this parameter helps prevent
+	 some problems that may occur with screen readers that interpret Flash content as part of
+	 the HTML page. The default value is false.
+	 </nonHTML></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>source</apiItemName><apiOperationClassifier>flash.display:DisplayObject</apiOperationClassifier><apiDesc>The DisplayObject from which the accessibility event is being sent.
+	 </apiDesc></apiParam><apiParam><apiItemName>childID</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiDesc>The child ID of the accessibility interface element to which the event applies
+	 (for example, an individual list item in a list box). Use 0 to indicate that the event applies
+	 to the DisplayObject supplied in the <codeph>source</codeph> parameter.
+	 </apiDesc></apiParam><apiParam><apiItemName>eventType</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiDesc>A constant indicating the event type. Event names and values are a subset 
+	 of the MSAA event constants.
+	 </apiDesc></apiParam><apiParam><apiItemName>nonHTML</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData></apiParam></apiOperationDef><apiDesc>
+	 
+	 Sends an event to the Microsoft Active Accessibility API. 
+	 Microsoft Active Accessibility handles that event and sends the event
+	 to any active screen reader application, which in turn reports the change to the user.
+	 For example, when a user toggles a RadioButton instance, the RadioButton's 
+	 AccessibilityImplementation calls <codeph>Accessibility.sendEvent()</codeph>
+	 with the event type <codeph>EVENT_OBJECT_STATECHANGE</codeph>.
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.accessibility.xml#AccessibilityImplementation"><linktext>flash.accessibility.AccessibilityImplementation</linktext></link><link href="" invalidHref="mx.accessibility.AccImpl.xml"><linktext>mx.accessibility.AccImpl</linktext></link></related-links></apiOperation><apiOperation id="flash.accessibility:Accessibility:updateProperties"><apiName>updateProperties</apiName><shortdesc>
+	Tells Flash Player to apply any accessibility changes made by using the DisplayObject.accessibilityProperties property.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>accessibility; Accessibility.updateProperties, updateProperties, screen reader,
+	MSAA
+    </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiException><apiDesc>Accessibility is not supported in this version of
+	Flash Player. Do not call the <codeph>Accessibility.updateProperties()</codeph> method 
+	if the <codeph>flash.system.Capabilities.hasAccessibility</codeph> property is <codeph>false</codeph>.
+	
+	
+	</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+	Tells Flash Player to apply any accessibility changes made by using the <codeph>DisplayObject.accessibilityProperties</codeph> property.  
+	You need to call this method for your changes to take effect. 
+	
+	<p>If you modify the accessibility properties for multiple objects, only one call to the
+	<codeph>Accessibility.updateProperties()</codeph> method is necessary; multiple calls can result in
+	reduced performance and erroneous screen reader output.</p>
+	
+	<p>If you change an image and want to update its accessible name, you 
+	could use the following ActionScript code:</p>
+	<pre>
+	if (my_displayObj.accProps == undefined ) {
+	  my_displayObj.accProps = new Object();
+	}
+	my_displayObj.accProps.name = "Photo of Mount Rushmore";
+	Accessibility.updateProperties();
+	</pre>
+	
+	</apiDesc></apiOperationDetail><related-links><link href="flash.accessibility.xml#Accessibility/active"><linktext>active</linktext></link><link href="flash.display.xml#DisplayObject/accessibilityProperties"><linktext>flash.display.DisplayObject.accessibilityProperties</linktext></link><link href="flash.system.xml#Capabilities/hasAccessibility"><linktext>flash.system.Capabilities.hasAccessibility</linktext></link></related-links></apiOperation><apiValue id="flash.accessibility:Accessibility:active:get"><apiName>active</apiName><shortdesc>
+	Indicates whether a screen reader is currently active and the player is 
+	communicating with it.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>Accessibility.isActive, Accessibility, isActive, screen reader, MSAA
+    </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	Indicates whether a screen reader is currently active and the player is 
+	communicating with it. Use this property when you want your application to behave 
+	differently in the presence of a screen reader.
+	
+	<p><b>Note: </b>If you call this property within 1 or 2 seconds of the first
+	appearance of the Flash<sup>®</sup> window in which your document is playing, you might get a return
+	value of <codeph>false</codeph> even if there is an MSAA 
+	client. This happens because of an asynchronous communication mechanism between Flash 
+	and accessibility clients. You can work around this limitation by ensuring a delay of 1 to 2 
+	seconds after loading your document before calling this method.</p>
+	
+	To determine whether the player is running in an environment that supports screen readers, use the  
+	<codeph>Capabilities.hasAccessibility</codeph> property. 
+	
+	</apiDesc></apiValueDetail><related-links><link href="flash.system.xml#Capabilities/hasAccessibility"><linktext>flash.system.Capabilities.hasAccessibility</linktext></link><link href="flash.accessibility.xml#Accessibility/updateProperties()"><linktext>updateProperties()</linktext></link></related-links></apiValue></apiClassifier></apiPackage>

@@ -25,7 +25,12 @@ import spark.components.supportClasses.Skin;
 import spark.primitives.Path;
 import spark.primitives.Rect;
 
+/** 
+ * @copy spark.skins.spark.ApplicationSkin#hostComponent
+ */
 [HostComponent("spark.components.Border")]
+
+[States("normal", "disabled")]
 
 /**
  *  The default skin class for a Spark Border container.
@@ -74,7 +79,7 @@ public class BorderSkin extends Skin
 	private var bgRect:Rect;
     private var insetPath:Path;
     private var rds:RectangularDropShadow;
-
+    
     //--------------------------------------------------------------------------
     //
     //  Overridden methods
@@ -98,7 +103,7 @@ public class BorderSkin extends Skin
         insetPath = new Path();
         addElement(insetPath);
 	}
-    
+	
 	
     /**
      *  @private 
@@ -132,15 +137,15 @@ public class BorderSkin extends Skin
     {
         graphics.clear();
         
-        var borderWeight:int = getStyle("borderWeight"); 
+        var borderWeight:int;
         var borderStyle:String = getStyle("borderStyle");
         var borderVisible:Boolean = getStyle("borderVisible");
         var cornerRadius:Number = getStyle("cornerRadius");
-        
+                
         if (hostComponent && hostComponent.borderStroke)
-        {
             borderWeight = hostComponent.borderStroke.weight;
-        }
+        else
+            borderWeight = getStyle("borderWeight"); 
         
         if (!borderVisible)
             borderWeight = 0;
@@ -148,11 +153,10 @@ public class BorderSkin extends Skin
         if (isNaN(borderWeight))
             borderWeight = 1;
         
-        
-        // position & size the content group
-        contentGroup.x = contentGroup.y = borderWeight;
-        contentGroup.width = unscaledWidth - borderWeight * 2;
-        contentGroup.height = unscaledHeight - borderWeight * 2;
+        contentGroup.setStyle("left", borderWeight);
+        contentGroup.setStyle("right", borderWeight);
+        contentGroup.setStyle("top", borderWeight);
+        contentGroup.setStyle("bottom", borderWeight);
         
         // update the bgRect stroke/fill
         if (hostComponent.borderStroke)

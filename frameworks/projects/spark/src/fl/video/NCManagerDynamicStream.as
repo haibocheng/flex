@@ -144,7 +144,7 @@ package fl.video {
 		}
 
         /**
-         * overriden to call run() when _autoSenseBW is on, and to immediately
+         * overridden to call run() when _autoSenseBW is on, and to immediately
          * call onConnected() if it is not, instead of waiting for a call to
          * onBWDone from the server, like NCManager does.
          * 

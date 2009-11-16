@@ -90,9 +90,11 @@ public final class CompcTask extends FlexTask implements DynamicConfigurator
             new ConfigBoolean(new OptionSpec("compiler", "debug")),
             new ConfigBoolean(new OptionSpec("compiler", "incremental")), 
             new ConfigBoolean(new OptionSpec("compiler", "optimize")),
+            new ConfigBoolean(new OptionSpec("compiler", "report-invalid-styles-as-warnings")),
             new ConfigBoolean(new OptionSpec("compiler", "show-actionscript-warnings")),
             new ConfigBoolean(new OptionSpec("compiler", "show-binding-warnings")),
             new ConfigBoolean(new OptionSpec("compiler", "show-deprecation-warnings")),
+            new ConfigBoolean(new OptionSpec("compiler", "show-invalid-css-property-warnings")),
             new ConfigBoolean(new OptionSpec("compiler", "strict")),
             new ConfigBoolean(new OptionSpec("compiler", "use-resource-bundle-metadata")),
             new ConfigBoolean(new OptionSpec("directory")),
@@ -105,6 +107,7 @@ public final class CompcTask extends FlexTask implements DynamicConfigurator
             new ConfigBoolean(new OptionSpec("compiler", "es")),
             new ConfigBoolean(new OptionSpec("compiler", "generate-abstract-syntax-tree")),
             new ConfigBoolean(new OptionSpec("compiler", "headless-server")),
+            new ConfigBoolean(new OptionSpec("compiler", "isolate-styles")),
             new ConfigBoolean(new OptionSpec("compiler", "keep-all-type-selectors")),
             new ConfigBoolean(new OptionSpec("compiler", "keep-generated-actionscript", "keep")),
             new ConfigBoolean(new OptionSpec("compiler", "verbose-stacktraces")),
@@ -160,6 +163,9 @@ public final class CompcTask extends FlexTask implements DynamicConfigurator
             new ConfigString(new OptionSpec("raw-metadata")),
             new ConfigString(new OptionSpec("resource-bundle-list")),
             new ConfigString(new OptionSpec("target-player")),
+            new ConfigString(new OptionSpec("compiler", "minimum-supported-version", "msv")),
+            new ConfigString(new OptionSpec("compiler", "enable-swc-version-filtering", "esvf")),
+
             //Int Variables
             new ConfigInt(new OptionSpec("default-background-color")),
             new ConfigInt(new OptionSpec("default-frame-rate"))

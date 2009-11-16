@@ -243,7 +243,7 @@ public final class WebTierAPI extends Tool
 								new SVGTranscoder(), new SoundTranscoder(),
 								new MovieTranscoder(), new FontTranscoder( cfg ),
 								new DataTranscoder(), new XMLTranscoder(),
-								new SkinTranscoder(), new FXGTranscoder(), new PBJTranscoder()
+								new SkinTranscoder(), new PBJTranscoder()
 		};
 	}
 

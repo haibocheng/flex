@@ -16,21 +16,22 @@ import flash.display.DisplayObject;
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.MouseEvent;
-import flash.filters.ShaderFilter; 
+import flash.filters.ShaderFilter;
 import flash.geom.Rectangle;
 
 import mx.core.IVisualElement;
 import mx.core.UIComponent;
 import mx.core.mx_internal;
 import mx.events.PropertyChangeEvent;
+import mx.graphics.shaderClasses.LuminosityMaskShader; 
 
 import spark.components.ResizeMode;
 import spark.core.IViewport;
 import spark.core.MaskType;
 import spark.events.ElementExistenceEvent;
+import spark.events.DisplayLayerObjectExistenceEvent;
 import spark.layouts.BasicLayout;
 import spark.layouts.supportClasses.LayoutBase;
-import spark.primitives.shaders.LuminosityMaskShader; 
 
 use namespace mx_internal;
 
@@ -41,6 +42,19 @@ use namespace mx_internal;
 include "../../styles/metadata/BasicInheritingTextStyles.as"
 include "../../styles/metadata/AdvancedInheritingTextStyles.as"
 include "../../styles/metadata/SelectionFormatTextStyles.as"
+
+/**
+ *  Accent color used by component skins. The default button skin uses this color
+ *  to tint the background. Slider track highlighting uses this color. 
+ * 
+ *  @default #0099FF
+ * 
+ *  @langversion 3.0
+ *  @playerversion Flash 10
+ *  @playerversion AIR 1.5
+ *  @productversion Flex 4
+ */
+[Style(name="accentColor", type="uint", format="Color", inherit="yes", theme="spark")]
 
 /**
  *  The colors to use for the backgrounds of the items in the list. 
@@ -76,10 +90,10 @@ include "../../styles/metadata/SelectionFormatTextStyles.as"
  *  @playerversion AIR 1.5
  *  @productversion Flex 4
  */
-[Style(name="contentBackgroundAlpha", type="Number", inherit="yes", theme="spark")]
+[Style(name="contentBackgroundAlpha", type="Number", inherit="yes", theme="spark", minValue="0.0", maxValue="1.0")]
 
 /**
- *  Color of the fill of an item renderer
+ *  Color of the fill of an item renderer.
  *   
  *  @default 0xFFFFFF
  *  
@@ -98,10 +112,10 @@ include "../../styles/metadata/SelectionFormatTextStyles.as"
  *  @playerversion AIR 1.5
  *  @productversion Flex 4
  */
-[Style(name="disabledAlpha", type="Number", inherit="no", theme="spark")]
+[Style(name="disabledAlpha", type="Number", inherit="no", theme="spark", minValue="0.0", maxValue="1.0")]
 
 /**
- *  Color of focus ring when the component is in focus
+ *  Color of focus ring when the component is in focus.
  *   
  *  @default 0x70B2EE
  *  
@@ -113,7 +127,7 @@ include "../../styles/metadata/SelectionFormatTextStyles.as"
 [Style(name="focusColor", type="uint", format="Color", inherit="yes", theme="spark")]
 
 /**
- *  Color of the highlights when the mouse is over the component
+ *  Color of the highlights when the mouse is over the component.
  *   
  *  @default 0xCEDBEF
  *  
@@ -126,7 +140,7 @@ include "../../styles/metadata/SelectionFormatTextStyles.as"
 
 /**
  *  Color of any symbol of a component. Examples include the check mark of a CheckBox or
- *  the arrow of a scroll button
+ *  the arrow of a scroll button.
  *   
  *  @default 0x000000
  * 
@@ -141,6 +155,7 @@ include "../../styles/metadata/SelectionFormatTextStyles.as"
 //  Excluded APIs
 //--------------------------------------
 
+[Exclude(name="focusBlendMode", kind="style")]
 [Exclude(name="focusThickness", kind="style")]
 
 /**
@@ -384,6 +399,7 @@ public class GroupBase extends UIComponent implements IViewport
     //----------------------------------
         
     [Bindable]
+    [Inspectable(minValue="0.0")]     
 
     /**
      *  @copy spark.core.IViewport#horizontalScrollPosition
@@ -434,6 +450,7 @@ public class GroupBase extends UIComponent implements IViewport
     //----------------------------------
     
     [Bindable]
+    [Inspectable(minValue="0.0")] 
     
     /**
      *  @copy spark.core.IViewport#verticalScrollPosition
@@ -611,6 +628,78 @@ public class GroupBase extends UIComponent implements IViewport
     }
 
     //----------------------------------
+    //  overlay
+    //----------------------------------
+
+    /**
+     *  @private
+     *  Storage for the overlay property 
+     */
+    mx_internal var _overlay:DisplayLayer;
+
+    [Inspectable(category="General")]
+
+    /**
+     *  The overlay plane for this Group.
+     *  All objects of the overlay plane render on top of the Group elements.
+     *  Don't hold on to this object, as Group destroys and creates it on demand.
+     *   
+     *  @langversion 3.0
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
+     */
+    public function get overlay():DisplayLayer
+    {
+        if (!_overlay)
+        {
+            _overlay = new DisplayLayer();
+            _overlay.addEventListener(DisplayLayerObjectExistenceEvent.OBJECT_ADD, overlay_objectAdd);
+            _overlay.addEventListener(DisplayLayerObjectExistenceEvent.OBJECT_REMOVE, overlay_objectRemove);
+            
+            // Invalidate properties, so that if nothing was actually added to the
+            // overlay object, we'll clean it up:
+            invalidateProperties();
+        }
+        return _overlay;
+    }
+    
+    /**
+     *  @private
+     *  Event listener to add overlay objects when added to the overlay DisplayLayer.
+     */
+    private function overlay_objectAdd(event:DisplayLayerObjectExistenceEvent):void
+    {
+        super.addChildAt(event.object, event.index + numChildren - _overlay.numDisplayObjects + 1);
+    }
+    
+    /**
+     *  @private
+     *  Event listener to remove overlay objects when removed from the overlay
+     *  DisplayLayer.
+     */
+    private function overlay_objectRemove(event:DisplayLayerObjectExistenceEvent):void
+    {
+        // Remove the object from the display list
+        super.removeChild(event.object);
+        
+        // Is this the last display object?
+        if (_overlay.numDisplayObjects == 1)
+            invalidateProperties();
+    }
+    
+    /**
+     *  Destroys the overlay object. This method gets called on commitProperties
+     *  when the overlay doesn't contain any objects. 
+     */
+    private function destroyOverlay():void
+    {
+        _overlay.removeEventListener(DisplayLayerObjectExistenceEvent.OBJECT_ADD, overlay_objectAdd);
+        _overlay.removeEventListener(DisplayLayerObjectExistenceEvent.OBJECT_REMOVE, overlay_objectRemove);
+        _overlay = null;
+    }
+
+    //----------------------------------
     //  resizeMode
     //----------------------------------
     
@@ -703,13 +792,14 @@ public class GroupBase extends UIComponent implements IViewport
     }
      
     /**
+     *  @private
      *  Renders a background for the container, if necessary.  It is used to fill in
      *  a transparent background fill as necessary to support the mouseOpaque flag.  It 
      *  is also used in ItemRenderers when handleBackgroundColor is set to true.
      *  We assume for now that we are the first layer to be rendered into the graphics
      *  context.
      */
-    protected function renderBackgroundFill():void
+    mx_internal function drawBackground():void
     {
         if (!_mouseEnabledWhereTransparent || !_hasMouseListeners)
             return;
@@ -848,7 +938,19 @@ public class GroupBase extends UIComponent implements IViewport
         if (!layout)
             layout = new BasicLayout();
     }
-    
+
+    /**
+     *  @private
+     */ 
+    override protected function commitProperties():void
+    {
+        super.commitProperties();
+        
+        // Cleanup the _overlay object when there are no more overlay objects
+        if (_overlay && _overlay.numDisplayObjects == 0)
+            destroyOverlay();
+    }
+
     /**
      *  @private
      */
@@ -905,6 +1007,8 @@ public class GroupBase extends UIComponent implements IViewport
      */
     override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
     {
+        var shaderFilter:ShaderFilter; 
+        
         if (_resizeMode == ResizeMode.SCALE)
         {
             unscaledWidth = measuredWidth;
@@ -923,7 +1027,7 @@ public class GroupBase extends UIComponent implements IViewport
                 if (!_mask.parent)
                 {
                     // TODO (jszeto): Does this need to be attached to a sibling?
-                    super.addChild(_mask);
+                    overlay.addDisplayObject(_mask, OverlayDepth.MASK);
                     var maskComp:UIComponent = _mask as UIComponent;
                     if (maskComp)
                     {
@@ -932,6 +1036,37 @@ public class GroupBase extends UIComponent implements IViewport
                         maskComp.setActualSize(maskComp.getExplicitOrMeasuredWidth(), 
                                                maskComp.getExplicitOrMeasuredHeight());
                     }
+                }
+            }
+        }
+        
+        if (luminositySettingsChanged)
+        {
+            luminositySettingsChanged = false; 
+            
+            if (_mask && _maskType == MaskType.LUMINOSITY && _mask.filters.length > 0)
+            {
+                // Grab the shader filter 
+                var shaderFilterIndex:int; 
+                var len:int = _mask.filters.length; 
+                for (shaderFilterIndex = 0; shaderFilterIndex < len; shaderFilterIndex++)
+                {
+                    if (_mask.filters[shaderFilterIndex] is ShaderFilter && 
+                        ShaderFilter(_mask.filters[shaderFilterIndex]).shader is LuminosityMaskShader)
+                    {
+                        shaderFilter = _mask.filters[shaderFilterIndex];
+                        break; 
+                    }
+                }
+                
+                if (shaderFilter && (shaderFilter.shader is LuminosityMaskShader))
+                {
+                    // Reset the mode property  
+                    LuminosityMaskShader(shaderFilter.shader).mode = calculateLuminositySettings();
+                    
+                    // Re-apply the filter to the mask 
+                    _mask.filters[shaderFilterIndex] = shaderFilter; 
+                    _mask.filters = _mask.filters; 
                 }
             }
         }
@@ -955,35 +1090,27 @@ public class GroupBase extends UIComponent implements IViewport
                     _mask.cacheAsBitmap = true;
                     cacheAsBitmap = true;
                 }
-				else if (_maskType == MaskType.LUMINOSITY)
-				{
-					// Sets up the mask's mode property based on 
-					// whether the luminosityClip and 
-					// luminosityInvert properties are on or off. 
-					var mode:int;
-					if (luminosityClip && !luminosityInvert) 
-						mode = 0; 
-					if (luminosityClip && luminosityInvert) 
-						mode = 1; 
-					if (!luminosityClip && !luminosityInvert) 
-						mode = 2; 
-					if (!luminosityClip && luminosityInvert) 
-						mode = 3;
-					
-					_mask.cacheAsBitmap = true;
-					cacheAsBitmap = true;
-					
-					// Create the luminosityMask shader, apply the correct mode to it, 
-					// and create the filter
-					var luminosityMaskShader:LuminosityMaskShader = new LuminosityMaskShader();
-					luminosityMaskShader.mode = mode;
-					var maskFilter:ShaderFilter = new ShaderFilter(luminosityMaskShader);
-					
-					// Apply the filter to the mask
-					_mask.filters = [maskFilter];
-				}
+                else if (_maskType == MaskType.LUMINOSITY)
+                {
+                    _mask.cacheAsBitmap = true;
+                    cacheAsBitmap = true;
+                    
+                    // Create the shader class which wraps the pixel bender filter 
+                    var luminosityMaskShader:LuminosityMaskShader = new LuminosityMaskShader();
+                    
+                    // Sets up the shader's mode property based on 
+                    // whether the luminosityClip and 
+                    // luminosityInvert properties are on or off. 
+                    luminosityMaskShader.mode = calculateLuminositySettings(); 
+                    
+                    // Create the shader filter 
+                    shaderFilter = new ShaderFilter(luminosityMaskShader);
+                    
+                    // Apply the shader filter to the mask
+                    _mask.filters = [shaderFilter];
+                }
             }
-        }       
+        }     
 
         if (layoutInvalidateDisplayListFlag)
         {
@@ -994,6 +1121,21 @@ public class GroupBase extends UIComponent implements IViewport
             if (_layout)
                 _layout.updateScrollRect(unscaledWidth, unscaledHeight);
         }
+    }
+    
+    /**
+     *  @private
+     *  Calculates the luminosity mask shader's mode property which 
+     *  determines how the shader is drawn. 
+     */
+    private function calculateLuminositySettings():int
+    {
+        var mode:int = 0;
+        if (luminosityInvert)
+            mode += 1; 
+        if (luminosityClip) 
+            mode += 2;  
+        return mode; 
     }
     
     /**
@@ -1236,7 +1378,7 @@ public class GroupBase extends UIComponent implements IViewport
            
     //--------------------------------------------------------------------------
     //
-    //  Properties: Overriden Focus management
+    //  Properties: Overridden Focus management
     //
     //--------------------------------------------------------------------------
 
@@ -1272,7 +1414,7 @@ public class GroupBase extends UIComponent implements IViewport
     {
         if (value)
         {
-            super.addChild(value);
+            overlay.addDisplayObject(value, OverlayDepth.FOCUS_PANE);
 
             value.x = 0;
             value.y = 0;
@@ -1282,9 +1424,9 @@ public class GroupBase extends UIComponent implements IViewport
         }
         else
         {
-             super.removeChild(_focusPane);
+            overlay.removeDisplayObject(_focusPane);
              
-             // TODO (jszeto): remove mask?  SDK-15310
+            // TODO (jszeto): remove mask?  SDK-15310
             _focusPane = null;
         }
     }
@@ -1406,8 +1548,8 @@ public class GroupBase extends UIComponent implements IViewport
         if (_mask !== value)
         {
             if (_mask && _mask.parent === this)
-            {       
-                super.removeChild(_mask);
+            {
+                overlay.removeDisplayObject(_mask);
             }     
             
             _mask = value;
@@ -1428,11 +1570,38 @@ public class GroupBase extends UIComponent implements IViewport
     private var originalMaskFilters:Array;
     
     /**
-     *  The mask type.
-     *  Possible values are <code>MaskType.CLIP</code> and <code>MaskType.ALPHA</code> 
-	 *  or <code>MaskType.LUMINOSITY</code>. 
+     *  <p>The mask type. Possible values are <code>MaskType.CLIP</code>, <code>MaskType.ALPHA</code> 
+     *  or <code>MaskType.LUMINOSITY</code>.</p> 
      *
-     *  <p>The default value is <code>MaskType.CLIP</code>, corresponding to "clip".</p>
+     *  <p>Clip Masking</p>
+     * 
+     *  <p>When masking in clip mode, a clipping masks is reduced to 1-bit.  This means that a mask will 
+     *  not affect the opacity of a pixel in the source content; it either leaves the value unmodified, 
+     *  if the corresponding pixel in the mask is has a non-zero alpha value, or makes it fully 
+     *  transparent, if the mask pixel value has an alpha value of zero.</p>
+     * 
+     *  <p>Alpha Masking</p>
+     * 
+     *  <p>In alpha mode, the opacity of each pixel in the source content is multiplied by the opacity 
+     *  of the corresponding region of the mask.  i.e., a pixel in the source content with an opacity of 
+     *  1 that is masked by a region of opacity of .5 will have a resulting opacity of .5.  A source pixel 
+     *  with an opacity of .8 masked by a region with opacity of .5 will have a resulting opacity of .4.</p>
+     * 
+     *  <p>Luminosity Masking</p>
+     * 
+     *  <p>A luminosity mask, sometimes called a 'soft mask', works very similarly to an alpha mask
+     *  except that both the opacity and RGB color value of a pixel in the source content is multiplied
+     *  by the opacity and RGB color value of the corresponding region in the mask.</p>
+     * 
+     *  <p>Luminosity masking is not native to Flash but is common in Adobe Creative Suite tools like Adobe 
+     *  Illustrator and Adobe Photoshop. In order to accomplish the visual effect of a luminosity mask in 
+     *  Flash-rendered content, a graphic element specifying a luminosity mask actually instantiates a shader
+     *  filter that mimics the visual look of a luminosity mask as rendered in Adobe Creative Suite tools.</p>
+     * 
+     *  <p>Objects being masked by luminosity masks can set properties to control the RGB color value and 
+     *  clipping of the mask. See the luminosityInvert and luminosityClip attributes.</p>
+     * 
+     *  @default MaskType.CLIP 
      *
      *  @see  spark.core.MaskType
      *  
@@ -1451,7 +1620,7 @@ public class GroupBase extends UIComponent implements IViewport
      */
     public function set maskType(value:String):void
     {
-		if (_maskType != value)
+        if (_maskType != value)
         {
             _maskType = value;
             maskTypeChanged = true;
@@ -1472,12 +1641,20 @@ public class GroupBase extends UIComponent implements IViewport
     /**
      *  @private
      */
-    private var luminosityInvertChanged:Boolean;
+    private var luminositySettingsChanged:Boolean;
 
     [Inspectable(category="General", enumeration="true,false", defaultValue="false")]
     
     /**
-     *  Documentation is not currently available.
+     *  A property that controls the calculation of the RGB 
+     *  color value of a graphic element being masked by 
+     *  a luminosity mask. If true, the RGB color value of a  
+     *  pixel in the source content is inverted and multipled  
+     *  by the corresponding region in the mask. If false, 
+     *  the source content's pixel's RGB color value is used 
+     *  directly. 
+     * 
+     *  @default false 
      *  
      *  @langversion 3.0
      *  @playerversion Flash 10
@@ -1494,13 +1671,15 @@ public class GroupBase extends UIComponent implements IViewport
      */
     public function set luminosityInvert(value:Boolean):void
     {
-    	if (_luminosityInvert == value)
+        if (_luminosityInvert == value)
             return;
 
         _luminosityInvert = value;
+        luminositySettingsChanged = true;
+        invalidateDisplayList(); 
     }
 
-	//----------------------------------
+    //----------------------------------
     //  luminosityClip
     //----------------------------------
     
@@ -1510,15 +1689,17 @@ public class GroupBase extends UIComponent implements IViewport
      */
     private var _luminosityClip:Boolean = false; 
     
-    /**
-     *  @private
-     */
-    private var luminosityClipChanged:Boolean;
-
     [Inspectable(category="General", enumeration="true,false", defaultValue="false")]
     
     /**
-     *  Documentation is not currently available.
+     *  A property that controls whether the luminosity 
+     *  mask clips the masked content. This property can 
+     *  only have an effect if the graphic element has a 
+     *  mask applied to it that is of type 
+     *  MaskType.LUMINOSITY.  
+     * 
+     *  @default false 
+     *  @see #maskType 
      *  
      *  @langversion 3.0
      *  @playerversion Flash 10
@@ -1535,10 +1716,12 @@ public class GroupBase extends UIComponent implements IViewport
      */
     public function set luminosityClip(value:Boolean):void
     {
-    	if (_luminosityClip == value)
+        if (_luminosityClip == value)
             return;
 
         _luminosityClip = value;
+        luminositySettingsChanged = true;
+        invalidateDisplayList();
     }
     
    /**

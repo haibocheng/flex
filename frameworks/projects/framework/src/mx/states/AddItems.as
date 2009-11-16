@@ -32,7 +32,7 @@ import mx.core.UIComponent;
  *  @playerversion AIR 1.5
  *  @productversion Flex 4
  */
-public class AddItems extends OverrideBase implements IOverride
+public class AddItems extends OverrideBase 
 {
     include "../core/Version.as";
 
@@ -486,7 +486,7 @@ public class AddItems extends OverrideBase implements IOverride
      *  @playerversion AIR 1.5
      *  @productversion Flex 4
      */
-    public function initialize():void
+    override public function initialize():void
     {
         if (creationPolicy == ContainerCreationPolicy.AUTO)
             createInstance();
@@ -500,10 +500,30 @@ public class AddItems extends OverrideBase implements IOverride
      *  @playerversion AIR 1.5
      *  @productversion Flex 4
      */
-    public function apply(parent:UIComponent):void
+    override public function apply(parent:UIComponent):void
     {
-        var dest:* = destination = getOverrideContext(destination, parent);
+        var dest:* = getOverrideContext(destination, parent);
         var localItems:Array;
+        
+        added = false;
+        parentContext = parent;
+        
+        // Early exit if destination is null.
+        if (!dest)
+        {
+            if (destination != null && !applied)
+            {
+                // Our destination context is unavailable so we attempt to register
+                // a listener on our parent document to detect when/if it becomes
+                // valid.
+                addContextListener(destination);
+            }
+            applied = true;
+            return;
+        }
+
+        applied = true;
+        destination = dest;
         
         // Coerce to array if not already an array, or we wish
         // to treat the array as *the* item to add (isArray == true)
@@ -534,10 +554,6 @@ public class AddItems extends OverrideBase implements IOverride
         {
             addItemsToContentHolder(dest as IVisualElementContainer, localItems);
         }
-        else if (propertyName == "controlBarContent" && (dest is IVisualElementContainer))
-        {
-            addItemsToControlBar(dest as IVisualElementContainer, localItems);
-        }
         else if (propertyName == null && dest is IChildList)
         {
             addItemsToContainer(dest as IChildList, localItems);
@@ -566,14 +582,25 @@ public class AddItems extends OverrideBase implements IOverride
      *  @playerversion AIR 1.5
      *  @productversion Flex 4
      */
-    public function remove(parent:UIComponent):void
+    override public function remove(parent:UIComponent):void
     {
         var dest:* = getOverrideContext(destination, parent);
         var localItems:Array;
         var i:int;
         
         if (!added)
+        {
+            if (dest == null)
+            {
+                // It seems our override is no longer active, but we were never
+                // able to successfully apply ourselves, so remove our context
+                // listener if applicable.
+                removeContextListener();
+                applied = false;
+                parentContext = null;
+            }
             return;
+        }
                     
         // Coerce to array if not already an array, or we wish
         // to treat the array as *the* item to add (isArray == true)
@@ -589,11 +616,6 @@ public class AddItems extends OverrideBase implements IOverride
         {
             for (i = 0; i < numAdded; i++)
                 IVisualElementContainer(dest).removeElementAt(startIndex);
-        }
-        else if (propertyName == "controlBarContent" && (dest is IVisualElementContainer))
-        {
-            for (i = 0; i < numAdded; i++)
-                IVisualElementContainer(dest)["controlBarGroup"].removeElementAt(startIndex);
         }
         else if (propertyName == null && dest is IChildList)
         {
@@ -629,7 +651,10 @@ public class AddItems extends OverrideBase implements IOverride
 			// otherwise we'll continue on as normal
 			dispatchRemoveEvent(dest, localItems);
             
+        // Clear our flags and override context.
         added = false;
+        applied = false;
+        parentContext = null;
     }
 	
 	/**
@@ -764,9 +789,6 @@ public class AddItems extends OverrideBase implements IOverride
             if ((propertyName == null || propertyName == "mxmlContent") && (dest is IVisualElementContainer))
                 return IVisualElementContainer(dest).getElementIndex(object as IVisualElement);
             
-            if ((propertyName == null || propertyName == "controlBarContent") && (dest is IVisualElementContainer))
-                return IVisualElementContainer(dest)["controlBarGroup"].getElementIndex(object as IVisualElement);
-
             if (propertyName == null && dest is IChildList)
                 return IChildList(dest).getChildIndex(DisplayObject(object));
     
@@ -819,21 +841,7 @@ public class AddItems extends OverrideBase implements IOverride
         for (var i:int = 0; i < items.length; i++)
             dest.addElementAt(items[i], startIndex + i);
     }
-    
-    /**
-     *  @private
-     */
-    protected function addItemsToControlBar(dest:IVisualElementContainer, items:Array):void
-    {
-        dest = dest["controlBarGroup"];
-
-        if (startIndex == -1)
-            startIndex = dest.numElements;
-        
-        for (var i:int = 0; i < items.length; i++)
-            dest.addElementAt(items[i], startIndex + i);
-    }
-    
+       
     /**
      *  @private
      */

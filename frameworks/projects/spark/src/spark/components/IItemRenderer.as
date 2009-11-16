@@ -36,8 +36,8 @@ public interface IItemRenderer extends IDataRenderer, IVisualElement
 {
     
     /**
-     *  The index of the item in the data set 
-     *  that this renderer is visualizing.
+     *  The index of the item in the data provider
+     *  of the host component of the item renderer.
      *  
      *  @langversion 3.0
      *  @playerversion Flash 10
@@ -45,22 +45,22 @@ public interface IItemRenderer extends IDataRenderer, IVisualElement
      *  @productversion Flex 4
      *  
      */
-    function get index():int;
-    function set index(value:int):void;
+    function get itemIndex():int;
+    function set itemIndex(value:int):void;
     
-	/**
-	 *  True if the item renderer is being dragged.
-	 *  
-	 *  @langversion 3.0
-	 *  @playerversion Flash 10
-	 *  @playerversion AIR 1.5
-	 *  @productversion Flex 4
-	 *  
-	 */
-	function get dragging():Boolean;
-	function set dragging(value:Boolean):void;
+    /**
+     *  Contains <code>true</code> if the item renderer is being dragged.
+     *  
+     *  @langversion 3.0
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
+     *  
+     */
+    function get dragging():Boolean;
+    function set dragging(value:Boolean):void;
 
-	/**
+    /**
      *  The String to display in the item renderer. 
      *
      *  <p>The host component of the item renderer can use the 

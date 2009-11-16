@@ -202,8 +202,7 @@ public class SyntaxTreeEvaluator extends EvaluatorAdapter
             }
             else if (StandardDefs.MD_ACCESSIBILITYCLASS.equals(node.id))
             {
-                // C: if "implementation" is missing, report an error here!
-                unit.addAccessibilityClass(new MetaData(node));
+                processAccessibilityClassMetaData(cx, node);
             }
             else if (StandardDefs.MD_REMOTECLASS.equals(node.id))
             {
@@ -582,6 +581,18 @@ public class SyntaxTreeEvaluator extends EvaluatorAdapter
         unit.effectTriggers.put(triggerName, event);
     }
 
+    private void processAccessibilityClassMetaData(Context cx, MetaDataNode node) 
+    {   
+        if (node.getValue( "implementation" ) != null)
+        {
+            unit.addAccessibilityClass(new MetaData(node));
+        }
+        else
+        {
+            cx.localizedError2(cx.input.origin, node.pos(), new AccessibilityClassMustHaveType());
+        }
+    }
+    
     private void processHostComponentMetaData(Context cx, MetaDataNode node) 
     {
         if (node.count() == 1)
@@ -821,6 +832,11 @@ public class SyntaxTreeEvaluator extends EvaluatorAdapter
         private static final long serialVersionUID = -1068806137611429285L;
     }
 
+    public static class AccessibilityClassMustHaveType extends CompilerMessage.CompilerError
+    {
+        private static final long serialVersionUID = -8834434215232392864L;
+    }
+    
     public static class ArrayElementTypeMustHaveType extends CompilerMessage.CompilerError
     {
         private static final long serialVersionUID = -8834434214722392864L;

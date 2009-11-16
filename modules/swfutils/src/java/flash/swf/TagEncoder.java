@@ -69,6 +69,7 @@ public class TagEncoder extends TagHandler
     private int framecountPos;
     private DebugEncoder debug;
     private Header header;
+    private CompressionLevel compressionLevel; // if null, isDebug() is used to decide compression level
 
     protected Dictionary dict;
     private int uuidOffset;
@@ -147,6 +148,19 @@ public class TagEncoder extends TagHandler
         return debug != null;
     }
 
+    public CompressionLevel getCompressionLevel()
+    {
+    	if (compressionLevel != null)
+    		return compressionLevel;
+    	else
+    		return isDebug() ? CompressionLevel.BestSpeed : CompressionLevel.BestCompression;
+    }
+    
+    public void setCompressionLevel(CompressionLevel compressionLevel)
+    {
+    	this.compressionLevel = compressionLevel;
+    }
+
     public void header(Header header)
     {
         // get some header properties we need to know
@@ -210,7 +224,7 @@ public class TagEncoder extends TagHandler
 
     public void writeTo(OutputStream out) throws IOException
     {
-        writer.writeTo(out, isDebug());
+        writer.writeTo(out, getCompressionLevel());
     }
 
 
@@ -250,9 +264,9 @@ public class TagEncoder extends TagHandler
     {
         try
         {
-            tagw.compress(isDebug());
+            tagw.compress(getCompressionLevel());
             encodeTagHeader(tag.code, tagw.getPos(), isLongHeader(tag));
-            tagw.writeTo(writer, isDebug());
+            tagw.writeTo(writer, getCompressionLevel());
             tagw.reset();
         }
         catch (IOException e)

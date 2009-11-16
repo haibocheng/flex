@@ -496,6 +496,7 @@ public abstract class StandardDefs
 
             standardMxmlImports.add(NameFormatter.toDot(INTERFACE_IDEFERREDINSTANCE));    //    TODO make these conditional on use
             standardMxmlImports.add(NameFormatter.toDot(INTERFACE_IFACTORY));    //    TODO make these conditional on use
+            standardMxmlImports.add(INTERFACE_IFLEXMODULEFACTORY_DOT);
             standardMxmlImports.add(NameFormatter.toDot(INTERFACE_IPROPERTYCHANGENOTIFIER));
 
             standardMxmlImports.add(NameFormatter.toDot(CLASS_CLASSFACTORY));

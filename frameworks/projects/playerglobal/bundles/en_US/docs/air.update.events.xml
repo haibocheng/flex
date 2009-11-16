@@ -1,0 +1,525 @@
+ 
+<apiPackage id="air.update.events"><apiName>air.update.events</apiName><apiDetail/><apiClassifier id="air.update.events:StatusUpdateEvent"><apiName>StatusUpdateEvent</apiName><shortdesc>
+	An updater object dispatches a StatusUpdateEvent object after the updater successfully 
+	downloads and interprets the update descriptor file.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>air.update.events:UpdateEvent</apiBaseClassifier></apiClassifierDef><apiDesc>
+	An updater object dispatches a StatusUpdateEvent object after the updater successfully 
+	downloads and interprets the update descriptor file. 
+	
+	<p>The default behavior is to start downloading the update if the
+	<codeph>available</codeph> property of the StatusUpdateEvent object
+	is set to <codeph>true</codeph>. The default behavior can be prevented
+	only when using the ApplicationUpdater class.</p>
+	
+	</apiDesc></apiClassifierDetail><related-links><link href="air.update.xml#ApplicationUpdater"><linktext>air.update.ApplicationUpdater</linktext></link><link href="air.update.xml#ApplicationUpdaterUI"><linktext>air.update.ApplicationUpdaterUI</linktext></link></related-links><adobeApiEvent id="air.update.events:StatusUpdateEvent:UPDATE_STATUS_updateStatus"><apiName>updateStatus</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events:StatusUpdateEvent:UPDATE_STATUS</apiEventType><adobeApiEventClassifier>air.update.events:StatusUpdateEvent</adobeApiEventClassifier><apiDefinedEvent/></adobeApiEventDef></adobeApiEventDetail></adobeApiEvent><apiConstructor id="air.update.events:StatusUpdateEvent:StatusUpdateEvent"><apiName>StatusUpdateEvent</apiName><shortdesc>
+		The constructor function.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>type</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc> The type of the event. Event listeners can access this information through the inherited <codeph>type</codeph> property. There is only one type of error event: <codeph>ErrorEvent.ERROR</codeph>.
+		</apiDesc></apiParam><apiParam><apiItemName>bubbles</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>Determines whether the Event object bubbles. Event listeners can access this information through the inherited <codeph>bubbles</codeph> property.  
+		</apiDesc></apiParam><apiParam><apiItemName>cancelable</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>Determines whether the Event object can be canceled. Event listeners can access this information through the inherited <codeph>cancelable</codeph> property. 
+		</apiDesc></apiParam><apiParam><apiItemName>available</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>Text to be displayed as an error message. Event listeners can access this information through the <codeph>text</codeph> property.
+		</apiDesc></apiParam><apiParam><apiItemName>version</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData></apiData><apiDesc>A reference number to associate with the specific error.
+		
+		</apiDesc></apiParam><apiParam><apiItemName>details</apiItemName><apiOperationClassifier>Array</apiOperationClassifier><apiData>null</apiData></apiParam></apiConstructorDef><apiDesc>
+		The constructor function. Do not call this function. The update framework calls it to create the event object.
+		
+		</apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="air.update.events:StatusUpdateEvent:clone"><apiName>clone</apiName><shortdesc>
+	 	 Creates a copy of the object and sets the value of each property to match that of the original.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiOperationClassifier>flash.events:Event</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 	 Creates a copy of the object and sets the value of each property to match that of the original.
+	 	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.update.events:StatusUpdateEvent:toString"><apiName>toString</apiName><shortdesc>
+	 	 Returns a string that contains all the properties of the object.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 	 Returns a string that contains all the properties of the object.
+	 	 </apiDesc></apiOperationDetail></apiOperation><apiValue id="air.update.events:StatusUpdateEvent:UPDATE_STATUS"><apiName>UPDATE_STATUS</apiName><shortdesc>
+		 The StatusUpdateEvent.UPDATE_STATUS constant defines the value of the  
+		 type property of the event object for a updateStatus event.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>updateStatus</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 The <codeph>StatusUpdateEvent.UPDATE_STATUS</codeph> constant defines the value of the  
+		 <codeph>type</codeph> property of the event object for a <codeph>updateStatus</codeph> event.
+		 
+		<p>This event has the following properties:</p>
+		
+		<adobetable class="innertable">
+		
+		    
+		
+		    
+		
+		    
+		
+		    
+		
+		<tgroup cols="2"><thead><row><entry>Property</entry><entry>Value</entry></row></thead><tbody><row><entry><codeph>available</codeph></entry><entry>Set to <codeph>true</codeph> if
+		the update descriptor file specifies a version that is different
+		than that of the current application; <codeph>false</codeph> otherwise
+		(the version is the same).</entry></row><row><entry><codeph>details</codeph></entry><entry>An array defining the <codeph>details</codeph> string
+		for each of the supported languages. If there is no localized description,
+		this is defined as an array in which the first element is an empty
+		string (<codeph>""</codeph>) and the second element is the details
+		string. When there are localized descriptions, each element in the
+		array is an array itself with two elements. The first element is
+		the locale code, and the second is the description. For example,
+		the following array has sub-arrays for two languages (U.S. English
+		and French): <codeph>["en-US", "Hello World"], ["fr", "Bonjour monde"]</codeph>.
+		The languages are listed in the same order as in the update descriptor.</entry></row><row><entry><codeph>version</codeph></entry><entry>The string representing
+		the new available version </entry></row></tbody></tgroup></adobetable>
+		
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="air.update.events:StatusUpdateEvent:available"><apiName>available</apiName><shortdesc>
+		 Indicates if an update is available.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>false</apiData><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+		 Indicates if an update is available. This property is <codeph>true</codeph> if
+		 the update descriptor file specifies a version that is different
+		 than that of the current application; it is <codeph>false</codeph> otherwise
+		 (the version is the same).
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="air.update.events:StatusUpdateEvent:details"><apiName>details</apiName><shortdesc>
+		An array defining the details string
+		for each of the supported languages.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>unknown</apiData><apiValueClassifier>Array</apiValueClassifier></apiValueDef><apiDesc>
+		An array defining the <codeph>details</codeph> string
+		for each of the supported languages. If there is no localized description,
+		this is defined as an array in which the first element is an empty
+		string (<codeph>""</codeph>) and the second element is the details
+		string. When there are localized descriptions, each element in the
+		array is an array itself with two elements. The first element is
+		the locale code, and the second is the description. For example,
+		the following array has sub-arrays for two languages (U.S. English
+		and French): <codeph>["en-US", "Hello World"], ["fr", "Bonjour monde"]</codeph>.
+		The languages are listed in the same order as in the update descriptor.
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="air.update.events:StatusUpdateEvent:version"><apiName>version</apiName><shortdesc>
+		 The string representing the new available version.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 The string representing the new available version.
+		 
+		 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="air.update.events:StatusUpdateErrorEvent"><apiName>StatusUpdateErrorEvent</apiName><shortdesc>
+	 A StatusUpdateErrorEvent is dispatched when a call to the checkForUpdate() method 
+	 of an ApplicationUpdater object encounters an error while downloading or parsing the update descriptor file.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.events:ErrorEvent</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 A StatusUpdateErrorEvent is dispatched when a call to the <codeph>checkForUpdate()</codeph> method 
+	 of an ApplicationUpdater object encounters an error while downloading or parsing the update descriptor file.
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="air.update.xml#ApplicationUpdater"><linktext>air.update.ApplicationUpdater</linktext></link><link href="air.update.xml#ApplicationUpdaterUI"><linktext>air.update.ApplicationUpdaterUI</linktext></link></related-links><adobeApiEvent id="air.update.events:StatusUpdateErrorEvent:UPDATE_ERROR_updateError"><apiName>updateError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events:StatusUpdateErrorEvent:UPDATE_ERROR</apiEventType><adobeApiEventClassifier>air.update.events:StatusUpdateErrorEvent</adobeApiEventClassifier><apiDefinedEvent/></adobeApiEventDef></adobeApiEventDetail></adobeApiEvent><apiConstructor id="air.update.events:StatusUpdateErrorEvent:StatusUpdateErrorEvent"><apiName>StatusUpdateErrorEvent</apiName><shortdesc>
+		The constructor function.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>type</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc> The type of the event. Event listeners can access this information through the inherited <codeph>type</codeph> property. There is only one type of error event: <codeph>ErrorEvent.ERROR</codeph>.
+		</apiDesc></apiParam><apiParam><apiItemName>bubbles</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>Determines whether the Event object bubbles. Event listeners can access this information through the inherited <codeph>bubbles</codeph> property.  
+		</apiDesc></apiParam><apiParam><apiItemName>cancelable</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>Determines whether the Event object can be canceled. Event listeners can access this information through the inherited <codeph>cancelable</codeph> property. 
+		</apiDesc></apiParam><apiParam><apiItemName>text</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData></apiData><apiDesc>Text to be displayed as an error message. Event listeners can access this information through the <codeph>text</codeph> property.
+		</apiDesc></apiParam><apiParam><apiItemName>id</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiData>0</apiData><apiDesc>A reference number to associate with the specific error.
+		</apiDesc></apiParam><apiParam><apiItemName>subErrorID</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiData>0</apiData><apiDesc>Provides details about the error event, in addition to the <codeph>errorID</codeph>.
+		
+		</apiDesc></apiParam></apiConstructorDef><apiDesc>
+		The constructor function. Do not call this function. The update framework calls it to create the event object.
+		
+		</apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="air.update.events:StatusUpdateErrorEvent:clone"><apiName>clone</apiName><shortdesc>
+	 	 Creates a copy of the object and sets the value of each property to match that of the original.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiOperationClassifier>flash.events:Event</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 	 Creates a copy of the object and sets the value of each property to match that of the original.
+	 	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.update.events:StatusUpdateErrorEvent:toString"><apiName>toString</apiName><shortdesc>
+	 	 Returns a string that contains all the properties of the object.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 	 Returns a string that contains all the properties of the object.
+	 	 </apiDesc></apiOperationDetail></apiOperation><apiValue id="air.update.events:StatusUpdateErrorEvent:UPDATE_ERROR"><apiName>UPDATE_ERROR</apiName><shortdesc>
+		 The StatusUpdateErrorEvent.UPDATE_ERROR constant defines the value of the  
+		 type property of the event object for a statusUpdateError event.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>updateError</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 The <codeph>StatusUpdateErrorEvent.UPDATE_ERROR</codeph> constant defines the value of the  
+		 <codeph>type</codeph> property of the event object for a <codeph>statusUpdateError</codeph> event.
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="air.update.events:StatusUpdateErrorEvent:subErrorID"><apiName>subErrorID</apiName><shortdesc>
+		Provides information in addition to the errorId property.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>0</apiData><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+		Provides information in addition to the <codeph>errorId</codeph> property. 
+		
+		</apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="air.update.events:DownloadErrorEvent"><apiName>DownloadErrorEvent</apiName><shortdesc>
+	 A DownloadErrorEvent object is dispatched by an ApplicationUpdater or ApplicationUpdaterUI
+	 object when an error happens while downloading the update file.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.events:ErrorEvent</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 A DownloadErrorEvent object is dispatched by an ApplicationUpdater or ApplicationUpdaterUI
+	 object when an error happens while downloading the update file.
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="air.update.xml#ApplicationUpdater"><linktext>air.update.ApplicationUpdater</linktext></link><link href="air.update.xml#ApplicationUpdaterUI"><linktext>air.update.ApplicationUpdaterUI</linktext></link></related-links><adobeApiEvent id="air.update.events:DownloadErrorEvent:DOWNLOAD_ERROR_downloadError"><apiName>downloadError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events:DownloadErrorEvent:DOWNLOAD_ERROR</apiEventType><adobeApiEventClassifier>air.update.events:DownloadErrorEvent</adobeApiEventClassifier><apiDefinedEvent/></adobeApiEventDef></adobeApiEventDetail></adobeApiEvent><apiConstructor id="air.update.events:DownloadErrorEvent:DownloadErrorEvent"><apiName>DownloadErrorEvent</apiName><shortdesc>
+		The constructor function.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>type</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc> The type of the event. Event listeners can access this information through the inherited <codeph>type</codeph> property. There is only one type of error event: <codeph>ErrorEvent.ERROR</codeph>.
+		</apiDesc></apiParam><apiParam><apiItemName>bubbles</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>Determines whether the Event object bubbles. Event listeners can access this information through the inherited <codeph>bubbles</codeph> property.  
+		</apiDesc></apiParam><apiParam><apiItemName>cancelable</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>Determines whether the Event object can be canceled. Event listeners can access this information through the inherited <codeph>cancelable</codeph> property. 
+		</apiDesc></apiParam><apiParam><apiItemName>text</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData></apiData><apiDesc>Text to be displayed as an error message. Event listeners can access this information through the <codeph>text</codeph> property.
+		</apiDesc></apiParam><apiParam><apiItemName>id</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiData>0</apiData><apiDesc>A reference number to associate with the specific error.
+		</apiDesc></apiParam><apiParam><apiItemName>subErrorID</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiData>0</apiData><apiDesc>Provides details about the error event, in addition to the <codeph>errorID</codeph>.
+		
+		</apiDesc></apiParam></apiConstructorDef><apiDesc>
+		The constructor function. Do not call this function. The update framework calls it to create the event object.
+		
+		</apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="air.update.events:DownloadErrorEvent:clone"><apiName>clone</apiName><shortdesc>
+	 	 Creates a copy of the object and sets the value of each property to match that of the original.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiOperationClassifier>flash.events:Event</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 	 Creates a copy of the object and sets the value of each property to match that of the original.
+	 	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.update.events:DownloadErrorEvent:toString"><apiName>toString</apiName><shortdesc>
+	 	 Returns a string that contains all the properties of the object.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 	 Returns a string that contains all the properties of the object.
+	 	 </apiDesc></apiOperationDetail></apiOperation><apiValue id="air.update.events:DownloadErrorEvent:DOWNLOAD_ERROR"><apiName>DOWNLOAD_ERROR</apiName><shortdesc>
+		 The DownloadErrorEvent.DOWNLOAD_ERROR constant defines the value of the  
+		 type property of the event object for a downloadError event.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>downloadError</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 The <codeph>DownloadErrorEvent.DOWNLOAD_ERROR</codeph> constant defines the value of the  
+		 <codeph>type</codeph> property of the event object for a <codeph>downloadError</codeph> event.
+		 
+		<p>The <codeph>errorID</codeph> property of a DownloadErrorEvent object is
+		an integer defining error information (see the following
+		table). An additional <codeph>subErrorID</codeph> property may contain
+		more error information.</p>
+		
+		<adobetable class="innertable">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<tgroup cols="2"><thead><row><entry>errorID Error code</entry><entry>Description</entry></row></thead><tbody><row>
+		<entry>16800</entry>
+		<entry>Occurs during validating the downloaded
+		update file. The <codeph>subErrorID</codeph> property may contain additional
+		information.</entry>
+		</row><row>
+		<entry>16801</entry>
+		<entry>Invalid Adobe AIR file (missing application.xml).</entry>
+		</row><row>
+		<entry>16802</entry>
+		<entry>Invalid Adobe AIR file (missing MIME type).</entry>
+		</row><row>
+		<entry>16807</entry>
+		<entry>Invalid Adobe AIR file (format).</entry>
+		</row><row>
+		<entry>16804</entry>
+		<entry>Invalid Adobe AIR file (invalid flags).</entry>
+		</row><row>
+		<entry>16805</entry>
+		<entry>Invalid Adobe AIR file (unknown compression).</entry>
+		</row><row>
+		<entry>16806</entry>
+		<entry>Invalid Adobe AIR file (invalid filename).</entry>
+		</row><row>
+		<entry>16807</entry>
+		<entry>Invalid Adobe AIR file (corrupt).</entry>
+		</row><row>
+		<entry>16808</entry>
+		<entry>Configuration file does not exist.</entry>
+		</row><row>
+		<entry>16809</entry>
+		<entry>The <codeph>updateURL</codeph> property
+		is not set.</entry>
+		</row><row>
+		<entry>16810</entry>
+		<entry>Reserved.</entry>
+		</row><row>
+		<entry>16811</entry>
+		<entry>Invalid configuration file (unknown configuration
+		version).</entry>
+		</row><row>
+		<entry>16812</entry>
+		<entry>Invalid configuration file (URL missing).</entry>
+		</row><row>
+		<entry>16813</entry>
+		<entry>Invalid configuration file (delay format).</entry>
+		</row><row>
+		<entry>16814</entry>
+		<entry>Invalid configuration file (invalid defaultUI
+		values).</entry>
+		</row><row>
+		<entry>16815</entry>
+		<entry>Invalid update descriptor (unknown descriptor
+		version).</entry>
+		</row><row>
+		<entry>16816</entry>
+		<entry>Invalid update descriptor (missing update
+		version).</entry>
+		</row><row>
+		<entry>16817</entry>
+		<entry>Invalid update descriptor (invalid description).</entry>
+		</row><row>
+		<entry>16818</entry>
+		<entry>IO error while saving data to disk. The <codeph>subErrorID</codeph> property
+		may provide more information.</entry>
+		</row><row>
+		<entry>16819</entry>
+		<entry>Security error while downloading. The <codeph>subErrorID</codeph> property
+		may provide more information.</entry>
+		</row><row>
+		<entry>16820</entry>
+		<entry>Invalid HTTP status code. The <codeph>subErrorID</codeph> property
+		may contain the invalid status code.</entry>
+		</row><row>
+		<entry>16821</entry>
+		<entry>Reserved.</entry>
+		</row><row>
+		<entry>16822</entry>
+		<entry>I/O error while downloading. The <codeph>subErrorID</codeph> property
+		may provide more information.</entry>
+		</row><row>
+		<entry>16823</entry>
+		<entry>End-of-file error while saving data to disk.
+		The <codeph>subErrorID</codeph> property may provide more information.</entry>
+		</row><row>
+		<entry>16824</entry>
+		<entry>Invalid update descriptor. The <codeph>subErrorID</codeph> property may
+		provide more information.</entry>
+		</row><row>
+		<entry>16825</entry>
+		<entry>The update file contains an application
+		with a different application ID.</entry>
+		</row><row>
+		<entry>16826</entry>
+		<entry>The update file does not contain a newer
+		version of the application.</entry>
+		</row><row>
+		<entry>16827</entry>
+		<entry>The version contained in the update file
+		does not match the version from the update descriptor.</entry>
+		</row><row>
+		<entry>16828</entry>
+		<entry>Cannot update application, usually because
+		the application is running in the AIR Debug Launcher (ADL).</entry>
+		</row><row>
+		<entry>16829</entry>
+		<entry>Missing update file at install time.</entry>
+		</row></tbody></tgroup></adobetable>
+		
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="air.update.events:DownloadErrorEvent:subErrorID"><apiName>subErrorID</apiName><shortdesc>
+		Provides information in addition to the errorId property.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>0</apiData><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+		Provides information in addition to the <codeph>errorId</codeph> property. 
+		
+		</apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="air.update.events:StatusFileUpdateEvent"><apiName>StatusFileUpdateEvent</apiName><shortdesc>
+	Dispatched after the updater successfully validates the
+	file in the call to the installFromAIRFile() method.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>air.update.events:UpdateEvent</apiBaseClassifier></apiClassifierDef><apiDesc>
+	Dispatched after the updater successfully validates the
+	file in the call to the <codeph>installFromAIRFile()</codeph> method.
+	
+	<p>The default behavior is to install the update if the available
+	of the available property of the StatusFileUpdateEvent object is
+	set to true. The default behavior can be prevented only when using
+	the ApplicationUpdater class.</p>
+	
+	</apiDesc></apiClassifierDetail><related-links><link href="air.update.xml#ApplicationUpdater"><linktext>air.update.ApplicationUpdater</linktext></link><link href="air.update.xml#ApplicationUpdaterUI"><linktext>air.update.ApplicationUpdaterUI</linktext></link></related-links><adobeApiEvent id="air.update.events:StatusFileUpdateEvent:FILE_UPDATE_STATUS_fileUpdateStatus"><apiName>fileUpdateStatus</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events:StatusFileUpdateEvent:FILE_UPDATE_STATUS</apiEventType><adobeApiEventClassifier>air.update.events:StatusFileUpdateEvent</adobeApiEventClassifier><apiDefinedEvent/></adobeApiEventDef></adobeApiEventDetail></adobeApiEvent><apiConstructor id="air.update.events:StatusFileUpdateEvent:StatusFileUpdateEvent"><apiName>StatusFileUpdateEvent</apiName><shortdesc>
+		The constructor function.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>type</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc> The type of the event. Event listeners can access this information through the inherited <codeph>type</codeph> property. There is only one type of error event: <codeph>ErrorEvent.ERROR</codeph>.
+		</apiDesc></apiParam><apiParam><apiItemName>bubbles</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>Determines whether the Event object bubbles. Event listeners can access this information through the inherited <codeph>bubbles</codeph> property.  
+		</apiDesc></apiParam><apiParam><apiItemName>cancelable</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>Determines whether the Event object can be canceled. Event listeners can access this information through the inherited <codeph>cancelable</codeph> property. 
+		</apiDesc></apiParam><apiParam><apiItemName>available</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>Text to be displayed as an error message. Event listeners can access this information through the <codeph>text</codeph> property.
+		</apiDesc></apiParam><apiParam><apiItemName>version</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData></apiData><apiDesc>A reference number to associate with the specific error.
+		
+		</apiDesc></apiParam><apiParam><apiItemName>path</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData></apiData></apiParam></apiConstructorDef><apiDesc>
+		The constructor function. Do not call this function. The update framework calls it to create the event object.
+		
+		</apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="air.update.events:StatusFileUpdateEvent:clone"><apiName>clone</apiName><shortdesc>
+	 	 Creates a copy of the object and sets the value of each property to match that of the original.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiOperationClassifier>flash.events:Event</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 	 Creates a copy of the object and sets the value of each property to match that of the original.
+	 	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.update.events:StatusFileUpdateEvent:toString"><apiName>toString</apiName><shortdesc>
+	 	 Returns a string that contains all the properties of the object.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 	 Returns a string that contains all the properties of the object.
+	 	 </apiDesc></apiOperationDetail></apiOperation><apiValue id="air.update.events:StatusFileUpdateEvent:FILE_UPDATE_STATUS"><apiName>FILE_UPDATE_STATUS</apiName><shortdesc>
+		 The StatusUpdateEvent.UPDATE_STATUS constant defines the value of the  
+		 type property of the event object for a updateStatus event.</shortdesc><prolog/><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>fileUpdateStatus</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 The <codeph>StatusUpdateEvent.UPDATE_STATUS</codeph> constant defines the value of the  
+		 <codeph>type</codeph> property of the event object for a <codeph>updateStatus</codeph> event.
+		 
+		<p>This event has the following properties:</p>
+		
+		<p><adobetable class="innertable">
+		
+		    
+		
+		    
+		
+		    
+		
+		    
+		
+		<tgroup cols="2"><thead><row><entry>Property</entry><entry>Value</entry></row></thead><tbody><row><entry><codeph>available</codeph></entry><entry>Indicates if if there is a different version 
+		available than one of the current application (<codeph>true</codeph>); <codeph>false</codeph> otherwise (same version).</entry></row><row><entry><codeph>path</codeph></entry><entry>The <codeph>nativePath</codeph> property of
+		 the update File object specified by the <codeph>airFile</codeph> parameter
+		 in a call to the <codeph>installFromAIRFile()</codeph> method.</entry></row><row><entry><codeph>version</codeph></entry><entry>Indicates the version of the new update.</entry></row></tbody></tgroup></adobetable></p>
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="air.update.events:StatusFileUpdateEvent:available"><apiName>available</apiName><shortdesc>
+		 Indicates if if there is a different version available than one of the current application
+		 (true); false otherwise (same version).</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>false</apiData><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+		 Indicates if if there is a different version available than one of the current application
+		 (<codeph>true</codeph>); <codeph>false</codeph> otherwise (same version).
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="air.update.events:StatusFileUpdateEvent:path"><apiName>path</apiName><shortdesc>
+		 The nativePath property of
+		 the update File object specified by the airFile parameter
+		 in a call to the installFromAIRFile() method.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>null</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 The <codeph>nativePath</codeph> property of
+		 the update File object specified by the <codeph>airFile</codeph> parameter
+		 in a call to the <codeph>installFromAIRFile()</codeph> method.
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="air.update.events:StatusFileUpdateEvent:version"><apiName>version</apiName><shortdesc>
+		 Indicates the version of the new update.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 Indicates the version of the new update.
+		 
+		 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="air.update.events:StatusFileUpdateErrorEvent"><apiName>StatusFileUpdateErrorEvent</apiName><shortdesc>
+	 A StatusUpdateFileErrorEvent is dispatched when a call to the checkForUpdate() method of a ApplicationUpdater object encounters an error
+	 while downloading or parsing the update descriptor file.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.events:ErrorEvent</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 A StatusUpdateFileErrorEvent is dispatched when a call to the <codeph>checkForUpdate()</codeph> method of a ApplicationUpdater object encounters an error
+	 while downloading or parsing the update descriptor file.
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="air.update.xml#ApplicationUpdater"><linktext>air.update.ApplicationUpdater</linktext></link><link href="air.update.xml#ApplicationUpdaterUI"><linktext>air.update.ApplicationUpdaterUI</linktext></link></related-links><adobeApiEvent id="air.update.events:StatusFileUpdateErrorEvent:FILE_UPDATE_ERROR_fileUpdateError"><apiName>fileUpdateError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events:StatusFileUpdateErrorEvent:FILE_UPDATE_ERROR</apiEventType><adobeApiEventClassifier>air.update.events:StatusFileUpdateErrorEvent</adobeApiEventClassifier><apiDefinedEvent/></adobeApiEventDef></adobeApiEventDetail></adobeApiEvent><apiConstructor id="air.update.events:StatusFileUpdateErrorEvent:StatusFileUpdateErrorEvent"><apiName>StatusFileUpdateErrorEvent</apiName><shortdesc>
+		The constructor function.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>type</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc> The type of the event. Event listeners can access this information through the inherited <codeph>type</codeph> property. There is only one type of error event: <codeph>ErrorEvent.ERROR</codeph>.
+		</apiDesc></apiParam><apiParam><apiItemName>bubbles</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>Determines whether the Event object bubbles. Event listeners can access this information through the inherited <codeph>bubbles</codeph> property.  
+		</apiDesc></apiParam><apiParam><apiItemName>cancelable</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>Determines whether the Event object can be canceled. Event listeners can access this information through the inherited <codeph>cancelable</codeph> property. 
+		</apiDesc></apiParam><apiParam><apiItemName>text</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData></apiData><apiDesc>Text to be displayed as an error message. Event listeners can access this information through the <codeph>text</codeph> property.
+		</apiDesc></apiParam><apiParam><apiItemName>id</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiData>0</apiData><apiDesc>A reference number to associate with the specific error.
+		
+		</apiDesc></apiParam></apiConstructorDef><apiDesc>
+		The constructor function. Do not call this function. The update framework calls it to create the event object.
+		
+		</apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="air.update.events:StatusFileUpdateErrorEvent:clone"><apiName>clone</apiName><shortdesc>
+	 	 Creates a copy of the object and sets the value of each property to match that of the original.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiOperationClassifier>flash.events:Event</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 	 Creates a copy of the object and sets the value of each property to match that of the original.
+	 	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.update.events:StatusFileUpdateErrorEvent:toString"><apiName>toString</apiName><shortdesc>
+	 	 Returns a string that contains all the properties of the object.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 	 Returns a string that contains all the properties of the object.
+	 	 </apiDesc></apiOperationDetail></apiOperation><apiValue id="air.update.events:StatusFileUpdateErrorEvent:FILE_UPDATE_ERROR"><apiName>FILE_UPDATE_ERROR</apiName><shortdesc>
+		 The StatusUpdateErrorEvent.UPDATE_ERROR constant defines the value of the  
+		 type property of the event object for a statusUpdateError event.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>fileUpdateError</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 The <codeph>StatusUpdateErrorEvent.UPDATE_ERROR</codeph> constant defines the value of the  
+		 <codeph>type</codeph> property of the event object for a <codeph>statusUpdateError</codeph> event.
+		 
+		 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="air.update.events:UpdateEvent"><apiName>UpdateEvent</apiName><shortdesc>
+	 A UpdateEvent is dispatched by a ApplicationUpdater object during the update process.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.events:Event</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 A UpdateEvent is dispatched by a ApplicationUpdater object during the update process.
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="air.update.xml#ApplicationUpdater"><linktext>air.update.ApplicationUpdater</linktext></link><link href="air.update.xml#ApplicationUpdaterUI"><linktext>air.update.ApplicationUpdaterUI</linktext></link></related-links><adobeApiEvent id="air.update.events:UpdateEvent:BEFORE_INSTALL_beforeInstall"><apiName>beforeInstall</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events:UpdateEvent:BEFORE_INSTALL</apiEventType><adobeApiEventClassifier>air.update.events:UpdateEvent</adobeApiEventClassifier><apiDefinedEvent/></adobeApiEventDef></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update.events:UpdateEvent:CHECK_FOR_UPDATE_checkForUpdate"><apiName>checkForUpdate</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events:UpdateEvent:CHECK_FOR_UPDATE</apiEventType><adobeApiEventClassifier>air.update.events:UpdateEvent</adobeApiEventClassifier><apiDefinedEvent/></adobeApiEventDef></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update.events:UpdateEvent:DOWNLOAD_COMPLETE_downloadComplete"><apiName>downloadComplete</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events:UpdateEvent:DOWNLOAD_COMPLETE</apiEventType><adobeApiEventClassifier>air.update.events:UpdateEvent</adobeApiEventClassifier><apiDefinedEvent/></adobeApiEventDef></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update.events:UpdateEvent:DOWNLOAD_START_downloadStart"><apiName>downloadStart</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events:UpdateEvent:DOWNLOAD_START</apiEventType><adobeApiEventClassifier>air.update.events:UpdateEvent</adobeApiEventClassifier><apiDefinedEvent/></adobeApiEventDef></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update.events:UpdateEvent:INITIALIZED_initialized"><apiName>initialized</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events:UpdateEvent:INITIALIZED</apiEventType><adobeApiEventClassifier>air.update.events:UpdateEvent</adobeApiEventClassifier><apiDefinedEvent/></adobeApiEventDef></adobeApiEventDetail></adobeApiEvent><apiConstructor id="air.update.events:UpdateEvent:UpdateEvent"><apiName>UpdateEvent</apiName><shortdesc>
+		The constructor function.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>type</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc> The type of the event. Event listeners can access this information through the inherited <codeph>type</codeph> property. There is only one type of error event: <codeph>ErrorEvent.ERROR</codeph>.
+		</apiDesc></apiParam><apiParam><apiItemName>bubbles</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>Determines whether the Event object bubbles. Event listeners can access this information through the inherited <codeph>bubbles</codeph> property.  
+		</apiDesc></apiParam><apiParam><apiItemName>cancelable</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>Determines whether the Event object can be canceled. Event listeners can access this information through the inherited <codeph>cancelable</codeph> property. 
+		</apiDesc></apiParam></apiConstructorDef><apiDesc>
+		The constructor function. Do not call this function. The update framework calls it to create the event object.
+		
+		</apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="air.update.events:UpdateEvent:clone"><apiName>clone</apiName><shortdesc>
+	 	 Creates a copy of the object and sets the value of each property to match that of the original.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiOperationClassifier>flash.events:Event</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 	 Creates a copy of the object and sets the value of each property to match that of the original.
+	 	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.update.events:UpdateEvent:toString"><apiName>toString</apiName><shortdesc>
+	 	 Returns a string that contains all the properties of the object.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 	 Returns a string that contains all the properties of the object.
+	 	 </apiDesc></apiOperationDetail></apiOperation><apiValue id="air.update.events:UpdateEvent:BEFORE_INSTALL"><apiName>BEFORE_INSTALL</apiName><shortdesc>
+		 The UpdateEvent.BEFORE_INSTALL constant defines the value of the  
+		 type property of the event object for a beforeInstall event.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>beforeInstall</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 The <codeph>UpdateEvent.BEFORE_INSTALL</codeph> constant defines the value of the  
+		 <codeph>type</codeph> property of the event object for a <codeph>beforeInstall</codeph> event.
+		 
+		<p>This event has the following properties:</p>
+		
+		<adobetable class="innertable">
+		    
+		
+		    
+		
+		    
+		
+		    
+		
+		    
+		
+		<tgroup cols="2"><thead><row><entry>Property</entry><entry>Value</entry></row></thead><tbody><row><entry><codeph>bubbles</codeph></entry><entry><codeph>false</codeph></entry></row><row><entry><codeph>cancelable</codeph></entry><entry><codeph>false</codeph>; there is no default behavior to cancel.</entry></row><row><entry><codeph>currentTarget</codeph></entry><entry>The object that is actively processing the Event 
+		object with an event listener.</entry></row><row><entry><codeph>target</codeph></entry><entry>The updater object. </entry></row></tbody></tgroup></adobetable>
+		
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="air.update.events:UpdateEvent:CHECK_FOR_UPDATE"><apiName>CHECK_FOR_UPDATE</apiName><shortdesc>
+		 The UpdateEvent.CHECK_FOR_UPDATE constant defines the value of the  
+		 type property of the event object for a checkForUpdate event.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>checkForUpdate</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 The <codeph>UpdateEvent.CHECK_FOR_UPDATE</codeph> constant defines the value of the  
+		 <codeph>type</codeph> property of the event object for a <codeph>checkForUpdate</codeph> event.
+		 
+		<p>This event has the following properties:</p>
+		
+		<adobetable class="innertable">
+		    
+		
+		    
+		
+		    
+		
+		    
+		
+		    
+		
+		<tgroup cols="2"><thead><row><entry>Property</entry><entry>Value</entry></row></thead><tbody><row><entry><codeph>bubbles</codeph></entry><entry><codeph>false</codeph></entry></row><row><entry><codeph>cancelable</codeph></entry><entry><codeph>false</codeph>; there is no default behavior to cancel.</entry></row><row><entry><codeph>currentTarget</codeph></entry><entry>The object that is actively processing the Event 
+		object with an event listener.</entry></row><row><entry><codeph>target</codeph></entry><entry>The updater object. </entry></row></tbody></tgroup></adobetable>
+		
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="air.update.events:UpdateEvent:DOWNLOAD_COMPLETE"><apiName>DOWNLOAD_COMPLETE</apiName><shortdesc>
+		 The UpdateEvent.DOWNLOAD_COMPLETE constant defines the value of the  
+		 type property of the event object for a downloadComplete event.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>downloadComplete</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 The <codeph>UpdateEvent.DOWNLOAD_COMPLETE</codeph> constant defines the value of the  
+		 <codeph>type</codeph> property of the event object for a <codeph>downloadComplete</codeph> event.
+		 
+		<p>This event has the following properties:</p>
+		
+		<adobetable class="innertable">
+		    
+		
+		    
+		
+		    
+		
+		    
+		
+		    
+		
+		<tgroup cols="2"><thead><row><entry>Property</entry><entry>Value</entry></row></thead><tbody><row><entry><codeph>bubbles</codeph></entry><entry><codeph>false</codeph></entry></row><row><entry><codeph>cancelable</codeph></entry><entry><codeph>false</codeph>; there is no default behavior to cancel.</entry></row><row><entry><codeph>currentTarget</codeph></entry><entry>The object that is actively processing the Event 
+		object with an event listener.</entry></row><row><entry><codeph>target</codeph></entry><entry>The updater object. </entry></row></tbody></tgroup></adobetable>
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="air.update.events:UpdateEvent:DOWNLOAD_START"><apiName>DOWNLOAD_START</apiName><shortdesc>
+		 The UpdateEvent.DOWNLOAD_START constant defines the value of the  
+		 type property of the event object for a downloadStart event.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>downloadStart</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 The <codeph>UpdateEvent.DOWNLOAD_START</codeph> constant defines the value of the  
+		 <codeph>type</codeph> property of the event object for a <codeph>downloadStart</codeph> event.
+		 
+		<p>This event has the following properties:</p>
+		
+		<adobetable class="innertable">
+		    
+		
+		    
+		
+		    
+		
+		    
+		
+		    
+		
+		<tgroup cols="2"><thead><row><entry>Property</entry><entry>Value</entry></row></thead><tbody><row><entry><codeph>bubbles</codeph></entry><entry><codeph>false</codeph></entry></row><row><entry><codeph>cancelable</codeph></entry><entry><codeph>false</codeph>; there is no default behavior to cancel.</entry></row><row><entry><codeph>currentTarget</codeph></entry><entry>The object that is actively processing the Event 
+		object with an event listener.</entry></row><row><entry><codeph>target</codeph></entry><entry>The updater object. </entry></row></tbody></tgroup></adobetable>
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="air.update.events:UpdateEvent:INITIALIZED"><apiName>INITIALIZED</apiName><shortdesc>
+		 The UpdateEvent.INITIALIZED constant defines the value of the  
+		 type property of the event object for a initialized event.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>initialized</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 The <codeph>UpdateEvent.INITIALIZED</codeph> constant defines the value of the  
+		 <codeph>type</codeph> property of the event object for a <codeph>initialized</codeph> event.
+		 
+		<p>This event has the following properties:</p>
+		
+		<adobetable class="innertable">
+		    
+		
+		    
+		
+		    
+		
+		    
+		
+		    
+		
+		<tgroup cols="2"><thead><row><entry>Property</entry><entry>Value</entry></row></thead><tbody><row><entry><codeph>bubbles</codeph></entry><entry><codeph>false</codeph></entry></row><row><entry><codeph>cancelable</codeph></entry><entry><codeph>false</codeph>; there is no default behavior to cancel.</entry></row><row><entry><codeph>currentTarget</codeph></entry><entry>The object that is actively processing the Event 
+		object with an event listener.</entry></row><row><entry><codeph>target</codeph></entry><entry>The updater object. </entry></row></tbody></tgroup></adobetable>
+		
+		 </apiDesc></apiValueDetail></apiValue></apiClassifier></apiPackage>

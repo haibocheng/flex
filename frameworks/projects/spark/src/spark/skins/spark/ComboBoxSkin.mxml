@@ -22,7 +22,7 @@ is defined by the ComboBoxTextInputSkin class.
 @playerversion AIR 1.5
 @productversion Flex 4
 -->
-<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" 
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" 
         xmlns:fb="http://ns.adobe.com/flashbuilder/2009" alpha.disabled=".5"> 
     
     <!-- host component -->
@@ -41,6 +41,14 @@ is defined by the ComboBoxTextInputSkin class.
             private var cornerRadiusChanged:Boolean;
             private var cornerRadius:Number = 0;            
             
+            /* Define the content fill items that should be colored by the "contentBackgroundColor" style. */
+            static private const contentFill:Array = ["bgFill"];
+            
+            /**
+             * @private
+             */
+            override public function get contentItems():Array {return contentFill};
+
             /**
              *  @private
              */
@@ -166,7 +174,7 @@ is defined by the ComboBoxTextInputSkin class.
         <s:Group id="dropDown" maxHeight="134" minHeight="22" >
             
             <!-- drop shadow -->
-            <s:RectangularDropShadow id="dropShadow" blurX="20" blurY="20" alpha="0.6" distance="5" 
+            <s:RectangularDropShadow id="dropShadow" blurX="20" blurY="20" alpha="0.45" distance="7" 
                                      angle="90" color="#000000" left="0" top="0" right="0" bottom="0"/>
             
             <!-- border -->
@@ -204,12 +212,12 @@ is defined by the ComboBoxTextInputSkin class.
     </s:PopUpAnchor>
     
     <!--- The anchor button used by the ComboBox. The default skin is ComboBoxButtonSkin. -->
-    <s:Button id="openButton" width="20" right="0" top="0" bottom="0" focusEnabled="false"
+    <s:Button id="openButton" width="19" right="0" top="0" bottom="0" focusEnabled="false"
               skinClass="spark.skins.spark.ComboBoxButtonSkin" />  
     <!--- The text input area of the ComboBox. -->
     <s:TextInput id="textInput"
-                 left="0" right="19" top="0" bottom="0" 
+                 left="0" right="18" top="0" bottom="0" 
                  skinClass="spark.skins.spark.ComboBoxTextInputSkin"/> 
     
-</s:Skin>
+</s:SparkSkin>
 

@@ -147,8 +147,10 @@ public interface LinkerConfiguration
 	 boolean getComputeDigest();
      
      String getCompatibilityVersionString();
-
 	 int getCompatibilityVersion();
+	 
+	 String getMinimumSupportedVersionString();
+	 int getMinimumSupportedVersion();
 
 	/**
 	 * @return The major version of the player targeted by this application.

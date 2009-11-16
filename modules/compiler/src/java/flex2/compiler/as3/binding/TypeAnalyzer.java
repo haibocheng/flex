@@ -16,9 +16,11 @@ import flex2.compiler.Source;
 import flex2.compiler.SymbolTable;
 import flex2.compiler.abc.AbcClass;
 import flex2.compiler.abc.MetaData;
+import flex2.compiler.abc.Method;
 import flex2.compiler.abc.Variable;
 import flex2.compiler.as3.reflect.NodeMagic;
 import flex2.compiler.util.MultiName;
+import flex2.compiler.util.Name;
 import flex2.compiler.util.QName;
 import macromedia.asc.parser.*;
 import macromedia.asc.semantics.NamespaceValue;
@@ -318,7 +320,13 @@ public class TypeAnalyzer extends EvaluatorAdapter
         {
             for (int i = 0; i < getterNames.length; i++)
             {
-                classInfo.addGetter(getterNames[i]);
+            	QName getterName = getterNames[i];
+                classInfo.addGetter(getterName);
+
+                // Look for any SkinPart metadata.
+                Method getter = abcClass.getGetter(new String[]{getterName.getNamespace()}, getterName.getLocalPart(), true);
+                if (getter != null)
+                	processSkinPartMetaData(getter.getMetaData(SKINPART), classInfo, getterName);
             }
         }
 
@@ -341,24 +349,23 @@ public class TypeAnalyzer extends EvaluatorAdapter
                 QName varName = variableNames[i];
                 classInfo.addVariable(varName);
                 
-                // Look for any metadata we're interested in, namely SkinPart for now.
+                // Look for any SkinPart metadata.
                 Variable variable = abcClass.getVariable(new String[]{varName.getNamespace()}, varName.getLocalPart(), true);
                 if (variable != null)
-                {
-                    List<MetaData> metaData = variable.getMetaData(SKINPART);
-                    
-                    if (metaData != null)
-                    {
-                        Iterator<MetaData> dataIterator = metaData.iterator();
-                        if (dataIterator.hasNext())
-                        {
-                            MetaData skinPart = (MetaData) dataIterator.next();
-                            String sRequired = skinPart.getValue(REQUIRED);
-                            boolean required = ((sRequired != null) && sRequired.equalsIgnoreCase(TRUE)) ? true : false;
-                            classInfo.addSkinPart(varName.getLocalPart(), required);
-                        }
-                    }
-                }
+                	processSkinPartMetaData(variable.getMetaData(SKINPART), classInfo, varName);
+            }
+        }
+    }
+    
+    private void processSkinPartMetaData(List<MetaData> metaData, ClassInfo classInfo, QName qname)
+    {
+    	if (metaData != null)
+        {
+    		for (MetaData skinPart : metaData)
+            {
+    			String sRequired = skinPart.getValue(REQUIRED);
+                boolean required = ((sRequired != null) && sRequired.equalsIgnoreCase(TRUE)) ? true : false;
+                classInfo.addSkinPart(qname.getLocalPart(), required);
             }
         }
     }

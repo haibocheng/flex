@@ -45,9 +45,9 @@ public final class Source implements Comparable<Source>
 	// used by InterfaceCompiler.createInlineComponentUnit().  Note the owner will be set
 	// later by the ResourceContainer when this is passed into addResource() by
 	// CompilerAPI.addGeneratedSources().
-	public Source(VirtualFile file, Source original, boolean isInternal, boolean isRoot)
+	public Source(VirtualFile file, Source original, String shortName, boolean isInternal, boolean isRoot)
 	{
-		this(file, original.pathRoot, original.relativePath, file.getName(), null, isInternal, isRoot, true);
+		this(file, original.pathRoot, original.relativePath, shortName, null, isInternal, isRoot, true);
 		this.delegate = original;
 	}
 

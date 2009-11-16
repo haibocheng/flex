@@ -46,6 +46,12 @@ public interface MxmlConfiguration
 	 */
 	boolean enableRuntimeDesignLayers();
 	
+	/**
+	 * Enable swc version filtering (filer out swcs with 
+	 * minimumSupportedVersion > compatibility-version)
+	 */
+	boolean enableSwcVersionFiltering();
+	
     /**
      * Controls whether unused type selectors are processed.
      */

@@ -129,7 +129,7 @@ public abstract class AbstractCharacterTextNode extends AbstractTextNode
         }
         else if (FXG_LINEHEIGHT_ATTRIBUTE.equals(name))
         {
-            lineHeight = parseDouble(value);
+            lineHeight = parsePercent(value);
         }
         else if (FXG_TEXTDECORATION_ATTRIBUTE.equals(name))
         {

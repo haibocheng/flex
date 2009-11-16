@@ -1001,6 +1001,28 @@ public class CompilerConfiguration implements As3Configuration,
     }
     
     //
+    // 'compiler.enable-swc-version-filtering' option
+    //
+
+    private boolean enableSwcVersionFiltering = true;
+
+    public boolean enableSwcVersionFiltering()
+    {
+        return enableSwcVersionFiltering;
+    }
+
+    public void setEnableSwcVersionFiltering(boolean enableSwcFiltering)
+    {
+        this.enableSwcVersionFiltering = enableSwcFiltering;
+    }
+
+    public void cfgEnableSwcVersionFiltering(ConfigurationValue cv, boolean enable)
+    {
+    	setEnableSwcVersionFiltering(enable);
+    }
+    
+    
+    //
     // 'compiler.library-path' option
     //
 
@@ -1208,6 +1230,25 @@ public class CompilerConfiguration implements As3Configuration,
 		return mxmlConfig.getCompatibilityVersion();
 	}
 
+    //
+    // 'compiler.mxml.minimum-supported-version' option
+    //
+
+    public String getMinimumSupportedVersionString()
+    {
+        return mxmlConfig.getMinimumSupportedVersionString();
+    }
+
+    public int getMinimumSupportedVersion()
+    {
+        return mxmlConfig.getMinimumSupportedVersion();
+    }
+
+    public void cfgMinimumSupportedVersion(ConfigurationValue cv, String version) throws ConfigurationException
+    {
+        mxmlConfig.cfgMinimumSupportedVersion(cv, version);
+    }
+    
     //
     // 'qualified-type-selectors' option
     //
@@ -1425,17 +1466,6 @@ public class CompilerConfiguration implements As3Configuration,
         this.reportInvalidStylesAsWarnings = show;
     }
     
-    public static ConfigurationInfo getReportInvalidStylesAsWarningsInfo()
-    {
-        return new AdvancedConfigurationInfo()
-        {
-            public boolean isHidden()
-            {
-                return true;
-            }
-        };
-    }    
-
     //
     // 'compiler.show-invalid-css-property-warnings' option
     /**
@@ -1459,17 +1489,6 @@ public class CompilerConfiguration implements As3Configuration,
         this.showInvalidCssPropertyWarnings = show;
     }
     
-    public static ConfigurationInfo getShowInvalidCssPropertyWarningsInfo()
-    {
-        return new AdvancedConfigurationInfo()
-        {
-            public boolean isHidden()
-            {
-                return true;
-            }
-        };
-    }
-
     //
     // 'compiler.show-deprecation-warnings' option
     //
@@ -2943,32 +2962,26 @@ public class CompilerConfiguration implements As3Configuration,
     }
 
     //
-    // 'compiler.create-style-manager' option
+    // 'compiler.isolateStyles' option
     //
 
     // Allow the user to decide if the compiled application/module should have its
     // own style manager.
-    private boolean createStyleManager = false;
+    private boolean isolateStyles = true;
 
-    public boolean getCreateStyleManager()
+    public boolean getIsolateStyles()
     {
-        return createStyleManager;
+        return isolateStyles;
     }
 
-    public void cfgCreateStyleManager( ConfigurationValue cv, boolean createStyleManager )
+    public void cfgIsolateStyles( ConfigurationValue cv, boolean isolateStyles )
     {
-        this.createStyleManager = createStyleManager;
+        this.isolateStyles = isolateStyles;
     }
 
-    public static ConfigurationInfo getCreateStyleManagerInfo()
+    public static ConfigurationInfo getIsolateStylesInfo()
     {
-        return new AdvancedConfigurationInfo()
-        {
-            public boolean isHidden()
-            {
-                return true;
-            }
-        };
+        return new AdvancedConfigurationInfo();
     }
 
     //
@@ -2987,7 +3000,7 @@ public class CompilerConfiguration implements As3Configuration,
 
     public boolean getAllowDuplicateDefaultStyleDeclarations()
     {
-    	if (getCreateStyleManager())
+    	if (getIsolateStyles())
     		return allowDuplicateDefaultStyleDeclarations;
     	else
     		return true;

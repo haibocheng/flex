@@ -206,6 +206,7 @@ public class FXG2SWFTranscoder implements FXGTranscoder
     {
         GraphicContext context = node.createGraphicContext();
         String source = parseSource(node.source);
+
         if (source == null)
         {
             // Exception: Missing source attribute in <BitmapGraphic> or <BitmapFill>.
@@ -213,7 +214,7 @@ public class FXG2SWFTranscoder implements FXGTranscoder
         }
         DefineBits imageTag = createDefineBits(node, source);
         
-        if ((node.visible) && (!node.isPartofMask))
+        if ((node.visible) && (!node.isPartofClipMask))
         {
        
             DefineShape imageShape;
@@ -244,15 +245,17 @@ public class FXG2SWFTranscoder implements FXGTranscoder
         {
         	if (!ImageHelper.bitmapImageNeedsClipping(imageTag, node))
         	{       		
-        		 List<ShapeRecord>  shapeRecords = ShapeHelper.rectangle(0.0, 0.0, node.width, node.height);        
+        	     double width = (Double.isNaN(node.width)) ? imageTag.width : node.width;
+                 double height = (Double.isNaN(node.height)) ? imageTag.height : node.height;
+        		 List<ShapeRecord>  shapeRecords = ShapeHelper.rectangle(0.0, 0.0, width, height);        
         	     DefineShape shape = createDefineShape(null, shapeRecords, new SolidColorFillNode(), null, context.getTransform());
         		 PlaceObject po3 = placeObject(shape, context);
         		 return po3;
         	}
         	else
         	{
-                double width = (imageTag.width < node.width) ? imageTag.width : node.width;
-                double height = (imageTag.height < node.height) ? imageTag.height : node.height;
+                double width = ((imageTag.width < node.width) || Double.isNaN(node.width)) ? imageTag.width : node.width;
+                double height = ((imageTag.height < node.height) || (Double.isNaN(node.height))) ? imageTag.height : node.height;
        		 	List<ShapeRecord>  shapeRecords = ShapeHelper.rectangle(0.0, 0.0, width, height);        
        	        DefineShape shape = createDefineShape(null, shapeRecords, new SolidColorFillNode(), null, context.getTransform());
        		 	PlaceObject po3 = placeObject(shape, context);
@@ -432,7 +435,7 @@ public class FXG2SWFTranscoder implements FXGTranscoder
                 maskMatrix.setMatrixNodeValue(matrixNodeMasking);
             }
             
-            markLeafNodesAsMask((GroupNode) mask);
+            markLeafNodesAsMask(node, (GroupNode) mask);
             po3 = group((GroupNode)mask);
         }
         else if (mask instanceof PlaceObjectNode)
@@ -710,7 +713,7 @@ public class FXG2SWFTranscoder implements FXGTranscoder
 
         if (fill != null)
         {
-            FillStyle fillStyle = createFillStyle(fill, edgeBounds, transform);
+            FillStyle fillStyle = createFillStyle(fill, edgeBounds);
             sws.fillstyles = new ArrayList<FillStyle>(1);
             sws.fillstyles.add(fillStyle);
         }
@@ -721,7 +724,7 @@ public class FXG2SWFTranscoder implements FXGTranscoder
         	LineStyle ls = createGenericLineStyle((AbstractStrokeNode)stroke);
             shapeBounds = (node == null) ? ShapeHelper.getBounds(shapeRecords, ls, (AbstractStrokeNode)stroke) : node.getBounds(shapeRecords, ls);        	
 
-            LineStyle lineStyle = createLineStyle(stroke, shapeBounds, transform);
+            LineStyle lineStyle = createLineStyle(stroke, shapeBounds);
             sws.linestyles = new ArrayList<LineStyle>();
             sws.linestyles.add(lineStyle);            
         }
@@ -802,7 +805,7 @@ public class FXG2SWFTranscoder implements FXGTranscoder
             int fillStyle1Index = 0;
             ShapeHelper.setStyles(shapeRecords, lineStyleIndex, fillStyle0Index, fillStyle1Index);
 
-            FillStyle fillStyle = createFillStyle(fill, edgeBounds, context.getTransform());
+            FillStyle fillStyle = createFillStyle(fill, edgeBounds);
             sws.fillstyles = new ArrayList<FillStyle>(1);
             sws.fillstyles.add(fillStyle);
 
@@ -827,7 +830,7 @@ public class FXG2SWFTranscoder implements FXGTranscoder
                 LineStyle ls = createGenericLineStyle(strokeNode);
                 Rect shapeBounds = (node == null ) ? ShapeHelper.getBounds(shapeRecords, ls, (AbstractStrokeNode)stroke) : node.getBounds(shapeRecords, ls);              
                 
-                LineStyle lineStyle = createLineStyle(stroke, shapeBounds, context.getTransform());
+                LineStyle lineStyle = createLineStyle(stroke, shapeBounds);
                 swsStroke.linestyles = new ArrayList<LineStyle>(1);
                 swsStroke.linestyles.add(lineStyle);
 
@@ -850,14 +853,14 @@ public class FXG2SWFTranscoder implements FXGTranscoder
        
     }
     
-    protected FillStyle createFillStyle(FillNode fill, Rect bounds, FXGMatrix transform)
+    protected FillStyle createFillStyle(FillNode fill, Rect bounds)
      {
         if (fill instanceof SolidColorFillNode)
             return createFillStyle((SolidColorFillNode)fill);
         else if (fill instanceof LinearGradientFillNode)
-            return createFillStyle((LinearGradientFillNode)fill, bounds, transform);
+            return createFillStyle((LinearGradientFillNode)fill, bounds);
         else if (fill instanceof RadialGradientFillNode)
-            return createFillStyle((RadialGradientFillNode)fill, bounds, transform);
+            return createFillStyle((RadialGradientFillNode)fill, bounds);
         else if (fill instanceof BitmapFillNode)
             return createFillStyle((BitmapFillNode)fill, bounds);
         else
@@ -898,11 +901,11 @@ public class FXG2SWFTranscoder implements FXGTranscoder
         return fs;
     }
 
-    protected FillStyle createFillStyle(LinearGradientFillNode node, Rect bounds, FXGMatrix transform)
+    protected FillStyle createFillStyle(LinearGradientFillNode node, Rect bounds)
     {
         FillStyle fs = new FillStyle();
         fs.type = FillStyle.FILL_LINEAR_GRADIENT;
-        fs.matrix = TypeHelper.linearGradientMatrix(node, bounds, transform);
+        fs.matrix = TypeHelper.linearGradientMatrix(node, bounds);
         Gradient gradient = new Gradient();
         populateGradient(gradient, node.entries, node.interpolationMethod, node.spreadMethod);
         fs.gradient = gradient;
@@ -910,11 +913,11 @@ public class FXG2SWFTranscoder implements FXGTranscoder
         return fs;
     }
 
-    protected FillStyle createFillStyle(LinearGradientStrokeNode node, Rect bounds, FXGMatrix transform)
+    protected FillStyle createFillStyle(LinearGradientStrokeNode node, Rect bounds)
     {
         FillStyle fs = new FillStyle();
         fs.type = FillStyle.FILL_LINEAR_GRADIENT;
-        fs.matrix = TypeHelper.linearGradientMatrix(node, bounds, transform);
+        fs.matrix = TypeHelper.linearGradientMatrix(node, bounds);
         Gradient gradient = new Gradient();
         populateGradient(gradient, node.entries, node.interpolationMethod, node.spreadMethod);
         fs.gradient = gradient;
@@ -922,11 +925,11 @@ public class FXG2SWFTranscoder implements FXGTranscoder
         return fs;
     }
 
-    protected FillStyle createFillStyle(RadialGradientFillNode node, Rect bounds, FXGMatrix transform)
+    protected FillStyle createFillStyle(RadialGradientFillNode node, Rect bounds)
     {
         FillStyle fs = new FillStyle();
         fs.type = FillStyle.FILL_FOCAL_RADIAL_GRADIENT;
-        fs.matrix = TypeHelper.radialGradientMatrix(node, bounds, transform);
+        fs.matrix = TypeHelper.radialGradientMatrix(node, bounds);
         FocalGradient gradient = new FocalGradient();
         populateGradient(gradient, node.entries, node.interpolationMethod, node.spreadMethod);
         gradient.focalPoint = (float)node.focalPointRatio;
@@ -935,11 +938,11 @@ public class FXG2SWFTranscoder implements FXGTranscoder
         return fs;
     }
 
-    protected FillStyle createFillStyle(RadialGradientStrokeNode node, Rect bounds, FXGMatrix transform)
+    protected FillStyle createFillStyle(RadialGradientStrokeNode node, Rect bounds)
     {
         FillStyle fs = new FillStyle();
         fs.type = FillStyle.FILL_FOCAL_RADIAL_GRADIENT;
-        fs.matrix = TypeHelper.radialGradientMatrix(node, bounds, transform);
+        fs.matrix = TypeHelper.radialGradientMatrix(node, bounds);
         FocalGradient gradient = new FocalGradient();
         populateGradient(gradient, node.entries, node.interpolationMethod, node.spreadMethod);
         gradient.focalPoint = (float)node.focalPointRatio;
@@ -948,14 +951,14 @@ public class FXG2SWFTranscoder implements FXGTranscoder
         return fs;
     }
     
-    protected LineStyle createLineStyle(StrokeNode stroke, Rect bounds, FXGMatrix transform)
+    protected LineStyle createLineStyle(StrokeNode stroke, Rect bounds)
     {
         if (stroke instanceof SolidColorStrokeNode)
             return createLineStyle((SolidColorStrokeNode)stroke);
         else if (stroke instanceof LinearGradientStrokeNode)
-            return createLineStyle((LinearGradientStrokeNode)stroke, bounds, transform);
+            return createLineStyle((LinearGradientStrokeNode)stroke, bounds);
         else if (stroke instanceof RadialGradientStrokeNode)
-            return createLineStyle((RadialGradientStrokeNode)stroke, bounds, transform);
+            return createLineStyle((RadialGradientStrokeNode)stroke, bounds);
         else
             return null;
     }
@@ -999,19 +1002,19 @@ public class FXG2SWFTranscoder implements FXGTranscoder
         return ls;
     }
     
-    protected LineStyle createLineStyle(LinearGradientStrokeNode stroke, Rect bounds, FXGMatrix transform)
+    protected LineStyle createLineStyle(LinearGradientStrokeNode stroke, Rect bounds)
     {
         LineStyle ls = createGenericLineStyle(stroke);
-        ls.fillStyle = createFillStyle(stroke, bounds, transform);        
+        ls.fillStyle = createFillStyle(stroke, bounds);        
         int hasFillStyle = 1;
         ls.flags |= hasFillStyle << 3;
         return ls;
     }
 
-    protected LineStyle createLineStyle(RadialGradientStrokeNode stroke, Rect edgeBounds, FXGMatrix transform)
+    protected LineStyle createLineStyle(RadialGradientStrokeNode stroke, Rect edgeBounds)
     {
         LineStyle ls = createGenericLineStyle(stroke);
-        ls.fillStyle = createFillStyle(stroke, edgeBounds, transform);
+        ls.fillStyle = createFillStyle(stroke, edgeBounds);
         int hasFillStyle = 1;
         ls.flags |= hasFillStyle << 3;
         return ls;
@@ -1347,16 +1350,22 @@ public class FXG2SWFTranscoder implements FXGTranscoder
         return source;
     }
     
-    private void  markLeafNodesAsMask(GroupNode mask)
+    private void  markLeafNodesAsMask(MaskableNode maskableNode, GroupNode mask)
     {
-    	Iterator<GraphicContentNode> iter = ((GroupNode) mask).children.iterator();
+    	Iterator<GraphicContentNode> iter = mask.children.iterator();
     	while (iter.hasNext()) 
     	{
     		GraphicContentNode gcNode = iter.next();
     		if (gcNode instanceof GroupNode)
-    			markLeafNodesAsMask((GroupNode) gcNode);
+    		{
+    			markLeafNodesAsMask(maskableNode, (GroupNode) gcNode);
+    		}
     		else
-    			gcNode.isPartofMask = true; 
+    		{
+     		    if (maskableNode.getMaskType() == MaskType.CLIP)
+    		        gcNode.isPartofClipMask = true; 
+    		}
     	}
     }
+    
 }

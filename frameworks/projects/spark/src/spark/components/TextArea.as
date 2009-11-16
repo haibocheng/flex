@@ -85,15 +85,10 @@ use namespace mx_internal;
 [SkinState("disabled")]
 
 //--------------------------------------
-//  Excluded APIs
-//--------------------------------------
-
-[Exclude(name="verticalAlign", kind="style")]
-[Exclude(name="lineBreak", kind="style")]
-
-//--------------------------------------
 //  Other metadata
 //--------------------------------------
+
+[AccessibilityClass(implementation="spark.accessibility.TextAreaAccImpl")]
 
 [AccessibilityClass(implementation="spark.accessibility.TextAreaAccImpl")]
 
@@ -136,7 +131,7 @@ use namespace mx_internal;
  *        differently than the MX version.
  *        To learn how to use the
  *        <code>embedAsCFF</code> attribute when you embed a font,
- *    see the topic "Using embedded fonts" in <i>Using Flex SDK</i>.</li>
+ *    see the topic "Using embedded fonts" in <i>Using Flex</i>.</li>
  *  </ul></p>
  *
  *  <p>The Spark TextArea control uses the TLF object-oriented model of rich text,
@@ -431,7 +426,7 @@ public class TextArea extends SkinnableTextBase
      *  <p>The <code>content</code> property is the default property
      *  for TextArea, so that you can write MXML such as
      *  <pre>
-     *  &lt;s:TextArea&gt;Hello &lt;s:span fontWeight="bold"/&gt;World&lt;/s:span&gt;&lt;/s:TextArea&gt;
+     *  &lt;s:TextArea&gt;Hello &lt;s:span fontWeight="bold"&gt;World&lt;/s:span&gt;&lt;/s:TextArea&gt;
      *  </pre>
      *  and have the String and SpanElement that you specify
      *  as the content be used to create a TextFlow.</p>

@@ -125,8 +125,8 @@ public class Parser implements MXMLNamespaces, ParserConstants {
                 return ((Integer) ConstantMappings.get(localPart)).intValue();
             }
         }
-        else if ((SPARK_NAMESPACE.equals(uri) || HALO_NAMESPACE.equals(uri)) &&
-             SPECIAL_COMPONENT_TAGS.contains(localName))
+        else if ((SPARK_NAMESPACE.equals(uri) || HALO_NAMESPACE.equals(uri) ||
+             MX_NAMESPACE.equals(uri)) && SPECIAL_COMPONENT_TAGS.contains(localName))
         {
             String localPart = (isStart) ? localName : "/" + localName;
             if (ConstantMappings.containsKey(localPart))

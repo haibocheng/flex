@@ -212,12 +212,15 @@ public class ManagedFirstPassEvaluator extends GenerativeFirstPassEvaluator
 	public Value evaluate(Context context, FunctionDefinitionNode node)
 	{
 		boolean isGetter = NodeMagic.functionIsGetter(node);
-		if ((isGetter || NodeMagic.functionIsSetter(node))  && canManage(node))
+        boolean isSetter = NodeMagic.functionIsSetter(node);
+
+        if ((isGetter || isSetter)  && canManage(node))
 		{
 			assert currentInfo != null : "currentInfo == null";
 
             if (!NodeMagic.getFunctionName(node).equals("uid") ||
-                NodeMagic.getFunctionTypeName(node).equals("String"))
+                (isGetter && NodeMagic.getFunctionTypeName(node).equals("String")) ||
+                (isSetter && NodeMagic.getFunctionParamTypeName(node, 0).equals("String")))
             {
                 currentInfo.addAccessorFunction(node, false, isGetter);
                 registerManagedProperty(node, currentInfo);

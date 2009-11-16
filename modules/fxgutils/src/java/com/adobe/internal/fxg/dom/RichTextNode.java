@@ -96,8 +96,8 @@ public class RichTextNode extends GraphicContentNode implements TextNode
     protected static final double PARAGRAPH_SPACE_MAX_INCLUSIVE = 1000.00;    
     protected static final double TEXTINDENT_MIN_INCLUSIVE = -1000.0;
     protected static final double TEXTINDENT_MAX_INCLUSIVE = 1000.0; 
-    protected static final double TRACKING_MIN_INCLUSIVE = -100.0;
-    protected static final double TRACKING_MAX_INCLUSIVE = 100.0;     
+    protected static final double TRACKING_MIN_INCLUSIVE = -1000.0;
+    protected static final double TRACKING_MAX_INCLUSIVE = 1000.0;     
     
     //--------------------------------------------------------------------------
     //
@@ -432,19 +432,19 @@ public class RichTextNode extends GraphicContentNode implements TextNode
         }
         else if (FXG_PADDINGLEFT_ATTRIBUTE.equals(name))
         {
-            paddingLeft = getNumberInherit(this, value, PADDING_MIN_INCLUSIVE, PADDING_MAX_INCLUSIVE, paddingLeft.getNumberInheritAsDbl());
+            paddingLeft = getNumberInherit(this, value, PADDING_MIN_INCLUSIVE, PADDING_MAX_INCLUSIVE, paddingLeft.getNumberInheritAsDbl(), "UnknowPaddingLeft");
         }
         else if (FXG_PADDINGRIGHT_ATTRIBUTE.equals(name))
         {
-            paddingRight = getNumberInherit(this, value, PADDING_MIN_INCLUSIVE, PADDING_MAX_INCLUSIVE, paddingRight.getNumberInheritAsDbl());
+            paddingRight = getNumberInherit(this, value, PADDING_MIN_INCLUSIVE, PADDING_MAX_INCLUSIVE, paddingRight.getNumberInheritAsDbl(), "UnknowPaddingRight");
         }
         else if (FXG_PADDINGTOP_ATTRIBUTE.equals(name))
         {
-            paddingTop = getNumberInherit(this, value, PADDING_MIN_INCLUSIVE, PADDING_MAX_INCLUSIVE, paddingTop.getNumberInheritAsDbl());
+            paddingTop = getNumberInherit(this, value, PADDING_MIN_INCLUSIVE, PADDING_MAX_INCLUSIVE, paddingTop.getNumberInheritAsDbl(), "UnknowPaddingTop");
         }
         else if (FXG_PADDINGBOTTOM_ATTRIBUTE.equals(name))
         {
-            paddingBottom = getNumberInherit(this, value, PADDING_MIN_INCLUSIVE, PADDING_MAX_INCLUSIVE, paddingBottom.getNumberInheritAsDbl());
+            paddingBottom = getNumberInherit(this, value, PADDING_MIN_INCLUSIVE, PADDING_MAX_INCLUSIVE, paddingBottom.getNumberInheritAsDbl(), "UnknowPaddingBottom");
         }
         else if (FXG_LINEBREAK_ATTRIBUTE.equals(name))
         {
@@ -452,15 +452,15 @@ public class RichTextNode extends GraphicContentNode implements TextNode
         }        
         else if (FXG_COLUMNGAP_ATTRIBUTE.equals(name))
         {
-            columnGap = getNumberInherit(this, value, COLUMNGAP_MIN_INCLUSIVE, COLUMNGAP_MAX_INCLUSIVE, columnGap.getNumberInheritAsDbl());
+            columnGap = getNumberInherit(this, value, COLUMNGAP_MIN_INCLUSIVE, COLUMNGAP_MAX_INCLUSIVE, columnGap.getNumberInheritAsDbl(), "UnknowColumnGap");
         }
         else if (FXG_COLUMNCOUNT_ATTRIBUTE.equals(name))
         {
-            columnCount = getNumberAutoInt(this, value, COLUMNCOUNT_MIN_INCLUSIVE, COLUMNCOUNT_MAX_INCLUSIVE, columnCount.getNumberAutoAsInt());
+            columnCount = getNumberAutoInt(this, value, COLUMNCOUNT_MIN_INCLUSIVE, COLUMNCOUNT_MAX_INCLUSIVE, columnCount.getNumberAutoAsInt(), "UnknowColumnCount");
         }
         else if (FXG_COLUMNWIDTH_ATTRIBUTE.equals(name))
         {
-            columnWidth = getNumberAutoDbl(this, value, COLUMNWIDTH_MIN_INCLUSIVE, COLUMNWIDTH_MAX_INCLUSIVE, columnWidth.getNumberAutoAsDbl());
+            columnWidth = getNumberAutoDbl(this, value, COLUMNWIDTH_MIN_INCLUSIVE, COLUMNWIDTH_MAX_INCLUSIVE, columnWidth.getNumberAutoAsDbl(), "UnknownColumnWidth");
         }
         else if (FXG_FIRSTBASELINEOFFSET_ATTRIBUTE.equals(name))
         {
@@ -570,7 +570,7 @@ public class RichTextNode extends GraphicContentNode implements TextNode
         }
         else if (FXG_BACKGROUNDALPHA_ATTRIBUTE.equals(name))
         {
-        	backgroundAlpha = getAlphaInherit(this, value, ALPHA_MIN_INCLUSIVE, ALPHA_MAX_INCLUSIVE, backgroundAlpha.getNumberInheritAsDbl());
+        	backgroundAlpha = getAlphaInherit(this, value, ALPHA_MIN_INCLUSIVE, ALPHA_MAX_INCLUSIVE, backgroundAlpha.getNumberInheritAsDbl(), "UnknownBackgroundAlpha");
         }
         else if (FXG_BACKGROUNDCOLOR_ATTRIBUTE.equals(name))
         {
@@ -698,11 +698,12 @@ public class RichTextNode extends GraphicContentNode implements TextNode
      * @param defaultValue - the default double value; if the encountered minor 
      * version is later than the supported minor version and the attribute value
      *  is out-of-range, the default value is returned.
+     * @param errorCode - the error code if value is out-of-range.
      * @return the matching NumberAuto rule.
      * @throws FXGException if the String did not match a known
      * NumberAuto rule.
      */
-    private NumberAuto getNumberAutoDbl(FXGNode node, String value, double min, double max, double defaultValue)
+    private NumberAuto getNumberAutoDbl(FXGNode node, String value, double min, double max, double defaultValue, String errorCode)
     {
         try
         {
@@ -715,7 +716,7 @@ public class RichTextNode extends GraphicContentNode implements TextNode
             	return NumberAuto.newInstance(NumberAutoAsEnum.INHERIT);
             else
                 //Exception: Unknown number auto: {0}
-                throw new FXGException(node.getStartLine(), node.getStartColumn(), "UnknownNumberAuto", value);            
+                throw new FXGException(node.getStartLine(), node.getStartColumn(), errorCode, value);            
         }
     }
     
@@ -730,11 +731,12 @@ public class RichTextNode extends GraphicContentNode implements TextNode
      * @param defaultValue - the default int value; if the encountered minor 
      * version is later than the supported minor version and the attribute value
      *  is out-of-range, the default value is returned.
+     * @param errorCode - the error code if value is out-of-range.
      * @return the matching NumberAuto rule.
      * @throws FXGException if the String did not match a known
      * NumberAuto rule.
      */
-    private NumberAuto getNumberAutoInt(FXGNode node, String value, int min, int max, int defaultValue)
+    private NumberAuto getNumberAutoInt(FXGNode node, String value, int min, int max, int defaultValue, String errorCode)
     {
         try
         {
@@ -747,7 +749,7 @@ public class RichTextNode extends GraphicContentNode implements TextNode
             	return NumberAuto.newInstance(NumberAutoAsEnum.INHERIT);
             else
                 //Exception: Unknown number auto: {0}
-                throw new FXGException(node.getStartLine(), node.getStartColumn(), "UnknownNumberAuto", value);            
+                throw new FXGException(node.getStartLine(), node.getStartColumn(), errorCode, value);            
         }
     }
     
@@ -762,12 +764,13 @@ public class RichTextNode extends GraphicContentNode implements TextNode
      * @param defaultValue - the default double value; if the encountered minor 
      * version is later than the supported minor version and the attribute value
      *  is out-of-range, the default value is returned.
+     * @param errorCode - the error code if value is out-of-range.
      * @return the matching NumberInherit rule.
      * @throws FXGException if the String did not match a known
      * NumberInherit rule or the value falls out of the specified range 
      * (inclusive).
      */
-    private NumberInherit getNumberInherit(FXGNode node, String value, double min, double max, double defaultValue)
+    private NumberInherit getNumberInherit(FXGNode node, String value, double min, double max, double defaultValue, String errorCode)
     {
         try
         {
@@ -778,7 +781,7 @@ public class RichTextNode extends GraphicContentNode implements TextNode
                 return NumberInherit.newInstance(NumberInheritAsEnum.INHERIT);
             else
                 //Exception: Unknown number inherit: {0}
-                throw new FXGException(node.getStartLine(), node.getStartColumn(), "UnknownNumberInherit", value);            
+                throw new FXGException(node.getStartLine(), node.getStartColumn(), errorCode, value);            
         }
     }
     
@@ -827,11 +830,19 @@ public class RichTextNode extends GraphicContentNode implements TextNode
      * Convert an FXG String value to a NumberInherit object.
      * 
      * @param value - the FXG String value.
+     * @param min - the smallest double value that the result must be greater
+     * or equal to.
+     * @param max - the largest double value that the result must be smaller
+     * than or equal to.
+     * @param defaultValue - the default double value; if the encountered minor 
+     * version is later than the supported minor version and the attribute value
+     *  is out-of-range, the default value is returned.
+     * @param errorCode - the error code if value is out-of-range.
      * @return the matching NumberInherit rule.
      * @throws FXGException if the String did not match a known
      * NumberInherit rule.
      */
-    private NumberInherit getAlphaInherit(FXGNode node, String value, double min, double max, double defaultValue)        
+    private NumberInherit getAlphaInherit(FXGNode node, String value, double min, double max, double defaultValue, String errorCode)        
     {
         try
         {
@@ -845,7 +856,7 @@ public class RichTextNode extends GraphicContentNode implements TextNode
             else
             {
                 //Exception: Unknown number inherit: {0}
-                throw new FXGException(node.getStartLine(), node.getStartColumn(), "UnknownNumberInherit", value);            
+                throw new FXGException(node.getStartLine(), node.getStartColumn(), errorCode, value);            
             }
         }
     }

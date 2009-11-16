@@ -1,0 +1,1827 @@
+ 
+<apiPackage id="flash.desktop"><apiName>flash.desktop</apiName><apiDetail/><apiClassifier id="flash.desktop:InvokeEventReason"><apiName>InvokeEventReason</apiName><shortdesc>
+	 The InvokeEventReason class enumerates values returned by the 
+	 reason property of an InvokeEvent object.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5.1"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 The InvokeEventReason class enumerates values returned by the 
+	 <codeph>reason</codeph> property of an <codeph>InvokeEvent</codeph> object.
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="flash.events.xml#InvokeEvent/reason"><linktext>flash.events.InvokeEvent.reason</linktext></link></related-links><apiValue id="flash.desktop:InvokeEventReason:LOGIN"><apiName>LOGIN</apiName><shortdesc>
+			Indicates that the InvokeEvent event occurred due to the user logging in.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5.1"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>login</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+			Indicates that the InvokeEvent event occurred due to the user logging in.
+			
+			</apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:InvokeEventReason:STANDARD"><apiName>STANDARD</apiName><shortdesc>
+			Indicates that the InvokeEvent occured for any reason other than login.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5.1"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>standard</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+			Indicates that the InvokeEvent occured for any reason other than login.
+			
+			</apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.desktop:InteractiveIcon"><apiName>InteractiveIcon</apiName><shortdesc>
+	 The InteractiveIcon class is the base class for the operating 
+	 system icons associated with applications.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.desktop:Icon</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 The InteractiveIcon class is the base class for the operating 
+	 system icons associated with applications. 
+	 
+	 <p>Use the <codeph>icon</codeph> property of the NativeApplication object to get an instance of the application 
+	 icon. The icon type will be one of the subclasses of InteractiveIcon, 
+	 either DockIcon on Mac OS X<sup>®</sup> or SystemTrayIcon on Windows<sup>®</sup> and Linux.</p>
+	 
+	 <p>You cannot instantiate the InteractiveIcon class directly. Calls to 
+	 the <codeph>new InteractiveIcon()</codeph> constructor will throw an 
+	 ArgumentError exception.</p>
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="flash.desktop.xml#NativeApplication/icon"><linktext>flash.desktop.NativeApplication.icon</linktext></link><link href="flash.desktop.xml#NativeApplication/supportsDockIcon"><linktext>flash.desktop.NativeApplication.supportsDockIcon</linktext></link><link href="flash.desktop.xml#NativeApplication/supportsSystemTrayIcon"><linktext>flash.desktop.NativeApplication.supportsSystemTrayIcon</linktext></link></related-links><apiValue id="flash.desktop:InteractiveIcon:bitmaps:set"><apiName>bitmaps</apiName><shortdesc>
+		  
+	 The icon image as an array of BitmapData objects of different sizes.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Array</apiValueClassifier></apiValueDef><apiDesc>
+		  
+	 The icon image as an array of BitmapData objects of different sizes.
+	   
+	 <p>When an icon is displayed in a given operating system context, the bitmap
+	 in the array closest to the displayed size is used (and 
+	 scaled if necessary). Common sizes include 16x16, 32x32, 48x48, and 
+	 128x128. (512x512 pixel icons may be used for some operating system 
+	 icons in the near future.)</p>
+	 
+	 <p>In some contexts, the operating system may use a default system icon
+	 if nothing has been assigned to the <codeph>bitmaps</codeph> property.
+	 In other contexts, no icon appears.</p>
+	 
+	 <p>To set or change the icon appearance, assign an array of 
+	 BitmapData objects to the <codeph>bitmaps</codeph> property:</p>
+	 
+	 <codeblock>
+	 icon.bitmaps = new Array(icon16x16.bitmapData, icon128x128.bitmapData);
+	 </codeblock>
+	  
+	 <p>Modifying the <codeph>bitmaps</codeph> array directly has no effect.</p>
+	 
+	 <p>To clear the icon image, assign an empty array to the 
+	 <codeph>bitmaps</codeph> property.</p>
+	 
+	 <p>
+	 <b>Note:</b> When loading image files for an icon, the PNG file format
+	 generally provides the best alpha blending. The GIF format supports only
+	 on or off transparency (no blending). The JPG format does not support
+	 transparency at all.  
+	 </p>
+	  
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:InteractiveIcon:height:get"><apiName>height</apiName><shortdesc>
+		 The current display height of the icon in pixels.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+		 The current display height of the icon in pixels.
+		 
+		 <p>Some icon contexts support dynamic sizes.
+		 The <codeph>height</codeph> property indicates the height of the icon chosen from the <codeph>bitmaps</codeph> array
+		 for the current context. The actual display height may be different if the operating system
+		 has scaled the icon.</p>
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:InteractiveIcon:width:get"><apiName>width</apiName><shortdesc>
+		 The current display width of the icon in pixels.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+		 The current display width of the icon in pixels. 
+		 
+		 <p>Some icon contexts support dynamic sizes.
+		 The <codeph>width</codeph> property indicates the width of the icon chosen from the <codeph>bitmaps</codeph> array
+		 for the current context. The actual display width may be different if the operating system
+		 has scaled the icon.</p>
+		 
+		 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.desktop:NativeDragActions"><apiName>NativeDragActions</apiName><shortdesc>
+The NativeDragActions class defines string constants for the names of the drag-and-drop actions.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+The NativeDragActions class defines string constants for the names of the drag-and-drop actions.
+ 
+ <p>The NativeDragActions constants are used as values for the 
+ <codeph>dropAction</codeph> property of the NativeDragManager and NativeDragEvent classes.</p>
+ 
+ </apiDesc></apiClassifierDetail><related-links><link href="flash.desktop.xml#NativeDragManager"><linktext>flash.desktop.NativeDragManager</linktext></link><link href="flash.events.xml#NativeDragEvent"><linktext>flash.events.NativeDragEvent</linktext></link></related-links><apiValue id="flash.desktop:NativeDragActions:COPY"><apiName>COPY</apiName><shortdesc>
+	Defines the string to use for the copy action.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>copy</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	Defines the string to use for the copy action.
+	
+    </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeDragActions:LINK"><apiName>LINK</apiName><shortdesc>
+	Defines the string to use for the link action.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>link</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	Defines the string to use for the link action.
+	
+    </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeDragActions:MOVE"><apiName>MOVE</apiName><shortdesc>
+	 Defines the string to use for the move action.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>move</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 Defines the string to use for the move action.
+      
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeDragActions:NONE"><apiName>NONE</apiName><shortdesc>
+	Defines the string to use when no action is specified.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>none</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	Defines the string to use when no action is specified.
+	 
+	 <p>In a <codeph>nativeDragComplete</codeph> event, an action of <codeph>none</codeph> 
+	 indicates that the drag-and-drop operation was abandoned by the user.</p>
+	 
+     </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.desktop:ClipboardFormats"><apiName>ClipboardFormats</apiName><shortdesc>
+The ClipboardFormats class defines constants for the names of the standard data formats used with the Clipboard class.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><internal>Clipboard, ClipboardFormats and ClipboardTransferMode were all added to AIR 1.0. These are also being added, with some exceptions listed in this file, to FP10.
+</internal></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+The ClipboardFormats class defines constants for the names of the standard data formats used with the Clipboard class.
+Flash Player 10 only supports TEXT_FORMAT, RICH_TEXT_FORMAT, and HTML_FORMAT.
+
+</apiDesc></apiClassifierDetail><related-links><link href="flash.desktop.xml#Clipboard"><linktext>flash.desktop.Clipboard</linktext></link></related-links><apiValue id="flash.desktop:ClipboardFormats:BITMAP_FORMAT"><apiName>BITMAP_FORMAT</apiName><shortdesc>
+	Image data (AIR only).</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><internal>Not supported in FP10.
+	</internal></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>air:bitmap</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	Image data (AIR only).
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:ClipboardFormats:FILE_LIST_FORMAT"><apiName>FILE_LIST_FORMAT</apiName><shortdesc>
+	An array of files (AIR only).</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><internal>Not supported in FP10.
+	</internal></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>air:file list</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	An array of files (AIR only).
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:ClipboardFormats:HTML_FORMAT"><apiName>HTML_FORMAT</apiName><shortdesc>
+	HTML data.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>air:html</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	HTML data.
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:ClipboardFormats:RICH_TEXT_FORMAT"><apiName>RICH_TEXT_FORMAT</apiName><shortdesc>
+	Rich Text Format data.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.1"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>air:rtf</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	Rich Text Format data.
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:ClipboardFormats:TEXT_FORMAT"><apiName>TEXT_FORMAT</apiName><shortdesc>
+	String data.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>air:text</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	String data.
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:ClipboardFormats:URL_FORMAT"><apiName>URL_FORMAT</apiName><shortdesc>
+	A URL string (AIR only).</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><internal>Not supported in FP10.
+	</internal></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>air:url</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	A URL string (AIR only).
+	
+	</apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.desktop:NativeApplication"><apiName>NativeApplication</apiName><shortdesc>
+	 The NativeApplication class represents this AIR application.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>flash.events:EventDispatcher</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 The NativeApplication class represents this AIR application.
+	 
+	 <p>
+	 The NativeApplication class provides application information,
+	 application-wide functions, and dispatches application-level events.
+	 </p>
+	 <p>
+	 The NativeApplication object is a singleton object, created automatically at startup.
+	 Get the NativeApplication instance of an application with the static property 
+	 <codeph>NativeApplication.nativeApplication</codeph>.
+	 </p>
+	 
+	 </apiDesc></apiClassifierDetail><adobeApiEvent id="flash.desktop:NativeApplication_flash.events.Event.USER_PRESENT_userPresent"><apiName>userPresent</apiName><shortdesc>
+	 Dispatched when the operating system detects mouse or keyboard activity after an idle period.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.USER_PRESENT</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 Dispatched when the operating system detects mouse or keyboard activity after an idle period.
+	 
+	 <p>The period of time that is considered idle is configurable with the <codeph>idleThreshold</codeph> 
+	 property. The amount of time that the user has been idle can be determined from 
+	 the <codeph>timeSinceLastUserInput</codeph> property.</p>
+	 
+	 </apiDesc></adobeApiEventDetail><related-links><link href="flash.desktop.xml#NativeApplication/idleThreshold"><linktext>idleThreshold</linktext></link><link href="flash.desktop.xml#NativeApplication/timeSinceLastUserInput"><linktext>timeSinceLastUserInput</linktext></link></related-links></adobeApiEvent><adobeApiEvent id="flash.desktop:NativeApplication_flash.events.Event.USER_IDLE_userIdle"><apiName>userIdle</apiName><shortdesc>
+	 Dispatched when the user has been idle for the period of time specified by the 
+	 idleThreshold property.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.USER_IDLE</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 Dispatched when the user has been idle for the period of time specified by the 
+	 <codeph>idleThreshold</codeph> property. 
+	 
+	 <p>The amount of time that the user has been idle can be 
+	 determined from the <codeph>timeSinceLastUserInput</codeph> property.</p>
+	 
+	 </apiDesc></adobeApiEventDetail><related-links><link href="flash.desktop.xml#NativeApplication/idleThreshold"><linktext>idleThreshold</linktext></link><link href="flash.desktop.xml#NativeApplication/timeSinceLastUserInput"><linktext>timeSinceLastUserInput</linktext></link></related-links></adobeApiEvent><adobeApiEvent id="flash.desktop:NativeApplication_flash.events.Event.NETWORK_CHANGE_networkChange"><apiName>networkChange</apiName><shortdesc>
+	 Dispatched when either a new network connection becomes available or
+	 an existing network connection is lost.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.NETWORK_CHANGE</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 Dispatched when either a new network connection becomes available or
+	 an existing network connection is lost. 
+	 
+	 <p>A <codeph>networkChange</codeph> event does not necessarily mean that the host computer has
+	 gone online or offline; it may just be transitioning from one type of 
+	 connection to another. Applications can use this event to help optimize the 
+	 task of monitoring remote resource availability. The dispatch of a 
+	 <codeph>networkChange</codeph> event is often a good time to verify the availability of any remote resources.
+	 </p> 
+	 <p><b>Note:</b> There may be a short delay between
+	 a network change and the delivery of this event.</p>
+	 
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.desktop:NativeApplication_flash.events.Event.EXITING_exiting"><apiName>exiting</apiName><shortdesc>
+	 Dispatched when the application exit sequence is started.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.EXITING</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 Dispatched when the application exit sequence is started. 
+	 
+	 <p>The exiting event is dispatched when application exit is initiated by
+	 the operating system; for example, when a user issues the <codeph>Cmd-Q</codeph>
+	 key sequence on Mac OS X, or when the <codeph>autoExit</codeph> property of
+	 the NativeApplication object is <codeph>true</codeph> and the last
+	 application window is closed. 
+	 Canceling this event prevents the application from exiting.</p>
+	 
+	 <p><b>Note:</b> Calling the NativeApplication <codeph>exit()</codeph> method does not cause an 
+	 <codeph>exiting</codeph> event to be dispatched. To warn components of an impending exit, 
+	 dispatch the <codeph>exiting</codeph> event before calling <codeph>exit()</codeph></p>
+	 
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.desktop:NativeApplication_flash.events.Event.DEACTIVATE_deactivate"><apiName>deactivate</apiName><shortdesc>
+	 Dispatched when the desktop focus is switched to a different application.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.DEACTIVATE</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 Dispatched when the desktop focus is switched to a different application.
+	 
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.desktop:NativeApplication_flash.events.Event.ACTIVATE_activate"><apiName>activate</apiName><shortdesc>
+	 Dispatched when this application becomes the active desktop application.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.ACTIVATE</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 Dispatched when this application becomes the active desktop application.
+	  
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.desktop:NativeApplication_flash.events.BrowserInvokeEvent.Browser_INVOKE_browserInvoke"><apiName>browserInvoke</apiName><shortdesc>
+	 Dispatched when an application is invoked by a SWF file running in the user's browser.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.BrowserInvokeEvent.Browser_INVOKE</apiEventType><adobeApiEventClassifier>flash.events.BrowserInvokeEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 Dispatched when an application is invoked by a SWF file running in the user's browser. 
+	 
+	 <p>Browser invocation is permitted only if an application specifies the following in
+	 the application descriptor file:</p>
+	 
+	 <codeblock>&lt;allowBrowserInvocation&gt;true&lt;/allowBrowserInvocation&gt;</codeblock>
+	 
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.desktop:NativeApplication_flash.events.InvokeEvent.INVOKE_invoke"><apiName>invoke</apiName><shortdesc>
+	 Dispatched when an application is invoked.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.InvokeEvent.INVOKE</apiEventType><adobeApiEventClassifier>flash.events.InvokeEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 Dispatched when an application is invoked. 
+	 
+	 <p>When an application is invoked a second time,
+	 another instance of the application is not started. Instead, the first instance
+	 receives an additional invoke event. It is the responsibility of the 
+	 application to handle subsequent <codeph>invoke</codeph> events appropriately.</p>
+	 
+	 <p><b>Note:</b> All <codeph>invoke</codeph> events are queued. When a listener for this 
+	 event is registered, it receives all events in the queue as well as any new events.
+	 Queued events may be delivered before or after any new <codeph>invoke</codeph> events.</p>
+	 
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><apiOperation id="flash.desktop:NativeApplication:activate"><apiName>activate</apiName><shortdesc>
+         Activates this application.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>window</apiItemName><apiOperationClassifier>flash.display:NativeWindow</apiOperationClassifier><apiData>null</apiData><apiDesc>The NativeWindow object of the window to activate along with the application.
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+         Activates this application. 
+         
+         <p>Under some circumstances determined by the operating system, this method does not 
+         activate an application. Most operating systems restrict the ability of an application 
+         to activate itself to prevent it from accidentally or maliciously making it impossible 
+         for a user to use other applications.</p>
+         
+         <p>If the operating system allows activation, then the specified window is activated and 
+         brought to the desktop foreground; that is, in front of the windows of other applications. 
+         (If the <codeph>window</codeph> parameter is <codeph>null</codeph>, then a
+         visible window of this application is activated.)</p>
+         
+         <p>The <codeph>activate()</codeph> method has no effect if the application has no visible windows.</p>
+		 
+		 <p>The activate operation is synchronous.</p>
+		 
+		 </apiDesc></apiOperationDetail><adobeApiEvent id="flash.desktop:NativeApplication:activate_activate"><apiName>activate</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>Dispatched if the activation state changes.
+         
+         </apiDesc></adobeApiEventDetail><shortdesc>Dispatched if the activation state changes.</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.desktop:NativeApplication:addEventListener"><apiName>addEventListener</apiName><shortdesc>
+		
+	Registers an event listener object with an EventDispatcher object so that the listener 
+	receives notification of an event.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>type</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>The type of event.
+	
+	</apiDesc></apiParam><apiParam><apiItemName>listener</apiItemName><apiOperationClassifier>Function</apiOperationClassifier><apiDesc>The listener function that processes the event. This function must accept
+    an Event object as its only parameter and must return nothing<ph platform="actionscript">, as this example shows:</ph>
+	<ph platform="javascript">.</ph>
+	
+    <codeblock platform="actionscript">function(evt:Event):void</codeblock>
+	
+	<p>The function can have any name.</p>
+	
+	</apiDesc></apiParam><apiParam><apiItemName>useCapture</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc><ph platform="javascript">This parameter applies to display objects in the
+	ActionScript 3.0 display list architecture, used by SWF content.</ph>
+	
+	<ph platform="actionscript">Determines whether the listener works in the capture phase or the 
+	target and bubbling phases. If <codeph>useCapture</codeph> is set to <codeph>true</codeph>, 
+	the listener processes the event only during the capture phase and not in the 
+	target or bubbling phase. If <codeph>useCapture</codeph> is <codeph>false</codeph>, the
+	listener processes the event only during the target or bubbling phase. To listen for
+	the event in all three phases, call <codeph>addEventListener</codeph> twice, once with 
+	<codeph>useCapture</codeph> set to <codeph>true</codeph>, then again with
+	<codeph>useCapture</codeph> set to <codeph>false</codeph>.</ph>
+	
+	</apiDesc></apiParam><apiParam><apiItemName>priority</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiData>0</apiData><apiDesc>The priority level of the event listener. The priority is designated by
+	a signed 32-bit integer. The higher the number, the higher the priority. All listeners
+	with priority <i>n</i> are processed before listeners of priority <i>n</i>-1. If two
+	or more listeners share the same priority, they are processed in the order in which they
+	were added. The default priority is 0.
+	
+	</apiDesc></apiParam><apiParam><apiItemName>useWeakReference</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>Determines whether the reference to the listener is strong or
+	weak. A strong reference (the default) prevents your listener from being garbage-collected.
+    A weak reference does not. <p>Class-level member functions are not subject to garbage 
+    collection, so you can set <codeph>useWeakReference</codeph> to <codeph>true</codeph> for 
+    class-level member functions without subjecting them to garbage collection. If you set
+    <codeph>useWeakReference</codeph> to <codeph>true</codeph> for a listener that is a nested inner 
+    function, the function will be garbage-collected and no longer persistent. If you create 
+    references to the inner function (save it in another variable) then it is not 
+    garbage-collected and stays persistent.</p>
+	
+	</apiDesc></apiParam></apiOperationDef><apiDesc>
+		
+	Registers an event listener object with an EventDispatcher object so that the listener 
+	receives notification of an event. <ph platform="actionscript">You can register event listeners on all nodes in the 
+	display list for a specific type of event, phase, and priority.</ph>
+	
+	<p platform="javascript">JavaScript code in the AIR runtime uses this method to register
+	event listeners for events defined by the AIR APIs. For other JavaScript events (such as the <codeph>onload</codeph>
+	event of the DOM <codeph>body</codeph> object), you can use standard event handling techniques, as you would 
+	for content running in the browser.</p>
+	
+	<p>After you successfully register an event listener, you cannot change its priority
+	through additional calls to <codeph>addEventListener()</codeph>. To change a listener's
+	priority, you must first call <codeph>removeListener()</codeph>. Then you can register the
+	listener again with the new priority level. </p>
+	
+	<p>Keep in mind that after the listener is registered, subsequent calls to
+	<codeph>addEventListener()</codeph> with a different <codeph>type</codeph> or
+	<codeph>useCapture</codeph> value result in the creation of a separate listener registration. 
+	<ph platform="actionscript">For example, if you first register a listener with <codeph>useCapture</codeph> set to 
+	<codeph>true</codeph>, it listens only during the capture phase. If you call 
+	<codeph>addEventListener()</codeph> again using the same listener object, but with
+	<codeph>useCapture</codeph> set to <codeph>false</codeph>, you have two separate listeners: one
+	that listens during the capture phase and another that listens during the target and
+	bubbling phases.</ph>
+	</p>
+	
+	<p platform="actionscript">You cannot register an event listener for only the target phase or the bubbling 
+	phase. Those phases are coupled during registration because bubbling 
+	applies only to the ancestors of the target node.</p>
+	
+	<p>If you no longer need an event listener, remove it by calling 
+	<codeph>removeEventListener()</codeph>, or memory problems could result. Event listeners are not automatically
+	removed from memory because the garbage
+	collector does not remove the listener as long as the dispatching object exists (unless the <codeph>useWeakReference</codeph>
+	parameter is set to <codeph>true</codeph>).</p>
+		
+	<p>Copying an EventDispatcher instance does not copy the event listeners attached to it. 
+	(If your newly created node needs an event listener, you must attach the listener after
+    creating the node.) However, if you move an EventDispatcher instance, the event listeners 
+    attached to it move along with it.</p>
+	
+	
+	<p platform="actionscript">If the event listener is being registered on a node while an event is being processed
+	on this node, the event listener is not triggered during the current phase but can be 
+	triggered during a later phase in the event flow, such as the bubbling phase.</p>
+	
+	<p platform="actionscript">If an event listener is removed from a node while an event is being processed on the node,
+	it is still triggered by the current actions. After it is removed, the event listener is
+	never invoked again (unless registered again for future processing). </p>
+	
+	</apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.desktop:NativeApplication:clear"><apiName>clear</apiName><shortdesc>
+         Invokes an internal delete command on the focused display object.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc><codeph>true</codeph>.
+         
+		 </apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+         Invokes an internal delete command on the focused display object.
+		 
+         <p>This function call is ignored if the 
+         focused object does not implement the
+         command. Only display objects descending from the TextField or HTMLLoader 
+         classes currently implement this command.</p>
+         
+         <p><b>Note:</b> The <codeph>clear()</codeph> command deletes 
+         selected text. If nothing is selected, it does not clear all text.</p>
+         
+         </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.desktop:NativeApplication:copy"><apiName>copy</apiName><shortdesc>
+         Invokes an internal copy command on the focused display object.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+         Invokes an internal copy command on the focused display object.
+         
+         <p>This function call is ignored if the component does not implement the
+         command. Only display objects descending from the TextField or HTMLLoader 
+         classes currently implement this command.</p>
+		 
+		 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.desktop:NativeApplication:cut"><apiName>cut</apiName><shortdesc>
+         Invokes an internal cut command on the focused display object.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc><codeph>true</codeph>.
+         
+		 </apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+         Invokes an internal cut command on the focused display object.
+		 
+         <p>This function call is ignored if the component does not implement the
+         command. Only display objects descending from the TextField or HTMLLoader 
+         classes currently implement this commands.</p>
+         
+         </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.desktop:NativeApplication:dispatchEvent"><apiName>dispatchEvent</apiName><shortdesc>
+		
+	Dispatches an event into the event flow.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiDesc>A value of <codeph>true</codeph> if the event was successfully dispatched. A value of <codeph>false</codeph> indicates failure or that <codeph>preventDefault()</codeph> was called 
+	on the event.
+	
+	</apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn><apiParam><apiItemName>event</apiItemName><apiOperationClassifier>flash.events:Event</apiOperationClassifier><apiDesc>The Event object that is dispatched into the event flow.
+	If the event is being redispatched, a clone of the event is created automatically.
+	After an event is dispatched, its <codeph>target</codeph> property cannot be changed, so you
+	must create a new copy of the event for redispatching to work.
+	
+	</apiDesc></apiParam></apiOperationDef><apiDesc>
+		
+	Dispatches an event into the event flow. The event target is the EventDispatcher 
+	object upon which the <codeph>dispatchEvent()</codeph> method is called.
+	
+	</apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.desktop:NativeApplication:exit"><apiName>exit</apiName><shortdesc>
+		 Terminates this application.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>errorCode</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiData>0</apiData><apiDesc>The exit code reported to the operating system when this application exits.
+		 
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+		 Terminates this application. 
+		 
+		 <p>The call to the <codeph>exit()</codeph> method <i>will</i> return;
+		 the shutdown sequence does not begin until the currently executing code
+		 (such as a current event handler) has completed. Pending asynchronous
+		 operations are canceled and may or may not complete.</p>
+		 
+		 <p>Note that an <codeph>exiting</codeph> event is not dispatched. If an <codeph>exiting</codeph>
+		 event is required by application logic, call <codeph>NativeApplication.nativeApplication.dispatchEvent()</codeph>, passing
+		 in an Event object of type <codeph>exiting</codeph>. Likewise, <codeph>closing</codeph> 
+		 and <codeph>close</codeph> events are not dispatched before 
+		 application windows are closed. If windows should be notified before your application
+		 exits, you can dispatch <codeph>closing</codeph> events for each open window. 
+		 If a window <codeph>close</codeph> event is required, call the window's
+		 <codeph>close()</codeph> method before exiting.</p>
+		 
+		 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.desktop:NativeApplication:getDefaultApplication"><apiName>getDefaultApplication</apiName><shortdesc>
+		 Gets the default application for opening files with the specified extension.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>If the <codeph>extension</codeph> parameter does not contain one of the 
+		 file extensions declared in the application descriptor.
+		 
+		 </apiDesc><apiItemName>Error</apiItemName><apiOperationClassifier>Error</apiOperationClassifier></apiException><apiReturn><apiDesc>The path of the default application.
+		 
+		 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn><apiParam><apiItemName>extension</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>A String containing the extension of the file type of interest (without the ".").
+		 
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+		 Gets the default application for opening files with the specified extension.
+		 
+		 <p><b>Note:</b> This method can only be used with file types declared in the 
+		 <codeph>fileTypes</codeph> statement of the application descriptor.</p>
+		 
+		 </apiDesc></apiOperationDetail><related-links><link href="flash.desktop.xml#NativeApplication/applicationDescriptor"><linktext>applicationDescriptor</linktext></link></related-links></apiOperation><apiOperation id="flash.desktop:NativeApplication:isSetAsDefaultApplication"><apiName>isSetAsDefaultApplication</apiName><shortdesc>
+		 Specifies whether this application is currently the default application 
+		 for opening files with the specified extension.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>If the <codeph>extension</codeph> parameter does not contain one of the 
+		 file extensions declared in the application descriptor.
+		 
+		 </apiDesc><apiItemName>Error</apiItemName><apiOperationClassifier>Error</apiOperationClassifier></apiException><apiReturn><apiDesc><codeph>true</codeph> if this application is the default.
+		 
+		 </apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn><apiParam><apiItemName>extension</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>A String containing the extension of the file type of interest (without the ".").
+		 
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+		 Specifies whether this application is currently the default application 
+		 for opening files with the specified extension.
+		 
+		 </apiDesc></apiOperationDetail><related-links><link href="flash.desktop.xml#NativeApplication/applicationDescriptor"><linktext>applicationDescriptor</linktext></link></related-links></apiOperation><apiOperation id="flash.desktop:NativeApplication:paste"><apiName>paste</apiName><shortdesc>
+         Invokes an internal paste command on the focused display object.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc><codeph>true</codeph>.
+         
+		 </apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+         Invokes an internal paste command on the focused display object.
+		 
+         <p>This function call is ignored if the component does not implement the
+         command. Only display objects descending from the TextField or HTMLLoader 
+         classes currently implement this command.</p>
+         
+         </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.desktop:NativeApplication:removeAsDefaultApplication"><apiName>removeAsDefaultApplication</apiName><shortdesc>
+		 Removes this application as the default for opening files with the specified extension.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>If the <codeph>extension</codeph> parameter does not contain one of the 
+		 file extensions declared in the application descriptor.
+		 
+		 </apiDesc><apiItemName>Error</apiItemName><apiOperationClassifier>Error</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>extension</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>A String containing the extension of the file type of interest 
+		 (without the ".").
+         
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+		 Removes this application as the default for opening files with the specified extension.
+		 
+		 <p><b>Note:</b> This method can only be used with file types listed in the 
+		 <codeph>fileTypes</codeph> statement in the application descriptor.</p>
+		 
+		 </apiDesc></apiOperationDetail><related-links><link href="flash.desktop.xml#NativeApplication/applicationDescriptor"><linktext>applicationDescriptor</linktext></link></related-links></apiOperation><apiOperation id="flash.desktop:NativeApplication:removeEventListener"><apiName>removeEventListener</apiName><shortdesc>
+		
+	Removes a listener from the EventDispatcher object.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>type</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>The type of event.
+	
+	</apiDesc></apiParam><apiParam><apiItemName>listener</apiItemName><apiOperationClassifier>Function</apiOperationClassifier><apiDesc>The listener object to remove.
+	
+	</apiDesc></apiParam><apiParam><apiItemName>useCapture</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc><ph platform="javascript">This parameter applies to display objects in the
+	ActionScript 3.0 display list architecture, used by SWF content.</ph>
+	
+	<ph platform="actionscript">Specifies whether the listener was registered for the capture phase or the 
+	target and bubbling phases. If the listener was registered for both the capture phase and the
+	target and bubbling phases, two calls to <codeph>removeEventListener()</codeph> are required 
+	to remove both, one call with <codeph>useCapture()</codeph> set to <codeph>true</codeph>, and another 
+	call with <codeph>useCapture()</codeph> set to <codeph>false</codeph>.</ph>
+	
+	</apiDesc></apiParam></apiOperationDef><apiDesc>
+		
+	Removes a listener from the EventDispatcher object. If there is no matching listener registered with the EventDispatcher object, a call to this method has no effect.
+	
+	</apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.desktop:NativeApplication:selectAll"><apiName>selectAll</apiName><shortdesc>
+         Invokes an internal selectAll command on the focused display object.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc><codeph>true</codeph>.
+         
+		 </apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+         Invokes an internal selectAll command on the focused display object.
+		 
+         <p>This function call is ignored if the component does not implement the
+         command. Only display objects descending from the TextField or HTMLLoader 
+         classes currently implement this command.</p>
+         
+         </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.desktop:NativeApplication:setAsDefaultApplication"><apiName>setAsDefaultApplication</apiName><shortdesc>
+		 Sets this application as the default application for opening files with the specified extension.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>If the <codeph>extension</codeph> parameter does not contain one of the 
+		 file extensions declared in the application descriptor.
+		 
+		 </apiDesc><apiItemName>Error</apiItemName><apiOperationClassifier>Error</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>extension</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>A String containing the extension of the file type of interest (without the ".").
+		 
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+		 Sets this application as the default application for opening files with the specified extension.
+		 
+		 <p><b>Note:</b> This method can only be used with file types declared in the 
+		 <codeph>fileTypes</codeph> statement in the application descriptor.</p>
+		 
+		 </apiDesc></apiOperationDetail><related-links><link href="flash.desktop.xml#NativeApplication/applicationDescriptor"><linktext>applicationDescriptor</linktext></link></related-links></apiOperation><apiValue id="flash.desktop:NativeApplication:activeWindow:get"><apiName>activeWindow</apiName><shortdesc>
+         The active application window.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>flash.display:NativeWindow</apiValueClassifier></apiValueDef><apiDesc>
+         The active application window. 
+		 
+		 <p>If the active desktop window does not belong
+		 to this application, or there is no active window, <codeph>activeWindow</codeph> is 
+		 <codeph>null</codeph>.</p>
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeApplication:applicationDescriptor:get"><apiName>applicationDescriptor</apiName><shortdesc> 
+		 The contents of the application descriptor file for this AIR application.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>XML</apiValueClassifier></apiValueDef><apiDesc> 
+		 The contents of the application descriptor file for this AIR application.
+		 
+		 <p platform="javascript">ActionScript 3.0 code in SWF files supports E4X syntax for 
+		 for working with XML data. However in HTML-based AIR applications, you will want to 
+		 convert the XML value of this property to a DOMParser object, using the 
+		 <codeph>parseFromString()</codeph> method of a DOMParser object.</p>
+		 
+		 </apiDesc><example conref="examples\NativeApplication.applicationDescriptor.1.as"> The following example reads the <codeph>copyright</codeph> and <codeph>version</codeph>
+ elements from the application descriptor file. Note that you must use the default namespace 
+ defined in the application descriptor XML.
+<codeblock>
+var appDescriptor:XML = NativeApplication.nativeApplication.applicationDescriptor;
+var ns:Namespace = appDescriptor.namespace();
+var appCopyright:String = appDescriptor.ns::copyright;
+var appVersion:String = appDescriptor.ns::version;
+trace("appId:", appCopyright);
+trace("version:", appVersion);
+</codeblock><swfblock conref="examples\NativeApplication.applicationDescriptor.1.swf"/></example></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeApplication:applicationID:get"><apiName>applicationID</apiName><shortdesc> 
+		 The application ID of this application.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+		 The application ID of this application. 
+		 
+		 <p>The value of this ID is set in the
+		 application descriptor file.</p>
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeApplication:autoExit:get"><apiName>autoExit</apiName><shortdesc>
+		 Specifies whether the application should automatically terminate when 
+		 all windows have been closed.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+		 Specifies whether the application should automatically terminate when 
+		 all windows have been closed.  
+		 
+		 <p>When <codeph>autoExit</codeph> is <codeph>true</codeph>, which is the default,
+		 the application terminates when all windows are closed. Both
+		 <codeph>exiting</codeph> and <codeph>exit</codeph> events are dispatched.
+		 When <codeph>autoExit</codeph> is <codeph>false</codeph>, you must call
+		 <codeph>NativeApplication.nativeApplication.exit()</codeph> to terminate the application. </p> 
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeApplication:icon:get"><apiName>icon</apiName><shortdesc>
+		 The application icon.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>flash.desktop:InteractiveIcon</apiValueClassifier></apiValueDef><apiDesc>
+		 The application icon.
+		 
+		 <p>Use <codeph>NativeApplication.supportsDockIcon</codeph> and <codeph>NativeApplication.supportsSystemTrayIcon</codeph>
+		 to determine the icon class. The type will be one
+		 of the subclasses of InteractiveIcon. On Mac<sup>®</sup> OS X, <codeph>NativeApplication.icon</codeph> 
+		 is an object of type <codeph>DockIcon</codeph>. On Windows<sup>®</sup>, <codeph>NativeApplication.icon</codeph> 
+		 is an object of type <codeph>SystemTrayIcon</codeph>. On Linux, an application icon is not always supported. In this case,
+		 the <codeph>icon</codeph> property is <codeph>null</codeph>.</p>  
+		 
+		 <p>The <codeph>icon</codeph> object is automatically created, but it is not initialized
+		 with image data. On some operating systems, such as Mac OS X, a default image is supplied. 
+		 On others, such as Windows, the icon is not displayed unless image data is assigned to it. 
+		 To assign an icon image, set the <codeph>icon.bitmaps</codeph> property with an array 
+		 containing at least one BitmapData object. If more than one BitmapData object is included
+		 in the array, then the operating system chooses the image that is closest in size to the icon's 
+		 display dimensions, scaling the image if necessary.</p>  
+   		 
+         </apiDesc></apiValueDetail><related-links><link href="flash.desktop.xml#NativeApplication/supportsDockIcon"><linktext>supportsDockIcon</linktext></link><link href="flash.desktop.xml#DockIcon"><linktext>flash.desktop.DockIcon</linktext></link><link href="flash.desktop.xml#NativeApplication/supportsSystemTrayIcon"><linktext>supportsSystemTrayIcon</linktext></link><link href="flash.desktop.xml#SystemTrayIcon"><linktext>flash.desktop.SystemTrayIcon</linktext></link></related-links></apiValue><apiValue id="flash.desktop:NativeApplication:idleThreshold:get"><apiName>idleThreshold</apiName><shortdesc>
+		 The number of seconds that must elapse without keyboard or mouse input 
+		 before a userIdle event is dispatched.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>int</apiValueClassifier><apiException><apiDesc>If you attempt to set the property to an invalid value. 
+		 The acceptable range of values is from 5 (5 seconds) through 86,400 (1 day), inclusive.
+		 
+		 </apiDesc><apiItemName>ArgumentError</apiItemName><apiOperationClassifier>ArgumentError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+		 The number of seconds that must elapse without keyboard or mouse input 
+		 before a <codeph>userIdle</codeph> event is dispatched. 
+		 
+		 <p>By default, the idle threshold is 300 seconds (5 minutes). The acceptable 
+		 range of values is from 5 (5 seconds) through 86,400 (1 day), inclusive.</p>
+		 
+		 </apiDesc></apiValueDetail><related-links><link href="flash.desktop.xml#NativeApplication/event:userIdle"><linktext>userIdle</linktext></link><link href="flash.desktop.xml#NativeApplication/event:userPresent"><linktext>userPresent</linktext></link></related-links></apiValue><apiValue id="flash.desktop:NativeApplication:menu:get"><apiName>menu</apiName><shortdesc>
+		 The application menu.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>flash.display:NativeMenu</apiValueClassifier></apiValueDef><apiDesc>
+		 The application menu.
+		 
+		 <p>Application menus are supported when <codeph>NativeApplication.nativeApplication.supportsMenu</codeph>
+		 is <codeph>true</codeph>. Not all operating systems support application
+		 menus. For example, application menus are supported on Mac OS X, but not on Windows or Linux.
+		 Assigning a NativeMenu object to this property when <codeph>NativeApplication.nativeApplication.supportsMenu</codeph>
+		 is <codeph>false</codeph> is allowed, but does nothing. Be sure to use the
+	        <codeph>NativeApplication.nativeApplication.supportsMenu</codeph> property to determine whether the 
+	        operating system supports application menus. Using other means (such as <codeph>Capabilities.os</codeph>)
+	        to determine support can lead to programming errors (if some possible target operating systems 
+	        are not considered).</p>
+		 
+         <p><b>Note:</b> On Mac OS X, the <codeph>menu</codeph> property references the
+         operating-system-supplied default application menu. You can modify the 
+         existing menu structure by adding and removing items and submenus, and 
+		 by adding event listeners. You can also replace the default menus entirely by
+		 assigning a new NativeMenu object to this <codeph>menu</codeph> property.</p>
+		 
+		 </apiDesc></apiValueDetail><related-links><link href="flash.display.xml#NativeMenu"><linktext>flash.display.NativeMenu</linktext></link><link href="flash.display.xml#NativeWindow/supportsMenu"><linktext>flash.display.NativeWindow.supportsMenu</linktext></link></related-links></apiValue><apiValue id="flash.desktop:NativeApplication:nativeApplication:get"><apiName>nativeApplication</apiName><shortdesc> 
+		 The singleton instance of the NativeApplication object.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>flash.desktop:NativeApplication</apiValueClassifier><apiException><apiDesc>If accessed by content outside the application
+		 security sandbox.
+		 
+		 </apiDesc><apiItemName>Error</apiItemName><apiOperationClassifier>Error</apiOperationClassifier></apiException></apiValueDef><apiDesc> 
+		 The singleton instance of the NativeApplication object.
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeApplication:openedWindows:get"><apiName>openedWindows</apiName><shortdesc>
+		 An array containing all the open native windows of this application.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Array</apiValueClassifier></apiValueDef><apiDesc>
+		 An array containing all the open native windows of this application.
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeApplication:publisherID:get"><apiName>publisherID</apiName><shortdesc> 
+		 The publisher ID of this application.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+		 The publisher ID of this application. 
+		 
+		 <p>The value of this ID is set in the
+		 application's publisherid file, which is generated at installation from the
+		 certificate chain used to sign the application.</p>
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeApplication:runtimePatchLevel:get"><apiName>runtimePatchLevel</apiName><shortdesc> 
+		 The patch level of the runtime hosting this application.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>uint</apiValueClassifier></apiValueDef><apiDesc> 
+		 The patch level of the runtime hosting this application.
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeApplication:runtimeVersion:get"><apiName>runtimeVersion</apiName><shortdesc> 
+		 The version number of the runtime hosting this application.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+		 The version number of the runtime hosting this application.
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeApplication:startAtLogin:set"><apiName>startAtLogin</apiName><shortdesc>
+        Specifies whether this application is automatically launched whenever the 
+        current user logs in.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier><apiException><apiDesc>On Windows when another application with the same name 
+        (but with a different path to the executable) is already set to 
+        launch when this user logs in.
+        
+        </apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException><apiException><apiDesc>If this application is not installed, which 
+        may be the case when launched by the AIR Debug Launcher (ADL).
+        
+		</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+        Specifies whether this application is automatically launched whenever the 
+        current user logs in.
+        
+        <p>
+        The <codeph>startAtLogin</codeph> property reflects the status of the operating-system-defined mechanism for
+        designating that an application should start automatically when a user logs in. The
+        user can change the status manually by using the operating system user interface. This
+        property reflects the current status, whether the status was last changed
+        by the AIR application or by the operating system.   
+        </p>
+        </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeApplication:supportsDockIcon:get"><apiName>supportsDockIcon</apiName><shortdesc> 
+	   Indicates whether AIR supports application dock icons on the current operating system.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc> 
+	   Indicates whether AIR supports application dock icons on the current operating system.
+	  
+	  <p>If <codeph>true</codeph>, the <codeph>NativeApplication.icon</codeph> property is of type 
+	  <codeph>DockIcon</codeph>.</p>
+	  
+      <p>Mac OS X and various Linux<sup>®</sup> user interfaces provide an application 
+      "dock" containing icons for applications that are running or are frequently used.</p>
+	  
+	  <p>Be sure to use the <codeph>NativeApplication.supportsDockIcon</codeph> property to determine whether the 
+	  operating system supports application dock icons. Using other means (such as <codeph>Capabilities.os</codeph>)
+	  to determine support can lead to programming errors (if some possible target operating systems 
+	  are not considered).</p>
+      
+      </apiDesc></apiValueDetail><related-links><link href="flash.desktop.xml#NativeApplication/icon"><linktext>icon</linktext></link></related-links></apiValue><apiValue id="flash.desktop:NativeApplication:supportsMenu:get"><apiName>supportsMenu</apiName><shortdesc> 
+	   Specifies whether the current operating system supports a global application menu bar.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc> 
+	   Specifies whether the current operating system supports a global application menu bar.
+	  
+	  <p>When <codeph>true</codeph>, the <codeph>NativeApplication.menu</codeph> property can be used to define (or access) a native 
+	  application menu.</p> 
+	  
+	  <p>Be sure to use the <codeph>NativeApplication.supportsMenu</codeph> property to determine whether the 
+	  operating system supports the application menu bar. Using other means (such as <codeph>Capabilities.os</codeph>)
+	  to determine support can lead to programming errors (if some possible target operating systems 
+	  are not considered).</p>
+	  
+      </apiDesc></apiValueDetail><related-links><link href="flash.desktop.xml#NativeApplication/menu"><linktext>menu</linktext></link><link href="flash.display.xml#NativeWindow/supportsMenu"><linktext>flash.display.NativeWindow.supportsMenu</linktext></link></related-links></apiValue><apiValue id="flash.desktop:NativeApplication:supportsSystemTrayIcon:get"><apiName>supportsSystemTrayIcon</apiName><shortdesc> 
+	  Specifies whether AIR supports system tray icons on the current operating system.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc> 
+	  Specifies whether AIR supports system tray icons on the current operating system.
+	  
+	  <p>If <codeph>true</codeph>, the <codeph>NativeApplication.icon</codeph> property is of type 
+	  <codeph>SystemTrayIcon</codeph>.</p>
+	  
+	  <p>Be sure to use the <codeph>NativeApplication.supportsSystemTrayIcon</codeph> property to determine whether the 
+	  operating system supports system tray icons. Using other means (such as <codeph>Capabilities.os</codeph>)
+	  to determine support can lead to programming errors (if some possible target operating systems 
+	  are not considered).</p>
+	  
+      <p><b>Note:</b> On Windows, the system tray region of the task bar is officially called 
+      the <i>Notification Area</i>.</p> 
+      
+      </apiDesc></apiValueDetail><related-links><link href="flash.desktop.xml#NativeApplication/icon"><linktext>icon</linktext></link></related-links></apiValue><apiValue id="flash.desktop:NativeApplication:timeSinceLastUserInput:get"><apiName>timeSinceLastUserInput</apiName><shortdesc>
+         The time, in seconds, since the last mouse or keyboard input.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+         The time, in seconds, since the last mouse or keyboard input.
+		 
+		 </apiDesc></apiValueDetail><related-links><link href="flash.desktop.xml#NativeApplication/event:userIdle"><linktext>userIdle</linktext></link><link href="flash.desktop.xml#NativeApplication/event:userPresent"><linktext>userPresent</linktext></link></related-links></apiValue></apiClassifier><apiClassifier id="flash.desktop:Updater"><apiName>Updater</apiName><shortdesc>
+     The Updater class is used to update the currently running application
+     with a different version.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+     The Updater class is used to update the currently running application
+     with a different version. To use it, instantiate an Updater object and then call 
+	 its <codeph>update()</codeph> method.
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="air.update.xml#ApplicationUpdater"><linktext>air.update.ApplicationUpdater</linktext></link><link href="air.update.xml#ApplicationUpdaterUI"><linktext>air.update.ApplicationUpdaterUI</linktext></link></related-links><apiConstructor id="flash.desktop:Updater:Updater"><apiName>Updater</apiName><shortdesc>
+         The constructor function for the Updater class.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/></apiConstructorDef><apiDesc>
+         The constructor function for the Updater class. Note that the <codeph>update()</codeph>
+		 method is not a static member of the class. You must instantiate an Updater object
+		 and call the <codeph>update()</codeph> method on it.
+		 
+		 </apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="flash.desktop:Updater:update"><apiName>update</apiName><shortdesc>
+         Updates the currently running application with the version of the
+         application contained in the specified AIR file.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>The method was called when running in ADL. 
+		 
+		 </apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>airFile</apiItemName><apiOperationClassifier>flash.filesystem:File</apiOperationClassifier><apiDesc>The File object pointing to the AIR file that contains the
+		 update version of the application.
+		 
+		 </apiDesc></apiParam><apiParam><apiItemName>version</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>The required version in the new AIR file. The string in the
+		 <codeph>version</codeph> attribute of the main <codeph>application</codeph> element of the 
+		 application descriptor file for the AIR file must match this value in order for the 
+		 update to succeed.
+		 
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+         Updates the currently running application with the version of the
+         application contained in the specified AIR file. The application in
+         the AIR file must have the same application identifier 
+		 (<codeph>appID</codeph>) as the currently running application.
+		 
+         <p>Calling this method causes the current application to exit (as if the 
+         <codeph>NativeApplication.exit()</codeph> method had been called). This is necessary 
+		 because Adobe AIR cannot fully update an application while 
+		 the application is running. Upon successfully installing the new version of
+		 the application, the application launches. If the runtime cannot successfully
+		 install the new version (for example, if its application ID does not match
+		 the existing version), the AIR installer presents an error message to 
+		 the user, and then the old version relaunches.</p>
+		 
+		 <p>The update process relaunches the application whether or not the 
+		 update is successful. Updates can fail for a variety of reasons, including 
+		 some that the application cannot control (such as the user having insufficient 
+		 privileges to install the application). Applications should take care to 
+		 detect failures and avoid reattempting the same failed update repeatedly. 
+		 The resulting infinite loop would effectively disable the application. 
+		 One way to check for a successful update is to write the current 
+		 version number to a file before starting the update, and then compare 
+		 that to the version number when the application is relaunched.</p>
+		 
+		 <p>When testing an application using the AIR Debug Launcher (ADL) application, 
+		 calling the <codeph>update()</codeph> method results in an IllegalOperationError exception.</p>
+		 
+		 <p>On Mac OS, to install an updated version of an application, the user needs to 
+		 have adequate system privileges to install to the application directory. 
+		 On Windows or Linux, the user needs to have adminstrative privileges. </p>
+		 
+		 <p>If the updated version of the application requires an updated version of  
+		 the runtime, the new runtime version is installed. To update the runtime, 
+		 a user needs to have administrative privileges for the computer.</p>
+		 
+		 <p><i>Note:</i> Specifying the <codeph>version</codeph> parameter is required for
+		 security reasons. By requiring the application to verify the version number in
+		 the AIR file, the application will not inadvertantly install an older version,
+		 which might contain a security vulnerability that has been fixed.</p>
+		 
+		 </apiDesc><example conref="examples\Updater.update.1.as"> Note that the <codeph>update()</codeph> method is <i>not</i>
+ a static method of the class. You instantiate an Updater object and call the 
+ <codeph>update()</codeph> method of that object.
+<codeblock>
+import flash.fileSystem.File;
+import flash.desktop.Updater;
+ 
+var updater:Updater = new Updater();
+var airFile:File = File.applicationStore.resolvePath("Example Application.air");
+var version:String = "2.01";
+updater.update(airFile, version);
+</codeblock></example></apiOperationDetail><related-links><link href="air.update.xml#ApplicationUpdater"><linktext>air.update.ApplicationUpdater</linktext></link><link href="air.update.xml#ApplicationUpdaterUI"><linktext>air.update.ApplicationUpdaterUI</linktext></link></related-links></apiOperation></apiClassifier><apiClassifier id="flash.desktop:SystemTrayIcon"><apiName>SystemTrayIcon</apiName><shortdesc>
+	 The SystemTrayIcon class represents the Windows taskbar&amp;#xAE; notification
+	 area (system tray)-style icon.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.desktop:InteractiveIcon</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 The SystemTrayIcon class represents the Windows taskbar<sup>®</sup> notification
+	 area (system tray)-style icon.
+	 
+	 <p>Not all operating systems have system tray icons. Check <codeph>NativeApplication.supportsSystemTrayIcon</codeph>
+	 to determine whether system tray icons are supported on the current system.</p>
+	 
+	 <p>An instance of the SystemTrayIcon class cannot be created. Get the object representing the system tray 
+	 icon from the <codeph>icon</codeph> property of the "global" NativeApplication object.
+	 </p>
+	 
+	 <p>When system tray icons are supported, the icon will be of type <i>SystemTrayIcon</i>. 
+	 Otherwise, the type of <codeph>icon</codeph> will be another
+	 subclass of InteractiveIcon, typically DockIcon.</p>
+	 
+	 
+	 <p><b>Important:</b> Attempting to call a SystemTrayIcon class method on the
+	 <codeph>NativeApplication.icon</codeph> object on an operating system for which AIR does not support 
+	 system tray icons will generate a run-time exception.</p>
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="flash.desktop.xml#NativeApplication/icon"><linktext>flash.desktop.NativeApplication.icon</linktext></link><link href="flash.desktop.xml#NativeApplication/supportsSystemTrayIcon"><linktext>flash.desktop.NativeApplication.supportsSystemTrayIcon</linktext></link><link href="flash.desktop.xml#DockIcon"><linktext>flash.desktop.DockIcon</linktext></link></related-links><adobeApiEvent id="flash.desktop:SystemTrayIcon_flash.events.ScreenMouseEvent.RIGHT_CLICK_rightClick"><apiName>rightClick</apiName><shortdesc>
+	 Dispatched by this SystemTrayIcon object on right mouse click.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.ScreenMouseEvent.RIGHT_CLICK</apiEventType><adobeApiEventClassifier>flash.events.ScreenMouseEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 Dispatched by this SystemTrayIcon object on right mouse click.
+	 
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.desktop:SystemTrayIcon_flash.events.ScreenMouseEvent.RIGHT_MOUSE_UP_rightMouseUp"><apiName>rightMouseUp</apiName><shortdesc>
+	 Dispatched by this SystemTrayIcon object on right mouse up.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.ScreenMouseEvent.RIGHT_MOUSE_UP</apiEventType><adobeApiEventClassifier>flash.events.ScreenMouseEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 Dispatched by this SystemTrayIcon object on right mouse up.
+	 
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.desktop:SystemTrayIcon_flash.events.ScreenMouseEvent.RIGHT_MOUSE_DOWN_rightMouseDown"><apiName>rightMouseDown</apiName><shortdesc>
+	 Dispatched by this SystemTrayIcon object on right mouse down.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.ScreenMouseEvent.RIGHT_MOUSE_DOWN</apiEventType><adobeApiEventClassifier>flash.events.ScreenMouseEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 Dispatched by this SystemTrayIcon object on right mouse down.
+	 
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.desktop:SystemTrayIcon_flash.events.ScreenMouseEvent.CLICK_click"><apiName>click</apiName><shortdesc>
+ 	 Dispatched by this SystemTrayIcon object on mouse click.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.ScreenMouseEvent.CLICK</apiEventType><adobeApiEventClassifier>flash.events.ScreenMouseEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ 	 Dispatched by this SystemTrayIcon object on mouse click.
+ 	 
+ 	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.desktop:SystemTrayIcon_flash.events.ScreenMouseEvent.MOUSE_UP_mouseUp"><apiName>mouseUp</apiName><shortdesc>
+ 	 Dispatched by this SystemTrayIcon object on mouse up.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.ScreenMouseEvent.MOUSE_UP</apiEventType><adobeApiEventClassifier>flash.events.ScreenMouseEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ 	 Dispatched by this SystemTrayIcon object on mouse up.
+ 	 
+ 	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.desktop:SystemTrayIcon_flash.events.ScreenMouseEvent.MOUSE_DOWN_mouseDown"><apiName>mouseDown</apiName><shortdesc>
+ 	 Dispatched by this SystemTrayIcon object on mouse down.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.ScreenMouseEvent.MOUSE_DOWN</apiEventType><adobeApiEventClassifier>flash.events.ScreenMouseEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ 	 Dispatched by this SystemTrayIcon object on mouse down.
+ 	 
+ 	 </apiDesc></adobeApiEventDetail></adobeApiEvent><apiValue id="flash.desktop:SystemTrayIcon:MAX_TIP_LENGTH"><apiName>MAX_TIP_LENGTH</apiName><shortdesc>
+		 The permitted length of the system tray icon tooltip.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>63</apiData><apiValueClassifier>Number</apiValueClassifier></apiValueDef><apiDesc>
+		 The permitted length of the system tray icon tooltip.
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:SystemTrayIcon:bitmaps:get"><apiName>bitmaps</apiName><shortdesc> 
+		
+		  
+	 The icon image as an array of BitmapData objects of different sizes.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Array</apiValueClassifier></apiValueDef><apiDesc> 
+		
+		  
+	 The icon image as an array of BitmapData objects of different sizes.
+	   
+	 <p>When an icon is displayed in a given operating system context, the bitmap
+	 in the array closest to the displayed size is used (and 
+	 scaled if necessary). Common sizes include 16x16, 32x32, 48x48, and 
+	 128x128. (512x512 pixel icons may be used for some operating system 
+	 icons in the near future.)</p>
+	 
+	 <p>In some contexts, the operating system may use a default system icon
+	 if nothing has been assigned to the <codeph>bitmaps</codeph> property.
+	 In other contexts, no icon appears.</p>
+	 
+	 <p>To set or change the icon appearance, assign an array of 
+	 BitmapData objects to the <codeph>bitmaps</codeph> property:</p>
+	 
+	 <codeblock>
+	 icon.bitmaps = new Array(icon16x16.bitmapData, icon128x128.bitmapData);
+	 </codeblock>
+	  
+	 <p>Modifying the <codeph>bitmaps</codeph> array directly has no effect.</p>
+	 
+	 <p>To clear the icon image, assign an empty array to the 
+	 <codeph>bitmaps</codeph> property.</p>
+	 
+	 <p>
+	 <b>Note:</b> When loading image files for an icon, the PNG file format
+	 generally provides the best alpha blending. The GIF format supports only
+	 on or off transparency (no blending). The JPG format does not support
+	 transparency at all.  
+	 </p>
+	  
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:SystemTrayIcon:height:get"><apiName>height</apiName><shortdesc> 
+		
+		 The current display height of the icon in pixels.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc> 
+		
+		 The current display height of the icon in pixels.
+		 
+		 <p>Some icon contexts support dynamic sizes.
+		 The <codeph>height</codeph> property indicates the height of the icon chosen from the <codeph>bitmaps</codeph> array
+		 for the current context. The actual display height may be different if the operating system
+		 has scaled the icon.</p>
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:SystemTrayIcon:menu:get"><apiName>menu</apiName><shortdesc>
+		 The system tray icon menu.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>flash.display:NativeMenu</apiValueClassifier></apiValueDef><apiDesc>
+		 The system tray icon menu.
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:SystemTrayIcon:tooltip:get"><apiName>tooltip</apiName><shortdesc>
+		 The tooltip that pops up for the system tray icon.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 The tooltip that pops up for the system tray icon. If the string is
+		 longer than <codeph>SystemTrayIcon.MAX_TIP_LENGTH</codeph>, the tip will
+		 be truncated.
+		 
+	     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:SystemTrayIcon:width:get"><apiName>width</apiName><shortdesc> 
+		
+		 The current display width of the icon in pixels.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc> 
+		
+		 The current display width of the icon in pixels. 
+		 
+		 <p>Some icon contexts support dynamic sizes.
+		 The <codeph>width</codeph> property indicates the width of the icon chosen from the <codeph>bitmaps</codeph> array
+		 for the current context. The actual display width may be different if the operating system
+		 has scaled the icon.</p>
+		 
+		 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.desktop:Clipboard"><apiName>Clipboard</apiName><shortdesc>
+ The Clipboard class provides a container for transferring data and objects through the clipboard.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><internal>NativeDragManager is AIR only and is not in FP10.
+ </internal></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ The Clipboard class provides a container for transferring data and objects through the clipboard. 
+ In AIR, the Clipboard class is also used for drag-and-drop operations. The operating system clipboard 
+ can be accessed through the static <codeph>generalClipboard</codeph> property.
+ 
+ <p>A Clipboard object can contain the same information in more than one format. 
+ By supplying information in multiple formats, you increase the chances that another 
+ application will be able to use that information. Add data to a Clipboard object 
+ with the <codeph>setData()</codeph> or <codeph>setDataHandler()</codeph> method.</p> 
+ 
+ <p>The standard formats are:</p>
+ <ul>
+ <li>BITMAP_FORMAT: a BitmapData object (AIR only)</li>
+ <li>FILE_LIST_FORMAT: an array of File objects (AIR only)</li>
+ <li>HTML_FORMAT: HTML-formatted string data</li>
+ <li>TEXT_FORMAT: string data</li>
+ <li>RICH_TEXT_FORMAT: a ByteArray containing Rich Text Format data</li>
+ <li>URL_FORMAT: a URL string (AIR only)</li>
+ </ul>
+ <p>These constants for the names of the standard formats are defined in the ClipboardFormats class.</p>
+ 
+ <p>When a transfer between Flash Player or an AIR application and the operating system occurs,
+ the standard formats are automatically translated between <ph platform="javascript">JavaScript</ph>
+ <ph platform="actionscript">ActionScript</ph> data types and the native clipboard.</p>
+ 
+ <p>You can use application-defined formats to add <ph platform="javascript">JavaScript</ph>
+ <ph platform="actionscript">ActionScript</ph> objects to a 
+ Clipboard object. If an object is serializable, both a reference and a clone 
+ of the object can be made available. Object references are valid only within the 
+ originating application.</p>
+ 
+ <p>When it is computationally expensive to convert the information to be transferred into a 
+ particular format, you can supply the name of a function that performs the conversion. 
+ The function is called if and only if that format is read by the receiving component or application. 
+ Add a deferred rendering function to a Clipboard object with the 
+ <codeph>setDataHandler()</codeph> method.</p>
+ 
+ <p><b>Note for AIR applications:</b> The clipboard objects referenced by the event objects dispatched for HTML 
+ drag-and-drop and copy-and-paste events are not the same type as the AIR Clipboard object.
+ The JavaScript clipboard object is described in the AIR developer's guide.</p>
+ 
+ <p>On Linux, clipboard data does not persist when an AIR application closes.</p>
+  
+ </apiDesc><example conref="examples\ClipboardExample.as"> The following example, for Adobe AIR, uses the ClipboardExample class to 
+ copy a string from one variable to another via the system clipboard.  
+ This task is accomplished by performing the following steps:
+ 
+ <ol>
+     <li>Write the data, in this case a string, to <codeph>Clipboard.generalClipboard</codeph>.</li>
+    <li>Read the clipboard contents from <codeph>Clipboard.generalClipboard</codeph>.</li>
+ </ol>
+ <p><b>Note:</b> Because of security restrictions on accessing clipboard data, this example
+ does not work in Flash Player. In Flash Player, you can only call the <codeph>getData()</codeph>
+ method of the Clipboard object in a <codeph>paste</codeph> event handler.</p>
+<codeblock>
+package
+{
+    import flash.display.Sprite;
+    import flash.desktop.Clipboard;
+    import flash.desktop.ClipboardFormats;
+    import flash.desktop.ClipboardTransferMode;
+
+    public class ClipboardExample extends Sprite
+    {
+        public function ClipboardExample()
+        {
+            var sally:String = "Sally";
+            var person:String;
+            
+            copy(sally);
+            person = paste();
+            trace(person); //traces: "Sally"
+        }
+
+        private function copy(text:String):void 
+        {
+            Clipboard.generalClipboard.clear();
+            Clipboard.generalClipboard.setData(ClipboardFormats.TEXT_FORMAT, text);
+        }
+        
+        private function paste():String
+        {
+            if(Clipboard.generalClipboard.hasFormat(ClipboardFormats.TEXT_FORMAT))
+            {
+                return String(Clipboard.generalClipboard.getData(ClipboardFormats.TEXT_FORMAT));
+            } 
+            else 
+            {
+                return null;
+            }
+        }
+        
+    }
+}
+</codeblock></example></apiClassifierDetail><related-links><link href="flash.desktop.xml#NativeDragManager"><linktext>flash.desktop.NativeDragManager</linktext></link><link href="flash.desktop.xml#ClipboardFormats"><linktext>flash.desktop.ClipboardFormats</linktext></link><link href="flash.desktop.xml#ClipboardTransferMode"><linktext>flash.desktop.ClipboardTransferMode</linktext></link></related-links><apiConstructor id="flash.desktop:Clipboard:Clipboard"><apiName>Clipboard</apiName><shortdesc>
+	Creates an empty Clipboard object.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><internal>the example located at examples\Clipboard.clipboard.1.as should not be displayed with FP10 docs because FP10 will throw an error when new Clipboard() is called.
+	</internal></asCustoms></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiException><apiDesc><codeph>new Clipboard()</codeph> is not supported in Flash Player, since only the operating system clipboard can be used in Flash Player. For copy-and-paste operations involving the operating system clipboard, use the Clipboard.generalClipboard object rather than creating a new Clipboard object. Does not throw an error in an AIR application.
+	
+	</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiConstructorDef><apiDesc>
+	Creates an empty Clipboard object.
+	
+	</apiDesc><example conref="examples\Clipboard.clipboard.1.as"> The following example creates a new clipboard for use with the NativeDragManager
+ class.
+ 
+ <p><b>Note:</b> For copy-and-paste operations involving the operating system clipboard, 
+ use the <codeph>Clipboard.generalClipboard</codeph> object rather than creating a new clipboard.</p>
+<codeblock>
+ import flash.desktop.Clipboard;
+ 
+ var clipboard:Clipboard = new Clipboard();
+</codeblock></example></apiConstructorDetail><related-links><link href="flash.desktop.xml#Clipboard/generalClipboard"><linktext>generalClipboard</linktext></link></related-links></apiConstructor><apiOperation id="flash.desktop:Clipboard:clear"><apiName>clear</apiName><shortdesc>
+	Deletes all data representations from this Clipboard object.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+	Deletes all data representations from this Clipboard object.
+	
+ 	</apiDesc><example conref="examples\Clipboard.clear.1.as"> The following example clears the system clipboard:
+<codeblock>
+ Clipboard.generalClipboard.clear();
+</codeblock></example></apiOperationDetail></apiOperation><apiOperation id="flash.desktop:Clipboard:clearData"><apiName>clearData</apiName><shortdesc>
+	Deletes the data representation for the specified format.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>format</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>The data format to remove.
+	</apiDesc></apiParam></apiOperationDef><apiDesc>
+	Deletes the data representation for the specified format.
+	
+ 	</apiDesc><example conref="examples\Clipboard.clearData.1.as"> The following example clears any data having the format 
+ <codeph>ClipboardFormats.TEXT_FORMAT</codeph> from the system clipboard:
+<codeblock>
+ import flash.desktop.ClipboardFormats;
+ 
+ Clipboard.generalClipboard.clearData(ClipboardFormats.TEXT_FORMAT);
+</codeblock></example></apiOperationDetail></apiOperation><apiOperation id="flash.desktop:Clipboard:getData"><apiName>getData</apiName><shortdesc>
+	Gets the clipboard data if data in the specified format is present.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc><codeph>transferMode</codeph> is not one of the names defined in the ClipboardTransferMode class.
+	</apiDesc><apiItemName>Error</apiItemName><apiOperationClassifier>Error</apiOperationClassifier></apiException><apiException><apiDesc>The Clipboard object requested is no longer in scope (AIR only).
+	</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException><apiException><apiDesc>Reading from or writing to the clipboard is not permitted in this context. 
+	In Flash Player, you can only call this method successfully during the processing of a <codeph>paste</codeph> event.
+	In AIR, this restriction only applies to content outside of the application security sandbox.
+	
+	</apiDesc><apiItemName>SecurityError</apiItemName><apiOperationClassifier>SecurityError</apiOperationClassifier></apiException><apiReturn><apiDesc>An object of the type corresponding to the data format.
+	
+	</apiDesc><apiOperationClassifier>Object</apiOperationClassifier></apiReturn><apiParam><apiItemName>format</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>The data format to return. The format string can contain one of the standard
+	names defined in the ClipboardFormats class, or an application-defined name.
+	</apiDesc></apiParam><apiParam><apiItemName>transferMode</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData>originalPreferred</apiData><apiDesc>Specifies whether to return a reference or serialized copy
+	when an application-defined data format is accessed. The value must be one
+	of the names defined in the ClipboardTransferMode class. This value is
+	ignored for the standard data formats; a copy is always returned.
+	</apiDesc></apiParam></apiOperationDef><apiDesc>
+	Gets the clipboard data if data in the specified format is present.
+	
+	<p>Flash Player requires that the <codeph>getData()</codeph> be called in a <codeph>paste</codeph> event handler.
+	In AIR, this restriction only applies to content outside of the application security sandbox.</p>
+	
+	<p>When a standard data format is accessed, the data is returned as a new 
+	object of the corresponding Flash Player or AIR type.</p>
+	
+	<p>When an application-defined format is accessed, the value of the 
+	<codeph>transferMode</codeph> parameter determines whether a reference to the original
+	object or an anonymous object containing a serialized copy of the original
+	object is returned. When an <codeph>originalPreferred</codeph> or <codeph>clonePreferred</codeph> mode is specified, 
+	Flash Player or AIR returns the alternate version if the preferred version is not available. 
+	When an <codeph>originalOnly</codeph> or <codeph>cloneOnly</codeph> mode is specified, Flash Player or AIR returns 
+	<codeph>null</codeph> if the requested version is not available.</p>
+	
+	</apiDesc><example conref="examples\Clipboard.getData.1.as"> The following example reads text from the system clipboard, if available:
+<codeblock>
+ import flash.desktop.ClipboardFormats;
+
+ var pasteData:String = Clipboard.generalClipboard.getData(ClipboardFormats.TEXT_FORMAT) as String;
+</codeblock></example></apiOperationDetail><related-links><link href="flash.desktop.xml#Clipboard/setData()"><linktext>setData()</linktext></link><link href="flash.desktop.xml#ClipboardFormats"><linktext>flash.desktop.ClipboardFormats</linktext></link><link href="flash.desktop.xml#ClipboardTransferMode"><linktext>flash.desktop.ClipboardTransferMode</linktext></link></related-links></apiOperation><apiOperation id="flash.desktop:Clipboard:hasFormat"><apiName>hasFormat</apiName><shortdesc>
+	Checks whether data in the specified format exists in this Clipboard object.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>The Clipboard object requested is no longer in scope (AIR only).
+	</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException><apiException><apiDesc>Reading from or writing to the clipboard is not permitted in this context.
+	
+	</apiDesc><apiItemName>SecurityError</apiItemName><apiOperationClassifier>SecurityError</apiOperationClassifier></apiException><apiReturn><apiDesc><codeph>true</codeph>, if data in the specified format is present.
+	
+	</apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn><apiParam><apiItemName>format</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>The format type to check.
+	</apiDesc></apiParam></apiOperationDef><apiDesc>
+	Checks whether data in the specified format exists in this Clipboard object.
+	
+	<p>Use the constants in the ClipboardFormats class to reference the standard format names.</p>
+	
+	</apiDesc><example conref="examples\Clipboard.hasFormat.1.as"> The following example tests the system clipboard to determine 
+ whether text-formatted data is available:
+<codeblock>
+if(Clipboard.generalClipboard.hasFormat(ClipboardFormats.TEXT_FORMAT)){
+    //do something 
+}
+</codeblock></example></apiOperationDetail><related-links><link href="flash.desktop.xml#ClipboardFormats"><linktext>flash.desktop.ClipboardFormats</linktext></link></related-links></apiOperation><apiOperation id="flash.desktop:Clipboard:setData"><apiName>setData</apiName><shortdesc>
+	Adds a representation of the information to be transferred in the specified data format.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>The Clipboard object requested is no longer in scope (AIR only).
+	
+	</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException><apiException><apiDesc>Reading from or writing to the clipboard is not permitted in this context.
+	In Flash Player, you can only call this method successfully during the processing of a user event 
+	(as in a key press or mouse click). In AIR, this restriction only applies to content outside of the 
+	application security sandbox.
+	
+	</apiDesc><apiItemName>SecurityError</apiItemName><apiOperationClassifier>SecurityError</apiOperationClassifier></apiException><apiException><apiDesc><codeph>format</codeph> or <codeph>data</codeph> is <codeph>null</codeph>.
+	
+	</apiDesc><apiItemName>TypeError</apiItemName><apiOperationClassifier>TypeError</apiOperationClassifier></apiException><apiReturn><apiDesc><codeph>true</codeph> if the data was succesfully set; 
+	<codeph>false</codeph> otherwise. In Flash Player, returns <codeph>false</codeph> when <codeph>format</codeph> is an
+	unsupported member of ClipboardFormats. (Flash Player does not support <codeph>ClipboardFormats.URL_FORMAT</codeph>,
+	<codeph>ClipboardFormats.FILE_LIST_FORMAT</codeph>, or <codeph>ClipboardFormats.BITMAP_FORMAT</codeph>).
+	
+	</apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn><apiParam><apiItemName>format</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>The format of the data.
+	</apiDesc></apiParam><apiParam><apiItemName>data</apiItemName><apiOperationClassifier>Object</apiOperationClassifier><apiDesc>The information to add. 
+	</apiDesc></apiParam><apiParam><apiItemName>serializable</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>true</apiData><apiDesc>Specify <codeph>true</codeph> for objects that can be serialized (and deserialized).
+	
+	</apiDesc></apiParam></apiOperationDef><apiDesc>
+	Adds a representation of the information to be transferred in the specified data format.
+	Flash Player requires a user event (such as a key press or mouse click) before using <codeph>setData()</codeph>.
+	In AIR, this restriction only applies to content outside of the 
+	application security sandbox.
+	
+	<p>Different representations of the same information can be added to the clipboard in 
+	different formats, which increases the ability of other components or applications to 
+	make use of the available data. 
+	For example, in an AIR application, an image could be added as bitmap data for use by image editing applications, 
+	as a Bitmap object for use by other AIR applications, and as an encoded PNG file 
+	for transfer to the native file system.</p>
+	
+	<p>The data parameter must be the appropriate data type for the specified format:</p>
+	<adobetable class="innertable">
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	<tgroup cols="3"><thead><row><entry>Format</entry><entry>Type</entry><entry>Description</entry></row></thead><tbody><row><entry><codeph>ClipboardFormats.TEXT_FORMAT</codeph></entry><entry><codeph>String</codeph></entry><entry>string data</entry></row><row><entry><codeph>ClipboardFormats.HTML_FORMAT</codeph></entry><entry><codeph>String</codeph></entry><entry>HTML string data</entry></row><row><entry><codeph>ClipboardFormats.URL_FORMAT</codeph></entry><entry><codeph>String</codeph></entry><entry>URL string (AIR only)</entry></row><row><entry><codeph>ClipboardFormats.RICH_TEXT_FORMAT</codeph></entry><entry><codeph>ByteArray</codeph></entry><entry>Rich Text Format data</entry></row><row><entry><codeph>ClipboardFormats.BITMAP_FORMAT</codeph></entry><entry><codeph>BitmapData</codeph></entry><entry>bitmap data (AIR only)</entry></row><row><entry><codeph>ClipboardFormats.FILE_LIST_FORMAT</codeph></entry><entry>array of <codeph>File</codeph></entry><entry>an array of files (AIR only)</entry></row><row><entry>Custom format name</entry><entry>any</entry><entry>object reference and serialized clone</entry></row></tbody></tgroup></adobetable>
+	
+	<p>Custom format names cannot begin with "air:" or "flash:". In an AIR application, to prevent name collisions
+	when using custom formats, you may want to use your application ID or a package name as a
+	prefix to the format, such as "com.example.applicationName.dataPacket".</p>
+	
+	<p>When transferring within or between Flash Player or AIR applications, the <codeph>serializable</codeph> parameter 
+	determines whether both a reference and a copy are available, or whether only a reference to 
+	an object is available. Set <codeph>serializable</codeph> to <codeph>true</codeph> to make both the reference 
+	and a copy of the data object available. Set <codeph>serializable</codeph> to <codeph>false</codeph> 
+	to make only the object reference available. Object references are valid only within the current 
+	application so setting <codeph>serializable</codeph> to <codeph>false</codeph> also means that the data
+	in that format is not available to other Flash Player or AIR applications. A component can choose to get 
+	the reference or the copy of the object by setting the appropriate clipboard transfer mode 
+	when accessing the data for that format.</p>
+	
+	<p><b>Note:</b> The standard formats are always converted to native formats when data is pasted or
+	dragged (AIR only) outside a supported application, so the value of the <codeph>serializable</codeph>
+	parameter does not affect the availability of data in the standard formats to non-Flash Player or non-AIR applications.</p>
+	
+	<p>To defer rendering of the data for a format, use the <codeph>setDataHandler()</codeph> method instead.
+	If both the <codeph>setData()</codeph> and the <codeph>setDataHandler()</codeph> methods are used to add a
+	data representation with the same format name, then the handler function will never be called.</p>
+	
+	<p><b>Note:</b> On Mac OS, when you set the <codeph>format</codeph> parameter to <codeph>ClipboardFormats.URL_FORMAT</codeph>, 
+	the URL is transferred only if it is a valid URL. Otherwise, the Clipboard object is emptied (and calling 
+	<codeph>getData()</codeph> returns <codeph>null</codeph>).</p>
+	
+	</apiDesc><example conref="examples\Clipboard.setData.1.as"> The following example adds content to the system clipboard in both 
+ text and HTML formats:
+<codeblock>
+ import flash.desktop.ClipboardFormats;
+ 
+ var htmlString:String = "&lt;html&gt;&lt;body&gt;Body content&lt;/body&gt;&lt;/html&gt;";
+ Clipboard.generalClipboard.setData(ClipboardFormats.TEXT_FORMAT, urlString);
+ Clipboard.generalClipboard.setData(ClipboardFormats.HTML_FORMAT, urlString);
+</codeblock></example></apiOperationDetail><related-links><link href="flash.desktop.xml#Clipboard/setDataHandler()"><linktext>setDataHandler()</linktext></link><link href="flash.desktop.xml#Clipboard/getData()"><linktext>getData()</linktext></link><link href="flash.desktop.xml#ClipboardFormats"><linktext>flash.desktop.ClipboardFormats</linktext></link><link href="flash.desktop.xml#ClipboardTransferMode"><linktext>flash.desktop.ClipboardTransferMode</linktext></link></related-links></apiOperation><apiOperation id="flash.desktop:Clipboard:setDataHandler"><apiName>setDataHandler</apiName><shortdesc>
+	Adds a reference to a handler function that produces the data for the specified format on demand.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc><codeph>format</codeph> or <codeph>handler</codeph> is <codeph>null</codeph>.
+	</apiDesc><apiItemName>TypeError</apiItemName><apiOperationClassifier>TypeError</apiOperationClassifier></apiException><apiException><apiDesc>The Clipboard object requested is no longer in scope (AIR only).
+	</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException><apiException><apiDesc>Reading from or writing to the clipboard is not permitted in this context.
+	In Flash Player, you can only call this method successfully during the processing of a user event 
+	(such as a key press or mouse click). In AIR, this restriction only applies to content outside of the 
+	application security sandbox.
+	
+	</apiDesc><apiItemName>SecurityError</apiItemName><apiOperationClassifier>SecurityError</apiOperationClassifier></apiException><apiReturn><apiDesc><codeph>true</codeph> if the handler was succesfully set; 
+	<codeph>false</codeph> otherwise.
+	
+	</apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn><apiParam><apiItemName>format</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>A function that returns the data to be transferred.
+	</apiDesc></apiParam><apiParam><apiItemName>handler</apiItemName><apiOperationClassifier>Function</apiOperationClassifier><apiDesc>The format of the data. 
+	</apiDesc></apiParam><apiParam><apiItemName>serializable</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>true</apiData><apiDesc>Specify <codeph>true</codeph> if the object returned by <codeph>handler</codeph> 
+	can be serialized (and deserialized).
+	
+	</apiDesc></apiParam></apiOperationDef><apiDesc>
+	Adds a reference to a handler function that produces the data for the specified format on demand.
+	Use this method to defer creation or rendering of the data until it is actually accessed.
+	Flash Player requires a user event (such as a key press or mouse click) before using <codeph>setDataHandler()</codeph>.
+	In AIR, this restriction only applies to content outside of the 
+	application security sandbox.
+	
+	<p>The handler function must return the appropriate data type for the specified format:</p>
+	<adobetable class="innertable">
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	      
+	<tgroup cols="2"><thead><row><entry>Format</entry><entry>Return Type</entry></row></thead><tbody><row><entry><codeph>ClipboardFormats.TEXT_FORMAT</codeph></entry><entry><codeph>String</codeph></entry></row><row><entry><codeph>ClipboardFormats.HTML_FORMAT</codeph></entry><entry><codeph>String</codeph></entry></row><row><entry><codeph>ClipboardFormats.URL_FORMAT</codeph></entry><entry><codeph>String</codeph> (AIR only)</entry></row><row><entry><codeph>ClipboardFormats.RICH_TEXT_FORMAT</codeph></entry><entry><codeph>ByteArray</codeph></entry></row><row><entry><codeph>ClipboardFormats.BITMAP_FORMAT</codeph></entry><entry><codeph>BitmapData</codeph> (AIR only)</entry></row><row><entry><codeph>ClipboardFormats.FILE_LIST_FORMAT</codeph></entry><entry>Array of <codeph>File</codeph> (AIR only)</entry></row><row><entry>Custom format name</entry><entry>Non-void</entry></row></tbody></tgroup></adobetable>
+	
+	<p>The handler function is called when and only when the data in the specified format is read. 
+	Note that the underlying data can change between the time the handler is added and the time the data is
+	read unless your application takes steps to protect the data. 
+	The behavior that occurs when data on the clipboard represented by a handler function is read more than once 
+	is not guaranteed. Flash Player or AIR might return the data produced by the first function call or it might call the 
+	function again. Do not rely on either behavior.</p>
+	
+	<p>To add data directly to this Clipboard object, use the <codeph>setData()</codeph> method instead.     
+	If both the <codeph>setData()</codeph> and the <codeph>setDataHandler()</codeph> methods are called with the same
+	format name, then the handler function is never called.</p>
+	
+	<p><b>Note:</b> On Mac OS, when you set the <codeph>format</codeph> parameter to <codeph>ClipboardFormats.URL_FORMAT</codeph>, 
+	the URL is transferred only if the handler function returns a valid URL. Otherwise, the Clipboard object is emptied 
+	(and calling <codeph>getData()</codeph> returns <codeph>null</codeph>).</p>
+	
+	</apiDesc><example conref="examples\Clipboard.setDataHandler.1.as"> The following example adds a random number to the system clipboard  
+ through a deferred data function:
+<codeblock>
+ import flash.desktop.ClipboardFormats;
+ 
+ Clipboard.generalClipboard.setDataHandler(ClipboardFormats.TEXT_FORMAT, randomNumberGenerator);
+
+ public function randomNumberGenerator():String{
+     return Math.random().toString();
+ }
+</codeblock></example></apiOperationDetail><related-links><link href="flash.desktop.xml#Clipboard/setData()"><linktext>setData()</linktext></link><link href="flash.desktop.xml#ClipboardFormats"><linktext>flash.desktop.ClipboardFormats</linktext></link></related-links></apiOperation><apiValue id="flash.desktop:Clipboard:formats:get"><apiName>formats</apiName><shortdesc>
+	An array of strings containing the names of the data formats available
+	in this Clipboard object.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Array</apiValueClassifier></apiValueDef><apiDesc>
+	An array of strings containing the names of the data formats available
+	in this Clipboard object.
+	
+	<p>String constants for the names of the standard formats are defined in the
+	ClipboardFormats class. Other, application-defined, strings may also be used as format
+	names to transfer data as an object.</p>
+	
+	</apiDesc><example conref="examples\Clipboard.formats.1.as"> The following example reads the <codeph>formats</codeph> array of the system clipboard:
+<codeblock>
+ var availableFormats:Array = Clipboard.generalClipboard.formats;
+</codeblock></example></apiValueDetail><related-links><link href="flash.desktop.xml#ClipboardFormats"><linktext>flash.desktop.ClipboardFormats</linktext></link></related-links></apiValue><apiValue id="flash.desktop:Clipboard:generalClipboard:get"><apiName>generalClipboard</apiName><shortdesc>
+	 The operating system clipboard.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>flash.desktop:Clipboard</apiValueClassifier></apiValueDef><apiDesc>
+	 The operating system clipboard.
+	 
+	 <p>Any data pasted to the system clipboard is available to other 
+	 applications. This may include insecure remote code running in
+	 a web browser.</p>
+	 
+	 <p><b>Note:</b> In Flash Player 10 applications, a paste operation from the clipboard first
+	 requires a user event (such as a keyboard shortcut for the Paste command or a mouse click on the Paste command
+	 in a context menu). <codeph>Clipboard.getData()</codeph>
+	 will return the contents of the clipboard only if the InteractiveObject has received
+	 and is acting on a paste event. Calling <codeph>Clipboard.getData()</codeph> under any other circumstances
+	 will be unsuccessful. The same restriction applies in AIR for content outside the
+	 application sandbox.</p>
+	 
+	 <p>The <codeph>generalClipboard</codeph> object is created automatically.
+	 You cannot assign another instance of a Clipboard to this property.
+	 Instead, you use the <codeph>getData()</codeph> and <codeph>setData()</codeph>
+	 methods to read and write data to the existing object.</p>
+	 
+	 <p>You should always clear the clipboard before writing new data to it
+	 to ensure that old data in all formats is erased.</p>
+	 
+	 </apiDesc><example conref="examples\Clipboard.generalClipboard.1.as"> To write to the operating system clipboard:
+<codeblock>
+ import flash.desktop.ClipboardFormats;
+ 
+ var copy:String = "A string to copy to the system clipboard.";
+ Clipboard.generalClipboard.clear();
+ Clipboard.generalClipboard.setData(ClipboardFormats.TEXT_FORMAT, copy);
+</codeblock></example><example conref="examples\Clipboard.generalClipboard.2.as"> To read from the operating system clipboard:
+<codeblock>
+ import flash.desktop.ClipboardFormats;
+ 
+ var pasteData:String  = Clipboard.generalClipboard.getData(ClipboardFormats.TEXT_FORMAT) as String;
+</codeblock></example></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.desktop:NotificationType"><apiName>NotificationType</apiName><shortdesc>
+ The NotificationType class defines constants for use in the priority 
+ parameter of the DockIcon bounce() method and the type 
+ parameter of the NativeWindow notifyUser() method.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ The NotificationType class defines constants for use in the <codeph>priority</codeph> 
+ parameter of the DockIcon <codeph>bounce()</codeph> method and the <codeph>type</codeph> 
+ parameter of the NativeWindow <codeph>notifyUser()</codeph> method.
+ 
+ </apiDesc></apiClassifierDetail><related-links><link href="flash.desktop.xml#DockIcon/bounce()"><linktext>flash.desktop.DockIcon.bounce()</linktext></link><link href="flash.display.xml#NativeWindow/notifyUser()"><linktext>flash.display.NativeWindow.notifyUser()</linktext></link></related-links><apiValue id="flash.desktop:NotificationType:CRITICAL"><apiName>CRITICAL</apiName><shortdesc>
+	 Specifies that a notification alert is critical in nature and the user should attend to it promptly.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>critical</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 Specifies that a notification alert is critical in nature and the user should attend to it promptly.
+	 
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NotificationType:INFORMATIONAL"><apiName>INFORMATIONAL</apiName><shortdesc>
+	 Specifies that a notification alert is informational in nature and the user can safely ignore it.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>informational</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 Specifies that a notification alert is informational in nature and the user can safely ignore it.
+	 
+     </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.desktop:ClipboardTransferMode"><apiName>ClipboardTransferMode</apiName><shortdesc>
+ The ClipboardTransferMode class defines constants for the modes used as values of the transferMode
+ parameter of the Clipboard.getData() method.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><internal>Clipboard, ClipboardFormats and ClipboardTransferMode were all added to AIR 1.0. These are also being added, with some exceptions listed in this file, to FP10.
+ </internal></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ The ClipboardTransferMode class defines constants for the modes used as values of the <codeph>transferMode</codeph>
+ parameter of the <codeph>Clipboard.getData()</codeph> method.
+ 
+ <p>The transfer mode provides a hint about whether to return a reference or a 
+ copy when accessing an object contained on a clipboard.</p>
+ 
+ </apiDesc></apiClassifierDetail><related-links><link href="flash.desktop.xml#Clipboard/getData()"><linktext>flash.desktop.Clipboard.getData()</linktext></link></related-links><apiValue id="flash.desktop:ClipboardTransferMode:CLONE_ONLY"><apiName>CLONE_ONLY</apiName><shortdesc>
+    The Clipboard object should only return a copy.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>cloneOnly</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+    The Clipboard object should only return a copy.
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:ClipboardTransferMode:CLONE_PREFERRED"><apiName>CLONE_PREFERRED</apiName><shortdesc>
+    The Clipboard object should return a copy if available and a reference if not.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>clonePreferred</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+    The Clipboard object should return a copy if available and a reference if not.
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:ClipboardTransferMode:ORIGINAL_ONLY"><apiName>ORIGINAL_ONLY</apiName><shortdesc>
+    The Clipboard object should only return a reference.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>originalOnly</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+    The Clipboard object should only return a reference.
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:ClipboardTransferMode:ORIGINAL_PREFERRED"><apiName>ORIGINAL_PREFERRED</apiName><shortdesc>
+    The Clipboard object should return a reference if available and a copy if not.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>originalPreferred</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+    The Clipboard object should return a reference if available and a copy if not.
+	
+	</apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.desktop:NativeDragManager"><apiName>NativeDragManager</apiName><shortdesc>
+ The NativeDragManager class coordinates drag-and-drop operations.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ The NativeDragManager class coordinates drag-and-drop operations. With the native drag-and-drop API, 
+ you can allow a user to drag data between an AIR application and the native operating system, 
+ between two applications, or between components within a single application.
+ 
+ <p>The following kinds of data can be transferred:</p>
+ <ul>
+ <li>Bitmaps</li>
+ <li>Files</li>
+ <li>Text</li>
+ <li>URL strings</li>
+ <li>Serialized objects</li>
+ <li>Object references (valid only within the originating application)</li>
+ </ul>
+ 
+ <p><b>Note:</b> all NativeDragManager members are static. An instance of this class does not need to be created.</p>
+ 
+ <p>A drag-and-drop operation is a user interface gesture that begins with the user clicking a visible item and
+ dragging it elsewhere. During the drag gesture, interactive objects on the display list dispatch native drag events
+ as the gesture moves across the AIR application window. Handlers for these events can call 
+ the methods of the NativeDragManager class to indicate whether a dragged item 
+ can be dropped on an object. In response, the NativeDragManager changes the mouse pointer to provide 
+ feedback to the user.</p>
+ 
+ <p><b>Drag actions</b></p>
+ <p>Drag-and-drop gestures are typically used for three types of operations, called <i>actions</i>. 
+ Since the meaning of these actions depends on the application context, 
+ the runtime does not enforce any particular behavior with respect to actions. 
+ However, properly implementing the actions improves the user experience with your application.
+ </p> 
+ 
+ <p>The possible actions are:</p>
+ <ul>
+ <li>Copy — A copy of the data is made, leaving the original untouched. 
+ (When dragging objects within an application, care should be taken to copy the 
+ original object itself rather than the reference to that object.)</li>
+ <li>Move — The data is moved from its original context into the context defined by the drop target, 
+ such as when moving an item from one list to another.</li>
+ <li>Link — A reference or shortcut to the original data is created, 
+ leaving the item in its original context.</li>
+ </ul>
+ 
+ <p>The allowed actions can be set for a drag gesture by supplying an <codeph>allowedActions</codeph> parameter
+ in the <codeph>NativeDragManager.doDrag()</codeph> call that starts the drag operation. 
+ If no <codeph>allowedActions</codeph> parameter is provided, all
+ of the actions are allowed. Potential drag targets can check which actions are allowed by using the 
+ <codeph>allowedActions</codeph> property of a NativeDragEvent object, and should not accept a drop
+ that allows only incompatible actions (this is not enforced by the runtime, however).</p>
+ 
+ <p>If a drop target only implements a single action, the object can set the 
+ <codeph>dropAction</codeph> property of the NativeDragManager in the handlers for both
+ the <codeph>nativeDragEnter</codeph> and <codeph>nativeDragOver</codeph> events. Setting the
+ property before the drop, allows the drag manager to update the mouse pointer to 
+ indicate the supported action and also prevents
+ a user from choosing an incompatible action using modifier keys. If the specified action
+ is not one of the allowed actions, then a drop is not allowed, even if the target calls the
+ <codeph>acceptDrop()</codeph> method.</p>
+ 
+ <p>When accepting a drop, a potential drop target should specify the action chosen
+ by setting the <codeph>NativeDragManager.dropAction</codeph> property in response to the 
+ <codeph>nativeDragDrop</codeph> event. This action is reported back to the initiating
+ display object in the <codeph>nativeDragComplete</codeph> event. If no action is set by a drop target, 
+ then a default action is chosen from the allowed actions in this order of 
+ precedence: copy, move, link. The initiating object is responsible
+ for updating its internal state in response to the chosen action.</p> 
+ 
+ <p>String constants for the action names are defined in the NativeDragActions class.</p>
+  
+ <p><b>Sequence of events</b></p>
+ <p>A drag gesture is begun by calling the <codeph>NativeDragManager.doDrag()</codeph> method 
+ within a <codeph>mouseDown</codeph> or <codeph>mouseMove</codeph> event handler and 
+ proceeds through the following event sequence in response to user actions:</p>
+ <ul>
+ <li><codeph>nativeDragStart</codeph> event — When <codeph>NativeDragManager.doDrag()</codeph> is called, 
+ the interactive object passed as a paramter to the method becomes the initiator 
+ object and dispatches a <codeph>nativeDragStart</codeph> event.</li> 
+ 
+ <li><codeph>nativeDragUpdate</codeph> event — While the drag is in progress, the initiator object continually 
+ dispatches <codeph>nativeDragUpdate</codeph> events.</li>
+ 
+ <li><codeph>nativeDragEnter</codeph>, <codeph>nativeDragOver</codeph> events — When a drag 
+ gesture passes over an interactive object, that object dispatches a <codeph>nativeDragEnter</codeph> event. 
+ While the drag gesture remains over the interactive object, 
+ it continually dispatches <codeph>nativeDragOver</codeph> events. In response to either of these events, 
+ an object that serves as a potential drop target should check the properties of the event object 
+ to decide whether it can accept the drop. If the data format and allowed 
+ actions are appropriate, then the event handler for these events must call 
+ <codeph>NativeDragManager.acceptDrop()</codeph>, passing in a reference to the
+ display object to serve as the drag target (typically the object that 
+ dispatched the <codeph>nativeDragEnter</codeph> or <codeph>nativeDragOver</codeph> event). 
+ The user can then drop the dragged item onto the target.</li>
+ 
+ <li><codeph>nativeDragExit</codeph> event — When a drag gesture passes out of an
+ interactive object, the object dispatches a <codeph>nativeDragExit</codeph> event.
+ If the object had been designated as the drag target by an earlier call to the 
+ <codeph>NativeDragManager.acceptDrop()</codeph> method, that call is no longer valid
+ and <codeph>acceptDrop()</codeph> must be called again if the gesture re-enters the interactive object.</li>
+ 
+ <li><codeph>nativeDragDrop</codeph> event — The target display object dispatches a 
+ <codeph>nativeDragDrop</codeph> event when the user releases the mouse button over the object. 
+ The handler for this event can access the data in the <codeph>transferable</codeph> 
+ property of the event object and should set the <codeph>NativeDragManager.dropAction</codeph> property to
+ signal which action should be taken by the initiator object.</li>
+ 
+ <li><codeph>nativeDragComplete</codeph> — When the user releases the mouse button at the end of a drag gesture, 
+ the initiator object dispatches a <codeph>nativeDragComplete</codeph> event (whether or not the drop itself was consumated). 
+ The handler for this event can check the <codeph>dropAction</codeph> property of the event object to determine what, 
+ if any, modification should be made to its internal data state, such as removing a dragged-out item from a list. 
+ If <codeph>dropAction</codeph> is <codeph>NativeDragActions.NONE</codeph>, then the dragged item was not dropped on an eligible target.</li>
+ </ul>
+ 
+ <p><b>Gestures between applications</b></p>
+ <p>When a drag gesture enters an AIR application window from a non-AIR application,
+ there is no initiator object to dispatch the <codeph>nativeDragStart</codeph> or <codeph>nativeDragComplete</codeph>
+ event. The events dispatched during the gesture will otherwise follow the same
+ pattern as that of a gesture starting and ending within the same AIR application.</p>
+ 
+ <p>When a drag gesture leaves an AIR application window, there is no target object to dispatch 
+ <codeph>nativeDragEnter</codeph>, <codeph>nativeDragOver</codeph>, or <codeph>nativeDragDrop</codeph> events. The initiator object
+ still dispatches a <codeph>nativeDragComplete</codeph> event, which reports the drag action set 
+ by the native operating system (or <codeph>none</codeph>, if the drop was not accepted).</p>
+ 
+ <p>When a drag gesture moves from one AIR application to another, the initiator
+ and target display objects dispatch events within their separate applications
+ as usual.</p>
+ 
+ <p><b>Transfering information</b></p>
+ <p>The data transfered during a drag-and-drop gesture is contained in a Clipboard object. 
+ This data object is added to the drag operation with the 
+ <codeph>NativeDragManager.doDrag()</codeph> method that starts the drag gesture. 
+ Potential drop targets can access the Clipboard object through the 
+ <codeph>clipboard</codeph> property of the native drag event 
+ object. Once a drag operation has started, the Clipboard object can 
+ only be accessed in the event handler of a NativeDragEvent. Any other attempt 
+ to access the object generates a run-time error.</p>
+ 
+ <p><b>Security considerations</b></p>
+ <p>The security sandboxes of the initiator and potential target objects determine how the 
+ the data being dragged can be accessed. If both objects are in the same sandbox, 
+ then the data can be accessed from any NativeDragEvent object. However,
+ if the initiator and target objects are in different sandboxes, the data can 
+ only be accessed in the target sandbox within the event 
+ handler for the <codeph>nativeDragDrop</codeph> event. Other native drag event handlers can still
+ still access the Clipboard object referenced in the event <codeph>clipboard</codeph>
+ property to determine which data formats are available, but calling the 
+ <codeph>clipboard.getData()</codeph> method generates a security error.</p>
+ 
+ </apiDesc></apiClassifierDetail><related-links><link href="flash.events.xml#NativeDragEvent"><linktext>flash.events.NativeDragEvent</linktext></link><link href="flash.desktop.xml#NativeDragActions"><linktext>flash.desktop.NativeDragActions</linktext></link><link href="flash.desktop.xml#NativeDragOptions"><linktext>flash.desktop.NativeDragOptions</linktext></link><link href="flash.desktop.xml#Clipboard"><linktext>flash.desktop.Clipboard</linktext></link></related-links><apiOperation id="flash.desktop:NativeDragManager:acceptDragDrop"><apiName>acceptDragDrop</apiName><shortdesc>
+	 Informs the NativeDragManager object that the specified target interactive object can accept a drop
+	 corresponding to the current drag event.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>target</apiItemName><apiOperationClassifier>flash.display:InteractiveObject</apiOperationClassifier></apiParam></apiOperationDef><apiDesc>
+	 Informs the NativeDragManager object that the specified target interactive object can accept a drop
+	 corresponding to the current drag event.
+	 
+     <p>This method should be called only when there is a <codeph>nativeDragDrop</codeph>
+     handler on the specified target object that can handle at least one of the 
+     data formats in the dragged item and at least one of the allowed actions.</p>
+     
+	 <p>This function can be called only within a <codeph>nativeDragEnter</codeph> or <codeph>nativeDragOver</codeph>
+	 event handler.</p>
+	 
+     </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.desktop:NativeDragManager:doDrag"><apiName>doDrag</apiName><shortdesc>
+	 Starts a drag-and-drop operation.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>dragInitiator</apiItemName><apiOperationClassifier>flash.display:InteractiveObject</apiOperationClassifier><apiDesc>Typically the object from which the drag gesture began. Receives the <codeph>nativeDragStart</codeph>
+	 and <codeph>nativeDragComplete</codeph> events.
+	 
+	 </apiDesc></apiParam><apiParam><apiItemName>clipboard</apiItemName><apiOperationClassifier>flash.desktop:Clipboard</apiOperationClassifier><apiDesc>The container object for data being dragged.
+	 
+     </apiDesc></apiParam><apiParam><apiItemName>dragImage</apiItemName><apiOperationClassifier>flash.display:BitmapData</apiOperationClassifier><apiData>null</apiData><apiDesc>An optional proxy image displayed under the mouse pointer 
+     during the drag gesture. If <codeph>null</codeph>, no image is displayed.
+     
+     </apiDesc></apiParam><apiParam><apiItemName>offset</apiItemName><apiOperationClassifier>flash.geom:Point</apiOperationClassifier><apiData>null</apiData><apiDesc>The offset between the mouse hotspot and the top left 
+     corner of the drag image. Negative coordinates move the image up and 
+     to the left in relation to the hotspot. If <codeph>null</codeph>, the top 
+     left corner of the drag image is positioned at the mouse hotspot. 
+     
+     </apiDesc></apiParam><apiParam><apiItemName>allowedActions</apiItemName><apiOperationClassifier>flash.desktop:NativeDragOptions</apiOperationClassifier><apiData>null</apiData><apiDesc>Restricts the drag-and-drop actions allowed for 
+     this operation. If <codeph>null</codeph>, all actions are allowed.
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Starts a drag-and-drop operation.
+	 
+	 <p>To start a drag operation:</p>
+	 <ol>
+	 <li>Create a new Clipboard object.</li>
+	 <li>Add the data to be transferred in one or more formats.</li>
+	 <li>Optionally, create a BitmapData object to serve as a proxy image during the drag.</li>
+	 <li>Optionally, create a NativeDragOptions object to restrict the actions allowed in this operation. 
+     (If the <codeph>allowedActions</codeph> parameter is left <codeph>null</codeph>, all actions are allowed.)</li>
+     <li>Call <codeph>NativeDragManager.doDrag()</codeph>.</li>
+	 </ol>
+	 
+     <p>The initiator object dispatches a <codeph>nativeDragStart</codeph> event after this method is called,
+     <codeph>nativeDragStart</codeph> events while the drag is in progress, and a 
+     <codeph>nativeDragComplete</codeph> event when the user releases the mouse button to end the drag gesture. 
+     The handler for the <codeph>nativeDragComplete</codeph> event can check the <codeph>dropAction</codeph> property of the 
+	 event to determine whether the drag-and-drop operation was successfully completed. 
+	 If <codeph>dropAction</codeph> is <codeph>NativeDragActions.NONE</codeph>, then the dragged item was not dropped 
+	 on an eligible target.</p>
+	 
+     <p>This method can be called only from within a <codeph>mouseDown</codeph> or 
+     <codeph>mouseMove</codeph> event handler. (If called in response to a 
+     <codeph>mouseMove</codeph> event, the mouse button must also be down.)</p>
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.desktop.xml#NativeDragActions"><linktext>flash.desktop.NativeDragActions</linktext></link></related-links></apiOperation><apiValue id="flash.desktop:NativeDragManager:dragInitiator:get"><apiName>dragInitiator</apiName><shortdesc>
+	The interactive object passed to the NativeDragManager.doDrag() call that initiated the drag operation.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>flash.display:InteractiveObject</apiValueClassifier></apiValueDef><apiDesc>
+	The interactive object passed to the <codeph>NativeDragManager.doDrag()</codeph> call that initiated the drag operation.
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeDragManager:dropAction:get"><apiName>dropAction</apiName><shortdesc>
+	The drag action specified by the drop target.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="readwrite"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	The drag action specified by the drop target.
+	 
+     <p>The <codeph>dropAction</codeph> property
+     should be set in the handler for the <codeph>nativeDragDrop</codeph> event.
+     If <codeph>dropAction</codeph> is not set before the <codeph>nativeDragComplete</codeph>, 
+     the NativeDragManager sets the value with the first 
+     allowed action from the list: copy, move, or link (in that order).</p>
+     
+     </apiDesc></apiValueDetail><related-links><link href="flash.desktop.xml#NativeDragActions"><linktext>flash.desktop.NativeDragActions</linktext></link></related-links></apiValue><apiValue id="flash.desktop:NativeDragManager:isDragging:get"><apiName>isDragging</apiName><shortdesc>
+	Reports whether a drag operation is currently in progress.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	Reports whether a drag operation is currently in progress.
+	 
+     </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.desktop:NativeDragOptions"><apiName>NativeDragOptions</apiName><shortdesc>
+ The NativeDragOptions class defines constants for the names of drag-and-drop actions allowed in a drag-and-drop operation.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ The NativeDragOptions class defines constants for the names of drag-and-drop actions allowed in a drag-and-drop operation.
+ 
+ <p>Drag actions are part of a feedback mechanism to allow the initiating and
+ target objects to cooperate in the drag-and-drop exchange. The actions are only 
+ a <i>hint</i> to the operating system. It is up to the drag initiator and target objects
+ involved in the transaction to implement the proper behavior.</p>
+ 
+ <p>An initiating object should only allow the actions that it supports. For example, 
+ an initiating object should allow the <i>move</i> action only if that object's internal
+ logic removes the source data when a target accepts a drop with a move action.</p>
+ 
+ 
+ <p>A new NativeDragOptions object has all properties initialized to 
+ <codeph>true</codeph> (all actions allowed).</p>
+ 
+ </apiDesc></apiClassifierDetail><related-links><link href="flash.desktop.xml#NativeDragManager"><linktext>flash.desktop.NativeDragManager</linktext></link><link href="flash.events.xml#NativeDragEvent"><linktext>flash.events.NativeDragEvent</linktext></link></related-links><apiOperation id="flash.desktop:NativeDragOptions:toString"><apiName>toString</apiName><shortdesc>
+	
+	 Returns the string representation of the specified object.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>A string representation of the object.
+	 
+	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	
+	 Returns the string representation of the specified object.
+	 
+     <p platform="actionscript"><b>Note:</b> Methods of the Object class are dynamically created on Object's prototype. To redefine this method in a subclass of Object, do not use the <codeph>override</codeph> keyword. For example, a subclass of Object implements <codeph>function toString():String</codeph> instead of using an override of the base class.</p>
+     
+     </apiDesc></apiOperationDetail></apiOperation><apiValue id="flash.desktop:NativeDragOptions:allowCopy"><apiName>allowCopy</apiName><shortdesc>
+	A drop target is allowed to copy the dragged data.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>true</apiData><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	A drop target is allowed to copy the dragged data.
+	
+    </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeDragOptions:allowLink"><apiName>allowLink</apiName><shortdesc>
+	 A drop target is allowed to create a link to the dragged data.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>true</apiData><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	 A drop target is allowed to create a link to the dragged data.
+	 
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeDragOptions:allowMove"><apiName>allowMove</apiName><shortdesc>
+	A drop target is allowed to move the dragged data.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>true</apiData><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	A drop target is allowed to move the dragged data.
+	
+    </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.desktop:DockIcon"><apiName>DockIcon</apiName><shortdesc>
+	 The DockIcon class represents the MacOS X&amp;#xAE;-style dock icon.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.desktop:InteractiveIcon</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 The DockIcon class represents the MacOS X<sup>®</sup>-style dock icon.
+	 
+	 <p>You can use the DockIcon class to change the appearance of the standard
+	 icon; for example, to animate the icon or add informational graphics.
+	 You can also add items to the dock icon menu. The menu items that you add are displayed above
+	 the standard menu items.</p>
+	 
+	 <p>An instance of the DockIcon class cannot be created. Get the object
+	 representing the operating system dock icon from <codeph>NativeApplication.icon</codeph>.
+	 </p>
+	 
+	 <p>Not all operating systems have dock icons. Check <codeph>NativeApplication.supportsDockIcon</codeph>
+	 to determine whether dock icons are supported on the current system. If dock
+	 icons are supported, the <codeph>NativeApplication.icon</codeph> property is of type
+	 DockIcon. Otherwise, the type of <codeph>NativeApplication.icon</codeph> is another
+	 subclass of InteractiveIcon, typically SystemTrayIcon.</p>
+	 
+	 <p><b>Important:</b> Attempting to call a DockIcon class method on the
+	 <codeph>NativeApplication.icon</codeph> object on an operating system for which AIR does not support dock icons
+	 generates a run-time exception.</p>
+	 
+	 </apiDesc><example conref="examples\DockIconExample.as"> The following example loads a sequence of images and,
+ when the timer is started with the dock icon menu, animates the
+ icon image. (For the example to work, you must supply a set of icon
+ images and change the URLs in the imageURLs array.)
+<codeblock>
+
+ package {
+    import flash.desktop.DockIcon;
+    import flash.desktop.NativeApplication;
+    import flash.display.Loader;
+    import flash.display.NativeMenu;
+    import flash.display.NativeMenuItem;
+    import flash.display.Sprite;
+    import flash.events.Event;
+    import flash.events.TimerEvent;
+    import flash.net.URLRequest;
+    import flash.utils.Timer;
+
+    public class AnimatedDockIcon extends Sprite
+    {
+        private var imageURLs:Array =  ['gfx/frame01.png',
+                                        'gfx/frame02.png',
+                                        'gfx/frame03.png',
+                                        'gfx/frame04.png'];
+        
+        private var images:Array = new Array();
+        private var animTimer:Timer = new Timer(100);
+                                        
+        public function AnimatedDockIcon()
+        {
+            NativeApplication.nativeApplication.autoExit = false;
+            
+            addEventListener(Event.COMPLETE, loadImages);
+            loadImages();
+            
+            animTimer.addEventListener(TimerEvent.TIMER,advanceFrame);
+            addMenu();
+            stage.nativeWindow.close();
+        }
+        
+        private function addMenu():void{
+            var menu:NativeMenu = new NativeMenu();
+            var start:NativeMenuItem = menu.addItem(new NativeMenuItem("Start animation"));
+            var stop:NativeMenuItem = menu.addItem(new NativeMenuItem("Stop animation"));
+            start.addEventListener(Event.SELECT, startTimer);
+            stop.addEventListener(Event.SELECT, stopTimer);
+            
+            var dockIcon:DockIcon =    NativeApplication.nativeApplication.icon as DockIcon;
+            dockIcon.menu = menu;
+        }
+        
+        private function startTimer(event:Event):void{
+            animTimer.start();
+        }
+
+        private function stopTimer(event:Event):void{
+            animTimer.stop();
+        }
+
+        private var currentFrame:int = 0;
+        private function advanceFrame(event:Event):void{
+            if(currentFrame &lt; images.length){
+                currentFrame++;
+            } else {
+                currentFrame = 0;
+            }
+            NativeApplication.nativeApplication.icon.bitmaps = [images[currentFrame]];
+        }
+        
+
+        private function loadImages(event:Event = null):void{
+            if(event != null){
+                images.push(event.target.content.bitmapData);
+            }
+            if(imageURLs.length &gt; 0){
+                var urlString:String = imageURLs.pop();
+                var loader:Loader = new Loader();
+                loader.contentLoaderInfo.addEventListener(Event.COMPLETE, loadImages, false, 0, true);
+                loader.load(new URLRequest(urlString));
+            } else {
+                var complete:Event = new Event(Event.COMPLETE,false,false);
+                dispatchEvent(complete);
+            }
+        }
+    }
+}
+</codeblock></example></apiClassifierDetail><related-links><link href="flash.desktop.xml#NativeApplication/icon"><linktext>flash.desktop.NativeApplication.icon</linktext></link><link href="flash.desktop.xml#NativeApplication/supportsDockIcon"><linktext>flash.desktop.NativeApplication.supportsDockIcon</linktext></link><link href="flash.desktop.xml#SystemTrayIcon"><linktext>flash.desktop.SystemTrayIcon</linktext></link></related-links><apiOperation id="flash.desktop:DockIcon:bounce"><apiName>bounce</apiName><shortdesc>
+		 Notifies the user that an event has occurred that may require attention.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiDefaultValue>NotificationType.Informational
+		 
+		 </apiDefaultValue><apiParam><apiItemName>priority</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData>informational</apiData><apiDesc>The urgency with which to bounce the dock.
+		 
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+		 Notifies the user that an event has occurred that may require attention.
+		 
+		 <p>Calling this method bounces the dock icon if, and only if, the
+		 application is in the background. If the <codeph>priority</codeph> is
+		 <codeph>NotificationType.Informational</codeph> then the icon bounces once.
+		 If the <codeph>priority</codeph> is <codeph>NotificationType.Critical</codeph> then the
+		 icon bounces until the application is brought to the foreground.</p>
+		 
+		 </apiDesc><example conref="examples\DockIcon.bounce.1.as"> The following example bounces the dock icon until the user 
+ activates the application:
+<codeblock>
+ import flash.display.DockIcon;
+ import flash.display.NotificationType;
+ import flash.desktop.NativeApplication;
+
+ if(NativeApplication.supportsDockIcon){
+     var dockIcon:DockIcon = NativeApplication.nativeApplication.icon As DockIcon;
+     dockIcon.bounce(NotificationType.CRITICAL);
+ }
+ 
+</codeblock></example></apiOperationDetail><related-links><link href="flash.desktop.xml#NotificationType"><linktext>flash.desktop.NotificationType</linktext></link><link href="flash.display.xml#NativeWindow/notifyUser()"><linktext>flash.display.NativeWindow.notifyUser()</linktext></link></related-links></apiOperation><apiValue id="flash.desktop:DockIcon:bitmaps:set"><apiName>bitmaps</apiName><shortdesc> 
+		
+		  
+	 The icon image as an array of BitmapData objects of different sizes.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Array</apiValueClassifier></apiValueDef><apiDesc> 
+		
+		  
+	 The icon image as an array of BitmapData objects of different sizes.
+	   
+	 <p>When an icon is displayed in a given operating system context, the bitmap
+	 in the array closest to the displayed size is used (and 
+	 scaled if necessary). Common sizes include 16x16, 32x32, 48x48, and 
+	 128x128. (512x512 pixel icons may be used for some operating system 
+	 icons in the near future.)</p>
+	 
+	 <p>In some contexts, the operating system may use a default system icon
+	 if nothing has been assigned to the <codeph>bitmaps</codeph> property.
+	 In other contexts, no icon appears.</p>
+	 
+	 <p>To set or change the icon appearance, assign an array of 
+	 BitmapData objects to the <codeph>bitmaps</codeph> property:</p>
+	 
+	 <codeblock>
+	 icon.bitmaps = new Array(icon16x16.bitmapData, icon128x128.bitmapData);
+	 </codeblock>
+	  
+	 <p>Modifying the <codeph>bitmaps</codeph> array directly has no effect.</p>
+	 
+	 <p>To clear the icon image, assign an empty array to the 
+	 <codeph>bitmaps</codeph> property.</p>
+	 
+	 <p>
+	 <b>Note:</b> When loading image files for an icon, the PNG file format
+	 generally provides the best alpha blending. The GIF format supports only
+	 on or off transparency (no blending). The JPG format does not support
+	 transparency at all.  
+	 </p>
+	  
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:DockIcon:height:get"><apiName>height</apiName><shortdesc> 
+		
+		 The current display height of the icon in pixels.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc> 
+		
+		 The current display height of the icon in pixels.
+		 
+		 <p>Some icon contexts support dynamic sizes.
+		 The <codeph>height</codeph> property indicates the height of the icon chosen from the <codeph>bitmaps</codeph> array
+		 for the current context. The actual display height may be different if the operating system
+		 has scaled the icon.</p>
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:DockIcon:menu:set"><apiName>menu</apiName><shortdesc>
+		 The system-supplied menu of this dock icon.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>flash.display:NativeMenu</apiValueClassifier></apiValueDef><apiDesc>
+		 The system-supplied menu of this dock icon.
+		 
+		 <p>Any items in the menu are displayed above the standard items.
+		 The standard items cannot be modified or removed.</p>
+		 
+		 </apiDesc><example conref="examples\DockIcon.menu.1.as"> The following example adds an item to the dock icon menu:
+<codeblock>
+ import flash.desktop.NativeApplication;
+ import flash.events.Event;
+ 
+private function createDockIconMenu():void{
+    if(NativeApplication.supportsDockIcon){                
+        var dockIcon:DockIcon = NativeApplication.nativeApplication.icon as DockIcon;
+        
+        var dockMenu:NativeMenu = new NativeMenu();
+        var command:NativeMenuItem = dockMenu.addItem(new NativeMenuItem("Command"));
+        command.addEventListener(Event.SELECT, onCommand);
+        
+        dockIcon.menu = dockMenu;
+    }
+}
+
+ private function onCommand(event:Event):void{
+     //do command...
+ }
+</codeblock></example></apiValueDetail></apiValue><apiValue id="flash.desktop:DockIcon:width:get"><apiName>width</apiName><shortdesc> 
+		
+		 The current display width of the icon in pixels.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc> 
+		
+		 The current display width of the icon in pixels. 
+		 
+		 <p>Some icon contexts support dynamic sizes.
+		 The <codeph>width</codeph> property indicates the width of the icon chosen from the <codeph>bitmaps</codeph> array
+		 for the current context. The actual display width may be different if the operating system
+		 has scaled the icon.</p>
+		 
+		 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.desktop:Icon"><apiName>Icon</apiName><shortdesc> 
+	 The Icon class represents an operating system icon.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.events:EventDispatcher</apiBaseClassifier></apiClassifierDef><apiDesc> 
+	 The Icon class represents an operating system icon. 
+	 
+	 <p>An Icon object has one property, <codeph>bitmaps</codeph>, which is an array 
+	 of BitmapData objects. Only one image is displayed at a time. The operating 
+	 system selects the image closest in size to the icon's current display size,
+	 scaling if necessary.</p>
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="flash.filesystem.xml#File/icon"><linktext>flash.filesystem.File.icon</linktext></link><link href="flash.display.xml#BitmapData"><linktext>flash.display.BitmapData</linktext></link></related-links><apiValue id="flash.desktop:Icon:bitmaps:set"><apiName>bitmaps</apiName><shortdesc> 
+	 The icon image as an array of BitmapData objects of different sizes.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Array</apiValueClassifier></apiValueDef><apiDesc> 
+	 The icon image as an array of BitmapData objects of different sizes.
+	   
+	 <p>When an icon is displayed in a given operating system context, the bitmap
+	 in the array closest to the displayed size is used (and 
+	 scaled if necessary). Common sizes include 16x16, 32x32, 48x48, and 
+	 128x128. (512x512 pixel icons may be used for some operating system 
+	 icons in the near future.)</p>
+	 
+	 <p>In some contexts, the operating system may use a default system icon
+	 if nothing has been assigned to the <codeph>bitmaps</codeph> property.
+	 In other contexts, no icon appears.</p>
+	 
+	 <p>To set or change the icon appearance, assign an array of 
+	 BitmapData objects to the <codeph>bitmaps</codeph> property:</p>
+	 
+	 <codeblock>
+	 icon.bitmaps = new Array(icon16x16.bitmapData, icon128x128.bitmapData);
+	 </codeblock>
+	  
+	 <p>Modifying the <codeph>bitmaps</codeph> array directly has no effect.</p>
+	 
+	 <p>To clear the icon image, assign an empty array to the 
+	 <codeph>bitmaps</codeph> property.</p>
+	 
+	 <p>
+	 <b>Note:</b> When loading image files for an icon, the PNG file format
+	 generally provides the best alpha blending. The GIF format supports only
+	 on or off transparency (no blending). The JPG format does not support
+	 transparency at all.  
+	 </p>
+	  
+	 </apiDesc></apiValueDetail><related-links><link href="flash.filesystem.xml#File/icon"><linktext>flash.filesystem.File.icon</linktext></link><link href="flash.display.xml#BitmapData"><linktext>flash.display.BitmapData</linktext></link></related-links></apiValue></apiClassifier></apiPackage>

@@ -132,6 +132,7 @@ public class Swc
     {
         int version = linkerConfiguration.getCompatibilityVersion();
         forceLibraryVersion1 = version < MxmlConfiguration.VERSION_3_0;
+        versions.setMinimumVersion(linkerConfiguration.getMinimumSupportedVersionString());
         
         // get SWF bytes
         ByteArrayOutputStream swfOut = new ByteArrayOutputStream();

@@ -62,14 +62,16 @@ include "../styles/metadata/ModalTransparencyStyles.as";
 
 /**
  *  Alpha of the title bar, control bar and sides of the Panel.
- *  The default value is 0.4.
+ *
+ *  The default value for the Halo theme is <code>0.4</code>.
+ *  The default value for the Spark theme is <code>0.5</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
  *  @playerversion AIR 1.1
  *  @productversion Flex 3
  */
-[Style(name="borderAlpha", type="Number", inherit="no", theme="halo")]
+[Style(name="borderAlpha", type="Number", inherit="no", theme="halo, spark")]
 
 /**
  *  Thickness of the bottom border of the Panel control.
@@ -139,7 +141,8 @@ include "../styles/metadata/ModalTransparencyStyles.as";
 /**
  *  Radius of corners of the window frame.
  *
- *  @default 4
+ *  The default value for the Halo theme is <code>4</code>.
+ *  The default value for the Spark theme is <code>0</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -303,7 +306,8 @@ include "../styles/metadata/ModalTransparencyStyles.as";
 /**
  *  The title background skin.
  *
- *  @default mx.skins.halo.TitleBackground
+ *  The default value for the Halo theme is <code>mx.skins.halo.TitleBackground</code>.
+ *  The default value for the Spark theme is <code>mx.core.UIComponent</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -425,6 +429,7 @@ include "../styles/metadata/ModalTransparencyStyles.as";
  *   status=""
  *   title=""
  *   titleIcon="null"
+ *  
  *   <strong>Styles</strong>
  *   borderAlpha="0.4"
  *   borderThicknessBottom="NaN"
@@ -454,6 +459,7 @@ include "../styles/metadata/ModalTransparencyStyles.as";
  *   titleStyleName="windowStyles"
  *   verticalAlign="top|middle|bottom"
  *   verticalGap="6"
+ *  
  *   <strong>Effects</strong>
  *   resizeEndEffect="Dissolve"
  *   resizeStartEffect="Dissolve"
@@ -466,7 +472,7 @@ include "../styles/metadata/ModalTransparencyStyles.as";
  *  
  *  @includeExample examples/SimplePanelExample.mxml
  *
- *  @see mx.components.Panel
+ *  @see spark.components.Panel
  *  @see mx.containers.ControlBar
  *  @see mx.containers.VBox
  *  
@@ -1556,9 +1562,12 @@ public class Panel extends Container
             titleBar.setActualSize(titleBarWidth, headerHeight);
 
             // Position the titleBarBackground within the titleBar.
-            titleBarBackground.move(0, 0);
-            IFlexDisplayObject(titleBarBackground).setActualSize(
-                titleBarWidth, headerHeight);
+            if (titleBarBackground)
+            {
+                titleBarBackground.move(0, 0);
+                IFlexDisplayObject(titleBarBackground).setActualSize(
+                    titleBarWidth, headerHeight);
+            }
 
             // Set the close button next to the upper-right corner,
             // offset by the border thickness.

@@ -145,14 +145,42 @@ package $doc.packageName
 ##      parent's document in UIComponent.executeBindings().
         mx_internal::_document = this;
 #end
+
 #emitBindingInitializers()
 #emitComponentInitializers_1()
 #foreach ($frag in $doc.getStatesDeclaration())
 #embedText($frag.Text $frag.xmlLineNumber)
 #end
 #emitInitialBindingExecutions()
+
     }
 
+#if ($doc.isIFlexModule)
+    /**
+     * @private
+     **/ 
+    private var __moduleFactoryInitialized:Boolean = false;
+
+    /**
+     * @private
+     * Override the module factory so we can defer setting style declarations
+     * until a module factory is set. Without the correct module factory set
+     * the style declaration will end up in the wrong style manager.
+     **/ 
+    override public function set moduleFactory(factory:IFlexModuleFactory):void
+    {
+        super.moduleFactory = factory;
+        
+        if (__moduleFactoryInitialized)
+            return;
+
+        __moduleFactoryInitialized = true;
+
+#emitComponentStyleInitializers()
+                         
+    }
+#end
+ 
 #trace("    //  initialize()")
     /**
      * @private

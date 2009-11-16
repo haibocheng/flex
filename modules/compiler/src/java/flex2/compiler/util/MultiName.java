@@ -45,6 +45,7 @@ public final class MultiName extends Name
 		{
 			namespaceURI = EmptyNS;
 			localPart = qname;
+            assert localPart.indexOf(":") < 0 && localPart.indexOf(".") < 0;
 		}
 		else
 		{
@@ -57,13 +58,13 @@ public final class MultiName extends Name
 			}
 			namespaceURI = nsSet;
 			localPart = qname.substring(index + 1);
-            assert localPart.indexOf(":") < 0;
+            assert localPart.indexOf(":") < 0 && localPart.indexOf(".") < 0;
 		}
 	}
 
 	public MultiName(final String namespaceURI, final String localPart)
 	{
-        assert localPart.indexOf(":") < 0;
+        assert localPart.indexOf(":") < 0 && localPart.indexOf(".") < 0;
 		String[] nsSet = nsMap.get(namespaceURI);
 		if (nsSet == null)
 		{
@@ -76,7 +77,7 @@ public final class MultiName extends Name
 
 	public MultiName(final String[] namespaceURI, final String localPart)
 	{
-        assert localPart.indexOf(":") < 0;
+        assert localPart.indexOf(":") < 0 && localPart.indexOf(".") < 0;
 		this.namespaceURI = namespaceURI;
 		this.localPart = localPart;
 	}

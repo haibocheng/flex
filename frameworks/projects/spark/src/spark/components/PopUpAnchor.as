@@ -17,6 +17,7 @@ import flash.display.Sprite;
 import flash.display.Stage;
 import flash.display.StageDisplayState;
 import flash.events.Event;
+import flash.geom.ColorTransform;
 import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
@@ -220,23 +221,7 @@ public class PopUpAnchor extends UIComponent
         return _displayPopUp;
     }
 
-    /*[InstanceType("mx.core.UIComponent")]
-    private var _popUpFactory:ITransientDeferredInstance;
-    
-    public function set popUpFactory(value:ITransientDeferredInstance):void
-    {
-        if (_popUpFactory == value)
-            return;
-    
-        _popUpFactory = value;
-        
-        addOrRemovePopUp();
-    }
-    
-    public function get popUpFactory():ITransientDeferredInstance
-    {
-        return _popUpFactory;
-    }*/
+
     
     //----------------------------------
     //  popUp
@@ -372,6 +357,9 @@ public class PopUpAnchor extends UIComponent
              
         var regPoint:Point = new Point();
         
+        if (!matrix)
+            return regPoint;
+        
         var popUpBounds:Rectangle = new Rectangle(); 
         var popUpAsDisplayObject:DisplayObject = popUp as DisplayObject;
         
@@ -480,12 +468,6 @@ public class PopUpAnchor extends UIComponent
         if (!addedToStage)
             return;
         
-        /*if (popUpFactory && popUp == null && displayPopUp)
-        {
-            _popUp = UIComponent(popUpFactory.getInstance());
-            _popUp.styleName = this
-        }*/
-        
         if (popUp == null)
             return;
 
@@ -510,13 +492,16 @@ public class PopUpAnchor extends UIComponent
 			{
 				popUpParent = this;
 			}
+			
             PopUpManager.addPopUp(popUp, popUpParent, false);
             popUpIsDisplayed = true;
+
             if (popUp is UIComponent)
             {
                 popUpWidth = UIComponent(popUp).explicitWidth;
                 popUpHeight = UIComponent(popUp).explicitHeight;
             }   
+           
             applyPopUpTransform(width, height);
            	if (centered)
 				PopUpManager.centerPopUp(popUp);
@@ -526,28 +511,19 @@ public class PopUpAnchor extends UIComponent
             removeAndResetPopUp();
         }
     }
-    
     /**
      *  @private
      */
     private function removeAndResetPopUp():void
     {
         PopUpManager.removePopUp(popUp);
-
         popUpIsDisplayed = false;
         
-        if (popUp is UIComponent && !popUpWidthMatchesAnchorWidth)
+        if (popUp is UIComponent)
         {
             UIComponent(popUp).explicitWidth = popUpWidth;
             UIComponent(popUp).explicitHeight = popUpHeight;
         }
-        
-        /*if (popUpFactory)
-        {
-            _popUp.styleName = null;
-            _popUp = null;
-            popUpFactory.reset();
-        }*/
 	}
     
     /**
@@ -558,8 +534,12 @@ public class PopUpAnchor extends UIComponent
         // Take the PopUpAnchor's concatenatedMatrix 
         // and subtract out the popUp parent's concatenatedMatrix
         var matrix:Matrix = systemManager.getSandboxRoot().transform.concatenatedMatrix;
-        matrix.invert();
-        matrix.concat(MatrixUtil.getConcatenatedMatrix(this));
+        
+        if (matrix)
+        {
+            matrix.invert();
+            matrix.concat(MatrixUtil.getConcatenatedMatrix(this));
+        }
         
         return matrix;
     }
@@ -621,9 +601,9 @@ public class PopUpAnchor extends UIComponent
     {
         if (!popUpIsDisplayed)
             return;
-        
-        var m:Matrix = $transform.concatenatedMatrix;
-        
+                
+        var m:Matrix = getPopUpMatrix();
+         
         // Set the dimensions explicitly because UIComponents always set themselves to their
         // measured / explicit dimensions if they are parented by the SystemManager. 
         if (popUp is UIComponent)
@@ -657,7 +637,10 @@ public class PopUpAnchor extends UIComponent
         {
             // Ignore the RTE
         }
-                
+        
+        if (!m)
+            return;
+        
         // Position the popUp. 
         m.tx = popUpPoint.x;
         m.ty = popUpPoint.y;
@@ -666,12 +649,17 @@ public class PopUpAnchor extends UIComponent
         else if (popUp is DisplayObject)
             DisplayObject(popUp).transform.matrix = m;
         
-        // apply the color transformation
-		// this causes flickering to occur if you run an effect
-        // DisplayObject(popUp).transform.colorTransform = $transform.concatenatedColorTransform
-            
+        // apply the color transformation, but restore alpha value of popup
+        var oldAlpha:Number = DisplayObject(popUp).alpha;
+        var tmpColorTransform:ColorTransform = $transform.concatenatedColorTransform;
+        if (tmpColorTransform != null)
+        {
+            tmpColorTransform.alphaMultiplier = oldAlpha;
+            tmpColorTransform.alphaOffset = 0;
+        }
+        DisplayObject(popUp).transform.colorTransform = tmpColorTransform;
     }
-
+    
     //--------------------------------------------------------------------------
     //
     //  Event Handlers

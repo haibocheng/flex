@@ -12,6 +12,7 @@
 package spark.components
 {
 import flash.events.MouseEvent;
+import flash.events.Event;
 
 import spark.components.IItemRenderer;
 import mx.core.mx_internal;
@@ -19,14 +20,26 @@ import mx.core.mx_internal;
 use namespace mx_internal;
 
 /**
+ *  Dispatched when the <code>data</code> property changes.
+ *  
+ *  @langversion 3.0
+ *  @playerversion Flash 10
+ *  @playerversion AIR 1.5
+ *  @productversion Flex 4
+ * 
+ *  @eventType mx.events.FlexEvent.DATA_CHANGE
+ * 
+ */
+[Event(name="dataChange", type="mx.events.FlexEvent")]
+
+/**
  *  The ButtonBarButton class defines the custom item renderer
- *  used by the ButtobBar control. 
+ *  used by the ButtonBar control. 
  *  This item renderer is used in the ButtonBarSkin class, 
  *  the default skin for the ButtonBar.
  *
  *  @see spark.components.ButtonBar
  *  @see spark.skins.spark.ButtonBarSkin
- *  
  *  
  *  @langversion 3.0
  *  @playerversion Flash 10
@@ -60,7 +73,9 @@ public class ButtonBarButton extends ToggleButton implements IItemRenderer
     private var _allowDeselection:Boolean = true;
 
     /**
-     *  @inheritDoc 
+     *  If <code>true</code>, the user click on a currently selected button to deselect it.
+     *  If <code>false</code>, the user must select a different button 
+     *  to deselect the currently selected button.
      *
      *  @default true
      *  
@@ -120,29 +135,30 @@ public class ButtonBarButton extends ToggleButton implements IItemRenderer
         drawFocus(value);
     }
 
-	//----------------------------------
-	//  dragging
-	//----------------------------------
+    //----------------------------------
+    //  dragging
+    //----------------------------------
 
-	/**
-	 *  @private  
-	 */
-	public function get dragging():Boolean
-	{
-		return false;
-	}
+    /**
+     *  @private  
+     */
+    public function get dragging():Boolean
+    {
+        return false;
+    }
 
-	/**
-	 *  @private  
-	 */
-	public function set dragging(value:Boolean):void
-	{
-	}
+    /**
+     *  @private  
+     */
+    public function set dragging(value:Boolean):void
+    {
+    }
 
     //----------------------------------
     //  data
     //----------------------------------
 
+    [Bindable("dataChange")]
     /**
      *  @inheritDoc 
      *  
@@ -162,33 +178,35 @@ public class ButtonBarButton extends ToggleButton implements IItemRenderer
     public function set data(value:Object):void
     {
          content = value;
+         dispatchEvent(new Event("dataChange"));
     }
     
     //----------------------------------
-    //  index
+    //  itemIndex
     //----------------------------------
+    
     /**
      *  @private
-     *  storage for the index property 
+     *  storage for the itemIndex property 
      */    
-    private var _index:int;
+    private var _itemIndex:int;
     
     /**
      *  @inheritDoc 
      *
      *  @default false
      */    
-    public function get index():int
+    public function get itemIndex():int
     {
-        return _index;
+        return _itemIndex;
     }
     
     /**
      *  @private
      */    
-    public function set index(value:int):void
+    public function set itemIndex(value:int):void
     {
-        _index = value;
+        _itemIndex = value;
     }
     
     //----------------------------------

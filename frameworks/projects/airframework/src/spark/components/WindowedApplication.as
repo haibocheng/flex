@@ -54,6 +54,19 @@ use namespace mx_internal;
 //--------------------------------------
 
 /**
+ *  Alpha level of the color defined by the <code>backgroundColor</code>
+ *  property.
+ *   
+ *  @default 1.0
+ *   
+ *  @langversion 3.0
+ *  @playerversion Flash 10
+ *  @playerversion AIR 1.5
+ *  @productversion Flex 4
+ */
+[Style(name="backgroundAlpha", type="Number", inherit="no")]
+
+/**
  *  The background color of the application. This color is used as the stage color for the
  *  application and the background color for the HTML embed tag.
  *   
@@ -65,19 +78,8 @@ use namespace mx_internal;
 [Style(name="backgroundColor", type="uint", format="Color", inherit="no")]
 
 /**
- *  The background color of the application. This color is used as the stage color for the
- *  application and the background color for the HTML embed tag.
- *   
- *  @langversion 3.0
- *  @playerversion Flash 10
- *  @playerversion AIR 1.5
- *  @productversion Flex 4
- */
-[Style(name="backgroundAlpha", type="Number", inherit="no")]
-
-/**
  *  Provides a margin of error around a window's border so a resize
- *  and be more easily started. A click on a window is considered a
+ *  can be more easily started. A click on a window is considered a
  *  click on the window's border if the click occurs with the resizeAffordance
  *  number of pixels from the outside edge of the window.
  *
@@ -302,6 +304,10 @@ use namespace mx_internal;
 //  Excluded APIs
 //--------------------------------------
 
+[Exclude(name="controlBarContent", kind="property")]
+[Exclude(name="controlBarGroup", kind="property")]
+[Exclude(name="controlBarLayout", kind="property")]
+[Exclude(name="controlBarVisible", kind="property")]
 [Exclude(name="moveEffect", kind="effect")]
 
 //--------------------------------------
@@ -331,6 +337,8 @@ use namespace mx_internal;
 //--------------------------------------
 //  Other metadata
 //--------------------------------------
+
+[AccessibilityClass(implementation="spark.accessibility.WindowedApplicationAccImpl")]
 
 [ResourceBundle("core")]
 
@@ -418,6 +426,18 @@ use namespace mx_internal;
 public class WindowedApplication extends Application implements IWindow
 {
     include "../../mx/core/Version.as";
+
+    //--------------------------------------------------------------------------
+    //
+    //  Class mixins
+    //
+    //--------------------------------------------------------------------------
+
+    /**
+     *  @private
+     *  Placeholder for mixin by WindowedApplicationAccImpl.
+     */
+    mx_internal static var createAccessibilityImplementation:Function;
 
     //--------------------------------------------------------------------------
     //
@@ -1224,8 +1244,20 @@ public class WindowedApplication extends Application implements IWindow
      */
     public function set menu(value:FlexNativeMenu):void
     {
+        if (_menu)
+        {
+            _menu.automationParent = null;
+            _menu.automationOwner = null;
+        }
+        
         _menu = value;
         menuChanged = true;
+        
+        if (_menu)
+        {
+            menu.automationParent = this;
+            menu.automationOwner = this;
+        }
     }
 
     //----------------------------------
@@ -1576,6 +1608,15 @@ public class WindowedApplication extends Application implements IWindow
     //
     //--------------------------------------------------------------------------
     
+    /**
+     *  @private
+     */
+    override protected function initializeAccessibility():void
+    {
+        if (WindowedApplication.createAccessibilityImplementation != null)
+            WindowedApplication.createAccessibilityImplementation(this);
+    }
+
     /**
      *  @private
      */

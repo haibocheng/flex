@@ -100,30 +100,30 @@ public class SwfEncoder extends RandomAccessBuffer
      */
     public void compress() throws IOException
     {
-        compress(false);
+        compress(CompressionLevel.BestCompression);
     }
 
     /**
      * compress the marked section of our buffer, in place.
-     * @param isDebug If true, BEST_SPEED compression is used.  Otherwise, BEST_COMPRESSION is used.
+     * @param compressionLevel
      * @throws IOException
      */
-    public void compress(boolean isDebug) throws IOException
+    public void compress(CompressionLevel compressionLevel) throws IOException
     {
         if (compressPos != -1)
         {
             // compress in place from compressPos to pos
             pos = compressPos;
-            deflate(this, isDebug);
+            deflate(this, compressionLevel);
             compressPos = -1;
         }
     }
 
-    private void deflate(OutputStream out, boolean isDebug) throws IOException
+    private void deflate(OutputStream out, CompressionLevel compressionLevel) throws IOException
     {
         int compression;
 
-        if (isDebug)
+        if (compressionLevel == CompressionLevel.BestSpeed)
         {
             compression = Deflater.BEST_SPEED;
         }
@@ -132,10 +132,12 @@ public class SwfEncoder extends RandomAccessBuffer
             compression = Deflater.BEST_COMPRESSION;
         }
 
-        DeflaterOutputStream deflater = new DeflaterOutputStream(out, new Deflater(compression));
+        Deflater deflater = new Deflater(compression);
+		DeflaterOutputStream deflaterStream = new DeflaterOutputStream(out, deflater);
 
-        deflater.write(buf, compressPos, count-compressPos);
-        deflater.finish();
+        deflaterStream.write(buf, compressPos, count-compressPos);
+        deflaterStream.finish();
+        deflater.end();
     }
 
     /**
@@ -146,17 +148,17 @@ public class SwfEncoder extends RandomAccessBuffer
      */
     public synchronized void writeTo(OutputStream out) throws IOException
     {
-        writeTo(out, false);
+        writeTo(out, CompressionLevel.BestCompression);
     }
 
     /**
      * send buffer to the given stream.  If markComp was called, bytes after that mark
      * will be compressed.
      * @param out
-     * @param isDebug If true, BEST_SPEED compression is used.  Otherwise, BEST_COMPRESSION is used.
+     * @param compressionLevel
      * @throws IOException
      */
-    public synchronized void writeTo(OutputStream out, boolean isDebug) throws IOException
+    public synchronized void writeTo(OutputStream out, CompressionLevel compressionLevel) throws IOException
     {
         if (compressPos == -1)
         {
@@ -166,7 +168,7 @@ public class SwfEncoder extends RandomAccessBuffer
         {
             count = pos;
             out.write(buf, 0, compressPos);
-            deflate(out, isDebug);
+            deflate(out, compressionLevel);
         }
     }
 

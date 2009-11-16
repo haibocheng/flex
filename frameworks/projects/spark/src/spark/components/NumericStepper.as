@@ -33,6 +33,36 @@ include "../styles/metadata/AdvancedInheritingTextStyles.as"
 include "../styles/metadata/SelectionFormatTextStyles.as"
 
 /**
+ *  The alpha of the border for this component.
+ * 
+ *  @langversion 3.0
+ *  @playerversion Flash 10
+ *  @playerversion AIR 1.5
+ *  @productversion Flex 4
+ */
+[Style(name="borderAlpha", type="Number", inherit="no", theme="spark")]
+
+/**
+ *  The color of the border for this component.
+ * 
+ *  @langversion 3.0
+ *  @playerversion Flash 10
+ *  @playerversion AIR 1.5
+ *  @productversion Flex 4
+ */
+[Style(name="borderColor", type="uint", format="Color", inherit="no", theme="spark")]
+
+/**
+ *  Controls the visibility of the border for this component.
+ * 
+ *  @langversion 3.0
+ *  @playerversion Flash 10
+ *  @playerversion AIR 1.5
+ *  @productversion Flex 4
+ */
+[Style(name="borderVisible", type="Boolean", inherit="no", theme="spark")]
+
+/**
  *  The alpha of the content background for this component.
  * 
  *  @langversion 3.0
@@ -56,7 +86,7 @@ include "../styles/metadata/SelectionFormatTextStyles.as"
 //  Other metadata
 //--------------------------------------
 
-[AccessibilityClass(implementation="spark.accessibility.SpinnerAccImpl")]
+[AccessibilityClass(implementation="spark.accessibility.NumericStepperAccImpl")]
 
 [DefaultTriggerEvent("change")]
 
@@ -682,10 +712,10 @@ public class NumericStepper extends Spinner
      *  Commits the current text of <code>textDisplay</code> 
      *  to the <code>value</code> property. 
      *  This method uses the <code>nearestValidValue()</code> method 
-     *  to round the input value to the closest multiple of 
-     *  the <code>snapInterval</code> property, 
-     *  and constrains the value to the range defined by the 
-     *  <code>maximum</code> and <code>minimum</code> properties.
+     *  to round the input value to the closest valid value.
+     *  Valid values are defined by the sum of the minimum
+     *  with integer multiples of the snapInterval. It is also
+     *  constrained by and includes the <code>maximum</code> property.
      *  
      *  @langversion 3.0
      *  @playerversion Flash 10

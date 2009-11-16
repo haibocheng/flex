@@ -119,6 +119,18 @@ include "../styles/metadata/SkinStyles.as"
 include "../styles/metadata/TextStyles.as"
 
 /**
+ *  Color applied to the button when the emphasized flag is true. 
+ * 
+ *  @default #0099FF
+ * 
+ *  @langversion 3.0
+ *  @playerversion Flash 10
+ *  @playerversion AIR 1.5
+ *  @productversion Flex 4
+ */
+[Style(name="accentColor", type="uint", format="Color", inherit="yes", theme="spark")]
+
+/**
  *  Color of focus ring when the component is in focus
  *   
  *  @default 0x70B2EE
@@ -147,7 +159,8 @@ include "../styles/metadata/TextStyles.as"
  *  Number of pixels of vertical offset to apply to the label position.
  *  Positive numbers move the label down.
  *  
- *  @default 1 
+ *  The default value for the Halo theme is <code>0</code>.
+ *  The default value for the Spark theme is <code>1</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 10
@@ -160,7 +173,8 @@ include "../styles/metadata/TextStyles.as"
  *  Number of pixels between the component's bottom border
  *  and the bottom of its content area.
  *  
- *  @default 2 
+ *  The default value for the Halo theme is <code>2</code>.
+ *  The default value for the Spark theme is <code>0</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -173,7 +187,8 @@ include "../styles/metadata/TextStyles.as"
  *  Number of pixels between the component's top border
  *  and the top of its content area.
  *  
- *  @default 2
+ *  The default value for the Halo theme is <code>2</code>.
+ *  The default value for the Spark theme is <code>0</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -212,7 +227,8 @@ include "../styles/metadata/TextStyles.as"
 /**
  *  Text color of the label as the user moves the mouse pointer over the button.
  *  
- *  @default 0x2B333C
+ *  The default value for the Halo theme is <code>0x2B333C</code>.
+ *  The default value for the Spark theme is <code>0x000000</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -224,7 +240,8 @@ include "../styles/metadata/TextStyles.as"
 /**
  *  Text color of the label as the user presses it.
  *  
- *  @default 0x000000
+ *  The default value for the Halo theme is <code>0x2B333C</code>.
+ *  The default value for the Spark theme is <code>0x000000</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -251,8 +268,10 @@ include "../styles/metadata/TextStyles.as"
 //--------------------------------------
 
 /**
- *  Name of the class to use as the default skin for the background and border. 
- *  @default "mx.skins.halo.ButtonSkin"
+ *  Name of the class to use as the default skin for the background and border.
+ *  
+ *  The default value for the Halo theme is <code>mx.skins.halo.ButtonSkin</code>.
+ *  The default value for the Spark theme is <code>mx.skins.spark.ButtonSkin</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -260,17 +279,6 @@ include "../styles/metadata/TextStyles.as"
  *  @productversion Flex 3
  */
 [Style(name="skin", type="Class", inherit="no", states="up, over, down, disabled, selectedUp, selectedOver, selectedDown, selectedDisabled")]
-
-/**
- *  Name of the class to use as the emphasized skin for the background and border. 
- *  @default "mx.skins.halo.ButtonSkin"
- *  
- *  @langversion 3.0
- *  @playerversion Flash 9
- *  @playerversion AIR 1.1
- *  @productversion Flex 3
- */
-[Style(name="emphasizedSkin", type="Class", inherit="no", states="up, over, down, disabled, selectedUp, selectedOver, selectedDown, selectedDisabled")]
 
 /**
  *  Name of the class to use as the skin for the background and border
@@ -329,7 +337,8 @@ include "../styles/metadata/TextStyles.as"
  *  is <code>emphasized</code> (such as when serving as the default
  *  button for a container).
  * 
- *  @default "mx.skins.spark.DefaultButtonSkin"
+ *  The default value for the Halo theme is <code>mx.skins.halo.ButtonSkin</code>.
+ *  The default value for the Spark theme is <code>mx.skins.spark.DefaultButtonSkin</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -745,19 +754,21 @@ public class Button extends UIComponent
     mx_internal var currentSkin:IFlexDisplayObject;
 
     /**
-     *  @private
-     *  Skins for the various states (falseUp, trueOver, etc.)
-     *  are created just-in-time as they are needed.
-     *  Each icon is a child Sprite of this Button.
-     *  Each icon has a name property indicating which icon it is;
-     *  for example, the instance of the class specified by the falseUpIcon
+	 *  The icons array contains references to all icons
+	 *  that have been created. Since each icon is a child
+	 *  Sprite of this button, we need this array to keep
+	 *  track of which children are icons. Each icon has a 
+	 *  name property indicating which icon it is; for example,
+	 *  the instance of the class specified by the falseUpIcon
      *  style has the name "falseUpIcon" and can be found using
      *  getChildByName(). Note that there is no falseUpIcon property
      *  of Button containing a reference to this icon instance.
-     *  This array contains references to all icons that have been created,
-     *  for looping over them; without this array we wouldn't know
-     *  which of the children are the icons.
      *  New icons are created and added to this array in viewIcon().
+	 * 
+	 *  @langversion 3.0
+     *  @playerversion Flash 9
+     *  @playerversion AIR 1.1
+     *  @productversion Flex 3
      */
     protected var icons:Array /* of Sprite */ = [];
 

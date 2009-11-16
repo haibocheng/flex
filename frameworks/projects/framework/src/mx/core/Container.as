@@ -176,6 +176,19 @@ include "../styles/metadata/PaddingStyles.as"
 include "../styles/metadata/TextStyles.as"
 
 /**
+ *  Accent color used by component skins. The default button skin uses this color
+ *  to tint the background. Slider track highlighting uses this color. 
+ * 
+ *  @default #0099FF
+ * 
+ *  @langversion 3.0
+ *  @playerversion Flash 10
+ *  @playerversion AIR 1.5
+ *  @productversion Flex 4
+ */
+[Style(name="accentColor", type="uint", format="Color", inherit="yes", theme="spark")]
+
+/**
  *  If a background image is specified, this style specifies
  *  whether it is fixed with regard to the viewport (<code>"fixed"</code>)
  *  or scrolls along with the content (<code>"scroll"</code>).
@@ -977,7 +990,7 @@ public class Container extends UIComponent
      *  of the border, expressed in pixels.
      *
      *  <p>Unlike <code>viewMetrics</code>, this property is not
-     *  overriden by subclasses of Container.</p>
+     *  overridden by subclasses of Container.</p>
      *  
      *  @langversion 3.0
      *  @playerversion Flash 9
@@ -3273,12 +3286,12 @@ public class Container extends UIComponent
             vm = viewMetrics;
 
             // Set the position and size of the overlay .
-            if (overlay)
+            if (effectOverlay)
             {
-                overlay.x = 0;
-                overlay.y = 0;
-                overlay.width = unscaledWidth;
-                overlay.height = unscaledHeight;
+				effectOverlay.x = 0;
+				effectOverlay.y = 0;
+				effectOverlay.width = unscaledWidth;
+				effectOverlay.height = unscaledHeight;
             }
 
             // Set the positions and sizes of the scrollbars.
@@ -3726,7 +3739,7 @@ public class Container extends UIComponent
      */
     override protected function attachOverlay():void
     {
-        rawChildren_addChild(overlay);
+        rawChildren_addChild(effectOverlay);
     }
 
     /**
@@ -4255,7 +4268,7 @@ public class Container extends UIComponent
             if (childDescriptor.stylesFactory != null)
             {
                 if (!scChild.styleDeclaration)
-                    scChild.styleDeclaration = new CSSStyleDeclaration();
+                    scChild.styleDeclaration = new CSSStyleDeclaration(null, styleManager);
                 scChild.styleDeclaration.factory =
                     childDescriptor.stylesFactory;
             }
@@ -4988,7 +5001,7 @@ public class Container extends UIComponent
             needHorizontal ||
             needVertical ||
             hasNegativeCoords ||
-            overlay != null ||
+			effectOverlay != null ||
             vm.left > 0 ||
             vm.top > 0;
 

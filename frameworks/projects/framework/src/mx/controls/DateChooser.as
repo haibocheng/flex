@@ -125,7 +125,8 @@ include "../styles/metadata/TextStyles.as"
  *  NumericStepper, ProgressBar, RadioButton, ScrollBar, Slider, and any
  *  components that support the <code>borderStyle</code> style.
  *  The default value depends on the component class;
- *  if not overriden for the class, the default value is <code>0xB7BABC</code>.
+ *  if not overridden for the class, the default value is <code>0xB7BABC</code>
+ *  for the Halo theme and <code>0x696969</code> for the Spark theme.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -181,13 +182,10 @@ include "../styles/metadata/TextStyles.as"
 [Style(name="contentBackgroundColor", type="uint", format="Color", inherit="yes", theme="spark")]
 
 /**
- *  Radius of component corners.
- *  The following components support this style: Alert, Button, ComboBox,  
- *  LinkButton, MenuBar, NumericStepper, Panel, ScrollBar, Tab, TitleWindow, 
- *  and any component
- *  that supports a <code>borderStyle</code> property set to <code>"solid"</code>.
- *  The default value depends on the component class;
- *  if not overriden for the class, the default value is <code>0</code>.
+ *  Radius of corners of the component.
+ *
+ *  The default value for the Halo theme is <code>4</code>.
+ *  The default value for the Spark theme is <code>0</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -246,7 +244,8 @@ include "../styles/metadata/TextStyles.as"
 
 /**
  *  Name of the class to use as the skin for the next month arrow.
- *  The default value is the DateChooserMonthArrowSkin class.
+ *  The default value for the Halo theme is <code>mx.skins.halo.DateChooserMonthArrowSkin</code>.
+ *  The default value for the Spark theme is <code>mx.skins.spark.DateChooserNextMonthSkin</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -258,7 +257,8 @@ include "../styles/metadata/TextStyles.as"
 /**
  *  Name of the class to use as the skin for the next month arrow
  *  when the arrow is disabled.
- *  The default value is the DateChooserMonthArrowSkin class.
+ *  The default value for the Halo theme is <code>mx.skins.halo.DateChooserMonthArrowSkin</code>.
+ *  The default value for the Spark theme is <code>mx.skins.spark.DateChooserNextMonthSkin</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -270,7 +270,8 @@ include "../styles/metadata/TextStyles.as"
 /**
  *  Name of the class to use as the skin for the next month arrow
  *  when the user presses the mouse button down on the arrow.
- *  The default value is the DateChooserMonthArrowSkin class.
+ *  The default value for the Halo theme is <code>mx.skins.halo.DateChooserMonthArrowSkin</code>.
+ *  The default value for the Spark theme is <code>mx.skins.spark.DateChooserNextMonthSkin</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -282,7 +283,8 @@ include "../styles/metadata/TextStyles.as"
 /**
  *  Name of the class to use as the skin for the next month arrow
  *  when the user moves the mouse pointer over the arrow.
- *  The default value is the DateChooserMonthArrowSkin class.
+ *  The default value for the Halo theme is <code>mx.skins.halo.DateChooserMonthArrowSkin</code>.
+ *  The default value for the Spark theme is <code>mx.skins.spark.DateChooserNextMonthSkin</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -294,7 +296,8 @@ include "../styles/metadata/TextStyles.as"
 /**
  *  Name of the class to use as the skin for the next month arrow
  *  when the mouse pointer is not over the arrow.
- *  The default value is the DateChooserMonthArrowSkin class.
+ *  The default value for the Halo theme is <code>mx.skins.halo.DateChooserMonthArrowSkin</code>.
+ *  The default value for the Spark theme is <code>mx.skins.spark.DateChooserNextMonthSkin</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -305,7 +308,8 @@ include "../styles/metadata/TextStyles.as"
 
 /**
  *  Name of the class to use as the skin for the next year arrow.
- *  The default value is the DateChooserYearArrowSkin class.
+ *  The default value for the Halo theme is <code>mx.skins.halo.DateChooserYearArrowSkin</code>.
+ *  The default value for the Spark theme is <code>mx.skins.spark.DateChooserNextYearSkin</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -317,7 +321,8 @@ include "../styles/metadata/TextStyles.as"
 /**
  *  Name of the class to use as the skin for the next year arrow
  *  when the arrow is disabled. 
- *  The default value is the DateChooserYearArrowSkin class.
+ *  The default value for the Halo theme is <code>mx.skins.halo.DateChooserYearArrowSkin</code>.
+ *  The default value for the Spark theme is <code>mx.skins.spark.DateChooserNextYearSkin</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -329,7 +334,8 @@ include "../styles/metadata/TextStyles.as"
 /**
  *  Name of the class to use as the skin for the next Year arrow
  *  when the user presses the mouse button down on the arrow.
- *  The default value is the DateChooserYearArrowSkin class.
+ *  The default value for the Halo theme is <code>mx.skins.halo.DateChooserYearArrowSkin</code>.
+ *  The default value for the Spark theme is <code>mx.skins.spark.DateChooserNextYearSkin</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -341,7 +347,8 @@ include "../styles/metadata/TextStyles.as"
 /**
  *  Name of the class to use as the skin for the next Year arrow
  *  when the user moves the mouse pointer over the arrow.
- *  The default value is the DateChooserYearArrowSkin class.
+ *  The default value for the Halo theme is <code>mx.skins.halo.DateChooserYearArrowSkin</code>.
+ *  The default value for the Spark theme is <code>mx.skins.spark.DateChooserNextYearSkin</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -353,7 +360,8 @@ include "../styles/metadata/TextStyles.as"
 /**
  *  Name of the class to use as the skin for the next Year arrow
  *  when the mouse pointer is not over the arrow.
- *  The default value is the DateChooserYearArrowSkin class.
+ *  The default value for the Halo theme is <code>mx.skins.halo.DateChooserYearArrowSkin</code>.
+ *  The default value for the Spark theme is <code>mx.skins.spark.DateChooserNextYearSkin</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -364,7 +372,8 @@ include "../styles/metadata/TextStyles.as"
 
 /**
  *  Name of the class to use as the skin for the previous month arrow.
- *  The default value is the DateChooserMonthArrowSkin class.
+ *  The default value for the Halo theme is <code>mx.skins.halo.DateChooserMonthArrowSkin</code>.
+ *  The default value for the Spark theme is <code>mx.skins.spark.DateChooserPrevMonthSkin</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -376,7 +385,8 @@ include "../styles/metadata/TextStyles.as"
 /**
  *  Name of the class to use as the skin for the previous month arrow
  *  when the arrow is disabled.
- *  The default value is the DateChooserMonthArrowSkin class.
+ *  The default value for the Halo theme is <code>mx.skins.halo.DateChooserMonthArrowSkin</code>.
+ *  The default value for the Spark theme is <code>mx.skins.spark.DateChooserPrevMonthSkin</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -388,7 +398,8 @@ include "../styles/metadata/TextStyles.as"
 /**
  *  Name of the class to use as the skin for the previous month arrow
  *  when the user presses the mouse button down over the arrow.
- *  The default value is the DateChooserMonthArrowSkin class.
+ *  The default value for the Halo theme is <code>mx.skins.halo.DateChooserMonthArrowSkin</code>.
+ *  The default value for the Spark theme is <code>mx.skins.spark.DateChooserPrevMonthSkin</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -400,7 +411,8 @@ include "../styles/metadata/TextStyles.as"
 /**
  *  Name of the class to use as the skin for the previous month arrow
  *  when the user holds the mouse pointer over the arrow.
- *  The default value is the DateChooserMonthArrowSkin class.
+ *  The default value for the Halo theme is <code>mx.skins.halo.DateChooserMonthArrowSkin</code>.
+ *  The default value for the Spark theme is <code>mx.skins.spark.DateChooserPrevMonthSkin</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -412,7 +424,8 @@ include "../styles/metadata/TextStyles.as"
 /**
  *  Name of the class to use as the skin for the previous month arrow
  *  when the mouse pointer is not over the arrow.
- *  The default value is the DateChooserMonthArrowSkin class.
+ *  The default value for the Halo theme is <code>mx.skins.halo.DateChooserMonthArrowSkin</code>.
+ *  The default value for the Spark theme is <code>mx.skins.spark.DateChooserPrevMonthSkin</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -423,7 +436,8 @@ include "../styles/metadata/TextStyles.as"
 
 /**
  *  Name of the class to use as the skin for the previous year arrow.
- *  The default value is the DateChooserYearArrowSkin class.
+ *  The default value for the Halo theme is <code>mx.skins.halo.DateChooserYearArrowSkin</code>.
+ *  The default value for the Spark theme is <code>mx.skins.spark.DateChooserPrevYearSkin</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -435,7 +449,8 @@ include "../styles/metadata/TextStyles.as"
 /**
  *  Name of the class to use as the skin for the previous Year arrow
  *  when the arrow is disabled.
- *  The default value is the DateChooserYearArrowSkin class.
+ *  The default value for the Halo theme is <code>mx.skins.halo.DateChooserYearArrowSkin</code>.
+ *  The default value for the Spark theme is <code>mx.skins.spark.DateChooserPrevYearSkin</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -447,7 +462,8 @@ include "../styles/metadata/TextStyles.as"
 /**
  *  Name of the class to use as the skin for the previous Year arrow
  *  when the user presses the mouse button down over the arrow.
- *  The default value is the DateChooserYearArrowSkin class.
+ *  The default value for the Halo theme is <code>mx.skins.halo.DateChooserYearArrowSkin</code>.
+ *  The default value for the Spark theme is <code>mx.skins.spark.DateChooserPrevYearSkin</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -459,7 +475,8 @@ include "../styles/metadata/TextStyles.as"
 /**
  *  Name of the class to use as the skin for the previous Year arrow
  *  when the user holds the mouse pointer over the arrow.
- *  The default value is the DateChooserYearArrowSkin class.
+ *  The default value for the Halo theme is <code>mx.skins.halo.DateChooserYearArrowSkin</code>.
+ *  The default value for the Spark theme is <code>mx.skins.spark.DateChooserPrevYearSkin</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -471,7 +488,8 @@ include "../styles/metadata/TextStyles.as"
 /**
  *  Name of the class to use as the skin for the previous Year arrow
  *  when the mouse button not over the arrow.
- *  The default value is the DateChooserYearArrowSkin class.
+ *  The default value for the Halo theme is <code>mx.skins.halo.DateChooserYearArrowSkin</code>.
+ *  The default value for the Spark theme is <code>mx.skins.spark.DateChooserPrevYearSkin</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -483,7 +501,9 @@ include "../styles/metadata/TextStyles.as"
 /**
  *  Color of the highlight area of the date when the user holds the
  *  mouse pointer over a date in the DateChooser control.
- *  @default 0xE3FFD6
+ *  
+ *  The default value for the Halo theme is <code>0xB2E1FF</code>.
+ *  The default value for the Spark theme is <code>0xCEDBEF</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -497,7 +517,8 @@ include "../styles/metadata/TextStyles.as"
  *  highlight area of the date when the user holds the
  *  mouse pointer over a date in the DateChooser control.
  *
- *  @default mx.skins.halo.DateChooserIndicator
+ *  The default value for the Halo theme is <code>mx.skins.halo.DateChooserIndicator</code>.
+ *  The default value for the Spark theme is <code>mx.skins.spark.DateChooserRollOverIndicatorSkin</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -509,7 +530,9 @@ include "../styles/metadata/TextStyles.as"
 /**
  *  Color of the highlight area of the currently selected date
  *  in the DateChooser control.
- *  @default 0xCDFFC1
+ * 
+ *  The default value for the Halo theme is <code>0x7FCEFF</code>.
+ *  The default value for the Spark theme is <code>0xA8C6EE</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -523,7 +546,8 @@ include "../styles/metadata/TextStyles.as"
  *  highlight area of the currently selected date
  *  in the DateChooser control.
  *
- *  @default mx.skins.halo.DateChooserIndicator
+ *  The default value for the Halo theme is <code>mx.skins.halo.DateChooserIndicator</code>.
+ *  The default value for the Spark theme is <code>mx.skins.spark.DateChooserSelectionIndicatorSkin</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -547,7 +571,9 @@ include "../styles/metadata/TextStyles.as"
 
 /**
  *  Color of the background of today's date.
- *  The default value is <code>0x818181</code>.
+ * 
+ *  The default value for the Halo theme is <code>0x818181</code>
+ *  The default value for the Spark theme is <code>0xC6D0DB</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -561,7 +587,8 @@ include "../styles/metadata/TextStyles.as"
  *  highlight area of today's date
  *  in the DateChooser control.
  *
- *  @default mx.skins.halo.DateChooserIndicator
+ *  The default value for the Halo theme is <code>mx.skins.halo.DateChooserIndicator</code>.
+ *  The default value for the Spark theme is <code>mx.skins.spark.DateChooserTodayIndicatorSkin</code>.
  *  
  *  @langversion 3.0
  *  @playerversion Flash 9

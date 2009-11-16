@@ -1,0 +1,520 @@
+ 
+<apiPackage id="flash.errors"><apiName>flash.errors</apiName><apiDetail/><apiClassifier id="flash.errors:ScriptTimeoutError"><apiName>ScriptTimeoutError</apiName><shortdesc>
+	The ScriptTimeoutError exception is thrown when the script timeout interval is reached.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>Error
+	 
+	 </keyword></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiDynamic/><apiBaseClassifier>Error</apiBaseClassifier></apiClassifierDef><apiDesc>
+	The ScriptTimeoutError exception is thrown when the script timeout interval is reached. 
+	The script timeout interval is 15 seconds. <ph outputclass="flexonly">There are two XML attributes 
+	that you can add to the <codeph>mx:Application</codeph> tag: <codeph>scriptTimeLimit</codeph> 
+	(the number of seconds until script timeout) and <codeph>scriptRecursionLimit</codeph> 
+	(the depth of recursive calls permitted). </ph> 
+	
+	<p>Two ScriptTimeoutError exceptions are thrown. The first exception you can catch and exit
+	cleanly. If there is no exception handler, the uncaught exception terminates execution. The 
+	second exception is thrown but cannot be caught by user code; it goes to the uncaught 
+	exception handler. It is uncatchable to prevent Flash<sup>®</sup> Player from hanging 
+	indefinitely.</p>
+	
+ 	</apiDesc><example conref="examples\ScriptTimeoutErrorExample.as"> The following example uses the sample ScriptTimeoutErrorExample class to show 
+ the error generated in the event of script timeout.  This is accomplished with the following 
+ steps:
+ <ol>
+     <li>A <codeph>keepLooking</codeph> Boolean property is declared.</li>
+     <li>The constructor calls the <codeph>lockMachine()</codeph> method within an error handling code
+     segment that catches ScriptTimeoutError objects.  </li>
+     <li>The <codeph>lockMachine()</codeph> method contains an endless <codeph>while</codeph> loop.</li>
+     <li>After awhile, the ScriptTimeoutError is thrown. The constructor catches it, 
+     outputs an error message through the <codeph>trace</codeph> statement and resets the <codeph>keepLooking</codeph>
+     Boolean to <codeph>false</codeph>, which terminates the <codeph>while</codeph> loop in <codeph>lockMachine()</codeph>. </li>
+ </ol>
+<codeblock>
+package {
+    import flash.display.Sprite;
+    import flash.errors.ScriptTimeoutError;
+
+    public class ScriptTimeoutErrorExample extends Sprite {        
+        private var keepLooping:Boolean = true;
+
+        public function ScriptTimeoutErrorExample() {
+            try {
+                lockMachine();
+            } 
+            catch(e:ScriptTimeoutError) {
+                trace(e);    // ScriptTimeoutError: Error #1502: A script has executed for longer than 15 seconds
+                keepLooping = false;
+            }
+        }
+        
+        private function lockMachine():void {
+            while(keepLooping){        
+            }
+        }
+    }
+}
+</codeblock></example></apiClassifierDetail><apiConstructor id="flash.errors:ScriptTimeoutError:flash.errors:ScriptTimeoutError"><apiName>ScriptTimeoutError</apiName><shortdesc>
+		Creates a new ScriptTimeoutError object.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>
+		</keyword></asCustoms></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>message</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData></apiData><apiDesc>A string associated with the error object.
+		
+		</apiDesc></apiParam></apiConstructorDef><apiDesc>
+		Creates a new ScriptTimeoutError object.
+		
+		</apiDesc></apiConstructorDetail></apiConstructor></apiClassifier><apiClassifier id="flash.errors:SQLError"><apiName>SQLError</apiName><shortdesc>
+ A SQLError instance provides detailed information about a failed operation.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Error</apiBaseClassifier></apiClassifierDef><apiDesc>
+ A SQLError instance provides detailed information about a failed operation.
+ 
+ <p>In asynchronous execution mode, when an error occurs
+ with a SQL database operation the SQLConnection or SQLStatement instance
+ dispatches a SQLErrorEvent object. Information about the error in the form of a
+ SQLError instance can be accessed from the SQLErrorEvent object's <codeph>error</codeph>
+ property.</p>
+ 
+ <p>In synchronous execution mode, when an error occurs with a SQL
+ database operation the SQLConnection or SQLStatement instance throws a
+ SQLError exception, which can be handled by enclosing the error-throwing code in
+ a <codeph>try..catch</codeph> block.</p>
+ 
+ <p>This class provides properties containing the error details (specifying the specific type of
+ error that occured), a text message
+ containing the details of the error, and the operation that caused the
+ error to occur.</p>
+ 
+ </apiDesc></apiClassifierDetail><related-links><link href="flash.events.xml#SQLErrorEvent"><linktext>flash.events.SQLErrorEvent</linktext></link><link href="flash.data.xml#SQLConnection"><linktext>flash.data.SQLConnection</linktext></link><link href="flash.data.xml#SQLStatement"><linktext>flash.data.SQLStatement</linktext></link></related-links><apiConstructor id="flash.errors:SQLError:SQLError"><apiName>SQLError</apiName><shortdesc>
+     Creates a SQLError instance that can be thrown or used with a
+     SQLErrorEvent instance's error property.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>operation</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Indicates the specific operation that caused
+     the failure. The value is one of the constants defined in the
+     SQLErrorOperation class.
+     
+     </apiDesc></apiParam><apiParam><apiItemName>details</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData></apiData><apiDesc>The details for the current error.
+     
+     </apiDesc></apiParam><apiParam><apiItemName>message</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData></apiData><apiDesc>The description of the error that
+     occurred.
+     
+     </apiDesc></apiParam><apiParam><apiItemName>id</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiData>0</apiData><apiDesc>A reference number associated with the specific error message.
+     
+     </apiDesc></apiParam><apiParam><apiItemName>detailID</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiData>-1</apiData><apiDesc>A reference number associated with the detail error message.
+     
+     </apiDesc></apiParam><apiParam><apiItemName>detailArgs</apiItemName><apiOperationClassifier>Array</apiOperationClassifier><apiData>null</apiData><apiDesc>An ordered array of substitution values that can be used
+     to construct a locale specific detail error message.
+     
+     </apiDesc></apiParam></apiConstructorDef><apiDesc>
+     Creates a SQLError instance that can be thrown or used with a
+     SQLErrorEvent instance's <codeph>error</codeph> property.
+     
+     </apiDesc></apiConstructorDetail><related-links><link href="flash.errors.xml#SQLErrorOperation"><linktext>flash.errors.SQLErrorOperation</linktext></link></related-links></apiConstructor><apiOperation id="flash.errors:SQLError:toString"><apiName>toString</apiName><shortdesc>
+     
+	
+	Returns the string "Error" by default or the value contained in the Error.message property,
+    if defined.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>The error message.
+	
+	</apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+     
+	
+	Returns the string <codeph>"Error"</codeph> by default or the value contained in the <codeph>Error.message</codeph> property,
+    if defined.
+	
+    </apiDesc></apiOperationDetail></apiOperation><apiValue id="flash.errors:SQLError:detailArguments:get"><apiName>detailArguments</apiName><shortdesc>
+      An array of String values that can be used to construct a locale specific
+      detail error message.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.1"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Array</apiValueClassifier></apiValueDef><apiDesc>
+      An array of String values that can be used to construct a locale specific
+      detail error message.
+      
+      <p>This property contains the value or values that are substituted into 
+	  the <codeph>details</codeph> property error message to indicate the specific 
+	  database object or objects (table name, column name, and so forth) 
+	  associated with the error. For example, suppose an error with the following 
+	  <codeph>details</codeph> property error message occurs in an application:</p>
+	  
+	  <codeblock>there is already another table or index with this name: 'my_table'</codeblock>
+	  
+	  <p>In that case, the SQLError instance's <codeph>detailArguments</codeph> 
+	  property would contain a single element with the value <codeph>"my_table"</codeph>.</p>
+	  
+	  <p>Using the <codeph>detailID</codeph> property an 
+	  application can identify the specific <codeph>details</codeph> error message. The 
+	  application can provide alternate text for the end user in the language 
+	  of his or her locale. The argument values in the <codeph>detailArguments</codeph> array 
+	  can be substituted in the appropriate position in the error message string. This 
+	  is useful for applications that wish to display the <codeph>details</codeph> 
+	  property error message for this error directly to end users in a specific locale.</p>
+      
+      <p>For a list of the <codeph>detailID</codeph> values and their corresponding 
+	  English error details message and arguments, see the appendix 
+	  "<xref href="../../localDatabaseSQLErrorDetails.html">SQL error detail messages, ids, and arguments</xref>."</p>
+      
+      </apiDesc></apiValueDetail></apiValue><apiValue id="flash.errors:SQLError:detailID:get"><apiName>detailID</apiName><shortdesc>
+      A reference number associated with the specific detail message.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.1"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+      A reference number associated with the specific detail message.
+      This value is used to support locale specific translations of the
+      <codeph>details</codeph> property error message.
+      
+      <p>This property provides a unique identifier for each <codeph>details</codeph> 
+	  message. (For any type of error with a specific <codeph>errorID</codeph> there are 
+	  multiple errors with unique <codeph>detailID</codeph> values.) Using this 
+	  identifier together with the value or values in the 
+	  <codeph>detailArguments</codeph> array, an application can provide 
+      locale specific detail error messages. This is useful for applications
+      that wish to display the <codeph>details</codeph> property error message for 
+	  this error directly to end users in a specific locale.</p>
+      
+      <p>For a list of the <codeph>detailID</codeph> values and their corresponding 
+	  English error details message and arguments, see the appendix 
+	  "<xref href="../../localDatabaseSQLErrorDetails.html">SQL error detail messages, ids, and arguments</xref>."</p>
+      
+      </apiDesc></apiValueDetail></apiValue><apiValue id="flash.errors:SQLError:details:get"><apiName>details</apiName><shortdesc>
+     Details of the current error.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+     Details of the current error. This provides additional specific
+     information about the error that occurred.
+     
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.errors:SQLError:operation:get"><apiName>operation</apiName><shortdesc>
+     A value indicating the operation that was being attempted when the error occurred.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+     A value indicating the operation that was being attempted when the error occurred.
+     This value is one of the constants defined in the SQLErrorOperation class.
+     
+     </apiDesc></apiValueDetail><related-links><link href="flash.errors.xml#SQLErrorOperation"><linktext>flash.errors.SQLErrorOperation</linktext></link></related-links></apiValue></apiClassifier><apiClassifier id="flash.errors:SQLErrorOperation"><apiName>SQLErrorOperation</apiName><shortdesc>
+ This class contains the constants that represent the possible values for the
+ SQLError.operation property.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ This class contains the constants that represent the possible values for the
+ <codeph>SQLError.operation</codeph> property. These values indicate the attempted operation
+ that caused the error to occur.
+ 
+ <p>Each value represents one of the operations of the SQLConnection class
+ or the SQLStatement class.</p>
+ 
+ </apiDesc></apiClassifierDetail><related-links><link href="flash.errors.xml#SQLError/operation"><linktext>flash.errors.SQLError.operation</linktext></link><link href="flash.data.xml#SQLConnection"><linktext>flash.data.SQLConnection</linktext></link><link href="flash.data.xml#SQLStatement"><linktext>flash.data.SQLStatement</linktext></link></related-links><apiValue id="flash.errors:SQLErrorOperation:ANALYZE"><apiName>ANALYZE</apiName><shortdesc>
+     Indicates that the SQLConnection.analyze() method was called.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>analyze</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+     Indicates that the <codeph>SQLConnection.analyze()</codeph> method was called.
+     
+     </apiDesc></apiValueDetail><related-links><link href="flash.data.xml#SQLConnection/analyze()"><linktext>flash.data.SQLConnection.analyze()</linktext></link></related-links></apiValue><apiValue id="flash.errors:SQLErrorOperation:ATTACH"><apiName>ATTACH</apiName><shortdesc>
+     Indicates that the SQLConnection.attach() method was called.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>attach</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+     Indicates that the <codeph>SQLConnection.attach()</codeph> method was called.
+     
+     </apiDesc></apiValueDetail><related-links><link href="flash.data.xml#SQLConnection/attach()"><linktext>flash.data.SQLConnection.attach()</linktext></link></related-links></apiValue><apiValue id="flash.errors:SQLErrorOperation:BEGIN"><apiName>BEGIN</apiName><shortdesc>
+     Indicates that the SQLConnection.begin() method was called.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>begin</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+     Indicates that the <codeph>SQLConnection.begin()</codeph> method was called.
+     
+     </apiDesc></apiValueDetail><related-links><link href="flash.data.xml#SQLConnection/begin()"><linktext>flash.data.SQLConnection.begin()</linktext></link></related-links></apiValue><apiValue id="flash.errors:SQLErrorOperation:CLOSE"><apiName>CLOSE</apiName><shortdesc>
+     Indicates that the SQLConnection.close() method was called.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>close</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+     Indicates that the <codeph>SQLConnection.close()</codeph> method was called.
+     
+     </apiDesc></apiValueDetail><related-links><link href="flash.data.xml#SQLConnection/close()"><linktext>flash.data.SQLConnection.close()</linktext></link></related-links></apiValue><apiValue id="flash.errors:SQLErrorOperation:COMMIT"><apiName>COMMIT</apiName><shortdesc>
+     Indicates that the SQLConnection.commit() method was called.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>commit</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+     Indicates that the <codeph>SQLConnection.commit()</codeph> method was called.
+     
+     </apiDesc></apiValueDetail><related-links><link href="flash.data.xml#SQLConnection/commit()"><linktext>flash.data.SQLConnection.commit()</linktext></link></related-links></apiValue><apiValue id="flash.errors:SQLErrorOperation:COMPACT"><apiName>COMPACT</apiName><shortdesc>
+     Indicates that the SQLConnection.compact() method was called.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>compact</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+     Indicates that the <codeph>SQLConnection.compact()</codeph> method was called.
+     
+     </apiDesc></apiValueDetail><related-links><link href="flash.data.xml#SQLConnection/compact()"><linktext>flash.data.SQLConnection.compact()</linktext></link></related-links></apiValue><apiValue id="flash.errors:SQLErrorOperation:DEANALYZE"><apiName>DEANALYZE</apiName><shortdesc>
+     Indicates that the SQLConnection.deanalyze() method was called.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>deanalyze</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+     Indicates that the <codeph>SQLConnection.deanalyze()</codeph> method was called.
+     
+     </apiDesc></apiValueDetail><related-links><link href="flash.data.xml#SQLConnection/deanalyze()"><linktext>flash.data.SQLConnection.deanalyze()</linktext></link></related-links></apiValue><apiValue id="flash.errors:SQLErrorOperation:DETACH"><apiName>DETACH</apiName><shortdesc>
+     Indicates that the SQLConnection.detach() method was called.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>detach</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+     Indicates that the <codeph>SQLConnection.detach()</codeph> method was called.
+     
+     </apiDesc></apiValueDetail><related-links><link href="flash.data.xml#SQLConnection/detach()"><linktext>flash.data.SQLConnection.detach()</linktext></link></related-links></apiValue><apiValue id="flash.errors:SQLErrorOperation:EXECUTE"><apiName>EXECUTE</apiName><shortdesc>
+     Indicates that either the SQLStatement.execute() method
+	 or the SQLStatement.next() method was called.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>execute</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+     Indicates that either the <codeph>SQLStatement.execute()</codeph> method
+	 or the <codeph>SQLStatement.next()</codeph> method was called.
+     
+     </apiDesc></apiValueDetail><related-links><link href="flash.data.xml#SQLStatement/execute()"><linktext>flash.data.SQLStatement.execute()</linktext></link></related-links></apiValue><apiValue id="flash.errors:SQLErrorOperation:OPEN"><apiName>OPEN</apiName><shortdesc>
+     Indicates that either the SQLConnection.open() method or the SQLConnection.openAsync() method was called.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>open</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+     Indicates that either the <codeph>SQLConnection.open()</codeph> method or the <codeph>SQLConnection.openAsync()</codeph> method was called.
+     
+     </apiDesc></apiValueDetail><related-links><link href="flash.data.xml#SQLConnection/open()"><linktext>flash.data.SQLConnection.open()</linktext></link><link href="flash.data.xml#SQLConnection/openAsync()"><linktext>flash.data.SQLConnection.openAsync()</linktext></link></related-links></apiValue><apiValue id="flash.errors:SQLErrorOperation:REENCRYPT"><apiName>REENCRYPT</apiName><shortdesc>
+     Indicates that the SQLConnection.reencrypt() method was called.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>reencrypt</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+     Indicates that the <codeph>SQLConnection.reencrypt()</codeph> method was called.
+     
+     </apiDesc></apiValueDetail><related-links><link href="flash.data.xml#SQLConnection/reencrypt()"><linktext>flash.data.SQLConnection.reencrypt()</linktext></link></related-links></apiValue><apiValue id="flash.errors:SQLErrorOperation:ROLLBACK"><apiName>ROLLBACK</apiName><shortdesc>
+     Indicates that the SQLConnection.rollback() method was called.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>rollback</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+     Indicates that the <codeph>SQLConnection.rollback()</codeph> method was called.
+     
+     </apiDesc></apiValueDetail><related-links><link href="flash.data.xml#SQLConnection/rollback()"><linktext>flash.data.SQLConnection.rollback()</linktext></link></related-links></apiValue><apiValue id="flash.errors:SQLErrorOperation:SCHEMA"><apiName>SCHEMA</apiName><shortdesc>
+     Indicates that the SQLConnection.loadSchema() method was called.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>schema</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+     Indicates that the <codeph>SQLConnection.loadSchema()</codeph> method was called.
+     
+     </apiDesc></apiValueDetail><related-links><link href="flash.data.xml#SQLConnection/loadSchema()"><linktext>flash.data.SQLConnection.loadSchema()</linktext></link></related-links></apiValue></apiClassifier><apiClassifier id="flash.errors:MemoryError"><apiName>MemoryError</apiName><shortdesc>
+	The MemoryError exception is thrown when a memory allocation request fails.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>Error
+	 
+	 </keyword></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiDynamic/><apiBaseClassifier>Error</apiBaseClassifier></apiClassifierDef><apiDesc>
+	The MemoryError exception is thrown when a memory allocation request fails. 
+	
+	<p>On a desktop machine, memory allocation failures are rare unless an allocation 
+	request is extremely large. For example, a 32-bit Windows program can access only 2GB of
+	address space, so a request for 10 billion bytes is impossible.</p>
+	
+	<p>By default, Flash Player does not impose a limit on how much memory an 
+	ActionScript program can allocate.</p>
+	
+ 	</apiDesc><example conref="examples\MemoryErrorExample.as"> The following example shows one method of generating a MemoryError.
+<codeblock>
+package {
+    import flash.display.Sprite;
+    import flash.errors.MemoryError;
+    import flash.utils.setInterval;
+       
+    public class MemoryErrorExample extends Sprite {
+        private var crashingStr:String;
+        private var intervalId:Number;
+           
+        public function MemoryErrorExample() {
+            crashingStr = "abcdefghijklmnopqrstuvwxyz";
+            intervalId = setInterval(exhaustMemory, 50);
+        }
+           
+        public function exhaustMemory():void {            
+            try {
+                crashingStr += crashingStr;
+            }
+            catch(e:MemoryError) {
+                trace(e);
+            }
+        }
+    }
+}  
+</codeblock></example></apiClassifierDetail><apiConstructor id="flash.errors:MemoryError:flash.errors:MemoryError"><apiName>MemoryError</apiName><shortdesc> 
+		Creates a new MemoryError object.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>
+		</keyword></asCustoms></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>message</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData></apiData><apiDesc>A string associated with the error object.
+		
+		</apiDesc></apiParam></apiConstructorDef><apiDesc> 
+		Creates a new MemoryError object.
+		
+		</apiDesc></apiConstructorDetail></apiConstructor></apiClassifier><apiClassifier id="flash.errors:StackOverflowError"><apiName>StackOverflowError</apiName><shortdesc>
+	ActionScript throws a StackOverflowError exception when the stack available to the script 
+	is exhausted.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>Error
+	 
+	 </keyword></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiDynamic/><apiBaseClassifier>Error</apiBaseClassifier></apiClassifierDef><apiDesc>
+	ActionScript throws a StackOverflowError exception when the stack available to the script 
+	is exhausted. ActionScript uses a stack to store information about each method call made in 
+	a script, such as the local variables that the method uses. The amount of stack space 
+	available varies from system to system.
+	
+	<p>A StackOverflowError exception might indicate that infinite recursion has occurred, in 
+	which case a termination case needs to be added to the function. It also might indicate 
+	that the recursive algorithm has a proper terminating condition but has exhausted the stack 
+	anyway. In this case, try to express the algorithm iteratively instead.</p>
+	
+ 	</apiDesc><example conref="examples\StackOverflowErrorExample.as"> The following example uses the sample StackOverflowErrorExample class to show 
+ the error generated in the event of a stack overflow.  This is accomplished using the following 
+ steps:
+ <ol>
+     <li>The constructor calls the method <codeph>lockMachine()</codeph> within an error handling code
+     segment that catches StackOverflowError objects.  </li>
+     <li>The <codeph>lockMachine()</codeph> method calls itself until the stack overflows.</li>
+     <li>After the StackOverflowError is thrown, the constructor catches it and then outputs an 
+     error message through the <codeph>trace</codeph> statement. </li>
+ </ol>
+<codeblock>
+package {
+    import flash.display.Sprite;
+    import flash.errors.StackOverflowError;
+
+    public class StackOverflowErrorExample extends Sprite {        
+        public function StackOverflowErrorExample() {
+            try {
+                lockMachine();
+            } 
+            catch(e:StackOverflowError) {
+                trace(e);    // StackOverflowError: Error #1023: Stack overflow.
+            }
+        }
+        
+        private function lockMachine():void {
+            lockMachine();
+        }
+    }
+}
+</codeblock></example></apiClassifierDetail><apiConstructor id="flash.errors:StackOverflowError:flash.errors:StackOverflowError"><apiName>StackOverflowError</apiName><shortdesc>
+		Creates a new StackOverflowError object.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>
+		</keyword></asCustoms></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>message</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData></apiData><apiDesc>A string associated with the error object.
+		
+		</apiDesc></apiParam></apiConstructorDef><apiDesc>
+		Creates a new StackOverflowError object.
+		</apiDesc></apiConstructorDetail></apiConstructor></apiClassifier><apiClassifier id="flash.errors:DRMManagerError"><apiName>DRMManagerError</apiName><shortdesc>
+ The DRMManager dispatches a DRMManagerError event to report errors.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Error</apiBaseClassifier></apiClassifierDef><apiDesc>
+ The DRMManager dispatches a DRMManagerError event to report errors.
+ 
+ </apiDesc></apiClassifierDetail><related-links><link href="flash.net.drm.xml#DRMManager"><linktext>flash.net.drm.DRMManager</linktext></link></related-links><apiConstructor id="flash.errors:DRMManagerError:DRMManagerError"><apiName>DRMManagerError</apiName><shortdesc>
+	 Creates a new instance of the DRMManagerError class.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>message</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>The error description
+	 </apiDesc></apiParam><apiParam><apiItemName>id</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiDesc>The general error number
+	 </apiDesc></apiParam><apiParam><apiItemName>subErrorID</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiDesc>The specific error number
+	 
+ 	 </apiDesc></apiParam></apiConstructorDef><apiDesc>
+	 Creates a new instance of the DRMManagerError class.
+	 
+	 </apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="flash.errors:DRMManagerError:toString"><apiName>toString</apiName><shortdesc>
+	 
+	
+	Returns the string "Error" by default or the value contained in the Error.message property,
+    if defined.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>The error message.
+	
+	</apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 
+	
+	Returns the string <codeph>"Error"</codeph> by default or the value contained in the <codeph>Error.message</codeph> property,
+    if defined.
+	
+    </apiDesc></apiOperationDetail></apiOperation><apiValue id="flash.errors:DRMManagerError:subErrorID:get"><apiName>subErrorID</apiName><shortdesc>
+	 The specific error number.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+	 The specific error number.
+	 
+ 	 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.errors:IOError"><apiName>IOError</apiName><shortdesc>
+	The IOError exception is thrown when some type of input or output failure occurs.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>Error
+	 
+	 </keyword></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiDynamic/><apiBaseClassifier>Error</apiBaseClassifier></apiClassifierDef><apiDesc>
+	The IOError exception is thrown when some type of input or output failure occurs. 
+	For example, an IOError exception is thrown if a read/write operation is attempted on 
+	a socket that has not connected or that has become disconnected.
+	
+	
+ 	</apiDesc><example conref="examples\IOErrorExample.as"> The following example throws an IOError exception when it attempts to close
+ a Sound stream that has never been loaded.
+<codeblock>
+package {
+    import flash.display.Sprite;
+    import flash.errors.IOError;
+    import flash.media.Sound;
+      
+    public class IOErrorExample extends Sprite
+    {
+        public function IOErrorExample()
+        {
+            var music:Sound = new Sound();
+            try {
+                  music.close();
+                  trace("Stream closed.");
+            } catch (error:IOError) {
+                  trace("The stream could not be closed, or the stream was not open.");
+            }
+        }
+    }
+}
+</codeblock></example></apiClassifierDetail><apiConstructor id="flash.errors:IOError:flash.errors:IOError"><apiName>IOError</apiName><shortdesc> 
+		Creates a new IOError object.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>
+		</keyword></asCustoms></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>message</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData></apiData><apiDesc>A string associated with the error object.
+		
+		
+		</apiDesc></apiParam></apiConstructorDef><apiDesc> 
+		Creates a new IOError object.
+		
+		</apiDesc></apiConstructorDetail></apiConstructor></apiClassifier><apiClassifier id="flash.errors:IllegalOperationError"><apiName>IllegalOperationError</apiName><shortdesc>
+	The IllegalOperationError exception is thrown when a method is not implemented or the 
+	implementation doesn't cover the current usage.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>Error
+	 
+	 </keyword></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiDynamic/><apiBaseClassifier>Error</apiBaseClassifier></apiClassifierDef><apiDesc>
+	The IllegalOperationError exception is thrown when a method is not implemented or the 
+	implementation doesn't cover the current usage.
+	
+	<p>Examples of illegal operation error exceptions include:</p>
+	<ul>
+	    <li>A base class, such as DisplayObjectContainer, provides more functionality than a Stage 
+	can support (such as masks)</li>
+	    <li>Certain accessibility methods are called when Flash Player is compiled without accessibility 
+	support</li>
+	    <li>The mms.cfg setting prohibits a FileReference action</li>
+	    <li>ActionScript tries to run a <codeph>FileReference.browse()</codeph> call when a browse dialog box is already open</li>
+	    <li>ActionScript tries to use an unsupported protocol for a FileReference object (such as FTP)</li>
+	    <li product="flash">Authoring-only features are invoked from a run-time player.</li>
+	    <li product="flash">An attempt is made to set the name of a Timeline-placed object.</li>
+	</ul>
+	
+ 	</apiDesc><example conref="examples\IllegalOperationErrorExample.as"> The following example shows the use of an <codeph>IllegalOperationError</codeph> handler.
+<codeblock>
+package {
+    import flash.display.DisplayObject;
+    import flash.display.Sprite;
+    import flash.errors.IllegalOperationError;
+
+    public class IllegalOperationErrorExample extends Sprite {
+        public function IllegalOperationErrorExample() {
+            var child:Sprite = new Sprite();
+            try {
+                addChild(child);
+            }
+            catch(e:IllegalOperationError) {
+                trace(e);
+            }
+        }
+
+        public override function addChild(child:DisplayObject):DisplayObject {
+            throw new IllegalOperationError("addChild cannot be performed on the IllegalOperationErrorExample class");
+        }
+    }
+}
+</codeblock></example></apiClassifierDetail><apiConstructor id="flash.errors:IllegalOperationError:flash.errors:IllegalOperationError"><apiName>IllegalOperationError</apiName><shortdesc>
+		Creates a new IllegalOperationError object.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>
+		</keyword></asCustoms></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>message</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData></apiData><apiDesc>A string associated with the error object.
+		
+		</apiDesc></apiParam></apiConstructorDef><apiDesc>
+		Creates a new IllegalOperationError object.
+		
+		</apiDesc></apiConstructorDetail></apiConstructor></apiClassifier><apiClassifier id="flash.errors:EOFError"><apiName>EOFError</apiName><shortdesc>
+	An EOFError exception is thrown when you attempt to read past the end of the available data.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>Error
+	 
+	 </keyword></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiDynamic/><apiBaseClassifier>flash.errors:IOError</apiBaseClassifier></apiClassifierDef><apiDesc>
+	An EOFError exception is thrown when you attempt to read past the end of the available data. For example, an 
+	EOFError is thrown when one of the read methods in the IDataInput interface is 
+	called and there is insufficient data to satisfy the read request. 
+	
+ 	</apiDesc><example conref="examples\EOFErrorExample.as"> The following example uses the <codeph>EOFErrorExample</codeph> class to show 
+ the error generated if an attempt is made to read past the end of the available
+ data.  This is accomplished with the following steps:
+ <ol>
+     <li>The constructor creates a ByteArray object <codeph>byteArr</codeph> and writes a Boolean
+     value of <codeph>false</codeph> into the byte stream using <codeph>writeBoolean()</codeph>.  </li>
+     <li>The position of <codeph>byteArr</codeph> is reset to <codeph>0</codeph> (start of the data stream).</li>
+     <li>A single byte is removed from the data stream using <codeph>readBoolean()</codeph>.  The 
+     data stream now contains no data.</li>
+     <li>Within an error handling code segment set to catch EOFError objects, <codeph>readBoolean()</codeph>
+     is called a second time and the EOFError is caught and passed to a <codeph>trace()</codeph>
+     statement, which outputs the error message associated with EOFError objects. </li>
+ </ol>
+<codeblock>
+package {
+    import flash.display.Sprite;
+    import flash.errors.EOFError;
+    import flash.utils.ByteArray;
+
+    public class EOFErrorExample extends Sprite {        
+        public function EOFErrorExample() {
+            var byteArr:ByteArray = new ByteArray();
+
+            byteArr.writeBoolean(false);
+            trace(byteArr.length);        // 1
+            
+            byteArr.position = 0;
+            try {
+                trace(byteArr.readBoolean());    // false
+            }
+            catch(e:EOFError) {
+                trace(e);
+            }
+            try {
+                trace(byteArr.readBoolean());
+            } 
+            catch(e:EOFError) {
+                trace(e);        // EOFError: Error #2030: End of file was encountered.
+            }
+        }
+    }
+}
+</codeblock></example></apiClassifierDetail><related-links><link href="flash.utils.xml#ByteArray"><linktext>flash.utils.ByteArray</linktext></link><link href="flash.utils.xml#IDataInput"><linktext>flash.utils.IDataInput</linktext></link><link href="flash.net.xml#Socket"><linktext>flash.net.Socket</linktext></link><link href="flash.net.xml#URLStream"><linktext>flash.net.URLStream</linktext></link></related-links><apiConstructor id="flash.errors:EOFError:flash.errors:EOFError"><apiName>EOFError</apiName><shortdesc>
+		Creates a new EOFError object.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>
+		</keyword></asCustoms></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>message</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData></apiData><apiDesc>A string associated with the error object.
+		
+		</apiDesc></apiParam></apiConstructorDef><apiDesc>
+		Creates a new EOFError object.
+		
+		</apiDesc></apiConstructorDetail></apiConstructor></apiClassifier><apiClassifier id="flash.errors:InvalidSWFError"><apiName>InvalidSWFError</apiName><shortdesc>
+  Flash Player throws this exception when it encounters a corrupted SWF file.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiDynamic/><apiBaseClassifier>Error</apiBaseClassifier></apiClassifierDef><apiDesc>
+  Flash Player throws this exception when it encounters a corrupted SWF file. 
+  </apiDesc></apiClassifierDetail><apiConstructor id="flash.errors:InvalidSWFError:InvalidSWFError"><apiName>InvalidSWFError</apiName><shortdesc>
+        Creates a new InvalidSWFError object.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>
+         
+         </keyword></asCustoms></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>message</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData></apiData><apiDesc>A string associated with the error object.
+        
+        </apiDesc></apiParam><apiParam><apiItemName>id</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiData>0</apiData></apiParam></apiConstructorDef><apiDesc>
+        Creates a new InvalidSWFError object.
+        
+        </apiDesc></apiConstructorDetail></apiConstructor></apiClassifier></apiPackage>

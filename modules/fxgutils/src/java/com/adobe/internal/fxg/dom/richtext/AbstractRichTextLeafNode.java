@@ -53,8 +53,8 @@ public abstract class AbstractRichTextLeafNode extends AbstractRichTextNode
     protected static final double LINEHEIGHT_PERCENT_MAX_INCLUSIVE = 1000.0; 
     protected static final double LINEHEIGHT_PIXEL_MIN_INCLUSIVE = -720.0;
     protected static final double LINEHEIGHT_PIXEL_MAX_INCLUSIVE = 720.0; 
-    protected static final double TRACKING_MIN_INCLUSIVE = -100.0;
-    protected static final double TRACKING_MAX_INCLUSIVE = 100.0;     
+    protected static final double TRACKING_MIN_INCLUSIVE = -1000.0;
+    protected static final double TRACKING_MAX_INCLUSIVE = 1000.0;     
 
     //--------------------------------------------------------------------------
     //
@@ -188,7 +188,7 @@ public abstract class AbstractRichTextLeafNode extends AbstractRichTextNode
         }
         else if (FXG_BACKGROUNDALPHA_ATTRIBUTE.equals(name))
         {
-        	backgroundAlpha = getAlphaInherit(this, value, ALPHA_MIN_INCLUSIVE, ALPHA_MAX_INCLUSIVE, backgroundAlpha.getNumberInheritAsDbl());
+        	backgroundAlpha = getAlphaInherit(this, value, ALPHA_MIN_INCLUSIVE, ALPHA_MAX_INCLUSIVE, backgroundAlpha.getNumberInheritAsDbl(), "UnknownBackgroundAlpha");
         }
         else if (FXG_BACKGROUNDCOLOR_ATTRIBUTE.equals(name))
         {
@@ -303,11 +303,19 @@ public abstract class AbstractRichTextLeafNode extends AbstractRichTextNode
      * Convert an FXG String value to a NumberInherit object.
      * 
      * @param value - the FXG String value.
+     * @param min - the smallest double value that the result must be greater
+     * or equal to.
+     * @param max - the largest double value that the result must be smaller
+     * than or equal to.
+     * @param defaultValue - the default double value; if the encountered minor 
+     * version is later than the supported minor version and the attribute value
+     *  is out-of-range, the default value is returned.
+     * @param errorCode - the error code if value is out-of-range.
      * @return the matching NumberInherit rule.
      * @throws FXGException if the String did not match a known
      * NumberInherit rule.
      */
-    private NumberInherit getAlphaInherit(FXGNode node, String value, double min, double max, double defaultValue)        
+    private NumberInherit getAlphaInherit(FXGNode node, String value, double min, double max, double defaultValue, String errorCode)        
     {
         try
         {
@@ -321,7 +329,7 @@ public abstract class AbstractRichTextLeafNode extends AbstractRichTextNode
             else
             {
                 //Exception: Unknown number inherit: {0}
-                throw new FXGException(node.getStartLine(), node.getStartColumn(), "UnknownNumberInherit", value);            
+                throw new FXGException(node.getStartLine(), node.getStartColumn(), errorCode, value);            
             }
         }
     }

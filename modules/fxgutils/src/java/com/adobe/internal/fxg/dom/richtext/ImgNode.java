@@ -62,11 +62,11 @@ public class ImgNode extends AbstractRichTextNode
     {
         if (FXG_WIDTH_ATTRIBUTE.equals(name))
         {
-            width = getNumberPercentAuto(this, value);
+            width = getNumberPercentAuto(this, value, "UnknownImgWidth");
         }
         else if(FXG_HEIGHT_ATTRIBUTE.equals(name))
         {
-            height = getNumberPercentAuto(this, value);
+            height = getNumberPercentAuto(this, value, "UnknownImgHeight");
         }
         else if(FXG_SOURCE_ATTRIBUTE.equals(name))
         {
@@ -85,10 +85,11 @@ public class ImgNode extends AbstractRichTextNode
     /**
      * 
      * @param node - the FXG node.
+     * @param errorCode - the error code when value is out-of-range.
 	 * @param value - the FXG String value.
 	 * 
      */
-    private NumberPercentAuto getNumberPercentAuto(FXGNode node, String value)
+    private NumberPercentAuto getNumberPercentAuto(FXGNode node, String value, String errorCode)
     {
     	try
     	{
@@ -104,7 +105,7 @@ public class ImgNode extends AbstractRichTextNode
             else
             {
                 //Exception: Unknown number percent auto: {0}
-                throw new FXGException(node.getStartLine(), node.getStartColumn(), "UnknownNumberPercentAuto", value);            
+                throw new FXGException(node.getStartLine(), node.getStartColumn(), errorCode, value);            
             }
     	}
     }

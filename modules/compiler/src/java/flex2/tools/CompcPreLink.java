@@ -11,30 +11,35 @@
 
 package flex2.tools;
 
-import flash.util.StringJoiner;
 import flash.swf.tags.DefineFont;
 import flash.swf.tags.DefineTag;
+import flash.util.StringJoiner;
+import flex2.compiler.CompilationUnit;
+import flex2.compiler.CompilerSwcContext;
 import flex2.compiler.FileSpec;
 import flex2.compiler.ResourceBundlePath;
+import flex2.compiler.ResourceContainer;
 import flex2.compiler.Source;
 import flex2.compiler.SourceList;
 import flex2.compiler.SourcePath;
-import flex2.compiler.ResourceContainer;
 import flex2.compiler.SymbolTable;
-import flex2.compiler.CompilerSwcContext;
-import flex2.compiler.CompilationUnit;
-import flex2.compiler.i18n.I18nUtils;
-import flex2.compiler.swc.Digest;
-import flex2.compiler.swc.SwcException;
-import flex2.compiler.util.MimeMappings;
-import flex2.compiler.util.NameMappings;
-import flex2.compiler.util.MultiName;
-import flex2.compiler.util.NameFormatter;
-import flex2.compiler.util.QName;
-import flex2.compiler.util.ThreadLocalToolkit;
 import flex2.compiler.common.Configuration;
+import flex2.compiler.common.MxmlConfiguration;
+import flex2.compiler.i18n.I18nUtils;
 import flex2.compiler.io.TextFile;
 import flex2.compiler.io.VirtualFile;
+import flex2.compiler.swc.Digest;
+import flex2.compiler.swc.Swc;
+import flex2.compiler.swc.SwcException;
+import flex2.compiler.swc.SwcScript;
+import flex2.compiler.util.CompilerMessage;
+import flex2.compiler.util.MimeMappings;
+import flex2.compiler.util.MultiName;
+import flex2.compiler.util.Name;
+import flex2.compiler.util.NameFormatter;
+import flex2.compiler.util.NameMappings;
+import flex2.compiler.util.QName;
+import flex2.compiler.util.ThreadLocalToolkit;
 
 import java.io.File;
 import java.util.*;
@@ -69,7 +74,53 @@ public class CompcPreLink implements flex2.compiler.PreLink
                         NameMappings nameMappings,
                         Configuration configuration)
     {
-        // No-op for compc.
+        int highestMinimumSupportedVersion = (MxmlConfiguration.EARLIEST_MAJOR_VERSION << 24);
+        boolean isMinimumSupportedVersionConfigured = 
+            configuration.getCompilerConfiguration().getMxmlConfiguration().isMinimumSupportedVersionConfigured();
+
+        for (CompilationUnit u : units)
+        {
+            Set<Name> dependencies = new HashSet<Name>();
+            dependencies.addAll(u.inheritance);
+            dependencies.addAll(u.namespaces);
+            dependencies.addAll(u.expressions);
+            dependencies.addAll(u.types);
+
+            for (Name name : dependencies)
+            {
+                // All names should be uniquely qualified at this point.
+                Source dependent = symbolTable.findSourceByQName((QName) name);
+
+                if (dependent.isSwcScriptOwner())
+                {
+                    SwcScript swcScript = (SwcScript) dependent.getOwner();
+                    Swc swc = swcScript.getLibrary().getSwc();
+                        
+                    // Make sure each dependency's minimum
+                    // supported version is less than or equal to
+                    // the compatibility version.
+                    if (highestMinimumSupportedVersion < swc.getVersions().getMinimumVersion() &&
+                    	configuration.getCompilerConfiguration().enableSwcVersionFiltering())
+                    {
+                        highestMinimumSupportedVersion = swc.getVersions().getMinimumVersion();
+
+                        if (isMinimumSupportedVersionConfigured &&
+                            configuration.getMinimumSupportedVersion() < highestMinimumSupportedVersion)
+                        {
+                            HigherMinimumSupportedVersionRequired message =
+                                new HigherMinimumSupportedVersionRequired(swc.getLocation(),
+                                                                          swc.getVersions().getMinimumVersionString());
+                            ThreadLocalToolkit.log(message, u.getSource());
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!isMinimumSupportedVersionConfigured)
+        {
+            configuration.getCompilerConfiguration().getMxmlConfiguration().setMinimumSupportedVersion(highestMinimumSupportedVersion);
+        }
     }
 
     private void postGenerateExtraSwcCode(List<Source> sources, List units, SymbolTable symbolTable, SourceList sourceList, SourcePath sourcePath,
@@ -335,4 +386,17 @@ public class CompcPreLink implements flex2.compiler.PreLink
         return StringJoiner.join(codePieces, null);
     }
     
+    public static class HigherMinimumSupportedVersionRequired extends CompilerMessage.CompilerError
+    {
+        private static final long serialVersionUID = -917715346261180364L;
+
+        public String swc;
+        public String swcMinimumSupportedVersion;
+
+        public HigherMinimumSupportedVersionRequired(String swc, String swcMinimumSupportedVersion)
+        {
+            this.swc = swc;
+            this.swcMinimumSupportedVersion = swcMinimumSupportedVersion;
+        }
+    }
 }

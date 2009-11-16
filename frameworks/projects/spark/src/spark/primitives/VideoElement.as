@@ -895,7 +895,7 @@ public class VideoElement extends UIComponent
     //----------------------------------
     
     [Bindable("volumeChanged")]
-    [Inspectable(category="General", defaultValue="1.0")]
+    [Inspectable(category="General", defaultValue="1.0", minValue="0.0", maxValue="1.0")]
     
     /**
      *  The volume level, specified as an value between 0 and 1.

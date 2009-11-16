@@ -22,6 +22,8 @@ import mx.controls.alertClasses.AlertForm;
 import mx.core.EdgeMetrics;
 import mx.core.FlexGlobals;
 import mx.core.IFlexDisplayObject;
+import mx.core.IFlexModule;
+import mx.core.IFlexModuleFactory;
 import mx.core.mx_internal;
 import mx.core.UIComponent;
 import mx.events.CloseEvent;
@@ -539,6 +541,9 @@ public class Alert extends Panel
      *  just as if you clicked it. Pressing Escape triggers the Cancel
      *  or No button just as if you selected it.
      *
+     *  @param moduleFactory The moduleFactory where this Alert should look for
+     *  its embedded fonts and style manager.
+     * 
      *  @return A reference to the Alert control. 
      *
      *  @see mx.events.CloseEvent
@@ -553,7 +558,8 @@ public class Alert extends Panel
                                 parent:Sprite = null, 
                                 closeHandler:Function = null, 
                                 iconClass:Class = null, 
-                                defaultButtonFlag:uint = 0x4 /* Alert.OK */):Alert
+                                defaultButtonFlag:uint = 0x4 /* Alert.OK */,
+                                moduleFactory:IFlexModuleFactory = null):Alert
     {
         var modal:Boolean = (flags & Alert.NONMODAL) ? false : true;
 
@@ -594,13 +600,20 @@ public class Alert extends Panel
             alert.addEventListener(CloseEvent.CLOSE, closeHandler);
 
 		// Setting a module factory allows the correct embedded font to be found.
-        if (parent is UIComponent)
-        	alert.moduleFactory = UIComponent(parent).moduleFactory;
+        if (moduleFactory)
+            alert.moduleFactory = moduleFactory;    
+        else if (parent is IFlexModule)
+        	alert.moduleFactory = IFlexModule(parent).moduleFactory;
         else
         {
-            alert.moduleFactory = FlexGlobals.topLevelApplication.moduleFactory;
-            // also set document is parent isn't a UIComponent
-            alert.document = FlexGlobals.topLevelApplication.document;
+            if (parent is IFlexModuleFactory)
+                alert.moduleFactory = IFlexModuleFactory(parent);
+            else                
+                alert.moduleFactory = FlexGlobals.topLevelApplication.moduleFactory;
+            
+            // also set document if parent isn't a UIComponent
+            if (!parent is UIComponent)
+                alert.document = FlexGlobals.topLevelApplication.document;
         }
 
         alert.addEventListener(FlexEvent.CREATION_COMPLETE, static_creationCompleteHandler);

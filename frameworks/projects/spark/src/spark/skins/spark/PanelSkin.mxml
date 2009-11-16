@@ -34,7 +34,7 @@ in accordance with the terms of the license agreement accompanying it.
     <fx:Script fb:purpose="styling">
         /* Define the skin elements that should not be colorized. 
         For panel, border and title background are skinned, but the content area and title text are not. */
-        static private const exclusions:Array = ["background", "titleDisplay", "contentGroup"];
+        static private const exclusions:Array = ["background", "titleDisplay", "contentGroup", "controlBarGroup"];
         
         /**
          * @private
@@ -71,14 +71,13 @@ in accordance with the terms of the license agreement accompanying it.
             dropShadow.visible = getStyle("dropShadowVisible");
             
             var cr:Number = getStyle("cornerRadius");
+            var withControls:Boolean = 
+                (currentState == "disabledWithControlBar" || 
+                 currentState == "normalWithControlBar");
             
             if (cornerRadius != cr)
             {
                 cornerRadius = cr;
-                
-                var withControls:Boolean = 
-                    (currentState == "disabledWithControlBar" || 
-                     currentState == "normalWithControlBar");
                 
                 dropShadow.tlRadius = cornerRadius;
                 dropShadow.trRadius = cornerRadius;

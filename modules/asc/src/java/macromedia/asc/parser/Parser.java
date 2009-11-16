@@ -3442,7 +3442,7 @@ XMLElementContent
                 matchSemicolon(mode);
             }
         }
-        else  // super expression
+        else if ( lookahead() == DOT_TOKEN || lookahead() == LEFTBRACKET_TOKEN ) // super expression
         {
             Node t = parseFullPostfixExpressionPrime(first);
             if (lookahead()==ASSIGN_TOKEN) // ISSUE: what about compound assignment?
@@ -3451,6 +3451,14 @@ XMLElementContent
             }
             result = nodeFactory.expressionStatement(parseListExpressionPrime(mode, nodeFactory.list(null, t)));
             matchSemicolon(mode);
+        }
+        else
+        {
+        	error(ParseError.EOS, kError_Parser_ExpectedToken,
+        			Token.getTokenClassName(LEFTPAREN_TOKEN),
+        			scanner.getCurrentTokenTextOrTypeText(lookahead()));
+        	result = nodeFactory.error(kError_Parser_ExpectedToken);
+        	skiperror(SEMICOLON_TOKEN);
         }
 
         if (debug)
@@ -4383,6 +4391,13 @@ XMLElementContent
                         }
                     }
                 }
+                else
+                {
+                    if (ctx.errorCount() == 0) 
+                    { 
+                        matchSemicolon(mode);  // don't check if an error has already occured
+                    }
+                }
             }
         }
 
@@ -4584,24 +4599,6 @@ XMLElementContent
             }
             else 
             {
-            	if (t instanceof PragmaNode) 
-            	{
-              		list.has_pragma = true;
-              		
-            		// make sure it's at the top of the block
-            		if (list != null) 
-            		{
-            			for (int i = 0; i < list.items.size(); i++) 
-            			{
-            				Node kid = list.items.at(i);
-            				if (!(kid instanceof PragmaNode)) 
-            				{
-            					error(kError_Parser_NumericUseMisplaced);
-            					break;
-            				}
-            			}
-            		}
-            	}
             	list = nodeFactory.statementList(list, t);
             }
         }

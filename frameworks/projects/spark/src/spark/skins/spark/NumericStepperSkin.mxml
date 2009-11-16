@@ -52,6 +52,7 @@ component is defined by the NumericStepperTextInputSkin class.
         }
         
         private var cornerRadiusChanged:Boolean;
+        private var borderStylesChanged:Boolean;
         
         /**
          *  @private
@@ -67,6 +68,15 @@ component is defined by the NumericStepperTextInputSkin class.
                     incrementButton.setStyle("cornerRadius", cr);
                 if (decrementButton)
                     decrementButton.setStyle("cornerRadius", cr);
+                cornerRadiusChanged = false;
+            }
+            
+            if (borderStylesChanged)
+            {
+                textDisplay.setStyle("borderAlpha", getStyle("borderAlpha"));
+                textDisplay.setStyle("borderColor", getStyle("borderColor"));
+                textDisplay.setStyle("borderVisible", getStyle("borderVisible"));
+                borderStylesChanged = false;
             }
         }
         
@@ -80,6 +90,12 @@ component is defined by the NumericStepperTextInputSkin class.
             if (!styleProp || styleProp == "cornerRadius")
             {
                 cornerRadiusChanged = true;
+                invalidateProperties();
+            }
+            
+            if (!styleProp || styleProp.indexOf("border") == 0)
+            {
+                borderStylesChanged = true;
                 invalidateProperties();
             }
         }

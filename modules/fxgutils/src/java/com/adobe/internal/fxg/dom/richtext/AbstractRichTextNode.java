@@ -164,6 +164,10 @@ public abstract class AbstractRichTextNode extends AbstractFXGNode implements Te
                  */
         		return;
         	}
+        	else
+        	{
+        	    super.addChild(child);
+        	}
         }
         else 
         {

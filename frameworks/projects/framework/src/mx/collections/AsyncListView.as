@@ -18,6 +18,8 @@ import mx.collections.errors.ItemPendingError;
 import mx.core.mx_internal;
 import mx.events.CollectionEvent;
 import mx.events.CollectionEventKind;
+import mx.events.PropertyChangeEvent;
+import mx.events.PropertyChangeEventKind;
 import mx.utils.OnDemandEventDispatcher;
 
 use namespace mx_internal;  // for mx_internal functions pendingItemSucceeded,Failed()
@@ -36,8 +38,9 @@ use namespace mx_internal;  // for mx_internal functions pendingItemSucceeded,Fa
 [Event(name="collectionChange", type="mx.events.CollectionEvent")]
 
 /**
- *  A "wrapper" for IList implementations that handles ItemPendingErrors
- *  thrown by <code>getItemAt()</code>.
+ *  A wrapper for IList implementations that handles ItemPendingErrors
+ *  thrown by <code>getItemAt()</code>, <code>removeItemAt()</code>, 
+ *  and <code>toArray()</code>.
  * 
  *  <p>The getItemAt() method handles ItemPendingErrors by returning a provisional 
  *  "pending" item until the underlying request succeeds or fails.  The provisional
@@ -55,6 +58,11 @@ use namespace mx_internal;  // for mx_internal functions pendingItemSucceeded,Fa
  *  like List and ComboBox, which don't provide intrinsic support for 
  *  ItemPendingError handling.</p>
  * 
+ *  <p>AsyncListView does not support re-insertion of pending or failed items.  Once 
+ *  a failed or pending item is removed, its connection to a pending request for data 
+ *  is lost.  Using drag and drop to move a pending item in an ASyncListView, or sorting 
+ *  an ASyncListView that contains pending or failed items, is not supported because 
+ *  these operations remove and then re-insert list items.</p>
  * 
  *  @langversion 3.0
  *  @playerversion Flash 9
@@ -139,14 +147,19 @@ public class AsyncListView extends OnDemandEventDispatcher implements IList
     private function deleteAllPendingResponders():void
     {
         for each (var responder:ListItemResponder in pendingResponders)
-            responder.index = -1;
+        {
+            if (responder)
+                responder.index = -1;
+        }
         pendingResponders.length = 0;
+        failedItems.length = 0;
     }
 
     /**
      *  @private
-     *  Fixup the pendingResponders array after a change to the list.  Generally speaking,
-     *  if a list[index] item changes, the pending responder for that index is no longer needed.
+     *  Fixup the pendingResponders and failedItems arrays after a change to the list.  
+     *  Generally speaking, if a list[index] item changes, the pending responder for 
+     *  that index is no longer needed.
      *  
      *  All "collectionChange" events are redispatched to the AsyncListView listeners.
      */
@@ -213,17 +226,17 @@ public class AsyncListView extends OnDemandEventDispatcher implements IList
      *  case a contiguous block of items (ce.items) beginning with index=ce.location
      *  has been changed.  If there are any pending requests for these indices, we
      *  assume they're no longer valid, i.e. we assume that getItemAt() should no longer
-     *  return the pending item.
-     * 
-     *  Note that when a pending request succeeds, a REPLACE event is dispatched by 
-     *  the underlying list.   When a pending request fails, we set the corresponding 
-     *  list item, which also causes a REPLACE even to be dispatched.
+     *  return the pending item.  Likewise for failed items.
      */
     private function deletePendingResponders(ce:CollectionEvent):void
     {
         var index:int = ce.location;
         for each (var item:Object in ce.items)
-            deletePendingResponder(index++);
+        {
+            deletePendingResponder(index);
+            delete failedItems[index];
+            index += 1;
+        }
     }
 
     /**
@@ -239,7 +252,7 @@ public class AsyncListView extends OnDemandEventDispatcher implements IList
         var toIndex:int = ce.location;
         for each (var item:Object in ce.items)
         {
-            const pendingResponder:ListItemResponder = pendingResponders[fromIndex];
+            var pendingResponder:ListItemResponder = pendingResponders[fromIndex];
             if (pendingResponder)
             {
                 delete pendingResponders[fromIndex];
@@ -247,6 +260,14 @@ public class AsyncListView extends OnDemandEventDispatcher implements IList
                 deletePendingResponder(toIndex); // in case we're copying over a pending request
                 pendingResponders[toIndex] = pendingResponder;
             }
+            
+            var failedItem:* = failedItems[fromIndex];
+            if (failedItem !== undefined)
+            {
+                delete failedItems[fromIndex];
+                failedItems[toIndex] = failedItem;
+            }
+            
             fromIndex += 1;
             toIndex += 1;
         }
@@ -257,7 +278,8 @@ public class AsyncListView extends OnDemandEventDispatcher implements IList
      *  Handler for a CollectionEventKind.ADD.  The event indicates 
      *  that a block of ce.items.length items starting at ce.location was inserted,
      *  which implies that all of the pendingResponders whose index is greater than or
-     *  equal to ce.location, must be shifted right by ce.items.length.
+     *  equal to ce.location, must be shifted right by ce.items.length.  The failedItems
+     *  array is handled similarly.
      */
     private function shiftPendingRespondersRight(ce:CollectionEvent):void
     {
@@ -271,7 +293,17 @@ public class AsyncListView extends OnDemandEventDispatcher implements IList
             if (responder.index >= startIndex)
                 responder.index += delta;
             pendingResponders[responder.index] = responder;
-        } 
+        }
+        
+        for (var index:int = failedItems.length - 1; index >= startIndex; index--)
+        {
+            var failedItem:* = failedItems[index];
+            if (failedItem !== undefined)
+            {
+                delete failedItems[index];
+                failedItems[index + delta] = failedItem;
+            }
+        }
     }
 
     /**
@@ -279,7 +311,8 @@ public class AsyncListView extends OnDemandEventDispatcher implements IList
      *  Handler for a CollectionEventKind.REMOVE.  The event indicates 
      *  that a block of ce.items.length items starting at ce.location was removed,
      *  which implies that all of the pendingResponders whose index is greater than or
-     *  equal to ce.location, must be shifted left by ce.items.length.
+     *  equal to ce.location, must be shifted left by ce.items.length.  The failedItems
+     *  array is handled similarly.
      */
     private function shiftPendingRespondersLeft(ce:CollectionEvent):void
     {
@@ -293,7 +326,18 @@ public class AsyncListView extends OnDemandEventDispatcher implements IList
             if (responder.index >= startIndex)
                 responder.index -= delta;
             pendingResponders[responder.index] = responder;
-        } 
+        }
+        
+        const failedItemsLength:int = failedItems.length;
+        for (var index:int = startIndex; index < failedItemsLength; index++)
+        {
+            var failedItem:* = failedItems[index];
+            if (failedItem !== undefined)
+            {
+                delete failedItems[index];
+                failedItems[index - delta] = failedItem;
+            }
+        }        
     }
     
     /**
@@ -307,7 +351,10 @@ public class AsyncListView extends OnDemandEventDispatcher implements IList
         const r:Array = new Array();
         var index:int = 0;
         for each (var item:* in a)
-            r[index++] = item;
+        {
+            if (item !== undefined)
+                r[index++] = item;
+        }
         return r;
     }
     
@@ -428,6 +475,7 @@ public class AsyncListView extends OnDemandEventDispatcher implements IList
     //--------------------------------------------------------------------------
 
     private const pendingResponders:Array = new Array();
+    private const failedItems:Array = new Array();
     
     /**
      *  @private
@@ -456,12 +504,38 @@ public class AsyncListView extends OnDemandEventDispatcher implements IList
     {
         delete pendingResponders[index];
 
-        var item:Object = null;
-        if (createFailedItemFunction !== null)
+        if (createFailedItemFunction === null)
+            return;
+        
+        const item:Object = createFailedItemFunction(index, info);
+        failedItems[index] = item;
+            
+        // dispatch collection and property change events
+        
+        const hasCollectionListener:Boolean = hasEventListener(CollectionEvent.COLLECTION_CHANGE);
+        const hasPropertyListener:Boolean = hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE);
+        var pce:PropertyChangeEvent; 
+                
+        if (hasCollectionListener || hasPropertyListener)
         {
-            item = createFailedItemFunction(index, info);
-            list.setItemAt(item, index); 
+            pce = new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE);
+            pce.kind = PropertyChangeEventKind.UPDATE;
+            pce.oldValue = null;
+            pce.newValue = item;
+            pce.property = index;
         }
+                
+        if (hasCollectionListener)
+        {
+            var ce:CollectionEvent = new CollectionEvent(CollectionEvent.COLLECTION_CHANGE);
+            ce.kind = CollectionEventKind.REPLACE;
+            ce.location = index;
+            ce.items.push(pce);
+            dispatchEvent(ce);
+        }
+                
+        if (hasPropertyListener)
+            dispatchEvent(pce);
     }
             
     
@@ -544,6 +618,10 @@ public class AsyncListView extends OnDemandEventDispatcher implements IList
     {
         if (!list)
             return null;
+        
+        const failedItem:* = failedItems[index];
+        if (failedItem !== undefined)
+            return failedItem;
 
         const pendingResponder:ListItemResponder = pendingResponders[index];
         if (pendingResponder)
@@ -576,8 +654,12 @@ public class AsyncListView extends OnDemandEventDispatcher implements IList
      */
     public function getItemIndex(item:Object):int
     {
+        const failedItemIndex:int = failedItems.indexOf(item);
+        if (failedItemIndex != -1)
+            return failedItemIndex;
+        
         for each (var responder:ListItemResponder in pendingResponders)
-            if (responder.item === item)
+            if (responder && responder.item === item)
                 return responder.index;
         return (list) ? list.getItemIndex(item) : -1;
     }
@@ -593,7 +675,7 @@ public class AsyncListView extends OnDemandEventDispatcher implements IList
     public function itemUpdated(item:Object, property:Object=null, oldValue:Object=null, newValue:Object=null):void
     {
         if (list)
-            itemUpdated(item, property, oldValue, newValue);
+            list.itemUpdated(item, property, oldValue, newValue);
     }
     
     /**
@@ -634,17 +716,23 @@ public class AsyncListView extends OnDemandEventDispatcher implements IList
         if (!list)
             return null;
         
-        var item:Object = deletePendingResponder(index);
+        const failedItem:* = failedItems[index];
+        delete failedItems[index];
+        const pendingItem:Object = deletePendingResponder(index);
         try
         {
-            return list.removeItemAt(index);
+            const actualItem:Object = list.removeItemAt(index);
+            if (failedItem !== undefined)
+                return failedItem;
+            return (pendingItem) ? pendingItem : actualItem;
+            
         }
         catch (ipe:ItemPendingError)
         {
             // If list[index] doesn't exist yet, an IPE will be thrown.  There's nothing 
             // we can do about that, so ignore it.
         }
-        return item; 
+        return (failedItem !== undefined) ? failedItem : pendingItem; 
     }
     
     /**
@@ -660,9 +748,13 @@ public class AsyncListView extends OnDemandEventDispatcher implements IList
         if (!list)
             return null;
         
+        const failedItem:* = failedItems[index];
         const pendingResponder:ListItemResponder = pendingResponders[index];
         const setItemValue:Object = list.setItemAt(item, index);
-        return (pendingResponder) ? pendingResponder.item : setItemValue;
+        if (failedItem !== undefined)
+            return failedItem;
+        else
+            return (pendingResponder) ? pendingResponder.item : setItemValue;
     }
     
     /**
@@ -708,7 +800,10 @@ public class AsyncListView extends OnDemandEventDispatcher implements IList
         {
             var nRequests:int = 0;
             for each (var responder:ListItemResponder in pendingResponders)
-                nRequests += 1;
+            {
+                if (responder)
+                    nRequests += 1;
+            }
             s += " length=" + length + ", " + nRequests + " pending requests";
         }
         else

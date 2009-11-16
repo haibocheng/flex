@@ -423,10 +423,10 @@ public class StringUtils
     }
 
 	/**
-	 * character escaping...
+	 * character escaping.  For example, "\u0041-\u0043" returns "\\u0041-\\u0043".
 	 *
 	 * @param s
-	 * @return
+	 * @return a formatted string
 	 */
 	public static String formatString(String s)
 	{
@@ -438,7 +438,15 @@ public class StringUtils
 			switch (s.charAt(i))
 			{
 			case '\\':
-				result.append("\\\\");
+                // Leave unicode characters as is.
+                if ((i + 1 < s.length()) && (s.charAt(i + 1) == 'u'))
+                {
+                    result.append("\\");
+                }
+                else
+                {
+                    result.append("\\\\");
+                }
 				break;
 			case '"':
 				result.append("\\\"");
@@ -474,6 +482,65 @@ public class StringUtils
 
 		return result.toString();
 	}
+
+	/**
+	 * character unescaping.  For example, "\u0041-\u0043" becomes "A-C".
+	 *
+	 * @param s a formatted String
+	 * @return a unformated String
+	 */
+    public static String unformatString(String s)
+    {
+        StringBuffer result = new StringBuffer();
+        int i = 0;
+
+        while (i < s.length())
+        {
+            char c = s.charAt(i++);
+
+            if ((c == '\\') && (i < s.length()))
+            {
+                c = s.charAt(i++);
+
+                if ((c == 'u') && (i + 3 < s.length()))
+                {
+                    // Read the xxxx
+                    int value = 0;
+
+                    for (int j = 0; j < 4; j++)
+                    {
+                        c = s.charAt(i++);
+                        int digit = Character.digit(c, 16);
+
+                        if (digit != -1)
+                        {
+                            value = (value << 4) + digit;
+                        }
+                        else
+                        {
+                            throw new IllegalArgumentException("Malformed \\uxxxx encoding.");
+                        }
+                    }
+                    result.append((char) value);
+                }
+                else if (c == 'u')
+                {
+                    result.append(c);
+                }
+                else
+                {
+                    result.append('\\');
+                    result.append(c);
+                }
+            }
+            else
+            {
+                result.append(c);
+            }
+        }
+
+        return result.toString();
+    }
 
 	// Remove whitespace from the input string and return a string that contains
 	// at most 1 'replacementChar' character between each word.

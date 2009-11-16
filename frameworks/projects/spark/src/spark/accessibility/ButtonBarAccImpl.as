@@ -12,6 +12,9 @@
 package spark.accessibility
 {
 
+import flash.accessibility.Accessibility;
+import flash.events.Event;
+
 import mx.core.UIComponent;
 import mx.core.mx_internal;
 
@@ -37,6 +40,11 @@ public class ButtonBarAccImpl extends ListBaseAccImpl
     //  Class constants
     //
     //--------------------------------------------------------------------------
+
+    /**
+     *  @private
+     */
+    private static const EVENT_OBJECT_STATECHANGE:uint = 0x800a;
 
     /**
      *  @private
@@ -175,6 +183,37 @@ public class ButtonBarAccImpl extends ListBaseAccImpl
 
         return "Press";
     }
+    
+    //--------------------------------------------------------------------------
+    //
+    //  Event handlers
+    //
+    //--------------------------------------------------------------------------
+    
+    override protected function eventHandler(event:Event):void
+    {
+        // Let AccImpl class handle the events
+        // that all accessible UIComponents understand.
+        $eventHandler(event);
+        
+        switch (event.type)
+        {
+            case "change":
+            {
+                var pressed:int = ButtonBar(master).selectedIndex;
+                
+                Accessibility.sendEvent(master, pressed + 1,
+                    EVENT_OBJECT_STATECHANGE, true);
+                break;
+            }
+            default:
+            {
+                super.eventHandler(event);
+                break;
+            }
+        }
+    }
+
 }
 
 }

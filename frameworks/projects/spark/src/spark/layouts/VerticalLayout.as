@@ -12,11 +12,13 @@
 package spark.layouts
 {
 import flash.events.Event;
+import flash.geom.Point;
 import flash.geom.Rectangle;
 
 import mx.containers.utilityClasses.Flex;
 import mx.core.ILayoutElement;
 import mx.core.IVisualElement;
+import mx.core.mx_internal;
 import mx.events.PropertyChangeEvent;
 
 import spark.components.supportClasses.GroupBase;
@@ -25,6 +27,8 @@ import spark.layouts.supportClasses.DropLocation;
 import spark.layouts.supportClasses.LayoutBase;
 import spark.layouts.supportClasses.LayoutElementHelper;
 import spark.layouts.supportClasses.LinearLayoutVector;
+
+use namespace mx_internal;
 
 /**
  *  The VerticalLayout class arranges the layout elements in a vertical sequence,
@@ -175,8 +179,10 @@ public class VerticalLayout extends LayoutBase
     public function VerticalLayout():void
     {
         super();
-    }
-        
+		
+		// Don't drag-scroll in the horizontal direction
+		dragScrollRegionSizeHorizontal = 0;
+    }   
     
     //--------------------------------------------------------------------------
     //
@@ -322,7 +328,7 @@ public class VerticalLayout extends LayoutBase
 
     private var _paddingLeft:Number = 0;
     
-    [Inspectable(category="General")]
+    [Inspectable(category="General", minValue="0.0")]
 
     /**
      *  The minimum number of pixels between the container's left edge and
@@ -358,7 +364,7 @@ public class VerticalLayout extends LayoutBase
 
     private var _paddingRight:Number = 0;
     
-    [Inspectable(category="General")]
+    [Inspectable(category="General", minValue="0.0")]
 
     /**
      *  The minimum number of pixels between the container's right edge and
@@ -394,7 +400,7 @@ public class VerticalLayout extends LayoutBase
 
     private var _paddingTop:Number = 0;
     
-    [Inspectable(category="General")]
+    [Inspectable(category="General", minValue="0.0")]
 
     /**
      *  Number of pixels between the container's top edge
@@ -430,7 +436,7 @@ public class VerticalLayout extends LayoutBase
 
     private var _paddingBottom:Number = 0;
     
-    [Inspectable(category="General")]
+    [Inspectable(category="General", minValue="0.0")]
 
     /**
      *  Number of pixels between the container's bottom edge
@@ -466,7 +472,7 @@ public class VerticalLayout extends LayoutBase
 
     private var _requestedRowCount:int = -1;
     
-    [Inspectable(category="General")]
+    [Inspectable(category="General", minValue="-1")]
 
     /**
      *  The measured size of this layout is tall enough to display 
@@ -508,7 +514,7 @@ public class VerticalLayout extends LayoutBase
     
     private var _rowHeight:Number;
 
-    [Inspectable(category="General")]
+    [Inspectable(category="General", minValue="0.0")]
 
     /**
      *  If <code>variableRowHeight</code> is <code>false</code>, then 
@@ -702,7 +708,7 @@ public class VerticalLayout extends LayoutBase
     /**
      *  @private
      */
-    override protected function getElementBounds(index:int):Rectangle
+    override public function getElementBounds(index:int):Rectangle
     {
         if (!useVirtualLayout)
             return super.getElementBounds(index);
@@ -1874,6 +1880,20 @@ public class VerticalLayout extends LayoutBase
         y = Math.max(-1, Math.min(target.contentHeight - height + 1, y));
         return new Rectangle(x, y, width, height);
     }
+	
+	/**
+	 *  @private
+	 */
+	override protected function calculateDragScrollDelta(dropLocation:DropLocation,
+														 timeInterval:int,
+														 timeElapsed:int):Point
+	{
+		var delta:Point = super.calculateDragScrollDelta(dropLocation, timeInterval, timeElapsed);
+		// Don't scroll in the horizontal direction
+		if (delta)
+			delta.x = 0;
+		return delta;
+	}
 }
 }
 

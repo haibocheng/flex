@@ -12,6 +12,7 @@
 package spark.components.supportClasses
 {
 import flash.geom.Rectangle;
+import flash.events.TextEvent;
 
 import flashx.textLayout.edit.EditManager;
 import flashx.textLayout.tlf_internal;
@@ -75,7 +76,21 @@ public class RichEditableTextEditManager extends EditManager
     //
     //--------------------------------------------------------------------------
     
-    /**
+    /** 
+     * @private  
+     */
+    override public function textInputHandler(event:TextEvent):void
+    {
+        super.textInputHandler(event);
+
+        // Normally keystrokes are saved until the next enter frame event before
+        // they are inserted into the text flow.  If this flag is false, the 
+        // character just typed will be inserted into the text flow immediately.
+        if (!textDisplay.batchTextInput)
+            flushPendingOperations();        
+    }
+    
+   /**
     *  @private
     * 
     *  Override so if we are auto-sizing it does not update the display after an 

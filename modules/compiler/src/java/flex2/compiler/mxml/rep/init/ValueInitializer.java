@@ -1425,7 +1425,7 @@ public abstract class ValueInitializer implements Initializer, Cloneable
 
 		if (targetType.equals(typeTable.stringType))
 		{
-			return StringUtils.formatString((String)value);
+			return StringUtils.formatString(value.toString());
 		}
 		else if (targetType.equals(typeTable.booleanType) ||
 				targetType.equals(typeTable.numberType) ||
@@ -1438,7 +1438,7 @@ public abstract class ValueInitializer implements Initializer, Cloneable
 		{
 			if (value instanceof String)
 			{
-				return StringUtils.formatString((String)value);
+				return StringUtils.formatString((String) value);
 			}
 			else if (value instanceof Number || value instanceof Boolean)
 			{
@@ -1521,7 +1521,7 @@ public abstract class ValueInitializer implements Initializer, Cloneable
 
 		if (targetType.equals(typeTable.stringType))
 		{
-			return nodeFactory.literalString(value.toString());
+			return nodeFactory.literalString(StringUtils.unformatString(value.toString()));
 		}
 
 		if (targetType.equals(typeTable.booleanType))
@@ -1538,7 +1538,7 @@ public abstract class ValueInitializer implements Initializer, Cloneable
 		{
 			if (value instanceof String)
 			{
-				return nodeFactory.literalString((String) value);
+				return nodeFactory.literalString(StringUtils.unformatString((String) value));
 			}
 			else if (value instanceof Number)
 			{

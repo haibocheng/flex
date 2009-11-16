@@ -34,6 +34,9 @@ import flash.swf.tags.DefineBits;
  */
 public class TypeHelper
 {
+	
+	public static final double GRADIENT_DIMENSION = 1638.4;
+	
     /**
      * Creates a SWF Rect from double precision coordinate pairs (in pixels)
      * that specify the top left corner (minX, minY) and the bottom right corner
@@ -87,30 +90,27 @@ public class TypeHelper
      * @param node - the object to which the radial gradient is being applied.
      * @return a SWF Matrix to apply for a radial gradient.
      */
-    public static Matrix radialGradientMatrix(ScalableGradientNode gradient, Rect pathBounds, FXGMatrix pathMatrix)
+    public static Matrix radialGradientMatrix(ScalableGradientNode gradient, Rect pathBounds)
     {
-
         //support for node matrix 
         MatrixNode mtxNode = gradient.getMatrixNode();
-        FXGMatrix matrix = new FXGMatrix();
         if (mtxNode != null)
         {
-            Rect transformedBounds = pathMatrix.apply(pathBounds);
-            double width = (transformedBounds.xMax - transformedBounds.xMin); 
-            double height = (transformedBounds.yMax - transformedBounds.yMin); 
-            matrix.scale(width/SwfConstants.GRADIENT_SQUARE, height/SwfConstants.GRADIENT_SQUARE);
-            matrix.translate(transformedBounds.xMin/(double)SwfConstants.TWIPS_PER_PIXEL, transformedBounds.yMin/(double)SwfConstants.TWIPS_PER_PIXEL);
-            FXGMatrix nodeMatrix = new FXGMatrix(mtxNode);
-            matrix.concat(nodeMatrix);
-            return matrix.toSWFMatrix();
+            double tx = mtxNode.tx;
+            double ty = mtxNode.ty;
+            FXGMatrix fxgMtx = new FXGMatrix(mtxNode.a, mtxNode.b, mtxNode.c, mtxNode.d, 0, 0);
+            fxgMtx.scale(SwfConstants.TWIPS_PER_PIXEL/(float)SwfConstants.GRADIENT_SQUARE, SwfConstants.TWIPS_PER_PIXEL/(float)SwfConstants.GRADIENT_SQUARE);
+            fxgMtx.translate(tx, ty);
+            return fxgMtx.toSWFMatrix();
         }             
           
-        double w = !Double.isNaN(gradient.getScaleX()) ? gradient.getScaleX() : pathBounds.getWidth()/(double) SwfConstants.TWIPS_PER_PIXEL;
-        double h = !Double.isNaN(gradient.getScaleY()) ? gradient.getScaleY() : pathBounds.getHeight()/(double) SwfConstants.TWIPS_PER_PIXEL;
-        double tx = pathBounds.xMin/((double)SwfConstants.TWIPS_PER_PIXEL) + (!Double.isNaN(gradient.getX()) ? gradient.getX() : pathBounds.getWidth() / (2.0*SwfConstants.TWIPS_PER_PIXEL));
-        double ty = pathBounds.yMin/((double)SwfConstants.TWIPS_PER_PIXEL) + (!Double.isNaN(gradient.getY()) ? gradient.getY() :  pathBounds.getHeight() / (2.0*SwfConstants.TWIPS_PER_PIXEL));
+        double w = !Double.isNaN(gradient.getScaleX()) ? gradient.getScaleX()*SwfConstants.TWIPS_PER_PIXEL : pathBounds.getWidth();
+        double h = !Double.isNaN(gradient.getScaleY()) ? gradient.getScaleY()*SwfConstants.TWIPS_PER_PIXEL: pathBounds.getHeight();
+        double tx = (!Double.isNaN(gradient.getX()) ? gradient.getX() : pathBounds.getWidth() / (2.0*SwfConstants.TWIPS_PER_PIXEL));
+        double ty = (!Double.isNaN(gradient.getY()) ? gradient.getY() :  pathBounds.getHeight() / (2.0*SwfConstants.TWIPS_PER_PIXEL));
             
-        matrix.scale(w*SwfConstants.TWIPS_PER_PIXEL/SwfConstants.GRADIENT_SQUARE, h*SwfConstants.TWIPS_PER_PIXEL/SwfConstants.GRADIENT_SQUARE);
+        FXGMatrix matrix = new FXGMatrix();
+        matrix.scale(w/SwfConstants.GRADIENT_SQUARE, h/SwfConstants.GRADIENT_SQUARE);
         if (!Double.isNaN(gradient.getRotation()) && (gradient.getRotation() != 0))
             matrix.rotate(gradient.getRotation());
         matrix.translate(tx, ty);
@@ -131,104 +131,94 @@ public class TypeHelper
      * @param node - the object to which the linear gradient is being applied.
      * @return a SWF Matrix to apply for a linear gradient.
      */
-    public static Matrix linearGradientMatrix(ScalableGradientNode gradient, Rect pathBounds, FXGMatrix pathMatrix) 
+    public static Matrix linearGradientMatrix(ScalableGradientNode gradient, Rect pathBounds) 
     {
-
  
+        FXGMatrix matrix = new FXGMatrix();
+        matrix.translate(GRADIENT_DIMENSION/2.0, GRADIENT_DIMENSION/2.0);
+        matrix.scale(1.0/GRADIENT_DIMENSION, 1.0/GRADIENT_DIMENSION);
+
         //support for node matrix 
         MatrixNode mtxNode = gradient.getMatrixNode();
-        FXGMatrix matrix = new FXGMatrix();
         if (mtxNode != null)
         {
-            Rect transformedBounds = pathMatrix.apply(pathBounds);
-            double width = (transformedBounds.xMax - transformedBounds.xMin) / (double)SwfConstants.TWIPS_PER_PIXEL; 
-            double height = (transformedBounds.yMax - transformedBounds.yMin) / (double)SwfConstants.TWIPS_PER_PIXEL; 
-            matrix.scale((width*SwfConstants.TWIPS_PER_PIXEL)/SwfConstants.GRADIENT_SQUARE, 1);
-            matrix.translate(width/2.0 + transformedBounds.xMin/(double)SwfConstants.TWIPS_PER_PIXEL, height/2.0 + transformedBounds.yMin/(double)SwfConstants.TWIPS_PER_PIXEL);
             FXGMatrix nodeMatrix = new FXGMatrix(mtxNode);
             matrix.concat(nodeMatrix);
             return matrix.toSWFMatrix();
         }
-        
-        double width = (pathBounds.xMax - pathBounds.xMin) / (double)SwfConstants.TWIPS_PER_PIXEL; 
-        double height = (pathBounds.yMax - pathBounds.yMin) / (double)SwfConstants.TWIPS_PER_PIXEL; 
+
+        double width = pathBounds.getWidth(); 
+        double height = pathBounds.getHeight(); 
         double scaleX = gradient.getScaleX();
         double rotation = gradient.getRotation();
         double tx = gradient.getX();
         double ty = gradient.getY();
 
-        if (Double.isNaN(scaleX))
-        {
-            // Figure out the two sides
-            if (rotation % 90 != 0)
-            {           
-                // Normalize angles with absolute value > 360 
-                double normalizedAngle = rotation % 360;
-                // Normalize negative angles
-                if (normalizedAngle < 0)
-                    normalizedAngle += 360;
-                
-                // Angles wrap at 180
-                normalizedAngle %= 180;
-                
-                // Angles > 90 get mirrored
-                if (normalizedAngle > 90)
-                    normalizedAngle = 180 - normalizedAngle;
-                
-                double side = width;
-                // Get the hypotenuse of the largest triangle that can fit in the bounds
-                double hypotenuse = Math.sqrt(width * width + height * height);
-                // Get the angle of that largest triangle
-                double hypotenuseAngle =  Math.acos(width / hypotenuse) * 180 / Math.PI;
-                
-                // If the angle is larger than the hypotenuse angle, then use the height 
-                // as the adjacent side of the triangle
-                if (normalizedAngle > hypotenuseAngle)
-                {
-                    normalizedAngle = 90 - normalizedAngle;
-                    side = height;
-                }
-                
-                // Solve for the hypotenuse given an adjacent side and an angle. 
-                scaleX = side / Math.cos(normalizedAngle / 180 * Math.PI);
-            }
-            else 
-            {
-                // Use either width or height based on the rotation
-                scaleX = (rotation % 180) == 0 ? width : height;
-            }
-        } 
-       
+		if (Double.isNaN(scaleX))
+		{
+			// Figure out the two sides
+			if (rotation % 90 != 0) 
+			{
+				// Normalize angles with absolute value > 360
+				double normalizedAngle = rotation % 360;
+				// Normalize negative angles
+				if (normalizedAngle < 0)
+					normalizedAngle += 360;
+
+				// Angles wrap at 180
+				normalizedAngle %= 180;
+
+				// Angles > 90 get mirrored
+				if (normalizedAngle > 90)
+					normalizedAngle = 180 - normalizedAngle;
+
+				double side = width;
+				// Get the hypotenuse of the largest triangle that can fit in the
+				// bounds
+				double hypotenuse = Math.sqrt(width * width + height * height);
+				// Get the angle of that largest triangle
+				double hypotenuseAngle = Math.acos(width / hypotenuse) * 180
+				/ Math.PI;
+
+				// If the angle is larger than the hypotenuse angle, then use the
+				// height
+				// as the adjacent side of the triangle
+				if (normalizedAngle > hypotenuseAngle) {
+					normalizedAngle = 90 - normalizedAngle;
+					side = height;
+				}
+
+				// Solve for the hypotenuse given an adjacent side and an angle.
+				scaleX = side / Math.cos(normalizedAngle / 180 * Math.PI);
+
+			} else {
+					// Use either width or height based on the rotation
+					scaleX = (rotation % 180) == 0 ? width : height;
+			}
+			scaleX /= SwfConstants.TWIPS_PER_PIXEL;
+		}
+        
+                     
+        FXGMatrix nodeMatrix = new FXGMatrix();
+        nodeMatrix.scale(scaleX, 1);
+        
+        if (!Double.isNaN(rotation)) 
+        	nodeMatrix.rotate(rotation);
+        
         // If only x or y is defined, force the other to be set to 0
         if (!Double.isNaN(tx) && Double.isNaN(ty))
             ty = 0;
         if (Double.isNaN(tx) && !Double.isNaN(ty))
             tx = 0;
-        
-        // If x and y are specified, then move the gradient so that the
-        // top left corner is at 0,0
-        if (!Double.isNaN(tx) && !Double.isNaN(ty))
-            matrix.translate( SwfConstants.GRADIENT_SQUARE/(2.0*SwfConstants.TWIPS_PER_PIXEL), SwfConstants.GRADIENT_SQUARE/(2.0*SwfConstants.TWIPS_PER_PIXEL));
-             
-        // Force the scaleX to a minimum of 2. Values of 0 or 1 have undesired behavior 
-        scaleX = Math.max(scaleX, 2);
-        
-        // Scale the gradient in the x direction. The natural size is 1638.4px. No need
-        // to scale the y direction because it is infinite
-        scaleX = (scaleX*SwfConstants.TWIPS_PER_PIXEL)/ SwfConstants.GRADIENT_SQUARE;
-        matrix.scale(scaleX, 1);
-        
-        if (!Double.isNaN(rotation)) 
-            matrix.rotate(rotation);
-        
         if (Double.isNaN(tx))
-            tx = width / 2;
+            tx = 0;
         if (Double.isNaN(ty))
-            ty = height / 2;
-        matrix.translate(tx + pathBounds.xMin/(double)SwfConstants.TWIPS_PER_PIXEL, 
-                ty + pathBounds.yMin/(double)SwfConstants.TWIPS_PER_PIXEL);
-        
+            ty = 0;
+       nodeMatrix.translate(tx, ty);
+         
+        matrix.concat(nodeMatrix);
         return matrix.toSWFMatrix();
+
     }
 
     

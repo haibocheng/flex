@@ -45,6 +45,7 @@ import mx.managers.FocusManager;
 import mx.managers.IActiveWindowManager;
 import mx.managers.ICursorManager;
 import mx.managers.ISystemManager;
+import mx.managers.SystemManagerGlobals;
 import mx.managers.WindowedSystemManager;
 import mx.managers.systemClasses.ActiveWindowManager;
 import mx.styles.CSSStyleDeclaration;
@@ -1109,6 +1110,18 @@ public class Window extends LayoutContainer implements IWindow
      */
     override public function set visible(value:Boolean):void
     {
+        setVisible(value);
+    }
+    
+    /**
+     *  @private
+     *  We override setVisible because there's the flash display object concept 
+     *  of visibility and also the nativeWindow concept of visibility.
+     */
+    override public function setVisible(value:Boolean,
+                                        noEvent:Boolean = false):void
+    {
+        // first handle the native window stuff
         if (!_nativeWindow)
         {
             _nativeWindowVisible = value;
@@ -1116,27 +1129,22 @@ public class Window extends LayoutContainer implements IWindow
         }
         else if (!_nativeWindow.closed)
         {
-            var e:FlexEvent;
             if (value)
             {
                 _nativeWindow.visible = value;
-                e = new FlexEvent(FlexEvent.SHOW);
-                dispatchEvent(e);
             }
             else
             {
-                e = new FlexEvent(FlexEvent.HIDE);
-                if (getStyle("hideEffect"))
-                {
+                // in the conditions below we will play an effect
+                if (getStyle("hideEffect") && initialized && $visible != value)
                     addEventListener(EffectEvent.EFFECT_END, hideEffectEndHandler);
-                }
                 else
-                {
                     _nativeWindow.visible = value;
-                }
-                dispatchEvent(e);
             }
         }
+        
+        // now call super.setVisible
+        super.setVisible(value, noEvent);
     }
     
     //----------------------------------
@@ -1430,8 +1438,8 @@ public class Window extends LayoutContainer implements IWindow
     {
         if (_menu)
         {
-            _menu.automationOwner = null;
             _menu.automationParent = null;
+            _menu.automationOwner = null;
         }
         
         _menu = value;
@@ -2262,6 +2270,10 @@ public class Window extends LayoutContainer implements IWindow
         {
             flagForOpen = false;
             
+            // Set up our module factory if we don't have one.
+            if (moduleFactory == null)
+                moduleFactory = SystemManagerGlobals.topLevelSystemManagers[0];            
+
             var init:NativeWindowInitOptions = new NativeWindowInitOptions();
             init.maximizable = _maximizable;
             init.minimizable = _minimizable;
@@ -2292,7 +2304,7 @@ public class Window extends LayoutContainer implements IWindow
             addEventListener(Event.ENTER_FRAME, enterFrameHandler);
             
             //'register' with WindowedSystemManager so it can cleanup when done.
-            sm.addWindow(this);
+            sm.addWindow(this);            
         }
         
         // minimum width and height

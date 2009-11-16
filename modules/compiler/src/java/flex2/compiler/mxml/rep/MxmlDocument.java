@@ -871,6 +871,13 @@ public final class MxmlDocument
             BindingExpression bindingExpression = (BindingExpression) bindingExpressionsArray[i];
             if (bindingExpression.isTwoWayPrimary())
             {
+                Model destination = bindingExpression.getDestination();
+
+                if (destination != null)
+                {
+                    destination.ensureBindable();
+                }
+
                 String source2 = bindingExpression.getDestinationPath(false);
                 
                 BindingExpression bindingExpression2 = 

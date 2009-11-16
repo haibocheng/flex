@@ -12,6 +12,7 @@
 package spark.components
 {
 
+import flash.display.Graphics;
 import mx.core.mx_internal;
 import mx.utils.BitFlagUtil;
 
@@ -96,6 +97,7 @@ use namespace mx_internal;
  *   <strong>Properties</strong>
  *    controlBarContent="null"
  *    controlBarLayout="HorizontalLayout"
+ *    controlBarVisible="true"
  *    title=""
  *   &gt;
  *      ...
@@ -118,7 +120,7 @@ public class Panel extends SkinnableContainer
 {
     include "../core/Version.as";
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     //
     //  Class constants
     //
@@ -293,6 +295,17 @@ public class Panel extends SkinnableContainer
      *  @playerversion AIR 1.5
      *  @productversion Flex 4
      */
+    public function get controlBarContent():Array
+    {
+        if (controlBarGroup)
+            return controlBarGroup.getMXMLContent();
+        else
+            return controlBarGroupProperties.controlBarContent;
+    }
+
+    /**
+     *  @private
+     */
     public function set controlBarContent(value:Array):void
     {
         if (controlBarGroup)
@@ -329,9 +342,9 @@ public class Panel extends SkinnableContainer
     }
 
     /**
-	 *  @private
-	 */
-	public function set controlBarLayout(value:LayoutBase):void
+     *  @private
+     */
+    public function set controlBarLayout(value:LayoutBase):void
     {
         if (controlBarGroup)
         {
@@ -369,8 +382,8 @@ public class Panel extends SkinnableContainer
     }
 
     /**
-	 *  @private
-	 */
+     *  @private
+     */
     public function set controlBarVisible(value:Boolean):void
     {
         if (controlBarGroup)
@@ -392,13 +405,13 @@ public class Panel extends SkinnableContainer
     //----------------------------------
 
     /**
-	 *  @private
-	 */
+     *  @private
+     */
     private var _title:String = "";
     
     /**
-	 *  @private
-	 */
+     *  @private
+     */
     private var titleChanged:Boolean;
 
     [Bindable]
@@ -444,6 +457,38 @@ public class Panel extends SkinnableContainer
             Panel.createAccessibilityImplementation(this);
     }
 
+    /**
+     *  @private
+     */
+    override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
+    {
+        // fixme (gosmith): this is not working to extend the height of the the titleDisplay
+        super.updateDisplayList(unscaledWidth, unscaledHeight);
+        if (titleDisplay)
+        {
+            var g:Graphics = titleDisplay.graphics;
+            g.clear();
+            // Also draw an invisible unfilled rect whose height
+            // is the height of the entire Panel, not just the headerHeight.
+            // This is for accessibility; the titlebar of the Panel
+            // has an AccessibilityImplementation (see PanelAccImpl)
+            // which makes it act like a grouping (ROLE_SYSTEM_GROUPING)
+            // for the controls inside the panel.
+            // Drawing this rect makes the accLocation rect of the grouping
+            // enclose the controls inside the grouping,
+            // even though it is a sibling of them, not their parent.
+            // (This is because the Player doesn't support Sprites
+            // with AccessibilityImplementations inside other Sprites
+            // with AccessibilityImplementations; the accessible objects
+            // in a Flash SWF are a flat list, not a hierarchy.)
+            // This rectangle must be unfilled because the titleBar is
+            // actually on top of the content area and would otherwise
+            // block mouse events to the controls in the Panel.
+            g.lineStyle(0, 0x000000, 0);
+            g.drawRect(0, 0, unscaledWidth, unscaledHeight);
+        }
+    }
+        
     /**
      *  @private
      */

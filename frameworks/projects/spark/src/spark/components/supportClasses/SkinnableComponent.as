@@ -33,7 +33,7 @@ use namespace mx_internal;
 //--------------------------------------
 
 /**
- *  @copy spark.components.supportClasses.GroupBase#baseColor
+ *  @copy spark.components.supportClasses.GroupBase#style:baseColor
  *  
  *  @langversion 3.0
  *  @playerversion Flash 10
@@ -70,7 +70,6 @@ use namespace mx_internal;
 //--------------------------------------
 
 [Exclude(name="errorColor", kind="style")]
-[Exclude(name="focusBlendMode", kind="style")]
 [Exclude(name="themeColor", kind="style")]
 [Exclude(name="addChild", kind="method")]
 [Exclude(name="addChildAt", kind="method")]

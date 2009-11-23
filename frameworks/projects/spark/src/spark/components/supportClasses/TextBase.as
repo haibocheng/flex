@@ -416,7 +416,7 @@ public class TextBase extends UIComponent
      *  @private
      */
     mx_internal var _text:String = "";
-        
+    [Bindable("textChanged")]
     /**
      *  The text displayed by this text component.
 	 *
@@ -447,6 +447,7 @@ public class TextBase extends UIComponent
             invalidateTextLines();
             invalidateSize();
             invalidateDisplayList();
+			dispatchBindingEvent("textChanged");
         }
     }
     

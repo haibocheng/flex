@@ -41,7 +41,10 @@ package flashx.textLayout.operations
 		 * @langversion 3.0 
 		 */
 		public function RedoOperation(operation:FlowOperation)
-		{ super(null); }
+		{ 
+			super(operation.textFlow);
+			_operation = operation;
+		}
 
 
 		/** 

@@ -383,7 +383,7 @@ public final class Mxmlc extends Tool
                     benchmark.startTime(Benchmark.POSTCOMPILE);
                 }
 
-                // swc is already up-to-date so no need to compile/link or rewrite file
+                // swf is already up-to-date so no need to compile/link or rewrite file
                 ThreadLocalToolkit.log(new NoUpdateMessage(FileUtil.getCanonicalPath(outputFile)));
             }
             

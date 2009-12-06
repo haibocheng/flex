@@ -260,27 +260,30 @@ package flashx.textLayout.compose
 			}
 			else
 			{
-				ContainerController(controller).setRootElement(_rootElement)
+				controller.setRootElement(_rootElement)
 				var curContainer:Sprite = controller.container;
 				if (curContainer)
 					curContainer.focusRect = false;
-				// mark the previous container as geometry damaged - this is more than is needed
-				controller = this.getControllerAt(this.numControllers-2);
-				var damageStart:int = controller.absoluteStart;
-				var damageLen:int = controller.textLength;
-				// watch out for an empty previous container
-				if (damageLen == 0)
+				if (textFlow)
 				{
-					if (damageStart != textFlow.textLength)
-						damageLen++;
-					else if (damageStart != 0)
+					// mark the previous container as geometry damaged - this is more than is needed
+					controller = this.getControllerAt(this.numControllers-2);
+					var damageStart:int = controller.absoluteStart;
+					var damageLen:int = controller.textLength;
+					// watch out for an empty previous container
+					if (damageLen == 0)
 					{
-						damageStart--;
-						damageLen++;
+						if (damageStart != textFlow.textLength)
+							damageLen++;
+						else if (damageStart != 0)
+						{
+							damageStart--;
+							damageLen++;
+						}
 					}
+					if (damageLen)
+						textFlow.damage(damageStart,damageLen,FlowDamageType.GEOMETRY,false);
 				}
-				if (damageLen)
-					textFlow.damage(damageStart,damageLen,FlowDamageType.GEOMETRY,false);
 			}
 		}
 		/** @copy IFlowComposer#addControllerAt()
@@ -445,7 +448,7 @@ package flashx.textLayout.compose
 						if (cont.absoluteStart + cont.textLength >= absolutePosition)
 						{
 							// find first container or first one with non-zero textLength
-							while (mid != 0 && cont.textLength == 0)
+							while (mid != 0 && cont.absoluteStart == absolutePosition)
 							{
 								mid--;
 								cont = _controllerList[mid];
@@ -455,9 +458,8 @@ package flashx.textLayout.compose
 					}
 					else
 					{
-						if (cont.absoluteStart + cont.textLength > absolutePosition)
-							return mid;
-						if (cont.absoluteStart == absolutePosition && cont.textLength == 0)
+
+						if (cont.absoluteStart == absolutePosition && cont.textLength != 0)
 						{
 							while (mid != 0)
 							{
@@ -468,6 +470,8 @@ package flashx.textLayout.compose
 							}
 							return mid;
 						}
+						else if (cont.absoluteStart + cont.textLength > absolutePosition)
+							return mid;
 					}
 					lo = mid+1;
 				}

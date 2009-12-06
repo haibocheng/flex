@@ -13,7 +13,6 @@ package spark.components
 {
     
 import flash.display.DisplayObject;
-import flash.display.Sprite;
 import flash.display.Stage;
 import flash.display.StageDisplayState;
 import flash.events.Event;
@@ -23,10 +22,8 @@ import flash.geom.Point;
 import flash.geom.Rectangle;
 
 import mx.core.IFlexDisplayObject;
-import mx.core.FlexGlobals;
 import mx.core.UIComponent;
 import mx.core.mx_internal;
-import mx.managers.ISystemManager;
 import mx.managers.PopUpManager;
 import mx.styles.ISimpleStyleClient;
 import mx.utils.MatrixUtil;
@@ -111,6 +108,8 @@ public class PopUpAnchor extends UIComponent
     private var popUpIsDisplayed:Boolean = false;
     private var addedToStage:Boolean = false;
     
+    private var popUpSizeCaptured:Boolean = false;
+    
     private static var decomposition:Vector.<Number> = new <Number>[0,0,0,0,0];
     
     //--------------------------------------------------------------------------
@@ -192,7 +191,7 @@ public class PopUpAnchor extends UIComponent
     //----------------------------------
     
     private var _displayPopUp:Boolean = false;
-    private var displayPopUpChanged:Boolean = false;
+    
     
     /**
      *  If true, adds the <code>popUp</code> control to the PopUpManager. If false, removes it.  
@@ -210,7 +209,7 @@ public class PopUpAnchor extends UIComponent
             return;
             
         _displayPopUp = value;
-		addOrRemovePopUp();
+        addOrRemovePopUp();
     }
     
     /**
@@ -270,7 +269,7 @@ public class PopUpAnchor extends UIComponent
     
     private var _popUpPosition:String = PopUpPosition.TOP_LEFT;
     
-    [Inspectable(category="General", enumeration="left,right,above,below,center,topLeft,globalCenter", defaultValue="topLeft")]
+    [Inspectable(category="General", enumeration="left,right,above,below,center,topLeft", defaultValue="topLeft")]
     
     /**
      *  Position of the <code>popUp</code> control when it is opened, relative
@@ -314,7 +313,7 @@ public class PopUpAnchor extends UIComponent
      */
     override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
     {
-        super.updateDisplayList(unscaledWidth, unscaledHeight);
+        super.updateDisplayList(unscaledWidth, unscaledHeight);                
         applyPopUpTransform(unscaledWidth, unscaledHeight);            
     }
     
@@ -470,47 +469,27 @@ public class PopUpAnchor extends UIComponent
         
         if (popUp == null)
             return;
-
-		// parent isn't null if you run removeEffect!
-		// DisplayObject(popUp).parent == null && 
-        if (displayPopUp)
+                        
+        if (DisplayObject(popUp).parent == null && displayPopUp)
         {
-			var popUpParent:Sprite;
-			var centered:Boolean = (popUpPosition == PopUpPosition.GLOBAL_CENTER)
-			if (centered)
-			{
-				// from Alert
-	            var sm:ISystemManager = ISystemManager(FlexGlobals.topLevelApplication.systemManager);
-			    // no types so no dependencies
-			    var mp:Object = sm.getImplementation("mx.managers.IMarshallPlanSystemManager");
-			    if (mp && mp.useSWFBridge())
-	                popUpParent = Sprite(sm.getSandboxRoot());
-	            else
-	                popUpParent = Sprite(FlexGlobals.topLevelApplication);
-			}
-			else
-			{
-				popUpParent = this;
-			}
-			
-            PopUpManager.addPopUp(popUp, popUpParent, false);
+            PopUpManager.addPopUp(popUp,this,false);
             popUpIsDisplayed = true;
-
-            if (popUp is UIComponent)
+            if (popUp is UIComponent && !popUpSizeCaptured)
             {
                 popUpWidth = UIComponent(popUp).explicitWidth;
                 popUpHeight = UIComponent(popUp).explicitHeight;
+                UIComponent(popUp).validateNow();
+                popUpSizeCaptured = true;
             }   
-           
+            
             applyPopUpTransform(width, height);
-           	if (centered)
-				PopUpManager.centerPopUp(popUp);
         }
         else if (DisplayObject(popUp).parent != null && displayPopUp == false)
         {
             removeAndResetPopUp();
         }
     }
+    
     /**
      *  @private
      */
@@ -518,13 +497,7 @@ public class PopUpAnchor extends UIComponent
     {
         PopUpManager.removePopUp(popUp);
         popUpIsDisplayed = false;
-        
-        if (popUp is UIComponent)
-        {
-            UIComponent(popUp).explicitWidth = popUpWidth;
-            UIComponent(popUp).explicitHeight = popUpHeight;
-        }
-	}
+    }
     
     /**
      *  @private Get the concatenated matrix from the PopUpAnchor to the popUp parent 
@@ -610,8 +583,13 @@ public class PopUpAnchor extends UIComponent
         {
             if (popUpWidthMatchesAnchorWidth)
                 UIComponent(popUp).width = unscaledWidth;
+            else
+                UIComponent(popUp).explicitWidth = popUpWidth;
+            
             if (popUpHeightMatchesAnchorHeight)
                 UIComponent(popUp).height = unscaledHeight;
+            else
+                UIComponent(popUp).explicitHeight = popUpHeight;
         }
         else
         {
@@ -680,7 +658,7 @@ public class PopUpAnchor extends UIComponent
      */ 
     private function removedFromStageHandler(event:Event):void
     {
-        if (popUp && DisplayObject(popUp).parent != null)
+        if (popUp != null && DisplayObject(popUp).parent != null)
             removeAndResetPopUp();
         
         addedToStage = false;

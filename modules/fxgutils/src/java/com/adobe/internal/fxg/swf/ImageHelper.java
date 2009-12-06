@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.adobe.fxg.FXGVersion;
+import com.adobe.internal.fxg.dom.AbstractFXGNode;
 import com.adobe.internal.fxg.dom.BitmapGraphicNode;
 import com.adobe.internal.fxg.dom.FillNode;
 import com.adobe.internal.fxg.dom.fills.BitmapFillNode;
@@ -105,8 +106,8 @@ public class ImageHelper
         	else if (fillMode.equals(FillMode.SCALE))
         	{
         		//override the scale for matrix
-                matrix.scaleX = (int)(width*SwfConstants.TWIPS_PER_PIXEL * SwfConstants.FIXED_POINT_MULTIPLE/tag.width);
-                matrix.scaleY = (int)(height*SwfConstants.TWIPS_PER_PIXEL * SwfConstants.FIXED_POINT_MULTIPLE/tag.height);
+                matrix.scaleX = (int)StrictMath.rint((width*SwfConstants.TWIPS_PER_PIXEL * SwfConstants.FIXED_POINT_MULTIPLE)/(double)tag.width);
+                matrix.scaleY = (int)StrictMath.rint((height*SwfConstants.TWIPS_PER_PIXEL * SwfConstants.FIXED_POINT_MULTIPLE)/(double)tag.height);
         		
         		//fill style does not matter much since the entire area is filled with bitmap
         		fs = new FillStyle(FillStyle.FILL_BITS | FillStyle.FILL_BITS_CLIP, matrix, tag);
@@ -174,7 +175,7 @@ public class ImageHelper
  
     public static boolean isBitmapFillWithClip(FillNode fill)
     {
-    	if (fill == null) 
+        if (fill == null) 
     		return false;
     	
     	if (fill instanceof BitmapFillNode)
@@ -186,11 +187,12 @@ public class ImageHelper
     		}
     		else
     		{
-    			if ((bFill.getFileVersion() == FXGVersion.v2_0) && (bFill.fillMode == FillMode.SCALE))
+    			if ((bFill.getFileVersion().equalTo(FXGVersion.v2_0)) && (bFill.fillMode == FillMode.SCALE))
     			{
-    				if ((bFill.scaleX == Double.NaN) && (bFill.scaleY == Double.NaN) && 
-    						(bFill.x == Double.NaN) && (bFill.y == Double.NaN) &&
-    						(bFill.rotation == Double.NaN))
+    				if (Double.isNaN(bFill.scaleX) && Double.isNaN(bFill.scaleY) && 
+    						Double.isNaN(bFill.x) && Double.isNaN(bFill.y) &&
+    						(Double.isNaN(bFill.rotation) || Math.abs(bFill.rotation) < AbstractFXGNode.EPSILON) &&
+    						bFill.matrix == null)
     					return false;
     				else
     					return true;
@@ -203,6 +205,7 @@ public class ImageHelper
     		
     	}
     	return false;
+    	
     }
     public static DefineBits createDefineBits(InputStream in, String mimeType) throws IOException
     {

@@ -37,6 +37,11 @@ package org.osmf.metadata
 		 * @param namespaceURL Namespace for the object facet.
 		 * @param value Value of the object facet.
 		 * 
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
 		public function ObjectFacet(namespaceURL:URL, value:Object)
 		{
@@ -46,13 +51,25 @@ package org.osmf.metadata
 		
 		/**
 		 * Defines this facet's object value. 
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
 		public function set object(value:Object):void
 		{
 			if (value != _object)
 			{
 				var event:FacetValueChangeEvent
-					= new FacetValueChangeEvent(null, value, _object);
+					= new FacetValueChangeEvent
+						( FacetValueChangeEvent.VALUE_CHANGE
+						, false
+						, false
+						, null
+						, value
+						, _object
+						);
 					
 				_object = value;
 				
@@ -69,6 +86,11 @@ package org.osmf.metadata
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function get namespaceURL():URL
 		{
@@ -78,6 +100,11 @@ package org.osmf.metadata
 		/**
 		 * Always returns the set object value.
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function getValue(identifier:IIdentifier):*
 		{
@@ -86,6 +113,11 @@ package org.osmf.metadata
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function merge(childFacet:IFacet):IFacet
 		{
@@ -97,6 +129,11 @@ package org.osmf.metadata
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		override public function toString():String
 		{

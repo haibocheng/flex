@@ -29,6 +29,11 @@ package org.osmf.net.dynamicstreaming
 	
 	/**
 	 * The only switching rule that switches up, all the others switch down.
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 10
+	 *  @playerversion AIR 1.0
+	 *  @productversion OSMF 1.0
 	 */
 	public class SufficientBandwidthRule extends SwitchingRuleBase
 	{
@@ -41,6 +46,11 @@ package org.osmf.net.dynamicstreaming
 		 * The new bitrate index to which this rule recommends switching. If the rule has no change request it will
 		 * return a value of -1. 
 		 * 
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
         override public function getNewIndex():int 
         {
@@ -51,9 +61,9 @@ package org.osmf.net.dynamicstreaming
         	if (metrics.averageMaxBandwidth != 0) 
         	{
 				// First find the preferred bitrate level we should be at by finding the highest profile that can play, given the current average max bandwidth
-				for (var i:int = metrics.dynamicStreamingResource.numItems - 1; i >= 0; i--) 
+				for (var i:int = metrics.dynamicStreamingResource.streamItems.length - 1; i >= 0; i--) 
 				{
-					if (metrics.averageMaxBandwidth > (metrics.dynamicStreamingResource.getItemAt(i).bitrate * BANDWIDTH_SAFETY_MULTIPLE)) 
+					if (metrics.averageMaxBandwidth > (metrics.dynamicStreamingResource.streamItems[i].bitrate * BANDWIDTH_SAFETY_MULTIPLE)) 
 					{
 						newIndex = i;
 						break;

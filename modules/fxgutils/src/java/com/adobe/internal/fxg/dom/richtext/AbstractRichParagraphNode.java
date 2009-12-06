@@ -13,6 +13,7 @@ package com.adobe.internal.fxg.dom.richtext;
 
 import static com.adobe.fxg.FXGConstants.*;
 
+import com.adobe.internal.fxg.dom.DOMParserHelper;
 import com.adobe.internal.fxg.dom.types.Direction;
 import com.adobe.internal.fxg.dom.types.JustificationRule;
 import com.adobe.internal.fxg.dom.types.JustificationStyle;
@@ -100,23 +101,23 @@ public abstract class AbstractRichParagraphNode extends AbstractRichTextLeafNode
         }
         else if (FXG_TEXTINDENT_ATTRIBUTE.equals(name))
         {
-            textIndent = parseDouble(value, TEXTINDENT_MIN_INCLUSIVE, TEXTINDENT_MAX_INCLUSIVE, textIndent);
+            textIndent = DOMParserHelper.parseDouble(this, value, name, TEXTINDENT_MIN_INCLUSIVE, TEXTINDENT_MAX_INCLUSIVE, textIndent);
         }
         else if (FXG_PARAGRAPHSTARTINDENT_ATTRIBUTE.equals(name))
         {
-            paragraphStartIndent = parseDouble(value, PARAGRAPH_INDENT_MIN_INCLUSIVE, PARAGRAPH_INDENT_MAX_INCLUSIVE, paragraphStartIndent);
+            paragraphStartIndent = DOMParserHelper.parseDouble(this, value, name, PARAGRAPH_INDENT_MIN_INCLUSIVE, PARAGRAPH_INDENT_MAX_INCLUSIVE, paragraphStartIndent);
         }
         else if (FXG_PARAGRAPHENDINDENT_ATTRIBUTE.equals(name))
         {
-            paragraphEndIndent = parseDouble(value, PARAGRAPH_INDENT_MIN_INCLUSIVE, PARAGRAPH_INDENT_MAX_INCLUSIVE, paragraphEndIndent);
+            paragraphEndIndent = DOMParserHelper.parseDouble(this, value, name, PARAGRAPH_INDENT_MIN_INCLUSIVE, PARAGRAPH_INDENT_MAX_INCLUSIVE, paragraphEndIndent);
         }
         else if (FXG_PARAGRAPHSPACEBEFORE_ATTRIBUTE.equals(name))
         {
-            paragraphSpaceBefore = parseDouble(value, PARAGRAPH_SPACE_MIN_INCLUSIVE, PARAGRAPH_SPACE_MAX_INCLUSIVE, paragraphSpaceBefore);
+            paragraphSpaceBefore = DOMParserHelper.parseDouble(this, value, name, PARAGRAPH_SPACE_MIN_INCLUSIVE, PARAGRAPH_SPACE_MAX_INCLUSIVE, paragraphSpaceBefore);
         }
         else if (FXG_PARAGRAPHSPACEAFTER_ATTRIBUTE.equals(name))
         {
-            paragraphSpaceAfter = parseDouble(value, PARAGRAPH_SPACE_MIN_INCLUSIVE, PARAGRAPH_SPACE_MAX_INCLUSIVE, paragraphSpaceAfter);
+            paragraphSpaceAfter = DOMParserHelper.parseDouble(this, value, name, PARAGRAPH_SPACE_MIN_INCLUSIVE, PARAGRAPH_SPACE_MAX_INCLUSIVE, paragraphSpaceAfter);
         }
         else if (FXG_DIRECTION_ATTRIBUTE.equals(name))
         {

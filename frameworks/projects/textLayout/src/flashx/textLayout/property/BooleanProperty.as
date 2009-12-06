@@ -35,7 +35,7 @@ package flashx.textLayout.property
 				return newObject;
 			
 			if (newObject == "true" || newObject == "false")
-				return newObject = "true" ? true : false;
+				return newObject == "true";
 			
 			Property.errorHandler(this,newObject);
 			return currVal;	

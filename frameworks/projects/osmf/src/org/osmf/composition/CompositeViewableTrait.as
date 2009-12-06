@@ -24,8 +24,8 @@ package org.osmf.composition
 	import flash.display.DisplayObject;
 	import flash.errors.IllegalOperationError;
 	
-	import org.osmf.events.DimensionChangeEvent;
-	import org.osmf.events.ViewChangeEvent;
+	import org.osmf.events.DimensionEvent;
+	import org.osmf.events.ViewEvent;
 	import org.osmf.layout.DefaultLayoutRenderer;
 	import org.osmf.layout.ILayoutContext;
 	import org.osmf.layout.ILayoutRenderer;
@@ -43,16 +43,21 @@ package org.osmf.composition
 	/**
 	 * Dispatched when the trait's view has changed.
 	 * 
-	 * @eventType org.osmf.events.ViewChangeEvent.VIEW_CHANGE
+	 * @eventType org.osmf.events.ViewEvent.VIEW_CHANGE
 	 */	
-	[Event(name="viewChange",type="org.osmf.events.ViewChangeEvent")]
+	[Event(name="viewChange",type="org.osmf.events.ViewEvent")]
 	
 	/**
 	 * Dispatched when the width and/or height of the trait's view has changed.
 	 * 
-	 * @eventType org.osmf.events.DimensionChangeEvent.DIMENSION_CHANGE
+	 * @eventType org.osmf.events.DimensionEvent.DIMENSION_CHANGE
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 10
+	 *  @playerversion AIR 1.0
+	 *  @productversion OSMF 1.0
 	 */	
-	[Event(name="dimensionChange",type="org.osmf.events.DimensionChangeEvent")]
+	[Event(name="dimensionChange",type="org.osmf.events.DimensionEvent")]
 	
 	/**
 	 * Implements IViewable and ISpatial.
@@ -67,6 +72,11 @@ package org.osmf.composition
 	 * The viewable and/or spatial characteristics of a composite changing, influence
 	 * the containers characteristics - hence the trait needs to watch these traits on
 	 * its children.
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 10
+	 *  @playerversion AIR 1.0
+	 *  @productversion OSMF 1.0
 	 */	
 	internal class CompositeViewableTrait extends CompositeMediaTraitBase implements IViewable, ISpatial
 	{
@@ -77,7 +87,7 @@ package org.osmf.composition
 			// Prepare a container to hold our viewable children:
 			container = constructLayoutContext();
 			container.addEventListener
-				( DimensionChangeEvent.DIMENSION_CHANGE
+				( DimensionEvent.DIMENSION_CHANGE
 				, onContainerDimensionChange
 				);
 			
@@ -106,16 +116,26 @@ package org.osmf.composition
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
-		public function get width():int
+		public function get width():Number
 		{
 			return container.intrinsicWidth;
 		}
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
-		public function get height():int
+		public function get height():Number
 		{
 			return container.intrinsicHeight;
 		}
@@ -136,7 +156,7 @@ package org.osmf.composition
 			return new LayoutContextSprite(owner.metadata);
 		}
 		
-		protected function onContainerDimensionChange(event:DimensionChangeEvent):void
+		protected function onContainerDimensionChange(event:DimensionEvent):void
 		{
 			// Re-dispatch the event, this time as ISpatial.
 			dispatchEvent(event.clone());

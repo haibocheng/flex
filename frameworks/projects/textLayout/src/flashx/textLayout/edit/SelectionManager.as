@@ -15,6 +15,7 @@ package flashx.textLayout.edit
 	import flash.display.DisplayObject;
 	import flash.display.InteractiveObject;
 	import flash.display.Stage;
+	import flash.errors.IllegalOperationError;
 	import flash.events.ContextMenuEvent;
 	import flash.events.Event;
 	import flash.events.FocusEvent;
@@ -31,15 +32,19 @@ package flashx.textLayout.edit
 	import flash.ui.Keyboard;
 	import flash.ui.Mouse;
 	import flash.ui.MouseCursor;
+	import flash.utils.getQualifiedClassName;
 	
 	import flashx.textLayout.compose.TextFlowLine;
 	import flashx.textLayout.container.ColumnState;
 	import flashx.textLayout.container.ContainerController;
+	import flashx.textLayout.debug.Debugging;
 	import flashx.textLayout.debug.assert;
 	import flashx.textLayout.elements.FlowLeafElement;
+	import flashx.textLayout.elements.GlobalSettings;
 	import flashx.textLayout.elements.InlineGraphicElement;
 	import flashx.textLayout.elements.ParagraphElement;
 	import flashx.textLayout.elements.TextFlow;
+	import flashx.textLayout.elements.TextRange;
 	import flashx.textLayout.events.FlowOperationEvent;
 	import flashx.textLayout.events.SelectionEvent;
 	import flashx.textLayout.formats.BlockProgression;
@@ -63,6 +68,34 @@ package flashx.textLayout.edit
 	 * a text flow, assign a SelectionManager object to the <code>interactionManager</code>
 	 * property of the flow. (To allow editing, assign an instance of the EditManager class,
 	 * which extends SelectionManager.)</p>
+	 *
+	 * <p>The following table describes how the SelectionManager class handles keyboard shortcuts:</p>
+	 *
+	 * <table class="innertable" width="100%">
+	 * <thead>
+	 * <tr><th></th><th></th><th align = "center">TB,LTR</th><th align = "right"></th><th></th><th align = "center">TB,RTL</th><th></th><th></th><th align = "center">TL,LTR</th><th></th><th></th><th align = "center">RL,RTL</th><th></th></tr>
+	 * <tr><th></th><th>none</th><th>ctrl</th><th>alt|ctrl+alt</th><th>none</th><th>ctrl</th><th>alt|ctrl+alt</th><th>none</th><th>ctrl</th><th>alt|ctrl+alt</th><th>none</th><th>ctrl</th><th>alt|ctrl+alt</th></tr>
+	 * </thead>
+	 * <tr><td>leftarrow</td><td>previousCharacter</td><td>previousWord</td><td>previousWord</td><td>nextCharacter</td><td>nextWord</td><td>nextWord</td><td>nextLine</td><td>endOfDocument</td><td>endOfParagraph</td><td>nextLine</td><td>endOfDocument</td><td>endOfParagraph</td></tr>
+	 * <tr><td>uparrow</td><td>previousLine</td><td>startOfDocument</td><td>startOfParagraph</td><td>previousLine</td><td>startOfDocument</td><td>startOfParagraph</td><td>previousCharacter</td><td>previousWord</td><td>previousWord</td><td>nextCharacter</td><td>nextWord</td><td>nextWord</td></tr>
+	 * <tr><td>rightarrow</td><td>nextCharacter</td><td>nextWord</td><td>nextWord</td><td>previousCharacter</td><td>previousWord</td><td>previousWord</td><td>previousLine</td><td>startOfDocument</td><td>startOfParagraph</td><td>previousLine</td><td>startOfDocument</td><td>startOfParagraph</td></tr>
+	 * <tr><td>downarrow</td><td>nextLine</td><td>endOfDocument</td><td>endOfParagraph</td><td>nextLine</td><td>endOfDocument</td><td>endOfParagraph</td><td>nextCharacter</td><td>nextWord</td><td>nextWord</td><td>previousCharacter</td><td>previousWord</td><td>previousWord</td></tr>
+	 * <tr><td>home</td><td>startOfLine</td><td>startOfDocument</td><td>startOfLine</td><td>startOfLine</td><td>startOfDocument</td><td>startOfLine</td><td>startOfLine</td><td>startOfDocument</td><td>startOfLine</td><td>startOfLine</td><td>startOfDocument</td><td>startOfLine</td></tr>
+	 * <tr><td>end</td><td>endOfLine</td><td>endOfDocument</td><td>endOfLine</td><td>endOfLine</td><td>endOfDocument</td><td>endOfLine</td><td>endOfLine</td><td>endOfDocument</td><td>endOfLine</td><td>endOfLine</td><td>endOfDocument</td><td>endOfLine</td></tr>
+	 * <tr><td>pagedown</td><td>nextPage</td><td>nextPage</td><td>nextPage</td><td>nextPage</td><td>nextPage</td><td>nextPage</td><td>nextPage</td><td>nextPage</td><td>nextPage</td><td>nextPage</td><td>nextPage</td><td>nextPage</td></tr>
+	 * <tr><td>pageup</td><td>previousPage</td><td>previousPage</td><td>previousPage</td><td>previousPage</td><td>previousPage</td><td>previousPage</td><td>previousPage</td><td>previousPage</td><td>previousPage</td><td>previousPage</td><td>previousPage</td><td>previousPage</td></tr>
+	 * </table>
+	 *
+	 * <p><strong>Key:</strong>
+	 * <ul>
+	 *	<li>none = no modifier</li>
+	 *	<li>ctrl, shift, alt = modifiers</li>
+	 *	<li>alt-key and ctrl+alt-key are the same on all platforms (on some platforms alt-key does not get to TLF)</li>
+	 *	<li>shift key modifes to extend the active end of the selection in the specified manner</li>			
+	 *	<li>TB (top-to-bottom),RL (right-to-left) are textFlow level <code>blockProgression</code> settings</li>						
+	 * 	<li>LTR (left-to-right),RTL (right-to-left) are textFlow level <code>direction</code> settings</li>					
+	 *	<li>next and prev in logical order in the textFlow - the effect in RTL text is that the selection moves in the physical direction</li>
+	 * </ul></p>
 	 * 
 	 * @see EditManager
 	 * @see flashx.elements.TextFlow
@@ -91,18 +124,21 @@ package flashx.textLayout.edit
 		private var activeMark:Mark;
 		
 		// used to save pending attributes at a point selection
+		private var _pointFormat:ITextLayoutFormat;
 		/** 
 		 * The format that will be applied to inserted text. 
 		 * 
 		 * TBD: pointFormat needs to be extended to remember user styles and "undefine" of formats from calls to IEditManager.undefineFormat with leafFormat values on a point selection.
 		 */
-		protected var pointFormat:ITextLayoutFormat;
+		protected function get pointFormat():ITextLayoutFormat
+		{ return _pointFormat; }
+
 		
 		/** @private
 		 * Ignore the next text input event. This is needed because the player may send a text input event
 		 * following by a key down event when ctrl+key is entered. 
 		 */
-		protected var ignoreTextEvent:Boolean = false;
+		protected var ignoreNextTextEvent:Boolean = false;
 		
 		/**
 		 *  @private
@@ -139,7 +175,7 @@ package flashx.textLayout.edit
 			_textFlow = null;
 			anchorMark = createMark();
 			activeMark = createMark();
-			pointFormat = null;
+			_pointFormat = null;
 			_isActive = false;
 			CONFIG::debug 
 			{
@@ -162,7 +198,21 @@ package flashx.textLayout.edit
 		{
 			return new SelectionState(_textFlow, anchorMark.position, activeMark.position, pointFormat);
 		}
-		
+				
+		/**
+		 * @copy ISelectionManager#setSelectionState()
+		 * 
+		 * @playerversion Flash 10
+		 * @playerversion AIR 1.5
+		 * @langversion 3.0
+		 * 
+		 * @see flashx.textLayout.edit.SelectionState
+		 */
+		public function setSelectionState(sel:SelectionState):void
+		{
+			internalSetSelection(sel.textFlow, sel.anchorPosition, sel.activePosition, sel.pointFormat);
+		}
+
 		/**
 		 *  @copy ISelectionManager#hasSelection()
 		 * 
@@ -552,7 +602,7 @@ package flashx.textLayout.edit
 			_textFlow = root;
 			anchorMark.position = anchorIndex;
 			activeMark.position = activeIndex;
-			pointFormat = format;
+			_pointFormat = format;
 			anchorMark.position = NavigationUtil.updateStartIfInReadOnlyElement(root, anchorIndex);
 			activeMark.position = NavigationUtil.updateEndIfInReadOnlyElement(root, activeIndex);
 		//	trace("Selection ", anchorMark, "to", activeMark.position);
@@ -563,20 +613,11 @@ package flashx.textLayout.edit
 			_textFlow = root;
 			anchorMark.position = begIdx;
 			activeMark.position = endIdx;
-			pointFormat = format;
+			_pointFormat = format;
 			// make sure the selEndIdx is visible in the container
 			if (_textFlow.flowComposer && _textFlow.flowComposer.numControllers != 0)
 				 _textFlow.flowComposer.getControllerAt(_textFlow.flowComposer.numControllers-1).scrollToRange(activeMark.position,anchorMark.position);
 		}		
-		
-		/** @private
-		 * Set the selection state. 
-		* @see flashx.textLayout.edit.SelectionState
-		*/
-		tlf_internal function setSelectionState(sel:SelectionState):void
-		{
-			internalSetSelection(sel.textFlow, sel.anchorPosition, sel.activePosition, sel.pointFormat);
-		}
 		
 		/** Clear any active selections.
 		 */
@@ -670,7 +711,8 @@ package flashx.textLayout.edit
 			CONFIG::debug { debugCheckSelectionManager(); }	// validates the selection
 			
 			// clear any remembered attributes for the next character
-			if (resetPointFormat) pointFormat = null;
+			if (resetPointFormat) 
+				_pointFormat = null;
 			
 			if (doDispatchEvent)
 				textFlow.dispatchEvent(new SelectionEvent(SelectionEvent.SELECTION_CHANGE, false, false, hasSelection() ? getSelectionState() : null));
@@ -1012,7 +1054,7 @@ package flashx.textLayout.edit
 		}
 		/** @private - given a target and location compute the selectionIndex */
 		static tlf_internal function computeSelectionIndex(textFlow:TextFlow, target:Object, currentTarget:Object, localX:Number,localY:Number):int
-		{
+		{			
 			//trace("computeSelectionIndex");
 			var rslt:int = 0;
 			var containerPoint:Point; // scratch
@@ -1068,56 +1110,84 @@ package flashx.textLayout.edit
 					//the point is someplace else on stage.  Map the target 
 					//to the textFlow.container.
 					CONFIG::debug { assert(textFlow.flowComposer && textFlow.flowComposer.numControllers,"computeSelectionIndex: invalid textFlow"); }
-
-					var containerIndex:int = 0;
-					var curContainerController:ContainerController = textFlow.flowComposer.getControllerAt(containerIndex);
-					var containerWidth:Number = curContainerController.compositionWidth;
-					var containerHeight:Number = curContainerController.compositionHeight;
 					
+					
+					// result of the search
+					var controllerCandidate:ContainerController = null;
 					var candidateLocalX:Number;
 					var candidateLocalY:Number;
-					var relDistance:Number = -1;
-					var relDistanceX:Number;
-					var relDistanceY:Number;
-					var controllerFound:Boolean = false;
-					var controllerCandidate:ContainerController;
+					var relDistance:Number = Number.MAX_VALUE;
 					
-					do {
-						if (checkForDisplayed(curContainerController.container as DisplayObject))
-						{
-							containerPoint = DisplayObject(target).localToGlobal(new Point(localX, localY));
-							containerPoint = DisplayObject(curContainerController.container).globalToLocal(containerPoint);
-							
-							if ((containerPoint.x >= 0) && (containerPoint.x <= containerWidth) &&
-								(containerPoint.y >= 0) && (containerPoint.y <= containerHeight))
-							{
-								controllerFound = true;
-								controllerCandidate = curContainerController;
-								candidateLocalX = containerPoint.x;
-								candidateLocalY = containerPoint.y;
-								break;
-							} 
-							
-							relDistanceX = 0;
-							relDistanceY = 0;
-							if ((containerPoint.x < 0) || (containerPoint.x > containerWidth))
-								relDistanceX = Math.abs(containerPoint.x);
-							if ((containerPoint.y < 0) || (containerPoint.y > containerHeight))
-								relDistanceY = Math.abs(containerPoint.y);
-							var tempDist:Number = Math.sqrt(relDistanceX*relDistanceX + relDistanceY*relDistanceY);
-							if ((relDistance == -1) || (tempDist < relDistance))
-							{
-								controllerCandidate = curContainerController;
-								candidateLocalX = containerPoint.x;
-								candidateLocalY = containerPoint.y;
-								relDistance = tempDist;
-							}
-						}
+					for (var containerIndex:int = 0; containerIndex < textFlow.flowComposer.numControllers; containerIndex++)
+					{
+						var curContainerController:ContainerController = textFlow.flowComposer.getControllerAt(containerIndex);
+						
+						// displayed??
+						if (!checkForDisplayed(curContainerController.container as DisplayObject))
+							continue;
 
-						if (++containerIndex == textFlow.flowComposer.numControllers)
+						// handle measured containers??
+						var bounds:Rectangle = curContainerController.getContentBounds();
+						var containerWidth:Number = isNaN(curContainerController.compositionWidth) ? curContainerController.effectivePaddingLeft+bounds.width : curContainerController.compositionWidth;
+						var containerHeight:Number = isNaN(curContainerController.compositionHeight) ? curContainerController.effectivePaddingTop+bounds.height : curContainerController.compositionHeight;
+						
+						containerPoint = DisplayObject(target).localToGlobal(new Point(localX, localY));
+						containerPoint = DisplayObject(curContainerController.container).globalToLocal(containerPoint);
+						
+						// remove scrollRect effects for the distance test but add it back in for the result
+						var adjustX:Number = 0;
+						var adjustY:Number = 0;
+						
+						if (curContainerController.hasScrollRect)
+						{
+							containerPoint.x -= (adjustX = curContainerController.container.scrollRect.x);
+							containerPoint.y -= (adjustY = curContainerController.container.scrollRect.y);
+						}
+						
+						if ((containerPoint.x >= 0) && (containerPoint.x <= containerWidth) &&
+							(containerPoint.y >= 0) && (containerPoint.y <= containerHeight))
+						{
+							controllerCandidate = curContainerController;
+							candidateLocalX = containerPoint.x+adjustX;
+							candidateLocalY = containerPoint.y+adjustY;
 							break;
-						curContainerController = textFlow.flowComposer.getControllerAt(containerIndex);
-					} while (true)
+						}
+						
+						// figure minimum distance of containerPoint to curContainerController - 8 cases
+						var relDistanceX:Number = 0;
+						var relDistanceY:Number = 0;
+
+						if (containerPoint.x < 0)
+						{
+							relDistanceX = containerPoint.x;
+							if (containerPoint.y < 0)
+								relDistanceY = containerPoint.y;
+							else if (containerPoint.y > containerHeight)
+								relDistanceY = containerPoint.y-containerHeight;
+						}
+						else if (containerPoint.x > containerWidth)
+						{
+							relDistanceX = containerPoint.x-containerWidth;
+							if (containerPoint.y < 0)
+								relDistanceY = containerPoint.y;
+							else if (containerPoint.y > containerHeight)
+								relDistanceY = containerPoint.y-containerHeight;
+						}
+						else if (containerPoint.y < 0)
+							relDistanceY = -containerPoint.y;
+						else
+							relDistanceY = containerPoint.y-containerHeight;
+						var tempDist:Number = relDistanceX*relDistanceX + relDistanceY*relDistanceY;	// could do sqrt but why bother - there is no Math.hypot function
+						if (tempDist <= relDistance)
+						{
+							relDistance = tempDist;
+							controllerCandidate = curContainerController;
+							candidateLocalX = containerPoint.x+adjustX;
+							candidateLocalY = containerPoint.y+adjustY;
+						}
+					}
+
+
 					rslt = controllerCandidate ? computeSelectionIndexInContainer(textFlow, controllerCandidate, candidateLocalX, candidateLocalY) : -1;
 				}
 			}
@@ -1168,7 +1238,6 @@ package flashx.textLayout.edit
 		 */	
 		public function mouseMoveHandler(event:MouseEvent):void
 		{
-			// trace("mouseMoveHandler");
 			var wmode:String = textFlow.computedFormat.blockProgression;			
 			if (wmode != BlockProgression.RL) 
 				Mouse.cursor = MouseCursor.IBEAM;			
@@ -1382,13 +1451,23 @@ package flashx.textLayout.edit
 			}
 		}
 		
-		/** Perform a SelectionManager operation - these never modify the flow but clients still are able to cancel them. */
-		private function doInternal(op:FlowOperation):void
+		/** Perform a SelectionManager operation - these may never modify the flow but clients still are able to cancel them. 
+		  * 
+		  * @playerversion Flash 10
+		  * @playerversion AIR 1.5
+ 	 	  * @langversion 3.0
+		  */
+		public function doOperation(op:FlowOperation):void
 		{
-			var opEvent:FlowOperationEvent = new FlowOperationEvent(FlowOperationEvent.FLOW_OPERATION_BEGIN,false,true,op,null);
+			var opEvent:FlowOperationEvent = new FlowOperationEvent(FlowOperationEvent.FLOW_OPERATION_BEGIN,false,true,op,0,null);
 			textFlow.dispatchEvent(opEvent);
 			if (!opEvent.isDefaultPrevented())
 			{
+				op = opEvent.operation;
+				
+				// only copy operation is allowed
+				if (!(op is CopyOperation))
+					throw new IllegalOperationError(GlobalSettings.getResourceStringFunction("illegalOperation",[ getQualifiedClassName(op) ]));
 				var opError:Error = null;
 				try
 				{
@@ -1399,10 +1478,12 @@ package flashx.textLayout.edit
 					opError = e;
 				}
 				// operation completed - send event whether it succeeded or not.
-				opEvent = new FlowOperationEvent(FlowOperationEvent.FLOW_OPERATION_END,false,true,op,opError);
+				opEvent = new FlowOperationEvent(FlowOperationEvent.FLOW_OPERATION_END,false,true,op,0,opError);
 				textFlow.dispatchEvent(opEvent);
-				if (opError && !opEvent.isDefaultPrevented())
+				opError = opEvent.isDefaultPrevented() ? null : opEvent.error;
+				if (opError)
 					throw (opError);
+				textFlow.dispatchEvent(new FlowOperationEvent(FlowOperationEvent.FLOW_OPERATION_COMPLETE,false,false,op,0,null));
 			}			
 		}
 
@@ -1419,7 +1500,7 @@ package flashx.textLayout.edit
 			{
 				case Event.COPY:
 					flushPendingOperations();
-					doInternal(new CopyOperation(getSelectionState()));
+					doOperation(new CopyOperation(getSelectionState()));
 
 					break;
 				case Event.SELECT_ALL:
@@ -1432,7 +1513,7 @@ package flashx.textLayout.edit
 		}
 
 		private function handleLeftArrow(event:KeyboardEvent):SelectionState
-		{
+		{			
 			var selState:SelectionState = getSelectionState();
 			if(_textFlow.computedFormat.blockProgression != BlockProgression.RL)
 			{
@@ -1450,11 +1531,14 @@ package flashx.textLayout.edit
 					else
 						NavigationUtil.nextCharacter(selState,event.shiftKey);
 				}
-			} else {
-				if (event.ctrlKey)
-					NavigationUtil.endOfDocument(selState,event.shiftKey);
-				else if (event.altKey)
+			} 
+			else 
+			{
+				// always test for altkey first - that way ctrl-alt is the same as alt
+				if (event.altKey)
 					NavigationUtil.endOfParagraph(selState,event.shiftKey);
+				else if (event.ctrlKey)
+					NavigationUtil.endOfDocument(selState,event.shiftKey);
 				else
 					NavigationUtil.nextLine(selState,event.shiftKey);
 			}
@@ -1462,45 +1546,33 @@ package flashx.textLayout.edit
 		}
 		
 		private function handleUpArrow(event:KeyboardEvent):SelectionState
-		{
+		{			
 			var selState:SelectionState = getSelectionState();
-			if(_textFlow.computedFormat.blockProgression != BlockProgression.RL) {
-				if (event.ctrlKey)
-				{
-					NavigationUtil.startOfDocument(selState,event.shiftKey);
-				} 
-				else if (event.altKey)
-				{
+			if(_textFlow.computedFormat.blockProgression != BlockProgression.RL)
+			{
+				// always test for altkey first - that way ctrl-alt is the same as alt
+				if (event.altKey)
 					NavigationUtil.startOfParagraph(selState,event.shiftKey);
-				} 
+				else if (event.ctrlKey)
+					NavigationUtil.startOfDocument(selState,event.shiftKey);
 				else
-				{
 					NavigationUtil.previousLine(selState,event.shiftKey);
-				}
 			}
 			else
 			{
 				if(_textFlow.computedFormat.direction == Direction.LTR)
 				{
 					if (event.ctrlKey || event.altKey)
-					{
 						NavigationUtil.previousWord(selState,event.shiftKey);
-					}
 					else
-					{
 						NavigationUtil.previousCharacter(selState,event.shiftKey); 
-					}
 				}
 				else
 				{
 					if (event.ctrlKey || event.altKey)
-					{
 						NavigationUtil.nextWord(selState,event.shiftKey);
-					}
 					else
-					{
 						NavigationUtil.nextCharacter(selState,event.shiftKey);
-					}
 				}
 			}
 			return selState;
@@ -1529,13 +1601,12 @@ package flashx.textLayout.edit
 		 	}
 		 	else
 		 	{
-				if (event.ctrlKey)
-				{
-					NavigationUtil.startOfDocument(selState,event.shiftKey);
-				} else if (event.altKey)
-				{
+				// always test for altkey first - that way ctrl-alt is the same as alt
+				if (event.altKey)
 					NavigationUtil.startOfParagraph(selState,event.shiftKey);
-				} else
+				else if (event.ctrlKey)
+					NavigationUtil.startOfDocument(selState,event.shiftKey);
+				else
 					NavigationUtil.previousLine(selState,event.shiftKey);
 			}
 			return selState;
@@ -1547,14 +1618,11 @@ package flashx.textLayout.edit
 			
 			if(_textFlow.computedFormat.blockProgression != BlockProgression.RL)
 			{
-				if (event.ctrlKey)
-				{
-					NavigationUtil.endOfDocument(selState,event.shiftKey);
-				} 
-				else if (event.altKey)
-				{
+				// always test for altkey first - that way ctrl-alt is the same as alt
+				if (event.altKey)
 					NavigationUtil.endOfParagraph(selState,event.shiftKey);
-				}
+				else if (event.ctrlKey)
+					NavigationUtil.endOfDocument(selState,event.shiftKey);
 				else
 					NavigationUtil.nextLine(selState,event.shiftKey);
 			}
@@ -1563,24 +1631,16 @@ package flashx.textLayout.edit
 				if(_textFlow.computedFormat.direction == Direction.LTR)
 				{
 					if (event.ctrlKey || event.altKey)
-					{
 						NavigationUtil.nextWord(selState,event.shiftKey);
-					}
 					else
-					{
 						NavigationUtil.nextCharacter(selState,event.shiftKey);
-					}
 				}
 				else
 				{
 					if (event.ctrlKey || event.altKey)
-					{
 						NavigationUtil.previousWord(selState,event.shiftKey);
-					}
 					else
-					{
 						NavigationUtil.previousCharacter(selState,event.shiftKey); 
-					}
 				}
 			}
 
@@ -1590,7 +1650,7 @@ package flashx.textLayout.edit
 		private function handleHomeKey(event:KeyboardEvent):SelectionState
 		{
 			var selState:SelectionState = getSelectionState();
-			if (event.ctrlKey)
+			if (event.ctrlKey && !event.altKey)
 				NavigationUtil.startOfDocument(selState,event.shiftKey);
 			else
 				NavigationUtil.startOfLine(selState,event.shiftKey);
@@ -1600,7 +1660,7 @@ package flashx.textLayout.edit
 		private function handleEndKey(event:KeyboardEvent):SelectionState
 		{
 			var selState:SelectionState = getSelectionState();
-			if (event.ctrlKey)
+			if (event.ctrlKey && !event.altKey)
 				NavigationUtil.endOfDocument(selState,event.shiftKey);
 			else
 				NavigationUtil.endOfLine(selState,event.shiftKey);
@@ -1623,8 +1683,7 @@ package flashx.textLayout.edit
 						
 		private function handleKeyEvent(event:KeyboardEvent):void
 		{
-			var preventDefault:Boolean = true;
-			var selState:SelectionState;
+			var selState:SelectionState = null;
 			flushPendingOperations();			
 			
 			switch(event.keyCode)
@@ -1653,16 +1712,11 @@ package flashx.textLayout.edit
 				case Keyboard.PAGE_UP:
 					selState = handlePageUpKey(event);
 					break;
-				default:
-					preventDefault = false;
-					break;
 			}
-			
-			if  (preventDefault)
-				event.preventDefault();
 
 			if (selState != null)
 			{
+				event.preventDefault();
 				updateSelectionAndShapes(_textFlow, selState.anchorPosition, selState.activePosition);
 
 				// make sure the active end is visible in the container -- scroll if necessary
@@ -1742,7 +1796,7 @@ package flashx.textLayout.edit
 		public function textInputHandler(event:TextEvent):void
 		{
 			// do nothing
-			ignoreTextEvent = false;
+			ignoreNextTextEvent = false;
 		}
 
 		/** 
@@ -1755,6 +1809,7 @@ package flashx.textLayout.edit
 		public function imeStartCompositionHandler(event:IMEEvent):void
 		{
 			// Do nothing -- this is handled in the EditManager if editing is supported
+			// If there is no EditManager, doing nothing will refuse the IME session.
 		}
 		
 		/**
@@ -1826,12 +1881,12 @@ package flashx.textLayout.edit
 		 * @playerversion AIR 1.5
  	 	 * @langversion 3.0
 		 */
-		public function getCommonCharacterFormat():ITextLayoutFormat
+		public function getCommonCharacterFormat(range:TextRange=null):ITextLayoutFormat
 		{
-			if (!hasSelection())
+			if (!range && !hasSelection())
 				return null;
-				
-			var selRange:ElementRange = ElementRange.createElementRange(_textFlow, absoluteStart, absoluteEnd);
+			
+			var selRange:ElementRange = ElementRange.createElementRange(_textFlow, range ? range.absoluteStart : absoluteStart, range? range.absoluteEnd : absoluteEnd);
 			
 			var leaf:FlowLeafElement = selRange.firstLeaf;
 			var attr:TextLayoutFormat = new TextLayoutFormat(leaf.computedFormat);
@@ -1866,13 +1921,13 @@ package flashx.textLayout.edit
 		 * @playerversion AIR 1.5
  	 	 * @langversion 3.0
 		 */
-		public function getCommonParagraphFormat ():ITextLayoutFormat
+		public function getCommonParagraphFormat (range:TextRange=null):ITextLayoutFormat
 		{
-			if (!hasSelection())
+			if (!range && !hasSelection())
 				return null;
-				
-		 	var selRange:ElementRange = ElementRange.createElementRange(_textFlow, absoluteStart, absoluteEnd);
-
+			
+			var selRange:ElementRange = ElementRange.createElementRange(_textFlow, range ? range.absoluteStart : absoluteStart, range? range.absoluteEnd : absoluteEnd);
+			
 			var para:ParagraphElement = selRange.firstParagraph;
 			var attr:TextLayoutFormat = new TextLayoutFormat(para.computedFormat);
 			for (;;)
@@ -1894,10 +1949,11 @@ package flashx.textLayout.edit
 		 * @playerversion AIR 1.5
  	 	 * @langversion 3.0
 		 */
-		public function getCommonContainerFormat ():ITextLayoutFormat
+		public function getCommonContainerFormat (range:TextRange=null):ITextLayoutFormat
 		{
-			if (!hasSelection())
+			if (!range && !hasSelection())
 				return null;
+			
 			// TODO: FIX THIS - tlf_core supports mulutiple containers
 		 	// container attributes changes through the UI apply to TextFlow and all containers 
 		 	// as of changelist# 625596, so all attributes values are 'common'.
@@ -1932,11 +1988,20 @@ package flashx.textLayout.edit
 		}
 		
 		private var marks:Array = [];
-		private function createMark():Mark
+		
+		/** @private */
+		tlf_internal function createMark():Mark
 		{
 			var mark:Mark = new Mark(-1);
 			marks.push(mark);
 			return mark;
+		}
+		/** @private */
+		tlf_internal function removeMark(mark:Mark):void
+		{
+			var idx:int = marks.indexOf(mark);
+			if (idx != -1)
+				marks.splice(idx,idx+1);
 		}
 		
 		/** 

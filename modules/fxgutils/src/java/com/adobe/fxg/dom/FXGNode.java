@@ -45,7 +45,7 @@ public interface FXGNode
      * @param root - the root node of the FXG document.
      */
     void setDocumentNode(FXGNode root);
-
+    
     /**
      * Sets an FXG attribute on this node.
      * 

@@ -27,10 +27,7 @@ package flashx.textLayout.property
 		public function NumberOrPercentOrEnumProperty(nameValue:String, defaultValue:Object, inherited:Boolean, category:String, minValue:Number, maxValue:Number, minPercentValue:String, maxPercentValue:String, ... rest)
 		{
 			// rest is the list of possible values
-			_range = new Object();
-			for (var i:int = 0; i < rest.length; i++)
-				_range[rest[i]] = nextEnumHashValue++;
-			_range[FormatValue.INHERIT] = nextEnumHashValue++;
+			_range = EnumStringProperty.createRange(rest); 
 
 			if (defaultValue is String && _range.hasOwnProperty(defaultValue))
 				_defaultValue = defaultValue;

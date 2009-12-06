@@ -160,6 +160,17 @@ package flashx.textLayout.elements
 			replaceText(0,textLength, textValue); 
 		} 
 		
+		/* @private */
+		public override function getText(relativeStart:int=0, relativeEnd:int=-1, paragraphSeparator:String="\n"):String
+		{
+			// Get the text from the blockElement is there is one, otherwise grab it from the text property
+			var textValue:String = _blockElement ? _blockElement.rawText : _text;
+
+			if (textLength && relativeEnd == textLength && hasParagraphTerminator)
+				--relativeEnd;		// don't include terminator
+			return textValue ? textValue.substring(relativeStart, relativeEnd) : "";
+		}
+
 		[RichTextContent]
 		/** 
 		 * Sets text based on content within span tags; always deletes existing children.

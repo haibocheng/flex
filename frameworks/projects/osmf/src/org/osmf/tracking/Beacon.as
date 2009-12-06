@@ -24,7 +24,7 @@ package org.osmf.tracking
 	import flash.events.EventDispatcher;
 	
 	import org.osmf.events.BeaconEvent;
-	import org.osmf.events.LoadableStateChangeEvent;
+	import org.osmf.events.LoadEvent;
 	import org.osmf.media.URLResource;
 	import org.osmf.traits.LoadableTrait;
 	import org.osmf.traits.LoadState;
@@ -43,6 +43,11 @@ package org.osmf.tracking
 	 * Dispatched when the Beacon's HTTP request has failed.
 	 * 
 	 * @eventType org.osmf.events.BeaconEvent.PING_FAILED
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 10
+	 *  @playerversion AIR 1.0
+	 *  @productversion OSMF 1.0
 	 */
 	[Event(name="pingFailed",type="org.osmf.events.BeaconEvent")]
 
@@ -86,18 +91,18 @@ package org.osmf.tracking
 			{
 				var loadable:LoadableTrait = new LoadableTrait(httpLoader, urlResource);
 				
-				loadable.addEventListener(LoadableStateChangeEvent.LOADABLE_STATE_CHANGE, onLoadableStateChange);
+				loadable.addEventListener(LoadEvent.LOAD_STATE_CHANGE, onLoadStateChange);
 				loadable.load();
 	
-				function onLoadableStateChange(event:LoadableStateChangeEvent):void
+				function onLoadStateChange(event:LoadEvent):void
 				{
-					if (event.loadable.loadState == LoadState.LOADED)
+					if (event.loadState == LoadState.READY)
 					{
-						loadable.removeEventListener(LoadableStateChangeEvent.LOADABLE_STATE_CHANGE, onLoadableStateChange);
+						loadable.removeEventListener(LoadEvent.LOAD_STATE_CHANGE, onLoadStateChange);
 						
 						dispatchEvent(new BeaconEvent(BeaconEvent.PING_COMPLETE));
 					}
-					else if (event.loadable.loadState == LoadState.LOAD_FAILED)
+					else if (event.loadState == LoadState.LOAD_ERROR)
 					{
 						dispatchEvent(new BeaconEvent(BeaconEvent.PING_FAILED));
 					}

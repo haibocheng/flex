@@ -26,8 +26,8 @@ package org.osmf.proxies
 	
 	import org.osmf.events.PausedChangeEvent;
 	import org.osmf.events.PlayingChangeEvent;
-	import org.osmf.events.SeekingChangeEvent;
-	import org.osmf.events.TraitEvent;
+	import org.osmf.events.SeekEvent;
+	import org.osmf.events.TimeEvent;
 	import org.osmf.media.MediaElement;
 	import org.osmf.traits.IPausable;
 	import org.osmf.traits.IPlayable;
@@ -36,7 +36,6 @@ package org.osmf.proxies
 	import org.osmf.traits.PlayableTrait;
 	import org.osmf.traits.SeekableTrait;
 	import org.osmf.traits.TemporalTrait;
-	import org.osmf.utils.MediaFrameworkStrings;
 
 	/**
 	 * A TemporalProxyElement wraps a MediaElement to give it temporal capabilities.
@@ -124,7 +123,7 @@ package org.osmf.proxies
 			temporalTrait = new TemporalTrait();
 			temporalTrait.duration = _duration;
 			temporalTrait.currentTime = 0;
-			temporalTrait.addEventListener(TraitEvent.DURATION_REACHED, onDurationReached);
+			temporalTrait.addEventListener(TimeEvent.DURATION_REACHED, onDurationReached);
 			addTrait(MediaTraitType.TEMPORAL, temporalTrait);
 
 			seekableTrait = new SeekableTrait();
@@ -134,7 +133,8 @@ package org.osmf.proxies
 			// Reduce priority of our listener so that all other listeners will
 			// receive the seeking=true event before we dispatch the seeking=false
 			// event. 
-			seekableTrait.addEventListener(SeekingChangeEvent.SEEKING_CHANGE, onSeekingChange, false, -1);
+			seekableTrait.addEventListener(SeekEvent.SEEK_BEGIN, onSeekingChange, false, -1);
+			seekableTrait.addEventListener(SeekEvent.SEEK_END, onSeekingChange, false, -1);
 			
 			playableTrait = new PlayableTrait(this);
 			playableTrait.addEventListener(PlayingChangeEvent.PLAYING_CHANGE, onPlayingChange);
@@ -219,9 +219,9 @@ package org.osmf.proxies
 			}			
 		}
 		
-		private function onSeekingChange(event:SeekingChangeEvent):void
+		private function onSeekingChange(event:SeekEvent):void
 		{
-			if (event.seeking)
+			if (event.type == SeekEvent.SEEK_BEGIN)
 			{				
 				elapsedTime = event.time;
 				absoluteTimeAtLastPlay = flash.utils.getTimer();
@@ -229,7 +229,7 @@ package org.osmf.proxies
 			}
 		}
 		
-		private function onDurationReached(event:TraitEvent):void
+		private function onDurationReached(event:TimeEvent):void
 		{
 			playheadTimer.stop();
 		}

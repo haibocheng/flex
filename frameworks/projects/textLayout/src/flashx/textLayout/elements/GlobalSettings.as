@@ -44,6 +44,23 @@ package flashx.textLayout.elements
 		
 		private static var _fontMapperFunction:Function
 		
+		/** Controls whether the text will be visible to a search engine indexer. Defaults to <code>true</code>.
+		 * 
+		 * @playerversion Flash 10
+		 * @playerversion AIR 1.5
+		 * @langversion 3.0
+		 */
+		public static function get enableSearch():Boolean
+		{
+			return _enableSearch;
+		}
+		public static function set enableSearch(value:Boolean):void
+		{
+			_enableSearch = value;
+		}
+		
+		private static var _enableSearch:Boolean = true;
+
 		/** Function that takes two parameters, a resource id and an optional array of parameters to substitute into the string.
 		 * The string is of form "Content {0} more content {1}".  The parameters are read from the optional array and substituted for the bracketed substrings
 		 * TLF provides a default implementation with
@@ -78,6 +95,8 @@ package flashx.textLayout.elements
 			invalidReplaceTextPositions:	"Invalid positions passed to SpanElement.replaceText",
 			invalidSurrogatePairSplit: 		"Invalid splitting of a surrogate pair",
 			badPropertyValue:				"Property {0} value {1} is out of range",
+			// selection/editing
+			illegalOperation:				"Illegal attempt to execute {0} operation",
 			// shared import errors
 			unexpectedXMLElementInSpan:		"Unexpected element {0} within a span",
 			unexpectedNamespace:			"Unexpected namespace {0}",

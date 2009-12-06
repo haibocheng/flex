@@ -1,8 +1,8 @@
 //========================================================================================
 //  $File: //a3t/argon/dev/textLayout_core/src/flashx/textLayout/formats/ITextLayoutFormat.as $
-//  $DateTime: 2009/11/10 13:19:41 $
-//  $Revision: #23 $
-//  $Change: 727329 $
+//  $DateTime: 2009/11/18 15:42:10 $
+//  $Revision: #27 $
+//  $Change: 728525 $
 //  
 //  ADOBE CONFIDENTIAL
 //  
@@ -37,7 +37,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of 0.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -51,7 +51,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will have a value of TRANSPARENT.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -66,7 +66,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of false.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -80,7 +80,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of 1.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -94,7 +94,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will have a value of 1.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -108,7 +108,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of 12.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -124,7 +124,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of 0.0.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -135,13 +135,13 @@ package flashx.textLayout.formats
 
 		/**
 		 * Number in pixels (or percent of <code>fontSize</code>, like 120%) indicating the amount of tracking (manual kerning) to be applied to the left of each character. If kerning is enabled, the <code>trackingLeft</code> value is added to the values in the kerning table for the font. If kerning is disabled, the <code>trackingLeft</code> value is used as a manual kerning value. Supports both positive and negative values. 
-		 * <p>Legal values as a number are from -100 to 1000.</p>
-		 * <p>Legal values as a percent are numbers from -100% to 1000%.</p>
+		 * <p>Legal values as a number are from -1000 to 1000.</p>
+		 * <p>Legal values as a percent are numbers from -1000% to 1000%.</p>
 		 * <p>Legal values include flashx.textLayout.formats.FormatValue.INHERIT.</p>
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of 0.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -151,13 +151,13 @@ package flashx.textLayout.formats
 
 		/**
 		 * Number in pixels (or percent of <code>fontSize</code>, like 120%) indicating the amount of tracking (manual kerning) to be applied to the right of each character.  If kerning is enabled, the <code>trackingRight</code> value is added to the values in the kerning table for the font. If kerning is disabled, the <code>trackingRight</code> value is used as a manual kerning value. Supports both positive and negative values. 
-		 * <p>Legal values as a number are from -100 to 1000.</p>
-		 * <p>Legal values as a percent are numbers from -100% to 1000%.</p>
+		 * <p>Legal values as a number are from -1000 to 1000.</p>
+		 * <p>Legal values as a percent are numbers from -1000% to 1000%.</p>
 		 * <p>Legal values include flashx.textLayout.formats.FormatValue.INHERIT.</p>
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of 0.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -173,7 +173,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of 120%.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -187,7 +187,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of AUTO.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -202,7 +202,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of DEFAULT.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -217,7 +217,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of DEFAULT.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -232,7 +232,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of flashx.textLayout.formats.FormatValue.AUTO.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -247,7 +247,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of AUTO.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -262,7 +262,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of COMMON.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -278,7 +278,7 @@ package flashx.textLayout.formats
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of USE_DOMINANT_BASELINE.</p>
 		 * @includeExample examples\TextLayoutFormat_alignmentBaselineExample.as -noswf
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -292,7 +292,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of en.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -301,12 +301,12 @@ package flashx.textLayout.formats
 		function get locale():*;
 
 		/**
-		 * The type of typographic case used for this text. Here are some examples:<p><img src='../../../images/textLayout_typographiccase.gif' alt='typographicCase' /></p>
+		 * The type of typographic case used for this text. Here are some examples:<p><img src='../../../images/textLayout_typographiccase.png' alt='typographicCase' /></p>
 		 * <p>Legal values are flashx.textLayout.formats.TLFTypographicCase.DEFAULT, flashx.textLayout.formats.TLFTypographicCase.CAPS_TO_SMALL_CAPS, flashx.textLayout.formats.TLFTypographicCase.UPPERCASE, flashx.textLayout.formats.TLFTypographicCase.LOWERCASE, flashx.textLayout.formats.TLFTypographicCase.LOWERCASE_TO_SMALL_CAPS, flashx.textLayout.formats.FormatValue.INHERIT.</p>
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of DEFAULT.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -320,7 +320,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of Arial.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -334,7 +334,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of NONE.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -349,7 +349,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of NORMAL.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -364,7 +364,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of NORMAL.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -379,7 +379,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of COLLAPSE.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -394,7 +394,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of CFF.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -409,7 +409,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of HORIZONTAL_STEM.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -424,7 +424,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of DEVICE.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -439,7 +439,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of AUTO.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -455,7 +455,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of 0.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -469,7 +469,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of 0.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -483,7 +483,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of 0.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -498,7 +498,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of 0.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -513,7 +513,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of 0.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -528,7 +528,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of START.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -544,7 +544,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of START.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -560,7 +560,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of INTER_WORD.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -576,7 +576,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of flashx.textLayout.formats.FormatValue.AUTO.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -592,7 +592,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of flashx.textLayout.formats.FormatValue.AUTO.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -608,7 +608,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of LTR.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -623,7 +623,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of null.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -633,12 +633,12 @@ package flashx.textLayout.formats
 
 		/**
 		 * Specifies the leading model, which is a combination of leading basis and leading direction.
-		 * Leading basis is the baseline to which the <code>lineHeight</code> property refers. Leading direction determines whether the <code>lineHeight</code> property refers to the distance of a line's baseline from that of the line before it or the line after it. The default value of <code>FormatValue.AUTO</code> is resolved based on the paragraph's <code>locale</code> property.  For Japanese and Chinese, it is <code>LeadingModel.IDEOGRAPHIC_TOP_DOWN</code> and for all others it is <code>LeadingModel.ROMAN_UP</code>.<p><img src='../../../images/textLayout_LB1.jpg' alt='leadingBasis1' /><img src='../../../images/textLayout_LB2.jpg' alt='leadingBasis2' /><img src='../../../images/textLayout_LB3.jpg' alt='leadingBasis3' /><img src='../../../images/textLayout_LD1.jpg' alt='leadingDirection1' /><img src='../../../images/textLayout_LD2.jpg' alt='leadingDirection2' /><img src='../../../images/textLayout_LD3.jpg' alt='leadingDirection3' /></p>
+		 * Leading basis is the baseline to which the <code>lineHeight</code> property refers. Leading direction determines whether the <code>lineHeight</code> property refers to the distance of a line's baseline from that of the line before it or the line after it. The default value of <code>FormatValue.AUTO</code> is resolved based on the paragraph's <code>locale</code> property.  For Japanese and Chinese, it is <code>LeadingModel.IDEOGRAPHIC_TOP_DOWN</code> and for all others it is <code>LeadingModel.ROMAN_UP</code>.<p><strong>Leading Basis:</strong></p><p><img src='../../../images/textLayout_LB1.png' alt='leadingBasis1' />    <img src='../../../images/textLayout_LB2.png' alt='leadingBasis2' />    <img src='../../../images/textLayout_LB3.png' alt='leadingBasis3' /></p><p><strong>Leading Direction:</strong></p><p><img src='../../../images/textLayout_LD1.png' alt='leadingDirection1' />    <img src='../../../images/textLayout_LD2.png' alt='leadingDirection2' />    <img src='../../../images/textLayout_LD3.png' alt='leadingDirection3' /></p>
 		 * <p>Legal values are flashx.textLayout.formats.LeadingModel.ROMAN_UP, flashx.textLayout.formats.LeadingModel.IDEOGRAPHIC_TOP_UP, flashx.textLayout.formats.LeadingModel.IDEOGRAPHIC_CENTER_UP, flashx.textLayout.formats.LeadingModel.IDEOGRAPHIC_TOP_DOWN, flashx.textLayout.formats.LeadingModel.IDEOGRAPHIC_CENTER_DOWN, flashx.textLayout.formats.LeadingModel.APPROXIMATE_TEXT_FIELD, flashx.textLayout.formats.LeadingModel.ASCENT_DESCENT_UP, flashx.textLayout.formats.LeadingModel.AUTO, flashx.textLayout.formats.FormatValue.INHERIT.</p>
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of AUTO.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -654,7 +654,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will have a value of 20.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -669,7 +669,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will have a value of 0.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -684,7 +684,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will have a value of 0.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -699,7 +699,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will have a value of 0.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -714,7 +714,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will have a value of 0.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -729,7 +729,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will have a value of AUTO.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -745,7 +745,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will have a value of AUTO.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -761,7 +761,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of AUTO.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -777,7 +777,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will have a value of TOP.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -793,7 +793,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of TB.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -809,7 +809,7 @@ package flashx.textLayout.formats
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will have a value of TO_FIT.</p>
 		 * 
-		 * @throws RangeError when set value is not within range for this property.
+		 * @throws RangeError when set value is not within range for this property
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5

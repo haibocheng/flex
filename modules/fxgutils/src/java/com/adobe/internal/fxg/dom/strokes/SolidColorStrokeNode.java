@@ -13,6 +13,8 @@ package com.adobe.internal.fxg.dom.strokes;
 
 import static com.adobe.fxg.FXGConstants.*;
 
+import com.adobe.internal.fxg.dom.DOMParserHelper;
+
 /**
  * @author Peter Farland
  */
@@ -46,9 +48,9 @@ public class SolidColorStrokeNode extends AbstractStrokeNode
     public void setAttribute(String name, String value)
     {
         if (FXG_COLOR_ATTRIBUTE.equals(name))
-            color = parseRGB(value, color);
+            color = DOMParserHelper.parseRGB(this, value, name);
         else if (FXG_ALPHA_ATTRIBUTE.equals(name))
-            alpha = parseDouble(value, ALPHA_MIN_INCLUSIVE, ALPHA_MAX_INCLUSIVE, alpha);
+            alpha = DOMParserHelper.parseDouble(this, value, name, ALPHA_MIN_INCLUSIVE, ALPHA_MAX_INCLUSIVE, alpha);
         else
             super.setAttribute(name, value);
     }

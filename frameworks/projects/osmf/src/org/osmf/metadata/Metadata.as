@@ -42,11 +42,21 @@ package org.osmf.metadata
 	 * Dispatched when the an IMetadata has been removed.
 	 * 
 	 * @eventType org.osmf.events.MetadataEvent.FACET_REMOVE
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 10
+	 *  @playerversion AIR 1.0
+	 *  @productversion OSMF 1.0
 	 */	
 	[Event(name="facetRemove",type="org.osmf.events.MetadataEvent")]
 	
 	/**
 	 *  The Metadata collection is the default implementation for metadata carrying media.
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 10
+	 *  @playerversion AIR 1.0
+	 *  @productversion OSMF 1.0
 	 */ 
 	public class Metadata extends EventDispatcher
 	{		 
@@ -56,6 +66,11 @@ package org.osmf.metadata
 		 * null if none exists.  The result can be cast to the class represented
 		 * by FacetType (similar to how we cast traits after calling getTrait).
 		 * Null if a facet doesn't exist at the specified index
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		public function getFacet(nameSpace:URL):IFacet
 		{				
@@ -69,6 +84,11 @@ package org.osmf.metadata
 		 * @param value the facet to add
 		 * 
 		 * @throws IllegalOperation if the data or namespace is null.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		public function addFacet(data:IFacet):void
 		{
@@ -84,11 +104,11 @@ package org.osmf.metadata
 			}	
 			var oldFacet:IFacet = _list[data.namespaceURL.rawUrl];			
 			_list[data.namespaceURL.rawUrl] = data;
-			if(oldFacet)
+			if (oldFacet)
 			{
-				dispatchEvent(new MetadataEvent(oldFacet, MetadataEvent.FACET_REMOVE));		
+				dispatchEvent(new MetadataEvent(MetadataEvent.FACET_REMOVE, false, false, oldFacet));		
 			}	
-			dispatchEvent(new MetadataEvent(data, MetadataEvent.FACET_ADD));							
+			dispatchEvent(new MetadataEvent(MetadataEvent.FACET_ADD, false, false, data));							
 		}
 		
 		/**
@@ -99,6 +119,11 @@ package org.osmf.metadata
 		 * @returns The removed facet.  Null if value is not in this IMetadata.
 		 * 
 		 * @throws IllegalOperation if the data or namespace is null.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		public function removeFacet(data:IFacet):IFacet
 		{		
@@ -115,7 +140,7 @@ package org.osmf.metadata
 			if (_list[data.namespaceURL.rawUrl])
 			{			
 				delete _list[data.namespaceURL.rawUrl];	
-				dispatchEvent(new MetadataEvent(data, MetadataEvent.FACET_REMOVE));	
+				dispatchEvent(new MetadataEvent(MetadataEvent.FACET_REMOVE, false, false, data));	
 				return data;					
 			}				
 			return null;
@@ -126,11 +151,16 @@ package org.osmf.metadata
 		 * 
 		 * @returns The a list of all valid namespaces
 		 *
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		public function get namespaceURLs():Vector.<String>
 		{
 			var spaces:Vector.<String> = new Vector.<String>;
-			for ( var ns:String in _list)
+			for (var ns:String in _list)
 			{
 				spaces.push(ns);
 			}			

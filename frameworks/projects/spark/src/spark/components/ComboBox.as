@@ -28,6 +28,7 @@ import flashx.textLayout.operations.InsertTextOperation;
 import mx.core.mx_internal;
 import mx.styles.StyleProxy;
 
+import spark.components.supportClasses.DropDownListBase;
 import spark.components.supportClasses.ListBase;
 import spark.core.NavigationUnit;
 import spark.events.DropDownEvent;
@@ -87,6 +88,13 @@ use namespace mx_internal;
  *  @productversion Flex 4
  */
 [Style(name="paddingTop", type="Number", format="Length", inherit="no")]
+
+//--------------------------------------
+//  Other metadata
+//--------------------------------------
+
+[AccessibilityClass(implementation="spark.accessibility.ComboBoxAccImpl")]
+[IconFile("ComboBox.png")]
 
 /**
  *  The ComboBox control is a child class of the DropDownListBase control. 
@@ -184,6 +192,18 @@ public class ComboBox extends DropDownListBase
     [SkinPart(required="false")]
     public var textInput:TextInput;
     
+    //--------------------------------------------------------------------------
+    //
+    //  Class mixins
+    //
+    //--------------------------------------------------------------------------
+    
+    /**
+     *  @private
+     *  Placeholder for mixin by ComboBoxAccImpl.
+     */
+    mx_internal static var createAccessibilityImplementation:Function;
+    
     /**
      *  Constructor. 
      *  
@@ -240,19 +260,21 @@ public class ComboBox extends DropDownListBase
      *  It then and scrolls to and highlights the closest match in the item list.
      * 
      *  <p>The function referenced by this property takes an input string and returns
-     *  the items in the data provider that match the input. 
-     *  The items are returned as a Vector of indices in the data provider. </p>
+     *  the index of the items in the data provider that match the input. 
+     *  The items are returned as a Vector.&lt;int&gt; of indices in the data provider. </p>
      * 
      *  <p>The callback function must have the following signature: </p>
      * 
      *  <pre>
-     *    function myMatchingFunction(comboBox:ComboBox, inputText:String):Vector</pre>
+     *    function myMatchingFunction(comboBox:ComboBox, inputText:String):Vector.&lt;int&gt;</pre>
      * 
      *  <p>If the value of this property is null, the ComboBox finds matches 
      *  using the default algorithm.  
      *  By default, if an input string of length n is equivalent to the first n characters 
      *  of an item (ignoring case), then it is a match to that item. For example, 'aRiz' 
      *  is a match to "Arizona" while 'riz' is not.</p>
+     *
+     *  <p>To disable search, create a callback function that returns an empty Vector.&lt;int&gt;.</p>
      * 
      *  @default null
      *  
@@ -413,6 +435,22 @@ public class ComboBox extends DropDownListBase
         actualProposedSelectedIndex = value;
     }
     
+    private var typicalItemChanged:Boolean = false;
+    
+    /**
+     *  @private
+     */
+    override public function set typicalItem(value:Object):void
+    {   
+		if (value != typicalItem)
+			return;
+     
+        super.typicalItem = value;
+        
+        typicalItemChanged = true;
+        invalidateProperties();
+    }
+    
     /**
      *  @private 
      */
@@ -541,6 +579,15 @@ public class ComboBox extends DropDownListBase
     //--------------------------------------------------------------------------
     
     /**
+     *  @private
+     */
+    override protected function initializeAccessibility():void
+    {
+        if (ComboBox.createAccessibilityImplementation != null)
+            ComboBox.createAccessibilityImplementation(this);
+    }
+    
+    /**
      *  @private 
      */
     override protected function commitProperties():void
@@ -571,6 +618,22 @@ public class ComboBox extends DropDownListBase
                 textInput.restrict = _restrict;
                 restrictChanged = false;
             }
+            
+            if (typicalItemChanged)
+            {
+                if (typicalItem != null)
+                {
+                    var itemString:String = LabelUtil.itemToLabel(typicalItem, labelField, labelFunction);
+                    textInput.widthInChars = itemString.length;
+                }
+                else
+                {
+                    // Just set it back to the default value
+                    textInput.widthInChars = 10; 
+                }
+                
+                typicalItemChanged = false;
+            }
         }
         
         // Clear the TextInput because we were programmatically set to NO_SELECTION
@@ -578,20 +641,22 @@ public class ComboBox extends DropDownListBase
         // changed the value to NO_SELECTION
         if (selectedIndexChanged && selectedIndex == NO_SELECTION)
             textInput.text = "";
-    }
+    }    
     
     /**
      *  @private 
      */ 
-    override mx_internal function updateLabelDisplay():void
+    override mx_internal function updateLabelDisplay(displayItem:* = undefined):void
     {
         super.updateLabelDisplay();
         
         if (textInput)
         {
-            if (selectedItem != null && selectedItem != undefined)
+            if (displayItem == undefined)
+                displayItem = selectedItem;
+            if (displayItem != null && displayItem != undefined)
             {
-                textInput.text = LabelUtil.itemToLabel(selectedItem, labelField, labelFunction);
+                textInput.text = LabelUtil.itemToLabel(displayItem, labelField, labelFunction);
             }
         }
     }
@@ -807,7 +872,6 @@ public class ComboBox extends DropDownListBase
      */ 
     protected function textInput_changeHandler(event:TextOperationEvent):void
     {  
-    
         userTypedIntoText = true;
         
         var operation:FlowOperation = event.operation;

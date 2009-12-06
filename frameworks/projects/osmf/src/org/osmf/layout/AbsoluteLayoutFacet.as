@@ -43,26 +43,51 @@ package org.osmf.layout
 	 * On encountering this facet on a target, the default layout renderer
 	 * will use the set values to position and size the target according to
 	 * the absolute values set.
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 10
+	 *  @playerversion AIR 1.0
+	 *  @productversion OSMF 1.0
 	 */	
 	public class AbsoluteLayoutFacet extends EventDispatcher implements IFacet
 	{
 		/**
 		 * Identifier for the facet's x property.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public static const X:StringIdentifier = new StringIdentifier("x");
 		
 		/**
 		 * Identifier for the facet's y property.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public static const Y:StringIdentifier = new StringIdentifier("y");
 		
 		/**
 		 * Identifier for the facet's width property.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public static const WIDTH:StringIdentifier = new StringIdentifier("width");
 		
 		/**
 		 * Identifier for the facet's height property.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public static const HEIGHT:StringIdentifier = new StringIdentifier("height");
 		
@@ -71,6 +96,11 @@ package org.osmf.layout
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function get namespaceURL():URL
 		{
@@ -79,6 +109,11 @@ package org.osmf.layout
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function getValue(identifier:IIdentifier):*
 		{
@@ -112,6 +147,11 @@ package org.osmf.layout
 		 * This facet does not merge.
 		 * 
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function merge(childFacet:IFacet):IFacet
 		{
@@ -126,6 +166,11 @@ package org.osmf.layout
 		 * 
 		 * Defines the desired horizontal offset of a target expressed in
 		 * pixels.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
 		public function get x():Number
 		{
@@ -136,7 +181,7 @@ package org.osmf.layout
 			if (_x != value)
 			{
 				var event:FacetValueChangeEvent
-					= new FacetValueChangeEvent(X, value, _x);
+					= new FacetValueChangeEvent(FacetValueChangeEvent.VALUE_CHANGE, false, false, X, value, _x);
 				
 				_x = value;
 						
@@ -149,6 +194,11 @@ package org.osmf.layout
 		 * 
 		 * Defines the desired vertical offset of a target expressed in
 		 * pixels.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function get y():Number
 		{
@@ -159,7 +209,7 @@ package org.osmf.layout
 			if (_y != value)
 			{
 				var event:FacetValueChangeEvent
-					= new FacetValueChangeEvent(Y, value, _y);
+					= new FacetValueChangeEvent(FacetValueChangeEvent.VALUE_CHANGE, false, false, Y, value, _y);
 					
 				_y = value;
 						
@@ -172,6 +222,11 @@ package org.osmf.layout
 		 * 
 		 * Defines the desired horizontal size of a target expressed in
 		 * pixels.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function get width():Number
 		{
@@ -182,7 +237,7 @@ package org.osmf.layout
 			if (_width != value)
 			{
 				var event:FacetValueChangeEvent
-					= new FacetValueChangeEvent(WIDTH, value, _width);
+					= new FacetValueChangeEvent(FacetValueChangeEvent.VALUE_CHANGE, false, false, WIDTH, value, _width);
 					
 				_width = value;
 						
@@ -195,6 +250,11 @@ package org.osmf.layout
 		 * 
 		 * Defines the desired vertical offset of a target expressed in
 		 * pixels.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function get height():Number
 		{
@@ -205,7 +265,7 @@ package org.osmf.layout
 			if (_height != value)
 			{
 				var event:FacetValueChangeEvent
-					= new FacetValueChangeEvent(HEIGHT, value, _height);
+					= new FacetValueChangeEvent(FacetValueChangeEvent.VALUE_CHANGE, false, false, HEIGHT, value, _height);
 					
 				 _height = value;
 						

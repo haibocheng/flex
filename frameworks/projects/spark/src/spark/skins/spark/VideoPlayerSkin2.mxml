@@ -60,7 +60,7 @@
     <!-- states -->
     <s:states>
         <s:State name="uninitialized" stateGroups="uninitializedStates, normalStates" />
-        <s:State name="initializing" stateGroups="initializingStates, normalStates" />
+        <s:State name="loading" stateGroups="loadingStates, normalStates" />
         <s:State name="ready" stateGroups="readyStates, normalStates" />
         <s:State name="playing" stateGroups="playingStates, normalStates" />
         <s:State name="paused" stateGroups="pausedStates, normalStates" />
@@ -68,7 +68,7 @@
         <s:State name="playbackError" stateGroups="playbackErrorStates, normalStates" />
         <s:State name="disabled" stateGroups="disabledStates, normalStates"/>
         <s:State name="uninitializedAndFullScreen" stateGroups="uninitializedStates, fullScreenStates" />
-        <s:State name="initializingAndFullScreen" stateGroups="initializingStates, fullScreenStates" />
+        <s:State name="loadingAndFullScreen" stateGroups="loadingStates, fullScreenStates" />
         <s:State name="readyAndFullScreen" stateGroups="readyStates, fullScreenStates" />
         <s:State name="playingAndFullScreen" stateGroups="playingStates, fullScreenStates" />
         <s:State name="pausedAndFullScreen" stateGroups="pausedStates, fullScreenStates" />
@@ -81,9 +81,13 @@
     <s:RectangularDropShadow id="shadow" blurX="17" blurY="17" alpha="0.32" distance="4" 
                 angle="90" color="#131313" left="0" top="0" right="0" bottom="0"/>
     
-    <!-- video and player controls are clipped if they exceed the size of the 
-         component, but the drop shadow above is not clipped and sizes to the component -->
-    <s:Group clipAndEnableScrolling="true" left="0" top="0" right="0" bottom="0">
+    <!-- Video and player controls are clipped if they exceed the size of the 
+         component, but the drop shadow above is not clipped and sizes to the component.
+         We also set verticalScrollPosition so that when we do clip, rather than clipping  
+         off the bottom first, we clip off the top fist.  This is so the player controls 
+         are still visible when we start clipping. -->
+    <s:Group id="clippedGroup" clipAndEnableScrolling="true" left="0" top="0" right="0" bottom="0" 
+             verticalScrollPosition="{Math.max(0, 184-clippedGroup.height)}">
     
         <!-- There's a minimum size for the video and controls.  If we go below that
              we are clipped. -->

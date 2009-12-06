@@ -15,6 +15,15 @@
 
 	<property name="FLEX_HOME" location="${basedir}"/>
 
+        <!-- Required for OSX 10.6 / Snow Leopard Performance -->
+	<condition property="local.d32" value="-d32" >
+		<and>
+        	<equals arg1="${sun.arch.data.model}" arg2="64"/>
+        	<equals arg1="${os.arch}" arg2="x86_64"/>
+                <os family="mac"/>
+		</and>
+	</condition>
+
 	<property file="${FLEX_HOME}/local.properties"/>
 	<property file="${FLEX_HOME}/build.properties"/>
 	<property environment="env"/>
@@ -208,6 +217,11 @@
 		<copy file="${basedir}/modules/thirdparty/batik/batik-1.6/lib/batik-all.jar"
 			  tofile="${basedir}/lib/batik-all-flex.jar"/>
 		<ant dir="${basedir}/modules/thirdparty/batik" target="clean"/>
+                <exec executable="jar">
+		    <arg value="umf"/>
+                    <arg value="${basedir}/modules/thirdparty/batik/sources/batik-all-flex.mf"/>
+                    <arg value="${basedir}/lib/batik-all-flex.jar"/>
+                </exec>
 	</target>
 
 	<target name="velocity" description="Full build of velocity-dep-1.4-flex.jar">
@@ -242,6 +256,10 @@
 
 	<target name="airframework-compile" description="Recompile airframework.swc">
 		<ant dir="${basedir}/frameworks/projects/airframework" target="compile"/>
+	</target>
+
+	<target name="airspark-compile" description="Recompile airspark.swc">
+		<ant dir="${basedir}/frameworks/projects/airspark" target="compile"/>
 	</target>
 
 	<target name="other.locales" if="locales" description="Build resource SWCs for additional locales">
@@ -469,6 +487,8 @@ zip -yrq ../out/flex_sdk_4 * -x /zip_pkg.sh
 				<include name="digest.exe"/>
 				<include name="fcsh"/>
 				<include name="fcsh.exe"/>
+				<include name="font2swf"/>
+				<include name="font2swf.bat"/>
 				<include name="fdb"/>
 				<include name="fdb.exe"/>
 				<include name="jvm.config"/>
@@ -529,6 +549,7 @@ zip -yrq ../out/flex_sdk_4 * -x /zip_pkg.sh
 		<copy todir="${basedir}/temp/frameworks/libs">
 			<fileset dir="${basedir}/frameworks/libs">
 				<include name="air/airframework.swc"/>
+				<include name="air/airspark.swc"/>
 				<include name="flex.swc"/>
 				<include name="spark.swc"/>
 				<include name="framework.swc"/>
@@ -552,6 +573,10 @@ zip -yrq ../out/flex_sdk_4 * -x /zip_pkg.sh
 		<!-- frameworks/projects -->
 		<copy todir="${basedir}/temp/frameworks/projects">
 			<fileset dir="${basedir}/frameworks/projects">
+				<exclude name="**/.settings/**"/>
+				<exclude name="**/.actionScriptProperties"/>
+				<exclude name="**/.flexLibProperties"/>
+				<exclude name="**/.project"/>
 				<exclude name="**/asdoc/**"/>
 				<exclude name="**/*.intf"/>
 				<exclude name="**/*generated.as"/>
@@ -745,12 +770,22 @@ zip -yrq ../out/flex_sdk_4 * -x /zip_pkg.sh
 				<include name="mx-manifest.xml"/>
 				<include name="mxml-2009-manifest.xml"/>
 				<include name="winFonts.ser"/>
+				<exclude name="**/.settings/**"/>
+				<exclude name="**/.actionScriptProperties"/>
+				<exclude name="**/.flexLibProperties"/>
+				<exclude name="**/.project"/>
 				<include name="projects/airframework/**"/>
 				<exclude name="projects/airframework/build.*"/>
 				<exclude name="projects/airframework/asdoc/**"/>
 				<exclude name="projects/airframework/build.*"/>
 				<exclude name="projects/airframework/bundles/ja_JP/**"/>
 				<exclude name="projects/airframework/bundles/en_US/build.*"/>
+				<include name="projects/airspark/**"/>
+				<exclude name="projects/airspark/build.*"/>
+				<exclude name="projects/airspark/asdoc/**"/>
+				<exclude name="projects/airspark/build.*"/>
+				<exclude name="projects/airspark/bundles/ja_JP/**"/>
+				<exclude name="projects/airspark/bundles/en_US/build.*"/>
 				<include name="projects/flex/**"/>
 				<exclude name="projects/flex/build.*"/>
 				<include name="projects/framework/**"/>
@@ -892,6 +927,9 @@ zip -yrq ../out/flex_sdk_4 * -x /zip_pkg.sh
 		<!-- frameworks/projects -->
 		<copy todir="${basedir}/temp/frameworks/projects/airframework/bundles">
 			<fileset dir="${basedir}/frameworks/projects/airframework/bundles"/>
+		</copy>
+		<copy todir="${basedir}/temp/frameworks/projects/airspark/bundles">
+			<fileset dir="${basedir}/frameworks/projects/airspark/bundles"/>
 		</copy>
 		<copy todir="${basedir}/temp/frameworks/projects/rpc/bundles">
 			<fileset dir="${basedir}/frameworks/projects/rpc/bundles"/>

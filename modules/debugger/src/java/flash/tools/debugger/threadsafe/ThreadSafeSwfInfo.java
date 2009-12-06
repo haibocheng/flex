@@ -108,4 +108,10 @@ public class ThreadSafeSwfInfo extends ThreadSafeDebuggerObject implements SwfIn
 			return fSwfInfo.isUnloaded();
 		}
 	}
+
+	public int getUnnamedIndex() {
+		synchronized (getSyncObject()) {
+			return fSwfInfo.getUnnamedIndex();
+		}
+	}
 }

@@ -44,6 +44,11 @@ package org.osmf.gateways
 
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function addElement(child:MediaElement):MediaElement
 		{
@@ -88,6 +93,11 @@ package org.osmf.gateways
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function removeElement(child:MediaElement):MediaElement
 		{
@@ -116,6 +126,11 @@ package org.osmf.gateways
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function containsElement(child:MediaElement):Boolean
 		{
@@ -138,6 +153,11 @@ package org.osmf.gateways
 		 * 
 		 * @param gatewayIdentifier The identifier that will be used for this gateway
 		 * in JavaScript. 
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
 		public function initialize(gatewayIdentifier:String):void
 		{
@@ -301,10 +321,10 @@ package org.osmf.gateways
 				{
 					// ILoadable
 					case "LoadState":
-						var newState:LoadState = loadStateFromString(value);
+						var newLoadState:String = value;
 						if (htmlElement)
 						{
-							htmlElement.loadState = newState;
+							htmlElement.loadState = newLoadState;
 						}
 						break;
 					// IPlayable:
@@ -482,26 +502,7 @@ package org.osmf.gateways
 			
 			return result;
 		}
-		
-		private static function loadStateFromString(value:String):LoadState
-		{
-			var result:LoadState;
-			
-			if (value)
-			{
-				for each (var state:LoadState in LoadState.ALL_STATES)
-				{
-					if (state.toString().toLowerCase() == value)
-					{
-						result = state;
-						break;
-					} 
-				}
-			}
-			
-			return result; 	
-		}
-		
+				
         // JavaScript API
         //
         
@@ -574,11 +575,11 @@ package org.osmf.gateways
         	function Constants()
         	{
         		this.loadState =
-        			{ CONSTRUCTED: "constructed"
+        			{ UNINITIALIZED: "uninitialized"
         			, LOADING: "loading"
-        			, LOADED: "loaded"
+        			, READY: "ready"
         			, UNLOADING: "unloading"
-        			, LOAD_FAILED: "loadFailed"
+        			, LOAD_ERROR: "loadError"
         			}
         	}
         	]]>;

@@ -95,7 +95,19 @@ package flashx.textLayout.container
 	 
 	[Event(name="flowOperationEnd", type="flashx.textLayout.events.FlowOperationEvent")]
 	
-	 /** Dispatched whenever the selection is changed.  Primarily used to update selection-dependent user interface. 
+	
+	/**
+	 * 
+	 * @eventType flashx.textLayout.events.FlowOperationEvent.FLOW_OPERATION_COMPLETE
+	 *
+	 * @playerversion Flash 10
+	 * @playerversion AIR 1.5
+	 * @langversion 3.0
+	 */
+	
+	[Event(name="flowOperationComplete", type="flashx.textLayout.events.FlowOperationEvent")]
+	
+	/** Dispatched whenever the selection is changed.  Primarily used to update selection-dependent user interface. 
 	 *
 	 * @playerversion Flash 10
 	 * @playerversion AIR 1.5
@@ -220,6 +232,7 @@ package flashx.textLayout.container
 		static private const eventList:Array = [ 
 			FlowOperationEvent.FLOW_OPERATION_BEGIN,
 			FlowOperationEvent.FLOW_OPERATION_END,
+			FlowOperationEvent.FLOW_OPERATION_COMPLETE,
 			SelectionEvent.SELECTION_CHANGE,
 			CompositionCompleteEvent.COMPOSITION_COMPLETE,
 			MouseEvent.CLICK,		//from FlowElementMouseEvent
@@ -653,6 +666,11 @@ package flashx.textLayout.container
 	 	 */
 		public function setTextFlow(textFlow:TextFlow):void
 		{
+			if (textFlow == null)
+			{
+				setText(null);
+				return;
+			}
 			if (_sourceState == SOURCE_TEXTFLOW)
 			{
 				removeTextFlowListeners();
@@ -830,7 +848,7 @@ package flashx.textLayout.container
 			{
 			 	if (fn == textBlock.createTextLine)
 					return createTextLine(textBlock,argsArray);
-				if (TextLineRecycler.textBlockHasRecreateTextLine && fn == thisArg["recreateTextLine"])
+				if (Configuration.playerEnablesArgoFeatures && fn == thisArg["recreateTextLine"])
 					return recreateTextLine(textBlock,argsArray);
 			}
 	        if (returns)
@@ -851,7 +869,7 @@ package flashx.textLayout.container
 	 	 */
 		private function createTextLine(textBlock:TextBlock, argsArray:Array):TextLine
 		{
-			CONFIG::debug { assert(TextLineRecycler.textBlockHasRecreateTextLine,"Bad call to createTextLine"); }
+			CONFIG::debug { assert(Configuration.playerEnablesArgoFeatures,"Bad call to createTextLine"); }
 			if (_composeRecycledInPlaceLines < _composedLines.length)
 			{
 				var textLine:TextLine = _composedLines[_composeRecycledInPlaceLines++];
@@ -1180,7 +1198,7 @@ package flashx.textLayout.container
 					else
 					{
 						var callback:Function;
-						if (TextLineRecycler.textBlockHasRecreateTextLine)
+						if (Configuration.playerEnablesArgoFeatures)
 						{
 							// if the first thing in the array is not a TextLine its the background color from the last compose - remove it
 							var firstObj:Object = _composedLines[0];
@@ -1200,7 +1218,7 @@ package flashx.textLayout.container
 						inputManagerFactory.verticalScrollPolicy = _verticalScrollPolicy;
 						inputManagerFactory.horizontalScrollPolicy = _horizontalScrollPolicy;
 						inputManagerFactory.compositionBounds = new Rectangle(0,0,_compositionWidth,_compositionHeight);
-						inputManagerFactory.swfContext = TextLineRecycler.textBlockHasRecreateTextLine ? this : _swfContext;
+						inputManagerFactory.swfContext = Configuration.playerEnablesArgoFeatures ? this : _swfContext;
 							
 						if (_sourceState == SOURCE_STRING)
 						{
@@ -1214,7 +1232,7 @@ package flashx.textLayout.container
 						else
 							_inputManagerTextFlowFactory.createTextLines(callback,_textFlow);
 							
-						if (TextLineRecycler.textBlockHasRecreateTextLine)
+						if (Configuration.playerEnablesArgoFeatures)
 							_composedLines.length = _composePushedLines;
 
 						bounds = inputManagerFactory.getContentBounds();
@@ -1259,7 +1277,7 @@ package flashx.textLayout.container
 			else if (_needsRedraw)
 			{
 				var textObject:DisplayObject; 	// scratch - TextLines and background shapes
-				if (TextLineRecycler.textBlockHasRecreateTextLine)
+				if (Configuration.playerEnablesArgoFeatures)
 				{
 					// if the first child in the container is a Shape - its the background color - lose it
 					if (_container.numChildren != 0)

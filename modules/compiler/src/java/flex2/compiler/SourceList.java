@@ -65,7 +65,7 @@ public final class SourceList
 				{
 					String relativePath = calculateRelativePath(name);
 					String namespaceURI = relativePath.replace('/', '.'), localPart = calculateLocalPart(name);
-					Source s = new Source(files[i], pathRoot, relativePath, localPart, this, false, (i == length - 1) && lastIsRoot);					
+					Source s = new Source(files[i], pathRoot, relativePath, localPart, this, false, (i == length - 1) && lastIsRoot);
 					sources.put(constructClassName(namespaceURI, localPart), s);
 				}
 				else
@@ -90,7 +90,7 @@ public final class SourceList
 	{
 		return calculatePathRoot(f, directories);
 	}
-	
+
 	static VirtualFile calculatePathRoot(VirtualFile f, List<File> directories)
 	{
 		String name = f.getName();
@@ -105,16 +105,20 @@ public final class SourceList
 		// return new LocalFile(FileUtil.openFile(f.getParent()));
 		return null;
 	}
-	
+
 	private String calculateRelativePath(String name)
 	{
 		// C: name is canonical.
 		for (int i = 0, size = directories == null ? 0 : directories.size(); i < size; i++)
 		{
-			String dir = directories.get(i).getAbsolutePath();
+            // Tack on the separatorChar to handle directories, which
+            // are the same as other, just longer.  Like "a" and "a1".
+            // See SDK-24084.
+            String dir = directories.get(i).getAbsolutePath() + File.separatorChar;
+
 			if (name.startsWith(dir))
 			{
-				name = name.substring(dir.length() + 1);
+				name = name.substring(dir.length());
 				int index = name.lastIndexOf(File.separatorChar);
 				if (index != -1)
 				{
@@ -129,7 +133,7 @@ public final class SourceList
 
 		return "";
 	}
-	
+
 	private String calculateLocalPart(String name)
 	{
 		String leafName = name.substring(name.lastIndexOf(File.separatorChar) + 1);
@@ -186,7 +190,7 @@ public final class SourceList
 		{
 			return null;
 		}
-		
+
 		assert localPart.indexOf('.') == -1 && localPart.indexOf('/') == -1 && localPart.indexOf(':') == -1
                 : "findSource(" + namespaceURI + "," + localPart + ") has bad localPart";
 
@@ -225,44 +229,44 @@ public final class SourceList
 
 		return s;
 	}
-	
+
 	String[] checkClassNameFileName(Source s)
 	{
 		String defName = null, pathName = null;
-		
+
 		if (s.getOwner() == this)
 		{
 			QName def = s.getCompilationUnit().topLevelDefinitions.last();
-			
+
 			defName = def.getLocalPart();
 			pathName = s.getShortName();
-			
+
 			if (defName.equals(pathName))
 			{
 				return null;
 			}
 		}
-		
+
 		return new String[] { pathName, defName };
 	}
 
 	String[] checkPackageNameDirectoryName(Source s)
 	{
 		String defPackage = null, pathPackage = null;
-		
+
 		if (s.getOwner() == this)
 		{
 			QName def = s.getCompilationUnit().topLevelDefinitions.last();
-			
+
 			defPackage = NameFormatter.normalizePackageName(def.getNamespace());
 			pathPackage = NameFormatter.toDot(s.getRelativePath(), '/');
-			
+
 			if (defPackage.equals(pathPackage))
 			{
 				return null;
 			}
 		}
-		
+
 		return new String[] { pathPackage, defPackage };
 	}
 

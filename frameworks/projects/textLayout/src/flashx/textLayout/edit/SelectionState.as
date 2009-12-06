@@ -12,8 +12,8 @@ package flashx.textLayout.edit
 {
 	import flashx.textLayout.elements.TextFlow;
 	import flashx.textLayout.elements.TextRange;
-	import flashx.textLayout.formats.TextLayoutFormat;
 	import flashx.textLayout.formats.ITextLayoutFormat;
+	import flashx.textLayout.formats.TextLayoutFormat;
 	import flashx.textLayout.tlf_internal;
 	
 	use namespace tlf_internal;
@@ -40,6 +40,8 @@ package flashx.textLayout.edit
 	{		
 		/** Format that are associated with the caret position & will be applied to inserted text */
 		private var _pointFormat:ITextLayoutFormat;
+		
+		private var _selectionManagerOperationState:Boolean;
 
 		/** 
 		 * Creates a SelectionState object.
@@ -106,5 +108,14 @@ package flashx.textLayout.edit
 		{ return _pointFormat; }
 		public function set pointFormat(format:ITextLayoutFormat):void
 		{ _pointFormat = format; } 
+		
+		/** @private used to tell an operation that the SelectionState is from the SelectionManager and that the SelectionManager pointFormat should be updated. */
+		tlf_internal function get selectionManagerOperationState():Boolean
+		{ return _selectionManagerOperationState; }
+		tlf_internal function set selectionManagerOperationState(val:Boolean):void
+		{ _selectionManagerOperationState = val; }
+		/** @private */
+		tlf_internal function clone():SelectionState
+		{ return new SelectionState(textFlow,anchorPosition,activePosition,pointFormat); }
 	}
 }

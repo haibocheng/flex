@@ -26,7 +26,6 @@ import flash.text.TextFormat;
 import flash.text.engine.ElementFormat;
 import flash.text.engine.FontDescription;
 import flash.text.engine.FontLookup;
-import flash.text.engine.ITextSupport;
 import flash.text.engine.TextBlock;
 import flash.text.engine.TextElement;
 import flash.text.engine.TextLine;
@@ -46,6 +45,7 @@ import flashx.textLayout.edit.SelectionManager;
 import flashx.textLayout.edit.SelectionState;
 import flashx.textLayout.elements.Configuration;
 import flashx.textLayout.elements.GlobalSettings;
+import flashx.textLayout.elements.InlineGraphicElement;
 import flashx.textLayout.elements.InlineGraphicElementStatus;
 import flashx.textLayout.elements.TextFlow;
 import flashx.textLayout.events.CompositionCompleteEvent;
@@ -196,7 +196,7 @@ include "../styles/metadata/SelectionFormatTextStyles.as"
 //  Excluded APIs
 //--------------------------------------
 
-[Exclude(name="baseColor", kind="style")]
+[Exclude(name="chromeColor", kind="style")]
 
 //--------------------------------------
 //  Other metadata
@@ -385,7 +385,7 @@ include "../styles/metadata/SelectionFormatTextStyles.as"
  *  @productversion Flex 4
  */
 public class RichEditableText extends UIComponent
-    implements IFocusManagerComponent, IIMESupport, ITextSupport, IViewport
+    implements IFocusManagerComponent, IIMESupport, IViewport
 {
     include "../core/Version.as";
     
@@ -656,6 +656,13 @@ public class RichEditableText extends UIComponent
         
     /**
      *  @private
+     *  The generation of the text flow that last reported its content
+     *  bounds. 
+     */
+    private var lastContentBoundsGeneration:int = 0;  // 0 means not set
+    
+    /**
+     *  @private
      *  True if TextOperationEvent.CHANGING and TextOperationEvent.CHANGE 
      *  events should be dispatched.
      */
@@ -665,11 +672,6 @@ public class RichEditableText extends UIComponent
      *  @private
      */
     mx_internal var ignoreDamageEvent:Boolean = false;
-
-    /**
-     *  @private
-     */
-    mx_internal var ignoreSelectionChangeEvent:Boolean = false;
 
     /**
      *  @private
@@ -1118,19 +1120,6 @@ public class RichEditableText extends UIComponent
     //--------------------------------------------------------------------------
 
     //----------------------------------
-    //  canReconvert
-    //----------------------------------
-
-	/**
-	 *  @private
-	 *  FIXME (gosmith)
-	 */
-	public function get canReconvert():Boolean
-	{
-		return enabled && editable;
-	}
-
-    //----------------------------------
     //  content
     //----------------------------------
 
@@ -1366,7 +1355,26 @@ public class RichEditableText extends UIComponent
      */
     private function set editingMode(value:String):void
     {
+        var lastEditingMode:String = _textContainerManager.editingMode;
+
+        if (lastEditingMode == value)
+            return;
+        
         _textContainerManager.editingMode = value;
+        
+        // Make sure the selection manager selection is in sync with the
+        // current selection.
+        if (value != EditingMode.READ_ONLY && 
+            _selectionAnchorPosition != -1 && _selectionActivePosition != -1)
+        {
+            var selectionManager:ISelectionManager = 
+                _textContainerManager.beginInteraction();
+            
+            selectionManager.selectRange(
+                _selectionAnchorPosition, _selectionActivePosition);
+            
+            _textContainerManager.endInteraction();
+        }
     }
 
     //----------------------------------
@@ -1658,34 +1666,6 @@ public class RichEditableText extends UIComponent
     }
 
     //----------------------------------
-    //  selectionActiveIndex
-    //----------------------------------
-
-	/**
-	 *  @private
-	 *  FIXME (gosmith): ITextSupport needs to rename its
-	 *  selectionActiveIndex to selectionActivePosition.
-	 */
-	public function get selectionActiveIndex():int
-	{
-		return _selectionActivePosition;
-	}
-
-    //----------------------------------
-    //  selectionAnchorIndex
-    //----------------------------------
-
-	/**
-	 *  @private
-	 *  FIXME (gosmith): ITextSupport needs to rename its
-	 *  selectionAnchorIndex to selectionAnchorPosition.
-	 */
-	public function get selectionAnchorIndex():int
-	{
-		return _selectionAnchorPosition;
-	}
-
-    //----------------------------------
     //  selectionActivePosition
     //----------------------------------
 
@@ -1964,7 +1944,7 @@ public class RichEditableText extends UIComponent
     /**
      *  @private
      */
-    private var _textContainerManager:TextContainerManager;
+    private var _textContainerManager:RichEditableTextContainerManager;
             
     /**
      *  @private
@@ -2326,7 +2306,8 @@ public class RichEditableText extends UIComponent
         if (textChanged || textFlowChanged || contentChanged)
         {
             lastGeneration = _textFlow ? _textFlow.generation : 0;
-
+            lastContentBoundsGeneration = 0;
+            
             // Handle the case where the initial text, textFlow or content 
             // is displayed as a password.
             if (displayAsPassword)
@@ -2366,12 +2347,13 @@ public class RichEditableText extends UIComponent
             if (editingMode != EditingMode.READ_ONLY)
             {
                 // Must preserve the selection, if there was one.
-                var selectionManager:ISelectionManager = getSelectionManager();
+                var selManager:ISelectionManager = 
+                    _textContainerManager.beginInteraction();
                 
                 // The visible selection will be refreshed during the update.
-                selectionManager.selectRange(oldAnchorPosition, oldActivePosition);        
+                selManager.selectRange(oldAnchorPosition, oldActivePosition);        
                                      
-                releaseSelectionManager(); 
+                _textContainerManager.endInteraction();
             }           
             
             displayAsPasswordChanged = false;
@@ -2519,7 +2501,7 @@ public class RichEditableText extends UIComponent
                     composeHeight = calculateHeightInLines();
 
                 // The composeWidth may be adjusted for minWidth/maxWidth.
-                bounds = measureTextSize(NaN);
+                bounds = measureTextSize(NaN, composeHeight);
                 
                 // Have we already hit the limit with the existing text?  If we
                 // are beyond the composeHeight we can assume we've maxed out on
@@ -2889,8 +2871,8 @@ public class RichEditableText extends UIComponent
      */
     public function scrollToRange(anchorPosition:int, activePosition:int):void
     {
-        // Make sure the properties are commited and the text is composed.
-        validateNow();
+        // Make sure the properties are commited since the text could change.
+        validateProperties();
 
         // Scrolls so that the text position is visible in the container. 
         textContainerManager.scrollToRange(anchorPosition, activePosition);       
@@ -2915,17 +2897,31 @@ public class RichEditableText extends UIComponent
     public function selectRange(anchorPosition:int,
                                 activePosition:int):void
     {
-        // Make sure all properties are committed before doing the operation.
-        validateNow();
+        // Make sure the properties are commited since the text could change.
+        validateProperties();
 
-        var selectionManager:ISelectionManager = getSelectionManager();
-        
-        selectionManager.selectRange(anchorPosition, activePosition);        
-                
-        // Refresh the selection.  This does not cause a damage event.
-        selectionManager.refreshSelection();
-        
-        releaseSelectionManager();
+        if (editingMode == EditingMode.READ_ONLY)
+        {
+            var selectionState:SelectionState =
+                new SelectionState(textFlow, anchorPosition, activePosition);
+            
+            var selectionEvent:SelectionEvent = 
+                new SelectionEvent(SelectionEvent.SELECTION_CHANGE, 
+                                   false, false, selectionState);
+            
+            textContainerManager_selectionChangeHandler(selectionEvent);            
+        }
+        else
+        {
+            var im:ISelectionManager = _textContainerManager.beginInteraction();
+            
+            im.selectRange(anchorPosition, activePosition);        
+            
+            // Refresh the selection.  This does not cause a damage event.
+            im.refreshSelection();
+            
+            _textContainerManager.endInteraction();
+        }
 
         // Remember if the current selection is a range which was set
         // programatically.
@@ -2978,11 +2974,9 @@ public class RichEditableText extends UIComponent
     {
         var format:TextLayoutFormat = new TextLayoutFormat();
  
-         // Make sure all properties are committed before doing the operation.
-        validateNow();
+        // Make sure all properties are committed.
+        validateProperties();
 
-        var selectionManager:ISelectionManager = getSelectionManager();
-                
         // This internal TLF object maps the names of format properties
         // to Property instances.
         // Each Property instance has a category property which tells
@@ -3032,36 +3026,32 @@ public class RichEditableText extends UIComponent
         var containerFormat:ITextLayoutFormat;
         var paragraphFormat:ITextLayoutFormat;
         var characterFormat:ITextLayoutFormat;
-        
-        // Unfortunatley getCommonContainerFormat() works only on the curent
-        // selection, so if another selection is requested, we have to 
-        // temporarily change the current selection and then restore it when
-        // we are done.
-        var oldAnchorPosition:int;
-        var oldActivePosition:int;
-        if (anchorPosition != -1 && activePosition != -1)
+                                 
+        if (anchorPosition == -1 && activePosition == -1)
         {
-            oldAnchorPosition = _selectionAnchorPosition;
-            oldActivePosition = _selectionActivePosition;
-            
-            ignoreSelectionChangeEvent = true;            
-            selectionManager.selectRange(anchorPosition, activePosition);        
-        }                       
-                               
+            anchorPosition = _selectionAnchorPosition;
+            activePosition = _selectionActivePosition;
+        }
+        
         if (needContainerFormat)
-            containerFormat = selectionManager.getCommonContainerFormat();
+        {
+            containerFormat = 
+                _textContainerManager.getCommonContainerFormat();
+        }
         
         if (needParagraphFormat)
-            paragraphFormat = selectionManager.getCommonParagraphFormat();
-
-        if (needCharacterFormat)
-            characterFormat = selectionManager.getCommonCharacterFormat();
-
-        if (anchorPosition != -1 && activePosition != -1)
         {
-            selectionManager.selectRange(oldAnchorPosition, oldActivePosition);
-            ignoreSelectionChangeEvent = false;            
-        }        
+            paragraphFormat = 
+                _textContainerManager.getCommonParagraphFormat(
+                    anchorPosition, activePosition);
+        }
+        
+        if (needCharacterFormat)
+        {
+            characterFormat = 
+                _textContainerManager.getCommonCharacterFormat(
+                    anchorPosition, activePosition);
+        }
         
         // Extract the requested formats to return.
         for each (p in requestedFormats)
@@ -3078,9 +3068,6 @@ public class RichEditableText extends UIComponent
             else if (category == Category.CHARACTER && characterFormat)
                 format[p] = characterFormat[p];
         }
-        
-        // All done with the selection manager.
-        releaseSelectionManager();
         
         return format;
     }
@@ -3110,10 +3097,9 @@ public class RichEditableText extends UIComponent
                                      anchorPosition:int=-1,
                                      activePosition:int=-1):void
     {
-         // Make sure all properties are committed before doing the operation.
-        validateNow();
-        
-        var editManager:IEditManager = getEditManager();
+        // Make sure all properties are committed.  The damage handler for the 
+        // applyTextFormat op will cause the remeasure and display update.
+        validateProperties();
         
         // Assign each specified attribute to one of three format objects,
         // depending on whether it is container-, paragraph-,
@@ -3155,25 +3141,24 @@ public class RichEditableText extends UIComponent
             }
         }
 
-        var selectionState:SelectionState =
-            anchorPosition == -1 || activePosition == -1 ? null :                       
-            new SelectionState(editManager.textFlow, 
-                               anchorPosition, 
-                               activePosition);
-
+        // If the selection isn't specified, use the current one.
+        if (anchorPosition == -1 && activePosition == -1)
+        {
+            anchorPosition = _selectionAnchorPosition;
+            activePosition = _selectionActivePosition;
+        }
+        
         // Apply the three format objects to the current selection if
         // selectionState is null, else the specified selection.
-        editManager.applyFormat(
-            characterFormat, paragraphFormat, containerFormat, selectionState);
-        
-        // All done with the edit manager.
-        releaseEditManager(editManager);
+        _textContainerManager.applyFormatOperation(
+            characterFormat, paragraphFormat, containerFormat, 
+            anchorPosition, activePosition);
     }
 
     /**
      *  @private
      */
-    mx_internal function createTextContainerManager():TextContainerManager
+    mx_internal function createTextContainerManager():RichEditableTextContainerManager
     {
         return new RichEditableTextContainerManager(this, staticConfiguration);
     }
@@ -3238,29 +3223,12 @@ public class RichEditableText extends UIComponent
             var bold:Boolean = getStyle("fontWeight") == "bold";
             var italic:Boolean = getStyle("fontStyle") == "italic";
             
-            fontContext = embeddedFontRegistry.getAssociatedModuleFactory(
-                font, bold, italic, this, moduleFactory);
-
-            // If we found the font, then it is embedded. 
-            // But some fonts are not listed in info()
-            // and are therefore not in the above registry.
-            // So we call isFontFaceEmbedded() which gets the list
-            // of embedded fonts from the player.
-            if (!fontContext) 
-            {
-                var sm:ISystemManager;
-                if (moduleFactory != null && moduleFactory is ISystemManager)
-                    sm = ISystemManager(moduleFactory);
-                else if (parent is IUIComponent)
-                    sm = IUIComponent(parent).systemManager;
-
-                staticTextFormat.font = font;
-                staticTextFormat.bold = bold;
-                staticTextFormat.italic = italic;
+            var localLookup:ISystemManager = 
+                fontContext && fontContext is ISystemManager ? 
+                ISystemManager(fontContext) : systemManager;
                 
-                if (sm != null && sm.isFontFaceEmbedded(staticTextFormat))
-                    fontContext = sm;
-            }
+            fontContext = embeddedFontRegistry.getAssociatedModuleFactory(
+                font, bold, italic, this, fontContext, localLookup, true);
         }
 
         if (!fontContext && fontLookup == FontLookup.EMBEDDED_CFF)
@@ -3273,71 +3241,6 @@ public class RichEditableText extends UIComponent
         return fontContext;
     }
 
-    /**
-     *  @private
-     *  The editingMode is set to READ_SELECT if not already READ_SELECT or
-     *  READ_WRITE.
-     *  When done call releaseSelectionManager().
-     */
-    mx_internal function getSelectionManager():ISelectionManager
-    {
-        priorEditingMode = editingMode;
-        
-        if (editingMode == EditingMode.READ_ONLY)
-            editingMode = EditingMode.READ_SELECT;
-
-        return SelectionManager(_textContainerManager.beginInteraction());
-    }
-
-    /**
-     *  @private
-     */
-    mx_internal function releaseSelectionManager():void
-    {
-        _textContainerManager.endInteraction();
-        
-        editingMode = priorEditingMode;
-    }
-
-    /**
-     *  @private
-     *  The editingMode is set to READ_WRITE.
-     *  When done call releaseEditManager().  Should only be used by API calls.
-     */
-    mx_internal function getEditManager():IEditManager
-    {
-        // This triggers a damage event if the interactionManager is
-        // changed. 
-                
-        priorEditingMode = editingMode;
-        
-        if (editingMode != EditingMode.READ_WRITE)
-            editingMode = EditingMode.READ_WRITE;
-        
-        var editManager:IEditManager =
-            EditManager(_textContainerManager.beginInteraction());
-            
-        // Combine all the edits from one API call into one operation so it 
-        // can be undone as a single operation.  It will also prevent this from
-        // possibibly being combined with the last operation.
-        editManager.beginCompositeOperation(); 
-        
-        return editManager;           
-    }
-
-    /**
-     *  @private
-     *  Should only be used by API calls.
-     */
-    mx_internal function releaseEditManager(editManager:IEditManager):void
-    {
-        editManager.endCompositeOperation();
-                    
-        _textContainerManager.endInteraction();
-
-        editingMode = priorEditingMode;
-    }
-        
     /**
      *  @private
      *  Return true if there is a width and height to use for the measure.
@@ -3363,7 +3266,8 @@ public class RichEditableText extends UIComponent
      *  be adjusted for minWidth or maxWidth.  The value used for the compose
      *  is in _textContainerManager.compositionWidth.
      */
-    private function measureTextSize(composeWidth:Number):Rectangle
+    private function measureTextSize(composeWidth:Number, 
+                                     composeHeight:Number=NaN):Rectangle
     {             
         // Adjust for explicit min/maxWidth so the measurement is accurate.
         if (isNaN(explicitWidth))
@@ -3380,9 +3284,10 @@ public class RichEditableText extends UIComponent
             }
         }
         
-        // The bottom border can grow to allow all the text to fit.
+        // If the width is NaN it can grow up to TextLine.MAX_LINE_WIDTH wide.
+        // If the height is NaN it can grow to allow all the text to fit.
         _textContainerManager.compositionWidth = composeWidth;
-        _textContainerManager.compositionHeight = NaN;
+        _textContainerManager.compositionHeight = composeHeight;
 
         // Compose only.  The display should not be updated.
         _textContainerManager.compose();
@@ -3401,7 +3306,7 @@ public class RichEditableText extends UIComponent
             bounds.width = bounds.width + getStyle("fontSize");
        }
 
-       //trace("measureTextSize", composeWidth, "->", bounds.width, bounds.height);
+       //trace("measureTextSize", composeWidth, "->", bounds.width, composeHeight, "->", bounds.height);
         
        return bounds;
     }
@@ -3501,6 +3406,7 @@ public class RichEditableText extends UIComponent
                     FontLookup.EMBEDDED_CFF :
                     FontLookup.DEVICE;
             }
+            fontDescription.fontLookup = s;
         }
          
         s = getStyle("fontStyle");
@@ -3654,37 +3560,32 @@ public class RichEditableText extends UIComponent
      * 
      *  This is used when text is either inserted or appended via the API.
      */
-    private function handleInsertText(text:String, isAppend:Boolean=false):void
+    private function handleInsertText(newText:String, isAppend:Boolean=false):void
     {
-        // Make sure all properties are committed and events dispatched
-        // before doing the append.
-        validateNow();
+        // Make sure all properties are committed.  The damage handler for the 
+        // insert will cause the remeasure and display update.
+        validateProperties();
 
-        // Always use the EditManager regardless of the values of
-        // selectable, editable and enabled.
-        var editManager:IEditManager = getEditManager();
-        
-        // An append is an insert with the selection set to the end.
-        // If no selection, then it's an append.
-         if (isAppend || !editManager.hasSelection())
-            editManager.selectRange(int.MAX_VALUE, int.MAX_VALUE);
+        if (isAppend)
+        {
+            // Set insertion pt to the end of the current text.
+            _selectionAnchorPosition = text.length;
+            _selectionActivePosition = _selectionAnchorPosition;
+        }
+        else
+        {
+            // Insert requires a selection, or it is a noop.
+            if (_selectionAnchorPosition == -1 || _selectionActivePosition == -1)
+                return;
+        }
 
-        dispatchChangeAndChangingEvents = false;
- 
-        // Insert the text.  It will be composed but the display will not be
-        // updated because of our override of 
-        // EditManager.updateAllControllers().
-        editManager.insertText(text);
-
-        // Make the insertion happen now rather than on the next frame.
-        editManager.flushPendingOperations();
-        
-        dispatchChangeAndChangingEvents = true;
-        
-        // All done with edit manager.
-        releaseEditManager(editManager);        
-
-        dispatchEvent(new FlexEvent(FlexEvent.VALUE_COMMIT));                                   
+        // This will update the selection after the operation is done.
+        var success:Boolean =
+            _textContainerManager.insertTextOperation(
+                newText, _selectionAnchorPosition, _selectionActivePosition);
+                
+        if (success)
+            dispatchEvent(new FlexEvent(FlexEvent.VALUE_COMMIT));                                   
     }
 
     /**
@@ -3726,16 +3627,6 @@ public class RichEditableText extends UIComponent
         dispatchChangeAndChangingEvents = true;
     }
 
-	/**
-	 *  @private
-	 *  FIXME (gosmith).
-	 */
-	public function getTextInRange(startIndex:int = -1,
-								   endIndex:int = -1):String
-	{
-		return null;
-	}
-            
     //--------------------------------------------------------------------------
     //
     //  Event handlers
@@ -3955,6 +3846,69 @@ public class RichEditableText extends UIComponent
 
     /**
      *  @private
+     *  If the textFlow hasn't changed the generation remains the same.
+     *  Changing the composition width and/or height does not change the
+     *  generation.  The bounds can change as a result of different
+     *  composition dimensions or as a result of more of the text flow
+     *  being composed.  Only as much of the text flow as is displayed is
+     *  composed.  If not all of the text flow is composed, its content height
+     *  is estimated.  Until the entire text flow is composed its content
+     *  height can increase or decrease while scrolling thru the flow.  
+     *
+     *  If the following conditions are met with the contentWidth and the
+     *  contentHeight reported to the scroller, the scroller can avoid the 
+     *  situation we've seen where it tries to add a scroll bar which causes the 
+     *  text to reflow, which changes the content bounds, which causes the 
+     *  scroller to react, and potentially loop indefinately.
+     * 
+     *       if width is reduced the height should grow or stay the same
+     *       if height is reduced the width should grow or stay the same
+     *       if width and height are reduce then either the width or height
+     *           should grow or stay the same.
+     *
+     *  toFit
+     *      width       height      
+     *      smaller     smaller     height pinned to old height
+     *      smaller     larger      ok
+     *      larger      larger      ok
+     *      larger      smaller     ok
+     *       
+     *  explicit
+     *      width       height
+     *      smaller     smaller     width pinned to old width
+     *      smaller     larger      width pinned to old width
+     *      larger      larger      ok
+     *      larger      smaller     ok
+     */
+    private function adjustContentBoundsForScroller(bounds:Rectangle):void
+    {   
+        // Already reported bounds at least once for this generation of
+        // the text flow so we have to be careful to mantain consistency
+        // for the scroller.
+        if (_textFlow.generation == lastContentBoundsGeneration)
+        {            
+            if (bounds.width < _contentWidth)
+            {
+                if (_textContainerManager.hostFormat.lineBreak == "toFit")
+                {
+                    if (bounds.height < _contentHeight)
+                        bounds.height = _contentHeight;
+                }
+                else
+                {
+                    // The width may get smaller if the compose height is 
+                    // reduced and fewer lines are composed.  Use the old 
+                    // content width which is more accurate.
+                    bounds.width = _contentWidth;
+                }
+            }
+        }
+        
+        lastContentBoundsGeneration = _textFlow.generation;
+    }
+        
+    /**
+     *  @private
      *  Called when the TextContainerManager dispatches a 'compositionComplete'
      *  event when it has recomposed the text into TextLines.
      */
@@ -3964,53 +3918,37 @@ public class RichEditableText extends UIComponent
         //trace("compositionComplete");
                 
         var oldContentWidth:Number = _contentWidth;
+        var oldContentHeight:Number = _contentHeight;
 
         var newContentBounds:Rectangle = 
             _textContainerManager.getContentBounds();
-        var newContentWidth:Number = newContentBounds.width;
+        
+        // Try to prevent the scroller from getting into a loop while
+        // adding/removing scroll bars.
+        if (_textFlow && clipAndEnableScrolling)
+            adjustContentBoundsForScroller(newContentBounds);
+        
+        var newContentWidth:Number = newContentBounds.width;        
+        var newContentHeight:Number = newContentBounds.height;
         
         // TODO:(cframpto) handle blockProgression == RL
         
-        // TODO:(cframpto) Figure out if we still need these checks.
-        // Error correction for rounding errors.  It shouldn't be so but
-        // the contentWidth can be slightly larger than the requested
-        // compositionWidth.
-        if (newContentWidth > _textContainerManager.compositionWidth &&
-            Math.round(newContentWidth) == 
-            _textContainerManager.compositionWidth)
-        { 
-            newContentWidth = _textContainerManager.compositionWidth;
-        }
-
         if (newContentWidth != oldContentWidth)
         {
             _contentWidth = newContentWidth;
             
-            //trace("contentWidth", oldContentWidth, newContentWidth);
+            //trace("composeWidth", _textContainerManager.compositionWidth, "contentWidth", oldContentWidth, newContentWidth);
 
             // If there is a scroller, this triggers the scroller layout.
             dispatchPropertyChangeEvent(
                 "contentWidth", oldContentWidth, newContentWidth);
         }
         
-        var oldContentHeight:Number = _contentHeight;
-        var newContentHeight:Number = newContentBounds.height;
-
-        // Error correction for rounding errors.  It shouldn't be so but
-        // the contentHeight can be slightly larger than the requested
-        // compositionHeight.  
-        if (newContentHeight > _textContainerManager.compositionHeight &&
-            Math.round(newContentHeight) == 
-            _textContainerManager.compositionHeight)
-        { 
-            newContentHeight = _textContainerManager.compositionHeight;
-        }
-            
         if (newContentHeight != oldContentHeight)
         {
             _contentHeight = newContentHeight;
             
-            //trace("contentHeight", oldContentHeight, newContentHeight);
+            //trace("composeHeight", _textContainerManager.compositionHeight, "contentHeight", oldContentHeight, newContentHeight);
             
             // If there is a scroller, this triggers the scroller layout.
             dispatchPropertyChangeEvent(
@@ -4118,20 +4056,22 @@ public class RichEditableText extends UIComponent
     private function textContainerManager_selectionChangeHandler(
                         event:SelectionEvent):void
     {
-        if (ignoreSelectionChangeEvent)
-            return;
-            
         var oldAnchor:int = _selectionAnchorPosition;
         var oldActive:int = _selectionActivePosition;
         
-        var selectionManager:ISelectionManager = 
-            _textContainerManager.beginInteraction();
+        var selectionState:SelectionState = event.selectionState;
         
-        _selectionAnchorPosition = selectionManager.anchorPosition;
-        _selectionActivePosition = selectionManager.activePosition;
+        if (selectionState)
+        {
+            _selectionAnchorPosition = selectionState.anchorPosition;
+            _selectionActivePosition = selectionState.activePosition;
+        }
+        else
+        {
+            _selectionAnchorPosition = -1;
+            _selectionActivePosition = -1;
+        }
         
-        _textContainerManager.endInteraction();
-
         // Selection changed so reset.
         hasProgrammaticSelectionRange = false;
         
@@ -4301,17 +4241,24 @@ public class RichEditableText extends UIComponent
     private function textContainerManager_inlineGraphicStatusChangeHandler (
                         event:StatusChangeEvent):void
     {
-        //trace("inlineGraphicStatusChangedHandler", event.status);
-
-        // Now that the actual size of the graphic is available need to
-        // optionally remeasure and updateContainer.
-        if (event.status == InlineGraphicElementStatus.READY)
+        if (event.status == InlineGraphicElementStatus.SIZE_PENDING &&
+            event.element is InlineGraphicElement)
         {
+            // Force InlineGraphicElement.applyDelayedElementUpdate to
+            // execute and finish loading the graphic.  This is a workaround
+            // for the case when the image is in a compiled text flow.
+            InlineGraphicElement(event.element).updateForMustUseComposer(
+                                        _textContainerManager.getTextFlow());
+        }
+        else if (event.status == InlineGraphicElementStatus.READY)
+        {
+            // Now that the actual size of the graphic is available need to
+            // optionally remeasure and updateContainer.
             if (autoSize)
                 invalidateSize();
             
             invalidateDisplayList();
-        } 
+        }
     }    
 }
 

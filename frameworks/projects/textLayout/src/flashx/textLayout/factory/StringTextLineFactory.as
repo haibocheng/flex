@@ -24,7 +24,6 @@ package flashx.textLayout.factory
 	import flash.geom.Rectangle;
 	import flash.text.engine.TextLine;
 	
-	import flashx.textLayout.compose.ISWFContext;
 	import flashx.textLayout.container.ScrollPolicy;
 	import flashx.textLayout.debug.assert;
 	import flashx.textLayout.elements.Configuration;
@@ -35,9 +34,7 @@ package flashx.textLayout.factory
 	import flashx.textLayout.formats.BlockProgression;
 	import flashx.textLayout.formats.ITextLayoutFormat;
 	import flashx.textLayout.formats.LineBreak;
-	import flashx.textLayout.formats.TextLayoutFormat;
 	import flashx.textLayout.tlf_internal;
-	import flashx.textLayout.compose.IFlowComposer;
 
 	use namespace tlf_internal;
 
@@ -83,10 +80,6 @@ package flashx.textLayout.factory
 		 */
 		public function get configuration():IConfiguration
 		{
-			if (!_configuration)
-			{
-				_configuration = Configuration(defaultConfiguration).getImmutableClone();
-			}
 			return _configuration; 
 		}
 		
@@ -120,11 +113,13 @@ package flashx.textLayout.factory
 		public function StringTextLineFactory(configuration:IConfiguration = null):void
 		{
 			super();
-			
-			if (configuration)
-				_configuration = Configuration(configuration).getImmutableClone();
-
-			_tf = new TextFlow(this.configuration);
+			initialize(configuration);
+		}
+		
+		private function initialize(config:IConfiguration):void
+		{	
+			_configuration = Configuration(config ? config : defaultConfiguration).getImmutableClone();
+			_tf = new TextFlow(_configuration);
 			_para = new ParagraphElement();
 			_span = new SpanElement();
 			_para.replaceChildren(0, 0, _span);

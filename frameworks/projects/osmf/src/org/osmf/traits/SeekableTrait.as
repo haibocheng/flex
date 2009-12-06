@@ -21,14 +21,26 @@
 *****************************************************/
 package org.osmf.traits
 {
-	import org.osmf.events.SeekingChangeEvent;
+	import org.osmf.events.SeekEvent;
 
 	/**
-	 * Dispatched when this trait's <code>seeking</code> property changes.
+	 * Dispatched when this trait begins a seek operation.
 	 * 
-	 * @eventType org.osmf.events.SeekingChangeEvent.SEEKING_CHANGE
+	 * @eventType org.osmf.events.SeekEvent.SEEK_BEGIN
 	 */
-	[Event(name="seekingChange",type="org.osmf.events.SeekingChangeEvent")]
+	[Event(name="seekBegin",type="org.osmf.events.SeekEvent")]
+
+	/**
+	 * Dispatched when this trait ends a seek operation.
+	 * 
+	 * @eventType org.osmf.events.SeekEvent.SEEK_END
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 10
+	 *  @playerversion AIR 1.0
+	 *  @productversion OSMF 1.0
+	 */
+	[Event(name="seekEnd",type="org.osmf.events.SeekEvent")]
 
 	/**
 	 * The SeekableTrait class provides a base ISeekable implementation.
@@ -37,6 +49,11 @@ package org.osmf.traits
 	 * subclass or as is by a media element that listens for and handles
 	 * its change events.
 	 * 
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 10
+	 *  @playerversion AIR 1.0
+	 *  @productversion OSMF 1.0
 	 */	
 	public class SeekableTrait extends MediaTraitBase implements ISeekable
 	{
@@ -62,6 +79,11 @@ package org.osmf.traits
 		 * capabilities in this implementation.
 		 * <p>If no temporal class is assigned, the 
 		 * <code>canSeekTo()</code> method should return <code>false</code>.</p>
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
 		public function set temporal(value:ITemporal):void
 		{
@@ -81,6 +103,11 @@ package org.osmf.traits
 		 * @param time Position in seconds that the playhead was ultimately
 		 * moved to.
 		 * 
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
 		final public function processSeekCompletion(time:Number):void
 		{
@@ -100,6 +127,11 @@ package org.osmf.traits
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		final public function get seeking():Boolean
 		{
@@ -112,14 +144,13 @@ package org.osmf.traits
 		 * If <code>time</code> is non numerical or negative, does not attempt to seek. 
 		 * 
 		 * <p>If the seeking attempt sets the <code>seeking</code> property to <code>true</code>,
-		 * dispatches a seekingChange event unless
-		 * the trait is already seeking.
+		 * dispatches a seekingChange event.
 		 * It is the responsibility of the media element that
 		 * owns this trait to handle this event. </p>
 		 *
 		 * <p>It is important to invoke the <code>processSeekCompletion()</code> method
 		 * when the seek completes, whether successfully or unsuccessfully. 
-		 * Otherwise future seek operations will be blocked.</p>
+		 * Otherwise future seek operations may be blocked.</p>
 		 * @param time Time to seek to in seconds.
 		 * @see #processSeekCompletion()
 		 * @see #canProcessSeekingChange()
@@ -127,41 +158,48 @@ package org.osmf.traits
 		 * @see #postProcessSeekingChange()
 		 * 
 		 * 
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		final public function seek(time:Number):void
 		{
-			if (_seeking == false)
+			if (canSeekTo(time))
 			{
-				if (isNaN(time) || time < 0)
-				{
-					time = 0;
-				}
+				seekTargetTime = time;
 				
-				if (canSeekTo(time))
+				if (canProcessSeekingChange(true))
 				{
-					seekTargetTime = time;
+					processSeekingChange(true, time);
 					
-					if (canProcessSeekingChange(true))
-					{
-						processSeekingChange(true,time)
-						
-						_seeking = true;
-						
-						postProcessSeekingChange(false);
-					}
+					_seeking = true;
+					
+					postProcessSeekingChange(false);
 				}
 			}
 		}
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function canSeekTo(time:Number):Boolean
 		{
+			// Validate that the time is in range.  Note that we return true
+			// if the time is less than the duration *or* the current time.  The
+			// latter is for the case where the media has no (NaN) duration, but
+			// is still progressing.  Presumably it should be possible to seek
+			// backwards.
 			return _temporal 
 				?	(	isNaN(time) == false
-					&&	time <= _temporal.duration
-					&&	time >= 0
+					&& 	time >= 0
+					&&	(time <= _temporal.duration || time <= _temporal.currentTime)
 					)
 				: 	false;
 		}
@@ -169,16 +207,17 @@ package org.osmf.traits
 		// Internals
 		//
 		
-		private var _temporal:ITemporal;
-		private var _seeking:Boolean;
-		private var seekTargetTime:Number;
-		
 		/**
 		 * Called before the <code>seeking</code> property is changed. 
 		 *  
          * @param newSeeking Proposed new <code>seeking</code> value.
 		 * @return Returns <code>true</code> by default. Subclasses that override 
 		 * this method can return <code>false</code> to abort processing.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
 		protected function canProcessSeekingChange(newSeeking:Boolean):Boolean
 		{
@@ -188,11 +227,14 @@ package org.osmf.traits
 		/**
          * Called immediately before the <code>seeking</code> property is changed.
 		 * <p>Subclasses implement this method to communicate the change to the media.</p>
-         * @param newSeeking New <code>seeking</code> value.
-         * @param time New <code>time</code> value representing the time that the playhead seeks to
-         * when <code>newSeeking</code> is <code>true</code>.
+         * @param time New <code>time</code> value representing the time that the playhead seeks to.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
-		protected function processSeekingChange(newSeeking:Boolean,time:Number):void
+		protected function processSeekingChange(newSeeking:Boolean, time:Number):void
 		{
 		}
 		
@@ -201,15 +243,27 @@ package org.osmf.traits
 		 * Dispatches the change event.
 		 * 
 		 * <p>Subclasses that override should call this method to
-		 * dispatch the seekingChange event.</p>
-		 * @param oldSeeking Previous <code>seeking</code> value.
-		 * 
+		 * dispatch the change event.</p>
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
 		protected function postProcessSeekingChange(oldSeeking:Boolean):void
 		{
-			dispatchEvent(new SeekingChangeEvent(_seeking,seekTargetTime));
+			dispatchEvent
+				( new SeekEvent
+					( seeking ? SeekEvent.SEEK_BEGIN : SeekEvent.SEEK_END
+					, false
+					, false
+					, seekTargetTime
+					)
+				);
 		}
-		
-		
+
+		private var _temporal:ITemporal;
+		private var _seeking:Boolean;
+		private var seekTargetTime:Number;
 	}
 }

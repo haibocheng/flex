@@ -66,7 +66,7 @@ package org.osmf.traits
 		
 		/**
 		 * If this method is overridden, the subclass must call super.unload() in order
-		 * to validate the unload.  The Loadable's loadState is set to LoadState.CONSTRUCTED.
+		 * to validate the unload.  The Loadable's loadState is set to LoadState.UNINITIALIZED.
 		 **/
 		public function unload(loadable:ILoadable):void
 		{
@@ -80,28 +80,39 @@ package org.osmf.traits
 		 * appropriate events.
 		 * 
 		 * @param loadable The loadable to update.
-		 * @param newState The new state of the loadable.
+		 * @param newState The new LoadState of the loadable.
 		 * @param loadedContext The loaded context (if any) of the loadable.
 		 **/
-		protected function updateLoadable(loadable:ILoadable, newState:LoadState, loadedContext:ILoadedContext=null):void
+		protected function updateLoadable(loadable:ILoadable, newState:String, loadedContext:ILoadedContext=null):void
 		{
 			if (newState != loadable.loadState)
 			{
-				if (newState == LoadState.LOADED && loadedContext == null)
+				if (newState == LoadState.READY && loadedContext == null)
 				{
 					throw new IllegalOperationError(MediaFrameworkStrings.LOADED_CONTEXT_NULL);
 				}
-				if (newState == LoadState.CONSTRUCTED && loadedContext != null)
+				if (newState == LoadState.UNINITIALIZED && loadedContext != null)
 				{
 					throw new IllegalOperationError(MediaFrameworkStrings.LOADED_CONTEXT_NOT_NULL);
 				}
 				
-				var oldState:LoadState = loadable.loadState;
+				var oldState:String = loadable.loadState;
 				
 				loadable.loadedContext = loadedContext;
 				loadable.loadState = newState;
 				
-				dispatchEvent(new LoaderEvent(this, loadable, oldState, newState, loadedContext));
+				dispatchEvent
+					( new LoaderEvent
+						( LoaderEvent.LOADABLE_STATE_CHANGE
+						, false
+						, false
+						, this
+						, loadable
+						, oldState
+						, newState
+						, loadedContext
+						)
+					);
 			}
 		}
 		
@@ -116,9 +127,9 @@ package org.osmf.traits
 			{
 				throw new IllegalOperationError(MediaFrameworkStrings.NULL_PARAM);
 			}
-			if (loadable.loadState == LoadState.LOADED)
+			if (loadable.loadState == LoadState.READY)
 			{
-				throw new IllegalOperationError(MediaFrameworkStrings.ALREADY_LOADED);
+				throw new IllegalOperationError(MediaFrameworkStrings.ALREADY_READY);
 			}
 			if (loadable.loadState == LoadState.LOADING)
 			{
@@ -126,7 +137,7 @@ package org.osmf.traits
 			}
 			if (canHandleResource(loadable.resource) == false)
 			{
-				throw new IllegalOperationError(MediaFrameworkStrings.ILOADER_CANT_HANDLER_RESOURCE);
+				throw new IllegalOperationError(MediaFrameworkStrings.ILOADER_CANT_HANDLE_RESOURCE);
 			}
 		}
 
@@ -146,13 +157,13 @@ package org.osmf.traits
 			{
 				throw new IllegalOperationError(MediaFrameworkStrings.ALREADY_UNLOADING);
 			}
-			if (loadable.loadState == LoadState.CONSTRUCTED)
+			if (loadable.loadState == LoadState.UNINITIALIZED)
 			{
 				throw new IllegalOperationError(MediaFrameworkStrings.ALREADY_UNLOADED);
 			}
 			if (canHandleResource(loadable.resource) == false)
 			{
-				throw new IllegalOperationError(MediaFrameworkStrings.ILOADER_CANT_HANDLER_RESOURCE);
+				throw new IllegalOperationError(MediaFrameworkStrings.ILOADER_CANT_HANDLE_RESOURCE);
 			}
 		}
 	}

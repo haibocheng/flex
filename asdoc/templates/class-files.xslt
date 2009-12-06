@@ -1418,6 +1418,9 @@
 											<xsl:with-param name="baseRef" select="$baseRef"/>
 										</xsl:call-template>
 										<xsl:text> </xsl:text>
+										<xsl:if test="apiValueDetail/apiValueDef/apiStatic">
+											<xsl:text>static </xsl:text>
+										</xsl:if>
 										<xsl:text>function set </xsl:text>
 										<xsl:value-of select="$name"/>
 										<xsl:text>(value:</xsl:text>
@@ -2462,14 +2465,30 @@
 			<xsl:value-of select="$gfile"/>
 		      </xsl:if>
 		    </xsl:variable>
-		    <xsl:if test="$hyperLink = ''">
-		      <xsl:value-of select="$destination"/>
-		    </xsl:if>
-		    <xsl:if test="$hyperLink != ''">
-		      <a href="{$hyperLink}" class="signatureLink">
-			<xsl:value-of select="$h1"/>
-		      </a>
-		    </xsl:if>
+
+		    <xsl:if test="count($classHeader_map//apiClassifier[@id=$destination] ) &gt; 0">
+				<xsl:if test="$hyperLink = ''">
+					<xsl:if test="not(contains($destination,':'))">
+						<xsl:value-of select="$destination"/>
+					</xsl:if>
+					<xsl:if test="contains($destination,':')">
+						<xsl:value-of select="concat($h2,concat('.',$h1))"/>
+					</xsl:if>
+				</xsl:if>
+				<xsl:if test="$hyperLink != ''">
+					<a href="{$hyperLink}" class="signatureLink">
+						<xsl:value-of select="$h1"/>
+		      		</a>
+				</xsl:if>
+		      </xsl:if>
+		      <xsl:if test="not(count($classHeader_map//apiClassifier[@id=$destination] ) &gt; 0)">
+					<xsl:if test="not(contains($destination,':'))">
+						<xsl:value-of select="$destination"/>
+					</xsl:if>
+					<xsl:if test="contains($destination,':')">
+						<xsl:value-of select="concat($h2,concat('.',$h1))"/>
+					</xsl:if>
+		      </xsl:if>
 		  </xsl:if>
 		</div>
 	      </td>

@@ -22,65 +22,80 @@
 package org.osmf.media
 {
 	/**
-     *  The MediaPlayerState class enumerates public constants that describe the current state of the
-     *  Media Player.
+     *  The MediaPlayerState class enumerates public constants that describe the current
+     *  state of the MediaPlayer.
      */
-    public class MediaPlayerState
+    public final class MediaPlayerState
     {
-		/**
-		 * Constructor.
-		 * 
-		 * @private
-		 **/        	
-		public function MediaPlayerState(name:String)
-		{
-			_name = name;
-        }
-              
 		/**
 		 * The MediaPlayer has been created but is not ready to be used.
 		 * This is the base state for a MediaPlayer.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
-		public static const UNINITIALIZED:MediaPlayerState   = new MediaPlayerState('uninitialized');
+		public static const UNINITIALIZED:String   = "uninitialized";
 
 		/**
 		 * The MediaPlayer is loading or connecting.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
-		public static const INITIALIZING:MediaPlayerState  = new MediaPlayerState('initializing');
+		public static const LOADING:String  = "loading";
 
 		/**
 		 * The MediaPlayer is ready to be used.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
-		public static const READY:MediaPlayerState = new MediaPlayerState('ready');
+		public static const READY:String = "ready";
 
 		/**
 	     * The MediaPlayer is playing media.
+         *  
+         *  @langversion 3.0
+         *  @playerversion Flash 10
+         *  @playerversion AIR 1.0
+         *  @productversion OSMF 1.0
          */
-		public static const PLAYING:MediaPlayerState = new MediaPlayerState('playing');
+		public static const PLAYING:String = "playing";
 
 		/**
          * The MediaPlayer is pausing media.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
-		public static const PAUSED:MediaPlayerState = new MediaPlayerState('paused');
+		public static const PAUSED:String = "paused";
 
 		/**
 		 * The MediaPlayer is buffering.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
-		public static const BUFFERING:MediaPlayerState = new MediaPlayerState('buffering');
+		public static const BUFFERING:String = "buffering";
 
 		/**
 		 * The MediaPlayer encountered an error while trying to play media.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
-		public static const PLAYBACK_ERROR:MediaPlayerState = new MediaPlayerState('playbackError');
-		
-		/**
-		 * The name value of the state.
-		 **/
-		public function get name():String
-		{
-			return _name;
-		}
-             
-		private var _name:String;
+		public static const PLAYBACK_ERROR:String = "playbackError";
 	} 
 }

@@ -35,6 +35,7 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -103,6 +104,37 @@ public class MxmlScanner extends DefaultHandler implements TokenManager,
                 ETagRequired = "The element type \"{0}\" must be terminated by the matching end-tag \"</{0}>\".";
             }
         }
+    }
+
+    public static final HashSet<String> SPARK_TEXT_TAGS = new HashSet<String>(4);
+    static
+    {
+        SPARK_TEXT_TAGS.add("RichEditableText");
+        SPARK_TEXT_TAGS.add("RichText");
+        SPARK_TEXT_TAGS.add("TextArea");
+        SPARK_TEXT_TAGS.add("TextInput");
+    }
+
+    public static final HashSet<String> SPARK_TEXT_PROPERTY_TAGS = new HashSet<String>(3);
+    static
+    {
+        SPARK_TEXT_PROPERTY_TAGS.add("content");
+        SPARK_TEXT_PROPERTY_TAGS.add("mxmlContent");
+        SPARK_TEXT_PROPERTY_TAGS.add("text");
+    }
+
+    public static final HashSet<String> SPARK_TEXT_CONTENT_TAGS = new HashSet<String>(9);
+    static
+    {
+        SPARK_TEXT_CONTENT_TAGS.add("a");
+        SPARK_TEXT_CONTENT_TAGS.add("br");
+        SPARK_TEXT_CONTENT_TAGS.add("div");
+        SPARK_TEXT_CONTENT_TAGS.add("img");
+        SPARK_TEXT_CONTENT_TAGS.add("p");
+        SPARK_TEXT_CONTENT_TAGS.add("span");
+        SPARK_TEXT_CONTENT_TAGS.add("tcy");
+        SPARK_TEXT_CONTENT_TAGS.add("tab");
+        SPARK_TEXT_CONTENT_TAGS.add("TextFlow");
     }
 
     public MxmlScanner(InputStream in, boolean processDesignLayers)
@@ -241,11 +273,13 @@ public class MxmlScanner extends DefaultHandler implements TokenManager,
      * we should move revisiting and simplifying the parser architecture to the
      * top of the list..
      */
-
-    private static final int LEX_FLEX2 = 0, LEX_FLEX1_WEBSERVICE = 1,
-            LEX_FLEX1_HTTPSERVICE = 2, LEX_FLEX1_REMOTEOBJECT = 3,
-            LEX_FLEX2_PRIVATE = 4;
+    private static final int LEX_FLEX2 = 0;
+    private static final int LEX_FLEX1_WEBSERVICE = 1;
+    private static final int LEX_FLEX1_HTTPSERVICE = 2;
+    private static final int LEX_FLEX1_REMOTEOBJECT = 3;
+    private static final int LEX_FLEX2_PRIVATE = 4;
     private int state = LEX_FLEX2;
+    private boolean textState;
 
     private int findElementType(String uri, String localName, boolean start)
     {
@@ -474,6 +508,24 @@ public class MxmlScanner extends DefaultHandler implements TokenManager,
                     else
                         node = new Node(uri, localName, numAttributes);
                 }
+
+                // Custom whitespace preservation for spark text components.
+                if (SPARK_NAMESPACE.equals(uri))
+                {
+                    if (SPARK_TEXT_TAGS.contains(localName))
+                    {
+                        textState = true;
+                        node.hasText = true;
+                        node.preserveWhitespace = true;
+                    }
+                    else if (textState
+                            && (SPARK_TEXT_CONTENT_TAGS.contains(localName) || 
+                                SPARK_TEXT_PROPERTY_TAGS.contains(localName)))
+                    {
+                        node.hasText = true;
+                        node.preserveWhitespace = true;
+                    }
+                }
                 break;
             case ParserConstants.START_COMPONENT:
                 node = new InlineComponentNode(uri, localName, numAttributes);
@@ -546,6 +598,7 @@ public class MxmlScanner extends DefaultHandler implements TokenManager,
     public void startDocument() throws SAXException
     {
         prefixMappings = new HashMap<String, String>();
+        textState = false;
     }
 
     public void endDocument() throws SAXException
@@ -651,6 +704,19 @@ public class MxmlScanner extends DefaultHandler implements TokenManager,
             // clear up the comment.
             cdataHandler.comment = null;
         }
+
+        // If a spark text tag has a child tag that is not part of text mark-up,
+        // we won't preserve whitespace.
+        if (textState && !elementStack.empty())
+        {
+            Node parent = (Node) elementStack.peek();
+            if (SPARK_NAMESPACE.equals(uri)
+                && !SPARK_TEXT_CONTENT_TAGS.contains(localName))
+            {
+                parent.preserveWhitespace = false;
+            }
+        }
+
         saxEvents.add(n);
         elementStack.push(n);
 
@@ -675,7 +741,13 @@ public class MxmlScanner extends DefaultHandler implements TokenManager,
         n.image = "</" + qName + ">";
 
         saxEvents.add(n);
-        
+
+        // Stop preserving whitespace when we leave the scope of a text tag.
+        if (textState && SPARK_NAMESPACE.equals(uri) && SPARK_TEXT_TAGS.contains(localName))
+        {
+            textState = false;
+        }
+
         if (!elementStack.empty())
         {
             Node prevNode = (Node) elementStack.peek();  	
@@ -720,9 +792,23 @@ public class MxmlScanner extends DefaultHandler implements TokenManager,
         // if (!wasInCDATA && !cdataHandler.inCDATA)
         {
             // do not null out cdata...
-            if (kind != ParserConstants.CDATA && image.trim().length() == 0)
+            if (kind != ParserConstants.CDATA
+                    && image.trim().length() == 0)
             {
-                skip = true;
+                if (textState)
+                {
+                    // Check to see if the parent node will preserve whitespace
+                    if (!elementStack.empty())
+                    {
+                        Node parent = (Node) elementStack.peek();
+                        if (!parent.preserveWhitespace)
+                            skip = true;
+                    }
+                }
+                else
+                {
+                    skip = true;
+                }
             }
         }
 

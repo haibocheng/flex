@@ -325,6 +325,10 @@ public class RichTextNode extends GraphicContentNode implements TextNode
 
             content.add((TextNode)child);
         }
+        else
+        {
+            throw new FXGException(child.getStartLine(), child.getStartColumn(), "InvalidChildNode",  child.getNodeName(), getNodeName());                        
+        }
 
         if (child instanceof AbstractRichTextNode)
             ((AbstractRichTextNode)child).setParent(this);       
@@ -420,11 +424,11 @@ public class RichTextNode extends GraphicContentNode implements TextNode
     {
         if (FXG_WIDTH_ATTRIBUTE.equals(name))
         {
-            width = parseDouble(value);
+            width = DOMParserHelper.parseDouble(this, value, name);
         }
         else if (FXG_HEIGHT_ATTRIBUTE.equals(name))
         {
-            height = parseDouble(value);
+            height = DOMParserHelper.parseDouble(this, value, name);
         }
         else if (FXG_BLOCKPROGRESSION_ATTRIBUTE.equals(name))
         {
@@ -432,19 +436,19 @@ public class RichTextNode extends GraphicContentNode implements TextNode
         }
         else if (FXG_PADDINGLEFT_ATTRIBUTE.equals(name))
         {
-            paddingLeft = getNumberInherit(this, value, PADDING_MIN_INCLUSIVE, PADDING_MAX_INCLUSIVE, paddingLeft.getNumberInheritAsDbl(), "UnknowPaddingLeft");
+            paddingLeft = getNumberInherit(this, name, value, PADDING_MIN_INCLUSIVE, PADDING_MAX_INCLUSIVE, paddingLeft.getNumberInheritAsDbl(), "UnknownPaddingLeft");
         }
         else if (FXG_PADDINGRIGHT_ATTRIBUTE.equals(name))
         {
-            paddingRight = getNumberInherit(this, value, PADDING_MIN_INCLUSIVE, PADDING_MAX_INCLUSIVE, paddingRight.getNumberInheritAsDbl(), "UnknowPaddingRight");
+            paddingRight = getNumberInherit(this, name, value, PADDING_MIN_INCLUSIVE, PADDING_MAX_INCLUSIVE, paddingRight.getNumberInheritAsDbl(), "UnknownPaddingRight");
         }
         else if (FXG_PADDINGTOP_ATTRIBUTE.equals(name))
         {
-            paddingTop = getNumberInherit(this, value, PADDING_MIN_INCLUSIVE, PADDING_MAX_INCLUSIVE, paddingTop.getNumberInheritAsDbl(), "UnknowPaddingTop");
+            paddingTop = getNumberInherit(this, name, value, PADDING_MIN_INCLUSIVE, PADDING_MAX_INCLUSIVE, paddingTop.getNumberInheritAsDbl(), "UnknownPaddingTop");
         }
         else if (FXG_PADDINGBOTTOM_ATTRIBUTE.equals(name))
         {
-            paddingBottom = getNumberInherit(this, value, PADDING_MIN_INCLUSIVE, PADDING_MAX_INCLUSIVE, paddingBottom.getNumberInheritAsDbl(), "UnknowPaddingBottom");
+            paddingBottom = getNumberInherit(this, name, value, PADDING_MIN_INCLUSIVE, PADDING_MAX_INCLUSIVE, paddingBottom.getNumberInheritAsDbl(), "UnknownPaddingBottom");
         }
         else if (FXG_LINEBREAK_ATTRIBUTE.equals(name))
         {
@@ -452,19 +456,19 @@ public class RichTextNode extends GraphicContentNode implements TextNode
         }        
         else if (FXG_COLUMNGAP_ATTRIBUTE.equals(name))
         {
-            columnGap = getNumberInherit(this, value, COLUMNGAP_MIN_INCLUSIVE, COLUMNGAP_MAX_INCLUSIVE, columnGap.getNumberInheritAsDbl(), "UnknowColumnGap");
+            columnGap = getNumberInherit(this, name, value, COLUMNGAP_MIN_INCLUSIVE, COLUMNGAP_MAX_INCLUSIVE, columnGap.getNumberInheritAsDbl(), "UnknownColumnGap");
         }
         else if (FXG_COLUMNCOUNT_ATTRIBUTE.equals(name))
         {
-            columnCount = getNumberAutoInt(this, value, COLUMNCOUNT_MIN_INCLUSIVE, COLUMNCOUNT_MAX_INCLUSIVE, columnCount.getNumberAutoAsInt(), "UnknowColumnCount");
+            columnCount = getNumberAutoInt(this, name, value, COLUMNCOUNT_MIN_INCLUSIVE, COLUMNCOUNT_MAX_INCLUSIVE, columnCount.getNumberAutoAsInt(), "UnknownColumnCount");
         }
         else if (FXG_COLUMNWIDTH_ATTRIBUTE.equals(name))
         {
-            columnWidth = getNumberAutoDbl(this, value, COLUMNWIDTH_MIN_INCLUSIVE, COLUMNWIDTH_MAX_INCLUSIVE, columnWidth.getNumberAutoAsDbl(), "UnknownColumnWidth");
+            columnWidth = getNumberAutoDbl(this, name, value, COLUMNWIDTH_MIN_INCLUSIVE, COLUMNWIDTH_MAX_INCLUSIVE, columnWidth.getNumberAutoAsDbl(), "UnknownColumnWidth");
         }
         else if (FXG_FIRSTBASELINEOFFSET_ATTRIBUTE.equals(name))
         {
-            firstBaselineOffset = getFirstBaselineOffset(this, value, BASELINEOFFSET_MIN_INCLUSIVE, BASELINEOFFSET_MAX_INCLUSIVE, firstBaselineOffset.getBaselineOffsetAsDbl());
+            firstBaselineOffset = getFirstBaselineOffset(this, name, value, BASELINEOFFSET_MIN_INCLUSIVE, BASELINEOFFSET_MAX_INCLUSIVE, firstBaselineOffset.getBaselineOffsetAsDbl());
         }
         else if (FXG_VERTICALALIGN_ATTRIBUTE.equals(name))
         {
@@ -480,23 +484,23 @@ public class RichTextNode extends GraphicContentNode implements TextNode
         }
         else if (FXG_TEXTINDENT_ATTRIBUTE.equals(name))
         {
-            textIndent = parseDouble(value, TEXTINDENT_MIN_INCLUSIVE, TEXTINDENT_MAX_INCLUSIVE, textIndent);
+            textIndent = DOMParserHelper.parseDouble(this, value, name, TEXTINDENT_MIN_INCLUSIVE, TEXTINDENT_MAX_INCLUSIVE, textIndent);
         }
         else if (FXG_PARAGRAPHSTARTINDENT_ATTRIBUTE.equals(name))
         {
-            paragraphStartIndent = parseDouble(value, PARAGRAPH_INDENT_MIN_INCLUSIVE, PARAGRAPH_INDENT_MAX_INCLUSIVE, paragraphStartIndent);
+            paragraphStartIndent = DOMParserHelper.parseDouble(this, value, name, PARAGRAPH_INDENT_MIN_INCLUSIVE, PARAGRAPH_INDENT_MAX_INCLUSIVE, paragraphStartIndent);
         }
         else if (FXG_PARAGRAPHENDINDENT_ATTRIBUTE.equals(name))
         {
-            paragraphEndIndent = parseDouble(value, PARAGRAPH_INDENT_MIN_INCLUSIVE, PARAGRAPH_INDENT_MAX_INCLUSIVE, paragraphEndIndent);
+            paragraphEndIndent = DOMParserHelper.parseDouble(this, value, name, PARAGRAPH_INDENT_MIN_INCLUSIVE, PARAGRAPH_INDENT_MAX_INCLUSIVE, paragraphEndIndent);
         }
         else if (FXG_PARAGRAPHSPACEBEFORE_ATTRIBUTE.equals(name))
         {
-            paragraphSpaceBefore = parseDouble(value, PARAGRAPH_SPACE_MIN_INCLUSIVE, PARAGRAPH_SPACE_MAX_INCLUSIVE, paragraphSpaceBefore);
+            paragraphSpaceBefore = DOMParserHelper.parseDouble(this, value, name, PARAGRAPH_SPACE_MIN_INCLUSIVE, PARAGRAPH_SPACE_MAX_INCLUSIVE, paragraphSpaceBefore);
         }
         else if (FXG_PARAGRAPHSPACEAFTER_ATTRIBUTE.equals(name))
         {
-            paragraphSpaceAfter = parseDouble(value, PARAGRAPH_SPACE_MIN_INCLUSIVE, PARAGRAPH_SPACE_MAX_INCLUSIVE, paragraphSpaceAfter);
+            paragraphSpaceAfter = DOMParserHelper.parseDouble(this, value, name, PARAGRAPH_SPACE_MIN_INCLUSIVE, PARAGRAPH_SPACE_MAX_INCLUSIVE, paragraphSpaceAfter);
         }
         else if (FXG_DIRECTION_ATTRIBUTE.equals(name))
         {
@@ -528,7 +532,7 @@ public class RichTextNode extends GraphicContentNode implements TextNode
         }
         else if (FXG_FONTSIZE_ATTRIBUTE.equals(name))
         {
-            fontSize = parseDouble(value, FONTSIZE_MIN_INCLUSIVE, FONTSIZE_MAX_INCLUSIVE, fontSize);
+            fontSize = DOMParserHelper.parseDouble(this, value, name, FONTSIZE_MIN_INCLUSIVE, FONTSIZE_MAX_INCLUSIVE, fontSize);
         }
         else if (FXG_FONTSTYLE_ATTRIBUTE.equals(name))
         {
@@ -544,7 +548,7 @@ public class RichTextNode extends GraphicContentNode implements TextNode
         }        
         else if (FXG_LINEHEIGHT_ATTRIBUTE.equals(name))
         {
-            lineHeight = parseNumberPercentWithSeparateRange(value, 
+            lineHeight = DOMParserHelper.parseNumberPercentWithSeparateRange(this, value, name, 
             		LINEHEIGHT_PERCENT_MIN_INCLUSIVE, LINEHEIGHT_PERCENT_MAX_INCLUSIVE, 
             		LINEHEIGHT_PIXEL_MIN_INCLUSIVE, LINEHEIGHT_PIXEL_MAX_INCLUSIVE, lineHeight); 
         }
@@ -554,15 +558,15 @@ public class RichTextNode extends GraphicContentNode implements TextNode
         }
         else if ( FXG_LINETHROUGH_ATTRIBUTE.equals(name))
         {
-            lineThrough = parseBoolean(value);
+            lineThrough = DOMParserHelper.parseBoolean(this, value, name);
         }                   
         else if (FXG_COLOR_ATTRIBUTE.equals(name))
         {
-            color = parseRGB(value, color);
+            color = DOMParserHelper.parseRGB(this, value, name);
         }
         else if (FXG_TEXTALPHA_ATTRIBUTE.equals(name))
         {
-            textAlpha = parseDouble(value, ALPHA_MIN_INCLUSIVE, ALPHA_MAX_INCLUSIVE, textAlpha);
+            textAlpha = DOMParserHelper.parseDouble(this, value, name, ALPHA_MIN_INCLUSIVE, ALPHA_MAX_INCLUSIVE, textAlpha);
         }
         else if (FXG_WHITESPACECOLLAPSE_ATTRIBUTE.equals(name))
         {
@@ -570,15 +574,15 @@ public class RichTextNode extends GraphicContentNode implements TextNode
         }
         else if (FXG_BACKGROUNDALPHA_ATTRIBUTE.equals(name))
         {
-        	backgroundAlpha = getAlphaInherit(this, value, ALPHA_MIN_INCLUSIVE, ALPHA_MAX_INCLUSIVE, backgroundAlpha.getNumberInheritAsDbl(), "UnknownBackgroundAlpha");
+        	backgroundAlpha = getAlphaInherit(this, name, value, ALPHA_MIN_INCLUSIVE, ALPHA_MAX_INCLUSIVE, backgroundAlpha.getNumberInheritAsDbl(), "UnknownBackgroundAlpha");
         }
         else if (FXG_BACKGROUNDCOLOR_ATTRIBUTE.equals(name))
         {
-            backgroundColor = getColorWithEnum(this, value);
+            backgroundColor = getColorWithEnum(this, name, value);
         }
         else if (FXG_BASELINESHIFT_ATTRIBUTE.equals(name))
         {
-            baselineShift = getBaselineShift(this, value, BASELINESHIFT_MIN_INCLUSIVE, BASELINESHIFT_MAX_INCLUSIVE, baselineShift.getBaselineShiftAsDbl());
+            baselineShift = getBaselineShift(this, name, value, BASELINESHIFT_MIN_INCLUSIVE, BASELINESHIFT_MAX_INCLUSIVE, baselineShift.getBaselineShiftAsDbl());
         }
         else if (FXG_BREAKOPPORTUNITY_ATTRIBUTE.equals(name))
         {
@@ -614,11 +618,11 @@ public class RichTextNode extends GraphicContentNode implements TextNode
         }        
         else if (FXG_TRACKINGLEFT_ATTRIBUTE.equals(name))
         {
-            trackingLeft = parseNumberPercent(value, TRACKING_MIN_INCLUSIVE, TRACKING_MAX_INCLUSIVE, trackingLeft);
+            trackingLeft = DOMParserHelper.parseNumberPercent(this, value, name, TRACKING_MIN_INCLUSIVE, TRACKING_MAX_INCLUSIVE, trackingLeft);
         }
         else if (FXG_TRACKINGRIGHT_ATTRIBUTE.equals(name))
         {
-            trackingRight = parseNumberPercent(value, TRACKING_MIN_INCLUSIVE, TRACKING_MAX_INCLUSIVE, trackingRight);
+            trackingRight = DOMParserHelper.parseNumberPercent(this, value, name, TRACKING_MIN_INCLUSIVE, TRACKING_MAX_INCLUSIVE, trackingRight);
         } 
         else if (FXG_TEXTROTATION_ATTRIBUTE.equals(name))
         {
@@ -647,6 +651,7 @@ public class RichTextNode extends GraphicContentNode implements TextNode
      * Convert an FXG String value to a BaselineOffset object.
      * 
      * @param value - the FXG String value.
+     * @param name - the FXG attribute name.
      * @param min - the smallest double value that the result must be greater
      * or equal to.
      * @param max - the largest double value that the result must be smaller
@@ -659,7 +664,7 @@ public class RichTextNode extends GraphicContentNode implements TextNode
      * BaselineOffset rule or the value falls out of the specified range 
      * (inclusive).
      */
-    private BaselineOffset getFirstBaselineOffset(FXGNode node, String value, double min, double max, double defaultValue)
+    private BaselineOffset getFirstBaselineOffset(FXGNode node, String name, String value, double min, double max, double defaultValue)
     {
         if (FXG_BASELINEOFFSET_AUTO_VALUE.equals(value))
         {
@@ -677,12 +682,12 @@ public class RichTextNode extends GraphicContentNode implements TextNode
         {
         	try
         	{
-        		return BaselineOffset.newInstance(parseDouble(value, min, max, defaultValue));
+        		return BaselineOffset.newInstance(DOMParserHelper.parseDouble(this, value, name, min, max, defaultValue));
         	}
-        	catch(NumberFormatException e)
+        	catch(FXGException e)
         	{
-	            //Exception: Unknown baseline offset: {0}
-	            throw new FXGException(node.getStartLine(), node.getStartColumn(), "UnknownBaselineOffset", value);
+	            //Exception: Unknown first baseline offset: {0}
+	            throw new FXGException(node.getStartLine(), node.getStartColumn(), "UnknownFirstBaselineOffset", value);
         	}
         }
     }
@@ -691,6 +696,7 @@ public class RichTextNode extends GraphicContentNode implements TextNode
      * Convert an FXG String value to a NumberAuto object.
      * 
      * @param value - the FXG String value.
+     * @param name - the FXG attribute name.
      * @param min - the smallest double value that the result must be greater
      * or equal to.
      * @param max - the largest double value that the result must be smaller
@@ -703,12 +709,12 @@ public class RichTextNode extends GraphicContentNode implements TextNode
      * @throws FXGException if the String did not match a known
      * NumberAuto rule.
      */
-    private NumberAuto getNumberAutoDbl(FXGNode node, String value, double min, double max, double defaultValue, String errorCode)
+    private NumberAuto getNumberAutoDbl(FXGNode node, String name, String value, double min, double max, double defaultValue, String errorCode)
     {
         try
         {
-            return NumberAuto.newInstance(parseDouble(value, min, max, defaultValue));            
-        }catch(NumberFormatException e)
+            return NumberAuto.newInstance(DOMParserHelper.parseDouble(this, value, name, min, max, defaultValue));            
+        }catch(FXGException e)
         {
             if (FXG_NUMBERAUTO_AUTO_VALUE.equals(value))
                 return NumberAuto.newInstance(NumberAutoAsEnum.AUTO);
@@ -724,6 +730,7 @@ public class RichTextNode extends GraphicContentNode implements TextNode
      * Convert an FXG String value to a NumberAuto object.
      * 
      * @param value - the FXG String value.
+     * @param name - the FXG attribute name.
      * @param min - the smallest int value that the result must be greater
      * or equal to.
      * @param max - the largest int value that the result must be smaller
@@ -736,12 +743,12 @@ public class RichTextNode extends GraphicContentNode implements TextNode
      * @throws FXGException if the String did not match a known
      * NumberAuto rule.
      */
-    private NumberAuto getNumberAutoInt(FXGNode node, String value, int min, int max, int defaultValue, String errorCode)
+    private NumberAuto getNumberAutoInt(FXGNode node, String name, String value, int min, int max, int defaultValue, String errorCode)
     {
         try
         {
-            return NumberAuto.newInstance(parseInt(value, min, max, defaultValue));            
-        }catch(NumberFormatException e)
+            return NumberAuto.newInstance(DOMParserHelper.parseInt(this, value, name, min, max, defaultValue));            
+        }catch(FXGException e)
         {
             if (FXG_NUMBERAUTO_AUTO_VALUE.equals(value))
                 return NumberAuto.newInstance(NumberAutoAsEnum.AUTO);
@@ -757,6 +764,7 @@ public class RichTextNode extends GraphicContentNode implements TextNode
      * Convert an FXG String value to a NumberInherit enumeration.
      * 
      * @param value - the FXG String value.
+     * @param name - the FXG attribute name.
      * @param min - the smallest double value that the result must be greater
      * or equal to.
      * @param max - the largest double value that the result must be smaller
@@ -770,12 +778,12 @@ public class RichTextNode extends GraphicContentNode implements TextNode
      * NumberInherit rule or the value falls out of the specified range 
      * (inclusive).
      */
-    private NumberInherit getNumberInherit(FXGNode node, String value, double min, double max, double defaultValue, String errorCode)
+    private NumberInherit getNumberInherit(FXGNode node, String name, String value, double min, double max, double defaultValue, String errorCode)
     {
         try
         {
-            return NumberInherit.newInstance(parseDouble(value, min, max, defaultValue));            
-        }catch(NumberFormatException e)
+            return NumberInherit.newInstance(DOMParserHelper.parseDouble(this, value, name, min, max, defaultValue));            
+        }catch(FXGException e)
         {
             if (FXG_INHERIT_VALUE.equals(value))
                 return NumberInherit.newInstance(NumberInheritAsEnum.INHERIT);
@@ -789,6 +797,7 @@ public class RichTextNode extends GraphicContentNode implements TextNode
      * Convert an FXG String value to a BaselineShift enumeration.
      * 
      * @param value - the FXG String value.
+     * @param name - the FXG attribute name.
      * @param min - the smallest double value that the result must be greater
      * or equal to.
      * @param max - the largest double value that the result must be smaller
@@ -801,14 +810,14 @@ public class RichTextNode extends GraphicContentNode implements TextNode
      * BaselineShift rule or the value falls out of the specified range 
      * (inclusive).
      */
-    private BaselineShift getBaselineShift(FXGNode node, String value, double min, double max, double defaultValue)
+    private BaselineShift getBaselineShift(FXGNode node, String name, String value, double min, double max, double defaultValue)
     {
         try
         {
         	
-            return BaselineShift.newInstance(parseNumberPercent(value, min, max, defaultValue));            
+            return BaselineShift.newInstance(DOMParserHelper.parseNumberPercent(this, value, name, min, max, defaultValue));            
         }
-        catch(NumberFormatException e)
+        catch(FXGException e)
         {
             if (FXG_BASELINESHIFT_SUPERSCRIPT_VALUE.equals(value))
             {
@@ -830,6 +839,7 @@ public class RichTextNode extends GraphicContentNode implements TextNode
      * Convert an FXG String value to a NumberInherit object.
      * 
      * @param value - the FXG String value.
+     * @param name - the FXG attribute name.
      * @param min - the smallest double value that the result must be greater
      * or equal to.
      * @param max - the largest double value that the result must be smaller
@@ -842,12 +852,12 @@ public class RichTextNode extends GraphicContentNode implements TextNode
      * @throws FXGException if the String did not match a known
      * NumberInherit rule.
      */
-    private NumberInherit getAlphaInherit(FXGNode node, String value, double min, double max, double defaultValue, String errorCode)        
+    private NumberInherit getAlphaInherit(FXGNode node, String name, String value, double min, double max, double defaultValue, String errorCode)        
     {
         try
         {
-            return NumberInherit.newInstance(parseDouble(value, ALPHA_MIN_INCLUSIVE, ALPHA_MAX_INCLUSIVE, defaultValue));           
-        }catch(NumberFormatException e)
+            return NumberInherit.newInstance(DOMParserHelper.parseDouble(this, value, name, ALPHA_MIN_INCLUSIVE, ALPHA_MAX_INCLUSIVE, defaultValue));           
+        }catch(FXGException e)
         {
             if (FXG_INHERIT_VALUE.equals(value))
             {
@@ -864,12 +874,14 @@ public class RichTextNode extends GraphicContentNode implements TextNode
     /**
      * Convert an FXG String value to a NumberInherit object.
      * 
+     * @param node - the FXG node.
+     * @param attribute - the FXG attribute name.
      * @param value - the FXG String value.
      * @return the matching NumberInherit rule.
      * @throws FXGException if the String did not match a known
      * NumberInherit rule.
      */
-    private ColorWithEnum getColorWithEnum(FXGNode node, String value)        
+    private ColorWithEnum getColorWithEnum(FXGNode node, String attribute, String value)        
     {
         if (FXG_COLORWITHENUM_TRANSPARENT_VALUE.equals(value))
         {
@@ -881,7 +893,7 @@ public class RichTextNode extends GraphicContentNode implements TextNode
         }
         else
         {
-            return ColorWithEnum.newInstance(parseRGB(value));           
+            return ColorWithEnum.newInstance(DOMParserHelper.parseRGB(this, value, attribute));           
         }
     }
 }

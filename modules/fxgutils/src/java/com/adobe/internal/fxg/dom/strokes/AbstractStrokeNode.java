@@ -15,6 +15,7 @@ import static com.adobe.fxg.FXGConstants.*;
 import com.adobe.fxg.FXGException;
 import com.adobe.fxg.FXGVersion;
 import com.adobe.internal.fxg.dom.AbstractFXGNode;
+import com.adobe.internal.fxg.dom.DOMParserHelper;
 import com.adobe.internal.fxg.dom.GraphicNode;
 import com.adobe.internal.fxg.dom.StrokeNode;
 import com.adobe.internal.fxg.dom.types.Caps;
@@ -128,13 +129,13 @@ public abstract class AbstractStrokeNode extends AbstractFXGNode implements Stro
         else if (FXG_CAPS_ATTRIBUTE.equals(name))
             caps = getCaps(value);
         else if (FXG_WEIGHT_ATTRIBUTE.equals(name))
-            weight = parseDouble(value, WEIGHT_MIN_INCLUSIVE, WEIGHT_MAX_INCLUSIVE, weight);
+            weight = DOMParserHelper.parseDouble(this, value, name, WEIGHT_MIN_INCLUSIVE, WEIGHT_MAX_INCLUSIVE, weight);
         else if (FXG_PIXELHINTING_ATTRIBUTE.equals(name))
-            pixelHinting = parseBoolean(value);
+            pixelHinting = DOMParserHelper.parseBoolean(this, value, name);
         else if (FXG_JOINTS_ATTRIBUTE.equals(name))
             joints = getJoints(value);
         else if (FXG_MITERLIMIT_ATTRIBUTE.equals(name))
-            miterLimit = parseDouble(value, MITERLIMIT_MIN_INCLUSIVE, MITERLIMIT_MAX_INCLUSIVE, miterLimit);
+            miterLimit = DOMParserHelper.parseDouble(this, value, name, MITERLIMIT_MIN_INCLUSIVE, MITERLIMIT_MAX_INCLUSIVE, miterLimit);
         else if (FXG_ID_ATTRIBUTE.equals(name))
             id = value;
         else

@@ -25,7 +25,7 @@ package org.osmf.audio
 	import flash.events.ProgressEvent;
 	import flash.media.Sound;
 	
-	import org.osmf.events.BytesTotalChangeEvent;
+	import org.osmf.events.LoadEvent;
 	import org.osmf.traits.DownloadableTrait;
 
 	/**
@@ -37,7 +37,12 @@ package org.osmf.audio
 		/**
 		 * Constructor
 		 * 
-		 * @param sound The Sound object from which the values for bytesDownloaed and bytesTotal will be obtained.
+		 * @param sound The Sound object from which the values for bytesLoaded and bytesTotal will be obtained.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function SoundDownloadableTrait(sound:Sound)
 		{
@@ -50,14 +55,24 @@ package org.osmf.audio
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
-		override public function get bytesDownloaded():Number
+		override public function get bytesLoaded():Number
 		{
 			return _sound.bytesLoaded;
 		}
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		override public function get bytesTotal():Number
 		{
@@ -72,9 +87,12 @@ package org.osmf.audio
 		{
 			if (_lastBytesTotal != _sound.bytesTotal)
 			{
-				var event:BytesTotalChangeEvent
-					= new BytesTotalChangeEvent
-						( _lastBytesTotal
+				var event:LoadEvent
+					= new LoadEvent
+						( LoadEvent.BYTES_TOTAL_CHANGE
+						, false
+						, false
+						, null
 						, _sound.bytesTotal
 						);
 						

@@ -1,4 +1,4 @@
-/*****************************************************
+﻿/*****************************************************
 *  
 *  Copyright 2009 Adobe Systems Incorporated.  All Rights Reserved.
 *  
@@ -58,6 +58,11 @@ package org.osmf.audio
 	{
 		/**
 		 * Constructs a new SoundLoader.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		public function SoundLoader()
 		{
@@ -69,6 +74,11 @@ package org.osmf.audio
 		 * Returns <code>true</code> for IURLResources with MP3 extensions or media/mime
 		 * types that match MP3.
 		 * @param resource Resource proposed to be loaded.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		override public function canHandleResource(resource:IMediaResource):Boolean
 		{
@@ -93,10 +103,15 @@ package org.osmf.audio
 		/**
 		 * Loads the Sound object.. 
 		 * <p>Updates the ILoadable's <code>loadedState</code> property to LOADING
-		 * while loading and to LOADED upon completing a successful load.</p> 
+		 * while loading and to READY upon completing a successful load.</p> 
 		 * 
 		 * @see org.osmf.traits.LoadState
 		 * @param ILoadable ILoadable to be loaded.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		override public function load(loadable:ILoadable):void
 		{
@@ -147,17 +162,20 @@ package org.osmf.audio
 				 
 				toggleSoundListeners(sound, false);
 
-				updateLoadable(loadable, LoadState.LOADED, context);
+				updateLoadable(loadable, LoadState.READY, context);
 			}
 
 			function onIOError(ioEvent:IOErrorEvent, ioEventDetail:String=null):void
 			{	
 				toggleSoundListeners(sound, false);
 				
-				updateLoadable(loadable, LoadState.LOAD_FAILED);
+				updateLoadable(loadable, LoadState.LOAD_ERROR);
 				loadable.dispatchEvent
 					( new MediaErrorEvent
-						( new MediaError
+						( MediaErrorEvent.MEDIA_ERROR
+						, false
+						, false
+						, new MediaError
 							( MediaErrorCodes.AUDIO_IO_LOAD_ERROR
 							, ioEvent ? ioEvent.text : ioEventDetail
 							)
@@ -169,10 +187,13 @@ package org.osmf.audio
 			{	
 				toggleSoundListeners(sound, false);
 				
-				updateLoadable(loadable, LoadState.LOAD_FAILED);
+				updateLoadable(loadable, LoadState.LOAD_ERROR);
 				loadable.dispatchEvent
 					( new MediaErrorEvent
-						( new MediaError
+						( MediaErrorEvent.MEDIA_ERROR
+						, false
+						, false
+						, new MediaError
 							( MediaErrorCodes.AUDIO_SECURITY_LOAD_ERROR
 							, securityErrorDetail
 							)
@@ -185,10 +206,15 @@ package org.osmf.audio
 		 * Unloads the Sound object.  
 		 * 
 		 * <p>Updates the ILoadable's <code>loadedState</code> property to UNLOADING
-		 * while unloading and to CONSTRUCTED upon completing a successful unload.</p>
+		 * while unloading and to UNINITIALIZED upon completing a successful unload.</p>
 		 *
 		 * @param ILoadable ILoadable to be unloaded.
 		 * @see org.osmf.traits.LoadState
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		override public function unload(loadable:ILoadable):void
 		{
@@ -204,7 +230,7 @@ package org.osmf.audio
 			{
 				// Swallow, either way the Sound is now unloaded.
 			}
-			updateLoadable(loadable, LoadState.CONSTRUCTED);
+			updateLoadable(loadable, LoadState.UNINITIALIZED);
 		}
 		
 		// Internals

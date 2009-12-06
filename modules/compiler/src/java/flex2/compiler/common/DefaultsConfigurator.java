@@ -128,6 +128,7 @@ public class DefaultsConfigurator
 	         new String[]
 	         {
 		         "lazy-init",
+                 "compiler.omit-trace-statements",
 		         "compiler.optimize",
 		         "compiler.strict",
 		         "compiler.show-actionscript-warnings",

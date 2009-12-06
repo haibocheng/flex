@@ -60,7 +60,8 @@ package flashx.textLayout.operations
 		{
 			var beforeOpLen:int = textFlow.textLength;
 			TextFlowEdit.replaceRange(textFlow, absoluteStart, absoluteEnd, null);			
-			textFlow.interactionManager.notifyInsertOrDelete(absoluteStart, -(absoluteEnd - absoluteStart));
+			if (textFlow.interactionManager)
+				textFlow.interactionManager.notifyInsertOrDelete(absoluteStart, -(absoluteEnd - absoluteStart));
 			if (textFlow.textLength == beforeOpLen)
 			{
 				_tScrap = null;
@@ -74,7 +75,8 @@ package flashx.textLayout.operations
 			if (_tScrap != null) 
 			{
 				TextFlowEdit.replaceRange(textFlow, absoluteStart, absoluteStart, _tScrap);
-				textFlow.interactionManager.notifyInsertOrDelete(absoluteStart, absoluteEnd - absoluteStart);
+				if (textFlow.interactionManager)
+					textFlow.interactionManager.notifyInsertOrDelete(absoluteStart, absoluteEnd - absoluteStart);
 			}				
 			return originalSelectionState;	
 		}
@@ -83,7 +85,8 @@ package flashx.textLayout.operations
 		public override function redo():SelectionState
 		{
 			TextFlowEdit.replaceRange(textFlow, absoluteStart,absoluteEnd, null);												
-			textFlow.interactionManager.notifyInsertOrDelete(absoluteStart, -(absoluteEnd - absoluteStart));
+			if (textFlow.interactionManager)
+				textFlow.interactionManager.notifyInsertOrDelete(absoluteStart, -(absoluteEnd - absoluteStart));
 			return new SelectionState(textFlow, absoluteStart, absoluteStart, null);
 		}
 		

@@ -53,9 +53,9 @@ public class EllipseNode extends AbstractShapeNode
     public void setAttribute(String name, String value)
     {
         if (FXG_WIDTH_ATTRIBUTE.equals(name))
-            width = parseDouble(value);
+            width = DOMParserHelper.parseDouble(this, value, name);
         else if (FXG_HEIGHT_ATTRIBUTE.equals(name))
-            height = parseDouble(value);
+            height = DOMParserHelper.parseDouble(this, value, name);
         else
             super.setAttribute(name, value);
     }
@@ -67,8 +67,8 @@ public class EllipseNode extends AbstractShapeNode
     {
         int x1 = 0;
         int y1 = 0;
-        int x2 = (int) width*SwfConstants.TWIPS_PER_PIXEL;
-        int y2 = (int) height*SwfConstants.TWIPS_PER_PIXEL;
+        int x2 = (int) (width*SwfConstants.TWIPS_PER_PIXEL);
+        int y2 = (int) (height*SwfConstants.TWIPS_PER_PIXEL);
         if (ls != null)
         {
             int width = SwfConstants.TWIPS_PER_PIXEL;

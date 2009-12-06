@@ -678,7 +678,9 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
         generateAttributes(textNode, type, attributes, srcContext, currentVar);
 
         // Properties
-        generateProperties(srcContext, currentVar, textNode.getTextProperties(), varContext);
+        // Note: We process RichTextNode properties after content has been assigned.
+        if (!(textNode instanceof RichTextNode))
+            generateProperties(srcContext, textNode, currentVar, varContext);
 
         // Child Nodes
         if (children != null && children.size() > 0)
@@ -794,6 +796,11 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
         // e.g. someElement.mxmlChildren = someContent;
         if (parentChildrenVar != null && contentVar != null)
             buf.append("        ").append(currentVar).append(".").append(parentChildrenVar).append(" = ").append(contentVar).append(";\r\n");
+
+        // RichText is a special case whose properties must be set after content
+        // is assigned and the textFlow has been populated.
+        if (textNode instanceof RichTextNode)
+            generateProperties(srcContext, textNode, currentVar, varContext);
     }
 
     /**
@@ -802,14 +809,15 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
      * statement.
      * 
      * @param srcContext - the ActionScript source code generation buffers.
+     * @param parentNode - the parent TextNode to process for properties  
      * @param parentVar - the parent variable that declares the properties
-     * @param properties - the text property nodes 
      * @param varContext - the current context for generating variables in
      * ActionScript code 
      */
-    private void generateProperties(SourceContext srcContext, String parentVar,
-            Map<String, TextNode> properties, Variables varContext)
+    private void generateProperties(SourceContext srcContext, TextNode parentNode,
+            String parentVar, Variables varContext)
     {
+        Map<String, TextNode> properties = parentNode.getTextProperties(); 
         if (properties != null)
         {
             StringBuilder buf = srcContext.functionBuffer;
@@ -821,9 +829,20 @@ public class FlexFXG2SWFTranscoder extends FXG2SWFTranscoder
 
                 if (node instanceof TextLayoutFormatNode)
                 {
-                    varContext.setVar(textLayoutFormatType, NodeType.TEXT_LAYOUT_FORMAT);
-                    generateTextVariable(node, srcContext, varContext);
-                    buf.append("        ").append(parentVar).append(".").append(propertyName).append(" = ").append(varContext.elementVar).append(";\r\n");
+                    // RichText does not support setting text layout formatting
+                    // at the top level so we must update its textFlow instead.
+                    if (parentNode instanceof RichTextNode)
+                    {
+                        varContext.setVar(textLayoutFormatType, NodeType.TEXT_LAYOUT_FORMAT);
+                        generateTextVariable(node, srcContext, varContext);
+                        buf.append("        ").append(parentVar).append(".textFlow.").append(propertyName).append(" = ").append(varContext.elementVar).append(";\r\n");
+                    }
+                    else
+                    {
+                        varContext.setVar(textLayoutFormatType, NodeType.TEXT_LAYOUT_FORMAT);
+                        generateTextVariable(node, srcContext, varContext);
+                        buf.append("        ").append(parentVar).append(".").append(propertyName).append(" = ").append(varContext.elementVar).append(";\r\n");
+                    }
                 }
             }
         }

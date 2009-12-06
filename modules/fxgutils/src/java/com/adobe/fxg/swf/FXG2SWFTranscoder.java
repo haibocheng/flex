@@ -267,6 +267,8 @@ public class FXG2SWFTranscoder implements FXGTranscoder
 
     protected void graphicContentNodes(List<GraphicContentNode> nodes)
     {
+        if (nodes == null) return;
+
         Iterator<GraphicContentNode> iterator = nodes.iterator();
         while (iterator.hasNext())
         {
@@ -342,10 +344,24 @@ public class FXG2SWFTranscoder implements FXGTranscoder
         // in the PlaceObject3 Matrix and instead start the shape from the
         // origin (0.0, 0.0).
         Ellipse2D.Double ellipse = new Ellipse2D.Double(0.0, 0.0, node.width, node.height);
-        GraphicContext context = node.createGraphicContext();
+        ShapeBuilder builder = new ShapeBuilder();
+        ShapeIterator iterator = new PathIteratorWrapper(ellipse.getPathIterator(null));
+        builder.processShape(iterator);
+        Shape shape = builder.build();
         
-        PlaceObject po3 = placeDefineShape(node, ellipse, node.fill, node.stroke, context);
-        return po3;
+        List<ShapeRecord> shapeRecords2 = null;
+        if ((node.stroke != null) && !node.isPartofClipMask && ImageHelper.isBitmapFillWithClip(node.fill)) 
+        {            
+            Ellipse2D.Double ellipse2 = new Ellipse2D.Double(0.0, 0.0, node.width, node.height);
+            ShapeBuilder builder2 = new ShapeBuilder();
+            ShapeIterator iterator2 = new PathIteratorWrapper(ellipse2.getPathIterator(null));
+            builder2.processShape(iterator2);
+            Shape shape2 = builder2.build();
+            shapeRecords2 = shape2.shapeRecords;
+        }
+ 
+        return placeDefineShape(node, shape.shapeRecords, shapeRecords2, node.fill, node.stroke, node.createGraphicContext());
+        
     }
 
     protected PlaceObject group(GroupNode node)
@@ -388,8 +404,12 @@ public class FXG2SWFTranscoder implements FXGTranscoder
     protected PlaceObject line(LineNode node)
     {
         List<ShapeRecord> shapeRecords = ShapeHelper.line(node.xFrom, node.yFrom, node.xTo, node.yTo);
+        List<ShapeRecord> shapeRecords2 = null;
+        if ((node.stroke != null) && !node.isPartofClipMask && ImageHelper.isBitmapFillWithClip(node.fill)) 
+             shapeRecords2 = ShapeHelper.line(node.xFrom, node.yFrom, node.xTo, node.yTo);
+
         GraphicContext context = node.createGraphicContext();
-        PlaceObject po3 = placeDefineShape(node, shapeRecords, node.fill, node.stroke, context);
+        PlaceObject po3 = placeDefineShape(node, shapeRecords, shapeRecords2, node.fill, node.stroke, context);
         return po3;
     }
 
@@ -479,11 +499,14 @@ public class FXG2SWFTranscoder implements FXGTranscoder
 
     protected PlaceObject path(PathNode node)
     {
-        List<ShapeRecord> shapeRecords = ShapeHelper.path(node);
+        List<ShapeRecord> shapeRecords = ShapeHelper.path(node, (node.fill != null));
         GraphicContext context = node.createGraphicContext();
         Winding winding[] = new Winding[1];
         winding[0] = node.winding;
-        PlaceObject po3 = placeDefineShape(node, shapeRecords, node.fill, node.stroke, context, winding);
+        List<ShapeRecord> shapeRecords2 = null;
+        if ((node.stroke != null) && !node.isPartofClipMask && ImageHelper.isBitmapFillWithClip(node.fill)) 
+            shapeRecords2 = ShapeHelper.path(node, false);
+        PlaceObject po3 = placeDefineShape(node, shapeRecords, shapeRecords2, node.fill, node.stroke, context, winding);
         return po3;
     }
 
@@ -562,6 +585,7 @@ public class FXG2SWFTranscoder implements FXGTranscoder
         // origin (0.0, 0.0).
         GraphicContext context = node.createGraphicContext();
         List<ShapeRecord> shapeRecords;
+        List<ShapeRecord> shapeRecords2 = null;
         if (node.radiusX != 0.0 || node.radiusY != 0.0 
         		|| !Double.isNaN(node.topLeftRadiusX) || !Double.isNaN(node.topLeftRadiusY)
         		|| !Double.isNaN(node.topRightRadiusX) || !Double.isNaN(node.topRightRadiusY)
@@ -572,13 +596,20 @@ public class FXG2SWFTranscoder implements FXGTranscoder
             		 node.radiusX, node.radiusY, node.topLeftRadiusX, node.topLeftRadiusY,
             		 node.topRightRadiusX, node.topRightRadiusY, node.bottomLeftRadiusX, node.bottomLeftRadiusY,
             		 node.bottomRightRadiusX, node.bottomRightRadiusY);
+             if ((node.stroke != null) && !node.isPartofClipMask && ImageHelper.isBitmapFillWithClip(node.fill)) 
+                 shapeRecords2 = ShapeHelper.rectangle(0.0, 0.0, node.width, node.height, 
+                         node.radiusX, node.radiusY, node.topLeftRadiusX, node.topLeftRadiusY,
+                         node.topRightRadiusX, node.topRightRadiusY, node.bottomLeftRadiusX, node.bottomLeftRadiusY,
+                         node.bottomRightRadiusX, node.bottomRightRadiusY);
         }
         else
         {
              shapeRecords = ShapeHelper.rectangle(0.0, 0.0, node.width, node.height);
+             if ((node.stroke != null) && !node.isPartofClipMask && ImageHelper.isBitmapFillWithClip(node.fill)) 
+                 shapeRecords2 = ShapeHelper.rectangle(0.0, 0.0, node.width, node.height);
         }
         
-        PlaceObject po3 = placeDefineShape(node, shapeRecords, node.fill, node.stroke, context);
+        PlaceObject po3 = placeDefineShape(node, shapeRecords, shapeRecords2, node.fill, node.stroke, context);
         return po3;
     }
 
@@ -681,17 +712,7 @@ public class FXG2SWFTranscoder implements FXGTranscoder
         sprite.name = name + random.nextInt();
         return sprite;
     }
-
-    protected DefineShape createDefineShape(AbstractShapeNode node, java.awt.Shape shape2d,
-            FillNode fill, StrokeNode stroke, FXGMatrix transform)
-    {
-        ShapeBuilder builder = new ShapeBuilder();
-        ShapeIterator iterator = new PathIteratorWrapper(shape2d.getPathIterator(null));
-        builder.processShape(iterator);
-        Shape shape = builder.build();
-        return createDefineShape(node, shape.shapeRecords, fill, stroke, transform);
-    }
-    
+ 
     protected DefineShape createDefineShape(AbstractShapeNode node, List<ShapeRecord> shapeRecords, FillNode fill,
             StrokeNode stroke, FXGMatrix transform, Winding... windings)
     {
@@ -746,28 +767,28 @@ public class FXG2SWFTranscoder implements FXGTranscoder
         return defineShape4;
     }
     
-    protected PlaceObject placeDefineShape(AbstractShapeNode node, java.awt.Shape shape2d,
-            FillNode fill, StrokeNode stroke, GraphicContext context)
-    {
-        ShapeBuilder builder = new ShapeBuilder();
-        ShapeIterator iterator = new PathIteratorWrapper(shape2d.getPathIterator(null));
-        builder.processShape(iterator);
-        Shape shape = builder.build();
-        return placeDefineShape(node, shape.shapeRecords, fill, stroke, context);
-    }
     
-    
-    protected PlaceObject placeDefineShape(AbstractShapeNode node, List<ShapeRecord> shapeRecords,
+    protected PlaceObject placeDefineShape(AbstractShapeNode node, List<ShapeRecord> shapeRecords, List<ShapeRecord> shapeRecords2,
             FillNode fill, StrokeNode stroke, GraphicContext context, Winding... windings )
     {
  
-        if (ImageHelper.isBitmapFillWithClip(fill)) 
+        if (node != null && fill!= null && !node.isPartofClipMask && ImageHelper.isBitmapFillWithClip(fill)) 
         {
-
+            /* Support of fillMode=clip/scale is complicated since SWF does not 
+             * support proper clipping of bitmaps. For fillMode=clip/scale, FXG defines 
+             * the area outside of the bitmap fill area to be transparent.
+             * In SWF, the bitmap bleeds to fill the rest of the path/shape 
+             * if bitmap is specified to be a clipping bitmap.
+             * 
+             * In order to get the effect that FXG wants with SWF tags, the
+             * the path/shape is split into two ShapeRecords for a path 
+             * with a stroke & fill. A clipping mask is applied to the fill 
+             * but not the stroke.
+             */
         	BitmapFillNode fillNode = (BitmapFillNode) fill;
 
             // Calculate the bounds of the shape outline (without strokes)
-            Rect edgeBounds = (node == null) ? ShapeHelper.getBounds(shapeRecords, null, (AbstractStrokeNode)stroke) : node.getBounds(shapeRecords, null);           
+            Rect edgeBounds = node.getBounds(shapeRecords, null);           
             
             String source = parseSource(fillNode.source);
             if (source == null)
@@ -791,7 +812,7 @@ public class FXG2SWFTranscoder implements FXGTranscoder
             placeObject(clipShape, clipContext); 
             spriteStack.pop();
             
-            //place the clipping mask in the imageSprite
+            // Set the depth of the mask to that of the bitmap image fill
             clipContext.setTransform(context.getTransform());
             PlaceObject po3clip = placeObject(clipSprite, clipContext); 
             po3clip.setClipDepth(po3clip.depth+1);
@@ -799,36 +820,47 @@ public class FXG2SWFTranscoder implements FXGTranscoder
             // Then, process the bitmap image fill
             ShapeWithStyle sws = new ShapeWithStyle();
             sws.shapeRecords = shapeRecords;
-
             int lineStyleIndex = 0;
             int fillStyle0Index = 1;
             int fillStyle1Index = 0;
-            ShapeHelper.setStyles(shapeRecords, lineStyleIndex, fillStyle0Index, fillStyle1Index);
+            if (windings.length > 0)
+                ShapeHelper.setPathStyles(shapeRecords, lineStyleIndex, fillStyle0Index, fillStyle1Index);
+            else
+                ShapeHelper.setStyles(shapeRecords, lineStyleIndex, fillStyle0Index, fillStyle1Index);
 
             FillStyle fillStyle = createFillStyle(fill, edgeBounds);
             sws.fillstyles = new ArrayList<FillStyle>(1);
             sws.fillstyles.add(fillStyle);
-
+            
             DefineShape imageShape = new DefineShape(Tag.stagDefineShape4);
             imageShape.shapeWithStyle = sws;
             imageShape.bounds = edgeBounds;
             imageShape.edgeBounds = edgeBounds;
+            if ((fill != null) &&( windings.length > 0))
+            {
+                Winding windingValue = windings[0];
+                imageShape.usesFillWindingRule = (windingValue == Winding.NON_ZERO);
+            }
             PlaceObject po3 = placeObject(imageShape, context);        
-            
+             
             if (stroke != null)
             {
+                //generate the define sprite for the stroke object with no clipping
                 ShapeWithStyle swsStroke = new ShapeWithStyle();
-                swsStroke.shapeRecords = shapeRecords;
-
+                swsStroke.shapeRecords = shapeRecords2;
+    
                 lineStyleIndex = 1;
                 fillStyle0Index = 0;
                 fillStyle1Index = 0;
-                ShapeHelper.setStyles(shapeRecords, lineStyleIndex, fillStyle0Index, fillStyle1Index);
+                if (windings.length > 0)
+                    ShapeHelper.setPathStyles(shapeRecords2, lineStyleIndex, fillStyle0Index, fillStyle1Index);
+                else
+                    ShapeHelper.setStyles(shapeRecords2, lineStyleIndex, fillStyle0Index, fillStyle1Index);
 
                 // Consider linestyle stroke widths with bounds calculation               
                 AbstractStrokeNode strokeNode = (AbstractStrokeNode) stroke;
                 LineStyle ls = createGenericLineStyle(strokeNode);
-                Rect shapeBounds = (node == null ) ? ShapeHelper.getBounds(shapeRecords, ls, (AbstractStrokeNode)stroke) : node.getBounds(shapeRecords, ls);              
+                Rect shapeBounds =  node.getBounds(shapeRecords2, ls);              
                 
                 LineStyle lineStyle = createLineStyle(stroke, shapeBounds);
                 swsStroke.linestyles = new ArrayList<LineStyle>(1);
@@ -839,8 +871,8 @@ public class FXG2SWFTranscoder implements FXGTranscoder
                 strokeShape.bounds = shapeBounds;
                 strokeShape.edgeBounds = edgeBounds;
                 po3 = placeObject(strokeShape, context);    
-
-             }            
+            } 
+            
             return po3;
             
         }
@@ -974,6 +1006,7 @@ public class FXG2SWFTranscoder implements FXGTranscoder
         int jointStyle = createJoints(stroke.joints);
         int noHorizonalScale = 1;
         int noVerticalScale = 1;
+        
 
         // First set of 8 bit flags
         if (stroke.scaleMode == ScaleMode.VERTICAL || stroke.scaleMode == ScaleMode.NONE)
@@ -982,6 +1015,8 @@ public class FXG2SWFTranscoder implements FXGTranscoder
             flags |= noVerticalScale << 2;
         flags |= jointStyle << 4;
         flags |= startCapStyle << 6;
+        if (stroke.pixelHinting)
+            flags |= 1;
 
         // Second set of 8 bit flags
         flags |= endCapStyle << 8;

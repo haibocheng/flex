@@ -30,8 +30,8 @@ package org.osmf.metadata
 	import org.osmf.composition.CompositeElement;
 	import org.osmf.events.PausedChangeEvent;
 	import org.osmf.events.PlayingChangeEvent;
-	import org.osmf.events.SeekingChangeEvent;
-	import org.osmf.events.TraitsChangeEvent;
+	import org.osmf.events.SeekEvent;
+	import org.osmf.events.MediaElementEvent;
 	import org.osmf.media.MediaElement;
 	import org.osmf.traits.IPausable;
 	import org.osmf.traits.IPlayable;
@@ -50,6 +50,11 @@ package org.osmf.metadata
 	 * and dispatches events of type <code>TemporalFacetEvent</code> when 
 	 * the <code>ITemporal</code> position of the MediaElement matches any of the
 	 * time values in it's collection of <code>TemporalIdentifer</code> objects. 
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 10
+	 *  @playerversion AIR 1.0
+	 *  @productversion OSMF 1.0
 	 */
 	public class TemporalFacet extends EventDispatcher implements IFacet
 	{
@@ -60,6 +65,11 @@ package org.osmf.metadata
 		 * @param owner The media element this facet applies to.
 		 * 
 		 * @throws ArgumentError If owner argument is null.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function TemporalFacet(namespaceURL:URL, owner:MediaElement)
 		{
@@ -77,7 +87,7 @@ package org.osmf.metadata
 			intervalTimer.addEventListener(TimerEvent.TIMER, onIntervalTimer);
 			
 			// Check the owner media element for traits, if they are null here
-			// 	that's okay we'll manage them in the TraitsChangeEvent handlers.
+			// 	that's okay we'll manage them in the event handlers.
 			temporal = owner.getTrait(MediaTraitType.TEMPORAL) as ITemporal;
 			
 			seekable = owner.getTrait(MediaTraitType.SEEKABLE) as ISeekable;
@@ -89,12 +99,17 @@ package org.osmf.metadata
 			pausable = owner.getTrait(MediaTraitType.PAUSABLE) as IPausable;
 			setupTraitEventListener(MediaTraitType.PAUSABLE);
 			
-			owner.addEventListener(TraitsChangeEvent.TRAIT_ADD, onTraitAdd);
-			owner.addEventListener(TraitsChangeEvent.TRAIT_REMOVE, onTraitRemove);
+			owner.addEventListener(MediaElementEvent.TRAIT_ADD, onTraitAdd);
+			owner.addEventListener(MediaElementEvent.TRAIT_REMOVE, onTraitRemove);
 		}
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function get namespaceURL():URL
 		{
@@ -106,6 +121,11 @@ package org.osmf.metadata
 		 * will dispatch events of type TemporalFacetEvent. Setting
 		 * this property to <code>false</code> will cause the class to stop
 		 * dispatching events.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function set enable(value:Boolean):void 
 		{
@@ -121,6 +141,11 @@ package org.osmf.metadata
 		 * 
 		 * @throws ArgumentError If value is null or the time in the value 
 		 * object is less than zero.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function addValue(value:TemporalIdentifier):void
 		{
@@ -164,6 +189,11 @@ package org.osmf.metadata
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function getValue(identifier:IIdentifier):*
 		{
@@ -184,6 +214,11 @@ package org.osmf.metadata
 		
 		/**
 		 * The number of TemporalIdentifer values in this class' collection.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function get numValues():int
 		{
@@ -199,6 +234,11 @@ package org.osmf.metadata
 		 * 
 		 * @return The TemporalIdentifier item at the specified index or 
 		 * <code>null</code> if there is none.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function getValueAt(index:int):TemporalIdentifier
 		{
@@ -222,6 +262,11 @@ package org.osmf.metadata
 		
 		/**
 		 * Starts / stops the interval timer.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		private function startTimer(start:Boolean=true):void
 		{
@@ -238,6 +283,11 @@ package org.osmf.metadata
 						
 		/**
 		 * Perform a reset on the class' internal state.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		private function reset(startTimer:Boolean):void 
 		{
@@ -256,6 +306,11 @@ package org.osmf.metadata
 		 * The interval timer callback. Checks for temporal metadata 
 		 * around the current ITemporal.position and dispatches a TemporalFacetEvent
 		 * if found. 
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
    		private function checkForTemporalMetadata():void 
    		{
@@ -287,7 +342,8 @@ package org.osmf.metadata
    			{
 	   			if (traitType == MediaTraitType.SEEKABLE && seekable != null)
 	   			{
-					seekable.addEventListener(SeekingChangeEvent.SEEKING_CHANGE, onSeekingChange);
+					seekable.addEventListener(SeekEvent.SEEK_BEGIN, onSeekingChange);
+					seekable.addEventListener(SeekEvent.SEEK_END, onSeekingChange);
 	   			}
 	   			
 	   			else if (traitType == MediaTraitType.PAUSABLE && pausable != null)
@@ -304,7 +360,8 @@ package org.osmf.metadata
 	   		{
 	   			if (traitType == MediaTraitType.SEEKABLE && seekable != null)
 	   			{
-					seekable.removeEventListener(SeekingChangeEvent.SEEKING_CHANGE, onSeekingChange);
+					seekable.removeEventListener(SeekEvent.SEEK_BEGIN, onSeekingChange);
+					seekable.removeEventListener(SeekEvent.SEEK_END, onSeekingChange);
 	   			}
 	   			
 	   			else if (traitType == MediaTraitType.PAUSABLE && pausable != null)
@@ -320,9 +377,9 @@ package org.osmf.metadata
 	   		}
    		}
    		
-   		private function onSeekingChange(event:SeekingChangeEvent):void
+   		private function onSeekingChange(event:SeekEvent):void
    		{
-   			if (event.seeking)
+   			if (event.type == SeekEvent.SEEK_BEGIN)
    			{
    				reset(true);
    			}
@@ -347,6 +404,11 @@ package org.osmf.metadata
 		/**
 		 * Returns the index of the temporal metadata object matching the time. If no match is found, returns
 		 * the index where the value should be inserted as a negative number.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		private function findTemporalMetadata(firstIndex:int, lastIndex:int, time:Number):int 
 		{
@@ -375,6 +437,11 @@ package org.osmf.metadata
 		 * Dispatch the events for this temporal value. If there is a duration
 		 * property on the value, dispatch a duration reached event after the 
 		 * proper amount of time has passed.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		private function dispatchTemporalEvents(index:int):void
 		{
@@ -401,6 +468,11 @@ package org.osmf.metadata
    		 * TemporalFacetEvent is dispatched.
    		 * 
    		 * Returns True if a match was found, otherwise False.
+   		 *  
+   		 *  @langversion 3.0
+   		 *  @playerversion Flash 10
+   		 *  @playerversion AIR 1.0
+   		 *  @productversion OSMF 1.0
    		 */
    		private function checkTemporalMetadata(index:int, now:Number):Boolean 
    		{ 		
@@ -457,6 +529,11 @@ package org.osmf.metadata
 
 		/**
 		 * The interval timer event handler.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		private function onIntervalTimer(event:TimerEvent):void 
 		{
@@ -465,8 +542,13 @@ package org.osmf.metadata
 		
 		/**
 		 * Called when traits are added to the owner media element.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
-		private function onTraitAdd(event:TraitsChangeEvent):void
+		private function onTraitAdd(event:MediaElementEvent):void
 		{
 			switch (event.traitType)
 			{
@@ -490,8 +572,13 @@ package org.osmf.metadata
 		
 		/**
 		 * Called when traits are removed from the owner media element.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
-		private function onTraitRemove(event:TraitsChangeEvent):void
+		private function onTraitRemove(event:MediaElementEvent):void
 		{
 			// Remove any event listeners
 			setupTraitEventListener(event.traitType, false);

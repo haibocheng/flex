@@ -23,8 +23,8 @@ package org.osmf.composition
 {
 	import flash.events.Event;
 	
-	import org.osmf.events.DimensionChangeEvent;
-	import org.osmf.events.TraitsChangeEvent;
+	import org.osmf.events.DimensionEvent;
+	import org.osmf.events.MediaElementEvent;
 	import org.osmf.media.IMediaTrait;
 	import org.osmf.media.MediaElement;
 	import org.osmf.traits.ISpatial;
@@ -34,9 +34,9 @@ package org.osmf.composition
 	/**
 	 * Dispatched when the width and/or height of the ISpatial media has changed.
 	 * 
-	 * @eventType org.osmf.events.DimensionChangeEvent.DIMENSION_CHANGE
+	 * @eventType org.osmf.events.DimensionEvent.DIMENSION_CHANGE
 	 */	
-	[Event(name="dimensionChange",type="org.osmf.events.DimensionChangeEvent")]
+	[Event(name="dimensionChange",type="org.osmf.events.DimensionEvent")]
 
 	/**
 	 * Implementation of ISpatial for parallel compositions.
@@ -48,11 +48,21 @@ package org.osmf.composition
 	 * then the parallel composite spatial trait will constitute a trait instance that
 	 * has the maximum width of all its children for its width, and the maximum height of
 	 * all its children as its height.
+ 	 *  
+ 	 *  @langversion 3.0
+ 	 *  @playerversion Flash 10
+ 	 *  @playerversion AIR 1.0
+ 	 *  @productversion OSMF 1.0
  	 */	
 	internal class ParallelSpatialTrait extends CompositeSpatialTrait
 	{
 		/**
 		 * Constructor.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
 		public function ParallelSpatialTrait(traitAggregator:TraitAggregator, owner:MediaElement)
 		{
@@ -75,6 +85,11 @@ package org.osmf.composition
 		
 		/**
 		 * Invoked when a new spatial child trait becomes available.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
 		override protected function processAggregatedChild(child:IMediaTrait):void
 		{
@@ -92,6 +107,11 @@ package org.osmf.composition
 		
 		/**
 		 * Invoked when a child spatial trait is lost.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
 		override protected function processUnaggregatedChild(child:IMediaTrait):void
 		{
@@ -112,6 +132,11 @@ package org.osmf.composition
 		
 		/**
 		 * Handles the spatial trait that determines the dimensions that we reflect, chaning.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
 		override protected function updateSpatialSource(oldSource:ISpatial, newSource:ISpatial):void
 		{
@@ -126,6 +151,11 @@ package org.osmf.composition
 		/**
 		 * Adds or removes dimension change event listeners on all child spatial
 		 * traits.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
 		private function toggleChildSpatialListeners(on:Boolean):void
 		{
@@ -143,6 +173,11 @@ package org.osmf.composition
 		
 		/**
 		 * Recalculates our dimensions based on all of our child ISpatial traits.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
 		private function calculateDimensions(event:Event = null):void
 		{
@@ -164,7 +199,7 @@ package org.osmf.composition
 		private function registerChildSpatialListener(trait:ISpatial):void
 		{
 			trait.addEventListener
-				( DimensionChangeEvent.DIMENSION_CHANGE
+				( DimensionEvent.DIMENSION_CHANGE
 				, calculateDimensions
 				, false, 0, true
 				);
@@ -173,7 +208,7 @@ package org.osmf.composition
 		private function unregisterChildSpatialListener(trait:ISpatial):void
 		{
 			trait.removeEventListener
-				( DimensionChangeEvent.DIMENSION_CHANGE
+				( DimensionEvent.DIMENSION_CHANGE
 				, calculateDimensions
 				);
 		}

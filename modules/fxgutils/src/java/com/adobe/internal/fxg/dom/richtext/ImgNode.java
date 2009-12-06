@@ -15,6 +15,7 @@ import static com.adobe.fxg.FXGConstants.*;
 
 import com.adobe.fxg.FXGException;
 import com.adobe.fxg.dom.FXGNode;
+import com.adobe.internal.fxg.dom.DOMParserHelper;
 import com.adobe.internal.fxg.dom.types.NumberPercentAuto;
 import com.adobe.internal.fxg.dom.types.NumberPercentAuto.NumberPercentAutoAsEnum;
 
@@ -24,7 +25,7 @@ import com.adobe.internal.fxg.dom.types.NumberPercentAuto.NumberPercentAutoAsEnu
  * @since 2.0
  * @author Min Plunkett
  */
-public class ImgNode extends AbstractRichTextNode
+public class ImgNode extends AbstractRichTextLeafNode
 {
     //--------------------------------------------------------------------------
     //
@@ -62,11 +63,11 @@ public class ImgNode extends AbstractRichTextNode
     {
         if (FXG_WIDTH_ATTRIBUTE.equals(name))
         {
-            width = getNumberPercentAuto(this, value, "UnknownImgWidth");
+            width = getNumberPercentAuto(this, name, value, "UnknownImgWidth");
         }
         else if(FXG_HEIGHT_ATTRIBUTE.equals(name))
         {
-            height = getNumberPercentAuto(this, value, "UnknownImgHeight");
+            height = getNumberPercentAuto(this, name, value, "UnknownImgHeight");
         }
         else if(FXG_SOURCE_ATTRIBUTE.equals(name))
         {
@@ -85,18 +86,19 @@ public class ImgNode extends AbstractRichTextNode
     /**
      * 
      * @param node - the FXG node.
+     * @param name - the FXG attribute.
      * @param errorCode - the error code when value is out-of-range.
 	 * @param value - the FXG String value.
 	 * 
      */
-    private NumberPercentAuto getNumberPercentAuto(FXGNode node, String value, String errorCode)
+    private NumberPercentAuto getNumberPercentAuto(FXGNode node, String name, String value, String errorCode)
     {
     	try
     	{
-    		double valueDbl = parsePercent(value);
+    		double valueDbl = DOMParserHelper.parsePercent(this, value, name);
     		return NumberPercentAuto.newInstance(valueDbl);
     	}
-    	catch (NumberFormatException e)
+    	catch (FXGException e)
     	{
     		if (FXG_NUMBERPERCENAUTO_AUTO_VALUE.equals(value))
     		{

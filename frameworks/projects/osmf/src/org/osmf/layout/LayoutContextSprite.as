@@ -25,19 +25,24 @@ package org.osmf.layout
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
 	
-	import org.osmf.events.DimensionChangeEvent;
+	import org.osmf.events.DimensionEvent;
 	import org.osmf.metadata.Metadata;
 	import org.osmf.metadata.MetadataUtils;
 
 	/**
 	 * Dispatched when a layout element's intrinsic width and height changed.
 	 * 
-	 * @eventType org.osmf.events.DimensionChangeEvent.DIMENSION_CHANGE
+	 * @eventType org.osmf.events.DimensionEvent.DIMENSION_CHANGE
 	 */	
-	[Event(name="dimensionChange",type="org.osmf.events.DimensionChangeEvent")]
+	[Event(name="dimensionChange",type="org.osmf.events.DimensionEvent")]
 	
 	/**
 	 * LayoutContextSprite defines a Sprite based ILayoutContext implementation.
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 10
+	 *  @playerversion AIR 1.0
+	 *  @productversion OSMF 1.0
 	 */	
 	public class LayoutContextSprite extends Sprite implements ILayoutContext
 	{
@@ -46,6 +51,11 @@ package org.osmf.layout
 		 * 
 		 * @param metadata The metadata that an ILayoutRenderer may be using on calculating
 		 * a layout using this context.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
 		public function LayoutContextSprite(metadata:Metadata=null)
 		{
@@ -56,6 +66,11 @@ package org.osmf.layout
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function get metadata():Metadata
 		{
@@ -66,6 +81,11 @@ package org.osmf.layout
 		 * A reference to this instance.
 		 * 
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function get view():DisplayObject
 		{
@@ -74,6 +94,11 @@ package org.osmf.layout
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function get intrinsicWidth():Number
 		{
@@ -82,6 +107,11 @@ package org.osmf.layout
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function get intrinsicHeight():Number
 		{
@@ -96,6 +126,11 @@ package org.osmf.layout
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
 		public function get layoutRenderer():ILayoutRenderer
 		{
@@ -112,6 +147,11 @@ package org.osmf.layout
 		 * A reference to this instance.
 		 * 
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function get container():DisplayObjectContainer
 		{
@@ -123,6 +163,11 @@ package org.osmf.layout
 		 * it by the layout renderer.
 		 * 
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
 		public function get firstChildIndex():uint
 		{
@@ -207,9 +252,10 @@ package org.osmf.layout
 					
 			if (newIntrinsicWidth != _intrinsicWidth)
 			{
-				var event:DimensionChangeEvent
-						= new DimensionChangeEvent
-							( _intrinsicWidth	, _intrinsicHeight
+				var event:DimensionEvent
+						= new DimensionEvent
+							( DimensionEvent.DIMENSION_CHANGE, false, false
+							, _intrinsicWidth	, _intrinsicHeight
 							, newIntrinsicWidth	, _intrinsicHeight
 							);
 							
@@ -224,9 +270,10 @@ package org.osmf.layout
 			
 			if (newIntrinsicHeight != _intrinsicHeight)
 			{
-				var event:DimensionChangeEvent
-						= new DimensionChangeEvent
-							( _intrinsicWidth	, _intrinsicHeight
+				var event:DimensionEvent
+						= new DimensionEvent
+							( DimensionEvent.DIMENSION_CHANGE, false, false
+							, _intrinsicWidth	, _intrinsicHeight
 							, _intrinsicWidth	, newIntrinsicHeight
 							);
 							

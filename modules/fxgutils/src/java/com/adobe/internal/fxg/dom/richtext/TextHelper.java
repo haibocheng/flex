@@ -11,88 +11,7 @@
 
 package com.adobe.internal.fxg.dom.richtext;
 
-import static com.adobe.fxg.FXGConstants.FXG_ALIGNMENTBASELINE_ASCENT_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_ALIGNMENTBASELINE_DESCENT_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_ALIGNMENTBASELINE_IDEOGRAPHICBOTTOM_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_ALIGNMENTBASELINE_IDEOGRAPHICCENTER_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_ALIGNMENTBASELINE_IDEOGRAPHICTOP_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_ALIGNMENTBASELINE_ROMAN_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_ALIGNMENTBASELINE_USEDOMINANTBASELINE_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_BLOCKPROGRESSION_RL_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_BLOCKPROGRESSION_TB_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_BREAKOPPORTUNITY_ALL_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_BREAKOPPORTUNITY_ANY_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_BREAKOPPORTUNITY_AUTO_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_BREAKOPPORTUNITY_NONE_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_DIGITCASE_DEFAULT_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_DIGITCASE_LINING_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_DIGITCASE_OLDSTYLE_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_DIGITWIDTH_DEFAULT_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_DIGITWIDTH_PROPORTIONAL_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_DIGITWIDTH_TABULAR_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_DIRECTION_LTR_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_DIRECTION_RTL_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_DOMINANTBASELINE_ASCENT_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_DOMINANTBASELINE_AUTO_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_DOMINANTBASELINE_DESCENT_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_DOMINANTBASELINE_IDEOGRAPHICBOTTOM_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_DOMINANTBASELINE_IDEOGRAPHICCENTER_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_DOMINANTBASELINE_IDEOGRAPHICTOP_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_DOMINANTBASELINE_ROMAN_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_FONTSTYLE_ITALIC_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_FONTSTYLE_NORMAL_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_FONTWEIGHT_BOLD_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_FONTWEIGHT_NORMAL_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_INHERIT_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_JUSTIFICATIONRULE_AUTO_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_JUSTIFICATIONRULE_EASTASIAN_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_JUSTIFICATIONRULE_SPACE_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_JUSTIFICATIONSTYLE_AUTO_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_JUSTIFICATIONSTYLE_PRIORITIZELEASTADJUSTMENT_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_JUSTIFICATIONSTYLE_PUSHINKINSOKU_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_JUSTIFICATIONSTYLE_PUSHOUTONLY_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_KERNING_AUTO_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_KERNING_OFF_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_KERNING_ON_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_LEADINGMODEL_ASCENTDESCENTUP_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_LEADINGMODEL_AUTO_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_LEADINGMODEL_IDEOGRAPHICCENTERDOWN_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_LEADINGMODEL_IDEOGRAPHICCENTERUP_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_LEADINGMODEL_IDEOGRAPHICTOPDOWN_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_LEADINGMODEL_IDEOGRAPHICTOPUP_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_LEADINGMODEL_ROMANUP_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_LIGATURELEVEL_COMMON_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_LIGATURELEVEL_EXOTIC_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_LIGATURELEVEL_MINIMUM_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_LIGATURELEVEL_UNCOMMON_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_LINEBREAK_EXPLICIT_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_LINEBREAK_TOFIT_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_TEXTALIGN_CENTER_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_TEXTALIGN_END_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_TEXTALIGN_JUSTIFY_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_TEXTALIGN_LEFT_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_TEXTALIGN_RIGHT_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_TEXTALIGN_START_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_TEXTDECORATION_NONE_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_TEXTDECORATION_UNDERLINE_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_TEXTJUSTIFY_DISTRIBUTE_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_TEXTJUSTIFY_INTERWORD_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_TEXTROTATION_AUTO_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_TEXTROTATION_ROTATE_0_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_TEXTROTATION_ROTATE_180_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_TEXTROTATION_ROTATE_270_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_TEXTROTATION_ROTATE_90_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_TYPOGRAPHICCASE_CAPSTOSMALLCAPS_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_TYPOGRAPHICCASE_DEFAULT_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_TYPOGRAPHICCASE_LOWERCASETOSMALLCAPS_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_TYPOGRAPHICCASE_LOWERCASE_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_TYPOGRAPHICCASE_UPPERCASE_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_VERTICALALIGN_BOTTOM_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_VERTICALALIGN_JUSTIFY_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_VERTICALALIGN_MIDDLE_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_VERTICALALIGN_TOP_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_WHITESPACE_COLLAPSE_VALUE;
-import static com.adobe.fxg.FXGConstants.FXG_WHITESPACE_PRESERVE_VALUE;
+import static com.adobe.fxg.FXGConstants.*;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -590,6 +509,8 @@ public class TextHelper
             return LeadingModel.IDEOGRAPHICTOPDOWN;
         else if (FXG_LEADINGMODEL_IDEOGRAPHICCENTERDOWN_VALUE.equals(value))
             return LeadingModel.IDEOGRAPHICCENTERDOWN;
+        else if (FXG_LEADINGMODEL_APPROXIMATETEXTFIELD_VALUE.equals(value))
+            return LeadingModel.APPROXIMATETEXTFIELD;
         else
             //Exception: Unknown leading model: {0}
             throw new FXGException(node.getStartLine(), node.getStartColumn(), "UnknownLeadingModel", value);

@@ -13,6 +13,8 @@ package com.adobe.internal.fxg.dom.transforms;
 
 import static com.adobe.fxg.FXGConstants.*;
 
+import com.adobe.internal.fxg.dom.DOMParserHelper;
+
 /**
  * @author Peter Farland
  */
@@ -49,17 +51,17 @@ public class MatrixNode extends AbstractTransformNode
     public void setAttribute(String name, String value)
     {
         if (FXG_A_ATTRIBUTE.equals(name))
-            a = parseDouble(value);
+            a = DOMParserHelper.parseDouble(this, value, name);
         else if (FXG_B_ATTRIBUTE.equals(name))
-            b = parseDouble(value);
+            b = DOMParserHelper.parseDouble(this, value, name);
         else if (FXG_C_ATTRIBUTE.equals(name))
-            c = parseDouble(value);
+            c = DOMParserHelper.parseDouble(this, value, name);
         else if (FXG_D_ATTRIBUTE.equals(name))
-            d = parseDouble(value);
+            d = DOMParserHelper.parseDouble(this, value, name);
         else if (FXG_TX_ATTRIBUTE.equals(name))
-            tx = parseDouble(value);
+            tx = DOMParserHelper.parseDouble(this, value, name);
         else if (FXG_TY_ATTRIBUTE.equals(name))
-            ty = parseDouble(value);
+            ty = DOMParserHelper.parseDouble(this, value, name);
     }
 
 }

@@ -22,8 +22,6 @@
 package org.osmf.events
 {
 	import flash.events.Event;
-	
-	import org.osmf.media.MediaPlayerState;
 
 	/**
 	 * A MediaPlayer dispatches this event when its state  
@@ -32,7 +30,7 @@ package org.osmf.events
 	public class MediaPlayerStateChangeEvent extends Event
 	{
 		/**
-		 * The MediaPlayerChangeEvent.MEDIA_PLAYER_STATE_CHANGE constant defines the value
+		 * The MediaPlayerStateChangeEvent.MEDIA_PLAYER_STATE_CHANGE constant defines the value
 		 * of the type property of the event object for a mediaPlayerStateChange
 		 * event.
 		 * 
@@ -40,38 +38,42 @@ package org.osmf.events
 		 **/		
 		public static const MEDIA_PLAYER_STATE_CHANGE:String = "mediaPlayerStateChange";
 
-        /**
-         *   Creates a new MediaPlayerStateChange event, capturing the new and old states.
-         * 	@param newState New media player state.
-         * 	@param oldState	Previous media player state.
-        **/          
-        public function MediaPlayerStateChangeEvent(newState:MediaPlayerState, oldState:MediaPlayerState)
+ 		/**
+		 * Constructor.
+		 * 
+		 * @param type Event type.
+ 		 * @param bubbles Specifies whether the event can bubble up the display list hierarchy.
+ 		 * @param cancelable Specifies whether the behavior associated with the event can be prevented. 
+		 * @param state New MediaPlayerState of the MediaPlayer.
+		 **/
+        public function MediaPlayerStateChangeEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false, state:String=null)
         {
-        	super(MEDIA_PLAYER_STATE_CHANGE);
-            _newState = newState;
-            _oldState = oldState;
+        	super(type, bubbles, cancelable);
+        	
+            _state = state;
         }
+        
 		/**
-		 * New MediaPlayerState resulting from this change.
+		 * New MediaPlayerState of the MediaPlayer.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
-        public function get newState():MediaPlayerState
+        public function get state():String
         {
-        	return _newState;
+        	return _state;
         }
-		/**
-		 * Old MediaPlayerState before it was changed.
-		*/		           
-        public function get oldState():MediaPlayerState
-        {
-        	return _oldState;
-        }
-           
+        
+        /**
+         * @private
+         **/
         override public function clone():Event
         {
-        	return new MediaPlayerStateChangeEvent(_newState, _oldState);
+        	return new MediaPlayerStateChangeEvent(type, bubbles, cancelable, _state);
         }
 
-		private var _newState:MediaPlayerState;
-		private var _oldState:MediaPlayerState;
+		private var _state:String;
 	}
 }

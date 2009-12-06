@@ -1590,7 +1590,7 @@ public class TopLevelClassesGenerator
             result.setGetterSetter("Set");
 
             result.setMethodName((String)result.getClassNames().get(classNameSize - 1));
-            result.setMethodName((String)result.getClassNames().get(classNameSize - 1));
+            result.getClassNames().remove(classNameSize - 1);
 
             if (classNameSpacesSize != 0)
             {

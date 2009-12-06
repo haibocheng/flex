@@ -50,6 +50,37 @@ public class DynamicStreamingVideoSource extends Object
     //--------------------------------------------------------------------------
     
     //----------------------------------
+    //  host
+    //----------------------------------
+   
+    private var _host:Object;
+
+    [Inspectable(category="General")]
+
+    /**
+     *  The uri pointing to the location of the server.
+     *  This should be a String, but it's typed as an Object
+     *  to support any future changes.
+     *  
+     *  @langversion 3.0
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
+     */ 
+    public function get host():Object
+    {
+        return _host;
+    }
+
+    /**
+     *  @private
+     */
+    public function set host(value:Object):void
+    {
+        _host = value;
+    }
+    
+    //----------------------------------
     //  initialIndex
     //----------------------------------
    
@@ -77,35 +108,6 @@ public class DynamicStreamingVideoSource extends Object
     public function set initialIndex(value:int):void
     {
         _initialIndex = value;
-    }
-    
-    //----------------------------------
-    //  serverURI
-    //----------------------------------
-   
-    private var _serverURI:String;
-
-    [Inspectable(category="General")]
-
-    /**
-     *  The uri pointing to the location of the server
-     *  
-     *  @langversion 3.0
-     *  @playerversion Flash 10
-     *  @playerversion AIR 1.5
-     *  @productversion Flex 4
-     */ 
-    public function get serverURI():String
-    {
-        return _serverURI;
-    }
-
-    /**
-     *  @private
-     */
-    public function set serverURI(value:String):void
-    {
-        _serverURI = value;
     }
     
     //----------------------------------
@@ -146,7 +148,7 @@ public class DynamicStreamingVideoSource extends Object
     [Inspectable(category="General", enumeration="any,live,recorded", defaultValue="any")]
     
     /**
-     *  The type of stream we are trying to connect to.
+     *  The type of stream we are trying to connect to: any, live, or recorded.
      * 
      *  <p>If the streamType is <code>any</code>, then we will attempt to 
      *  connect to a live stream first.  If no live stream is found, we will 
@@ -154,6 +156,8 @@ public class DynamicStreamingVideoSource extends Object
      *  then a live stream will be created.</p>
      * 
      *  @default any
+     * 
+     *  @see org.osmf.net.StreamType
      *  
      *  @langversion 3.0
      *  @playerversion Flash 10

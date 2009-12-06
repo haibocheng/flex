@@ -30,19 +30,32 @@ package org.osmf.events
 	 */	
 	public class GatewayChangeEvent extends Event
 	{
+		/**
+		 * The GatewayChangeEvent.GATEWAY_CHANGE constant defines the value
+		 * of the type property of the event object for a gatewayChange
+		 * event.
+		 * 
+		 * @eventType GATEWAY_CHANGE
+		 **/
 		public static const GATEWAY_CHANGE:String = "gatewayChange";
 		
 		/**
 		 * Constructor
-		 *  
-		 * @param oldValue Old IGateway reference.
-		 * @param newValue New IGateway reference.
+		 * 
+		 * @param type Event type.
 		 * @param bubbles Specifies whether the event can bubble up the display list hierarchy.
  		 * @param cancelable Specifies whether the behavior associated with the event can be prevented. 
+		 * @param oldValue Old IGateway reference.
+		 * @param newValue New IGateway reference.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
-		public function GatewayChangeEvent(oldValue:IMediaGateway, newValue:IMediaGateway, bubbles:Boolean=false, cancelable:Boolean=false)
+		public function GatewayChangeEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false, oldValue:IMediaGateway=null, newValue:IMediaGateway=null)
 		{
-			super(GATEWAY_CHANGE, bubbles, cancelable);
+			super(type, bubbles, cancelable);
 			
 			_oldValue = oldValue;
 			_newValue = newValue;
@@ -50,6 +63,11 @@ package org.osmf.events
 		
 		/**
 		 * Defines the old gateway reference.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
 		public function get oldValue():IMediaGateway
 		{
@@ -58,6 +76,11 @@ package org.osmf.events
 		
 		/**
 		 * Defines the new gateway reference.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
 		public function get newValue():IMediaGateway
 		{
@@ -68,11 +91,11 @@ package org.osmf.events
 		//
 		
 		/**
-		 * @inheritDoc
+		 * @private
 		 */
 		override public function clone():Event
 		{
-			return new GatewayChangeEvent(_oldValue, _newValue, bubbles, cancelable);
+			return new GatewayChangeEvent(type, bubbles, cancelable, _oldValue, _newValue);
 		}
 		
 		// Internals

@@ -18,9 +18,9 @@ import flash.events.Event;
 import flash.events.FullScreenEvent;
 import flash.events.KeyboardEvent;
 import flash.events.MouseEvent;
-import flash.events.ProgressEvent;
 import flash.events.TimerEvent;
 import flash.geom.Rectangle;
+import flash.media.Video;
 import flash.utils.Timer;
 
 import mx.core.FlexGlobals;
@@ -29,12 +29,12 @@ import mx.core.mx_internal;
 import mx.events.FlexEvent;
 import mx.utils.BitFlagUtil;
 
-import org.osmf.events.BytesDownloadedChangeEvent;
-import org.osmf.events.DurationChangeEvent;
+import org.osmf.events.LoadEvent;
 import org.osmf.events.MediaPlayerStateChangeEvent;
-import org.osmf.events.PlayheadChangeEvent;
+import org.osmf.events.TimeEvent;
 import org.osmf.media.MediaPlayerState;
 
+import spark.components.mediaClasses.DynamicStreamingVideoSource;
 import spark.components.mediaClasses.MuteButton;
 import spark.components.mediaClasses.ScrubBar;
 import spark.components.mediaClasses.VolumeBar;
@@ -51,34 +51,54 @@ use namespace mx_internal;
 //--------------------------------------
 
 /**
- * Dispatched when the data is received as a download operation progresses.
+ *  Dispatched when the data is received as a download operation progresses.
  *
- * @eventType flash.events.ProgressEvent
+ *  @eventType org.osmf.events.LoadEvent.BYTES_LOADED_CHANGE
+ *  
+ *  @langversion 3.0
+ *  @playerversion Flash 10
+ *  @playerversion AIR 1.0
+ *  @productversion OSMF 1.0
  */
-[Event(name="bytesDownloadedChange",type="org.osmf.events.BytesDownloadedChangeEvent")]
+[Event(name="bytesLoadedChange",type="org.osmf.events.LoadEvent")]
 
 /**
- * Dispatched when the MediaPlayer's state has changed.
+ *  Dispatched when the <code>currentTime</code> property of the MediaPlayer has changed.
+ *  This value is updated at the interval set by 
+ *  the MediaPlayer's <code>currentTimeUpdateInterval</code> property.
+ *
+ *  @eventType org.osmf.events.TimeEvent.CURRENT_TIME_CHANGE
+ *
+ *  @langversion 3.0
+ *  @playerversion Flash 10
+ *  @playerversion AIR 1.0
+ *  @productversion OSMF 1.0
+ **/
+[Event(name="currentTimeChange",type="org.osmf.events.TimeEvent")]
+
+/**
+ *  Dispatched when the <code>duration</code> property of the media has changed.
  * 
- * @eventType org.osmf.events.PlayerStateChangeEvent.MEDIA_PLAYER_STATE_CHANGE
+ *  @eventType org.osmf.events.TimeEvent.DURATION_CHANGE
+ * 
+ *  @langversion 3.0
+ *  @playerversion Flash 10
+ *  @playerversion AIR 1.0
+ *  @productversion OSMF 1.0
+ */
+[Event(name="durationChange", type="org.osmf.events.TimeEvent")]
+
+/**
+ *  Dispatched when the MediaPlayer's state has changed.
+ * 
+ *  @eventType org.osmf.events.MediaPlayerStateChangeEvent.MEDIA_PLAYER_STATE_CHANGE
+ *  
+ *  @langversion 3.0
+ *  @playerversion Flash 10
+ *  @playerversion AIR 1.0
+ *  @productversion OSMF 1.0
  */	
 [Event(name="mediaPlayerStateChange", type="org.osmf.events.MediaPlayerStateChangeEvent")]
-
-/**
- * Dispatched when the <code>playhead</code> property of the MediaPlayer has changed.
- * This value is updated at the interval set by 
- * the MediaPlayer's <code>playheadUpdateInterval</code> property.
- *
- * @eventType org.osmf.events.PlayheadChangeEvent.PLAYHEAD_CHANGE
- **/
-[Event(name="playheadChange",type="org.osmf.events.PlayheadChangeEvent")]  
-
-/**
- * Dispatched when the <code>duration</code> property of the media has changed.
- * 
- * @eventType org.osmf.events.DurationChangeEvent.DURATION_CHANGE
- */
-[Event(name="durationChange", type="org.osmf.events.DurationChangeEvent")]
 
 //--------------------------------------
 //  Styles
@@ -127,7 +147,7 @@ include "../styles/metadata/BasicInheritingTextStyles.as";
 [SkinState("uninitialized")]
 
 /**
- *  Initializing State of the VideoPlayer.
+ *  Loading State of the VideoPlayer.
  *  The VideoPlayer is loading or connecting to the source. 
  *  
  *  @langversion 3.0
@@ -135,7 +155,7 @@ include "../styles/metadata/BasicInheritingTextStyles.as";
  *  @playerversion AIR 1.5
  *  @productversion Flex 4
  */
-[SkinState("initializing")]
+[SkinState("loading")]
 
 /**
  *  Ready State of the VideoPlayer.
@@ -214,7 +234,7 @@ include "../styles/metadata/BasicInheritingTextStyles.as";
 [SkinState("uninitializedAndFullScreen")]
 
 /**
- *  Initializing State of the VideoPlayer when 
+ *  Loading State of the VideoPlayer when 
  *  in full screen mode.
  *  The VideoPlayer is loading or connecting to the source. 
  *  
@@ -223,7 +243,7 @@ include "../styles/metadata/BasicInheritingTextStyles.as";
  *  @playerversion AIR 1.5
  *  @productversion Flex 4
  */
-[SkinState("initializingAndFullScreen")]
+[SkinState("loadingAndFullScreen")]
 
 /**
  *  Ready State of the VideoPlayer when 
@@ -435,17 +455,22 @@ public class VideoPlayer2 extends SkinnableComponent
     /**
      *  @private
      */
-    private static const VOLUME_PROPERTY_FLAG:uint = 1 << 6;
+    private static const SEEK_TO_FIRST_FRAME_PROPERTY_FLAG:uint = 1 << 6;
     
     /**
      *  @private
      */
-    private static const PAUSE_WHEN_HIDDEN_PROPERTY_FLAG:uint = 1 << 7;
+    private static const VOLUME_PROPERTY_FLAG:uint = 1 << 7;
     
     /**
      *  @private
      */
-    private static const THUMBNAIL_SOURCE_PROPERTY_FLAG:uint = 1 << 8;
+    private static const PAUSE_WHEN_HIDDEN_PROPERTY_FLAG:uint = 1 << 8;
+    
+    /**
+     *  @private
+     */
+    private static const THUMBNAIL_SOURCE_PROPERTY_FLAG:uint = 1 << 9;
     
     //--------------------------------------------------------------------------
     //
@@ -752,7 +777,7 @@ public class VideoPlayer2 extends SkinnableComponent
     //----------------------------------
     
     [Inspectable(Category="General", defaultValue="0")]
-    [Bindable("bytesDownloadedChange")]
+    [Bindable("bytesLoadedChange")]
     
     /**
      *  @copy spark.components.VideoDisplay#bytesLoaded
@@ -802,7 +827,7 @@ public class VideoPlayer2 extends SkinnableComponent
     //----------------------------------
     
     [Inspectable(Category="General", defaultValue="0")]
-    [Bindable("playheadChange")]
+    [Bindable("currentTimeChange")]
     
     /**
      *  @copy spark.components.VideoDisplay#currentTime
@@ -866,6 +891,33 @@ public class VideoPlayer2 extends SkinnableComponent
         {
             videoDisplayProperties.loop = value;
         }
+    }
+    
+    //----------------------------------
+    //  mediaPlayerState
+    //----------------------------------
+    
+    [Inspectable(category="General", defaultValue="uninitialized")]
+    [Bindable("mediaPlayerStateChange")]
+    
+    /**
+     *  @copy spark.components.VideoDisplay#mediaPlayerState
+     *  
+     *  @default uninitialized
+     * 
+     *  @see org.osmf.media.MediaPlayerState
+     * 
+     *  @langversion 3.0
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
+     */
+    public function get mediaPlayerState():String
+    {
+        if (videoDisplay)
+            return videoDisplay.mediaPlayerState;
+        else
+            return MediaPlayerState.UNINITIALIZED;
     }
     
     //----------------------------------
@@ -1036,6 +1088,52 @@ public class VideoPlayer2 extends SkinnableComponent
     }
     
     //----------------------------------
+    //  seekToFirstFrame
+    //----------------------------------
+        
+    [Inspectable(category="General", defaultValue="true")]
+    
+    /**
+     *  @copy spark.components.VideoDisplay#seekToFirstFrame
+     * 
+     *  @default true
+     *  
+     *  @langversion 3.0
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
+     */
+    public function get seekToFirstFrame():Boolean
+    {
+        if (videoDisplay)
+        {
+            return videoDisplay.seekToFirstFrame;
+        }
+        else
+        {
+            var v:* = videoDisplayProperties.seekToFirstFrame;
+            return (v === undefined) ? true : v;
+        }
+    }
+    
+    /**
+     * @private
+     */
+    public function set seekToFirstFrame(value:Boolean):void
+    {
+        if (videoDisplay)
+        {
+            videoDisplay.seekToFirstFrame = value;
+            videoDisplayProperties = BitFlagUtil.update(videoDisplayProperties as uint, 
+                SEEK_TO_FIRST_FRAME_PROPERTY_FLAG, true);
+        }
+        else
+        {
+            videoDisplayProperties.seekToFirstFrame = value;
+        }
+    }
+    
+    //----------------------------------
     //  source
     //----------------------------------
     
@@ -1153,6 +1251,30 @@ public class VideoPlayer2 extends SkinnableComponent
     }
     
     //----------------------------------
+    //  videoObject
+    //----------------------------------
+    
+    [Inspectable(category="General", defaultValue="null")]
+    
+    /**
+     *  @copy spark.components.VideoDisplay#videoObject
+     * 
+     *  @default null
+     *  
+     *  @langversion 3.0
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
+     */
+    public function get videoObject():Video
+    {
+        if (videoDisplay)
+            return videoDisplay.videoObject;
+        else
+            return null;
+    }
+    
+    //----------------------------------
     //  volume
     //----------------------------------
     
@@ -1210,7 +1332,7 @@ public class VideoPlayer2 extends SkinnableComponent
      */
     override protected function getCurrentSkinState():String
     {   
-        var state:String = videoDisplay.videoPlayer.state.name;
+        var state:String = videoDisplay.videoPlayer.state;
         
         // now that we have our video player's current state (atleast the one we care about)
         // and that we've set the previous state to something we care about, let's figure 
@@ -1232,10 +1354,10 @@ public class VideoPlayer2 extends SkinnableComponent
     {
         if (instance == videoDisplay)
         {
-            videoDisplay.addEventListener(PlayheadChangeEvent.PLAYHEAD_CHANGE, videoDisplay_playHeadChangeHandler);
-            videoDisplay.addEventListener(BytesDownloadedChangeEvent.BYTES_DOWNLOADED_CHANGE, videoDisplay_bytesDownloadedChangeHandler);
+            videoDisplay.addEventListener(TimeEvent.CURRENT_TIME_CHANGE, videoDisplay_currentTimeChangeHandler);
+            videoDisplay.addEventListener(LoadEvent.BYTES_LOADED_CHANGE, videoDisplay_bytesLoadedChangeHandler);
             videoDisplay.addEventListener(MediaPlayerStateChangeEvent.MEDIA_PLAYER_STATE_CHANGE, videoDisplay_mediaPlayerStateChangeHandler);
-            videoDisplay.addEventListener(DurationChangeEvent.DURATION_CHANGE, videoDisplay_durationChangeHandler);
+            videoDisplay.addEventListener(TimeEvent.DURATION_CHANGE, videoDisplay_durationChangeHandler);
             
             // just strictly for binding purposes
             videoDisplay.addEventListener("sourceChanged", dispatchEvent);
@@ -1299,6 +1421,13 @@ public class VideoPlayer2 extends SkinnableComponent
                 videoDisplay.pauseWhenHidden = videoDisplayProperties.pauseWhenHidden;
                 newVideoProperties = BitFlagUtil.update(newVideoProperties as uint, 
                     PAUSE_WHEN_HIDDEN_PROPERTY_FLAG, true);
+            }
+            
+            if (videoDisplayProperties.seekToFirstFrame !== undefined)
+            {
+                videoDisplay.seekToFirstFrame = videoDisplayProperties.seekToFirstFrame;
+                newVideoProperties = BitFlagUtil.update(newVideoProperties as uint, 
+                    SEEK_TO_FIRST_FRAME_PROPERTY_FLAG, true);
             }
             
             if (videoDisplayProperties.thumbnailSource !== undefined)
@@ -1484,6 +1613,9 @@ public class VideoPlayer2 extends SkinnableComponent
             if (BitFlagUtil.isSet(videoDisplayProperties as uint, PAUSE_WHEN_HIDDEN_PROPERTY_FLAG))
                 newVideoProperties.pauseWhenHidden = videoDisplay.pauseWhenHidden;
             
+            if (BitFlagUtil.isSet(videoDisplayProperties as uint, SEEK_TO_FIRST_FRAME_PROPERTY_FLAG))
+                newVideoProperties.seekToFirstFrame = videoDisplay.seekToFirstFrame;
+            
             if (BitFlagUtil.isSet(videoDisplayProperties as uint, THUMBNAIL_SOURCE_PROPERTY_FLAG))
                 newVideoProperties.thumbnailSource = videoDisplay.thumbnailSource;
             
@@ -1496,10 +1628,10 @@ public class VideoPlayer2 extends SkinnableComponent
             
             videoDisplayProperties = newVideoProperties;
             
-            videoDisplay.removeEventListener(PlayheadChangeEvent.PLAYHEAD_CHANGE, videoDisplay_playHeadChangeHandler);
-            videoDisplay.removeEventListener(DurationChangeEvent.DURATION_CHANGE, videoDisplay_durationChangeHandler);
-            videoDisplay.removeEventListener(BytesDownloadedChangeEvent.BYTES_DOWNLOADED_CHANGE, videoDisplay_bytesDownloadedChangeHandler);
+            videoDisplay.removeEventListener(TimeEvent.CURRENT_TIME_CHANGE, videoDisplay_currentTimeChangeHandler);
+            videoDisplay.removeEventListener(LoadEvent.BYTES_LOADED_CHANGE, videoDisplay_bytesLoadedChangeHandler);
             videoDisplay.removeEventListener(MediaPlayerStateChangeEvent.MEDIA_PLAYER_STATE_CHANGE, videoDisplay_mediaPlayerStateChangeHandler);
+            videoDisplay.removeEventListener(TimeEvent.DURATION_CHANGE, videoDisplay_durationChangeHandler);
             
             // just strictly for binding purposes
             videoDisplay.removeEventListener("sourceChanged", dispatchEvent);
@@ -1630,7 +1762,11 @@ public class VideoPlayer2 extends SkinnableComponent
         
         scrubBar.bufferedStart = 0;
         
-        if (videoDisplay.bytesTotal == 0)
+        // if streaming, then we pretend to have everything in view
+        // if progressive, then look at the bytesLoaded and bytesTotal
+        if (!videoDisplay.videoPlayer.downloadable)
+            scrubBar.bufferedEnd = videoDisplay.duration;
+        else if (videoDisplay.bytesTotal == 0)
             scrubBar.bufferedEnd = 0;
         else
             scrubBar.bufferedEnd = (videoDisplay.bytesLoaded/videoDisplay.bytesTotal)*videoDisplay.duration;
@@ -1655,9 +1791,11 @@ public class VideoPlayer2 extends SkinnableComponent
     protected function formatTimeValue(value:Number):String
     {
         // default format: hours:minutes:seconds
+        value = Math.round(value);
+        
         var hours:uint = Math.floor(value/3600) % 24;
         var minutes:uint = Math.floor(value/60) % 60;
-        var seconds:uint = Math.round(value) % 60;
+        var seconds:uint = value % 60;
         
         var result:String = "";
         if (hours != 0)
@@ -1693,7 +1831,7 @@ public class VideoPlayer2 extends SkinnableComponent
     /**
      *  @private
      */
-    private function videoDisplay_playHeadChangeHandler(event:PlayheadChangeEvent):void
+    private function videoDisplay_currentTimeChangeHandler(event:TimeEvent):void
     {
         if (scrubBar)
             updateScrubBar();
@@ -1707,7 +1845,7 @@ public class VideoPlayer2 extends SkinnableComponent
     /**
      *  @private
      */
-    private function videoDisplay_bytesDownloadedChangeHandler(event:BytesDownloadedChangeEvent):void
+    private function videoDisplay_bytesLoadedChangeHandler(event:LoadEvent):void
     {
         if (scrubBar)
             updateScrubBar();
@@ -1737,7 +1875,7 @@ public class VideoPlayer2 extends SkinnableComponent
     /**
      *  @private
      */
-    private function videoDisplay_durationChangeHandler(event:DurationChangeEvent):void
+    private function videoDisplay_durationChangeHandler(event:TimeEvent):void
     {
         if (scrubBar)
             updateScrubBar();
@@ -1821,9 +1959,8 @@ public class VideoPlayer2 extends SkinnableComponent
                 y: this.y,
                 width: this.getPreferredBoundsWidth(false),
                 height: this.getPreferredBoundsHeight(false),
-                smoothing: videoDisplay.videoObject.smoothing,
-                deblocking: videoDisplay.videoObject.deblocking, 
                 includeInLayout: this.includeInLayout};
+            
             includeInLayout = false;
             pauseWhenHidden = false;
             
@@ -1854,9 +1991,15 @@ public class VideoPlayer2 extends SkinnableComponent
             invalidateSize();
             invalidateDisplayList();
             
-            // this is for video performance reasons
-            videoDisplay.videoObject.smoothing = false;
-            videoDisplay.videoObject.deblocking = 0;
+            // this is for video performance reasons, but sometimes the videoObject isn't there
+            // if the source is null
+            if (videoDisplay.videoObject)
+            {
+                beforeFullScreenInfo.smoothing = videoDisplay.videoObject.smoothing;
+                beforeFullScreenInfo.deblocking = videoDisplay.videoObject.deblocking;
+                videoDisplay.videoObject.smoothing = false;
+                videoDisplay.videoObject.deblocking = 0;
+            }
             
             this.validateNow();
             
@@ -1963,8 +2106,14 @@ public class VideoPlayer2 extends SkinnableComponent
         this.y = beforeFullScreenInfo.y;
         this.setLayoutBoundsSize(beforeFullScreenInfo.width, beforeFullScreenInfo.height);
         
-        videoDisplay.videoObject.smoothing = beforeFullScreenInfo.smoothing;
-        videoDisplay.videoObject.deblocking = beforeFullScreenInfo.deblocking;
+        // sometimes there's no video object currently or there might not've been a 
+        // video object when we went in to fullScreen mode.  There may be no videoObject
+        // if the source hasn't been set.
+        if (videoDisplay.videoObject && beforeFullScreenInfo.smoothing !== undefined)
+        {
+            videoDisplay.videoObject.smoothing = beforeFullScreenInfo.smoothing;
+            videoDisplay.videoObject.deblocking = beforeFullScreenInfo.deblocking;
+        }
         
         // remove from top level application:
         if (parent is IVisualElementContainer)
@@ -2027,6 +2176,11 @@ public class VideoPlayer2 extends SkinnableComponent
             pause();
         else
             play();
+        
+        // need to synch up to what we've actually got because sometimes 
+        // the play() didn't actually play() because there's no source 
+        // or we're in an error state
+        playPauseButton.selected = playing;
     }
     
     /**

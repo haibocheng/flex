@@ -15,6 +15,7 @@ import static com.adobe.fxg.FXGConstants.*;
 
 import com.adobe.fxg.FXGException;
 import com.adobe.fxg.dom.FXGNode;
+import com.adobe.internal.fxg.dom.DOMParserHelper;
 import com.adobe.internal.fxg.dom.types.Kerning;
 import com.adobe.internal.fxg.dom.types.LineBreak;
 import com.adobe.internal.fxg.dom.types.WhiteSpaceCollapse;
@@ -117,7 +118,7 @@ public abstract class AbstractCharacterTextNode extends AbstractTextNode
         }
         else if (FXG_FONTSIZE_ATTRIBUTE.equals(name))
         {
-            fontSize = parseDouble(value, FONTSIZE_MIN_INCLUSIVE, FONTSIZE_MAX_INCLUSIVE, fontSize);
+            fontSize = DOMParserHelper.parseDouble(this, value, name, FONTSIZE_MIN_INCLUSIVE, FONTSIZE_MAX_INCLUSIVE, fontSize);
         }
         else if (FXG_FONTSTYLE_ATTRIBUTE.equals(name))
         {
@@ -129,7 +130,7 @@ public abstract class AbstractCharacterTextNode extends AbstractTextNode
         }
         else if (FXG_LINEHEIGHT_ATTRIBUTE.equals(name))
         {
-            lineHeight = parsePercent(value);
+            lineHeight = DOMParserHelper.parsePercent(this, value, name);
         }
         else if (FXG_TEXTDECORATION_ATTRIBUTE.equals(name))
         {
@@ -145,7 +146,7 @@ public abstract class AbstractCharacterTextNode extends AbstractTextNode
         }
         else if (FXG_TRACKING_ATTRIBUTE.equals(name))
         {
-            tracking = parsePercent(value);
+            tracking = DOMParserHelper.parsePercent(this, value, name);
         }
         else if (FXG_KERNING_ATTRIBUTE.equals(name))
         {
@@ -153,15 +154,15 @@ public abstract class AbstractCharacterTextNode extends AbstractTextNode
         }
         else if (FXG_TEXTALPHA_ATTRIBUTE.equals(name))
         {
-            textAlpha = parseDouble(value, ALPHA_MIN_INCLUSIVE, ALPHA_MAX_INCLUSIVE, textAlpha);
+            textAlpha = DOMParserHelper.parseDouble(this, value, name, ALPHA_MIN_INCLUSIVE, ALPHA_MAX_INCLUSIVE, textAlpha);
          }
         else if (FXG_COLOR_ATTRIBUTE.equals(name))
         {
-            color = parseRGB(value, color);
+            color = DOMParserHelper.parseRGB(this, value, name);
         }
         else if (FXG_LINETHROUGH_ATTRIBUTE.equals(name))
         {
-            lineThrough = parseBoolean(value);
+            lineThrough = DOMParserHelper.parseBoolean(this, value, name);
         }           
         else
         {

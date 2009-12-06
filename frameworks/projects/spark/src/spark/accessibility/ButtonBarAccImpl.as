@@ -15,6 +15,7 @@ package spark.accessibility
 import flash.accessibility.Accessibility;
 import flash.events.Event;
 
+import mx.accessibility.AccConst;
 import mx.core.UIComponent;
 import mx.core.mx_internal;
 
@@ -35,32 +36,6 @@ use namespace mx_internal;
 public class ButtonBarAccImpl extends ListBaseAccImpl
 {
     include "../core/Version.as";
-    //--------------------------------------------------------------------------
-    //
-    //  Class constants
-    //
-    //--------------------------------------------------------------------------
-
-    /**
-     *  @private
-     */
-    private static const EVENT_OBJECT_STATECHANGE:uint = 0x800a;
-
-    /**
-     *  @private
-     */
-    private static const STATE_SYSTEM_PRESSED:uint = 0x00000008;
-
-    /**
-     *  @private
-     */
-    private static const ROLE_SYSTEM_PUSHBUTTON:uint = 0x2B;
-
-    /**
-     *  @private
-     */
-    private static const STATE_SYSTEM_FOCUSED:uint = 0x00000004;
-
 
     //--------------------------------------------------------------------------
     //
@@ -121,7 +96,7 @@ public class ButtonBarAccImpl extends ListBaseAccImpl
     public function ButtonBarAccImpl(master:UIComponent)
     {
         super(master);
-        role = 0x16; // ROLE_SYSTEM_TOOLBAR
+        role = AccConst.ROLE_SYSTEM_TOOLBAR;
     }
 
     //--------------------------------------------------------------------------
@@ -138,7 +113,7 @@ public class ButtonBarAccImpl extends ListBaseAccImpl
      */
     override public function get_accRole(childID:uint):uint
     {
-        return childID == 0 ? role : ROLE_SYSTEM_PUSHBUTTON;
+        return childID == 0 ? role : AccConst.ROLE_SYSTEM_PUSHBUTTON;
     }
 
     /**
@@ -161,9 +136,9 @@ public class ButtonBarAccImpl extends ListBaseAccImpl
         {
             var index:int = childID - 1;
             if (ListBase(master).isItemIndexSelected(index))
-                accState |= STATE_SYSTEM_PRESSED;
+                accState |= AccConst.STATE_SYSTEM_PRESSED;
             if (index == ListBase(master).caretIndex)
-                accState |= STATE_SYSTEM_FOCUSED;
+                accState |= AccConst.STATE_SYSTEM_FOCUSED;
         }
         return accState;
     }
@@ -203,7 +178,7 @@ public class ButtonBarAccImpl extends ListBaseAccImpl
                 var pressed:int = ButtonBar(master).selectedIndex;
                 
                 Accessibility.sendEvent(master, pressed + 1,
-                    EVENT_OBJECT_STATECHANGE, true);
+                    AccConst.EVENT_OBJECT_STATECHANGE, true);
                 break;
             }
             default:

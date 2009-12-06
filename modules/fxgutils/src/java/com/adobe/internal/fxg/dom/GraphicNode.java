@@ -13,6 +13,7 @@ package com.adobe.internal.fxg.dom;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static com.adobe.fxg.FXGConstants.*;
 
@@ -32,6 +33,7 @@ public class GraphicNode extends AbstractFXGNode implements MaskableNode
 {
     private String documentName = null;
     private FXGVersion version = null; // The version of FXG being processed.
+    public Map<String, Class<? extends FXGNode>> reservedNodes;
     	
     //--------------------------------------------------------------------------
     //
@@ -108,6 +110,15 @@ public class GraphicNode extends AbstractFXGNode implements MaskableNode
         return version;
     }
     
+    /**
+     * Set the reserved nodes HashMap. Those XML element names are reserved and 
+     * cannot be used as the definition name for a library element.
+     * @param reserved nodes HashMap
+     */
+    public void setReservedNodes(Map<String, Class<? extends FXGNode>> reservedNodes)
+    {
+        this.reservedNodes = reservedNodes;
+    }
     
     //--------------------------------------------------------------------------
     //
@@ -205,46 +216,46 @@ public class GraphicNode extends AbstractFXGNode implements MaskableNode
     {
         if (FXG_SCALEGRIDLEFT_ATTRIBUTE.equals(name))
         {
-            scaleGridLeft = parseDouble(value);
+            scaleGridLeft = DOMParserHelper.parseDouble(this, value, name);
             insideScaleGrid = true;
         }
         else if (FXG_SCALEGRIDTOP_ATTRIBUTE.equals(name))
         {
-            scaleGridTop = parseDouble(value);
+            scaleGridTop = DOMParserHelper.parseDouble(this, value, name);
             insideScaleGrid = true;
         }
         else if (FXG_SCALEGRIDRIGHT_ATTRIBUTE.equals(name))
         {
-            scaleGridRight = parseDouble(value);
+            scaleGridRight = DOMParserHelper.parseDouble(this, value, name);
             insideScaleGrid = true;
         }
         else if (FXG_SCALEGRIDBOTTOM_ATTRIBUTE.equals(name))
         {
-            scaleGridBottom = parseDouble(value);
+            scaleGridBottom = DOMParserHelper.parseDouble(this, value, name);
             insideScaleGrid = true;
         }
         else if (FXG_VIEWWIDTH_ATTRIBUTE.equals(name))
         {
-            viewWidth = parseDouble(value);
+            viewWidth = DOMParserHelper.parseDouble(this, value, name);
         }
         else if (FXG_VIEWHEIGHT_ATTRIBUTE.equals(name))
         {
-            viewHeight = parseDouble(value);
+            viewHeight = DOMParserHelper.parseDouble(this, value, name);
         }
         else if (FXG_VERSION_ATTRIBUTE.equals(name))
         {
             try
             {
-                version = FXGVersion.newInstance(parseDouble(value));
+                version = FXGVersion.newInstance(DOMParserHelper.parseDouble(this, value, name));
             }
-            catch (NumberFormatException e)
+            catch (FXGException e)
             {
                 throw new FXGException("InvalidVersionNumber", e);
             }
         }
         else if (FXG_MASKTYPE_ATTRIBUTE.equals(name))
         {
-            maskType = parseMaskType(value, maskType);
+            maskType = DOMParserHelper.parseMaskType(this, value, maskType);
         }
         else if ((version != null) && (version.equalTo(FXGVersion.v1_0)))
         {
@@ -254,11 +265,11 @@ public class GraphicNode extends AbstractFXGNode implements MaskableNode
         }
         else if (FXG_LUMINOSITYINVERT_ATTRIBUTE.equals(name))
         {
-            luminosityInvert = parseBoolean(value); 
+            luminosityInvert = DOMParserHelper.parseBoolean(this, value, name);
         }        
         else if (FXG_LUMINOSITYCLIP_ATTRIBUTE.equals(name))
         {
-            luminosityClip = parseBoolean(value); 
+            luminosityClip = DOMParserHelper.parseBoolean(this, value, name); 
         }        
         else
         {

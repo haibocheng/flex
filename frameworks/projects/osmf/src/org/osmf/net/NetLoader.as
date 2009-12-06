@@ -75,6 +75,11 @@ package org.osmf.net
 		 * @param factory the NetConnectionFactory instance to use for managing NetConnections. Since the NetConnectionFactory
 		 * facilitates connection sharing, this is an easy way of enabling global sharing, by creating a single NetConnectionFactory
 		 * instance within the player and then handing it to all NetLoader instances. 
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function NetLoader(allowConnectionSharing:Boolean = true, factory:NetConnectionFactory = null)
 		{
@@ -94,6 +99,11 @@ package org.osmf.net
 		 * and will not be retro-actively applied to previously loaded, or loading operations that are underway.
 		 * 
 		 * @param value true if the NetConnectionFactory can share an existing NetConnection
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function set allowConnectionSharing(value:Boolean):void
 		{
@@ -104,7 +114,7 @@ package org.osmf.net
 		 * Validates the loadable to verify that this class can in fact load it. Examines the protocol
 		 * associated with the loadable's resource. If the protocol is HTTP, calls the <code>startLoadingHTTP()</code>
 		 * method. If the protocol is RTMP-based, calls the  <code>startLoadingRTMP()</code> method. If the URL protocol is invalid,
-		 * dispatches a mediaErroEvent against the loadable and updates the loadable's state to LoadState.LOAD_FAILED.
+		 * dispatches a mediaErroEvent against the loadable and updates the loadable's state to LoadState.LOAD_ERROR.
 	     *
 	     * @param loadable ILoadable trait requesting this load operation.
 	     * @see org.osmf.traits.ILoadable
@@ -132,8 +142,15 @@ package org.osmf.net
 					startLoadingHTTP(loadable);
 					break;
 				default:
-					updateLoadable(loadable, LoadState.LOAD_FAILED);
-					loadable.dispatchEvent(new MediaErrorEvent(new MediaError(MediaErrorCodes.INVALID_URL_PROTOCOL)));
+					updateLoadable(loadable, LoadState.LOAD_ERROR);
+					loadable.dispatchEvent
+						( new MediaErrorEvent
+							( MediaErrorEvent.MEDIA_ERROR
+							, false
+							, false
+							, new MediaError(MediaErrorCodes.INVALID_URL_PROTOCOL)
+							)
+						);
 					break;
 			}
 		}
@@ -164,7 +181,7 @@ package org.osmf.net
 			{
 				netLoadedContext.connection.close();
 			}	
-			updateLoadable(loadable, LoadState.CONSTRUCTED); 				
+			updateLoadable(loadable, LoadState.UNINITIALIZED); 				
 		}
 		
 		/**
@@ -259,7 +276,7 @@ package org.osmf.net
 		{
 			var stream:NetStream = createNetStream(connection, loadable);				
 			stream.client = new NetClient();				
-			updateLoadable(loadable, LoadState.LOADED, new NetLoadedContext(connection, stream, shareable, factory, loadable.resource as IURLResource));		
+			updateLoadable(loadable, LoadState.READY, new NetLoadedContext(connection, stream, shareable, factory, loadable.resource as IURLResource));		
 		}	
 		
 		/**
@@ -292,7 +309,7 @@ package org.osmf.net
 		 **/
 		private function onCreationFailed(event:NetConnectionFactoryEvent):void
 		{
-			updateLoadable(event.loadable, LoadState.LOAD_FAILED);
+			updateLoadable(event.loadable, LoadState.LOAD_ERROR);
 		}
 		
 		/**

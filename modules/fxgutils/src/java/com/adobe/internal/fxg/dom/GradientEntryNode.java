@@ -49,11 +49,11 @@ public class GradientEntryNode extends AbstractFXGNode
     public void setAttribute(String name, String value)
     {
         if (FXG_COLOR_ATTRIBUTE.equals(name))
-            color = parseRGB(value, color);
+            color = DOMParserHelper.parseRGB(this, value, name);
         else if (FXG_ALPHA_ATTRIBUTE.equals(name))
-            alpha = parseDouble(value, ALPHA_MIN_INCLUSIVE, ALPHA_MAX_INCLUSIVE, alpha);
+            alpha = DOMParserHelper.parseDouble(this, value, name, ALPHA_MIN_INCLUSIVE, ALPHA_MAX_INCLUSIVE, alpha);
         else if (FXG_RATIO_ATTRIBUTE.equals(name))
-            ratio = parseDouble(value, RATIO_MIN_INCLUSIVE, RATIO_MAX_INCLUSIVE, ratio);
+            ratio = DOMParserHelper.parseDouble(this, value, name, RATIO_MIN_INCLUSIVE, RATIO_MAX_INCLUSIVE, ratio);
         else
             super.setAttribute(name, value);
     }

@@ -600,7 +600,14 @@ public class SyntaxTreeEvaluator extends EvaluatorAdapter
             if (unit.hostComponentMetaData == null)
             {
                 unit.expressions.add(NameFormatter.toMultiName(node.getValue(0)));
+                
+                // Here we save a reference to our HostComponent metadata as well 
+                // as its owning class, because later at the time we validate our
+                // host component contract (CompilerExtension.generate()), node.def
+                // might not be valid.
                 unit.hostComponentMetaData = node;
+                if (node.def != null)
+                	unit.hostComponentOwnerClass =  NodeMagic.getClassName((ClassDefinitionNode) node.def);
             }
             else
             {
@@ -736,14 +743,18 @@ public class SyntaxTreeEvaluator extends EvaluatorAdapter
 
         ClassInfo classInfo = typeAnalyzer.getClassInfo(className);
 
-        ClassInfo baseClassInfo = classInfo.getBaseClassInfo();
-
-        if (baseClassInfo != null && !FrameworkDefs.bindingManagementVars.isEmpty())
+        // If classInfo is null, then errors should be reported downstream.
+        if (classInfo != null)
         {
-            // NOTE: take the presence of first var to imply the presence of the entire set
-            if (baseClassInfo.definesVariable((FrameworkDefs.bindingManagementVars.get(0)).getName()))
+            ClassInfo baseClassInfo = classInfo.getBaseClassInfo();
+
+            if (baseClassInfo != null && !FrameworkDefs.bindingManagementVars.isEmpty())
             {
-                removeVariables(classDefinitionNode, FrameworkDefs.bindingManagementVars);
+                // NOTE: take the presence of first var to imply the presence of the entire set
+                if (baseClassInfo.definesVariable((FrameworkDefs.bindingManagementVars.get(0)).getName()))
+                {
+                    removeVariables(classDefinitionNode, FrameworkDefs.bindingManagementVars);
+                }
             }
         }
     }

@@ -11,6 +11,8 @@
 
 package com.adobe.fxg;
 
+import java.lang.Long;
+
 /**
  * FXGVersion is an enumeration of the different versions of FXG Specification.
  */
@@ -28,7 +30,7 @@ public final class FXGVersion
 
     private FXGVersion(double version)
     {
-        if (version == Double.NaN || version < 1.0D)
+        if (Double.isNaN(version) || version < 1.0D)
             throw new FXGException("InvalidVersionNumber");
         
         this.version = version;
@@ -91,6 +93,14 @@ public final class FXGVersion
     }
 
     /**
+     * Returns the hashCode
+     */
+    public int hashCode()
+    {
+        return (Long.valueOf(Double.doubleToLongBits(version))).hashCode();
+    }
+ 
+    /**
      * Compares whether this FXGVersion's value is greater than the value of the
      * version parameter.
      * 
@@ -103,18 +113,6 @@ public final class FXGVersion
         return (compareTo(version) > 0);
     }
 
-    /**
-     * Compares whether this FXGVersion's value is less than the value of the
-     * version parameter.
-     * 
-     * @param version
-     * @return true if this object's value is less than the 'version' object's
-     * value; false otherwise
-     */
-    public boolean lessThan(FXGVersion version)
-    {
-        return lessThan(version);
-    }
 
     /**
      * @param version

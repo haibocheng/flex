@@ -26,7 +26,7 @@ package org.osmf.net.dynamicstreaming
 	import flash.net.NetConnection;
 	import flash.net.NetStream;
 	
-	import org.osmf.events.LoadableStateChangeEvent;
+	import org.osmf.events.LoadEvent;
 	import org.osmf.media.URLResource;
 	import org.osmf.net.NetConnectionFactory;
 	import org.osmf.net.NetLoadedContext;
@@ -34,7 +34,7 @@ package org.osmf.net.dynamicstreaming
 	import org.osmf.traits.ILoadable;
 	import org.osmf.traits.LoadState;
 	import org.osmf.traits.LoadableTrait;
-	import org.osmf.utils.FMSURL;
+	import org.osmf.utils.URL;
 	import org.osmf.utils.MediaFrameworkStrings;
 	
 	/**
@@ -44,6 +44,11 @@ package org.osmf.net.dynamicstreaming
 	 * DynamicStreamingResource it will call the base class
 	 * implementation for both <code>load</code> and <code>unload</code>
 	 * methods.
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 10
+	 *  @playerversion AIR 1.0
+	 *  @productversion OSMF 1.0
 	 */
 	public class DynamicStreamingNetLoader extends NetLoader
 	{
@@ -51,6 +56,11 @@ package org.osmf.net.dynamicstreaming
 		 * Constructor.
 		 * 
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function DynamicStreamingNetLoader(allowConnectionSharing:Boolean=true, factory:NetConnectionFactory=null)
 		{
@@ -62,6 +72,11 @@ package org.osmf.net.dynamicstreaming
 		 * If the <code>loadable</code> argument is not a DynamicStreamingResource, the
 		 * base class implementation will be called so that this class can handle regular,
 		 * non-dynamic streaming resources.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		override public function load(loadable:ILoadable):void
 		{
@@ -75,17 +90,17 @@ package org.osmf.net.dynamicstreaming
 			else
 			{
 				// Get the hostname from the DynamicStreamingResource and ask the base class to connect
-				var hostName:FMSURL = dsResource.hostName;
-				var tempTrait:LoadableTrait = new LoadableTrait(null, new URLResource(hostName));
+				var host:URL = dsResource.host;
+				var tempTrait:LoadableTrait = new LoadableTrait(null, new URLResource(host));
 				
-				tempTrait.addEventListener(LoadableStateChangeEvent.LOADABLE_STATE_CHANGE, onLoadableStateChange);
+				tempTrait.addEventListener(LoadEvent.LOAD_STATE_CHANGE, onLoadStateChange);
 				super.load(tempTrait);
 				
-				function onLoadableStateChange(event:LoadableStateChangeEvent):void
+				function onLoadStateChange(event:LoadEvent):void
 				{
-					if (event.newState == LoadState.LOADED)
+					if (event.loadState == LoadState.READY)
 					{
-						tempTrait.removeEventListener(LoadableStateChangeEvent.LOADABLE_STATE_CHANGE, onLoadableStateChange);
+						tempTrait.removeEventListener(LoadEvent.LOAD_STATE_CHANGE, onLoadStateChange);
 									
 						var netLoadedContext:NetLoadedContext = tempTrait.loadedContext as NetLoadedContext;
 						DynamicNetStream(netLoadedContext.stream).resource = dsResource;
@@ -94,7 +109,7 @@ package org.osmf.net.dynamicstreaming
 																						netLoadedContext.shareable, netLoadedContext.netConnectionFactory,
 																						netLoadedContext.resource, tempTrait);
 					}
-					loadable.loadState = event.newState;					
+					loadable.loadState = event.loadState;					
 				}
 			}
 		}
@@ -104,6 +119,11 @@ package org.osmf.net.dynamicstreaming
 		 * If the <code>loadable</code> argument is not a DynamicStreamingResource, the
 		 * base class implementation will be called so that this class can handle regular,
 		 * non-dynamic streaming resources.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		override public function unload(loadable:ILoadable):void
 		{
@@ -116,7 +136,7 @@ package org.osmf.net.dynamicstreaming
 			else
 			{
 				var loadedContext:DynamicStreamingNetLoadedContext = loadable.loadedContext as DynamicStreamingNetLoadedContext;
-				var hostLoadable:ILoadable = loadedContext.hostNameLoadable;
+				var hostLoadable:ILoadable = loadedContext.hostLoadable;
 				
 				var netLoadedContext:NetLoadedContext = hostLoadable.loadedContext as NetLoadedContext;
 				if (netLoadedContext == null)
@@ -136,13 +156,18 @@ package org.osmf.net.dynamicstreaming
 						netLoadedContext.connection.close();
 					}			
 						
-					updateLoadable(loadable, LoadState.CONSTRUCTED);	
+					updateLoadable(loadable, LoadState.UNINITIALIZED);	
 				}
 			}			
 		}
 		
 		/**
 		 * Overridden to allow the creation of a DynamicNetStream object.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		override protected function createNetStream(connection:NetConnection,loadable:ILoadable):NetStream
 		{			

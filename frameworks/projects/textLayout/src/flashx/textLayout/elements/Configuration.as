@@ -12,6 +12,7 @@ package flashx.textLayout.elements
 {
 	import flash.display.BlendMode;
 	import flash.system.Capabilities;
+	import flash.text.engine.TextBlock;
 	
 	import flashx.textLayout.compose.StandardFlowComposer;
 	import flashx.textLayout.edit.SelectionFormat;
@@ -52,6 +53,9 @@ package flashx.textLayout.elements
 			var versionData:Array = Capabilities.version.split(" ")[1].split(","); 
 			return int(versionData[0]) > major || (int(versionData[0]) == major && int(versionData[1]) >= minor);
 		}
+		
+		/** @private The player may disable the feature for older swfs.  */
+		static tlf_internal const playerEnablesArgoFeatures:Boolean = versionIsAtLeast(10,1) && (new TextBlock).hasOwnProperty("recreateTextLine"); 
 		
 		/** If manageTabKey and manageEnterKey are false, the client must handle those keys on their own. */
 		private var _manageTabKey:Boolean;
@@ -99,44 +103,47 @@ package flashx.textLayout.elements
 		public function Configuration(initializeWithDefaults:Boolean = true)
 		{
 			if (initializeWithDefaults)
-			{
-				var scratchFormat:TextLayoutFormatValueHolder;
+				initialize()
+		}
+		
+		private function initialize():void
+		{
+			var scratchFormat:TextLayoutFormatValueHolder;
 	
-				_manageTabKey = false;
-				_manageEnterKey = true;
-				_overflowPolicy = OverflowPolicy.FIT_DESCENDERS;
-				_enableAccessibility = false;
-				_releaseLineCreationData = false;
+			_manageTabKey = false;
+			_manageEnterKey = true;
+			_overflowPolicy = OverflowPolicy.FIT_DESCENDERS;
+			_enableAccessibility = false;
+			_releaseLineCreationData = false;
 			
-				_focusedSelectionFormat = new SelectionFormat(0xffffff, 1.0, BlendMode.DIFFERENCE);
-				_unfocusedSelectionFormat = new SelectionFormat(0xffffff, 0, BlendMode.DIFFERENCE, 0xffffff, 0.0, BlendMode.DIFFERENCE, 0);
-				_inactiveSelectionFormat = new SelectionFormat(0xffffff, 0, BlendMode.DIFFERENCE, 0xffffff, 0.0, BlendMode.DIFFERENCE, 0);
+			_focusedSelectionFormat = new SelectionFormat(0xffffff, 1.0, BlendMode.DIFFERENCE);
+			_unfocusedSelectionFormat = new SelectionFormat(0xffffff, 0, BlendMode.DIFFERENCE, 0xffffff, 0.0, BlendMode.DIFFERENCE, 0);
+			_inactiveSelectionFormat  = _unfocusedSelectionFormat;
 				
-				scratchFormat = new TextLayoutFormatValueHolder();
-				scratchFormat.textDecoration = TextDecoration.UNDERLINE;
-				scratchFormat.color = 0x0000FF;//default link color is blue
-				_defaultLinkNormalFormat = scratchFormat;
+			scratchFormat = new TextLayoutFormatValueHolder();
+			scratchFormat.textDecoration = TextDecoration.UNDERLINE;
+			scratchFormat.color = 0x0000FF;//default link color is blue
+			_defaultLinkNormalFormat = scratchFormat;
 				
-				scratchFormat = new TextLayoutFormatValueHolder();
-				scratchFormat.lineBreak = FormatValue.INHERIT;
-				scratchFormat.paddingLeft = FormatValue.INHERIT;
-				scratchFormat.paddingRight = FormatValue.INHERIT;
-				scratchFormat.paddingTop = FormatValue.INHERIT;
-				scratchFormat.paddingBottom = FormatValue.INHERIT;
-				scratchFormat.verticalAlign = FormatValue.INHERIT;
-				scratchFormat.columnCount = FormatValue.INHERIT;
-				scratchFormat.columnCount = FormatValue.INHERIT;
-				scratchFormat.columnGap = FormatValue.INHERIT;
-				scratchFormat.columnWidth = FormatValue.INHERIT;
-				_textFlowInitialFormat = scratchFormat;
+			scratchFormat = new TextLayoutFormatValueHolder();
+			scratchFormat.lineBreak = FormatValue.INHERIT;
+			scratchFormat.paddingLeft = FormatValue.INHERIT;
+			scratchFormat.paddingRight = FormatValue.INHERIT;
+			scratchFormat.paddingTop = FormatValue.INHERIT;
+			scratchFormat.paddingBottom = FormatValue.INHERIT;
+			scratchFormat.verticalAlign = FormatValue.INHERIT;
+			scratchFormat.columnCount = FormatValue.INHERIT;
+			scratchFormat.columnCount = FormatValue.INHERIT;
+			scratchFormat.columnGap = FormatValue.INHERIT;
+			scratchFormat.columnWidth = FormatValue.INHERIT;
+			_textFlowInitialFormat = scratchFormat;
 					
-				_scrollDragDelay = 35;
-				_scrollDragPixels = 20;
-				_scrollPagePercentage = 7.0/8.0;
-				_scrollMouseWheelMultiplier = 20;
+			_scrollDragDelay = 35;
+			_scrollDragPixels = 20;
+			_scrollPagePercentage = 7.0/8.0;
+			_scrollMouseWheelMultiplier = 20;
 				
-				_flowComposerClass = StandardFlowComposer;
-			}
+			_flowComposerClass = StandardFlowComposer;
 		}
 		
 		private var _immutableClone:IConfiguration;

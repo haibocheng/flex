@@ -1,4 +1,4 @@
-/*****************************************************
+﻿/*****************************************************
 *  
 *  Copyright 2009 Adobe Systems Incorporated.  All Rights Reserved.
 *  
@@ -78,6 +78,11 @@ package org.osmf.audio
 		 * @see org.osmf.net.NetLoader
 		 * 
 		 * @throws ArgumentError If loader is null, or neither a NetLoader nor a SoundLoader.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		public function AudioElement(loader:ILoader, resource:IURLResource=null)
 		{
@@ -92,10 +97,9 @@ package org.osmf.audio
 		/**
 		 *  @private 
 		 */ 
-		override protected function processLoadedState():void
+		override protected function processReadyState():void
 		{
 			var loadable:ILoadable = getTrait(MediaTraitType.LOADABLE) as ILoadable;
-			var urlResource:URLResource = resource as URLResource;
 
 			var seekable:SeekableTrait;
 			var temporal:TemporalTrait;
@@ -109,9 +113,9 @@ package org.osmf.audio
 				
 				var stream:NetStream = netLoadedContext.stream;
 				
-				addTrait(MediaTraitType.PLAYABLE, new NetStreamPlayableTrait(this, stream, urlResource));
+				addTrait(MediaTraitType.PLAYABLE, new NetStreamPlayableTrait(this, stream, resource));
 				seekable = new NetStreamSeekableTrait(stream);
-				temporal = new NetStreamTemporalTrait(stream);
+				temporal = new NetStreamTemporalTrait(stream, resource);
 				seekable.temporal = temporal;
 				addTrait(MediaTraitType.SEEKABLE, seekable);
 				addTrait(MediaTraitType.TEMPORAL, temporal);

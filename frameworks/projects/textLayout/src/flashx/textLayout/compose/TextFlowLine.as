@@ -656,7 +656,7 @@ package flashx.textLayout.compose
 				} while (line != this);			
 			}
 			
-			if(textLine.numChildren == 0 && this._adornCount > 0)
+			if(textLine != null && textLine.numChildren == 0 && _adornCount > 0)
 			{
 				var para:ParagraphElement = this.paragraph;
 				var paraStart:int = para.getAbsoluteStart();
@@ -748,17 +748,13 @@ package flashx.textLayout.compose
 			var endPos:int = _absoluteStart + _textLength;
 			
 			//init adornments back to 0
-			this.clearAdornCount();
-			
-			
+			_adornCount = 0;
+
 			for (;;)
 			{
 				var format:ITextLayoutFormat = elem.computedFormat;
-				if (format.textDecoration == TextDecoration.UNDERLINE || format.lineThrough || (format.backgroundColor != BackgroundColor.TRANSPARENT && format.backgroundAlpha))
-				{	
-					elem.updateAdornments(this, blockProgression); 
-					this.incrementAdornCount();
-				}
+
+				_adornCount += elem.updateAdornments(this, blockProgression);
 				
 				var fvh:FlowValueHolder = elem.format as FlowValueHolder;
 				if(fvh && fvh.userStyles && fvh.userStyles.imeStatus)
@@ -785,7 +781,7 @@ package flashx.textLayout.compose
 		{
 			CONFIG::debug { assert(elemStart == elem.getAbsoluteStart(),"bad elemStart passed to getLineLeading"); } 
 			var endPos:int = _absoluteStart + _textLength;
-			var totalLeading:Number;
+			var totalLeading:Number = 0;
 			CONFIG::debug { assert(elem.getAncestorWithContainer() != null,"element with no container"); }
 			for (;;)
 			{
@@ -795,7 +791,7 @@ package flashx.textLayout.compose
 				if (!(bp == BlockProgression.RL && (elem.parent is TCYElement) &&  (!isNaN(totalLeading) || (elem.textLength != this.textLength))))
 				{
 					var elemLeading:Number = TextLayoutFormat.lineHeightProperty.computeActualPropertyValue(elem.computedFormat.lineHeight,elem.getEffectiveFontSize());
-					totalLeading = isNaN(totalLeading) ? elemLeading : Math.max(totalLeading, elemLeading);
+					totalLeading = Math.max(totalLeading, elemLeading);
 				}
 				elemStart += elem.textLength;
 				if (elemStart >= endPos)
@@ -803,7 +799,7 @@ package flashx.textLayout.compose
 				elem = elem.getNextLeaf(_para);
 				CONFIG::debug { assert(elem != null,"bad nextLeaf"); }
 			}
-			return isNaN(totalLeading) ? 0 : totalLeading;
+			return totalLeading;
 		}
         
 		/** @private 
@@ -2049,13 +2045,8 @@ package flashx.textLayout.compose
 		}
 		
 		/** @private */
-		tlf_internal function incrementAdornCount():void { ++_adornCount; }
-		
-		/** @private */
-		tlf_internal function clearAdornCount():void { _adornCount = 0; }
-		
-		/** @private */
-		tlf_internal function get adornCount():int { return _adornCount; }
+		tlf_internal function get adornCount():int 
+		{ return _adornCount; }
 		
 		/** @private */
 		CONFIG::debug public function dumpToXML():String

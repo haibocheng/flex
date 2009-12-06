@@ -32,6 +32,7 @@ import spark.events.ElementExistenceEvent;
 import spark.events.DisplayLayerObjectExistenceEvent;
 import spark.layouts.BasicLayout;
 import spark.layouts.supportClasses.LayoutBase;
+import spark.utils.FTETextUtil;
 
 use namespace mx_internal;
 
@@ -80,7 +81,7 @@ include "../../styles/metadata/SelectionFormatTextStyles.as"
  *  @playerversion AIR 1.5
  *  @productversion Flex 4
  */ 
-[Style(name="baseColor", type="uint", format="Color", inherit="yes", theme="spark")]
+[Style(name="chromeColor", type="uint", format="Color", inherit="yes", theme="spark")]
 
 /**
  *  The alpha of the content background for this component.
@@ -196,6 +197,7 @@ include "../../styles/metadata/SelectionFormatTextStyles.as"
  */
 public class GroupBase extends UIComponent implements IViewport
 {
+
     //--------------------------------------------------------------------------
     //
     //  Constructor
@@ -238,6 +240,36 @@ public class GroupBase extends UIComponent implements IViewport
         _explicitAlpha = value;
     }
     
+    //----------------------------------
+    //  baselinePosition
+    //----------------------------------
+
+    /**
+     *  @inheritDoc
+     *  
+     *  @langversion 3.0
+     *  @playerversion Flash 9
+     *  @playerversion AIR 1.1
+     *  @productversion Flex 3
+     */
+    override public function get baselinePosition():Number
+    {
+        if (!validateBaselinePosition())
+            return NaN;
+
+        // Unless the height is very small, the baselinePosition
+        // of a generic UIComponent is calculated as if there was
+        // a UITextField using the component's styles
+        // whose top coincides with the component's top.
+        // If the height is small, the baselinePosition is calculated
+        // as if there were text within whose ascent the component
+        // is vertically centered.
+        // At the crossover height, these two calculations
+        // produce the same result.
+
+        return FTETextUtil.calculateFontBaseline(this, height, moduleFactory);
+    }
+
     //----------------------------------
     //  mouseChildren
     //----------------------------------
@@ -1160,7 +1192,7 @@ public class GroupBase extends UIComponent implements IViewport
     //----------------------------------
 
     /**
-     *  @copy spark.core.IViewport#horizontalScrollPositionDelta()
+     *  @copy spark.layouts.supportClasses.LayoutBase#getHorizontalScrollPositionDelta()
      *  
      *  @langversion 3.0
      *  @playerversion Flash 10
@@ -1173,7 +1205,7 @@ public class GroupBase extends UIComponent implements IViewport
     }
     
     /**
-     *  @copy spark.core.IViewport#verticalScrollPositionDelta()
+     *  @copy spark.layouts.supportClasses.LayoutBase#getVerticalScrollPositionDelta()
      *  
      *  @langversion 3.0
      *  @playerversion Flash 10
@@ -1393,11 +1425,6 @@ public class GroupBase extends UIComponent implements IViewport
     private var _focusPane:Sprite;
 
     [Inspectable(environment="none")]
-    
-    // FIXME (rfrishbe): only reason we need to override focusPane getter/setter
-    // is because addChild/removeChild for Groups throw an RTE.
-    // This is the same as UIComponent's focusPane getter/setter but it uses
-    // super.add/removeChild.
 
     /**
      *  @private
@@ -1754,6 +1781,7 @@ public class GroupBase extends UIComponent implements IViewport
             }
         }
     }
+
 }
 
 }

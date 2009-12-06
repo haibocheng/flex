@@ -128,6 +128,18 @@ package flashx.textLayout.operations
 		}
 		
 		/**	
+		 * Test if this operation be placed on the undo stack.
+		 * 
+		 * @return true means to push the operation onto the undo stack.  false means do not push this operation.
+		 * 
+		 * @playerversion Flash 10
+		 * @playerversion AIR 1.5
+		 * @langversion 3.0 
+		 */
+		public function canUndo():Boolean
+		{ return true; }
+		
+		/**	
 		 * Re-executes the operation. 
 		 * 
 		 * <p>This method must be overridden in derived classes. The base class method does nothing.

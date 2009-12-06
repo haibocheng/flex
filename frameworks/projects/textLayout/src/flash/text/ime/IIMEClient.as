@@ -16,15 +16,35 @@ import flash.geom.Rectangle;
 //
 // IIMEClient
 //
+/**
+ * Dispatched when the user begins to use an IME (input method editor).
+ * @eventType flash.events.IMEEvent.IME_START_COMPOSITION
+ * @playerversion Flash 10
+ * @playerversion AIR 1.5
+ * @langversion 3.0
+ */
+[Event(name="imeStartComposition", type="flash.IMEEvent.IME_START_COMPOSITION")]
 
 /**
-* Interface for IME clients.  If your .swf application has a text engine that calls flash.text.engine directly, you
-* need to implement this interface to support editing text inline using an IME. If your .swf uses TextField objects, 
-* this interface is not used. TextLayoutFramework uses this interface to support the IME, so clients using TLF do not
-* to implement this interface.
+ * Dispatched when the user enters text. For IME (input method editor) clients, the receiver should 
+ * insert the string contained in the event object's <code>text</code> property at the current insertion point.
+ * @eventType flash.events.TextEvent.TEXT_INPUT
+ * @playerversion Flash 10
+ * @playerversion AIR 1.5
+ * @langversion 3.0
+ */
+[Event(name="textInput", type="flash.TextEvent.TEXT_INPUT")]
+
+/**
+* Interface for IME (input method editor) clients.  Components based on the flash.text.engine package must implement 
+* this interface to support editing text inline using an IME. This interface is not used with TextField objects. 
+* TextLayoutFramework (TLF) uses this interface to support inline IME, so clients using TLF do not need to implement this 
+* interface. 
+* <p>To support inline IME, set the <code>imeClient</code> property of an <code>ImeEvent.IME_START_COMPOSITION</code> event to
+* an object which implements this interface.</p>
 *
-* 
 * @see flash.text.ime.CompositionAttributeRange
+* @see flash.events.ImeEvent:imeClient
 * 
 * @playerversion Flash 10.1
 * @playerversion AIR 1.5
@@ -60,8 +80,9 @@ public interface IIMEClient
 	function confirmComposition(text:String = null, preserveSelection:Boolean = false):void;
 
 	/**
-	* This callback is used by the IME to query the bounding box of the text being edited with the IME
-	* It is used to place the candidate window and set the mouse cursor when over the inline session
+	* This callback is used by the IME to query the bounding box of the text being edited with the IME client.
+	* Use this method to place the candidate window and set the mouse cursor in the IME client when the mouse is over the 
+	* text field or other component that supports IME.
 	* 
 	* @playerversion Flash 10.1
 	* @langversion 3.0
@@ -106,5 +127,52 @@ public interface IIMEClient
 	 * @langversion 3.0
 	 */
     function get verticalTextLayout():Boolean;
+
+	/** 
+	 * The zero-based character index value of the first character in the current selection.
+	 *
+	 * @return the index of the character at the anchor end of the selection, or <code>-1</code> if no text is selected.
+	 * 
+	 * @playerversion Flash 10.1
+	 * @langversion 3.0
+	 */
+	function get selectionAnchorIndex():int;
+
+	/** 
+	 * The zero-based character index value of the last character in the current selection.
+	 *
+	 * @return the index of the character at the active end of the selection, or <code>-1</code> if no text is selected.
+	 * 
+	 * @playerversion Flash 10.1
+	 * @langversion 3.0
+	 */
+	function get selectionActiveIndex():int;
+    
+	/** 
+	 * Sets the range of selected text in the component.
+	 * If either of the arguments is out of bounds the selection should not be changed.
+	 * 
+	 * @param anchorIndex The zero-based index value of the character at the anchor end of the selection
+	 * @param activeIndex The zero-based index value of the character at the active end of the selection.
+	 * 
+	 * @playerversion Flash 10.1
+	 * @langversion 3.0
+	 */
+	function selectRange(anchorIndex:int, activeIndex:int):void;
+    
+	/** 
+	 * Gets the specified range of text from the component.  This method is called during IME reconversion.
+	 * 
+	 * @param startIndex an integer that specifies the starting location of the range of text to be retrieved.
+	 * @param endIndex an integer that specifies the ending location of the range of text to be retrieved.
+	 * 
+	 * @return The requested text, or <code>null</code> if no text is available in the requested range
+	 * or if either or both of the indexes are invalid.  The same value should be returned 
+	 * independant of whether <code>startIndex</code> is greater or less than <code>endIndex</code>.
+	 * 
+	 * @playerversion Flash 10.1
+	 * @langversion 3.0
+	 */
+	function getTextInRange(startIndex:int, endIndex:int):String;
 } // end of class
 } // end of package

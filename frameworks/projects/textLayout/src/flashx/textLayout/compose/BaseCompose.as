@@ -11,6 +11,7 @@
 package flashx.textLayout.compose
 {
 	import flash.geom.Rectangle;
+	import flash.text.engine.TextBlock;
 	import flash.text.engine.TextLine;
 	
 	import flashx.textLayout.*;
@@ -249,7 +250,7 @@ package flashx.textLayout.compose
 		public function composeTextFlow(textFlow:TextFlow, composeToPosition:int, controllerEndIndex:int):int
 		{
 			_textFlow = textFlow;
-			_releaseLineCreationData = textFlow.configuration.releaseLineCreationData && ParagraphElement.textBlockHasReleaseLineCreationData;
+			_releaseLineCreationData = textFlow.configuration.releaseLineCreationData && Configuration.playerEnablesArgoFeatures;
 			
 			// must setup _startController and _startComposePosition
 			initializeForComposer(textFlow.flowComposer, composeToPosition, controllerEndIndex);
@@ -560,18 +561,30 @@ package flashx.textLayout.compose
 				}
 				else
 				{
-					// The AUTO case requires aligning line top to container top inset. This efect can be achieved by using firstBaselineOffset=ASCENT
-					// and firstBaselineOffsetBasis=ROMAN 
-					baselineType = BaselineOffset.ASCENT;
-					lineHeight -= curTextLine.getBaselinePosition(flash.text.engine.TextBaseline.ROMAN);
-					
-					// Reinterpret AUTO when APPROXIMATE_TEXT_FIELD leading model is used. 
-					// Align the "enhanced ascent" (an approximation of TextField's notion of ascent baseline, 
-					// which differs from FTEs notion of the same by an amount equal to the line's descent) with the container top inset
 					if (_curLineLeadingModel == LeadingModel.APPROXIMATE_TEXT_FIELD)
-						lineHeight += Math.round(curTextLine.descent);
+					{
+						// Reinterpret AUTO when APPROXIMATE_TEXT_FIELD leading model is used. 
+						// Align the "enhanced ascent" (an approximation of TextField's notion of ascent baseline, 
+						// which differs from FTEs notion of the same by an amount equal to the line's descent) with the container top inset
+						lineHeight += Math.round(curTextLine.descent) + Math.round(curTextLine.ascent);  
+						
+						// Ensure Roman baseline will fall at an integer position. This is desirable for all leading models, 
+						// but only APPROXIMATE_TEXT_FIELD requires it now. In a future release, this code can be moved below and lineX/lineY rounded off directly. 
+						if (_blockProgression == BlockProgression.TB)
+							lineHeight = Math.round(lineY + lineHeight) - lineY;
+						else
+							lineHeight = lineX - Math.round(lineX - lineHeight);
+						
+						baselineType = 0; // No further adjustments    
+					}
+					else
+					{
+						// The AUTO case requires aligning line top to container top inset. This efect can be achieved by using firstBaselineOffset=ASCENT
+						// and firstBaselineOffsetBasis=ROMAN 
+						baselineType = BaselineOffset.ASCENT;
+						lineHeight -= curTextLine.getBaselinePosition(flash.text.engine.TextBaseline.ROMAN);
+					}
 				}
-
 			}
 			else
 			{
@@ -599,7 +612,7 @@ package flashx.textLayout.compose
 					if (_curLineLeadingModel == LeadingModel.APPROXIMATE_TEXT_FIELD)
 					{
 						// Position the "enhanced ascent" (see above) at a distance of leading from the previous line's descent
-						lineHeight += Math.round(_lastLineDescent) + Math.round(curTextLine.ascent) + Math.round(curTextLine.descent) + _curLineLeading;
+						lineHeight += Math.round(_lastLineDescent) + Math.round(curTextLine.ascent) + Math.round(curTextLine.descent) + Math.round(_curLineLeading);
 					}
 					else if (_curLineLeadingModel == LeadingModel.ASCENT_DESCENT_UP)
 					{
@@ -673,10 +686,7 @@ package flashx.textLayout.compose
 			
 			if(isNewLine)
 				curLine.createAdornments(_blockProgression,_curElement,_curElementStart);
- 		}
-		
-		/** @private */
-		static tlf_internal const textLineHasTabs:Boolean = Configuration.versionIsAtLeast(10,1);
+ 		}		
  		
  		// Calculate the text alignment of the current line we're composing. If alignment is required, the adjustment will be made in
  		// applyTextAlign, after we've calculated the width of the parcel (it may be based on measurement).
@@ -705,7 +715,7 @@ package flashx.textLayout.compose
 			var createAlignData:Boolean = textAlignment == TextAlign.CENTER || textAlignment == TextAlign.RIGHT;
 			
 			// in argo lines that have tabs must be either START or JUSTIFY
-			if (textLineHasTabs)
+			if (Configuration.playerEnablesArgoFeatures)
 			{
 				if (curTextLine["hasTabs"])
 				{

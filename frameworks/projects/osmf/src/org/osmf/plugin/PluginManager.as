@@ -24,7 +24,7 @@ package org.osmf.plugin
 	import flash.events.EventDispatcher;
 	import flash.utils.Dictionary;
 	
-	import org.osmf.events.LoadableStateChangeEvent;
+	import org.osmf.events.LoadEvent;
 	import org.osmf.events.MediaErrorEvent;
 	import org.osmf.events.PluginLoadEvent;
 	import org.osmf.media.IMediaResource;
@@ -116,8 +116,14 @@ package org.osmf.plugin
 			var pluginEntry:PluginEntry = _pluginMap[identifier] as PluginEntry;
 			if (pluginEntry != null)
 			{
-				dispatchEvent(
-					new PluginLoadEvent(PluginLoadEvent.PLUGIN_LOADED, resource));
+				dispatchEvent
+					( new PluginLoadEvent
+						( PluginLoadEvent.PLUGIN_LOADED
+						, false
+						, false
+						, resource
+						)
+					);
 			}
 			else
 			{
@@ -132,14 +138,13 @@ package org.osmf.plugin
 					if (loadable != null)
 					{
 						loadable.addEventListener(
-							LoadableStateChangeEvent.LOADABLE_STATE_CHANGE, onLoadableStateChange);
+							LoadEvent.LOAD_STATE_CHANGE, onLoadStateChange);
 						loadable.addEventListener(MediaErrorEvent.MEDIA_ERROR, onMediaError);
 						loadable.load();
 					}
 					else
 					{
-						dispatchEvent(
-							new PluginLoadEvent(PluginLoadEvent.PLUGIN_LOAD_FAILED));
+						dispatchEvent(new PluginLoadEvent(PluginLoadEvent.PLUGIN_LOAD_FAILED));
 					}
 				}
 				else
@@ -148,17 +153,23 @@ package org.osmf.plugin
 				}
 			}
 			
-			function onLoadableStateChange(event:LoadableStateChangeEvent):void
+			function onLoadStateChange(event:LoadEvent):void
 			{
-				if (event.newState == LoadState.LOADED)
+				if (event.loadState == LoadState.READY)
 				{
 					pluginEntry.state = PluginLoadingState.LOADED;
 					_pluginList.push(pluginEntry);
 					
-					dispatchEvent(
-						new PluginLoadEvent(PluginLoadEvent.PLUGIN_LOADED, resource));
+					dispatchEvent
+						( new PluginLoadEvent
+							( PluginLoadEvent.PLUGIN_LOADED
+							, false
+							, false
+							, resource
+							)
+						);
 				}
-				else if (event.newState == LoadState.LOAD_FAILED)
+				else if (event.loadState == LoadState.LOAD_ERROR)
 				{
 					// Remove from the pluginMap when the load failed!!!!
 					delete _pluginMap[identifier];
@@ -196,7 +207,7 @@ package org.osmf.plugin
 				loadable = pluginEntry.pluginElement.getTrait(MediaTraitType.LOADABLE) as ILoadable;
 				if (loadable != null)
 				{
-					loadable.addEventListener(LoadableStateChangeEvent.LOADABLE_STATE_CHANGE, onLoadStateChange);
+					loadable.addEventListener(LoadEvent.LOAD_STATE_CHANGE, onLoadStateChange);
 					loadable.unload();
 				}
 			}
@@ -205,11 +216,11 @@ package org.osmf.plugin
 				dispatchEvent(new PluginLoadEvent(PluginLoadEvent.PLUGIN_UNLOADED));
 			}
 			
-			function onLoadStateChange(event:LoadableStateChangeEvent):void
+			function onLoadStateChange(event:LoadEvent):void
 			{
-				if (event.newState == LoadState.CONSTRUCTED)
+				if (event.loadState == LoadState.UNINITIALIZED)
 				{
-					// When the loadable's state is back to CONSTRUCTED, the unload process 
+					// When the loadable's state is back to UNINITIALIZED, the unload process 
 					// is finished.
 					removePluginEntry(pluginEntry);
 					delete _pluginMap[identifier];

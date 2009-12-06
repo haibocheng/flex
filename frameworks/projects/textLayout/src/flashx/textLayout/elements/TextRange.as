@@ -40,9 +40,9 @@ package flashx.textLayout.elements
 		private function clampToRange(index:int):int
 		{
 			if (index < 0)
-				index = 0;
-			else if (index > _textFlow.textLength)
-				index = _textFlow.textLength;
+				return 0;
+			if (index > _textFlow.textLength)
+				return _textFlow.textLength;
 			return index;
 		}
 		

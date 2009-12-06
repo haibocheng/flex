@@ -21,14 +21,9 @@
 *****************************************************/
 package org.osmf.content
 {
-	import flash.display.Loader;
 	import flash.events.ProgressEvent;
 	
-	import org.osmf.events.BytesTotalChangeEvent;
-	import org.osmf.events.TraitsChangeEvent;
 	import org.osmf.traits.DownloadableTrait;
-	import org.osmf.traits.ILoadable;
-	import org.osmf.traits.MediaTraitType;
 	
 	internal class ContentDownloadableTrait extends DownloadableTrait
 	{
@@ -48,7 +43,7 @@ package org.osmf.content
 		private function onContextLoadableProgress(event:ProgressEvent):void
 		{
 			bytesTotal = event.bytesTotal;
-			bytesDownloaded = event.bytesLoaded;
+			bytesLoaded = event.bytesLoaded;
 		}
 		
 	}

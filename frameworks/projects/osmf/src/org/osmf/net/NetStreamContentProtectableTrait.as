@@ -29,16 +29,15 @@ package org.osmf.net
 	import flash.net.drm.DRMContentData;
 	}
 	
-	import org.osmf.events.AuthenticationFailedEvent;
-	import org.osmf.events.TraitEvent;
 	import org.osmf.traits.ContentProtectableTrait;
-	import org.osmf.events.AuthenticationCompleteEvent;
+	import org.osmf.events.ContentProtectionEvent;
 
+    [ExcludeClass]
     
     /**
 	 * @private
-	 * TODO: Remove @private label when we turn on 10.1 Flash support in the build & docs
-     * NetStream specific protected content trait.
+	 * 
+     * NetStream-specific protected content trait.
      */
 	public class NetStreamContentProtectableTrait extends ContentProtectableTrait
 	{
@@ -46,18 +45,28 @@ package org.osmf.net
 	{
 		/**
    		 * Constructs a NetContentProtectableTrait
+   		 *  
+   		 *  @langversion 3.0
+   		 *  @playerversion Flash 10
+   		 *  @playerversion AIR 1.0
+   		 *  @productversion OSMF 1.0
    		 */ 
 		public function NetStreamContentProtectableTrait()
 		{
 			super();
 			
-			drmServices.addEventListener(AuthenticationCompleteEvent.AUTHENTICATION_COMPLETE, redispatch);
-			drmServices.addEventListener(AuthenticationFailedEvent.AUTHENTICATION_FAILED, redispatch);
-			drmServices.addEventListener(TraitEvent.AUTHENTICATION_NEEDED, redispatch);						
+			drmServices.addEventListener(ContentProtectionEvent.AUTHENTICATION_COMPLETE, redispatchEvent);
+			drmServices.addEventListener(ContentProtectionEvent.AUTHENTICATION_FAILED, redispatchEvent);
+			drmServices.addEventListener(ContentProtectionEvent.AUTHENTICATION_NEEDED, redispatchEvent);						
 		}
 		
 		/**
-		 * 	Data used by the flash player to implement DRM specific content protection.
+		 * Data used by the flash player to implement DRM specific content protection.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function set drmMetadata(value:Object):void
 		{
@@ -72,64 +81,40 @@ package org.osmf.net
 			return drmServices.drmMetadata;
 		}
 				
-				
-		/**
-		 * @inheritDoc
-		 */ 		
 		override public function get authenticationMethod():String
 		{
 			return drmServices.authenticationMethod;
 		}
 		
-		/**
-		 * @inheritDoc
-		 * 
-		 * Authenticates a user in order to retrieve a voucher for a protected piece of content.
-		 * @throws IllegalOperation error if the drmMetadata isn't set.
-		 */ 
 		override protected function processAuthenticate(username:String, password:String):void
 		{							
 			drmServices.authenticate(username, password);
 		}
 		
-		/**
-		 * Authenticates a user using an object, which serves as a token.
-		 * 
-		 * @throws IllegalOperation error if the drmMetadata isn't set.
-		 */ 
 		override protected function processAuthenticateWithToken(token:Object):void
 		{							
 			drmServices.authenticateWithToken(token);
 		}
 		
-		/**
-		 * Returns the start date for the playback window.  Returns null if authentication 
-		 * hasn't taken place.
-		 */	
 		override public function get startDate():Date
 		{
 			return drmServices.startDate;
 		}
 		
-		/**
-		 * Returns the end date for the playback window.  Returns null if authentication 
-		 * hasn't taken place.
-		 */	
 		override public function get endDate():Date
 		{
 			return drmServices.endDate;
 		}
 		
-		/**
-		 * Returns the length of the playback window.  Returns NaN if authentication 
-		 * hasn't taken place.
-		 */		
 		override public function get period():Number
 		{
 			return drmServices.period;
 		}
+		
+		// Internals
+		//
 						
-		private function redispatch(event:Event):void
+		private function redispatchEvent(event:Event):void
 		{
 			dispatchEvent(event.clone());
 		}

@@ -1817,7 +1817,14 @@ public class XMLDecoder extends SchemaProcessor implements IXMLDecoder
                 if (xml.hasSimpleContent())
                 {
                     content = new SimpleContent(xml.text().toString());
-                    propertyList = xml.attributes();
+                    propertyList = filterAttributes(xml.attributes());
+
+                    // If the attributes were filtered out, we just have a
+                    // simple value. 
+                    if (propertyList.length() == 0)
+                    {
+                        return schemaManager.unmarshall(xml, type, restriction);
+                    }
                 }
                 else
                 {
@@ -1826,7 +1833,7 @@ public class XMLDecoder extends SchemaProcessor implements IXMLDecoder
                         ContentProxy(content).object_proxy::isSimple = false; // The XML value has complex content.
 
                     propertyList = xml.elements();
-                    propertyList += xml.attributes(); 
+                    propertyList += filterAttributes(xml.attributes()); 
                 }
             }
             else
@@ -2159,7 +2166,7 @@ public class XMLDecoder extends SchemaProcessor implements IXMLDecoder
                             // for simple property values on strongly typed values
 
                             // HACK for SDK-14800:
-                            // Flex Builder 3 may generate a strongly typed class for simpleContent extensions
+                            // Flash Builder may generate a strongly typed class for simpleContent extensions
                             // or restrictions, which uses the convention of "_" + typeName for the simpleContent
                             // value.
                             var localName:String = getUnqualifiedClassName(simpleContent); 
@@ -2171,7 +2178,7 @@ public class XMLDecoder extends SchemaProcessor implements IXMLDecoder
                             }
 
                             // HACK for SDK-22327:
-                            // Flex Builder 3 may alternatively generate a property
+                            // Flash Builder may alternatively generate a property
                             // name with camel case for a simpleType enumeration
                             simplePropName = localName.charAt(0).toLowerCase() + localName.substr(1);
                             if (Object(simpleContent).hasOwnProperty(simplePropName))
@@ -2601,6 +2608,49 @@ public class XMLDecoder extends SchemaProcessor implements IXMLDecoder
             name = name.substr(index + 2);
 
         return name;
+    }
+
+    /**
+     * Remove attributes that should not be included in general
+     * deserialization to ActionScript, such as internal schema instance
+     * attributes.  
+     * @private
+     */ 
+    protected function filterAttributes(attributes:XMLList):XMLList
+    {
+        var filtered:XMLList = attributes.copy();
+        for (var i:int = filtered.length() - 1; i >= 0; i--)
+        {
+            var attr:XML = filtered[i];
+            if (attr != null)
+            {
+                var name:QName = attr.name();
+                if (isInternalNamespace(name))
+                {
+                    delete filtered[i];
+                }
+            }
+        }
+        return filtered;
+    }
+
+    /**
+     * Determines whether a name is in an internal (XML Schema specific)
+     * namespace (as opposed to a user's namespace).
+     * @private 
+     */
+    protected function isInternalNamespace(name:QName):Boolean
+    {
+        var uri:String = (name != null) ? name.uri : null;
+        if (uri)
+        {
+            if (URLUtil.urisEqual(uri, constants.xsiNamespace.uri) ||
+                URLUtil.urisEqual(uri, constants.xsdNamespace.uri))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

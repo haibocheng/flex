@@ -86,6 +86,10 @@ package flashx.textLayout.conversion
 			height	: InlineGraphicElement.heightPropertyDefinition,
 			width	: InlineGraphicElement.widthPropertyDefinition,
 			src		: new StringProperty("src", null, false, null)};
+		
+		// Separate description because id value is case-sensitive unlike others
+		static internal const _imageMiscDescription:Object = {
+			id		: new StringProperty("id", null, false, null)};
 			
 		static internal const _classDescription:Object =
 		{
@@ -102,6 +106,7 @@ package flashx.textLayout.conversion
 		static private var _paragraphFormatImporter:HtmlCustomParaFormatImporter;
 		static private var _linkFormatImporter:CaseInsensitiveTLFFormatImporter;
 		static private var _ilgFormatImporter:CaseInsensitiveTLFFormatImporter;
+		static private var _ilgMiscFormatImporter:CaseInsensitiveTLFFormatImporter;
 		static private var _classImporter:CaseInsensitiveTLFFormatImporter;
 		
 		// Formats specified by formatting elements in the ancestry of the element being parsed currently 
@@ -113,6 +118,11 @@ package flashx.textLayout.conversion
 		
 		/** Constructor */
 		public function HtmlImporter(textFlowConfiguration:IConfiguration)
+		{
+			super(textFlowConfiguration, null, createConfig());
+		}
+		
+		private static function createConfig():ImportExportConfiguration
 		{
 			var config:ImportExportConfiguration = new ImportExportConfiguration();
 			
@@ -148,10 +158,11 @@ package flashx.textLayout.conversion
 				_linkFormatImporter = new CaseInsensitiveTLFFormatImporter(Dictionary,_linkDescription);
 			if (_ilgFormatImporter == null)
 				_ilgFormatImporter = new CaseInsensitiveTLFFormatImporter(Dictionary,_imageDescription);
+			if (_ilgMiscFormatImporter == null)
+				_ilgMiscFormatImporter = new CaseInsensitiveTLFFormatImporter(Dictionary,_imageMiscDescription, false);
 			if (_classImporter == null)
 				_classImporter = new CaseInsensitiveTLFFormatImporter(Dictionary,_classDescription);
-					
-			super(textFlowConfiguration, null, config);
+			return config;
 		}
 		
 		
@@ -387,7 +398,7 @@ package flashx.textLayout.conversion
 		{				
 			var imgElem:InlineGraphicElement = new InlineGraphicElement();
 
-			var formatImporters:Array = [ _ilgFormatImporter ];	
+			var formatImporters:Array = [_ilgFormatImporter, _ilgMiscFormatImporter];	
 			parseAttributes(xmlToParse,formatImporters);
 			
 			var source:String = _ilgFormatImporter.getFormatValue("src");
@@ -403,6 +414,9 @@ package flashx.textLayout.conversion
 			// float "left" vs. "none"
 			imgElem.float = floatVal ? floatVal : Float.LEFT;
 			*/
+			
+			var id:String = _ilgMiscFormatImporter.getFormatValue("id");
+			imgElem.id = id;
 			
 			//  Apply active format
 			imgElem.format = _activeFormat;
@@ -990,11 +1004,14 @@ package flashx.textLayout.conversion
 import flashx.textLayout.conversion.TLFormatImporter;
 
 /** Specialized to provide case insensitivity (as required by TEXT_FIELD_HTML_FORMAT)
+ *  Keys need to be lower-cased. Values may or may not based on a flag passed to the constructor. 
  */
 class CaseInsensitiveTLFFormatImporter extends TLFormatImporter
 {
-	public function CaseInsensitiveTLFFormatImporter(classType:Class,description:Object)
+	public function CaseInsensitiveTLFFormatImporter(classType:Class,description:Object, convertValuesToLowerCase:Boolean=true)
 	{
+		_convertValuesToLowerCase = convertValuesToLowerCase;
+		
 		var lowerCaseDescription:Object = new Object();
 		for (var prop:Object in description)
 		{
@@ -1006,13 +1023,15 @@ class CaseInsensitiveTLFFormatImporter extends TLFormatImporter
 	
 	public override function importOneFormat(key:String,val:String):Boolean
 	{
-		return super.importOneFormat(key.toLowerCase(), val.toLowerCase()); // covert val too to lower case; TLF won't accept, say float="RIGHT" 
+		return super.importOneFormat(key.toLowerCase(), _convertValuesToLowerCase ? val.toLowerCase() : val);  
 	} 
 	
 	public function getFormatValue (key:String):*
 	{
 		return result ? result[key.toLowerCase()] : undefined;
 	}
+	
+	private var _convertValuesToLowerCase:Boolean;
 }
 
 class HtmlCustomParaFormatImporter extends TLFormatImporter

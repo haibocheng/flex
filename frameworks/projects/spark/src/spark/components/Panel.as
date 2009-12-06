@@ -27,6 +27,8 @@ use namespace mx_internal;
 
 /**
  *  The alpha of the border for this component.
+ *
+ *  @default 0.5
  * 
  *  @langversion 3.0
  *  @playerversion Flash 10
@@ -37,6 +39,8 @@ use namespace mx_internal;
 
 /**
  *  The color of the border for this component.
+ *
+ *  @default 0
  * 
  *  @langversion 3.0
  *  @playerversion Flash 10
@@ -47,6 +51,8 @@ use namespace mx_internal;
 
 /**
  *  Controls the visibility of the border for this component.
+ *
+ *  @default true
  * 
  *  @langversion 3.0
  *  @playerversion Flash 10
@@ -57,6 +63,8 @@ use namespace mx_internal;
 
 /**
  *  The radius of the corners for this component.
+ *
+ *  @default 0
  * 
  *  @langversion 3.0
  *  @playerversion Flash 10
@@ -67,6 +75,8 @@ use namespace mx_internal;
 
 /**
  *  Controls the visibility of the drop shadow for this component.
+ *
+ *  @default true
  * 
  *  @langversion 3.0
  *  @playerversion Flash 10
@@ -99,6 +109,13 @@ use namespace mx_internal;
  *    controlBarLayout="HorizontalLayout"
  *    controlBarVisible="true"
  *    title=""
+ * 
+ *   <strong>Styles</strong>
+ *    borderAlpha="0.5"
+ *    borderColor="0"
+ *    borderVisible="true"
+ *    cornerRadius="0"
+ *    dropShadowVisible="true"
  *   &gt;
  *      ...
  *      <i>child tags</i>
@@ -361,11 +378,14 @@ public class Panel extends SkinnableContainer
     //---------------------------------- 
     
     /**
-     *  A flag that controls whether the controlBar is visible.
-     *  The flag has no meaning if there is no controlBarContent.
-     *  The Panel does not monitor the controlBarGroup so if some
-     *  other code makes it invisible, the Panel may not update
-     *  correctly
+     *  If <code>true</code>, the control bar is visible.
+     *  The flag has no affect if there is no value set for
+     *  the <code>controlBarContent</code> property.
+     *
+     *  <p><b>Note:</b> The Panel container does not monitor the 
+     *  <code>controlBarGroup</code> property. 
+     *  If other code makes it invisible, the Panel container 
+     *  might not update correctly.</p>
      *
      *  @default true
      *  

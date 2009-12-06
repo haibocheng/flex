@@ -51,6 +51,11 @@ package org.osmf.content
 		 * @param resource Url that points to the content that the ContentElement will use.
 		 * 
 		 * @throws ArgumentError If loader is null.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
 		public function ContentElement(loader:ContentLoader, resource:IURLResource = null)
 		{
@@ -77,7 +82,7 @@ package org.osmf.content
 		/**
 		 *  @private 
 		 */ 		
-		override protected function processLoadedState():void
+		override protected function processReadyState():void
 		{
 			var context:ContentLoadedContext
 				=	(getTrait(MediaTraitType.LOADABLE) as ILoadable).loadedContext
@@ -107,7 +112,10 @@ package org.osmf.content
 			{
 				dispatchEvent
 					( new MediaErrorEvent
-						( new MediaError
+						( MediaErrorEvent.MEDIA_ERROR
+						, false
+						, false
+						, new MediaError
 							( MediaErrorCodes.CONTENT_SECURITY_LOAD_ERROR
 							, error.message
 							)

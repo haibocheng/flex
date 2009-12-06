@@ -126,7 +126,13 @@ public class SwcChecksums
             VirtualFile file = entry.getValue();
             swcFileChecksums.put(filename, new Long(file.getLastModified()));             
         }
-   }
+
+        for (VirtualFile themeStyleSheet : swcContext.getThemeStyleSheets())
+        {
+            swcFileChecksums.put(themeStyleSheet.getName(),
+                                 new Long(themeStyleSheet.getLastModified()));
+        }
+    }
 
     /**
      * Save the checksums for the resources that get written to the swc.  These
@@ -349,7 +355,14 @@ public class SwcChecksums
         }
 
         Map<String, VirtualFile> swcFiles = swcContext.getFiles();
+
+        for (VirtualFile themeStyleSheet : swcContext.getThemeStyleSheets())
+        {
+            swcFiles.put(themeStyleSheet.getName(), themeStyleSheet);
+        }
+
         Set<Map.Entry<String, Long>> dataSet = swcFileChecksums.entrySet();
+
         if (swcFiles.size() < dataSet.size())
         {
             if (Trace.swcChecksum)

@@ -1475,13 +1475,21 @@ public class InterfaceCompiler extends flex2.compiler.AbstractSubCompiler implem
         private void createDefinitionUnit(DefinitionNode node)
         {
             Node definitionRoot = (Node) node.getChildAt(0);
-            String className = getInnerClassName(node.getAttribute(DefinitionNode.DEFINITION_NAME_ATTR));
+
+            // We don't use getInnerClassName() here, because for
+            // definitions, it was deemed more important to make them
+            // document private than to be able to reference them from
+            // Script.  When we have inner class support, we should be
+            // able to do both.  See SDK-24229, SDK-24228, SDK-24224,
+            // and SDK-23662.
+            String nameAttr = (String)node.getAttributeValue(DefinitionNode.DEFINITION_NAME_ATTR);
+            String className = docInfo.getClassName() + "_definition" + (innerClassCount++);
 
             // Qualify definition classname with language namespace
             QName classQName = new QName(docInfo.getPackageName(), className);
 
             // Register the local class mapping...
-            docInfo.addLocalClass(node.getNamespace(), className, classQName.toString());
+            docInfo.addLocalClass(node.getNamespace(), nameAttr, classQName.toString());
 
             // save classname to the inline component node
             // TODO ideally, we could just convert this in-place to a ClassNode for downstream processing
@@ -1550,7 +1558,7 @@ public class InterfaceCompiler extends flex2.compiler.AbstractSubCompiler implem
 
             if (result == null)
             {
-                result = docInfo.getClassName() + "InnerClass" + (++innerClassCount);
+                result = docInfo.getClassName() + "InnerClass" + (innerClassCount++);
             }
             
             return result;

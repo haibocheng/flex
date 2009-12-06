@@ -77,7 +77,9 @@ public class DefinitionNode extends AbstractFXGNode
     {
         if (FXG_NAME_ATTRIBUTE.equals(name))
         {
-            this.name = parseIdentifier(value, name);
+            this.name = DOMParserHelper.parseIdentifier(this, value, name);
+            if (((GraphicNode)this.getDocumentNode()).reservedNodes.containsKey(value))
+                throw new FXGException(getStartLine(), getStartColumn(), "InvalidDefinitionName", value);
         }
         else
         {

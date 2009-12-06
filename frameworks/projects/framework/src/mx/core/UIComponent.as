@@ -14,14 +14,14 @@ package mx.core
 
 import flash.accessibility.Accessibility;
 import flash.accessibility.AccessibilityProperties;
-import flash.display.BlendMode; 
+import flash.display.BlendMode;
 import flash.display.DisplayObject;
 import flash.display.DisplayObjectContainer;
 import flash.display.GradientType;
 import flash.display.Graphics;
 import flash.display.InteractiveObject;
 import flash.display.Loader;
-import flash.display.Shader; 
+import flash.display.Shader;
 import flash.display.Sprite;
 import flash.display.Stage;
 import flash.events.Event;
@@ -811,7 +811,7 @@ include "../styles/metadata/AnchorStyles.as";
  *  @playerversion AIR 1.5
  *  @productversion Flex 4
  */
-[Style(name="baseColor", type="uint", format="Color", inherit="yes", theme="spark")]
+[Style(name="chromeColor", type="uint", format="Color", inherit="yes", theme="spark")]
 
 /**
  *  Color of the component highlight when validation fails.
@@ -1670,130 +1670,130 @@ public class UIComponent extends FlexSprite
         _updateCompletePendingFlag = value;
     }
 
-	//------------------------------------------------------------------------
+    //------------------------------------------------------------------------
     //
     //  Properties: Accessibility
     //
     //------------------------------------------------------------------------
 
-	/**
+    /**
      *  @public
-	 *  A convenience accessor for the 'silent' property
-	 *  in this UIComponent's accessibilityProperties object.
-	 *
-	 *  Note that accessibilityEnabled has the opposite sense from silent;
-	 *  accessibilityEnabled is true when silent is false and vice versa.
-	 *
-	 *  The getter simply returns accessibilityProperties.silent,
-	 *  or true if accessibilityProperties is null.
-	 *  The setter first checks whether accessibilityProperties is null, and if it is,
-	 *  sets it to a new AccessibilityProperties instance;
-	 *  then it sets accessibilityProperties.silent.
-	 *
+     *  A convenience accessor for the 'silent' property
+     *  in this UIComponent's accessibilityProperties object.
+     *
+     *  Note that accessibilityEnabled has the opposite sense from silent;
+     *  accessibilityEnabled is true when silent is false and vice versa.
+     *
+     *  The getter simply returns accessibilityProperties.silent,
+     *  or true if accessibilityProperties is null.
+     *  The setter first checks whether accessibilityProperties is null, and if it is,
+     *  sets it to a new AccessibilityProperties instance;
+     *  then it sets accessibilityProperties.silent.
+     *
      *  @langversion 3.0
-	 *  @playerversion Flash 9
-	 *  @playerversion AIR 1.1
+     *  @playerversion Flash 9
+     *  @playerversion AIR 1.1
      *  @productversion Flex 3
-	 */
-	public function get accessibilityEnabled():Boolean
+     */
+    public function get accessibilityEnabled():Boolean
     {
       return accessibilityProperties ? !accessibilityProperties.silent : true;
-	}
-		
-	public function set accessibilityEnabled(value:Boolean):void
+    }
+        
+    public function set accessibilityEnabled(value:Boolean):void
     {
-	  if (!accessibilityProperties) 
+      if (!accessibilityProperties) 
         accessibilityProperties = new AccessibilityProperties();
-   	  accessibilityProperties.silent = !value;
+      accessibilityProperties.silent = !value;
       Accessibility.updateProperties();
-	}
+    }
 
-	/**
+    /**
      *  @public
-	 *  A convenience accessor for the 'name' property
-	 *  in this UIComponent's accessibilityProperties object.
-	 *
-	 *  The getter simply returns accessibilityProperties.name,
-	 *  or "" if accessibilityProperties is null.
-	 *  The setter first checks whether accessibilityProperties is null, and if it is,
-	 *  sets it to a new AccessibilityProperties instance;
-	 *  then it sets accessibilityProperties.name.
-	 *
-	 *  @langversion 3.0
-	 *  @playerversion Flash 9
-	 *  @playerversion AIR 1.1
-	 *  @productversion Flex 3
- 	 */
-	public function get accessibilityName():String
+     *  A convenience accessor for the 'name' property
+     *  in this UIComponent's accessibilityProperties object.
+     *
+     *  The getter simply returns accessibilityProperties.name,
+     *  or "" if accessibilityProperties is null.
+     *  The setter first checks whether accessibilityProperties is null, and if it is,
+     *  sets it to a new AccessibilityProperties instance;
+     *  then it sets accessibilityProperties.name.
+     *
+     *  @langversion 3.0
+     *  @playerversion Flash 9
+     *  @playerversion AIR 1.1
+     *  @productversion Flex 3
+     */
+    public function get accessibilityName():String
     {
-	  return accessibilityProperties ? accessibilityProperties.name : "";
-	}
-	
+      return accessibilityProperties ? accessibilityProperties.name : "";
+    }
+    
     public function set accessibilityName(value:String):void 
     {
-	  if (!accessibilityProperties)
-	    accessibilityProperties = new AccessibilityProperties();
- 	  accessibilityProperties.name = value;
+      if (!accessibilityProperties)
+        accessibilityProperties = new AccessibilityProperties();
+      accessibilityProperties.name = value;
       Accessibility.updateProperties();
-	}
+    }
 
-	/**
-	 *  @public
-	 *  A convenience accessor for the 'description' property
-	 *  in this UIComponent's accessibilityProperties object.
-	 *
-	 *  The getter simply returns accessibilityProperties.description,
-	 *  or "" if accessibilityProperties is null.
-	 *  The setter first checks whether accessibilityProperties is null, and if it is,
-	 *  sets it to a new AccessibilityProperties instance;
-	 *  then it sets accessibilityProperties.description.
-	 *
-  	 *  @langversion 3.0
-	 *  @playerversion Flash 9
-	 *  @playerversion AIR 1.1
-	 *  @productversion Flex 3
-	 */
-	public function get accessibilityDescription():String 
+    /**
+     *  @public
+     *  A convenience accessor for the 'description' property
+     *  in this UIComponent's accessibilityProperties object.
+     *
+     *  The getter simply returns accessibilityProperties.description,
+     *  or "" if accessibilityProperties is null.
+     *  The setter first checks whether accessibilityProperties is null, and if it is,
+     *  sets it to a new AccessibilityProperties instance;
+     *  then it sets accessibilityProperties.description.
+     *
+     *  @langversion 3.0
+     *  @playerversion Flash 9
+     *  @playerversion AIR 1.1
+     *  @productversion Flex 3
+     */
+    public function get accessibilityDescription():String 
     {
-	  return accessibilityProperties ? accessibilityProperties.description : "";
-	}
+      return accessibilityProperties ? accessibilityProperties.description : "";
+    }
 
-	public function set accessibilityDescription(value:String):void
+    public function set accessibilityDescription(value:String):void
     {
-	  if (!accessibilityProperties)
-		accessibilityProperties = new AccessibilityProperties();
-   	  accessibilityProperties.description = value;
+      if (!accessibilityProperties)
+        accessibilityProperties = new AccessibilityProperties();
+      accessibilityProperties.description = value;
       Accessibility.updateProperties();
-	}
+    }
 
-	/**
-	 *  @public
-	 *  A convenience accessor for the 'shortcut' property
-	 *  in this UIComponent's accessibilityProperties object.
-	 *
-	 *  The getter simply returns accessibilityProperties.shortcut,
-	 *  or "" if accessibilityProperties is null.
-	 *  The setter first checks whether accessibilityProperties is null, and if it is,
-	 *  sets it to a new AccessibilityProperties instance;
-	 *  then it sets accessibilityProperties.shortcut.
-	 *
-	 *  @langversion 3.0
-	 *  @playerversion Flash 9
-	 *  @playerversion AIR 1.1
-	 *  @productversion Flex 3
-	 */
-	public function get accessibilityShortcut():String
+    /**
+     *  @public
+     *  A convenience accessor for the 'shortcut' property
+     *  in this UIComponent's accessibilityProperties object.
+     *
+     *  The getter simply returns accessibilityProperties.shortcut,
+     *  or "" if accessibilityProperties is null.
+     *  The setter first checks whether accessibilityProperties is null, and if it is,
+     *  sets it to a new AccessibilityProperties instance;
+     *  then it sets accessibilityProperties.shortcut.
+     *
+     *  @langversion 3.0
+     *  @playerversion Flash 9
+     *  @playerversion AIR 1.1
+     *  @productversion Flex 3
+     */
+    public function get accessibilityShortcut():String
     {
-	  return accessibilityProperties ? accessibilityProperties.shortcut : "";
-	}
-	
+      return accessibilityProperties ? accessibilityProperties.shortcut : "";
+    }
+    
     public function set accessibilityShortcut(value:String):void
     {
-   	  if (!accessibilityProperties)
-	    accessibilityProperties = new AccessibilityProperties();
-	  accessibilityProperties.shortcut = value;
+      if (!accessibilityProperties)
+        accessibilityProperties = new AccessibilityProperties();
+      accessibilityProperties.shortcut = value;
       Accessibility.updateProperties();
-	}
+    }
 
 //--------------------------------------------------------------------------
     //
@@ -4650,8 +4650,10 @@ public class UIComponent extends FlexSprite
     /**
      *  A flag that indicates whether child objects can receive focus
      * 
-     *  <p>This is similar to the <code>tabChildren</code> property
-     *  used by Flash Player.</p>
+     *  <p><b>Note: </b>This property is similar to the <code>tabChildren</code> property
+     *  used by Flash Player. 
+     *  Use the <code>hasFocusableChildren</code> property with Flex applications.
+     *  Do not use the <code>tabChildren</code> property.</p>
      * 
      *  <p>This is usually <code>false</code> because most components
      *  either receive focus themselves or delegate focus to a single
@@ -8447,8 +8449,12 @@ public class UIComponent extends FlexSprite
 
     /**
      *  Measures the specified text, assuming that it is displayed
-     *  in a single-line UITextField using a UITextFormat
-     *  determined by the styles of this UIComponent.
+     *  in a single-line UITextField (or UIFTETextField) using a UITextFormat
+     *  determined by the styles of this UIComponent.  Does not 
+     *  work for Spark components since they don't use UITextField
+     *  (or UIFTETextField).  To measure text in Spark components, 
+     *  get the measurements of a spark.components.Label 
+     *  or spark.components.RichText
      *
      *  @param text A String specifying the text to measure.
      *
@@ -9648,11 +9654,11 @@ public class UIComponent extends FlexSprite
 		if (shouldDispatchEvent(MoveEvent.MOVE))
         	dispatchEvent(new MoveEvent(MoveEvent.MOVE, false, false,
 				oldX, oldY));
-
+        
         oldX = x;
         oldY = y;
     }
-
+    
     /**
      *  @private
      */
@@ -9661,7 +9667,7 @@ public class UIComponent extends FlexSprite
 		if (shouldDispatchEvent(ResizeEvent.RESIZE))
 			dispatchEvent(new ResizeEvent(ResizeEvent.RESIZE, false, false,
 				oldWidth, oldHeight));
-
+        
         oldWidth = width;
         oldHeight = height;
     }
@@ -10303,6 +10309,10 @@ public class UIComponent extends FlexSprite
      */
     protected function stateChanged(oldState:String, newState:String, recursive:Boolean):void
     {
+        // This test only checks for pseudo conditions on the subject of the selector.
+        // Pseudo conditions on ancestor selectors are not detected - eg:
+        //    List ScrollBar:inactive #track
+        // The track styles will not change when the scrollbar is in the inactive state.
         if (currentCSSState && oldState != newState &&
                (styleManager.hasPseudoCondition(oldState) ||
                 styleManager.hasPseudoCondition(newState)))
@@ -10742,11 +10752,11 @@ public class UIComponent extends FlexSprite
         if (!effectOverlay)
         {
             effectOverlayColor = color;
-			effectOverlay = new UIComponent();
-			effectOverlay.name = "overlay";
+            effectOverlay = new UIComponent();
+            effectOverlay.name = "overlay";
             // Have to set visibility immediately
             // to make sure we avoid flicker
-			effectOverlay.$visible = true;
+            effectOverlay.$visible = true;
 
             fillOverlay(effectOverlay, color, targetArea);
 
@@ -10755,8 +10765,8 @@ public class UIComponent extends FlexSprite
             if (!targetArea)
                 addEventListener(ResizeEvent.RESIZE, overlay_resizeHandler);
 
-			effectOverlay.x = 0;
-			effectOverlay.y = 0;
+            effectOverlay.x = 0;
+            effectOverlay.y = 0;
 
             invalidateDisplayList();
 
@@ -10825,7 +10835,7 @@ public class UIComponent extends FlexSprite
             if (super.getChildByName("overlay"))
                 $removeChild(effectOverlay);
 
-			effectOverlay = null;
+            effectOverlay = null;
         }
     }
     /**
@@ -11803,7 +11813,7 @@ public class UIComponent extends FlexSprite
      *  where an object wanting to  use the font should be created.
      */
     mx_internal function getFontContext(fontName:String, bold:Boolean,
-                                        italic:Boolean):IFlexModuleFactory
+                                        italic:Boolean, embeddedCff:*=undefined):IFlexModuleFactory
     {
         if (noEmbeddedFonts) 
             return null;
@@ -11811,7 +11821,8 @@ public class UIComponent extends FlexSprite
         var registry:IEmbeddedFontRegistry = embeddedFontRegistry;
 
         return registry ? registry.getAssociatedModuleFactory(
-            fontName, bold, italic, this, moduleFactory) : null;
+            fontName, bold, italic, this, moduleFactory, systemManager,
+            embeddedCff) : null;
     }
 
     /**
@@ -11853,15 +11864,8 @@ public class UIComponent extends FlexSprite
         var bold:Boolean = (fontWeight == "bold");
         var italic:Boolean = (fontStyle == "italic");
 
-        // Save for hasFontContextChanged().
-        oldEmbeddedFontContext = getFontContext(fontName, bold, italic);
-        
-        var moduleContext:IFlexModuleFactory = oldEmbeddedFontContext ?
-                                               oldEmbeddedFontContext :
-                                               moduleFactory;
-                                                    
         var className:String = getQualifiedClassName(classObj);
-
+        
         // If the caller requests a UITextField,
         // we may actually return a UITLFTextField,
         // depending on the version number
@@ -11871,9 +11875,17 @@ public class UIComponent extends FlexSprite
             className = getTextFieldClassName();
             if (className == "mx.core::UIFTETextField")
                 classObj = Class(ApplicationDomain.currentDomain.
-                                                    getDefinition(className));
+                    getDefinition(className));
         }
-                               
+        
+        // Save for hasFontContextChanged().
+        oldEmbeddedFontContext = getFontContext(fontName, bold, italic, 
+            className == "mx.core::UIFTETextField");
+        
+        var moduleContext:IFlexModuleFactory = oldEmbeddedFontContext ?
+                                               oldEmbeddedFontContext :
+                                               moduleFactory;
+        
         // Not in font registry, so create in this font context.
         var obj:Object = createInModuleContext(moduleContext, className);
 
@@ -11884,10 +11896,10 @@ public class UIComponent extends FlexSprite
         // so that it knows what module to use for creating its TextLines.
         if (className == "mx.core::UIFTETextField")
             obj.fontContext = moduleContext;
-
+        
         return obj;
     }
-
+    
     /**
      *  @private
      *  Returns either "mx.core::UITextField" or "mx.core::UIFTETextField",
@@ -11970,7 +11982,8 @@ public class UIComponent extends FlexSprite
         var italic:Boolean = fontStyle == "italic";
         var fontContext:IFlexModuleFactory = noEmbeddedFonts ? null : 
             embeddedFontRegistry.getAssociatedModuleFactory(
-                fontName, bold, italic, this, moduleFactory);
+                fontName, bold, italic, this, moduleFactory,
+                systemManager);
         return fontContext != oldEmbeddedFontContext;
     }
 

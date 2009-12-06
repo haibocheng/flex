@@ -93,7 +93,8 @@ package flashx.textLayout.operations
 			var paraSelBegIdx:int = absoluteStart-para.getAbsoluteStart();
 			
 			var nextPara:ParagraphElement = ParaEdit.splitParagraph(para, paraSelBegIdx, _characterFormat);
-			textFlow.interactionManager.notifyInsertOrDelete(absoluteStart, 1);
+			if (textFlow.interactionManager)
+				textFlow.interactionManager.notifyInsertOrDelete(absoluteStart, 1);
 
 			// splitParagraph guarantees these exist
 			var lastParaLeaf:FlowLeafElement = para.getLastLeaf(); 
@@ -148,7 +149,8 @@ package flashx.textLayout.operations
 		{ 
 			var para:ParagraphElement = textFlow.findAbsoluteParagraph(absoluteStart);
 			ParaEdit.mergeParagraphWithNext(para);
-			textFlow.interactionManager.notifyInsertOrDelete(absoluteStart, -1);
+			if (textFlow.interactionManager)
+				textFlow.interactionManager.notifyInsertOrDelete(absoluteStart, -1);
 			
 			return absoluteStart < absoluteEnd ? delSelOp.undo() : originalSelectionState;
 		}

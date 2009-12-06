@@ -67,6 +67,7 @@ internal class HaloClasses
 	import mx.skins.halo.TabSkin; TabSkin;
 	import mx.skins.halo.TitleBackground; TitleBackground;
 	import mx.skins.halo.ToolTipBorder; ToolTipBorder;
+	import mx.skins.halo.WindowBackground; WindowBackground;
 	// Maintain alphabetical order
 }
 

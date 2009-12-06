@@ -15,6 +15,7 @@ import static com.adobe.fxg.FXGConstants.*;
 
 import com.adobe.fxg.FXGException;
 import com.adobe.fxg.dom.FXGNode;
+import com.adobe.internal.fxg.dom.DOMParserHelper;
 import com.adobe.internal.fxg.dom.types.BaselineOffset;
 import com.adobe.internal.fxg.dom.types.BlockProgression;
 import com.adobe.internal.fxg.dom.types.LineBreak;
@@ -84,19 +85,19 @@ public abstract class AbstractRichBlockTextNode extends AbstractRichParagraphNod
         }
         else if (FXG_PADDINGLEFT_ATTRIBUTE.equals(name))
         {
-            paddingLeft = getNumberInherit(this, value, PADDING_MIN_INCLUSIVE, PADDING_MAX_INCLUSIVE, paddingLeft.getNumberInheritAsDbl(), "UnknowPaddingLeft");
+            paddingLeft = getNumberInherit(this, name, value, PADDING_MIN_INCLUSIVE, PADDING_MAX_INCLUSIVE, paddingLeft.getNumberInheritAsDbl(), "UnknownPaddingLeft");
         }
         else if (FXG_PADDINGRIGHT_ATTRIBUTE.equals(name))
         {
-            paddingRight = getNumberInherit(this, value, PADDING_MIN_INCLUSIVE, PADDING_MAX_INCLUSIVE, paddingRight.getNumberInheritAsDbl(), "UnknowPaddingRight");
+            paddingRight = getNumberInherit(this, name, value, PADDING_MIN_INCLUSIVE, PADDING_MAX_INCLUSIVE, paddingRight.getNumberInheritAsDbl(), "UnknownPaddingRight");
         }
         else if (FXG_PADDINGTOP_ATTRIBUTE.equals(name))
         {
-            paddingTop = getNumberInherit(this, value, PADDING_MIN_INCLUSIVE, PADDING_MAX_INCLUSIVE, paddingTop.getNumberInheritAsDbl(), "UnknowPaddingTop");
+            paddingTop = getNumberInherit(this, name, value, PADDING_MIN_INCLUSIVE, PADDING_MAX_INCLUSIVE, paddingTop.getNumberInheritAsDbl(), "UnknownPaddingTop");
         }
         else if (FXG_PADDINGBOTTOM_ATTRIBUTE.equals(name))
         {
-            paddingBottom = getNumberInherit(this, value, PADDING_MIN_INCLUSIVE, PADDING_MAX_INCLUSIVE, paddingBottom.getNumberInheritAsDbl(), "UnknowPaddingBottom");
+            paddingBottom = getNumberInherit(this, name, value, PADDING_MIN_INCLUSIVE, PADDING_MAX_INCLUSIVE, paddingBottom.getNumberInheritAsDbl(), "UnknownPaddingBottom");
         }
         else if (FXG_LINEBREAK_ATTRIBUTE.equals(name))
         {
@@ -104,19 +105,19 @@ public abstract class AbstractRichBlockTextNode extends AbstractRichParagraphNod
         }        
         else if (FXG_COLUMNGAP_ATTRIBUTE.equals(name))
         {
-            columnGap = getNumberInherit(this, value, COLUMNGAP_MIN_INCLUSIVE, COLUMNGAP_MAX_INCLUSIVE, columnGap.getNumberInheritAsDbl(), "UnknowColumnGap");
+            columnGap = getNumberInherit(this, name, value, COLUMNGAP_MIN_INCLUSIVE, COLUMNGAP_MAX_INCLUSIVE, columnGap.getNumberInheritAsDbl(), "UnknownColumnGap");
         }
         else if (FXG_COLUMNCOUNT_ATTRIBUTE.equals(name))
         {
-            columnCount = getNumberAutoInt(this, value, COLUMNCOUNT_MIN_INCLUSIVE, COLUMNCOUNT_MAX_INCLUSIVE, columnCount.getNumberAutoAsInt(), "UnknowColumnCount");
+            columnCount = getNumberAutoInt(this, name, value, COLUMNCOUNT_MIN_INCLUSIVE, COLUMNCOUNT_MAX_INCLUSIVE, columnCount.getNumberAutoAsInt(), "UnknownColumnCount");
         }
         else if (FXG_COLUMNWIDTH_ATTRIBUTE.equals(name))
         {
-            columnWidth = getNumberAutoDbl(this, value, COLUMNWIDTH_MIN_INCLUSIVE, COLUMNWIDTH_MAX_INCLUSIVE, columnWidth.getNumberAutoAsDbl(), "UnknownColumnWidth");
+            columnWidth = getNumberAutoDbl(this, name, value, COLUMNWIDTH_MIN_INCLUSIVE, COLUMNWIDTH_MAX_INCLUSIVE, columnWidth.getNumberAutoAsDbl(), "UnknownColumnWidth");
         }
         else if (FXG_FIRSTBASELINEOFFSET_ATTRIBUTE.equals(name))
         {
-            firstBaselineOffset = getFirstBaselineOffset(this, value, BASELINEOFFSET_MIN_INCLUSIVE, BASELINEOFFSET_MAX_INCLUSIVE, firstBaselineOffset.getBaselineOffsetAsDbl());
+            firstBaselineOffset = getFirstBaselineOffset(this, name, value, BASELINEOFFSET_MIN_INCLUSIVE, BASELINEOFFSET_MAX_INCLUSIVE, firstBaselineOffset.getBaselineOffsetAsDbl());
         }
         else if (FXG_VERTICALALIGN_ATTRIBUTE.equals(name))
         {
@@ -142,6 +143,7 @@ public abstract class AbstractRichBlockTextNode extends AbstractRichParagraphNod
      * Convert an FXG String value to a BaselineOffset object.
      * 
      * @param value - the FXG String value.
+     * @param name - the FXG attribute name.
      * @param min - the smallest double value that the result must be greater
      * or equal to.
      * @param max - the largest double value that the result must be smaller
@@ -154,7 +156,7 @@ public abstract class AbstractRichBlockTextNode extends AbstractRichParagraphNod
      * BaselineOffset rule or the value falls out of the specified range 
      * (inclusive).
      */
-    private BaselineOffset getFirstBaselineOffset(FXGNode node, String value, double min, double max, double defaultValue)
+    private BaselineOffset getFirstBaselineOffset(FXGNode node, String name, String value, double min, double max, double defaultValue)
     {
         if (FXG_BASELINEOFFSET_AUTO_VALUE.equals(value))
         {
@@ -172,12 +174,12 @@ public abstract class AbstractRichBlockTextNode extends AbstractRichParagraphNod
         {
         	try
         	{
-        		return BaselineOffset.newInstance(parseDouble(value, min, max, defaultValue));
+        		return BaselineOffset.newInstance(DOMParserHelper.parseDouble(this, value, name, min, max, defaultValue));
         	}
-        	catch(NumberFormatException e)
+        	catch(FXGException e)
         	{
-	            //Exception: Unknown baseline offset: {0}
-	            throw new FXGException(node.getStartLine(), node.getStartColumn(), "UnknownBaselineOffset", value);
+	            //Exception: Unknown first baseline offset: {0}
+	            throw new FXGException(node.getStartLine(), node.getStartColumn(), "UnknownFirstBaselineOffset", value);
         	}
         }
     }
@@ -186,6 +188,7 @@ public abstract class AbstractRichBlockTextNode extends AbstractRichParagraphNod
      * Convert an FXG String value to a NumberAuto object.
      * 
      * @param value - the FXG String value.
+     * @param name - the FXG attribute name.
      * @param min - the smallest double value that the result must be greater
      * or equal to.
      * @param max - the largest double value that the result must be smaller
@@ -198,12 +201,12 @@ public abstract class AbstractRichBlockTextNode extends AbstractRichParagraphNod
      * @throws FXGException if the String did not match a known
      * NumberAuto rule.
      */
-    private NumberAuto getNumberAutoDbl(FXGNode node, String value, double min, double max, double defaultValue, String errorCode)
+    private NumberAuto getNumberAutoDbl(FXGNode node, String name, String value, double min, double max, double defaultValue, String errorCode)
     {
         try
         {
-            return NumberAuto.newInstance(parseDouble(value, min, max, defaultValue));            
-        }catch(NumberFormatException e)
+            return NumberAuto.newInstance(DOMParserHelper.parseDouble(this, value, name, min, max, defaultValue));            
+        }catch(FXGException e)
         {
             if (FXG_NUMBERAUTO_AUTO_VALUE.equals(value))
                 return NumberAuto.newInstance(NumberAutoAsEnum.AUTO);
@@ -219,6 +222,7 @@ public abstract class AbstractRichBlockTextNode extends AbstractRichParagraphNod
      * Convert an FXG String value to a NumberAuto object.
      * 
      * @param value - the FXG String value.
+     * @param name - the FXG attribute name.
      * @param min - the smallest int value that the result must be greater
      * or equal to.
      * @param max - the largest int value that the result must be smaller
@@ -231,12 +235,12 @@ public abstract class AbstractRichBlockTextNode extends AbstractRichParagraphNod
      * @throws FXGException if the String did not match a known
      * NumberAuto rule.
      */
-    private NumberAuto getNumberAutoInt(FXGNode node, String value, int min, int max, int defaultValue, String errorCode)
+    private NumberAuto getNumberAutoInt(FXGNode node, String name, String value, int min, int max, int defaultValue, String errorCode)
     {
         try
         {
-            return NumberAuto.newInstance(parseInt(value, min, max, defaultValue));            
-        }catch(NumberFormatException e)
+            return NumberAuto.newInstance(DOMParserHelper.parseInt(this, value, name, min, max, defaultValue));            
+        }catch(FXGException e)
         {
             if (FXG_NUMBERAUTO_AUTO_VALUE.equals(value))
                 return NumberAuto.newInstance(NumberAutoAsEnum.AUTO);
@@ -252,6 +256,7 @@ public abstract class AbstractRichBlockTextNode extends AbstractRichParagraphNod
      * Convert an FXG String value to a NumberInherit enumeration.
      * 
      * @param value - the FXG String value.
+     * @param name - the FXG attribute name.
      * @param min - the smallest double value that the result must be greater
      * or equal to.
      * @param max - the largest double value that the result must be smaller
@@ -265,12 +270,12 @@ public abstract class AbstractRichBlockTextNode extends AbstractRichParagraphNod
      * NumberInherit rule or the value falls out of the specified range 
      * (inclusive).
      */
-    private NumberInherit getNumberInherit(FXGNode node, String value, double min, double max, double defaultValue, String errorCode)
+    private NumberInherit getNumberInherit(FXGNode node, String name, String value, double min, double max, double defaultValue, String errorCode)
     {
         try
         {
-            return NumberInherit.newInstance(parseDouble(value, min, max, defaultValue));            
-        }catch(NumberFormatException e)
+            return NumberInherit.newInstance(DOMParserHelper.parseDouble(this, value, name, min, max, defaultValue));            
+        }catch(FXGException e)
         {
             if (FXG_INHERIT_VALUE.equals(value))
                 return NumberInherit.newInstance(NumberInheritAsEnum.INHERIT);

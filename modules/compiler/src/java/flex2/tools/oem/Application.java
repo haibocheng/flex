@@ -896,7 +896,7 @@ public class Application implements Builder
             data.swcChecksum = swcContext.checksum();
 
             // create a symbol table
-            SymbolTable symbolTable = new SymbolTable(data.perCompileData);
+            SymbolTable symbolTable = new SymbolTable(tempOEMConfiguration.configuration, data.perCompileData);
 
             data.sources = new ArrayList<Source>();
             data.units = compile(compilers, swcContext, symbolTable, mappings, licenseMap, data.sources, tempOEMConfiguration);
@@ -1097,11 +1097,11 @@ public class Application implements Builder
 
         if (data.perCompileData != null)
         {
-            symbolTable = new SymbolTable(data.perCompileData);
+            symbolTable = new SymbolTable(localOEMConfiguration.configuration, data.perCompileData);
         }
         else
         {
-            symbolTable = SymbolTable.newSymbolTable(localOEMConfiguration.configuration);
+            symbolTable = new SymbolTable(localOEMConfiguration.configuration);
             data.perCompileData = symbolTable.perCompileData;
 
             if (librarySwcCache != null)

@@ -1043,15 +1043,16 @@ public class ListBase extends SkinnableDataContainer
             return false;
         }
         
-        // Step 3: commit the selection change and caret change 
-        if (_selectedIndex != NO_SELECTION)
-            itemSelected(_selectedIndex, false);
-        if (_proposedSelectedIndex != NO_SELECTION && _proposedSelectedIndex != CUSTOM_SELECTED_ITEM)
-            itemSelected(_proposedSelectedIndex, true);
+        // Step 3: commit the selection change and caret change
         _selectedIndex = _proposedSelectedIndex;
-        setCurrentCaretIndex(_proposedSelectedIndex); 
         _proposedSelectedIndex = NO_PROPOSED_SELECTION;
         
+        if (oldSelectedIndex != NO_SELECTION)
+            itemSelected(oldSelectedIndex, false);
+        if (_selectedIndex != NO_SELECTION && _selectedIndex != CUSTOM_SELECTED_ITEM)
+            itemSelected(_selectedIndex, true);
+        setCurrentCaretIndex(_selectedIndex); 
+
         // Step 4: dispatch the "change" event and "caretChange" 
         // events based on the dispatchChangeEvents parameter. Overrides may  
         // chose to dispatch the change/caretChange events 
@@ -1138,12 +1139,8 @@ public class ListBase extends SkinnableDataContainer
         else if (index <= selectedIndex)
         {
             // If an item is added before the selected item, bump up our
-            // selected index backing variable. We check for valid values
-            // because there is a scenario when a ViewStack is the 
-            // dataProvider and has its first child added that the ViewStack
-            // assigns selectedIndex to 0 then this code would
-            // bump it to 1.
-            adjustSelection(Math.min(selectedIndex + 1, dataProvider.length - 1));
+            // selected index backing variable.
+            adjustSelection(selectedIndex + 1);
         }
     }
     

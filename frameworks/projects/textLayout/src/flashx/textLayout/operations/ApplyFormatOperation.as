@@ -19,6 +19,7 @@ package flashx.textLayout.operations
 	import flashx.textLayout.formats.Category;
 	import flashx.textLayout.formats.ITextLayoutFormat;
 	import flashx.textLayout.formats.TextLayoutFormat;
+	import flashx.textLayout.formats.TextLayoutFormatValueHolder;
 	import flashx.textLayout.property.Property;
 	import flashx.textLayout.tlf_internal;
 	use namespace tlf_internal;
@@ -133,25 +134,39 @@ package flashx.textLayout.operations
 			applyContainerFormat = value ? new TextLayoutFormat(value) : null;
 		}
 		
-		private function doInternal():void
+		private function doInternal():SelectionState
 		{
+			var anyNewSelectionState:SelectionState;
+			
 			// Apply character format
-			if (applyLeafFormat && absoluteStart != absoluteEnd)
+			if (applyLeafFormat)
 			{
-				var range:ElementRange = ElementRange.createElementRange(textFlow, absoluteStart,absoluteEnd);
-				
-				var begSel:int = range.absoluteStart;
-				var endSel:int = range.absoluteEnd;
-				if(endSel == textFlow.textLength - 1)
-					++endSel;
-					
-			//	CONFIG::debug { if (begSel != absoluteStart || endSel != absoluteEnd) trace("found mismatch ApplyFormatOperation"); }
-				if (!undoLeafArray)
+				if (absoluteStart != absoluteEnd)
 				{
-					undoLeafArray = new Array();
-					ParaEdit.cacheStyleInformation(textFlow,begSel,endSel,undoLeafArray);
+					var range:ElementRange = ElementRange.createElementRange(textFlow, absoluteStart,absoluteEnd);
+					
+					var begSel:int = range.absoluteStart;
+					var endSel:int = range.absoluteEnd;
+					if(endSel == textFlow.textLength - 1)
+						++endSel;
+						
+				//	CONFIG::debug { if (begSel != absoluteStart || endSel != absoluteEnd) trace("found mismatch ApplyFormatOperation"); }
+					if (!undoLeafArray)
+					{
+						undoLeafArray = new Array();
+						ParaEdit.cacheStyleInformation(textFlow,begSel,endSel,undoLeafArray);
+					}
+					ParaEdit.applyTextStyleChange(textFlow,begSel,endSel,applyLeafFormat,null);
 				}
-				ParaEdit.applyTextStyleChange(textFlow,begSel,endSel,applyLeafFormat,null);
+				else if (originalSelectionState.selectionManagerOperationState && textFlow.interactionManager)
+				{
+					// on point selection remember pendling leaf formats for next char typed
+					
+					anyNewSelectionState = originalSelectionState.clone();
+					var newFormat:TextLayoutFormatValueHolder = new TextLayoutFormatValueHolder(anyNewSelectionState.pointFormat);
+					newFormat.apply(applyLeafFormat);
+					anyNewSelectionState.pointFormat = newFormat;
+				}
 			}
 
 			if (applyParagraphFormat)
@@ -172,14 +187,23 @@ package flashx.textLayout.operations
 				}
 				ParaEdit.applyContainerStyleChange(textFlow,absoluteStart,absoluteEnd,applyContainerFormat,null);
 			}
+			return anyNewSelectionState;
 		}
 		
 		/** @private */
 		public override function doOperation():Boolean
 		{ 
-			doInternal(); 
+			var newSelectionState:SelectionState = doInternal();
+			if (newSelectionState && textFlow.interactionManager)
+				textFlow.interactionManager.setSelectionState(newSelectionState);
 			return true;
 		}	
+		
+		override public function redo():SelectionState
+		{
+			var newSelectionState:SelectionState = doInternal();
+			return newSelectionState? newSelectionState : originalSelectionState;
+		}
 		
 		/** @private */
 		public override function undo():SelectionState

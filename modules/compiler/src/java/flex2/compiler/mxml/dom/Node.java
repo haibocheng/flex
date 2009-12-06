@@ -11,7 +11,10 @@
 
 package flex2.compiler.mxml.dom;
 
+import java.util.List;
+
 import flex2.compiler.mxml.Element;
+import flex2.compiler.mxml.Token;
 
 /**
  * @author Clement Wong
@@ -51,6 +54,41 @@ public class Node extends Element
 	{
 		return image + " " + beginLine;
 	}
-	
-	public String comment;
+
+	@Override
+    public void addChild(Token child)
+    {
+	    if (hasText && !preserveWhitespace)
+	    {
+	        if (child instanceof CDATANode)
+	        {
+	            CDATANode cdata = (CDATANode)child;
+	            if (cdata.isWhitespace())
+	                return;
+	        }
+	    }
+
+	    super.addChild(child);
+    }
+
+    @Override
+    public void addChildren(List<Token> children)
+    {
+        if (hasText && children != null)
+        {
+            for (Token child : children)
+            {
+                addChild(child);
+            }
+            return;
+        }
+
+        super.addChildren(children);
+    }
+
+    public String comment;
+
+	public boolean hasText;
+
+	public boolean preserveWhitespace;
 }

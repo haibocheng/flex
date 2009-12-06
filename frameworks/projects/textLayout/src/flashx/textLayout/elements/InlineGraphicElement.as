@@ -76,6 +76,19 @@ package flashx.textLayout.elements
 	 * <p>Some inline graphics are animations or videos that possibly have audio. They begin to run the first time they are composed after they finish loading.  
 	 * They don't stop running until the flowComposer on the TextFlow is set to null.  At that time they are stopped and unloaded.</p>
 	 * 
+	 * The following restrictions apply to InLineGraphicElement objects:
+	 * <ol>
+	 * 	<li>On export of TLFMarkup, source is converted to a string. If the graphic element is 
+	 *		a class, the Text Layout Framework can't export it properly</li>.
+	 *	<li>When doing a copy/paste operation of an InlineGraphicElement, if source can't be 
+	 * 		used to create a new InLineGraphicElement, it won't be pasted.  For example if 
+	 *		source is a DisplayObject, or if the graphic is set directly, it can't be 
+	 *		duplicated.  Best results are obtained if the source is the class of an embedded graphic 
+	 * 		though that doesn't export/import.</li>
+	 * 	<li>InLineGraphicElement objects work in the factory (TextFlowTextLineFactory) only if 
+	 * 		the source is a class or if you explicitly set the graphic to a loaded graphic. 
+	 * 		InlineGraphic objects that require delayed loads generally do not show up.</li>
+	 * </ol>
 	 * @includeExample examples\InlineGraphicElementExample.as -noswf
 	 *
 	 * @playerversion Flash 10
@@ -842,36 +855,21 @@ package flashx.textLayout.elements
 			}
 		}
 		
-		// used to stop the graphic as soon as complete or io_error is received
-		private function stopOnEvent(e:Event):void
-		{
-			changeGraphicStatus(e is IOErrorEvent ? e : LOAD_COMPLETE);
-			e.currentTarget.removeEventListener(Event.COMPLETE,stopOnEvent);
-			e.currentTarget.removeEventListener(IOErrorEvent.IO_ERROR,stopOnEvent);
-			stop(true);
-		}
 		
 		/** stop if its a movieclip */
 		private function stop(okToUnloadGraphics:Boolean):Boolean
 		{
-
-			if (_graphicStatus == OPEN_RECEIVED)
-			{
-				// the open message has been received but not the complete message.
-				// can't close the graphic until the COMPLETE or IO_ERROR event is received so wait for those.
-				removeDefaultLoadHandlers();
-				
-				// shutdown on COMPLETE or IO_ERROR
-				Loader(graphic).contentLoaderInfo.addEventListener(Event.COMPLETE,stopOnEvent,false,0,true);	
-				Loader(graphic).contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR,stopOnEvent,false,0,true);	
-				return false;
-			}
 			
 			// watch for changing the source while we've got an event listener on the current graphic
 			// if so cancel the load and remove the listeners
-			if (_graphicStatus == LOAD_INITIATED)
+			if (_graphicStatus == OPEN_RECEIVED || _graphicStatus == LOAD_INITIATED)
 			{
-				Loader(graphic).close();	// cancels in process load
+				try
+				{
+					Loader(graphic).close();	// cancels in process load
+				}
+				catch (e:Error)
+				{ /* ignore */ }
 				removeDefaultLoadHandlers();
 			}
 

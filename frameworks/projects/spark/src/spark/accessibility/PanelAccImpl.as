@@ -12,6 +12,7 @@
 package spark.accessibility
 {
 import mx.accessibility.AccImpl;
+import mx.accessibility.AccConst;
 import mx.core.mx_internal;
 import mx.core.UIComponent;
 import spark.components.Panel;
@@ -71,9 +72,14 @@ public class PanelAccImpl extends AccImpl
         // If it were placed on the Panel itself,
         // the AccessibilityImplementations of the Panel's children
         // would be ignored.
-        var titleBar:UIComponent = Panel(component).titleDisplay;
-        titleBar.accessibilityImplementation =
-            new PanelAccImpl(component);
+        var titleDisplay:UIComponent = Panel(component).titleDisplay;
+        
+        if (titleDisplay)
+        {
+            titleDisplay.accessibilityImplementation = new PanelAccImpl(component);
+            if (Panel(component).tabIndex > 0 && titleDisplay.tabIndex == -1)
+                titleDisplay.tabIndex = Panel(component).tabIndex;
+        }
     }
 
     //--------------------------------------------------------------------------
@@ -97,7 +103,7 @@ public class PanelAccImpl extends AccImpl
     {
         super(master);
 
-        role = 0x14; // ROLE_SYSTEM_GROUPING
+        role = AccConst.ROLE_SYSTEM_GROUPING;
     }
 
     //--------------------------------------------------------------------------

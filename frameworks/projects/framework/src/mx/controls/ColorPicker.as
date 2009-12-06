@@ -889,9 +889,7 @@ public class ColorPicker extends ComboBase
     {
         if (!indexFlag)
         {
-            var SI:int = findColorByName(value);
-            if (SI != -1)
-                super.selectedIndex = SI;
+            super.selectedIndex = findColorByName(value);
         }
         else
         {
@@ -1615,7 +1613,7 @@ public class ColorPicker extends ComboBase
         UIComponent.resumeBackgroundProcessing();
         
         if (showingDropdown && showTextField)
-            dropdownSwatch.setFocus();
+            dropdownSwatch.callLater(dropdownSwatch.setFocus);
         else
             setFocus();
         

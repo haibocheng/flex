@@ -215,7 +215,7 @@ include "../styles/metadata/TextStyles.as"
  *  @playerversion AIR 1.1
  *  @productversion Flex 3
  */
-[Style(name="headerColors", type="Array", arrayType="uint", format="Color", inherit="yes", theme="halo")]
+[Style(name="headerColors", type="Array", arrayType="uint", format="Color", inherit="yes", theme="halo, spark")]
 
 /**
  *  Name of the style sheet definition to configure the text (month name and year)
@@ -2671,21 +2671,21 @@ public class DateChooser extends UIComponent implements IFocusManagerComponent, 
             w, headerHeight, cornerRadius, cornerRadius, 0, 0);
         headerContext.endFill();
                
-        // Apply Spark baseColor tint if applicable.
+        // Apply Spark chromeColor tint if applicable.
         if (isSpark && FlexVersion.compatibilityVersion >= FlexVersion.VERSION_4_0)
         {
-            var baseColor:uint = getStyle("baseColor");
+            var chromeColor:uint = getStyle("chromeColor");
             
             // These values derived from SparkSkin.as.
             var defaultColorValue:Number = 0xCC; 
             var defaultColor:Number = 0xCCCCCC; 
             
-            if (baseColor != StyleManager.NOT_A_COLOR && baseColor != defaultColor)
+            if (chromeColor != StyleManager.NOT_A_COLOR && chromeColor != defaultColor)
             {  
                 var colorTransform:ColorTransform = new ColorTransform();
-                colorTransform.redOffset = ((baseColor & (0xFF << 16)) >> 16) - defaultColorValue;
-                colorTransform.greenOffset = ((baseColor & (0xFF << 8)) >> 8) - defaultColorValue;
-                colorTransform.blueOffset = (baseColor & 0xFF) - defaultColorValue;
+                colorTransform.redOffset = ((chromeColor & (0xFF << 16)) >> 16) - defaultColorValue;
+                colorTransform.greenOffset = ((chromeColor & (0xFF << 8)) >> 8) - defaultColorValue;
+                colorTransform.blueOffset = (chromeColor & 0xFF) - defaultColorValue;
                 colorTransform.alphaMultiplier = alpha;
                 calHeader.transform.colorTransform = colorTransform; 
             }

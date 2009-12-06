@@ -23,9 +23,9 @@
 
     <fx:Metadata>
     <![CDATA[ 
-    /** 
-     * @copy spark.skins.spark.ApplicationSkin#hostComponent
-     */
+        /** 
+         * @copy spark.skins.spark.ApplicationSkin#hostComponent
+         */
         [HostComponent("spark.components.SkinnableContainer")]
     ]]>
     </fx:Metadata> 
@@ -37,8 +37,18 @@
              */
             override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number) : void
             {
-                bgFill.color = getStyle("backgroundColor");
-                bgFill.alpha = getStyle("backgroundAlpha");
+                // Push backgroundColor and backgroundAlpha directly.
+                // Handle undefined backgroundColor by hiding the background object.
+                if (isNaN(getStyle("backgroundColor")))
+                {
+                    background.visible = false;
+                }
+                else
+                {
+                    background.visible = true;
+                    bgFill.color = getStyle("backgroundColor");
+                    bgFill.alpha = getStyle("backgroundAlpha");
+                }
                 
                 super.updateDisplayList(unscaledWidth, unscaledHeight);
             }
@@ -50,8 +60,10 @@
         <s:State name="disabled" />
     </s:states>
     
-    <s:Rect left="0" right="0" top="0" bottom="0">
+    <!--- Defines the appearance of the SkinnableContainer class's background. -->
+    <s:Rect id="background" left="0" right="0" top="0" bottom="0">
         <s:fill>
+            <!--- @private -->
             <s:SolidColor id="bgFill" color="#FFFFFF"/>
         </s:fill>
     </s:Rect>
@@ -61,6 +73,7 @@
         size will not be thwarted by this skin part's minimum size.   This is a compromise,
         more about it here: http://bugs.adobe.com/jira/browse/SDK-21143
     -->
+    <!--- @copy spark.components.SkinnableContainer#contentGroup -->
     <s:Group id="contentGroup" left="0" right="0" top="0" bottom="0" minWidth="0" minHeight="0">
         <s:layout>
             <s:BasicLayout/>

@@ -133,7 +133,7 @@ package flashx.textLayout.compose
 		protected function initializeLines():void
 		{
 			// remove all the lines we have now - cache for reuse
-			if (TextLineRecycler.textBlockHasRecreateTextLine)
+			if (TextLineRecycler.textLineRecyclerEnabled)
 			{
 				for each (var line:TextFlowLine in _lines)
 				{
@@ -518,7 +518,7 @@ package flashx.textLayout.compose
 					damageStart = newLine.absoluteStart + newLine.textLength;
 				}
 				// remove userData on the deleted lines so they can be recycled
-				if (TextLineRecycler.textBlockHasRecreateTextLine)
+				if (TextLineRecycler.textLineRecyclerEnabled)
 				{
 					for (var recycleIdx:int = workIndex; recycleIdx < workIndex+deleteCount; recycleIdx++)
 					{

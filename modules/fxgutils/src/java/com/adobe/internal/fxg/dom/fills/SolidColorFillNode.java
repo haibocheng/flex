@@ -13,6 +13,8 @@ package com.adobe.internal.fxg.dom.fills;
 
 import static com.adobe.fxg.FXGConstants.*;
 
+import com.adobe.internal.fxg.dom.DOMParserHelper;
+
 /**
  * @author Peter Farland
  */
@@ -45,9 +47,9 @@ public class SolidColorFillNode extends AbstractFillNode
     public void setAttribute(String name, String value)
     {
         if (FXG_ALPHA_ATTRIBUTE.equals(name))
-            alpha = parseDouble(value, ALPHA_MIN_INCLUSIVE, ALPHA_MAX_INCLUSIVE, alpha);
+            alpha = DOMParserHelper.parseDouble(this, value, name, ALPHA_MIN_INCLUSIVE, ALPHA_MAX_INCLUSIVE, alpha);
         else if (FXG_COLOR_ATTRIBUTE.equals(name))
-            color = parseRGB(value, color);
+            color = DOMParserHelper.parseRGB(this, value, name);
         else
             super.setAttribute(name, value);
     }

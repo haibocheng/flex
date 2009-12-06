@@ -81,11 +81,7 @@ package flashx.textLayout.elements
 		* Specifies the initial link attributes for all LinkElement objects in the text flow. These are default
 		* values for new LinkElement objects that don't specify values for these attributes.
 		*
-		* <p>The default values are: </p>
-		* <listing version="3.0" >
-		* 	LinkElement.linkCharacterFormat.color = blue; 
-		* 	LinkElement.linkCharacterFormat.textDecoration = flashx.textLayout.formats.TextDecoration.UNDERLINE.
-		* </listing>
+		* The default normal format displays the link in blue with underlining.
 		*
 		* @playerversion Flash 10
 		* @playerversion AIR 1.5

@@ -43,6 +43,11 @@ package org.osmf.plugin
 	{
 		/**
 		 * Constructor.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function PluginLoader(mediaFactory:MediaFactory)
 		{
@@ -72,8 +77,13 @@ package org.osmf.plugin
 		/**
 		 * Loads the plugin into the ILoadable.
 		 * On success sets the LoadState of the ILOadable to LOADING, 
-		 * on failure to LOAD_FAILED.
+		 * on failure to LOAD_ERROR.
 		 * @param pluginInfo IPluginInfo instance to use for this load operation.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		protected function loadFromPluginInfo(loadable:ILoadable, pluginInfo:IPluginInfo, loader:Loader = null):void
 		{
@@ -100,7 +110,7 @@ package org.osmf.plugin
 						
 						var loadedContext:PluginLoadedContext = new PluginLoadedContext(pluginInfo, loader); 
 						
-						updateLoadable(loadable, LoadState.LOADED, loadedContext);
+						updateLoadable(loadable, LoadState.READY, loadedContext);
 					}
 					catch (error:RangeError)
 					{
@@ -111,8 +121,15 @@ package org.osmf.plugin
 				else
 				{
 					// Version not supported by plugin.
-					updateLoadable(loadable, LoadState.LOAD_FAILED);
-					loadable.dispatchEvent(new MediaErrorEvent(new MediaError(MediaErrorCodes.INVALID_PLUGIN_VERSION)));
+					updateLoadable(loadable, LoadState.LOAD_ERROR);
+					loadable.dispatchEvent
+						( new MediaErrorEvent
+							( MediaErrorEvent.MEDIA_ERROR
+							, false
+							, false
+							, new MediaError(MediaErrorCodes.INVALID_PLUGIN_VERSION)
+							)
+						);
 				}
 			}
 			else
@@ -123,8 +140,15 @@ package org.osmf.plugin
 			
 			if (invalidImplementation)
 			{
-				updateLoadable(loadable, LoadState.LOAD_FAILED);
-				loadable.dispatchEvent(new MediaErrorEvent(new MediaError(MediaErrorCodes.INVALID_PLUGIN_IMPLEMENTATION)));
+				updateLoadable(loadable, LoadState.LOAD_ERROR);
+				loadable.dispatchEvent
+					( new MediaErrorEvent
+						( MediaErrorEvent.MEDIA_ERROR
+						, false
+						, false
+						, new MediaError(MediaErrorCodes.INVALID_PLUGIN_IMPLEMENTATION)
+						)
+					);
 			}
 		}
 		

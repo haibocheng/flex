@@ -19,12 +19,15 @@ package flashx.textLayout.edit
 	import flash.events.TextEvent;
 	import flash.system.Capabilities;
 	import flash.ui.Keyboard;
+	import flash.utils.getQualifiedClassName;
 	
 	import flashx.textLayout.compose.TextLineRecycler;
 	import flashx.textLayout.container.ContainerController;
 	import flashx.textLayout.debug.assert;
+	import flashx.textLayout.elements.Configuration;
 	import flashx.textLayout.elements.FlowElement;
 	import flashx.textLayout.elements.FlowLeafElement;
+	import flashx.textLayout.elements.GlobalSettings;
 	import flashx.textLayout.elements.ParagraphElement;
 	import flashx.textLayout.events.FlowOperationEvent;
 	import flashx.textLayout.formats.ITextLayoutFormat;
@@ -45,8 +48,8 @@ package flashx.textLayout.edit
 	import flashx.textLayout.operations.PasteOperation;
 	import flashx.textLayout.operations.RedoOperation;
 	import flashx.textLayout.operations.SplitParagraphOperation;
-	import flashx.textLayout.operations.UndefineFormatOnElementOperation;
-	import flashx.textLayout.operations.UndefineFormatOperation;
+	import flashx.textLayout.operations.ClearFormatOnElementOperation;
+	import flashx.textLayout.operations.ClearFormatOperation;
 	import flashx.textLayout.operations.UndoOperation;
 	import flashx.textLayout.tlf_internal;
 	import flashx.textLayout.utils.CharacterUtil;
@@ -63,6 +66,29 @@ package flashx.textLayout.edit
 	 * property of the TextFlow object. The edit manager handles changes to the text (such as insertions, 
 	 * deletions, and format changes). Changes are reversible if the edit manager has an undo manager. The edit
 	 * manager triggers the recomposition and display of the text flow, as necessary.</p>
+	 *
+	 * <p>The EditManager class supports the following keyboard shortcuts:</p>
+	 * 
+	 * <table class="innertable" width="100%">
+	 *      <tr><th>Keys</th><th>Result</th></tr>
+	 *      <tr><td>ctrl-z</td><td>undo</td></tr>					
+	 * 	<tr><td>ctrl-y</td><td>redo</td></tr>					
+	 * 	<tr><td>ctrl-backspace</td><td>deletePreviousWord</td></tr>					
+	 * 	<tr><td>ctrl-delete</td><td>deleteNextWord</td></tr>					
+	 * 	<tr><td>alt+delete</td><td>deleteNextWord</td></tr>					
+	 * 	<tr><td>ctrl+alt-delete</td><td>deleteNextWord</td></tr>					
+	 * 	<tr><td>ctrl-shift-hyphen</td><td>insert discretionary hyphen</td></tr>					
+	 * 	<tr><td>ctrl+backspace</td><td>deletePreviousWord</td></tr>					
+	 * 	<tr><td>alt+backspace</td><td>deletePreviousWord</td></tr>					
+	 * 	<tr><td>ctrl+alt-backspace</td><td>deletePreviousWord</td></tr>					
+	 * 	<tr><td>INSERT</td><td>toggles overWriteMode</td></tr>					
+	 * 	<tr><td>backspace</td><td>deletePreviousCharacter</td></tr>					
+	 * 	<tr><td>ENTER</td><td>if textFlow.configuration.manageEnterKey splitParagraph</td></tr>					
+	 * 	<tr><td>TAB</td><td>if textFlow.configuration.manageTabKey insert a TAB or overwrite next character with a TAB</td></tr>    
+	 * </table>
+	 *
+	 * <p><strong>Note:</strong> The following keys do not work on Windows: alt-backspace, alt-delete, ctrl+alt-backspace,
+	 * and ctrl+alt-delete. These keys do not generate an event for the runtime.</p>						
  	 * 
  	 * @see flashx.textLayout.elements.TextFlow
  	 * @see flashx.undo.UndoManager
@@ -205,43 +231,47 @@ package flashx.textLayout.edit
 				// The player subsequently sends a text input event (which should be ignored) as listed below:
 				// CTRL/CMD+z: Only on Mac when using a pre-Argo player version
 				// CTRL/CMD+y: On all platforms (the exact char code for the text input event is platform dependent) 
-				
-				switch(event.charCode)
+				if (!event.altKey)
 				{
-					case 122:	// small z
-						if (!TextLineRecycler.textBlockHasRecreateTextLine /* pre-Argo */ && (Capabilities.os.search("Mac OS") > -1)) 
-							ignoreTextEvent = true;
-						undo();
-						event.preventDefault();
-						break;
-					case 121:	// small y
-						ignoreTextEvent = true;
-						redo();
-						event.preventDefault();
-						break;
-					case Keyboard.BACKSPACE:
-						deletePreviousWord();
-						event.preventDefault();
-						break;
-				}
-				if (event.keyCode == Keyboard.DELETE)
-				{
-					deleteNextWord();
-					event.preventDefault();
-				}
-				
-				if (event.shiftKey)
-				{
-					// detect ctrl-shift-"-" (cnd-shift-"-" on mac) and insert a DH
-					if (event.charCode == 95)
+					switch(event.charCode)
 					{
-						//a discretionary hyphen is being inserted. 
-						var discretionaryHyphenString:String = String.fromCharCode(0x000000AD);
-						overwriteMode ? overwriteText(discretionaryHyphenString) : insertText(discretionaryHyphenString);
+						case 122:	// small z
+							/* pre-Argo and on the mac then ignoreNextTextEvent */ 
+							if (!Configuration.versionIsAtLeast(10,1) && (Capabilities.os.search("Mac OS") > -1)) 
+								ignoreNextTextEvent = true;
+							undo();
+							event.preventDefault();
+							break;
+						case 121:	// small y
+							ignoreNextTextEvent = true;
+							redo();
+							event.preventDefault();
+							break;
+						case Keyboard.BACKSPACE:
+							deletePreviousWord();
+							event.preventDefault();
+							break;
+					}
+					if (event.keyCode == Keyboard.DELETE)
+					{
+						deleteNextWord();
 						event.preventDefault();
 					}
+					
+					if (event.shiftKey)
+					{
+						// detect ctrl-shift-"-" (cnd-shift-"-" on mac) and insert a DH
+						if (event.charCode == 95)
+						{
+							//a discretionary hyphen is being inserted. 
+							var discretionaryHyphenString:String = String.fromCharCode(0x000000AD);
+							overwriteMode ? overwriteText(discretionaryHyphenString) : insertText(discretionaryHyphenString);
+							event.preventDefault();
+						}
+					}
 				}
-			} else if (event.altKey)
+			} 
+			else if (event.altKey)
 			{
 				if (event.charCode == Keyboard.BACKSPACE)
 				{
@@ -311,16 +341,14 @@ package flashx.textLayout.edit
 		/** @private */
 		public override function textInputHandler(event:TextEvent):void
 		{
-			if (!ignoreTextEvent)
+			if (!ignoreNextTextEvent)
 			{
-				// trace("textInputHandler","length",event.text.length,"text",event.text,"charCode",event.text.charCodeAt(0));
-				
 				var charCode:int = event.text.charCodeAt(0);
 				// only if its a space or larger - ignore control characters here
 				if (charCode >=  32)
 					overwriteMode ? overwriteText(event.text) : insertText(event.text);
 			}
-			ignoreTextEvent = false;
+			ignoreNextTextEvent = false;
 		}
 		
 		/** 
@@ -346,8 +374,12 @@ package flashx.textLayout.edit
 		*/
 		override public function imeStartCompositionHandler(event:IMEEvent):void
 		{
-			//trace("start IME session");
 			CONFIG::debug{ assert(!_imeSession, "IME session already in progress: IME not reentrant!"); }
+
+			// any pending operations must be executed first, to
+			// preserve operation order.
+			flushPendingOperations();
+			
 			// Coded to avoid dependency on Argo (10.1). 
 			if (!(event["imeClient"]))
 			{
@@ -389,7 +421,7 @@ package flashx.textLayout.edit
 		  * @playerversion AIR 1.5
  	 	  * @langversion 3.0
 		  */
-		public function doOperation(operation:FlowOperation):void
+		public override function doOperation(operation:FlowOperation):void
 		{
 			CONFIG::debug { assert(operation.textFlow == this.textFlow,"Operation from a different TextFlow"); }
 			
@@ -401,9 +433,17 @@ package flashx.textLayout.edit
 			// preserve operation order.
 			flushPendingOperations();
 			
-			++captureLevel;
-			operation = doInternal(operation);
-			--captureLevel;
+			try
+			{
+				captureLevel++;
+				operation = doInternal(operation);
+			}
+			catch(e:Error)
+			{
+				captureLevel--;
+				throw(e);
+			}
+			captureLevel--;
 			
 			if (operation)			// don't finalize if operation was cancelled
 				finalizeDo(operation);
@@ -444,7 +484,8 @@ package flashx.textLayout.edit
 							}
 						}
 					}
-					_undoManager.pushUndo(op);
+					if (op.canUndo())
+						_undoManager.pushUndo(op);
 					allowOperationMerge = true;
 
 					// following operations are no longer redoable
@@ -458,6 +499,11 @@ package flashx.textLayout.edit
 					var controllerIndex:int = textFlow.flowComposer.findControllerIndexAtPosition(activePosition);
 					if (controllerIndex >= 0)
 						textFlow.flowComposer.getControllerAt(controllerIndex).scrollToRange(activePosition,anchorPosition);	
+				}
+				if (!_imeSession)
+				{	
+					var opEvent:FlowOperationEvent = new FlowOperationEvent(FlowOperationEvent.FLOW_OPERATION_COMPLETE,false,false,op,0,null);
+					textFlow.dispatchEvent(opEvent);
 				}
 			}	
 		}
@@ -481,14 +527,19 @@ package flashx.textLayout.edit
 			
 			var captureStart:int = captureOperations.length;
 			var success:Boolean = false;
+			var opEvent:FlowOperationEvent;
 			
 			// tell any listeners about the operation
 			if (!_imeSession)
 			{
-				var opEvent:FlowOperationEvent = new FlowOperationEvent(FlowOperationEvent.FLOW_OPERATION_BEGIN,false,true,op,null);
+				opEvent = new FlowOperationEvent(FlowOperationEvent.FLOW_OPERATION_BEGIN,false,true,op,captureLevel-1,null);
 				textFlow.dispatchEvent(opEvent);
 				if (opEvent.isDefaultPrevented())
 					return null;
+				// user may replace the operation - TODO: WHAT IF SWITCH TO UNDO/REDO????
+				op = opEvent.operation;
+				if ((op is UndoOperation) || (op is RedoOperation))
+					throw new IllegalOperationError(GlobalSettings.getResourceStringFunction("illegalOperation",[ getQualifiedClassName(op) ]));
 			}
 				
 			var opError:Error = null;
@@ -517,7 +568,8 @@ package flashx.textLayout.edit
 				else 
 				{
 					var index:int = captureOperations.indexOf(op);
-					if (index >= 0) captureOperations.splice(index, 1);
+					if (index >= 0) 
+						captureOperations.splice(index, 1);
 				}
 			}
 			catch(e:Error)
@@ -529,11 +581,12 @@ package flashx.textLayout.edit
 			// client can check generation number for changes
 			if (!_imeSession)
 			{
-				opEvent = new FlowOperationEvent(FlowOperationEvent.FLOW_OPERATION_END,false,true,op,opError);
+				opEvent = new FlowOperationEvent(FlowOperationEvent.FLOW_OPERATION_END,false,true,op,captureLevel-1,opError);
 				textFlow.dispatchEvent(opEvent);
+				opError = opEvent.isDefaultPrevented() ? null : opEvent.error;
 			}
 
-			if (opError && (!opEvent || !opEvent.isDefaultPrevented()))
+			if (opError)
 				throw (opError);
 				
 			// If we fired off any subsidiary operations, create a composite operation to hold them all
@@ -602,7 +655,7 @@ package flashx.textLayout.edit
 			if (!_imeSession)
 			{
 				var undoPsuedoOp:UndoOperation = new UndoOperation(operation);
-				var opEvent:FlowOperationEvent = new FlowOperationEvent(FlowOperationEvent.FLOW_OPERATION_BEGIN,false,true,undoPsuedoOp,null);
+				var opEvent:FlowOperationEvent = new FlowOperationEvent(FlowOperationEvent.FLOW_OPERATION_BEGIN,false,true,undoPsuedoOp,0,null);
 				textFlow.dispatchEvent(opEvent);
 				if (opEvent.isDefaultPrevented())
 				{
@@ -610,6 +663,10 @@ package flashx.textLayout.edit
 					undoManager.pushUndo(operation);
 					return;
 				}
+				undoPsuedoOp = opEvent.operation as UndoOperation;
+				if (!undoPsuedoOp)
+					throw new IllegalOperationError(GlobalSettings.getResourceStringFunction("illegalOperation",[ getQualifiedClassName(opEvent.operation) ]));
+				operation = undoPsuedoOp.operation;
 			}
 					
 			if (operation.endGeneration != textFlow.generation)
@@ -630,16 +687,7 @@ package flashx.textLayout.edit
 				setSelectionState(rslt);
 				if (_undoManager)
 					_undoManager.pushRedo(operation);
-				updateAllControllers();
-				// push the generation of the textFlow backwards.
-				textFlow.setGeneration(operation.beginGeneration);
-					
-				if (hasSelection())
-				{
-					var controllerIndex:int = textFlow.flowComposer.findControllerIndexAtPosition(activePosition);
-					if (controllerIndex >= 0)
-						textFlow.flowComposer.getControllerAt(controllerIndex).scrollToRange(activePosition,anchorPosition);											
-				}
+
 			}
 			catch(e:Error)
 			{
@@ -649,12 +697,27 @@ package flashx.textLayout.edit
 			// tell user its complete and give them a chance to cancel the rethrow
 			if (!_imeSession)
 			{
-				opEvent = new FlowOperationEvent(FlowOperationEvent.FLOW_OPERATION_END,false,true,undoPsuedoOp,opError);
+				opEvent = new FlowOperationEvent(FlowOperationEvent.FLOW_OPERATION_END,false,true,undoPsuedoOp,0,opError);
 				textFlow.dispatchEvent(opEvent);
+				opError = opEvent.isDefaultPrevented() ? null : opEvent.error;
 			}
 
-			if (opError && (!opEvent || !opEvent.isDefaultPrevented()))
+			if (opError)
 				throw (opError);
+			
+			updateAllControllers();
+			
+			// push the generation of the textFlow backwards - must be done after update which does a normalize
+			textFlow.setGeneration(operation.beginGeneration);
+			
+			if (hasSelection())
+			{
+				var controllerIndex:int = textFlow.flowComposer.findControllerIndexAtPosition(activePosition);
+				if (controllerIndex >= 0)
+					textFlow.flowComposer.getControllerAt(controllerIndex).scrollToRange(activePosition,anchorPosition);											
+			}
+			opEvent = new FlowOperationEvent(FlowOperationEvent.FLOW_OPERATION_COMPLETE,false,false,undoPsuedoOp,0,null);
+			textFlow.dispatchEvent(opEvent);
 		}
 		
 		/** 
@@ -676,6 +739,7 @@ package flashx.textLayout.edit
 		/** @private */
 		public function performRedo(theop:IOperation):void
 		{
+			var opEvent:FlowOperationEvent;
 			var op:FlowOperation = theop as FlowOperation;
 			if ((!op) || (op.textFlow != textFlow)) 
 				return;
@@ -683,7 +747,7 @@ package flashx.textLayout.edit
 			if (!_imeSession)
 			{
 				var redoPsuedoOp:RedoOperation = new RedoOperation(op);
-				var opEvent:FlowOperationEvent = new FlowOperationEvent(FlowOperationEvent.FLOW_OPERATION_BEGIN,false,true,redoPsuedoOp,null);
+				opEvent = new FlowOperationEvent(FlowOperationEvent.FLOW_OPERATION_BEGIN,false,true,redoPsuedoOp,0,null);
 				textFlow.dispatchEvent(opEvent);
 				if (opEvent.isDefaultPrevented() && _undoManager)
 				{
@@ -691,6 +755,10 @@ package flashx.textLayout.edit
 					_undoManager.pushRedo(op);
 					return;
 				}
+				redoPsuedoOp = opEvent.operation as RedoOperation;
+				if (!redoPsuedoOp)
+					throw new IllegalOperationError(GlobalSettings.getResourceStringFunction("illegalOperation",[ getQualifiedClassName(opEvent.operation) ]));
+				op = redoPsuedoOp.operation;
 			}
 					
 			if (op.beginGeneration != textFlow.generation)
@@ -710,16 +778,8 @@ package flashx.textLayout.edit
 				setSelectionState(rslt);
 				if (_undoManager)
 					_undoManager.pushUndo(op);
-				updateAllControllers();
-				// set the generation of the textFlow to end of redoOp.
-				textFlow.setGeneration(op.endGeneration);
-										
-				if (hasSelection())
-				{
-					var controllerIndex:int = textFlow.flowComposer.findControllerIndexAtPosition(activePosition);
-					if (controllerIndex >= 0)
-						textFlow.flowComposer.getControllerAt(controllerIndex).scrollToRange(activePosition,anchorPosition);						
-				}				
+
+			
 			}
 			catch(e:Error)
 			{
@@ -729,11 +789,27 @@ package flashx.textLayout.edit
 			// tell user its complete and give them a chance to cancel the rethrow
 			if (!_imeSession)
 			{
-				opEvent = new FlowOperationEvent(FlowOperationEvent.FLOW_OPERATION_END,false,true,redoPsuedoOp,opError);
+				opEvent = new FlowOperationEvent(FlowOperationEvent.FLOW_OPERATION_END,false,true,redoPsuedoOp,0,opError);
 				textFlow.dispatchEvent(opEvent);
+				opError = opEvent.isDefaultPrevented() ? null : opEvent.error;
 			}
-			if (opError && (!opEvent || !opEvent.isDefaultPrevented()))
+			if (opError)
 				throw (opError);
+			
+			updateAllControllers();
+			
+			// push the generation of the textFlow backwards - must be done after update which does a normalize
+			// set the generation of the textFlow to end of redoOp.
+			textFlow.setGeneration(op.endGeneration);
+			
+			if (hasSelection())
+			{
+				var controllerIndex:int = textFlow.flowComposer.findControllerIndexAtPosition(activePosition);
+				if (controllerIndex >= 0)
+					textFlow.flowComposer.getControllerAt(controllerIndex).scrollToRange(activePosition,anchorPosition);						
+			}	
+			opEvent = new FlowOperationEvent(FlowOperationEvent.FLOW_OPERATION_COMPLETE,false,false,op,0,null);
+			textFlow.dispatchEvent(opEvent);			
 		}
 		
 		/**
@@ -758,8 +834,35 @@ package flashx.textLayout.edit
 		/** @private */
 		tlf_internal function defaultOperationState(operationState:SelectionState = null):SelectionState
 		{
-			if (!operationState)
-				return hasSelection() ? getSelectionState() : null;
+			if (operationState)
+			{
+				// flush any pending operations and use marks to preserve the operationState positions
+				var markActive:Mark = createMark();
+				var markAnchor:Mark = createMark();
+				try
+				{
+					markActive.position = operationState.activePosition;
+					markAnchor.position = operationState.anchorPosition;
+					flushPendingOperations();
+				}
+				finally
+				{
+					removeMark(markActive);
+					removeMark(markAnchor);
+					operationState.activePosition = markActive.position;
+					operationState.anchorPosition = markAnchor.position;
+				}
+			}
+			else
+			{
+				flushPendingOperations();
+				if (hasSelection())
+				{
+					// tell the operation that the state is from the SelectionManager so it will update pending point formats
+					operationState = getSelectionState();
+					operationState.selectionManagerOperationState = true;
+				}
+			}
 			return operationState;
 		}
 
@@ -897,8 +1000,6 @@ package flashx.textLayout.edit
 			if (!operationState)
 				return;
 
-			pointFormat = new TextLayoutFormat(textFlow.findLeaf(operationState.absoluteStart).format);
-
 			var deleteOp:DeleteTextOperation;
 			if (operationState.absoluteStart == operationState.absoluteEnd)
 			{	// with a caret selection, delete the previous character
@@ -920,7 +1021,6 @@ package flashx.textLayout.edit
 		 */		
 		public function deletePreviousWord(operationState:SelectionState = null):void
 		{
-			var origOperationState:SelectionState
 			operationState = defaultOperationState(operationState);
 			if (!operationState)
 				return;
@@ -998,24 +1098,23 @@ package flashx.textLayout.edit
 		 */	
 		public function insertText(text:String, origOperationState:SelectionState = null):void
 		{
-			var operationState:SelectionState = defaultOperationState(origOperationState);
-			if (!operationState)
-				return;
-			
 			// if there's another insert operation waiting to be executed, 
 			// just add to it, if possible
-			if (pendingInsert)
+			if (origOperationState == null && pendingInsert)
 				pendingInsert.text += text;
 			else 
 			{
+				var operationState:SelectionState = defaultOperationState(origOperationState);
+				if (!operationState)
+					return;
+				
 				// rather than execute the insert immediately, create
 				// it and wait for the next frame, in order to batch
 				// keystrokes.
 				pendingInsert = new InsertTextOperation(operationState, text);
-				if (origOperationState == null)	// clear pointFormat
-					this.pointFormat = null;
+				
 				var controller:ContainerController = textFlow.flowComposer.getControllerAt(0);
-				if (controller && controller.container)
+				if (captureLevel == 0 && origOperationState == null && controller && controller.container)
 				{
 					enterFrameListener = controller.container;
 					enterFrameListener.addEventListener(Event.ENTER_FRAME, enterFrameHandler, false, 1.0, true);
@@ -1091,32 +1190,15 @@ package flashx.textLayout.edit
 		 */		
 		public function applyFormat(leafFormat:ITextLayoutFormat, paragraphFormat:ITextLayoutFormat, containerFormat:ITextLayoutFormat, operationState:SelectionState = null):void
 		{
+			operationState = defaultOperationState(operationState);
 			if (!operationState)
-			{
-				operationState = defaultOperationState(operationState);
-				if (!operationState)
-					return;
-
-				// on point selection remember pendling leaf formats for next char typed
-				var newPointFormat:ITextLayoutFormat = leafFormat;
-				if (absoluteEnd == absoluteStart && newPointFormat != null)
-				{
-					if (pointFormat == null)
-						pointFormat = new TextLayoutFormat(newPointFormat);
-					else
-					{
-						CONFIG::debug{ assert(pointFormat is TextLayoutFormat, "What kind of format is the pointFormat if not TextLayoutFormat?!"); }
-						var format:TextLayoutFormat = pointFormat as TextLayoutFormat;
-						format.apply(newPointFormat);
-					}
-				}
-			}
+				return;
 
 			// apply to the current selection else remember new format for next char typed
 			doOperation(new ApplyFormatOperation(operationState, leafFormat, paragraphFormat, containerFormat));
 		}
 		/** 
-		 * @copy IEditManager#undefineFormat()
+		 * @copy IEditManager#clearFormat()
 		 * 
 		 * Known issue is that undefines of leafFormat values with a point selection are not applied at the next insertion.
 		 * 
@@ -1124,33 +1206,14 @@ package flashx.textLayout.edit
 		 * @playerversion AIR 1.5
 		 * @langversion 3.0
 		 */
-		public function undefineFormat(leafFormat:ITextLayoutFormat, paragraphFormat:ITextLayoutFormat, containerFormat:ITextLayoutFormat, operationState:SelectionState = null):void
+		public function clearFormat(leafFormat:ITextLayoutFormat, paragraphFormat:ITextLayoutFormat, containerFormat:ITextLayoutFormat, operationState:SelectionState = null):void
 		{
+			operationState = defaultOperationState(operationState);
 			if (!operationState)
-			{
-				operationState = defaultOperationState(operationState);
-				if (!operationState)
-					return;
-				
-				// remember new formats for next char typed
-				if (absoluteEnd == absoluteStart && leafFormat != null)
-				{
-					// This is only a partial implementation - see watson bug 
-					// here if the format is pending we can clear it
-					// The bug is that we don't remember any pending clear that's not set in pointFormat on the next character typed
-					if (pointFormat && leafFormat)
-					{
-						for (var prop:String in TextLayoutFormat.description)
-						{
-							if (leafFormat[prop] !== undefined)
-								pointFormat[prop] = undefined;
-						} 
-					}
-				}
-			}
+				return;
 			
 			// apply to the current selection else remember new format for next char typed
-			doOperation(new UndefineFormatOperation(operationState, leafFormat, paragraphFormat, containerFormat));
+			doOperation(new ClearFormatOperation(operationState, leafFormat, paragraphFormat, containerFormat));
 		}
 		/** 
 		 * @copy IEditManager#applyLeafFormat()
@@ -1211,19 +1274,19 @@ package flashx.textLayout.edit
 		}
 
 		/** 
-		 * @copy IEditManager#applyFormatToElement()
+		 * @copy IEditManager#clearFormatOnElement()
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
 		 * @langversion 3.0
 		 */	
-		public function undefineFormatOnElement(targetElement:FlowElement, format:ITextLayoutFormat, operationState:SelectionState = null):void
+		public function clearFormatOnElement(targetElement:FlowElement, format:ITextLayoutFormat, operationState:SelectionState = null):void
 		{
 			operationState = defaultOperationState(operationState);
 			if (!operationState)
 				return;
 			
-			doOperation(new UndefineFormatOnElementOperation(operationState, targetElement, format));
+			doOperation(new ClearFormatOnElementOperation(operationState, targetElement, format));
 		}
 		
 		/** 
@@ -1370,9 +1433,18 @@ package flashx.textLayout.edit
 		 */
 		public function beginCompositeOperation():void
 		{
+			flushPendingOperations();
+			
 			if (!parentStack)
 				parentStack = [];
 			var operation:CompositeOperation = new CompositeOperation();
+			
+			if (!_imeSession)
+			{	
+				var opEvent:FlowOperationEvent = new FlowOperationEvent(FlowOperationEvent.FLOW_OPERATION_BEGIN,false,false,operation,captureLevel,null);
+				textFlow.dispatchEvent(opEvent);
+			}
+			
 			CONFIG::debug { assert(!operation.operations  || operation.operations.length == 0, "opening a composite operation that already has operations"); }
 			operation.setGenerations(textFlow.generation, 0);
 			parentStack.push(operation);
@@ -1395,6 +1467,11 @@ package flashx.textLayout.edit
 			--captureLevel;
 			
 			var operation:FlowOperation = parentStack.pop() as FlowOperation;
+			if (!_imeSession)
+			{	
+				var opEvent:FlowOperationEvent = new FlowOperationEvent(FlowOperationEvent.FLOW_OPERATION_END,false,false,operation,captureLevel,null);
+				textFlow.dispatchEvent(opEvent);
+			}
 			operation.setGenerations(operation.beginGeneration, textFlow.generation);
 			finalizeDo(operation);
 		}

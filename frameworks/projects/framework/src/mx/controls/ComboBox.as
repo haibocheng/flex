@@ -472,6 +472,9 @@ include "../styles/metadata/TextStyles.as"
 
 [IconFile("ComboBox.png")]
 
+[Alternative(replacement="spark.components.DropDownList", since="4.0")]
+[Alternative(replacement="spark.components.ComboBox", since="4.0")]
+
 /**
  *  The ComboBox control contains a drop-down list
  *  from which the user can select a single value.
@@ -1447,7 +1450,11 @@ public class ComboBox extends ComboBase
         // and will not affect the dropdown size
         if (_dropdown && !inTween)
         {
-            destroyDropdown();
+            // We will not destroy our dropdown if user is actively
+            // interacting with it, this has been legacy behavior since
+            // Flex 3.0.
+            if (!_showingDropdown)
+                destroyDropdown();
         }
         else if (_showingDropdown)
         {

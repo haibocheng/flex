@@ -192,6 +192,7 @@ public final class CompilationUnit
 	public Map<String, AbcClass> classTable;
 	
 	public MetaDataNode hostComponentMetaData;
+	public String hostComponentOwnerClass;
     
     /**
      * The CRC32 of the class signature, coming from SignatureExtension.

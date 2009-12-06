@@ -24,6 +24,7 @@ import macromedia.asc.parser.AttributeListNode;
 import macromedia.asc.parser.ClassDefinitionNode;
 import macromedia.asc.parser.DocCommentNode;
 import macromedia.asc.parser.FunctionDefinitionNode;
+import macromedia.asc.parser.IdentifierNode;
 import macromedia.asc.parser.InterfaceDefinitionNode;
 import macromedia.asc.parser.LiteralBooleanNode;
 import macromedia.asc.parser.LiteralNullNode;
@@ -957,6 +958,10 @@ public class ClassTable implements DocCommentTable {
                         {
                             paramTypes[i] = getRefName(cx, pn.typeref);
                         }
+                        else
+                        {
+                        	paramTypes[i] = "*";
+                        }
                         
                         //parameter defaults
                         if (pn.init == null)
@@ -1048,7 +1053,16 @@ public class ClassTable implements DocCommentTable {
                     else if (vb.initializer instanceof MemberExpressionNode)
                     {
                         MemberExpressionNode mb = (MemberExpressionNode)(vb.initializer);
-                        Slot vs = (mb.ref != null ? mb.ref.getSlot(cx, Tokens.GET_TOKEN) : null);
+                        Slot vs = null;
+						if (mb.ref != null && mb.selector.isGetExpression())
+						{
+							vs = (mb.ref != null ? mb.ref.getSlot(cx, Tokens.GET_TOKEN) : null);
+						}
+						else
+						{
+							vs = vb.ref.getSlot(cx, Tokens.GET_TOKEN);
+						}
+                        
                         Value v = (vs != null ? vs.getValue() : null);
                         ObjectValue ov = ((v instanceof ObjectValue) ? (ObjectValue)(v) : null);
                         // if constant evaluator has determined this has a value, use it.

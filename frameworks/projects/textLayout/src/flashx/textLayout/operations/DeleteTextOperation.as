@@ -10,6 +10,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 package flashx.textLayout.operations
 {
+	import flashx.textLayout.edit.SelectionManager;
 	import flashx.textLayout.edit.SelectionState;
 	import flashx.textLayout.edit.TextFlowEdit;
 	import flashx.textLayout.edit.TextScrap;
@@ -17,6 +18,7 @@ package flashx.textLayout.operations
 	import flashx.textLayout.elements.ParagraphElement;
 	import flashx.textLayout.formats.ITextLayoutFormat;
 	import flashx.textLayout.formats.TextLayoutFormat;
+	import flashx.textLayout.formats.TextLayoutFormatValueHolder;
 	import flashx.textLayout.tlf_internal;
 	
 	use namespace tlf_internal;
@@ -35,9 +37,10 @@ package flashx.textLayout.operations
 	{
 		private var _textScrap:TextScrap;
 		private var _allowMerge:Boolean;
-		private var _undoParaFormat:ITextLayoutFormat = null;
-		private var _undoCharacterFormat:ITextLayoutFormat = null;
+		private var _undoParaFormat:TextLayoutFormatValueHolder;
+		private var _undoCharacterFormat:TextLayoutFormatValueHolder;
 		private var _needsOldFormat:Boolean = false;
+		private var _pendingFormat:TextLayoutFormatValueHolder;
 		
 		private var _deleteSelectionState:SelectionState = null;
 		/** 
@@ -53,14 +56,11 @@ package flashx.textLayout.operations
 		 * @playerversion AIR 1.5
 	 	 * @langversion 3.0 
 		 */
-		function DeleteTextOperation(operationState:SelectionState, deleteSelectionState:SelectionState = null, allowMerge:Boolean = false)
+		public function DeleteTextOperation(operationState:SelectionState, deleteSelectionState:SelectionState = null, allowMerge:Boolean = false)
 		{
-			if (!deleteSelectionState)
-				deleteSelectionState = operationState;
-				
-			_deleteSelectionState = deleteSelectionState;
+			_deleteSelectionState = deleteSelectionState ? deleteSelectionState : operationState;				
 			
-			super(deleteSelectionState);
+			super(_deleteSelectionState);
 			originalSelectionState = operationState;
 			_allowMerge = allowMerge;
 		}
@@ -111,6 +111,8 @@ package flashx.textLayout.operations
 			var leafEl:FlowLeafElement = textFlow.findLeaf(absoluteStart);
 			var paraEl:ParagraphElement = leafEl.getParagraph(); 
 			var paraElAbsStart:int = paraEl.getAbsoluteStart();
+			
+			_pendingFormat = new TextLayoutFormatValueHolder(leafEl.format);
 						
 			if (_textScrap)
 			{
@@ -130,8 +132,8 @@ package flashx.textLayout.operations
 					paraEl = leafEl.getParagraph();
 					if (absoluteEnd == paraEl.getAbsoluteStart())
 					{
-						_undoParaFormat = paraEl.format;
-						_undoCharacterFormat = leafEl.format;
+						_undoParaFormat = new TextLayoutFormatValueHolder(paraEl.format);
+						_undoCharacterFormat = new TextLayoutFormatValueHolder(leafEl.format);
 						_needsOldFormat = true;
 					}
 				}
@@ -139,12 +141,23 @@ package flashx.textLayout.operations
 			
 			var beforeOpLen:int = textFlow.textLength;
 			TextFlowEdit.replaceRange(textFlow, absoluteStart, absoluteEnd, null);
-			textFlow.interactionManager.notifyInsertOrDelete(absoluteStart, -(absoluteEnd - absoluteStart));
-
-			if (beforeOpLen == textFlow.textLength)
+			if (textFlow.interactionManager)
+				textFlow.interactionManager.notifyInsertOrDelete(absoluteStart, -(absoluteEnd - absoluteStart));
+			
+			if (originalSelectionState.selectionManagerOperationState && textFlow.interactionManager)
 			{
-				_textScrap = null;
+				// set pointFormat from leafFormat
+				var state:SelectionState = textFlow.interactionManager.getSelectionState();
+				if (state.anchorPosition == state.activePosition)
+				{
+					state.pointFormat = new TextLayoutFormatValueHolder(_pendingFormat);
+					textFlow.interactionManager.setSelectionState(state);
+				}
 			}
+
+			// nothing deleted???
+			if (beforeOpLen == textFlow.textLength)
+				_textScrap = null;
 			return true;	
 		}
 		
@@ -161,11 +174,12 @@ package flashx.textLayout.operations
 					{
 						var paraEl:ParagraphElement = leafEl.getParagraph();
 						paraEl.format = _undoParaFormat;
-						paraEl.format = _undoCharacterFormat; 
+						leafEl.format = _undoCharacterFormat; 
 					}
 					
 				}
-				textFlow.interactionManager.notifyInsertOrDelete(absoluteStart, absoluteEnd - absoluteStart);
+				if (textFlow.interactionManager)
+					textFlow.interactionManager.notifyInsertOrDelete(absoluteStart, absoluteEnd - absoluteStart);
 			}
 			return originalSelectionState;				
 		}
@@ -173,10 +187,10 @@ package flashx.textLayout.operations
 		/** @private */
 		public override function redo():SelectionState
 		{
-			var pointFormat:TextLayoutFormat = new TextLayoutFormat(textFlow.findLeaf(absoluteStart).format);
 			TextFlowEdit.replaceRange(textFlow, absoluteStart, absoluteEnd, null);			
-			textFlow.interactionManager.notifyInsertOrDelete(absoluteStart, -(absoluteEnd - absoluteStart));
-			return new SelectionState(textFlow,absoluteStart,absoluteStart,pointFormat);	
+			if (textFlow.interactionManager)
+				textFlow.interactionManager.notifyInsertOrDelete(absoluteStart, -(absoluteEnd - absoluteStart));
+			return new SelectionState(textFlow,absoluteStart,absoluteStart,_pendingFormat);	
 		}
 
 		/** @private */

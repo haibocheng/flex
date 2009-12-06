@@ -18,6 +18,7 @@ import java.util.List;
 
 import com.adobe.fxg.FXGException;
 import com.adobe.fxg.dom.FXGNode;
+import com.adobe.internal.fxg.dom.DOMParserHelper;
 import com.adobe.internal.fxg.dom.GradientEntryNode;
 
 /**
@@ -90,21 +91,21 @@ public class GradientGlowFilterNode extends AbstractFilterNode
     public void setAttribute(String name, String value)
     {
         if (FXG_ANGLE_ATTRIBUTE.equals(name))
-            angle = parseDouble(value);
+            angle = DOMParserHelper.parseDouble(this, value, name);
         else if (FXG_BLURX_ATTRIBUTE.equals(name))
-            blurX = parseDouble(value);
+            blurX = DOMParserHelper.parseDouble(this, value, name);
         else if (FXG_BLURY_ATTRIBUTE.equals(name))
-            blurY = parseDouble(value);
+            blurY = DOMParserHelper.parseDouble(this, value, name);
         else if (FXG_DISTANCE_ATTRIBUTE.equals(name))
-            distance = parseDouble(value);
+            distance = DOMParserHelper.parseDouble(this, value, name);
         else if (FXG_INNER_ATTRIBUTE.equals(name))
-            inner = parseBoolean(value);
+            inner = DOMParserHelper.parseBoolean(this, value, name);
         else if (FXG_KNOCKOUT_ATTRIBUTE.equals(name))
-            knockout = parseBoolean(value);
+            knockout = DOMParserHelper.parseBoolean(this, value, name);
         else if (FXG_QUALITY_ATTRIBUTE.equals(name))
-            quality = parseInt(value, QUALITY_MIN_INCLUSIVE, QUALITY_MAX_INCLUSIVE, quality);
+            quality = DOMParserHelper.parseInt(this, value, name, QUALITY_MIN_INCLUSIVE, QUALITY_MAX_INCLUSIVE, quality);
         else if (FXG_STRENGTH_ATTRIBUTE.equals(name))
-            strength = parseDouble(value);
+            strength = DOMParserHelper.parseDouble(this, value, name);
         else
             super.setAttribute(name, value);
     }

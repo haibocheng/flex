@@ -26,6 +26,8 @@ import mx.core.mx_internal;
 import mx.core.UIComponent;
 import mx.events.PropertyChangeEvent;
 
+import spark.utils.FTETextUtil;
+
 use namespace mx_internal;
 
 //--------------------------------------
@@ -33,14 +35,14 @@ use namespace mx_internal;
 //--------------------------------------
 
 /**
- *  @copy spark.components.supportClasses.GroupBase#style:baseColor
+ *  @copy spark.components.supportClasses.GroupBase#style:chromeColor
  *  
  *  @langversion 3.0
  *  @playerversion Flash 10
  *  @playerversion AIR 1.5
  *  @productversion Flex 4
  */
-[Style(name="baseColor", type="uint", format="Color", inherit="yes", theme="spark")]
+[Style(name="chromeColor", type="uint", format="Color", inherit="yes", theme="spark")]
 
 /**
  *  Name of the skin class to use for this component when a validation error occurs. 
@@ -199,11 +201,62 @@ public class SkinnableComponent extends UIComponent
         dispatchEvent(new Event("skinChanged"));
     }
 
+    //----------------------------------
+    //  suggestedFocusSkinExclusions
+    //----------------------------------
+    
+    /**
+     *  An Array that lists the skin parts that will be
+     *  excluded from bitmaps captured and used to
+     *  show focus.  This list is only used if
+     *  the skin has a null focusSkinExclusions property.
+     *  
+     *  @langversion 3.0
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
+     */
+    public function get suggestedFocusSkinExclusions():Array
+    {
+        return null;
+    }
+    
+
     //--------------------------------------------------------------------------
     //
     //  Overridden properties
     //
     //--------------------------------------------------------------------------
+
+    //----------------------------------
+    //  baselinePosition
+    //----------------------------------
+
+    /**
+     *  @inheritDoc
+     *  
+     *  @langversion 3.0
+     *  @playerversion Flash 9
+     *  @playerversion AIR 1.1
+     *  @productversion Flex 3
+     */
+    override public function get baselinePosition():Number
+    {
+        if (!validateBaselinePosition())
+            return NaN;
+
+        // Unless the height is very small, the baselinePosition
+        // of a generic UIComponent is calculated as if there was
+        // a UITextField using the component's styles
+        // whose top coincides with the component's top.
+        // If the height is small, the baselinePosition is calculated
+        // as if there were text within whose ascent the component
+        // is vertically centered.
+        // At the crossover height, these two calculations
+        // produce the same result.
+
+        return FTETextUtil.calculateFontBaseline(this, height, moduleFactory);
+    }
 
     //----------------------------------
     //  currentCSSState

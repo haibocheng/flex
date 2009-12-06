@@ -30,6 +30,7 @@ import macromedia.asc.parser.BinaryExpressionNode;
 import macromedia.asc.parser.ClassDefinitionNode;
 import macromedia.asc.parser.CallExpressionNode;
 import macromedia.asc.parser.DefinitionNode;
+import macromedia.asc.parser.DocCommentNode;
 import macromedia.asc.parser.ExpressionStatementNode;
 import macromedia.asc.parser.FunctionCommonNode;
 import macromedia.asc.parser.FunctionDefinitionNode;
@@ -126,26 +127,46 @@ public class BindableSecondPassEvaluator extends GenerativeSecondPassEvaluator
         classDefinition.statements =
             nodeFactory.statementList(classDefinition.statements, variableDefinition);
 
+        DocCommentNode docCommentNode = generateInheritDocComment(context);
+        classDefinition.statements =
+            nodeFactory.statementList(classDefinition.statements, docCommentNode);
+        
         FunctionDefinitionNode addEventListenerFunctionDefinition =
             generateAddEventListenerFunctionDefinition(context);
         classDefinition.statements =
             nodeFactory.statementList(classDefinition.statements, addEventListenerFunctionDefinition);
 
+        docCommentNode = generateInheritDocComment(context);
+        classDefinition.statements =
+            nodeFactory.statementList(classDefinition.statements, docCommentNode);
+        
         FunctionDefinitionNode dispatchEventFunctionDefinition =
             generateDispatchEventFunctionDefinition(context);
         classDefinition.statements =
             nodeFactory.statementList(classDefinition.statements, dispatchEventFunctionDefinition);
 
+        docCommentNode = generateInheritDocComment(context);
+        classDefinition.statements =
+            nodeFactory.statementList(classDefinition.statements, docCommentNode);
+        
         FunctionDefinitionNode hasEventListenerFunctionDefinition =
             generateHasEventListenerFunctionDefinition(context);
         classDefinition.statements =
             nodeFactory.statementList(classDefinition.statements, hasEventListenerFunctionDefinition);
 
+        docCommentNode = generateInheritDocComment(context);
+        classDefinition.statements =
+            nodeFactory.statementList(classDefinition.statements, docCommentNode);
+        
         FunctionDefinitionNode removeEventListenerFunctionDefinition =
             generateRemoveEventListenerFunctionDefinition(context);
         classDefinition.statements =
             nodeFactory.statementList(classDefinition.statements, removeEventListenerFunctionDefinition);
 
+        docCommentNode = generateInheritDocComment(context);
+        classDefinition.statements =
+            nodeFactory.statementList(classDefinition.statements, docCommentNode);
+        
         FunctionDefinitionNode willTriggerFunctionDefinition =
             generateWillTriggerFunctionDefinition(context);
         classDefinition.statements =
@@ -338,6 +359,18 @@ public class BindableSecondPassEvaluator extends GenerativeSecondPassEvaluator
         return nodeFactory.statementList(then, expressionStatement);
     }
 
+    private DocCommentNode generateInheritDocComment(Context context)
+    {
+        // Equivalent AS:
+        //
+        //    /**
+    	//     * @inheritDoc
+    	//     */
+        NodeFactory nodeFactory = context.getNodeFactory();
+
+        return AbstractSyntaxTreeUtil.generateInheritDocComment(nodeFactory);
+    }
+    
     private FunctionDefinitionNode generateAddEventListenerFunctionDefinition(Context context)
     {
         // Equivalent AS:

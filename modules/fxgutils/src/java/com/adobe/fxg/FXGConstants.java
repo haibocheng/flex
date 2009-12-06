@@ -334,6 +334,7 @@ public final class FXGConstants
     public static final String FXG_KERNING_OFF_VALUE = "off";
     public static final String FXG_KERNING_ON_VALUE = "on";
     
+    public static final String FXG_LEADINGMODEL_APPROXIMATETEXTFIELD_VALUE = "approximateTextField";
     public static final String FXG_LEADINGMODEL_AUTO_VALUE = "auto";
     public static final String FXG_LEADINGMODEL_ROMANUP_VALUE = "romanUp";
     public static final String FXG_LEADINGMODEL_IDEOGRAPHICTOPUP_VALUE = "ideographicTopUp";

@@ -26,10 +26,13 @@ package org.osmf.net
 	
 	import org.osmf.traits.BufferableTrait;
 
+	[ExcludeClass]
+	
 	/**
+	 * @private
+	 * 
 	 * The NetStreamBufferableTrait class implements an IBufferable interface that uses a NetStream.
 	 * This trait is used by AudioElements and VideoElements.
-	 * @private
 	 * @see flash.net.NetStream
 	 */  
 	public class NetStreamBufferableTrait extends BufferableTrait
@@ -39,6 +42,11 @@ package org.osmf.net
 		 * @param netStream NetStream created for the ILoadable that belongs to the media element
 		 * that uses this trait.
 		 * @see NetLoader
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function NetStreamBufferableTrait(netStream:NetStream)
 		{
@@ -51,6 +59,11 @@ package org.osmf.net
 		
 		/**
 		 *  @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		override public function get bufferLength():Number
 		{
@@ -63,6 +76,11 @@ package org.osmf.net
 		 * @return Returns <code>true</code> by default. 
 		 * Subclasses that override this method can return <code>false</code> to
 		 * abort processing.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
 		override protected function canProcessBufferLengthChange(newSize:Number):Boolean
 		{

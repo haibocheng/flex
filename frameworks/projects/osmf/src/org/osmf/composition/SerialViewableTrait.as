@@ -22,7 +22,7 @@
 package org.osmf.composition
 {
 	import org.osmf.events.GatewayChangeEvent;
-	import org.osmf.events.ViewChangeEvent;
+	import org.osmf.events.ViewEvent;
 	import org.osmf.layout.MediaElementLayoutTarget;
 	import org.osmf.media.IMediaGateway;
 	import org.osmf.media.MediaElement;
@@ -30,9 +30,9 @@ package org.osmf.composition
 	/**
 	 * Dispatched when the trait's view has changed.
 	 * 
-	 * @eventType org.osmf.events.ViewChangeEvent.VIEW_CHANGE
+	 * @eventType org.osmf.events.ViewEvent.VIEW_CHANGE
 	 */	
-	[Event(name="viewChange",type="org.osmf.events.ViewChangeEvent")]
+	[Event(name="viewChange",type="org.osmf.events.ViewEvent")]
 	
 	/**
 	 * Implements IViewable for serial compositions
@@ -40,11 +40,21 @@ package org.osmf.composition
 	 * The viewable characteristics of a serial composition are identical to the viewable
 	 * characteristics of the active child of that serial composition.
 	 * 
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 10
+	 *  @playerversion AIR 1.0
+	 *  @productversion OSMF 1.0
 	 */	
 	internal class SerialViewableTrait extends CompositeViewableTrait implements IReusable
 	{
 		/**
 		 * Constructor
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
 		public function SerialViewableTrait(traitAggregator:TraitAggregator, owner:MediaElement)
 		{
@@ -76,6 +86,11 @@ package org.osmf.composition
 		
 		/**
 		 * Invoked on the serial's active child changing.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
 		private function onListenedChildChange(event:TraitAggregatorEvent):void
 		{
@@ -136,7 +151,10 @@ package org.osmf.composition
 					
 				onTargetGatewayChange
 					( new GatewayChangeEvent
-						( null
+						( GatewayChangeEvent.GATEWAY_CHANGE
+						, false
+						, false
+						, null
 						, layoutTarget.mediaElement.gateway
 						)
 					);

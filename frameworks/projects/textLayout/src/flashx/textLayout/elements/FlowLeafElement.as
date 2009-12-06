@@ -95,9 +95,7 @@ package flashx.textLayout.elements
 		/** @private */
 		override tlf_internal function releaseContentElement():void
 		{
-			if (_hasAttachedListeners)
-				return;
-			if (_blockElement == null)
+			if (!canReleaseContentElement() || _blockElement == null)
 				return;
 				
 			_blockElement = null;
@@ -613,8 +611,8 @@ package flashx.textLayout.elements
 		}
 		
 		
-		/** @private */
-		tlf_internal function updateAdornments(line:TextFlowLine, blockProgression:String):void
+		/** @private return number of shapes added */
+		tlf_internal function updateAdornments(line:TextFlowLine, blockProgression:String):int
 		{
 			CONFIG::debug { assert(_computedFormat != null,"invalid call to updateAdornments"); }
 
@@ -624,8 +622,10 @@ package flashx.textLayout.elements
 				var tLine:TextLine = line.getTextLine(true);
 				var spanBoundsArray:Array = getSpanBoundsOnLine(tLine, blockProgression);
 				for (var i:int = 0; i < spanBoundsArray.length; i++)
-					updateAdornmentsOnBounds(line, tLine, blockProgression, Rectangle(spanBoundsArray[i]));
+					updateAdornmentsOnBounds(line, tLine, blockProgression, spanBoundsArray[i]);
+				return spanBoundsArray.length ;
 			}
+			return 0;
 		}
 		 
 		private function updateAdornmentsOnBounds(line:TextFlowLine, tLine:TextLine, blockProgression:String, spanBounds:Rectangle):void
@@ -731,8 +731,8 @@ package flashx.textLayout.elements
 				}
 			}
 			
-		selObj.graphics.endFill();
-		tLine.addChild(selObj);
+			selObj.graphics.endFill();
+			tLine.addChild(selObj);
 		}
 		
 		/** @private

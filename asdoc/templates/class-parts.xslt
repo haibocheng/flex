@@ -730,13 +730,25 @@
 									<xsl:variable name="h1" select="substring-after($text,':')"/>
 									<xsl:variable name="file" select="concat($baseRef,translate($h2,'.','/'),'/',$h1,'.html')"/>
 									<xsl:text> </xsl:text>
-									<a>
-										<xsl:attribute name="href">
-											<xsl:value-of select="$file"/>
-										</xsl:attribute>
-										<xsl:value-of select="$h1"/>
-									</a>
-									<xsl:text> </xsl:text>
+									
+									<xsl:if test="count($classHeader_map//apiClassifier[@id=$text] ) &gt; 0">
+										<a>
+											<xsl:attribute name="href">
+												<xsl:value-of select="$file"/>
+											</xsl:attribute>
+											<xsl:value-of select="$h1"/>
+										</a>
+									</xsl:if>
+									<xsl:if test="not(count($classHeader_map//apiClassifier[@id=$text] ) &gt; 0)">
+										<xsl:if test="not(contains($text,':'))">
+											<xsl:value-of select="$text"/>
+										</xsl:if>
+										<xsl:if test="contains($text,':')">
+											<xsl:value-of select="concat($h2,concat('.',$h1))"/>
+										</xsl:if>
+									</xsl:if>
+									
+									<xsl:text></xsl:text>
 									<xsl:if test="position() != last()">
 										<xsl:text>, </xsl:text>
 									</xsl:if>

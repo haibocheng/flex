@@ -25,8 +25,7 @@ package org.osmf.composition
 	
 	import flash.errors.IllegalOperationError;
 	
-	import org.osmf.events.SwitchingChangeEvent;
-	import org.osmf.events.TraitEvent;
+	import org.osmf.events.SwitchEvent;
 	import org.osmf.media.IMediaTrait;
 	import org.osmf.media.MediaElement;
 	import org.osmf.traits.ISwitchable;
@@ -36,27 +35,42 @@ package org.osmf.composition
 	/**
 	 * Dispatched when a stream switch is requested, completed, or failed.
 	 * 
-	 * @eventType org.osmf.events.SwitchingChangeEvent.SWITCHING_CHANGE
+	 * @eventType org.osmf.events.SwitchEvent.SWITCHING_CHANGE
 	 */
-	[Event(name="switchingChange",type="org.osmf.events.SwitchingChangeEvent")]
+	[Event(name="switchingChange",type="org.osmf.events.SwitchEvent")]
 	
 	/**
 	 * Dispatched when the number of indicies or associated bitrates have changed.
 	 * 
-	 * @eventType org.osmf.events.TraitEvent.INDICES_CHANGE
+	 * @eventType org.osmf.events.SwitchEvent.INDICES_CHANGE
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 10
+	 *  @playerversion AIR 1.0
+	 *  @productversion OSMF 1.0
 	 */
-	[Event(name="indicesChange",type="org.osmf.events.TraitEvent")]
+	[Event(name="indicesChange",type="org.osmf.events.SwitchEvent")]
 	
 	/**
 	 * CompositeSwitchableTrait brings mutiple bitrate switchable traits together into one
 	 * trait that is an aggregation of the different bitrates of the chid traits.
 	 * If a child doesn't have the same bitrate as an another, the closest match will be chosen
 	 * when switching between bitrates.
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 10
+	 *  @playerversion AIR 1.0
+	 *  @productversion OSMF 1.0
 	 */ 
 	internal class ParallelSwitchableTrait extends CompositeMediaTraitBase implements ISwitchable
 	{
 		/**
 		 * Construcs a CompositeSwitchableTrait
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		public function ParallelSwitchableTrait(traitAggregator:TraitAggregator)
 		{
@@ -65,6 +79,11 @@ package org.osmf.composition
 			
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 	
 		public function get autoSwitch():Boolean
 		{
@@ -73,6 +92,11 @@ package org.osmf.composition
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		public function set autoSwitch(value:Boolean):void
 		{
@@ -91,6 +115,11 @@ package org.osmf.composition
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		public function get currentIndex():int
 		{
@@ -99,6 +128,11 @@ package org.osmf.composition
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		public function getBitrateForIndex(index:int):Number
 		{
@@ -111,6 +145,11 @@ package org.osmf.composition
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		public function get maxIndex():int
 		{
@@ -119,6 +158,11 @@ package org.osmf.composition
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		public function set maxIndex(value:int):void
 		{		
@@ -131,6 +175,11 @@ package org.osmf.composition
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		public function get switchUnderway():Boolean
 		{				
@@ -149,6 +198,11 @@ package org.osmf.composition
 		/**
 		 * @inheritDoc
 		 * 
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		public function switchTo(index:int):void
 		{
@@ -174,12 +228,12 @@ package org.osmf.composition
 						}									
 						else if (childBitRate > desiredBitRate)
 						{
-							childIndex--;
+							childIndex--;							
 							break;
 						}				
 					}							
 					//If we made it here, the last item is the correct stream
-					mediaTrait.switchTo(Math.min(childIndex, mediaTrait.maxIndex));													
+					mediaTrait.switchTo(Math.max(0, Math.min(childIndex, mediaTrait.maxIndex)));													
 				}
 			    , MediaTraitType.SWITCHABLE);
 			    _currentIndex = index;
@@ -192,6 +246,11 @@ package org.osmf.composition
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		override protected function processAggregatedChild(child:IMediaTrait):void
 		{			
@@ -208,22 +267,27 @@ package org.osmf.composition
 						
 			if (mergeChildRates(childTrait))
 			{
-				dispatchEvent(new TraitEvent(TraitEvent.INDICES_CHANGE));
+				dispatchEvent(new SwitchEvent(SwitchEvent.INDICES_CHANGE));
 			}
 			
-			child.addEventListener(TraitEvent.INDICES_CHANGE, recomputeIndices);
-			child.addEventListener(SwitchingChangeEvent.SWITCHING_CHANGE, childSwitchingChange);
+			child.addEventListener(SwitchEvent.INDICES_CHANGE, recomputeIndices);
+			child.addEventListener(SwitchEvent.SWITCHING_CHANGE, childSwitchingChange);
 			_maxIndex = bitRates.length-1; 			
 			
 		}
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		override protected function processUnaggregatedChild(child:IMediaTrait):void
 		{	
-			child.removeEventListener(TraitEvent.INDICES_CHANGE, recomputeIndices);
-			child.removeEventListener(SwitchingChangeEvent.SWITCHING_CHANGE, childSwitchingChange);		
+			child.removeEventListener(SwitchEvent.INDICES_CHANGE, recomputeIndices);
+			child.removeEventListener(SwitchEvent.SWITCHING_CHANGE, childSwitchingChange);		
 			recomputeIndices();	
 		}
 		
@@ -232,6 +296,11 @@ package org.osmf.composition
 		 * updates the max index based on the children's max indices.
 		 * 
 		 * @returns if there were changes to the bitrate table.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		private function rebuildBitRateTable():Boolean
 		{
@@ -258,6 +327,11 @@ package org.osmf.composition
 		 * soted order.
 		 * 
 		 * @returns if the indices changed.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		private function mergeChildRates(child:ISwitchable):Boolean
 		{	
@@ -294,8 +368,13 @@ package org.osmf.composition
 		
 		/**
 		 * Rebuilds the bitrate table and switches to the appropriate bit rate.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
-		private function recomputeIndices(event:TraitEvent = null):void
+		private function recomputeIndices(event:SwitchEvent = null):void
 		{			
 			var oldBitRate:Number = bitRates[currentIndex];
 			if (rebuildBitRateTable()) //Update current index, and dispatch event if indices changed.
@@ -316,35 +395,37 @@ package org.osmf.composition
 					}	
 					_currentIndex = newBIndex;					
 				}
-				dispatchEvent(new TraitEvent(TraitEvent.INDICES_CHANGE));
+				dispatchEvent(new SwitchEvent(SwitchEvent.INDICES_CHANGE));
 			}								
 		}
 				
 		/**
 		 * Handle the child switchable changing.  If collapse multiple events
 		 * into a single event when switching muple children simultaneously.   
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
-		private function childSwitchingChange(event:SwitchingChangeEvent):void
+		private function childSwitchingChange(event:SwitchEvent):void
 		{			
 			if (event.newState != _state)
 			{					
-				if (event.newState == SwitchingChangeEvent.SWITCHSTATE_COMPLETE && switchUnderway)
+				if (event.newState == SwitchEvent.SWITCHSTATE_COMPLETE && switchUnderway)
 				{
 					return; //NO-OP if we have pending switches.				
 				}			
 				var oldState:int = 	_state;											
 				_state = event.newState;	
-				dispatchEvent(new SwitchingChangeEvent(event.newState, oldState, event.detail));			
+				dispatchEvent(new SwitchEvent(SwitchEvent.SWITCHING_CHANGE, false, false, event.newState, oldState, event.detail));			
 			}
 		}
 				
-		private var _state:int = SwitchingChangeEvent.SWITCHSTATE_UNDEFINED;
+		private var _state:int = SwitchEvent.SWITCHSTATE_UNDEFINED;
 		private var _autoSwitch:Boolean = false;
 		private var _maxIndex:int = int.MAX_VALUE;
 		private var _currentIndex:int = 0;
 		private var bitRates:Vector.<Number> = new Vector.<Number>;
-		
-		
-		
 	}
 }

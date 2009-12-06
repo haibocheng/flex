@@ -11,6 +11,7 @@
 package flashx.textLayout.events
 {
 	import flash.events.Event;
+	
 	import flashx.textLayout.operations.FlowOperation; 
 	
 	/** A TextFlow instance dispatches this event just before an operation commences
@@ -73,9 +74,20 @@ package flashx.textLayout.events
 	 	 */
 	 	
 		public static const FLOW_OPERATION_END:String = "flowOperationEnd";
+
+		/**  
+		 * Defines the value of the <code>type</code> property of a <code>flowOperationComplete</code> event object.
+		 * Dispatched after all operations including pending and composite operations are completed, composition is finished and the display is scrolled.
+		 * @playerversion Flash 10
+		 * @playerversion AIR 1.5
+		 * @langversion 3.0 
+		 */
 		
+		public static const FLOW_OPERATION_COMPLETE:String = "flowOperationComplete";
+				
 		private var _op:FlowOperation;
 		private var _e:Error;
+		private var _level:int;
 
 		/** 
 		 * The operation that is about to begin or has just ended.
@@ -104,6 +116,17 @@ package flashx.textLayout.events
 		public function set error(value:Error):void
 		{ _e = value; }
 		
+		/** 
+		 * Operations may be merged into composite operations through nesting.  This flag describes the nesting level of the operation.
+		 * @playerversion Flash 10
+		 * @playerversion AIR 1.5
+		 * @langversion 3.0 
+		 */
+		public function get level():int
+		{ return _level; }
+		public function set level(value:int):void
+		{ _level = value; }		
+		
 		/** Creates an event object that contains information about a flow operation.
 		 * @param type			The type of the event. Event listeners can access this information through the
 		 * inherited <code>type</code> property. There are two types: 
@@ -119,17 +142,18 @@ package flashx.textLayout.events
 		 * @playerversion AIR 1.5
 		 * @langversion 3.0 
 		 */
-		public function FlowOperationEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false, operation:FlowOperation = null, error:Error = null)
+		public function FlowOperationEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false, operation:FlowOperation = null, level:int = 0, error:Error = null)
 		{
 			_op = operation;
 			_e  = error;
+			_level = level;
 			super(type, bubbles, cancelable);
 		}
 		
        	/** @private */
 		override public function clone():Event
 		{
-			return new FlowOperationEvent(type, bubbles, cancelable, _op, _e);
+			return new FlowOperationEvent(type, bubbles, cancelable, _op, _level, _e);
 		}
 		
 	}

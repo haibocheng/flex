@@ -36,6 +36,8 @@ import mx.core.DesignLayer;
 import mx.core.IConstraintClient;
 import mx.core.IDeferredInstantiationUIComponent;
 import mx.core.IFlexDisplayObject;
+import mx.core.IFlexModule;
+import mx.core.IFlexModuleFactory;
 import mx.core.IInvalidating;
 import mx.core.ILayoutElement;
 import mx.core.IStateClient;
@@ -594,7 +596,7 @@ use namespace mx_internal;
 public dynamic class UIMovieClip extends MovieClip 
     implements IDeferredInstantiationUIComponent, IToolTipManagerClient, 
     IStateClient, IFocusManagerComponent, IConstraintClient, IAutomationObject, 
-    IVisualElement, ILayoutElement
+    IVisualElement, ILayoutElement, IFlexModule
 {
     //--------------------------------------------------------------------------
     //
@@ -622,8 +624,11 @@ public dynamic class UIMovieClip extends MovieClip
         // to the stage
         addEventListener(FlexEvent.CREATION_COMPLETE, creationCompleteHandler);
         
-        if (currentLabel && currentLabel.indexOf(":") < 0 && currentLabel != _currentState)
-            _currentState = currentLabel;
+        // we want to set currentState initially by checking the currentLabel, but we 
+        // defer this so that if curentState is set explicitely, 
+        // we do a goToAndStop() instead of short-circuiting the currentState 
+        // setter at "if (value == _currentState)"
+        addEventListener(Event.ENTER_FRAME, setUpFirstCurrentState);
     }
     
     //--------------------------------------------------------------------------
@@ -931,13 +936,13 @@ public dynamic class UIMovieClip extends MovieClip
         invalidateParentSizeAndDisplayList();
     }
     
-	//----------------------------------
-	//  z
-	//----------------------------------
+    //----------------------------------
+    //  z
+    //----------------------------------
 
-	[Bindable("zChanged")]
+    [Bindable("zChanged")]
 
-	/**
+    /**
      *  @inheritDoc
      *  
      *  @langversion 3.0
@@ -958,23 +963,23 @@ public dynamic class UIMovieClip extends MovieClip
         if (z == value)
             return;
 
-		if (_layoutFeatures == null)
+        if (_layoutFeatures == null)
             initAdvancedLayoutFeatures();
 
-		hasDeltaIdentityTransform = false;
-		_layoutFeatures.layoutZ = value;
+        hasDeltaIdentityTransform = false;
+        _layoutFeatures.layoutZ = value;
         invalidateTransform();
         //invalidateProperties();
         invalidateParentSizeAndDisplayList();
     }
     
-	//----------------------------------
-	//  boundingBoxName
-	//----------------------------------
+    //----------------------------------
+    //  boundingBoxName
+    //----------------------------------
 
-	[Inspectable]
+    [Inspectable]
 
-	/**
+    /**
      *  Name of the object to use as the bounding box.
      *
      *  <p>The bounding box is an object that is used by Flex to determine
@@ -1622,8 +1627,7 @@ public dynamic class UIMovieClip extends MovieClip
     public function set explicitMaxWidth(value:Number):void
     {
         _explicitMaxWidth = value;
-        
-        // FIXME (rfrishbe): invalidate size
+        invalidateParentSizeAndDisplayList();
     }
 
     //----------------------------------
@@ -2014,6 +2018,54 @@ public dynamic class UIMovieClip extends MovieClip
     }
 
     //----------------------------------
+    //  moduleFactory
+    //----------------------------------
+    
+    /**
+     *  @private
+     *  Storage for the moduleFactory property.
+     */
+    private var _moduleFactory:IFlexModuleFactory;
+    
+    [Inspectable(environment="none")]
+    
+    /**
+     *  A module factory is used as context for using embeded fonts and for
+     *  finding the style manager that controls the styles for this 
+     *  component. 
+     *  
+     *  @langversion 3.0
+     *  @playerversion Flash 9
+     *  @playerversion AIR 1.1
+     *  @productversion Flex 4
+     */
+    public function get moduleFactory():IFlexModuleFactory
+    {
+        return _moduleFactory;
+    }
+    
+    /**
+     *  @private
+     */
+    public function set moduleFactory(factory:IFlexModuleFactory):void
+    {
+        var n:int = numChildren;
+        for (var i:int = 0; i < n; i++)
+        {
+            var child:IFlexModule = getChildAt(i) as IFlexModule;
+            if (!child)
+                continue;
+            
+            if (child.moduleFactory == null || child.moduleFactory == _moduleFactory)
+            {
+                child.moduleFactory = factory;
+            }
+        }
+        
+        _moduleFactory = factory;
+    }
+    
+    //----------------------------------
     //  owner
     //----------------------------------
 
@@ -2393,7 +2445,7 @@ public dynamic class UIMovieClip extends MovieClip
             return;
         
         if (_layoutFeatures == null)
-			initAdvancedLayoutFeatures();
+            initAdvancedLayoutFeatures();
 
         hasDeltaIdentityTransform = false;
 
@@ -2426,29 +2478,6 @@ public dynamic class UIMovieClip extends MovieClip
     mx_internal function set $scaleX(value:Number):void
     {
         super.scaleX = value;
-    }
-    
-    /**
-     *  @private
-     */
-    private var _scaleXDueToSizing:Number = 1;
-    
-    /**
-     *  The scaleX of the component due to resizing.
-     *
-     *  @private
-     */
-    mx_internal function get scaleXDueToSizing():Number
-    {
-        return _scaleXDueToSizing;
-    }
-    
-    /**
-     *  @private
-     */
-    mx_internal function set scaleXDueToSizing(value:Number):void
-    {
-        _scaleXDueToSizing = value;
     }
 
     //----------------------------------
@@ -2491,7 +2520,7 @@ public dynamic class UIMovieClip extends MovieClip
             return;
         
         if (_layoutFeatures == null)
-			initAdvancedLayoutFeatures();
+            initAdvancedLayoutFeatures();
             
         hasDeltaIdentityTransform = false;
 
@@ -2505,14 +2534,14 @@ public dynamic class UIMovieClip extends MovieClip
         invalidateParentSizeAndDisplayList();
     }
     
-    /**
-     *  The actual scaleY of the component.  Because scaling is used
-     *  to resize the component, this is considerred an internal 
-     *  implementation detail, whereas scaleY is the user-set scale
-     *  of the component.
-     *
-     *  @private
-     */
+     /**
+      *  The actual scaleY of the component.  Because scaling is used
+      *  to resize the component, this is considerred an internal 
+      *  implementation detail, whereas scaleY is the user-set scale
+      *  of the component.
+      *
+      *  @private
+      */
     mx_internal function get $scaleY():Number
     {
         return super.scaleY;
@@ -2524,29 +2553,6 @@ public dynamic class UIMovieClip extends MovieClip
     mx_internal function set $scaleY(value:Number):void
     {
         super.scaleY = value;
-    }
-    
-    /**
-     *  @private
-     */
-    private var _scaleYDueToSizing:Number = 1;
-    
-    /**
-     *  The scaleX of the component due to resizing.
-     *
-     *  @private
-     */
-    mx_internal function get scaleYDueToSizing():Number
-    {
-        return _scaleYDueToSizing;
-    }
-    
-    /**
-     *  @private
-     */
-    mx_internal function set scaleYDueToSizing(value:Number):void
-    {
-        _scaleYDueToSizing = value;
     }
 
     //----------------------------------
@@ -2586,13 +2592,13 @@ public dynamic class UIMovieClip extends MovieClip
         if (scaleZ == value)
             return;
         if (_layoutFeatures == null)
-			initAdvancedLayoutFeatures();
-		
-		hasDeltaIdentityTransform = false;
-		_layoutFeatures.layoutScaleZ = value;
+            initAdvancedLayoutFeatures();
+        
+        hasDeltaIdentityTransform = false;
+        _layoutFeatures.layoutScaleZ = value;
         invalidateTransform();
         //invalidateProperties();
-		invalidateParentSizeAndDisplayList();
+        invalidateParentSizeAndDisplayList();
     }
     
     //--------------------------------------------------------------------------
@@ -2702,26 +2708,7 @@ public dynamic class UIMovieClip extends MovieClip
     [Inspectable(defaultValue="true")]
 
     /**
-     *  A flag that indicates whether child objects can receive focus
-     * 
-     *  <p>This is similar to the <code>tabChildren</code> property
-     *  used by the Flash Player.</p>
-     * 
-     *  <p>This is usually <code>false</code> because most components
-     *  either receive focus themselves or delegate focus to a single
-     *  internal sub-component and appear as if the component has
-     *  received focus.  For example, a TextInput contains a focusable
-     *  child RichEditableText control, but while the RichEditableText
-     *  sub-component actually receives focus, it appears as if the
-     *  TextInput has focus.  TextInput sets <code>hasFocusableChildren</code>
-     *  to <code>false</code> because TextInput is considered the
-     *  component that has focus.  Its internal structure is an
-     *  abstraction.</p>
-     *
-     *  <p>Usually only navigator components like TabNavigator and
-     *  Accordion have this flag set to <code>true</code> because they
-     *  receive focus on Tab but focus goes to components in the child
-     *  containers on further Tabs</p>
+     *  @copy mx.core.UIComponent#hasFocusableChildren
      *  
      *  @default true
      *  
@@ -2872,13 +2859,13 @@ public dynamic class UIMovieClip extends MovieClip
     {
         if (value == depth)
             return;
-		if (_layoutFeatures == null)
-			initAdvancedLayoutFeatures();
-		
+        if (_layoutFeatures == null)
+            initAdvancedLayoutFeatures();
+        
         _layoutFeatures.depth = value;      
         if (parent != null && "invalidateLayering" in parent && parent["invalidateLayering"] is Function)
             parent["invalidateLayering"]();
-        // FIXME (rfrishbe): should be in some interface...
+        // TODO (rfrishbe): should be in some interface...
     }
     
     /**
@@ -2900,9 +2887,9 @@ public dynamic class UIMovieClip extends MovieClip
     {
         if (transformX == value)
             return;
-		if (_layoutFeatures == null)
-			initAdvancedLayoutFeatures();
-		
+        if (_layoutFeatures == null)
+            initAdvancedLayoutFeatures();
+        
         _layoutFeatures.transformX = value;
         invalidateTransform();
         //invalidateProperties();
@@ -2928,8 +2915,8 @@ public dynamic class UIMovieClip extends MovieClip
     {
         if (transformY == value)
             return;
-		if (_layoutFeatures == null)
-			initAdvancedLayoutFeatures();
+        if (_layoutFeatures == null)
+            initAdvancedLayoutFeatures();
 
         _layoutFeatures.transformY = value;
         invalidateTransform();
@@ -2956,8 +2943,8 @@ public dynamic class UIMovieClip extends MovieClip
     {
         if (transformZ == value)
             return;
-		if (_layoutFeatures == null)
-			initAdvancedLayoutFeatures();
+        if (_layoutFeatures == null)
+            initAdvancedLayoutFeatures();
 
         _layoutFeatures.transformZ = value;
         invalidateTransform();
@@ -2997,20 +2984,20 @@ public dynamic class UIMovieClip extends MovieClip
         invalidateParentSizeAndDisplayList();
     }
 
-	/**
-	 *  Indicates the x-axis rotation of the DisplayObject instance, in degrees,
-	 *  from its original orientation relative to the 3D parent container.
-	 *  Values from 0 to 180 represent clockwise rotation; values from 0 to -180
-	 *  represent counterclockwise rotation. Values outside this range are added
-	 *  to or subtracted from 360 to obtain a value within the range.
-	 * 
-	 *  This property is ignored during calculation by any of Flex's 2D layouts. 
-	 *  
-	 *  @langversion 3.0
-	 *  @playerversion Flash 10
-	 *  @playerversion AIR 1.5
-	 *  @productversion Flex 3
-	 */
+    /**
+     *  Indicates the x-axis rotation of the DisplayObject instance, in degrees,
+     *  from its original orientation relative to the 3D parent container.
+     *  Values from 0 to 180 represent clockwise rotation; values from 0 to -180
+     *  represent counterclockwise rotation. Values outside this range are added
+     *  to or subtracted from 360 to obtain a value within the range.
+     * 
+     *  This property is ignored during calculation by any of Flex's 2D layouts. 
+     *  
+     *  @langversion 3.0
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 3
+     */
     override public function get rotationX():Number
     {
         return (_layoutFeatures == null) ? super.rotationX : _layoutFeatures.layoutRotationX;
@@ -3025,7 +3012,7 @@ public dynamic class UIMovieClip extends MovieClip
             return;
 
         if (_layoutFeatures == null)
-			initAdvancedLayoutFeatures();
+            initAdvancedLayoutFeatures();
         _layoutFeatures.layoutRotationX = value;
         invalidateTransform();
         //invalidateProperties();
@@ -3033,17 +3020,17 @@ public dynamic class UIMovieClip extends MovieClip
     }
 
     /**
-	 *  Indicates the y-axis rotation of the DisplayObject instance, in degrees,
-	 *  from its original orientation relative to the 3D parent container.
-	 *  Values from 0 to 180 represent clockwise rotation; values from 0 to -180
-	 *  represent counterclockwise rotation. Values outside this range are added
-	 *  to or subtracted from 360 to obtain a value within the range.
+     *  Indicates the y-axis rotation of the DisplayObject instance, in degrees,
+     *  from its original orientation relative to the 3D parent container.
+     *  Values from 0 to 180 represent clockwise rotation; values from 0 to -180
+     *  represent counterclockwise rotation. Values outside this range are added
+     *  to or subtracted from 360 to obtain a value within the range.
      * 
      * This property is ignored during calculation by any of Flex's 2D layouts. 
      *  
      *  @langversion 3.0
-	 *  @playerversion Flash 10
-	 *  @playerversion AIR 1.5
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
      *  @productversion Flex 3
      */
     override public function get rotationY():Number
@@ -3060,34 +3047,34 @@ public dynamic class UIMovieClip extends MovieClip
             return;
 
         if (_layoutFeatures == null)
-			initAdvancedLayoutFeatures();
+            initAdvancedLayoutFeatures();
         _layoutFeatures.layoutRotationY = value;
         invalidateTransform();
         //invalidateProperties();
         invalidateParentSizeAndDisplayList();
     }
     
-	/**
-	 *  @inheritDoc
-	 *  
-	 *  @langversion 3.0
-	 *  @playerversion Flash 10
-	 *  @playerversion AIR 1.5
-	 *  @productversion Flex 3
-	 */
-	override public function get rotationZ():Number
-	{
-		return rotation;
-	}
+    /**
+     *  @inheritDoc
+     *  
+     *  @langversion 3.0
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 3
+     */
+    override public function get rotationZ():Number
+    {
+        return rotation;
+    }
 
-	/**
-	 *  @private
-	 */
-	override public function set rotationZ(value:Number):void
-	{
-		rotation = value;
-	}
-	
+    /**
+     *  @private
+     */
+    override public function set rotationZ(value:Number):void
+    {
+        rotation = value;
+    }
+    
     /**
      *  Defines a set of adjustments that can be applied to the component's transform in a way that is 
      *  invisible to the component's parent's layout. For example, if you want a layout to adjust 
@@ -3102,8 +3089,8 @@ public dynamic class UIMovieClip extends MovieClip
      */
     public function set postLayoutTransformOffsets(value:TransformOffsets):void
     {
-		if (_layoutFeatures == null)
-			initAdvancedLayoutFeatures();
+        if (_layoutFeatures == null)
+            initAdvancedLayoutFeatures();
 
         
         if (_layoutFeatures.postLayoutTransformOffsets != null)
@@ -3538,34 +3525,34 @@ public dynamic class UIMovieClip extends MovieClip
      *
      * storage for advanced layout and transform properties.
      */
-    private var _layoutFeatures:AdvancedLayoutFeatures;
+    mx_internal var _layoutFeatures:AdvancedLayoutFeatures;
     
-	/**
-	 *  @private
-	 *  When true, the transform on this component consists only of translation.
-	 *  Otherwise, it may be arbitrarily complex.
-	 */
+    /**
+     *  @private
+     *  When true, the transform on this component consists only of translation.
+     *  Otherwise, it may be arbitrarily complex.
+     */
     protected var hasDeltaIdentityTransform:Boolean = true;
     
-	/**
-	 *  @private
-	 *  Storage for the modified Transform object that can dispatch
-	 *  change events correctly.
-	 */
+    /**
+     *  @private
+     *  Storage for the modified Transform object that can dispatch
+     *  change events correctly.
+     */
     private var _transform:flash.geom.Transform;
     
-	/**
-	 *  @private
-	 *  Initializes the implementation and storage of some of the less
-	 *  frequently used advanced layout features of a component.
-	 *  Call this function before attempting to use any of the
-	 *  features implemented by the AdvancedLayoutFeatures object.
-	 * 
+    /**
+     *  @private
+     *  Initializes the implementation and storage of some of the less
+     *  frequently used advanced layout features of a component.
+     *  Call this function before attempting to use any of the
+     *  features implemented by the AdvancedLayoutFeatures object.
+     * 
      *  @langversion 3.0
      *  @playerversion Flash 10
      *  @playerversion AIR 1.5
      *  @productversion Flex 4
-	 */
+     */
     private function initAdvancedLayoutFeatures():void
     {
         var features:AdvancedLayoutFeatures = new AdvancedLayoutFeatures();
@@ -3581,12 +3568,12 @@ public dynamic class UIMovieClip extends MovieClip
         features.layoutX = x;
         features.layoutY = y;
         features.layoutZ = z;
-		
-		// Initialize the internal variable last,
-		// since the transform getters depend on it.
+        
+        // Initialize the internal variable last,
+        // since the transform getters depend on it.
         _layoutFeatures = features;
 
-		invalidateTransform();
+        invalidateTransform();
     }
     
     private function invalidateTransform():void
@@ -3610,14 +3597,6 @@ public dynamic class UIMovieClip extends MovieClip
     {
         _layoutFeatures.updatePending = false;
         
-        // need to set the scale to the "real scale" (the user-set 
-        // scale + the scale needed for sizing) to get a real matrix.
-        // Afterwards, we'll reset it to the "user-set" scale.
-        var oldScaleX:Number = _layoutFeatures.layoutScaleX;
-        var oldScaleY:Number = _layoutFeatures.layoutScaleY;
-        _layoutFeatures.layoutScaleX = _layoutFeatures.layoutScaleX * scaleXDueToSizing;
-        _layoutFeatures.layoutScaleY = _layoutFeatures.layoutScaleY * scaleYDueToSizing;
-        
         if (_layoutFeatures.is3D)
         {
             super.transform.matrix3D = _layoutFeatures.computedMatrix3D;
@@ -3626,9 +3605,6 @@ public dynamic class UIMovieClip extends MovieClip
         {
             super.transform.matrix = _layoutFeatures.computedMatrix;
         }
-        
-        _layoutFeatures.layoutScaleX = oldScaleX;
-        _layoutFeatures.layoutScaleY = oldScaleY;
     }
     
     private function applyPerspectiveProjection():void
@@ -3801,10 +3777,10 @@ public dynamic class UIMovieClip extends MovieClip
         LayoutElementUIComponentUtils.setLayoutBoundsSize(this,width,height,postLayoutTransform? nonDeltaLayoutMatrix():null);
     }
     
-	/**
-	 *  @private
-	 *  Returns the layout matrix, or null if it only consists of translations.
-	 */
+    /**
+     *  @private
+     *  Returns the layout matrix, or null if it only consists of translations.
+     */
     private function nonDeltaLayoutMatrix():Matrix
     {
         if (hasDeltaIdentityTransform)
@@ -3819,7 +3795,7 @@ public dynamic class UIMovieClip extends MovieClip
             // if scale is actually set (and it's not just our "secret scale"), then 
             // layoutFeatures wont' be null and we won't be down here
             return MatrixUtil.composeMatrix(x, y, 1, 1, rotation,
-                        					transformX, transformY);
+                                            transformX, transformY);
         }
     }
     
@@ -4371,13 +4347,22 @@ public dynamic class UIMovieClip extends MovieClip
         
         // Use scaleX/scaleY to change our size since the new size is based
         // on our measured size, which can be different than our actual size.
-        scaleXDueToSizing = (newWidth / measuredWidth);
-        scaleYDueToSizing = (newHeight / measuredHeight);
-        $scaleX = scaleX*scaleXDueToSizing;
-        $scaleY = scaleY*scaleYDueToSizing;
+        var widthScale:Number = (newWidth / measuredWidth);
+        var heightScale:Number = (newHeight / measuredHeight);
         
-        // need to apply this scale if using layout offsets
-        invalidateTransform();
+        // if we need to scale due to sizing differences or if we might've scaled before, 
+        // then we need to set _layoutFeatures.stretchX/stretchY
+        if (widthScale != 1 || heightScale != 1 || _layoutFeatures != null)
+        {
+            if (_layoutFeatures == null)
+                initAdvancedLayoutFeatures();
+            
+            _layoutFeatures.stretchX = widthScale;
+            _layoutFeatures.stretchY = heightScale;
+            
+            // need to apply this scale if using layout offsets
+            invalidateTransform();
+        }
         
         if (sizeChanged(width, oldWidth) || sizeChanged(height, oldHeight))
             dispatchResizeEvent();
@@ -4613,8 +4598,11 @@ public dynamic class UIMovieClip extends MovieClip
         var currentBounds:Rectangle = bounds;
         
         // take secret scale into account as it's our real width/height
-        currentBounds.width *= scaleXDueToSizing;
-        currentBounds.height *= scaleYDueToSizing;
+        if (_layoutFeatures != null)
+        {
+            currentBounds.width *= _layoutFeatures.stretchX;
+            currentBounds.height *= _layoutFeatures.stretchY;
+        }
         
         if (sizeChanged(currentBounds.width, oldWidth) || sizeChanged(currentBounds.height, oldHeight))
         {
@@ -4642,8 +4630,20 @@ public dynamic class UIMovieClip extends MovieClip
     protected function autoUpdateCurrentStateEnterFrameHandler(event:Event):void
     {
         // Check for the current state.  This is really only checked for if 
-        // trackStateChanged == true.  This is so that if we magically land 
+        // autoUpdateCurrentState == true.  This is so that if we magically land 
         // on a "foo" labelled frame, we return "foo" as the currentState.
+        if (currentLabel && currentLabel.indexOf(":") < 0 && currentLabel != _currentState)
+            _currentState = currentLabel;
+    }
+        
+    /**
+     *  @private
+     *  Sets up the current state the very first time.  This will only run once.
+     */
+    private function setUpFirstCurrentState(event:Event):void
+    {
+        // only run this code the very first time.
+        removeEventListener(Event.ENTER_FRAME, setUpFirstCurrentState);
         if (currentLabel && currentLabel.indexOf(":") < 0 && currentLabel != _currentState)
             _currentState = currentLabel;
     }
@@ -4684,8 +4684,19 @@ public dynamic class UIMovieClip extends MovieClip
      */
     private function addFocusEventListeners():void
     {
-        stage.addEventListener(FocusEvent.KEY_FOCUS_CHANGE, keyFocusChangeHandler, false, 1, true);
-        stage.addEventListener(FocusEvent.FOCUS_OUT, focusOutHandler, false, 0, true);
+        // If we get a security error because we're not allowed to add event listeners to the stage, 
+        // then just add them to the systemManager instead because we could be an untrusted app.
+        try
+        {
+            stage.addEventListener(FocusEvent.KEY_FOCUS_CHANGE, keyFocusChangeHandler, false, 1, true);
+            stage.addEventListener(FocusEvent.FOCUS_OUT, focusOutHandler, false, 0, true);
+        }
+        catch (err:SecurityError)
+        {
+            systemManager.addEventListener(FocusEvent.KEY_FOCUS_CHANGE, keyFocusChangeHandler, false, 1, true);
+            systemManager.addEventListener(FocusEvent.FOCUS_OUT, focusOutHandler, false, 0, true);
+        }
+        
         focusListenersAdded = true;
     }
     
@@ -4699,8 +4710,18 @@ public dynamic class UIMovieClip extends MovieClip
      */
     private function removeFocusEventListeners():void
     {
-        stage.removeEventListener(FocusEvent.KEY_FOCUS_CHANGE, keyFocusChangeHandler);
-        stage.removeEventListener(FocusEvent.FOCUS_OUT, focusOutHandler);
+        // Same security issue as addFocusEventListeners()
+        try
+        {
+            stage.removeEventListener(FocusEvent.KEY_FOCUS_CHANGE, keyFocusChangeHandler);
+            stage.removeEventListener(FocusEvent.FOCUS_OUT, focusOutHandler);
+        }
+        catch (err:SecurityError)
+        {
+            systemManager.removeEventListener(FocusEvent.KEY_FOCUS_CHANGE, keyFocusChangeHandler);
+            systemManager.removeEventListener(FocusEvent.FOCUS_OUT, focusOutHandler);
+        }
+        
         focusListenersAdded = false;
     }
     
@@ -4782,11 +4803,34 @@ public dynamic class UIMovieClip extends MovieClip
         // Add a key focus change handler at the capture phase. We use this to 
         // determine focus direction in the setFocus() call.
         if (systemManager)
-            systemManager.stage.addEventListener(FocusEvent.KEY_FOCUS_CHANGE, keyFocusChangeCaptureHandler,
-                                                 true, 0, true);
+        {
+            // If we get a security error because we're not allowed to add event listeners to the stage, 
+            // then just add them to the systemManager instead because we could be an untrusted app.
+            try
+            {
+                systemManager.stage.addEventListener(FocusEvent.KEY_FOCUS_CHANGE, keyFocusChangeCaptureHandler,
+                                                     true, 0, true);
+            }
+            catch (err:SecurityError)
+            {
+                systemManager.addEventListener(FocusEvent.KEY_FOCUS_CHANGE, keyFocusChangeCaptureHandler,
+                                               true, 0, true);
+            }
+        }
         else if (parentDocument && parentDocument.systemManager)
-            parentDocument.systemManager.stage.addEventListener(FocusEvent.KEY_FOCUS_CHANGE, keyFocusChangeCaptureHandler,
-                                                 true, 0, true);
+        {
+            // Same security issue as above
+            try
+            {
+                parentDocument.systemManager.stage.addEventListener(FocusEvent.KEY_FOCUS_CHANGE, keyFocusChangeCaptureHandler,
+                                                                    true, 0, true);
+            }
+            catch (err:SecurityError)
+            {
+                parentDocument.systemManager.addEventListener(FocusEvent.KEY_FOCUS_CHANGE, keyFocusChangeCaptureHandler,
+                                                              true, 0, true);
+            }
+        }
     }
     
     /**

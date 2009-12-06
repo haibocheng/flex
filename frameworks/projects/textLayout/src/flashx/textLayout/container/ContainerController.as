@@ -184,8 +184,16 @@ package flashx.textLayout.container
 		 
 		public function ContainerController(container:Sprite,compositionWidth:Number=100,compositionHeight:Number=100)
 		{
+			initialize(container,compositionWidth,compositionHeight);
+		}
+		
+		private function initialize(container:Sprite,compositionWidth:Number,compositionHeight:Number):void
+		{
 			_container = container;
 			_containerRoot =  null;
+			
+			_textLength = 0;
+			_absoluteStart = -1;
 		
 			_columnState = new ColumnState(null/*blockProgression*/, null/*columnDirection*/, null/*controller*/, 0/*compositionWidth*/, 0/*compositionHeight*/);
 			//_visibleRect = new Rectangle();
@@ -1009,8 +1017,9 @@ package flashx.textLayout.container
 			
 			// clamp values to range absoluteStart,absoluteStart+_textLength
 			var controllerStart:int = absoluteStart;
-			activePosition = Math.max(controllerStart,Math.min(activePosition,controllerStart+_textLength));
-			anchorPosition = Math.max(controllerStart,Math.min(anchorPosition,controllerStart+_textLength));
+			var lastPosition:int = Math.min(controllerStart+_textLength, textFlow.textLength - 1);
+			activePosition = Math.max(controllerStart,Math.min(activePosition,lastPosition));
+			anchorPosition = Math.max(controllerStart,Math.min(anchorPosition,lastPosition));
 								
 			var verticalText:Boolean = effectiveBlockProgression == BlockProgression.RL;
 			var begPos:int = Math.min(activePosition,anchorPosition);
@@ -1274,6 +1283,10 @@ package flashx.textLayout.container
 		   			_container.addEventListener(MouseEvent.MOUSE_OVER, requiredMouseOverHandler);
 	    			
 	    			attachTransparentBackgroundForHit(false);
+					
+					// If the container already has focus, we have to attach all listeners
+					if (_container.stage && _container.stage.focus == _container)
+						attachAllListeners();
 				}
 			}
 	 	}
@@ -1407,12 +1420,17 @@ package flashx.textLayout.container
 			return createDefaultContextMenu();
 		}
 		
-		
-		private function scrollTimerHandler(event:Event):void
+		/** @private */
+		tlf_internal function scrollTimerHandler(event:Event):void
 		{
 			// trace("BEGIN scrollTimerHandler");
 			if (!_scrollTimer)
 				return;
+
+			// shut it down if not in this container
+			if (textFlow.interactionManager == null || textFlow.interactionManager.activePosition < absoluteStart || textFlow.interactionManager.activePosition > absoluteStart+textLength)
+				event = null;
+				
 						
 			// We're listening for MOUSE_UP so we can cancel autoscrolling
 			if (event is MouseEvent)
@@ -1427,8 +1445,6 @@ package flashx.textLayout.container
 			{
 				_scrollTimer.stop();
 				_scrollTimer.removeEventListener(TimerEvent.TIMER, scrollTimerHandler);
-				// can we leak right here???
-				CONFIG::debug{ assert(getContainerRoot() != null,"no container root in scrollTimerHandler"); }
 				if (getContainerRoot())
 					getContainerRoot().removeEventListener(	MouseEvent.MOUSE_UP, scrollTimerHandler);	
 				_scrollTimer = null;
@@ -1440,12 +1456,21 @@ package flashx.textLayout.container
 				var scrollChange:int = autoScrollIfNecessaryInternal(containerPoint);
 				if (scrollChange != 0 && interactionManager)		// force selection update if we actually scrolled and we have a selection manager
 				{
-					//if (interactionManager["setNewSelectionPoint"](_container,_container as InteractiveObject,containerPoint.x,containerPoint.y,true))
-					//	interactionManager.refreshSelection();
-					// var mouseEvent:MouseEvent = new MouseEvent(MouseEvent.MOUSE_DOWN,false,false,containerPoint.x,containerPoint.y,container as InteractiveObject,false,false,true,true);
-					// _container.dispatchEvent(mouseEvent);
-					var mouseEvent:MouseEvent = new PsuedoMouseEvent(MouseEvent.MOUSE_MOVE,false,false,containerPoint.x,containerPoint.y,_container as InteractiveObject,false,false,false,true);
-					interactionManager.mouseMoveHandler(mouseEvent);
+					var mouseEvent:MouseEvent = new PsuedoMouseEvent(MouseEvent.MOUSE_MOVE,false,false,_container.stage.mouseX, _container.stage.mouseY,_container.stage,false,false,false,true);
+					var stashedScrollTimer:Timer = _scrollTimer;	
+					try
+					{
+						_scrollTimer =  null;
+						interactionManager.mouseMoveHandler(mouseEvent);
+					}
+					catch (e:Error)
+					{
+						throw(e);
+					}
+					finally
+					{
+						_scrollTimer = stashedScrollTimer;
+					}
 				}
 			}
 			// trace("AFTER scrollTimerHandler");
@@ -1463,12 +1488,8 @@ package flashx.textLayout.container
 	 	 */
 		 
 		public function autoScrollIfNecessary(mouseX:int, mouseY:int):void
-		{
-			// No scrolling if scrolling is turned off
- 			if (!_hasScrollRect)
-				return;
- 			
- 			if (flowComposer.getControllerIndex(ContainerController(this)) < flowComposer.numControllers - 1)
+		{ 			
+ 			if (flowComposer.getControllerAt(flowComposer.numControllers-1) != this)
  			{
  				var verticalText:Boolean = (effectiveBlockProgression == BlockProgression.RL);
  				var lastController:ContainerController = flowComposer.getControllerAt(flowComposer.numControllers - 1);
@@ -1487,6 +1508,10 @@ package flashx.textLayout.container
 						lastController.autoScrollIfNecessary(mouseX, mouseY);
 				}
  			}
+			
+			// even if not the last container - may scroll if there are explicit linebreaks
+			if (!_hasScrollRect)
+				return;
 			var containerPoint:Point = new Point(mouseX, mouseY);
 			containerPoint = _container.globalToLocal(containerPoint); 			
 			autoScrollIfNecessaryInternal(containerPoint);
@@ -1510,6 +1535,7 @@ package flashx.textLayout.container
 			{ 
 				assert(_hasScrollRect, "internal scrolling function called on non-scrollable container");
 			}
+				
 			
 			var scrollDirection:int = 0;
 			
@@ -1898,6 +1924,28 @@ package flashx.textLayout.container
 			return;	// do nothing right now
 		}
 
+		// What'd I hit???
+		private function hitOnMyFlowExceptLastContainer(event:MouseEvent):Boolean
+		{
+			if (event.target is TextLine)
+			{
+				var tfl:TextFlowLine = TextLine(event.target).userData as TextFlowLine;
+				if (tfl)
+				{
+					var para:ParagraphElement = tfl.paragraph;
+					if(para.getTextFlow() == textFlow)
+						return true;
+				}
+			}
+			else if (event.target is Sprite)
+			{
+				// skip the last container in the chain
+				for (var idx:int = 0; idx < textFlow.flowComposer.numControllers-1; idx++)
+					if (textFlow.flowComposer.getControllerAt(idx).container == event.target)
+						return true;
+			}
+			return false;
+		}
 		/** 
 		 * Processes the <code>MouseEvent.MOUSE_MOVE</code> event when the client manages events.
 		 *
@@ -1914,7 +1962,8 @@ package flashx.textLayout.container
 		{
 			if (interactionManager)
 			{
-				if (event.buttonDown)
+				// only autoscroll if we haven't hit something on the stage related to this particular TextFlow
+				if (event.buttonDown && !hitOnMyFlowExceptLastContainer(event))
 					autoScrollIfNecessary(event.stageX, event.stageY);
 				interactionManager.mouseMoveHandler(event);
 			}
@@ -2263,169 +2312,6 @@ package flashx.textLayout.container
 					contextMenu.clipboardItems.selectAll = true;
 	    		}
 	    	}
-	    
-	    /**
-		 * Indicates whether the component implementing ITextSupport supports reconversion (has editable text).
-		 *
-		 * @playerversion Flash 10.0
-		 * @langversion 3.0
-		 */ 
-	    public function get canReconvert():Boolean
-		{
-			var selMgr:ISelectionManager = interactionManager;
-			if(!selMgr)
-				return false;
-			
-			return selMgr.editingMode == EditingMode.READ_WRITE;
-		}
-		
-		/** 
-		 * The zero-based character index value of the first character in the current selection.
-		 * Components which wish to support inline IME or Accessibility should call into this method.
-		 *
-		 * @return the index of the character at the anchor end of the selection, or <code>-1</code> if no text is selected.
-		 * 
-		 * @playerversion Flash 10.0
-		 * @langversion 3.0
-		 */
-		public function get selectionActiveIndex():int
-		{
-			var selMgr:ISelectionManager = interactionManager;
-			var selIndex:int = -1;
-			if(selMgr && selMgr.editingMode != EditingMode.READ_ONLY)
-			{
-				selIndex = selMgr.activePosition;
-			}
-			
-			return selIndex;
-		}
-		
-	    /** 
-		 * The zero-based character index value of the last character in the current selection.
-		 * Components which wish to support inline IME or Accessibility should call into this method.
-		 *
-		 * @return the index of the character at the active end of the selection, or <code>-1</code> if no text is selected.
-		 * 
-		 * @playerversion Flash 10.0
-		 * @langversion 3.0
-		 */
-		public function get selectionAnchorIndex():int
-		{
-			var selMgr:ISelectionManager = interactionManager;
-			var selIndex:int = -1;
-			if(selMgr && selMgr.editingMode != EditingMode.READ_ONLY)
-			{
-				selIndex = selMgr.anchorPosition;
-			}
-			
-			return selIndex;
-		}
-	    
-	    /** 
-		 * Gets the specified range of text from a component implementing ITextSupport.
-		 * To retrieve all text in the component, do not specify values for <code>startIndex</code> and <code>endIndex</code>.
-		 * Components which wish to support inline IME or web searchability should call into this method.
-		 * Components overriding this method should ensure that the default values of <code>-1</code> 
-		 * for <code>startIndex</code> and <code>endIndex</code> are supported.
-		 * 
-		 * @param startIndex Optional; an integer that specifies the starting location of the range of text to be retrieved.
-		 *
-		 * @param endIndex Optional; an integer that specifies the ending location of the range of text to be retrieved.
-		 * 
-		 * @return The requested text, or <code>null</code> if no text is available in the requested range
-		 * or if either or both of the indexes are invalid.  The same value should be returned 
-		 * independant of whether <code>startIndex</code> is greater or less than <code>endIndex</code>.
-		 * 
-		 * @playerversion Flash 10.0
-		 * @langversion 3.0
-		 */
-	    public function getTextInRange(startIndex:int = -1, endIndex:int = -1):String
-	    {
-	    	var text:String = "";
-	    	//don't include the final paraTerminator when determining text limits
-	    	if(startIndex < -1 || endIndex < -1 || startIndex > (this.textFlow.textLength - 1) || endIndex > (this.textFlow.textLength - 1))
-	    		return null;
-				
-	    	if(startIndex == -1 && endIndex == -1)
-	    	{
-	    		var curPara:ParagraphElement = this.textFlow.getFirstLeaf().getParagraph();
-	    		while(curPara)
-	    		{
-	    			text += curPara.getText();
-	    			curPara = curPara.getNextParagraph();
-	    			if(curPara)
-	    				text += "\n";
-	    		}
-	    		
-	    	}
-	    	else
-	    	{
-	    		if(endIndex == -1)
-	    			endIndex = this.textFlow.textLength;
-				
-				//make sure they're in the right order
-				if(endIndex < startIndex)
-				{
-					var tempIndex:int = endIndex;
-					endIndex = startIndex;
-					startIndex = tempIndex;
-				}
-				
-	    		var curPos:int = startIndex != -1 ? startIndex : 0;
-				
-									
-	    		var rangedPara:ParagraphElement = this.textFlow.getFirstLeaf().getParagraph();
-	    		var paraStart:int = rangedPara.getAbsoluteStart();
-	    		//textLength includes the terminator, exclude it.
-    			var paraEnd:int = paraStart + rangedPara.textLength - 1;
-    			
-    			//iterate over the paragraphs until we get to the one in range
-	    		while(rangedPara && paraStart < curPos && paraEnd < curPos)
-	    		{
-	    			rangedPara = rangedPara.getNextParagraph();
-	    			paraStart = paraEnd + 1;
-	    			//textLength includes the terminator, exclude it.
-	    			paraEnd = paraStart + rangedPara.textLength - 1;
-	    		}
-	    		
-	    		//we better have one!
-	    		CONFIG::debug{ assert(rangedPara != null, "failed to find a starting Paragraph for getTextInRange!"); }
-	    		
-	    		//now we'll walk the paras until we get to the end...
-	    		while(rangedPara && curPos < endIndex)
-	    		{
-	    			//convert paraStart (absolute) to a paragraph relative start
-	    			var relStart:int = curPos - paraStart;
-		    		var relEnd:int = relStart + (endIndex - curPos);
-		    		
-		    		//don't go beyond the end of the paragraph
-		    		if(relEnd > rangedPara.textLength)
-		    			relEnd = rangedPara.textLength - 1;
-		    		
-		    		var rangedParaText:String = rangedPara.getText();
-		    		text += rangedParaText.substr(relStart, relEnd - relStart);
-		    		
-		    		curPos += (relEnd - relStart);
-		    		
-	    			rangedPara = rangedPara.getNextParagraph();
-	    			//no need to perform these if we don't have a paragraph
-		    		if(rangedPara != null)
-		    		{
-		    			//save on the calculation, just paraStart eq it the last paraEnd + 1
-		    			paraStart = paraEnd + 1;
-		    			paraEnd = paraStart + rangedPara.textLength;
-		    			if(curPos < endIndex)
-		    				text += "\n";
-		    				
-		    			//get beyond the para terminator
-		    			++curPos;
-		    		}
-	    		}
-	    	}
-	    	
-	    	return text;
-	    }
-	    
 	    
 		 /** 
 		 * Sets the range of selected text in a component implementing ITextSupport.
@@ -2795,10 +2681,15 @@ package flashx.textLayout.container
 			}
 			
 			// reclamp vertical/horizontal scrollposition - addresses Watson 2380962
+			var scrolled:Boolean = false;	// true if scroll values were changed - we need to notify in this case
+			var tmp:Number = _yScroll;
 			if (verticalScrollPolicy != ScrollPolicy.OFF && !_measureHeight)
 				_yScroll = computeVerticalScrollPosition(_yScroll,false);
+			scrolled = (tmp != _yScroll);
+			tmp = _xScroll;
 			if (horizontalScrollPolicy != ScrollPolicy.OFF && !_measureWidth)
 				_xScroll = computeHorizontalScrollPosition(_xScroll,false);
+			scrolled = scrolled || (tmp != _xScroll);
 
 			// Post all the new TextLines to the display list, and remove any old TextLines left from last time. Do this
 			// in a non-destructive way so that lines that have not been changed are not touched. This reduces redraw time.
@@ -2863,6 +2754,12 @@ package flashx.textLayout.container
 				tf.backgroundManager.onUpdateComplete(this);
 			}
 			
+			// If we updated the scroll values, we need to send an event
+			if (scrolled && tf.hasEventListener(TextLayoutEvent.SCROLL))
+			{
+				tf.dispatchEvent(new TextLayoutEvent(TextLayoutEvent.SCROLL));
+			}
+
 			if (tf.hasEventListener(UpdateCompleteEvent.UPDATE_COMPLETE))
 			{
 				tf.dispatchEvent(new UpdateCompleteEvent(UpdateCompleteEvent.UPDATE_COMPLETE,false,false,tf, this));

@@ -56,6 +56,12 @@ public class DManager implements DProtocolNotifierIF, SourceLocator
 	private final ArrayList<DWatch>			m_watchpoints; /* WARNING: accessed from multiple threads */
 
 	/**
+	 * How many unnamed swfs (e.g. swfs loaded via Loader.loadBytes()) have
+	 * already been added to m_swfInfo.
+	 */
+	private int								m_unnamedCount;
+
+	/**
 	 * The currently active stack frames.
 	 */
 	private ArrayList<DStackContext>		m_frames;
@@ -328,7 +334,7 @@ public class DManager implements DProtocolNotifierIF, SourceLocator
 
 	            // put the source in the currently active swf
 	            DSwfInfo swf;
-				if (swfIndex == -1)				// caller didn't tell us what swf thi is for
+				if (swfIndex == -1)				// caller didn't tell us what swf this is for
 					swf = getActiveSwfInfo();	// ... so guess
 				else
 					swf = getOrCreateSwfInfo(swfIndex);
@@ -1449,11 +1455,11 @@ public class DManager implements DProtocolNotifierIF, SourceLocator
 				int count = msg.getWord();
 				for(int i=0; i<count; i++)
 				{
-					long index = msg.getDWord();
+					int index = (int) msg.getDWord();
 					long id = msg.getPtr();
 
 					// get it
-					DSwfInfo info = getOrCreateSwfInfo((int)index);
+					DSwfInfo info = getOrCreateSwfInfo(index);
 
 					// remember which was last seen
 					m_lastSwfInfo = info;
@@ -1501,14 +1507,35 @@ public class DManager implements DProtocolNotifierIF, SourceLocator
                             info.setPopulated(); // added by mmorearty on 9/5/05 for RSL debugging
                         }
 
+                        int unnamedIndex;
+                        if (justCreated)
+                        {
+                        	// SDK-22564: In the case of swfs that don't have a name because they
+                        	// were loaded with Loader.loadBytes(), the Player sends us the wrong
+                        	// path and URL -- it sends us the path and URL of the parent swf.
+                        	// We need to detect that case.
+	                        unnamedIndex = getUnnamedIndex(index, path);
+	                        if (unnamedIndex != 0)
+	                        {
+	                        	path = "<unnamed-" + unnamedIndex + ">"; //$NON-NLS-1$ //$NON-NLS-2$
+	                        	url = "unnamed:" + unnamedIndex; //$NON-NLS-1$
+	                        }
+                        }
+                        else
+                        {
+                        	unnamedIndex = info.getUnnamedIndex();
+                        	path = info.getPath();
+                        	url = info.getUrl();
+                        }
+
 						// update this swfinfo with the lastest data
-						info.freshen(id, path, url, host, port, debugComing, swfSize, swdSize, breakpointCount, offsetCount, scriptCount, local2global, minId, maxId);
+						info.freshen(id, path, url, unnamedIndex, host, port, debugComing, swfSize, swdSize, scriptCount, local2global, minId, maxId);
 						// now tie any scripts that have been loaded into this swfinfo object
 						tieScriptsToSwf(info);
 
 						// notify if its newly created
 						if (justCreated)
-							addEvent(new SwfLoadedEvent(id, (int)index, path, url, host, port, swfSize));
+							addEvent(new SwfLoadedEvent(id, index, path, url, unnamedIndex, host, port, swfSize));
 					}
 					else
 					{
@@ -1520,7 +1547,7 @@ public class DManager implements DProtocolNotifierIF, SourceLocator
 
 						// notify if this information is new.
 						if (!alreadyUnloaded)
-							addEvent(new SwfUnloadedEvent(info.getId(), info.getPath(), (int)index));
+							addEvent(new SwfUnloadedEvent(info.getId(), info.getPath(), index));
 					}
 //					System.out.println("[SWFLOAD] Loaded "+path+", size="+swfSize+", scripts="+scriptCount);
 				}
@@ -1662,6 +1689,34 @@ public class DManager implements DProtocolNotifierIF, SourceLocator
 				break;
 			}
 		}
+	}
+
+	/**
+	 * Returns an index for the specified swf to use as its unique index, if
+	 * another swf already has the same name.
+	 * <p>
+	 * This is to address SDK-22564: In the case of swfs that don't have a name
+	 * because they were loaded with Loader.loadBytes(), the Player sends us the
+	 * wrong path and URL -- it sends us the path and URL of the parent swf. We
+	 * need to detect that case.
+	 * 
+	 * @param indexOfThisSwf
+	 *            the index of this swf. Only swfs with smaller indices will be
+	 *            checked.
+	 * @param path
+	 *            the path of this swf
+	 * @return zero if no other earlier swfs have the same name, or a 1-based
+	 *         index if at least one earlier swf does have the same name (which
+	 *         indicates that this new swf is an unnamed child of the earlier
+	 *         one).
+	 */
+	private int getUnnamedIndex(int indexOfThisSwf, String path)
+	{
+		for (DSwfInfo swfInfo: getSwfInfos())
+			if (swfInfo.getPath().equals(path))
+				return ++m_unnamedCount;
+
+		return 0;
 	}
 
 	/**

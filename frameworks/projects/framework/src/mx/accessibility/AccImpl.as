@@ -18,6 +18,7 @@ import flash.accessibility.AccessibilityProperties;
 import flash.display.DisplayObjectContainer;
 import flash.events.Event;
 
+import mx.accessibility.AccConst;
 import mx.containers.Form;
 import mx.containers.FormHeading;
 import mx.containers.FormItem;
@@ -26,8 +27,12 @@ import mx.core.Container;
 import mx.core.UIComponent;
 import mx.core.mx_internal;
 import mx.managers.SystemManager;
+import mx.resources.ResourceManager;
+import mx.resources.IResourceManager;
 
 use namespace mx_internal;
+
+[ResourceBundle("controls")]
 
 /**
  *  The AccImpl class is Flex's base class for implementing accessibility
@@ -42,47 +47,6 @@ use namespace mx_internal;
 public class AccImpl extends AccessibilityImplementation
 {
     include "../core/Version.as";
-
-    //--------------------------------------------------------------------------
-    //
-    //  Class constants
-    //
-    //--------------------------------------------------------------------------
-
-    /**
-     *  @private
-     */
-    private static const STATE_SYSTEM_NORMAL:uint = 0x00000000;
-
-    /**
-     *  @private
-     */
-    private static const STATE_SYSTEM_FOCUSABLE:uint = 0x00100000;
-    
-    /**
-     *  @private
-     */
-    private static const STATE_SYSTEM_FOCUSED:uint = 0x00000004;
-    
-    /**
-     *  @private
-     */
-    private static const STATE_SYSTEM_UNAVAILABLE:uint = 0x00000001;
-    
-    /**
-     *  @private
-     */
-    private static const EVENT_OBJECT_NAMECHANGE:uint = 0x800C;
-    
-    /**
-     *  @private
-     */
-    private static const EVENT_OBJECT_SHOW:uint = 0x8002;
-
-    /**
-     *  @private
-     */
-    private static const EVENT_OBJECT_HIDE:uint = 0x8003;
 
     //--------------------------------------------------------------------------
     //
@@ -127,13 +91,36 @@ public class AccImpl extends AccessibilityImplementation
      *  @private
      *  Method for supporting Form Accessibility.
      */
+    private static function joinWithSpace(s1:String,s2:String):String
+    {
+		// Single space treated as null so developers can override default name elements with " ".
+		if (s1 == " ")
+			s1 = "";
+		if (s2 == " ")
+			s2 = "";
+        if (s1 && s2)
+            s1 += " " +s2;
+        else if (s2)
+            s1 = s2;
+        // else we have non-empty s1 and empty s2, so do nothing.
+        return s1;
+    }
+    
+    /**
+     *  @private
+     *  Method for supporting Form Accessibility.
+     */
     private static function updateFormItemString(formItem:FormItem):String
     {
         var formName:String = "";
+        var resourceManager:IResourceManager = ResourceManager.getInstance();
         
         const itemLabel:Label = formItem.itemLabel;
         const accProp:AccessibilityProperties = (itemLabel ? itemLabel.accessibilityProperties : null);
         if (accProp && accProp.silent)
+            // We already calculated this label's name below, so just return it.
+            // FIXME gosmith: Caching this will cause problems if
+            // formItem, item label, or form header changes dynamically.
             return accProp.name;
 
         var form:UIComponent = UIComponent(formItem.parent);
@@ -148,20 +135,41 @@ public class AccImpl extends AccessibilityImplementation
                 var child:UIComponent = UIComponent(form.getChildAt(i));
                 if (child is FormHeading)
                 {
-                    formName = FormHeading(child).label + " ";
+                    // Accessible name if it exists, else label text.
+                    if (FormHeading(child).accessibilityProperties)
+                        formName = 
+                        FormHeading(child).accessibilityProperties.name;
+                    if (formName == "") 
+                        formName = FormHeading(child).label;
                     break;
                 }
             }
         }
 
-        // Add in text if we are a required field
+        // Add in "Required Field" text if we are a required field
         if (formItem.required)
-            formName += "Required Field ";
+            formName = joinWithSpace(formName,
+                resourceManager.getString("controls","requiredField"))
 
         // Add in the label from the formItem
-        if (formItem.label != "")
-            formName += formItem.label + " ";
+        // Accessible name if it exists, else label text.
+        var f:String = "";
+        if (formItem.accessibilityProperties)
+            f = formItem.accessibilityProperties.name
+        if (f == "")
+            f = formItem.label;
+            
+        formName = joinWithSpace(formName, f);
 
+        /* 
+         * Disable form item label accessibility so the form item label and the 
+         * text from the form item label are not both seen in the virtual view of       
+         * a screen reader.
+         * Otherwise, the formItem would appear with a name, followed
+         * by the component being labeled, with a duplicate of that name.
+         * Setting silent here also causes code above to avoid recalculating the name.
+         * FIXME gosmith: If the caching above is removed, remove the above comment also.
+         */
         if (accProp && !accProp.silent)
         {
             accProp.silent = true;
@@ -294,21 +302,41 @@ public class AccImpl extends AccessibilityImplementation
      */
     override public function get_accName(childID:uint):String
     {
-        var accName:String = getFormName(master);
+        var accName:String;
 
-        if (childID == 0 && 
-            master.accessibilityProperties && 
+        // For simple children, do not include anything but the default name.
+        // Examples: combo box items, list items, etc.
+        if (childID)
+        {
+            accName = getName(childID);
+            // Historical: Return null and not "" for empty and null values.
+            return (accName != null && accName != "") ? accName : null;
+        }
+
+        // Start with form header and/or formItem label text.
+        // Also includes "Required Field" where appropriate.
+        accName = getFormName(master);
+
+        // Now the component's name or toolTip.
+        if (master.accessibilityProperties && 
             master.accessibilityProperties.name != null && 
             master.accessibilityProperties.name != "")
         {
-            accName += master.accessibilityProperties.name + " ";
+			// An accName is set, so use only that.
+            accName = joinWithSpace(accName, master.accessibilityProperties.name);
         }
-
-        accName += getName(childID) + getStatusName();
+        else
+        {
+			// No accName set; use default name, or toolTip if that is empty.
+            accName = joinWithSpace(accName, getName(0) || master.toolTip);
+        }
         
+        accName = joinWithSpace(accName, getStatusName());
+        
+        // Historical: Return null and not "" for empty and null values.
         return (accName != null && accName != "") ? accName : null;
     }
-    
+  
     /**
      *  @private
      *  Method to return an array of childIDs.
@@ -363,37 +391,22 @@ public class AccImpl extends AccessibilityImplementation
      */
     protected function getState(childID:uint):uint
     {
-        var accState:uint = STATE_SYSTEM_NORMAL;
+        var accState:uint = AccConst.STATE_SYSTEM_NORMAL;
         
         if (!UIComponent(master).enabled)
         {
-            accState |= STATE_SYSTEM_UNAVAILABLE;
+            accState &= ~AccConst.STATE_SYSTEM_FOCUSABLE;
+            accState |= AccConst.STATE_SYSTEM_UNAVAILABLE;
         }
         else
         {
-            accState |= STATE_SYSTEM_FOCUSABLE
+            accState |= AccConst.STATE_SYSTEM_FOCUSABLE
         
             if (UIComponent(master) == UIComponent(master).getFocus())
-                accState |= STATE_SYSTEM_FOCUSED;
+                accState |= AccConst.STATE_SYSTEM_FOCUSED;
         }
 
         return accState;
-    }
-
-    /**
-     *  @private
-     */
-    private function getStatusName():String
-    {
-        var statusName:String = "";
-        
-        if (master.toolTip)
-            statusName += " " + master.toolTip;
-        
-        if (master is UIComponent && UIComponent(master).errorString)
-            statusName += " " + UIComponent(master).errorString;
-        
-        return statusName;
     }
     
     /**
@@ -409,6 +422,19 @@ public class AccImpl extends AccessibilityImplementation
         }
         
         return a;
+    }
+    
+    /**
+     *  @private
+     */
+    private function getStatusName():String
+    {
+        var statusName:String = "";
+
+        if (master is UIComponent && UIComponent(master).errorString)
+            statusName = UIComponent(master).errorString;
+
+        return statusName;
     }
     
     //--------------------------------------------------------------------------
@@ -443,19 +469,22 @@ public class AccImpl extends AccessibilityImplementation
             case "errorStringChanged":
             case "toolTipChanged":
             {
-                Accessibility.sendEvent(master, 0, EVENT_OBJECT_NAMECHANGE);
+                Accessibility.sendEvent(master, 0,
+										AccConst.EVENT_OBJECT_NAMECHANGE);
                 Accessibility.updateProperties();
                 break;
             }
+
             case "show":
             {
-                Accessibility.sendEvent(master, 0, EVENT_OBJECT_SHOW);
+                Accessibility.sendEvent(master, 0, AccConst.EVENT_OBJECT_SHOW);
                 Accessibility.updateProperties();
                 break;
             }
+
             case "hide":
             {
-                Accessibility.sendEvent(master, 0, EVENT_OBJECT_HIDE);
+                Accessibility.sendEvent(master, 0, AccConst.EVENT_OBJECT_HIDE);
                 Accessibility.updateProperties();
                 break;
             }

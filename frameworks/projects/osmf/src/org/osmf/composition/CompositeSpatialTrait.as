@@ -21,8 +21,8 @@
 *****************************************************/
 package org.osmf.composition
 {
-	import org.osmf.events.DimensionChangeEvent;
-	import org.osmf.events.TraitsChangeEvent;
+	import org.osmf.events.DimensionEvent;
+	import org.osmf.events.MediaElementEvent;
 	import org.osmf.media.MediaElement;
 	import org.osmf.traits.ISpatial;
 	import org.osmf.traits.IViewable;
@@ -31,9 +31,9 @@ package org.osmf.composition
 	/**
 	 * Dispatched when the width and/or height of the ISpatial media has changed.
 	 * 
-	 * @eventType org.osmf.events.DimensionChangeEvent.DIMENSION_CHANGE
+	 * @eventType org.osmf.events.DimensionEvent.DIMENSION_CHANGE
 	 */	
-	[Event(name="dimensionChange",type="org.osmf.events.DimensionChangeEvent")]
+	[Event(name="dimensionChange",type="org.osmf.events.DimensionEvent")]
 
 	/**
 	 * Base implementation of ISpatial for compositions.
@@ -49,6 +49,11 @@ package org.osmf.composition
 	 * 
 	 * Futhermore, the implementation keeps state on what is the trait's current spatial
 	 * source (if applicable), watching it for change.
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 10
+	 *  @playerversion AIR 1.0
+	 *  @productversion OSMF 1.0
 	 */	
 	internal class CompositeSpatialTrait extends CompositeMediaTraitBase implements ISpatial
 	{
@@ -63,13 +68,13 @@ package org.osmf.composition
 			// data the we will forward: 
 			
 			owner.addEventListener
-				( TraitsChangeEvent.TRAIT_ADD
+				( MediaElementEvent.TRAIT_ADD
 				, onOwnerAddTrait
 				, false, 0, true
 				);
 			
 			owner.addEventListener
-				( TraitsChangeEvent.TRAIT_REMOVE
+				( MediaElementEvent.TRAIT_REMOVE
 				, onOwnerRemoveTrait
 				, false, 0, true
 				);
@@ -80,12 +85,12 @@ package org.osmf.composition
 		// ISpatial
 		//
 		
-		public function get width():int
+		public function get width():Number
 		{
 			return _width;
 		}
 		
-		public function get height():int
+		public function get height():Number
 		{
 			return _height;
 		}
@@ -95,24 +100,33 @@ package org.osmf.composition
 		
 		/**
 		 * Invoked when our owner has a trait added.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
-		private function onOwnerAddTrait(event:TraitsChangeEvent):void
+		private function onOwnerAddTrait(event:MediaElementEvent):void
 		{
 			// If owner got a viewable, then we try to pull our dimensions from
 			// there:
 			if (event.traitType == MediaTraitType.VIEWABLE)
 			{
 				updateViewableSibling
-					( owner.getTrait(MediaTraitType.VIEWABLE)
-					as IViewable
+					( owner.getTrait(MediaTraitType.VIEWABLE) as IViewable
 					);
 			}
 		}
 		
 		/**
 		 * Invoked when our owner has a trait removed. 
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
-		private function onOwnerRemoveTrait(event:TraitsChangeEvent):void
+		private function onOwnerRemoveTrait(event:MediaElementEvent):void
 		{
 			// If owner lost its viewable, then we revert to calculating our
 			// dimensions from all child' spatial traits.
@@ -124,6 +138,11 @@ package org.osmf.composition
 		
 		/**
 		 * Handles the spatial trait that determines the dimensions that we reflect, changing.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
 		protected function updateSpatialSource(oldSource:ISpatial, newSource:ISpatial):void
 		{
@@ -131,7 +150,7 @@ package org.osmf.composition
 			if (oldSource != null)
 			{
 				oldSource.removeEventListener
-					( DimensionChangeEvent.DIMENSION_CHANGE
+					( DimensionEvent.DIMENSION_CHANGE
 					, onSpatialSourceDimensionChange
 					);
 			}
@@ -139,21 +158,29 @@ package org.osmf.composition
 			// Store the new value as the current value:
 			spatialSource = newSource;
 			
-			var newWidth:int = -1;
-			var newHeight:int = -1;
+			var newWidth:Number = -1;
+			var newHeight:Number = -1;
 			
 			// On pulling our dimensions from one trait, we need to listen to that
 			// trait for change:
 			if (newSource != null)
 			{
 				newSource.addEventListener
-					( DimensionChangeEvent.DIMENSION_CHANGE
+					( DimensionEvent.DIMENSION_CHANGE
 					, onSpatialSourceDimensionChange
 					, false, 0, true
 					);
 					
 				newWidth = newSource.width;
+				if (isNaN(newWidth))
+				{
+					newWidth = 0;
+				}
 				newHeight = newSource.height;
+				if (isNaN(newHeight))
+				{
+					newHeight = 0;
+				}
 			}
 			
 			updateDimensions(newWidth, newHeight);
@@ -161,6 +188,11 @@ package org.osmf.composition
 		
 		/**
 		 * Handles updating viewableSibling. 
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
 		protected function updateViewableSibling(value:IViewable):void
 		{
@@ -174,8 +206,13 @@ package org.osmf.composition
 		
 		/**
 		 * Invoked on the spatialSource's dimensions changing. 
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
-		protected function onSpatialSourceDimensionChange(event:DimensionChangeEvent):void
+		protected function onSpatialSourceDimensionChange(event:DimensionEvent):void
 		{
 			updateDimensions(event.newWidth, event.newHeight);
 		}
@@ -183,22 +220,28 @@ package org.osmf.composition
 		/**
 		 * Resets the dimensions that we're currently reflecting. Dispatches a change
 		 * event when appropriate.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
-		protected function updateDimensions(newWidth:int = -1, newHeight:int = -1):void
+		protected function updateDimensions(newWidth:Number = -1, newHeight:Number = -1):void
 		{
 			if	(	newWidth != _width
 				||	newHeight != _height
 				)
 			{
-				var oldWidth:int = _width;
-				var oldHeight:int = _height;
+				var oldWidth:Number = _width;
+				var oldHeight:Number = _height;
 				
 				_width = newWidth;
 				_height = newHeight;
 				
 				dispatchEvent
-					( new DimensionChangeEvent
-						( oldWidth, oldHeight
+					( new DimensionEvent
+						( DimensionEvent.DIMENSION_CHANGE, false, false
+						, oldWidth, oldHeight
 						, _width, _height
 						)
 					);
@@ -210,8 +253,8 @@ package org.osmf.composition
 		protected var viewableSpatialSibling:ISpatial;
 		protected var spatialSource:ISpatial;
 		
-		protected var _width:int = -1;
-		protected var _height:int = -1;
+		protected var _width:Number = -1;
+		protected var _height:Number = -1;
 		
 	}
 }

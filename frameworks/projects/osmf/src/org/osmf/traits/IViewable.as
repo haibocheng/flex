@@ -28,9 +28,9 @@ package org.osmf.traits
 	/**
 	 * Dispatched when the trait's view has changed.
 	 * 
-	 * @eventType org.osmf.events.ViewChangeEvent.VIEW_CHANGE
+	 * @eventType org.osmf.events.ViewEvent.VIEW_CHANGE
 	 */	
-	[Event(name="viewChange",type="org.osmf.events.ViewChangeEvent")]
+	[Event(name="viewChange",type="org.osmf.events.ViewEvent")]
 
 	/**
 	 * IViewable defines the trait interface for media that expose a DisplayObject. 
@@ -47,11 +47,21 @@ package org.osmf.traits
 	 * @see org.osmf.composition
 	 * @see org.osmf.media.MediaElement
 	 * @see flash.display.DisplayObject
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 10
+	 *  @playerversion AIR 1.0
+	 *  @productversion OSMF 1.0
 	 */	
 	public interface IViewable extends IMediaTrait
 	{
 		/**
 		 * DisplayObject representing the viewable media element.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
 		function get view():DisplayObject;
 	}

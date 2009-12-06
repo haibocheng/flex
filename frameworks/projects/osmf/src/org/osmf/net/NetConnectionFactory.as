@@ -70,6 +70,11 @@ package org.osmf.net
 		/**
 		 * Constructor
 		 * 
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function NetConnectionFactory(target:IEventDispatcher=null)
 		{
@@ -90,11 +95,17 @@ package org.osmf.net
 		 * @see org.osmf.events.MediaErrorEvent;
 		 * @see org.osmf.events.MediaError
 		 * @see NetNegotiator
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function create(loadable:ILoadable,allowNetConnectionSharing:Boolean):void
 		{
 			var urlResource:IURLResource = loadable.resource as IURLResource;
 			var key:String = extractKey(urlResource);
+			
 			// The first time this method is called, we create our dictionaries.
 			if (connectionDictionary == null)
 			{
@@ -103,16 +114,27 @@ package org.osmf.net
 			}
 			var sharedConnection:SharedConnection = connectionDictionary[key] as SharedConnection;
 			var connectionsUnderway:Vector.<PendingConnection> = pendingDictionary[key] as Vector.<PendingConnection>;
+			
 			// Check to see if we already have this connection ready to be shared.
-			if ( sharedConnection != null && allowNetConnectionSharing)
+			if (sharedConnection != null && allowNetConnectionSharing)
 			{
 				sharedConnection.count++;
-				dispatchEvent(new NetConnectionFactoryEvent(NetConnectionFactoryEvent.CREATED, sharedConnection.netConnection, loadable, true));
+				dispatchEvent
+					( new NetConnectionFactoryEvent
+						( NetConnectionFactoryEvent.CREATED
+						, false
+						, false
+						, sharedConnection.netConnection
+						, loadable
+						, true
+						)
+					);
 			} 
 			// Check to see if there is already a connection attempt pending on this resource.
 			else if (connectionsUnderway != null)
 			{
-				// Add this loadable to the vector of loadables to be notified once the connection has either succeeded or failed
+				// Add this loadable to the vector of loadables to be notified once the
+				// connection has either succeeded or failed.
 				connectionsUnderway.push(new PendingConnection(loadable,allowNetConnectionSharing));
 			}
 			// If no connection is shareable or pending, then initiate a new connection attempt.
@@ -134,7 +156,8 @@ package org.osmf.net
 				{
 					negotiator.removeEventListener(NetNegotiatorEvent.CONNECTED, onConnected);
 					negotiator.removeEventListener(NetNegotiatorEvent.CONNECTION_FAILED, onConnectionFailed);
-					// Dispatch an event for each pending loadable
+					
+					// Dispatch an event for each pending loadable.
 					var pendingConnections:Vector.<PendingConnection> = pendingDictionary[key];
 					for (var i:Number=0; i< pendingConnections.length; i++)
 					{
@@ -154,7 +177,16 @@ package org.osmf.net
 								connectionDictionary[key] = obj;
 							}
 						} 
-						dispatchEvent(new NetConnectionFactoryEvent(NetConnectionFactoryEvent.CREATED,event.netConnection,pendingConnection.loadable,pendingConnection.shareable));
+						dispatchEvent
+							( new NetConnectionFactoryEvent
+								( NetConnectionFactoryEvent.CREATED
+								, false
+								, false
+								, event.netConnection
+								, pendingConnection.loadable
+								, pendingConnection.shareable
+								)
+							);
 					}
 					delete pendingDictionary[key];
 				}
@@ -164,15 +196,24 @@ package org.osmf.net
 				{
 					negotiator.removeEventListener(NetNegotiatorEvent.CONNECTED, onConnected);
 					negotiator.removeEventListener(NetNegotiatorEvent.CONNECTION_FAILED, onConnectionFailed);
-					// Dispatch an event for each pending loadable
+					
+					// Dispatch an event for each pending loadable.
 					var pendingConnections:Vector.<PendingConnection> = pendingDictionary[key];
 					for (var i:Number=0; i< pendingConnections.length; i++)
 					{
 						if (event.mediaError != null)
 						{
-							loadable.dispatchEvent(new MediaErrorEvent(event.mediaError));
+							loadable.dispatchEvent(new MediaErrorEvent(MediaErrorEvent.MEDIA_ERROR, false, false, event.mediaError));
 						}
-						dispatchEvent(new NetConnectionFactoryEvent(NetConnectionFactoryEvent.CREATION_FAILED,null,loadable));
+						dispatchEvent
+							( new NetConnectionFactoryEvent
+								( NetConnectionFactoryEvent.CREATION_FAILED
+								, false
+								, false
+								, null
+								, loadable
+								)
+							);
 					}
 					delete pendingDictionary[key];
 				}
@@ -184,6 +225,11 @@ package org.osmf.net
 		 * are only physically closed after the last sharer has requested a close().
 		 * 
 		 * @param resource the IURLresource originally used to establish the NetConenction
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function closeNetConnectionByResource(resource:IURLResource):void
 		{
@@ -199,6 +245,11 @@ package org.osmf.net
 		
 		/**
 		 * Override this method to allow the use of a custom NetNegotiator
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		protected function createNetNegotiator():NetNegotiator
 		{
@@ -210,6 +261,11 @@ package org.osmf.net
 		 * 
 		 * @param resource a IURLResource
 		 * @return a String hash that uniquely identifies the NetConnection
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		protected function extractKey(resource:IURLResource):String
 		{
@@ -226,8 +282,13 @@ import flash.net.NetConnection;
 import org.osmf.traits.ILoadable;
 
 /**
- * Utility class for structuring shared connection data
+ * Utility class for structuring shared connection data.
  *
+ *  
+ *  @langversion 3.0
+ *  @playerversion Flash 10
+ *  @playerversion AIR 1.0
+ *  @productversion OSMF 1.0
  */
 class SharedConnection
 {
@@ -236,8 +297,13 @@ class SharedConnection
 }
 
 /**
- * Utility class for structuring pending connection data
+ * Utility class for structuring pending connection data.
  *
+ *  
+ *  @langversion 3.0
+ *  @playerversion Flash 10
+ *  @playerversion AIR 1.0
+ *  @productversion OSMF 1.0
  */
 class PendingConnection
 {
@@ -246,14 +312,17 @@ class PendingConnection
 		_loadable = loadable;
 		_shareable = shareable;
 	}
+	
 	public function get loadable():ILoadable
 	{
 		return _loadable;
 	}
+	
 	public function get shareable():Boolean
 	{
 		return _shareable;
 	}
+	
 	private var _loadable:ILoadable;
-	private  var _shareable:Boolean;	
+	private var _shareable:Boolean;	
 }

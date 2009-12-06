@@ -26,23 +26,33 @@ package org.osmf.traits
 	/**
 	 * Dispatched when the audible trait's <code>volume</code> property has changed.
 	 * 
-	 * @eventType org.osmf.events.VolumeChangeEvent.VOLUME_CHANGE
+	 * @eventType org.osmf.events.AudioEvent.VOLUME_CHANGE
 	 */	
-	[Event(name="volumeChange",type="org.osmf.events.VolumeChangeEvent")]
+	[Event(name="volumeChange",type="org.osmf.events.AudioEvent")]
 	
 	/**
   	 * Dispatched when the audible trait's <code>muted</code> property has changed.
   	 * 
-  	 * @eventType org.osmf.events.MutedChangeEvent.MUTED_CHANGE
+  	 * @eventType org.osmf.events.AudioEvent.MUTED_CHANGE
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 10
+	 *  @playerversion AIR 1.0
+	 *  @productversion OSMF 1.0
 	 */	
-	[Event(name="mutedChange",type="org.osmf.events.MutedChangeEvent")]
+	[Event(name="mutedChange",type="org.osmf.events.AudioEvent")]
 	
 	/**
  	 * Dispatched when the audible trait's <code>pan</code> property has changed.
  	 * 
- 	 * @eventType org.osmf.events.PanChangeEvent.PAN_CHANGE 
+ 	 * @eventType org.osmf.events.AudioEvent.PAN_CHANGE 
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 10
+	 *  @playerversion AIR 1.0
+	 *  @productversion OSMF 1.0
 	 */	
-	[Event(name="panChange",type="org.osmf.events.PanChangeEvent")]
+	[Event(name="panChange",type="org.osmf.events.AudioEvent")]
 	
 	/**
 	 * IAudible defines the trait interface for media that are audible. 
@@ -58,6 +68,11 @@ package org.osmf.traits
 	 * 
 	 * @see org.osmf.composition
 	 * @see org.osmf.media.MediaElement
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 10
+	 *  @playerversion AIR 1.0
+	 *  @productversion OSMF 1.0
 	 */	
 	public interface IAudible extends IMediaTrait
 	{
@@ -74,6 +89,11 @@ package org.osmf.traits
 		 * <p>The default is 1.</p>
 		 * 
 		 * @see IAudible#muted 
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
 		function get volume():Number;
 		function set volume(value:Number):void;
@@ -87,6 +107,11 @@ package org.osmf.traits
 		 * <p>The default value is <code>false</code>.</p>
 		 * 
 		 * @see IAudible#volume
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
 		function get muted():Boolean;
 		function set muted(value:Boolean):void;
@@ -100,6 +125,11 @@ package org.osmf.traits
 		 * </p>
 		 * 
 		 * <p>The default is zero.</p>
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		function get pan():Number;
 		function set pan(value:Number):void;

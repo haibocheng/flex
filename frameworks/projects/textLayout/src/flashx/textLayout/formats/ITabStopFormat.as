@@ -1,8 +1,8 @@
 //========================================================================================
 //  $File: //a3t/argon/dev/textLayout_core/src/flashx/textLayout/formats/ITabStopFormat.as $
-//  $DateTime: 2009/11/04 13:50:40 $
-//  $Revision: #11 $
-//  $Change: 726402 $
+//  $DateTime: 2009/11/12 13:11:47 $
+//  $Revision: #12 $
+//  $Change: 727658 $
 //  
 //  ADOBE CONFIDENTIAL
 //  

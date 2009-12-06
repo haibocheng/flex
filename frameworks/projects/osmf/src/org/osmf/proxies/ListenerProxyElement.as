@@ -23,22 +23,17 @@ package org.osmf.proxies
 {
 	import flash.display.DisplayObject;
 	
-	import org.osmf.events.BufferTimeChangeEvent;
-	import org.osmf.events.BufferingChangeEvent;
-	import org.osmf.events.BytesTotalChangeEvent;
-	import org.osmf.events.DimensionChangeEvent;
-	import org.osmf.events.DurationChangeEvent;
-	import org.osmf.events.LoadableStateChangeEvent;
-	import org.osmf.events.MutedChangeEvent;
-	import org.osmf.events.PanChangeEvent;
+	import org.osmf.events.AudioEvent;
+	import org.osmf.events.BufferEvent;
+	import org.osmf.events.DimensionEvent;
+	import org.osmf.events.LoadEvent;
+	import org.osmf.events.MediaElementEvent;
 	import org.osmf.events.PausedChangeEvent;
 	import org.osmf.events.PlayingChangeEvent;
-	import org.osmf.events.SeekingChangeEvent;
-	import org.osmf.events.SwitchingChangeEvent;
-	import org.osmf.events.TraitEvent;
-	import org.osmf.events.TraitsChangeEvent;
-	import org.osmf.events.ViewChangeEvent;
-	import org.osmf.events.VolumeChangeEvent;
+	import org.osmf.events.SeekEvent;
+	import org.osmf.events.SwitchEvent;
+	import org.osmf.events.TimeEvent;
+	import org.osmf.events.ViewEvent;
 	import org.osmf.media.MediaElement;
 	import org.osmf.net.dynamicstreaming.SwitchingDetail;
 	import org.osmf.traits.IAudible;
@@ -52,7 +47,6 @@ package org.osmf.proxies
 	import org.osmf.traits.ISwitchable;
 	import org.osmf.traits.ITemporal;
 	import org.osmf.traits.IViewable;
-	import org.osmf.traits.LoadState;
 	import org.osmf.traits.MediaTraitType;
 	
 	/**
@@ -80,8 +74,8 @@ package org.osmf.proxies
 			if (wrappedElement != null)
 			{
 				// Clear our old listeners.
-				wrappedElement.removeEventListener(TraitsChangeEvent.TRAIT_ADD, onTraitAdd);
-				wrappedElement.removeEventListener(TraitsChangeEvent.TRAIT_REMOVE, onTraitRemove);
+				wrappedElement.removeEventListener(MediaElementEvent.TRAIT_ADD, onTraitAdd);
+				wrappedElement.removeEventListener(MediaElementEvent.TRAIT_REMOVE, onTraitRemove);
 
 				for each (traitType in wrappedElement.traitTypes)
 				{
@@ -94,8 +88,8 @@ package org.osmf.proxies
 			if (value != null)
 			{
 				// Listen for traits being added and removed.
-				wrappedElement.addEventListener(TraitsChangeEvent.TRAIT_ADD, onTraitAdd);
-				wrappedElement.addEventListener(TraitsChangeEvent.TRAIT_REMOVE, onTraitRemove);
+				wrappedElement.addEventListener(MediaElementEvent.TRAIT_ADD, onTraitAdd);
+				wrappedElement.addEventListener(MediaElementEvent.TRAIT_REMOVE, onTraitRemove);
 			
 				for each (traitType in wrappedElement.traitTypes)
 				{
@@ -127,7 +121,7 @@ package org.osmf.proxies
 		 * Subclasses can override to perform custom processing in response to
 		 * this change.
 		 **/
-		protected function processVolumeChange(oldVolume:Number, newVolume:Number):void
+		protected function processVolumeChange(newVolume:Number):void
 		{
 		}
 
@@ -143,7 +137,7 @@ package org.osmf.proxies
 		 * Subclasses can override to perform custom processing in response to
 		 * this change.
 		 **/
-		protected function processPanChange(oldPan:Number, newPan:Number):void
+		protected function processPanChange(newPan:Number):void
 		{
 		}
 		
@@ -159,7 +153,7 @@ package org.osmf.proxies
 		 * Subclasses can override to perform custom processing in response to
 		 * this change.
 		 **/
-		protected function processBufferTimeChange(oldTime:Number, newTime:Number):void
+		protected function processBufferTimeChange(newBufferTime:Number):void
 		{
 		}
 
@@ -167,7 +161,7 @@ package org.osmf.proxies
 		 * Subclasses can override to perform custom processing in response to
 		 * this change.
 		 **/
-		protected function processLoadableStateChange(oldState:LoadState, newState:LoadState):void
+		protected function processLoadStateChange(loadState:String):void
 		{
 		}
 		
@@ -207,7 +201,7 @@ package org.osmf.proxies
 		 * Subclasses can override to perform custom processing in response to
 		 * this change.
 		 **/
-		protected function processDurationChange(oldDuration:Number, newDuration:Number):void
+		protected function processDurationChange(newDuration:Number):void
 		{
 		}
 
@@ -247,40 +241,40 @@ package org.osmf.proxies
 		 * Subclasses can override to perform custom processing in response to
 		 * this change.
 		 **/
-		protected function processBytesTotalChange(newValue:Number):void
+		protected function processBytesTotalChange(newBytes:Number):void
 		{
 		}
 
 		// Internals
 		
-		private function onVolumeChange(event:VolumeChangeEvent):void
+		private function onVolumeChange(event:AudioEvent):void
 		{
-			processVolumeChange(event.oldVolume, event.newVolume);
+			processVolumeChange(event.volume);
 		}
 
-		private function onMutedChange(event:MutedChangeEvent):void
+		private function onMutedChange(event:AudioEvent):void
 		{
 			processMutedChange(event.muted);
 		}
 
-		private function onPanChange(event:PanChangeEvent):void
+		private function onPanChange(event:AudioEvent):void
 		{
-			processPanChange(event.oldPan, event.newPan);
+			processPanChange(event.pan);
 		}
 		
-		private function onBufferingChange(event:BufferingChangeEvent):void
+		private function onBufferingChange(event:BufferEvent):void
 		{
 			processBufferingChange(event.buffering);
 		}
 
-		private function onBufferTimeChange(event:BufferTimeChangeEvent):void
+		private function onBufferTimeChange(event:BufferEvent):void
 		{
-			processBufferTimeChange(event.oldTime, event.newTime);
+			processBufferTimeChange(event.bufferTime);
 		}
 
-		private function onLoadableStateChange(event:LoadableStateChangeEvent):void
+		private function onLoadStateChange(event:LoadEvent):void
 		{
-			processLoadableStateChange(event.oldState, event.newState);
+			processLoadStateChange(event.loadState);
 		}
 		
 		private function onPlayingChange(event:PlayingChangeEvent):void
@@ -293,57 +287,57 @@ package org.osmf.proxies
 			processPausedChange(event.paused);
 		}
 
-		private function onSeekingChange(event:SeekingChangeEvent):void
+		private function onSeekingChange(event:SeekEvent):void
 		{
-			processSeekingChange(event.seeking, event.time);
+			processSeekingChange(event.type == SeekEvent.SEEK_BEGIN, event.time);
 		}
 		
-		private function onDurationReached(event:TraitEvent):void
+		private function onDurationReached(event:TimeEvent):void
 		{
 			processDurationReached();
 		}
 
-		private function onDurationChange(event:DurationChangeEvent):void
+		private function onDurationChange(event:TimeEvent):void
 		{
-			processDurationChange(event.oldDuration, event.newDuration);
+			processDurationChange(event.time);
 		}
 
-		private function onDimensionChange(event:DimensionChangeEvent):void
+		private function onDimensionChange(event:DimensionEvent):void
 		{
 			processDimensionChange(event.oldWidth, event.oldHeight, event.newWidth, event.newHeight);
 		}
 		
-		private function onSwitchingChange(event:SwitchingChangeEvent):void
+		private function onSwitchingChange(event:SwitchEvent):void
 		{
 			processSwitchingChange(event.oldState, event.newState, event.detail);
 		}
 		
-		private function onIndicesChange(event:TraitEvent):void
+		private function onIndicesChange(event:SwitchEvent):void
 		{
 			processIndicesChange();
 		}
 
-		private function onViewChange(event:ViewChangeEvent):void
+		private function onViewChange(event:ViewEvent):void
 		{
 			processViewChange(event.oldView, event.newView);
 		}
 		
-		private function onBytesTotalChange(event:BytesTotalChangeEvent):void
+		private function onBytesTotalChange(event:LoadEvent):void
 		{
-			processBytesTotalChange(event.newValue);
+			processBytesTotalChange(event.bytes);
 		}
 
 		// Internals
 		//
 		
-		private function onTraitAdd(event:TraitsChangeEvent):void
+		private function onTraitAdd(event:MediaElementEvent):void
 		{
 			processTraitAdd(event.traitType);
 			
 			processTrait(event.traitType, true);
 		}
 
-		private function onTraitRemove(event:TraitsChangeEvent):void
+		private function onTraitRemove(event:MediaElementEvent):void
 		{
 			processTrait(event.traitType, false);
 
@@ -406,15 +400,15 @@ package org.osmf.proxies
 			{
 				if (added)
 				{
-					audible.addEventListener(VolumeChangeEvent.VOLUME_CHANGE, onVolumeChange);
-					audible.addEventListener(MutedChangeEvent.MUTED_CHANGE, onMutedChange);
-					audible.addEventListener(PanChangeEvent.PAN_CHANGE, onPanChange);
+					audible.addEventListener(AudioEvent.VOLUME_CHANGE, onVolumeChange);
+					audible.addEventListener(AudioEvent.MUTED_CHANGE, onMutedChange);
+					audible.addEventListener(AudioEvent.PAN_CHANGE, onPanChange);
 				}
 				else
 				{
-					audible.removeEventListener(VolumeChangeEvent.VOLUME_CHANGE, onVolumeChange);
-					audible.removeEventListener(MutedChangeEvent.MUTED_CHANGE, onMutedChange);
-					audible.removeEventListener(PanChangeEvent.PAN_CHANGE, onPanChange);
+					audible.removeEventListener(AudioEvent.VOLUME_CHANGE, onVolumeChange);
+					audible.removeEventListener(AudioEvent.MUTED_CHANGE, onMutedChange);
+					audible.removeEventListener(AudioEvent.PAN_CHANGE, onPanChange);
 				}
 			}
 		}
@@ -426,13 +420,13 @@ package org.osmf.proxies
 			{
 				if (added)
 				{
-					bufferable.addEventListener(BufferingChangeEvent.BUFFERING_CHANGE, onBufferingChange);
-					bufferable.addEventListener(BufferTimeChangeEvent.BUFFER_TIME_CHANGE, onBufferTimeChange);
+					bufferable.addEventListener(BufferEvent.BUFFERING_CHANGE, onBufferingChange);
+					bufferable.addEventListener(BufferEvent.BUFFER_TIME_CHANGE, onBufferTimeChange);
 				}
 				else
 				{
-					bufferable.removeEventListener(BufferingChangeEvent.BUFFERING_CHANGE, onBufferingChange);
-					bufferable.removeEventListener(BufferTimeChangeEvent.BUFFER_TIME_CHANGE, onBufferTimeChange);
+					bufferable.removeEventListener(BufferEvent.BUFFERING_CHANGE, onBufferingChange);
+					bufferable.removeEventListener(BufferEvent.BUFFER_TIME_CHANGE, onBufferTimeChange);
 				}
 			}
 		}
@@ -444,11 +438,11 @@ package org.osmf.proxies
 			{
 				if (added)
 				{
-					loadable.addEventListener(LoadableStateChangeEvent.LOADABLE_STATE_CHANGE, onLoadableStateChange);
+					loadable.addEventListener(LoadEvent.LOAD_STATE_CHANGE, onLoadStateChange);
 				}
 				else
 				{
-					loadable.removeEventListener(LoadableStateChangeEvent.LOADABLE_STATE_CHANGE, onLoadableStateChange);
+					loadable.removeEventListener(LoadEvent.LOAD_STATE_CHANGE, onLoadStateChange);
 				}
 			}
 		}
@@ -492,11 +486,13 @@ package org.osmf.proxies
 			{
 				if (added)
 				{
-					seekable.addEventListener(SeekingChangeEvent.SEEKING_CHANGE, onSeekingChange);
+					seekable.addEventListener(SeekEvent.SEEK_BEGIN, onSeekingChange);
+					seekable.addEventListener(SeekEvent.SEEK_END, onSeekingChange);
 				}
 				else
 				{
-					seekable.removeEventListener(SeekingChangeEvent.SEEKING_CHANGE, onSeekingChange);
+					seekable.removeEventListener(SeekEvent.SEEK_BEGIN, onSeekingChange);
+					seekable.removeEventListener(SeekEvent.SEEK_END, onSeekingChange);
 				}
 			}
 		}
@@ -508,11 +504,11 @@ package org.osmf.proxies
 			{
 				if (added)
 				{
-					spatial.addEventListener(DimensionChangeEvent.DIMENSION_CHANGE, onDimensionChange);
+					spatial.addEventListener(DimensionEvent.DIMENSION_CHANGE, onDimensionChange);
 				}
 				else
 				{
-					spatial.removeEventListener(DimensionChangeEvent.DIMENSION_CHANGE, onDimensionChange);
+					spatial.removeEventListener(DimensionEvent.DIMENSION_CHANGE, onDimensionChange);
 				}
 			}
 		}
@@ -523,13 +519,13 @@ package org.osmf.proxies
 			{
 				if (added)
 				{
-					switchable.addEventListener(SwitchingChangeEvent.SWITCHING_CHANGE, onSwitchingChange);
-					switchable.addEventListener(TraitEvent.INDICES_CHANGE, onIndicesChange);
+					switchable.addEventListener(SwitchEvent.SWITCHING_CHANGE, onSwitchingChange);
+					switchable.addEventListener(SwitchEvent.INDICES_CHANGE, onIndicesChange);
 				}
 				else
 				{
-					switchable.removeEventListener(SwitchingChangeEvent.SWITCHING_CHANGE, onSwitchingChange);
-					switchable.removeEventListener(TraitEvent.INDICES_CHANGE, onIndicesChange);
+					switchable.removeEventListener(SwitchEvent.SWITCHING_CHANGE, onSwitchingChange);
+					switchable.removeEventListener(SwitchEvent.INDICES_CHANGE, onIndicesChange);
 				}
 			}
 		}
@@ -540,13 +536,13 @@ package org.osmf.proxies
 			{
 				if (added)
 				{
-					temporal.addEventListener(TraitEvent.DURATION_REACHED, onDurationReached);
-					temporal.addEventListener(DurationChangeEvent.DURATION_CHANGE, onDurationChange);
+					temporal.addEventListener(TimeEvent.DURATION_REACHED, onDurationReached);
+					temporal.addEventListener(TimeEvent.DURATION_CHANGE, onDurationChange);
 				}
 				else
 				{
-					temporal.removeEventListener(TraitEvent.DURATION_REACHED, onDurationReached);
-					temporal.removeEventListener(DurationChangeEvent.DURATION_CHANGE, onDurationChange);
+					temporal.removeEventListener(TimeEvent.DURATION_REACHED, onDurationReached);
+					temporal.removeEventListener(TimeEvent.DURATION_CHANGE, onDurationChange);
 				}
 			}
 		}
@@ -558,11 +554,11 @@ package org.osmf.proxies
 			{
 				if (added)
 				{
-					viewable.addEventListener(ViewChangeEvent.VIEW_CHANGE, onViewChange);
+					viewable.addEventListener(ViewEvent.VIEW_CHANGE, onViewChange);
 				}
 				else
 				{
-					viewable.removeEventListener(ViewChangeEvent.VIEW_CHANGE, onViewChange);
+					viewable.removeEventListener(ViewEvent.VIEW_CHANGE, onViewChange);
 				}
 			}
 		}
@@ -574,11 +570,11 @@ package org.osmf.proxies
 			{
 				if (added)
 				{
-					downloadable.addEventListener(BytesTotalChangeEvent.BYTES_TOTAL_CHANGE, onBytesTotalChange);
+					downloadable.addEventListener(LoadEvent.BYTES_TOTAL_CHANGE, onBytesTotalChange);
 				}
 				else
 				{
-					downloadable.removeEventListener(BytesTotalChangeEvent.BYTES_TOTAL_CHANGE, onBytesTotalChange);
+					downloadable.removeEventListener(LoadEvent.BYTES_TOTAL_CHANGE, onBytesTotalChange);
 				}
 			}
 		}

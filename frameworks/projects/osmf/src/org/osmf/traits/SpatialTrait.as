@@ -21,14 +21,14 @@
 *****************************************************/
 package org.osmf.traits
 {
-	import org.osmf.events.DimensionChangeEvent;
+	import org.osmf.events.DimensionEvent;
 
 	/**
 	 * Dispatched when the width and/or height of the spatial media has changed.
 	 * 
-	 * @eventType org.osmf.events.DimensionChangeEvent.DIMENSION_CHANGE
+	 * @eventType org.osmf.events.DimensionEvent.DIMENSION_CHANGE
 	 */	
-	[Event(name="dimensionChange",type="org.osmf.events.DimensionChangeEvent")]
+	[Event(name="dimensionChange",type="org.osmf.events.DimensionEvent")]
 
 	/**
 	 * The SpatialTrait class provides a base ISpatial implementation. 	 
@@ -45,6 +45,11 @@ package org.osmf.traits
 	 * or when the active child in a serial composition changes.</p>
 	 * 
 	 * @ see org.osmf.composition.SerialElement
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 10
+	 *  @playerversion AIR 1.0
+	 *  @productversion OSMF 1.0
 	 */	
 	public class SpatialTrait extends MediaTraitBase implements ISpatial
 	{
@@ -66,24 +71,29 @@ package org.osmf.traits
 		 * @see #processDimensionsChange()
 		 * @see #postProcessDimensionsChange()
 		 * 
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
-		final public function setDimensions(width:int, height:int):void
+		final public function setDimensions(width:Number, height:Number):void
 		{
 			if	(	width != _width
 				||	height != _height
 				)
 			{
-				if (canProcessDimensionsChange(width,height))
+				if (canProcessDimensionsChange(width, height))
 				{
-					processDimensionsChange(width,height);
+					processDimensionsChange(width, height);
 					
-					var oldWidth:int = _width;
-					var oldHeight:int = _height;
+					var oldWidth:Number = _width;
+					var oldHeight:Number = _height;
 					
 					_width = width;
 					_height = height;
 					
-					postProcessDimensionsChange(oldWidth,oldHeight);
+					postProcessDimensionsChange(oldWidth, oldHeight);
 				}
 			}
 		}
@@ -94,7 +104,7 @@ package org.osmf.traits
 		/**
 		 * @inheritDoc
 		 **/
-		public function get width():int
+		public function get width():Number
 		{
 			return _width;
 		}
@@ -102,16 +112,13 @@ package org.osmf.traits
 		/**
 		 * @inheritDoc
 		 **/
-		public function get height():int
+		public function get height():Number
 		{
 			return _height;
 		}
 	
 		// Internals
 		//
-		
-		private var _width:int = 0;
-		private var _height:int = 0;
 		
 		/**
 		 * Called just before <code>setDimensions()</code> is invoked.
@@ -121,8 +128,13 @@ package org.osmf.traits
 		 * @return Returns <code>true</code> by default. 
 		 * Subclasses that override this method can return <code>false</code> to abort processing. 
 		 * 
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
-		protected function canProcessDimensionsChange(newWidth:int,newHeight:int):Boolean
+		protected function canProcessDimensionsChange(newWidth:Number, newHeight:Number):Boolean
 		{
 			return true;
 		}
@@ -132,8 +144,13 @@ package org.osmf.traits
 		 * Subclasses implement this method to communicate the change to the media.
 		 * @param newWidth New <code>width</code> value.
 		 * @param newHeight New <code>height</code> value.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
-		protected function processDimensionsChange(newWidth:int,newHeight:int):void
+		protected function processDimensionsChange(newWidth:Number, newHeight:Number):void
 		{
 		}
 		
@@ -146,10 +163,18 @@ package org.osmf.traits
 		 * @param oldWidth Previous <code>width</code> value.
 		 * @param oldHeight Previous <code>width</code> value.
 		 * 
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
-		protected function postProcessDimensionsChange(oldWidth:int,oldHeight:int):void
+		protected function postProcessDimensionsChange(oldWidth:Number, oldHeight:Number):void
 		{
-			dispatchEvent(new DimensionChangeEvent(oldWidth,oldHeight,_width,_height));
+			dispatchEvent(new DimensionEvent(DimensionEvent.DIMENSION_CHANGE, false, false, oldWidth, oldHeight, _width, _height));
 		}
+
+		private var _width:Number = 0;
+		private var _height:Number = 0;
 	}
 }

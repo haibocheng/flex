@@ -25,7 +25,11 @@ package org.osmf.content
 	
 	import org.osmf.traits.ILoadedContext;
 	
+	[ExcludeClass]
+	
 	/**
+	 * @private
+	 * 
 	 * The ContentLoadedContext contains information about the output of the
 	 * ContentLoader's load operation.
 	 */
@@ -35,6 +39,11 @@ package org.osmf.content
 		 *  Constructor.
 		 * 	@param loader A new Loader object that has been
 		 * 	successfully loaded.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		public function ContentLoadedContext(loader:Loader)
 		{
@@ -46,6 +55,11 @@ package org.osmf.content
 		 * The <code>content</code> property of the Loader class contains the content that 
 		 * was loaded.
 		 * @see flash.display.Loader#content
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function get loader():Loader
 		{

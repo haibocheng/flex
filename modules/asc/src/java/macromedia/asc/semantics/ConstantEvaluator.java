@@ -212,6 +212,7 @@ public final class ConstantEvaluator extends Emitter implements Evaluator, Error
                 ForStatementNode    fsn = it instanceof ForStatementNode ? (ForStatementNode)it : null;
                 WhileStatementNode    wsn = it instanceof WhileStatementNode ? (WhileStatementNode)it : null;
                 IfStatementNode        isn = it instanceof IfStatementNode ? (IfStatementNode)it : null;
+                DoStatementNode		dsn = it instanceof DoStatementNode ? (DoStatementNode)it : null;
 
                 if (stln != null)
                 {
@@ -235,6 +236,12 @@ public final class ConstantEvaluator extends Emitter implements Evaluator, Error
                 else if (wsn != null)
                 {
                     StatementListNode sln = wsn.statement instanceof StatementListNode ? (StatementListNode)(wsn.statement) : null;
+                    if (sln != null)
+                        PreprocessDefinitionTypeInfo(cx,sln.items,false);
+                }
+                else if ( dsn != null )
+                {
+                    StatementListNode sln = dsn.statements instanceof StatementListNode ? (StatementListNode)(dsn.statements) : null;
                     if (sln != null)
                         PreprocessDefinitionTypeInfo(cx,sln.items,false);
                 }
@@ -268,7 +275,15 @@ public final class ConstantEvaluator extends Emitter implements Evaluator, Error
     void PreprocessDefinitionTypeInfo(Context cx, FunctionCommonNode fcn)
     {
         ObjectValue fun = fcn.fun;
-        cx.pushScope(fun.activation);
+
+		// FIXME this could be a function expressions that was hoisted out of a
+		// block that is conditionally compiled out. If so it is dead code that
+		// is not properly initialized at this point (e.g fun == null), so we
+		// need to check and bail out if so. The better fix would be to not add
+		// it to the definition list in the first place.
+		if (fun==null) return;
+
+		cx.pushScope(fun.activation);
 
         if( fcn.def != null && fcn.def.version > -1)
             cx.pushVersion(fcn.def.version);
@@ -2626,7 +2641,7 @@ public final class ConstantEvaluator extends Emitter implements Evaluator, Error
                 {
                     cx.error(node.initializer.pos(), kError_IncompatibleDefaultValue,ov.type.getName(cx).toString(),type.getName(cx).toString());
                 }
-                slot.setObjectValue((ObjectValue) val);
+                slot.setObjectValue(checked);
             }
         }
 
@@ -3119,14 +3134,13 @@ public final class ConstantEvaluator extends Emitter implements Evaluator, Error
                 TypeValue[] ntype = new TypeValue[1];
                 // RES - for this check, I don't think I need the active number usage
                 double dval = cx.getEmitter().getValueOfNumberLiteral(nstr,ntype, new NumberUsage()).doubleValue();
-                long lval = (long)dval;
-                if( dval == lval &&
-                        lval >= 0 && lval <= 0xFFFFFFFFL )
-                        {
-                            return from;
-                        }
-                // otherwise error
-                break;
+                long uval = macromedia.asc.util.NumericConversions.toUint32(dval);
+
+                if( dval == uval )
+                    return from;
+                else
+                    //  Return the converted value.
+                    return new ObjectValue(Long.toString(uval), cx.uintType());
         	}
             break;
         }
@@ -3144,14 +3158,14 @@ public final class ConstantEvaluator extends Emitter implements Evaluator, Error
                 String nstr = from.toString();
                 TypeValue[] ntype = new TypeValue[1];
                 double dval = cx.getEmitter().getValueOfNumberLiteral(nstr,ntype, new NumberUsage()).doubleValue();
-                long lval = (long)dval;
-                if( dval == lval &&
-                        lval >= -0x80000000L && lval <= 0x7fffffffL )
-                    {
-                        return from;
-                    }
-                } // otherwise, error
-                break;
+                int ival = macromedia.asc.util.NumericConversions.toInt32(dval);
+                
+                if ( dval == ival )
+                    return from;
+                else
+                    //  Return the converted value.
+                    return new ObjectValue(Long.toString(ival), cx.intType());
+                }
             default:
                 break; // error
             }

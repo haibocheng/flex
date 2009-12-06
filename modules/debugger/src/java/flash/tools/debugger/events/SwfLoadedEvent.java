@@ -11,6 +11,8 @@
 
 package flash.tools.debugger.events;
 
+import flash.tools.debugger.SwfInfo;
+
 /**
  * This event is fired when the player has completed the loading of 
  * the specified SWF.
@@ -23,13 +25,19 @@ public class SwfLoadedEvent extends DebugEvent
 	/** index of swf in Session.getSwfs() array */
 	public int index;
 
-	/** full path name for  SWF */
+	/**
+	 * Full path name for SWF. If <code>unnamedIndex</code> is nonzero, then
+	 * this is "<unnamed-N>", where N is the value of <code>unnamedIndex</code>.
+	 */
 	public String path;
 
 	/** size of the loaded SWF in bytes */
 	public long swfSize;
 
-	/** URL of the loaded SWF */
+	/**
+	 * URL of the loaded SWF. If <code>unnamedIndex</code> is nonzero, then this
+	 * is "unnamed:N", where N is the value of <code>unnamedIndex</code>.
+	 */
 	public String url;
 
 	/** port number related to the URL */
@@ -38,14 +46,21 @@ public class SwfLoadedEvent extends DebugEvent
 	/** name of host in which the SWF was loaded */
 	public String host;
 
-	public SwfLoadedEvent(long sId, int sIndex, String sPath, String sUrl, String sHost, long sPort, long sSwfSize)
+	/**
+	 * @see SwfInfo#getUnnamedIndex()
+	 */
+	public int unnamedIndex;
+
+	public SwfLoadedEvent(long id, int index, String path, String url,
+			int unnamedIndex, String host, long port, long swfSize)
 	{
-		id = sId;
-		index = sIndex;
-		swfSize = sSwfSize;
-		port = sPort;
-		path = sPath;
-		url = sUrl;
-		host = sHost;
+		this.id = id;
+		this.index = index;
+		this.path = path;
+		this.url = url;
+		this.unnamedIndex = unnamedIndex;
+		this.host = host;
+		this.port = port;
+		this.swfSize = swfSize;
 	}
 }

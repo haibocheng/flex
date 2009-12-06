@@ -21,6 +21,7 @@ package com.adobe.internal.fxg.dom.types;
  *   3 = ascentDescentUp
  *   4 = ideographicTopDown
  *   5 = ideographicCenterDown
+ *   6 = approximateTextField
  * </pre>
  * 
  * @author Min Plunkett
@@ -60,5 +61,10 @@ public enum LeadingModel
     /**
      * The enum representing an 'ideographicCenterDown' LeadingModel.
      */
-    IDEOGRAPHICCENTERDOWN;      
+    IDEOGRAPHICCENTERDOWN,
+    
+    /**
+     * The enum representing an 'approximateTextField' LeadingModel.
+     */
+    APPROXIMATETEXTFIELD;
 }

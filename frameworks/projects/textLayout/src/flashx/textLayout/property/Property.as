@@ -49,8 +49,6 @@ package flashx.textLayout.property
 		
 		/** @private */
 		tlf_internal static const inheritHashValue:uint  = 314159;
-		/** @private */
-		tlf_internal static var   nextEnumHashValue:uint = 217287;
 		
 		/** Initializer.  Each property has a name and a default. */
 		public function Property(nameValue:String,defaultValue:Object,inherited:Boolean,category:String)

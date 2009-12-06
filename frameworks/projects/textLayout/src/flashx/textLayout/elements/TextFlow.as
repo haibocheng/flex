@@ -16,7 +16,6 @@ package flashx.textLayout.elements
 	import flash.text.engine.TextLineValidity;
 	import flash.utils.Dictionary;
 	
-	import flashx.textLayout.compose.ComposeState;
 	import flashx.textLayout.compose.IFlowComposer;
 	import flashx.textLayout.compose.StandardFlowComposer;
 	import flashx.textLayout.compose.TextFlowLine;
@@ -28,15 +27,12 @@ package flashx.textLayout.elements
 	import flashx.textLayout.events.DamageEvent;
 	import flashx.textLayout.events.ModelChange;
 	import flashx.textLayout.events.StatusChangeEvent;
-	import flashx.textLayout.formats.BlockProgression;
-	import flashx.textLayout.formats.Float;
+	import flashx.textLayout.external.WeakRef;
 	import flashx.textLayout.formats.ITextLayoutFormat;
 	import flashx.textLayout.formats.TextLayoutFormat;
 	import flashx.textLayout.formats.TextLayoutFormatValueHolder;
 	import flashx.textLayout.property.Property;
 	import flashx.textLayout.tlf_internal;
-	
-	import flashx.textLayout.external.WeakRef;
 		
 	use namespace tlf_internal;
 	
@@ -62,7 +58,18 @@ package flashx.textLayout.elements
 	 
 	[Event(name="flowOperationEnd", type="flashx.textLayout.events.FlowOperationEvent")]
 	
-	 /** Dispatched whenever the selection is changed.  Primarily used to update selection-dependent user interface. 
+	/**
+	 * 
+	 * @eventType flashx.textLayout.events.FlowOperationEvent.FLOW_OPERATION_COMPLETE
+	 *
+	 * @playerversion Flash 10
+	 * @playerversion AIR 1.5
+	 * @langversion 3.0
+	 */
+	
+	[Event(name="flowOperationComplete", type="flashx.textLayout.events.FlowOperationEvent")]
+	
+	/** Dispatched whenever the selection is changed.  Primarily used to update selection-dependent user interface. 
 	 * It can also be used to alter the selection, but cannot be used to alter the TextFlow itself.
 	 *
 	 * @playerversion Flash 10
@@ -291,14 +298,18 @@ package flashx.textLayout.elements
 		 
 		public function TextFlow(config:IConfiguration = null)
 		{
+			super();
+			initialize(config);
+		}
+		
+		private function initialize(config:IConfiguration):void
+		{
 			if (config == null)
 				config = defaultConfiguration;
 			// read only non changing copy of current state
 			_configuration = Configuration(config).getImmutableClone();
 			_eventDispatcher = new EventDispatcher(this);
-			
-			super();	
-			
+	
 			format = _configuration.textFlowInitialFormat;
 			
 			// initialize the flowComposer

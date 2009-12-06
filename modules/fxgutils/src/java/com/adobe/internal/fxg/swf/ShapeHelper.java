@@ -499,10 +499,9 @@ public class ShapeHelper implements SwfConstants
      * @param path The path to populate.
      * @param data A condensed String representation of a path data.
      */
-    public static List<ShapeRecord> path(PathNode node)
+    public static List<ShapeRecord> path(PathNode node, boolean fill)
     {
     	String data = node.data;
-    	boolean fill = (node.fill != null);
     	
         List<ShapeRecord> shapeRecords = new ArrayList<ShapeRecord>();
 
@@ -804,7 +803,7 @@ public class ShapeHelper implements SwfConstants
         }
         
         // Use strokeExtents to get the transformed stroke weight.
-        double halfWeight = (strokeExtents.xMax - strokeExtents.xMin)/ 2;   
+        double halfWeight = (strokeExtents.xMax - strokeExtents.xMin)/2.0;   
         newRect = addJoint2Bounds(records, ls, strokeNode, halfWeight, newRect);
         return newRect;
     }
@@ -937,7 +936,7 @@ public class ShapeHelper implements SwfConstants
                          
                          
     public static Rect addMiterLimitStrokeToBounds(ShapeRecord segment1, 
-            ShapeRecord segment2, double miterLimit, double weight, Rect pathBBox,
+            ShapeRecord segment2, double miterLimit, double halfWeight, Rect pathBBox,
             int xPrev, int yPrev, int x, int y)
     {
         // The tip of the joint
@@ -946,7 +945,7 @@ public class ShapeHelper implements SwfConstants
         //If a joint lies miterLimit*strokeWeight/2 away from pathBox, 
         //it is considered an inner joint and has no effect on bounds. So stop  
         //processing in this case.        
-        if (isInnerJoint(jointPoint, pathBBox, miterLimit, weight))
+        if (isInnerJoint(jointPoint, pathBBox, miterLimit, halfWeight))
         {
             return pathBBox;
         }
@@ -1005,13 +1004,13 @@ public class ShapeHelper implements SwfConstants
             // miterLimit * weight) / bisect.lenght. 
    
             bisect = normalize(bisect, 1);
-            halfT0T1 = normalize(halfT0T1, (weight - miterLimit * weight * sinHalfAlpha) / bisectLength);
+            halfT0T1 = normalize(halfT0T1, (halfWeight - miterLimit * halfWeight * sinHalfAlpha) / bisectLength);
 
-            Point pt0 = new Point(jointPoint.x + miterLimit * weight * bisect.x + halfT0T1.x,
-                   jointPoint.y + miterLimit * weight * bisect.y + halfT0T1.y);
+            Point pt0 = new Point(jointPoint.x + miterLimit * halfWeight * bisect.x + halfT0T1.x,
+                   jointPoint.y + miterLimit * halfWeight * bisect.y + halfT0T1.y);
 
-            Point pt1 = new Point(jointPoint.x + miterLimit * weight * bisect.x - halfT0T1.x,
-                   jointPoint.y + miterLimit * weight * bisect.y - halfT0T1.y);
+            Point pt1 = new Point(jointPoint.x + miterLimit * halfWeight * bisect.x - halfT0T1.x,
+                   jointPoint.y + miterLimit * halfWeight * bisect.y - halfT0T1.y);
 
             // Add it to the rectangle:
             newRect = rectUnion((int)StrictMath.rint(pt0.x), (int)StrictMath.rint(pt0.y), 
@@ -1023,8 +1022,8 @@ public class ShapeHelper implements SwfConstants
         {
             // miter limit is not reached, add the tip of the stroke
             bisect = normalize(bisect, 1);
-            Point strokeTip = new Point(jointPoint.x + bisect.x * weight / sinHalfAlpha,
-                   jointPoint.y + bisect.y * weight / sinHalfAlpha);
+            Point strokeTip = new Point(jointPoint.x + bisect.x * halfWeight / sinHalfAlpha,
+                   jointPoint.y + bisect.y * halfWeight / sinHalfAlpha);
    
             // Add it to the rectangle:
             newRect = rectUnion((int)StrictMath.rint(strokeTip.x), (int)StrictMath.rint(strokeTip.y), 
@@ -1041,14 +1040,14 @@ public class ShapeHelper implements SwfConstants
      * @param weight
      * @return
      */
-    private static boolean isInnerJoint(Point jointPoint, Rect pathBBox, double miterLimit, double weight)
+    private static boolean isInnerJoint(Point jointPoint, Rect pathBBox, double miterLimit, double halfWeight)
     {
         //If a joint lies miterLimit*strokeWeight/2 away from pathBox, 
         //it is considered an inner joint and has no effect on bounds.              
-        if ((jointPoint.x - pathBBox.xMin)>miterLimit*weight/2 &&
-                (pathBBox.xMax - jointPoint.x)>miterLimit*weight/2 &&
-                (jointPoint.y - pathBBox.yMin)>miterLimit*weight/2 &&
-                (pathBBox.yMax - jointPoint.y)>miterLimit*weight/2)
+        if ((jointPoint.x - pathBBox.xMin)>miterLimit*halfWeight &&
+                (pathBBox.xMax - jointPoint.x)>miterLimit*halfWeight &&
+                (jointPoint.y - pathBBox.yMin)>miterLimit*halfWeight &&
+                (pathBBox.yMax - jointPoint.y)>miterLimit*halfWeight)
         {
             return true;
         }
@@ -1232,7 +1231,7 @@ public class ShapeHelper implements SwfConstants
      
         //compute t at extrema point for x and the corresponding x, y values 
         double t = computeTExtrema(x0, x1, x2);
-        if (t == Double.NaN)
+        if (Double.isNaN(t))
         {
             //use control point
             if (x1 < xmin) xmin = x1;
@@ -1253,7 +1252,7 @@ public class ShapeHelper implements SwfConstants
         
         //compute t at extrema point for y and the corresponding x, y values 
         t = computeTExtrema(y0, y1, y2);
-        if (t == Double.NaN)
+        if (Double.isNaN(t))
         {
             //use control point
             if (x1 < xmin) xmin = x1;

@@ -232,6 +232,8 @@ package flashx.textLayout.conversion
 			// Exported as an <IMG/> with SRC, WIDTH, HEIGHT and ALIGN attributes
 			
 			var xml:XML = <{name}/>;
+			if (image.id)
+				xml.@ID = image.id;
 			if (image.source)
 				xml.@SRC = image.source;
 			if (image.width !== undefined && image.width != FormatValue.AUTO) 

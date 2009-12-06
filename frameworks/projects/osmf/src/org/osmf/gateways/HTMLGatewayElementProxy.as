@@ -59,7 +59,7 @@ package org.osmf.gateways
 		
 		// Temporal
 		
-		override protected function processDurationChange(oldDuration:Number, newDuration:Number):void
+		override protected function processDurationChange(newDuration:Number):void
 		{
 			ExternalInterface.call(elementScriptPath + "__onDurationChange__", newDuration);
 		}
@@ -71,7 +71,7 @@ package org.osmf.gateways
 		
 		// Audible
 		
-		override protected function processVolumeChange(oldVolume:Number, newVolume:Number):void
+		override protected function processVolumeChange(newVolume:Number):void
 		{
 			ExternalInterface.call(elementScriptPath + "__onVolumeChange__", newVolume);
 		}
@@ -81,7 +81,7 @@ package org.osmf.gateways
 			ExternalInterface.call(elementScriptPath + "__onMutedChange__", muted);
 		}
 		
-		override protected function processPanChange(oldPan:Number, newPan:Number):void
+		override protected function processPanChange(newPan:Number):void
 		{
 			ExternalInterface.call(elementScriptPath + "__onPanChange__", newPan);
 		}

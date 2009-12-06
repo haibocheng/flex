@@ -24,11 +24,15 @@ package org.osmf.net
 	import flash.events.NetStatusEvent;
 	import flash.net.NetStream;
 	
-	import org.osmf.events.BytesTotalChangeEvent;
+	import org.osmf.events.LoadEvent;
 	import org.osmf.traits.DownloadableTrait;
 
+	[ExcludeClass]
+	
 	/**
-	 * This class extends Downloadable trait to provide access to the bytesLoaded and bytesTotal properties
+	 * @private
+	 * 
+	 * This class extends DownloadableTrait to provide access to the bytesLoaded and bytesTotal properties
 	 * of NetStream.
 	 */
 	public class NetStreamDownloadableTrait extends DownloadableTrait
@@ -36,8 +40,13 @@ package org.osmf.net
 		/**
 		 * Constructor
 		 * 
-		 * @param netStream The NetStream object to be used for the retrieval of bytesDownloaded and bytesTotal values
+		 * @param netStream The NetStream object to be used for the retrieval of bytesLoaded and bytesTotal values
 		 *  
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function NetStreamDownloadableTrait(netStream:NetStream)
 		{
@@ -52,14 +61,24 @@ package org.osmf.net
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
-		override public function get bytesDownloaded():Number
+		override public function get bytesLoaded():Number
 		{
 			return _netStream.bytesLoaded;
 		}
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		override public function get bytesTotal():Number
 		{
@@ -74,7 +93,15 @@ package org.osmf.net
 		{
 			if (!isNaN(_netStream.bytesTotal) && _netStream.bytesTotal > 0)
 			{
-				dispatchEvent(new BytesTotalChangeEvent(0, _netStream.bytesTotal));
+				dispatchEvent
+					( new LoadEvent
+						( LoadEvent.BYTES_TOTAL_CHANGE
+						, false
+						, false
+						, null
+						, _netStream.bytesTotal
+						)
+					);
 				_netStream.removeEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
 			}
 		}

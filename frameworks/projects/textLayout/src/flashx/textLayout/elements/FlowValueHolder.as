@@ -11,8 +11,8 @@
 package flashx.textLayout.elements
 {
 	import flashx.textLayout.debug.assert;
-	import flashx.textLayout.formats.TextLayoutFormatValueHolder;
 	import flashx.textLayout.formats.TextLayoutFormat;
+	import flashx.textLayout.formats.TextLayoutFormatValueHolder;
 	import flashx.textLayout.tlf_internal;
 	
 	use namespace tlf_internal;
@@ -27,10 +27,15 @@ package flashx.textLayout.elements
 		public function FlowValueHolder(initialValues:FlowValueHolder = null)
 		{
 			super(initialValues);
+			initialize(initialValues);
+		}
+		
+		private function initialize(initialValues:FlowValueHolder):void
+		{
 			if (initialValues)
 			{
 				for (var s:String in initialValues.userStyles)
-						writableUserStyles()[s] = initialValues.userStyles[s];
+					writableUserStyles()[s] = initialValues.userStyles[s];
 				for (s in initialValues.privateData)
 					writablePrivateData()[s] = initialValues.privateData[s];
 			}

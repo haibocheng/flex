@@ -27,13 +27,12 @@ package org.osmf.content
 	import flash.errors.IOError;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
-	import flash.events.ProgressEvent;
 	import flash.events.SecurityErrorEvent;
 	import flash.net.URLRequest;
 	import flash.system.LoaderContext;
 	import flash.system.SecurityDomain;
 	
-	import org.osmf.events.BytesTotalChangeEvent;
+	import org.osmf.events.LoadEvent;
 	import org.osmf.events.MediaError;
 	import org.osmf.events.MediaErrorCodes;
 	import org.osmf.events.MediaErrorEvent;
@@ -42,13 +41,6 @@ package org.osmf.content
 	import org.osmf.traits.LoadState;
 	import org.osmf.traits.LoaderBase;
 	import org.osmf.utils.*;
-
-	/**
-	 * Dispatched when total size in bytes of data being downloaded into the application has changed.
-	 * 
-	 * @eventType org.osmf.events.BytesTotalChangeEvent
-	 */	
-	[Event(name="bytesTotalChange",type="org.osmf.events.BytesTotalChangeEvent")]
 
 	/**
 	 * The ContentLoader class creates a flash.display.Loader object, 
@@ -72,6 +64,11 @@ package org.osmf.content
 		 * with different versions.  Therefore, it is mandatory to have the
 		 * loaded SWF and loading SWF live in the same security domain if the
 		 * types need to be merged.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		public function ContentLoader(useCurrentSecurityDomain:Boolean=false)
 		{
@@ -86,11 +83,16 @@ package org.osmf.content
 		/**
 		 * Loads content using a flash.display.Loader object. 
 		 * <p>Updates the ILoadable's <code>loadedState</code> property to LOADING
-		 * while loading and to LOADED upon completing a successful load.</p> 
+		 * while loading and to READY upon completing a successful load.</p> 
 		 * 
 		 * @see org.osmf.traits.LoadState
 		 * @see flash.display.Loader#load()
 		 * @param ILoadable ILoadable to be loaded.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		override public function load(loadable:ILoadable):void
 		{
@@ -154,16 +156,19 @@ package org.osmf.content
 					loader = null;
 					loadedContext = null;
 					
-					updateLoadable(loadable, LoadState.LOAD_FAILED, loadedContext);
+					updateLoadable(loadable, LoadState.LOAD_ERROR, loadedContext);
 					loadable.dispatchEvent
 						( new MediaErrorEvent
-							( new MediaError(MediaErrorCodes.INVALID_SWF_AS_VERSION)
+							( MediaErrorEvent.MEDIA_ERROR
+							, false
+							, false
+							, new MediaError(MediaErrorCodes.INVALID_SWF_AS_VERSION)
 							)
 						);
 				}
 				else
 				{
-					updateLoadable(loadable, LoadState.LOADED, loadedContext);
+					updateLoadable(loadable, LoadState.READY, loadedContext);
 				}
 			}
 
@@ -173,10 +178,13 @@ package org.osmf.content
 				loader = null;
 				loadedContext = null;
 				
-				updateLoadable(loadable, LoadState.LOAD_FAILED, null);
+				updateLoadable(loadable, LoadState.LOAD_ERROR, null);
 				loadable.dispatchEvent
 					( new MediaErrorEvent
-						( new MediaError
+						( MediaErrorEvent.MEDIA_ERROR
+						, false
+						, false
+						, new MediaError
 							( MediaErrorCodes.CONTENT_IO_LOAD_ERROR
 							, ioEvent ? ioEvent.text : ioEventDetail
 							)
@@ -190,10 +198,13 @@ package org.osmf.content
 				loader = null;
 				loadedContext = null;
 				
-				updateLoadable(loadable, LoadState.LOAD_FAILED, loadedContext);
+				updateLoadable(loadable, LoadState.LOAD_ERROR, loadedContext);
 				loadable.dispatchEvent
 					( new MediaErrorEvent
-						( new MediaError
+						( MediaErrorEvent.MEDIA_ERROR
+						, false
+						, false
+						, new MediaError
 							( MediaErrorCodes.CONTENT_SECURITY_LOAD_ERROR
 							, securityEvent ? securityEvent.text : securityEventDetail
 							)
@@ -207,11 +218,16 @@ package org.osmf.content
 		 * Unloads content using a flash.display.Loader object.  
 		 * 
 		 * <p>Updates the ILoadable's <code>loadedState</code> property to UNLOADING
-		 * while unloading and to CONSTRUCTED upon completing a successful unload.</p>
+		 * while unloading and to UNINITIALIZED upon completing a successful unload.</p>
 		 *
 		 * @param ILoadable ILoadable to be unloaded.
 		 * @see org.osmf.traits.LoadState
 		 * @see flash.display.Loader#unload()
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		override public function unload(loadable:ILoadable):void
 		{
@@ -220,7 +236,7 @@ package org.osmf.content
 			var context:ContentLoadedContext = loadable.loadedContext as ContentLoadedContext;
 			updateLoadable(loadable, LoadState.UNLOADING, context);			
 			context.loader.unloadAndStop();
-			updateLoadable(loadable, LoadState.CONSTRUCTED);
+			updateLoadable(loadable, LoadState.UNINITIALIZED);
 		}
 		
 		// Internals

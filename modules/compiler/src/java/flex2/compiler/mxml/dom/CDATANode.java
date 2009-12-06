@@ -50,6 +50,11 @@ public class CDATANode extends Node
 	{
 	}
 
+	public boolean isWhitespace()
+	{
+	    return image != null && image.trim().length() == 0;
+	}
+
 	public String toString()
 	{
 		String cdata = image.replace('\r', ' ').replace('\n', ' ').trim();

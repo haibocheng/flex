@@ -35,6 +35,11 @@ package org.osmf.display
 	{
 		/**
 		 * Constructor.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function ScalableSprite()
 		{
@@ -45,16 +50,21 @@ package org.osmf.display
 						
 		/**
 		 * The <code>scaleMode</code> property describes different ways of laying out the media content within a this sprite.
-		 * <code>scaleMode</code> can be set to <code>NONE</code>, <code>STRETCH</code>, <code>LETTERBOX</code> or <code>ZOOM</code>.
+		 * <code>scaleMode</code> can be set to <code>none</code>, <code>straetch</code>, <code>letterbox</code> or <code>zoom</code>.
 		 * <code>MediaElementSprite</code> uses the value to calculate the layout.
 		 * @see org.osmf.display.ScaleMode for usage examples.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 			
-		public function get scaleMode():ScaleMode
+		public function get scaleMode():String
 		{
 			return _scaleMode;
 		}
 		
-		public function set scaleMode(value:ScaleMode):void
+		public function set scaleMode(value:String):void
 		{
 			if(_scaleMode != value)
 			{				
@@ -66,6 +76,11 @@ package org.osmf.display
 		/**
 		 * Changes the width and height of this container, and updates the layout of the contents.  This method is usually called in response to a 
 		 * stage resize or a component resize. This is similar to setting the width and height.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 					
 		public function setAvailableSize(width:Number, height:Number):void
 		{			
@@ -76,6 +91,11 @@ package org.osmf.display
 		
 		/**
 		 * Sets the width of this sprite, and updates the layout of the contents.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		override public function set width(value:Number):void
 		{
@@ -90,6 +110,11 @@ package org.osmf.display
 		
 		/**
 		 * Sets the height of this sprite, and updates the layout of the contents.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		override public function set height(value:Number):void
 		{
@@ -105,6 +130,11 @@ package org.osmf.display
 		/**
 		 * The <code>DisplayObject</code> to be laid out by this container. Sets the initial <code>intrinsicSize</code> of the
 		 * view based on the current measured width and height of the view.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function set view(value:DisplayObject):void
 		{
@@ -135,6 +165,11 @@ package org.osmf.display
 		 * The <code>intrinsicSize</code> is a preferred size and is not guaranteed unless <code>scaleMode</code> is set to <code>NONE</code>.
 		 * For more information on how <code>intrinsicSize</code> and the size of the container interact: 
 		 * @see org.osmf.display.ScaleMode
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function setIntrinsicSize(width:Number, height:Number):void
 		{
@@ -147,7 +182,7 @@ package org.osmf.display
 		{			
 			if (_view && !isNaN(availableWidth) && !isNaN(availableHeight))						
 			{
-				var size:Point = _scaleMode.getScaledSize(width, height, intrinsicWidth, intrinsicHeight);		
+				var size:Point = ScaleModeUtils.getScaledSize(_scaleMode, width, height, intrinsicWidth, intrinsicHeight);		
 							
 				_view.width = size.x;
 				_view.height = size.y;				 
@@ -161,6 +196,6 @@ package org.osmf.display
 		private var availableHeight:Number = NaN;
 		private var intrinsicWidth:Number = NaN;
 		private var intrinsicHeight:Number = NaN;				
-		private var _scaleMode:ScaleMode;
+		private var _scaleMode:String; // ScaleMode
 	}
 }

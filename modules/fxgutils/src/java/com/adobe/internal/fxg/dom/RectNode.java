@@ -66,15 +66,15 @@ public class RectNode extends AbstractShapeNode
     {
         if (FXG_WIDTH_ATTRIBUTE.equals(name))
         {
-            width = parseDouble(value);
+            width = DOMParserHelper.parseDouble(this, value, name);
         }
         else if (FXG_HEIGHT_ATTRIBUTE.equals(name))
         {
-            height = parseDouble(value);
+            height = DOMParserHelper.parseDouble(this, value, name);
         }
         else if (FXG_RADIUSX_ATTRIBUTE.equals(name))
         {
-            radiusX = parseDouble(value);
+            radiusX = DOMParserHelper.parseDouble(this, value, name);
             if (radiusX < 0) 
                 // RadiusX, RadiusY, TopLeftRadiusX, TopLeftRadiusY, 
             	// TopRightRadiusX, TopRightRadiusY, BottomRightRadiusX, 
@@ -84,7 +84,7 @@ public class RectNode extends AbstractShapeNode
         }
         else if (FXG_RADIUSY_ATTRIBUTE.equals(name))
         {
-            radiusY = parseDouble(value);
+            radiusY = DOMParserHelper.parseDouble(this, value, name);
             if (radiusY < 0)
                 // RadiusX, RadiusY, TopLeftRadiusX, TopLeftRadiusY, 
             	// TopRightRadiusX, TopRightRadiusY, BottomRightRadiusX, 
@@ -94,56 +94,56 @@ public class RectNode extends AbstractShapeNode
         }
         else if (FXG_TOPLEFTRADIUSX_ATTRIBUTE.equals(name))
         {
-        	topLeftRadiusX = parseDouble(value);
+        	topLeftRadiusX = DOMParserHelper.parseDouble(this, value, name);
             if (topLeftRadiusX < 0) 
                 // RadiusX and RadiusY must be greater than 0.
                 throw new FXGException(getStartLine(), getStartColumn(), "InvalidRectRadiusXRadiusYAttribute");
         }
         else if (FXG_TOPLEFTRADIUSY_ATTRIBUTE.equals(name))
         {
-        	topLeftRadiusY = parseDouble(value);
+        	topLeftRadiusY = DOMParserHelper.parseDouble(this, value, name);
             if (topLeftRadiusY < 0)
                 // RadiusX and RadiusY must be greater than 0.
                 throw new FXGException(getStartLine(), getStartColumn(), "InvalidRectRadiusXRadiusYAttribute");
         }
         else if (FXG_TOPRIGHTRADIUSX_ATTRIBUTE.equals(name))
         {
-        	topRightRadiusX = parseDouble(value);
+        	topRightRadiusX = DOMParserHelper.parseDouble(this, value, name);
             if (topRightRadiusX < 0) 
                 // RadiusX and RadiusY must be greater than 0.
                 throw new FXGException(getStartLine(), getStartColumn(), "InvalidRectRadiusXRadiusYAttribute");
         }
         else if (FXG_TOPRIGHTRADIUSY_ATTRIBUTE.equals(name))
         {
-        	topRightRadiusY = parseDouble(value);
+        	topRightRadiusY = DOMParserHelper.parseDouble(this, value, name);
             if (topRightRadiusY < 0)
                 // RadiusX and RadiusY must be greater than 0.
                 throw new FXGException(getStartLine(), getStartColumn(), "InvalidRectRadiusXRadiusYAttribute");
         }
         else if (FXG_BOTTOMLEFTRADIUSX_ATTRIBUTE.equals(name))
         {
-        	bottomLeftRadiusX = parseDouble(value);
+        	bottomLeftRadiusX = DOMParserHelper.parseDouble(this, value, name);
             if (bottomLeftRadiusX < 0) 
                 // RadiusX and RadiusY must be greater than 0.
                 throw new FXGException(getStartLine(), getStartColumn(), "InvalidRectRadiusXRadiusYAttribute");
         }
         else if (FXG_BOTTOMLEFTRADIUSY_ATTRIBUTE.equals(name))
         {
-        	bottomLeftRadiusY = parseDouble(value);
+        	bottomLeftRadiusY = DOMParserHelper.parseDouble(this, value, name);
             if (bottomLeftRadiusY < 0)
                 // RadiusX and RadiusY must be greater than 0.
                 throw new FXGException(getStartLine(), getStartColumn(), "InvalidRectRadiusXRadiusYAttribute");
         }
         else if (FXG_BOTTOMRIGHTRADIUSX_ATTRIBUTE.equals(name))
         {
-        	bottomRightRadiusX = parseDouble(value);
+        	bottomRightRadiusX = DOMParserHelper.parseDouble(this, value, name);
             if (bottomRightRadiusX < 0) 
                 // RadiusX and RadiusY must be greater than 0.
                 throw new FXGException(getStartLine(), getStartColumn(), "InvalidRectRadiusXRadiusYAttribute");
         }
         else if (FXG_BOTTOMRIGHTRADIUSY_ATTRIBUTE.equals(name))
         {
-            bottomRightRadiusY = parseDouble(value);
+            bottomRightRadiusY = DOMParserHelper.parseDouble(this, value, name);
             if (bottomRightRadiusY < 0)
                 // RadiusX and RadiusY must be greater than 0.
                 throw new FXGException(getStartLine(), getStartColumn(), "InvalidRectRadiusXRadiusYAttribute");
@@ -161,8 +161,8 @@ public class RectNode extends AbstractShapeNode
     {
         int x1 = 0;
         int y1 = 0;
-        int x2 = (int) width*SwfConstants.TWIPS_PER_PIXEL;
-        int y2 = (int) height*SwfConstants.TWIPS_PER_PIXEL;
+        int x2 = (int) (width*SwfConstants.TWIPS_PER_PIXEL);
+        int y2 = (int) (height*SwfConstants.TWIPS_PER_PIXEL);
         if (ls != null)
         {
             int width = SwfConstants.TWIPS_PER_PIXEL;

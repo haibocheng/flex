@@ -63,6 +63,21 @@ package flashx.textLayout.operations
 		{
 			super(operationState);
 			
+			CONFIG::debug { 
+				var elem:FlowElement = this.targetElement;
+				for (var i:int = nestLevel; i > 0; i--)
+					elem = elem.parent;
+				
+				assert (elem is TextFlow, "ChangeElementIdOperation targetElement root is not a TextFlow!"); 
+				assert (elem == operationState.textFlow, "ChangeElementIdOperation element is not part of selectionState TextFlow"); 
+			}
+			
+			initialize(targetElement,relativeStart,relativeEnd);
+		}
+		
+		
+		private function initialize(targetElement:FlowElement, relativeStart:int, relativeEnd:int ):void
+		{
 			this.targetElement = targetElement;
 			this.relativeEnd = relativeEnd;
 			this.relativeStart = relativeStart;
@@ -73,15 +88,6 @@ package flashx.textLayout.operations
 			CONFIG::debug { assert(relativeStart >= 0 && relativeStart <= targetElement.textLength,"ChangeElementIdOperation bad relativeStart"); } 
 			CONFIG::debug { assert(relativeEnd >= 0 && relativeEnd <= targetElement.textLength,"ChangeElementIdOperation bad relativeEnd"); } 
 			CONFIG::debug { assert(relativeStart <= relativeEnd,"ChangeElementIdOperation relativeStart not before relativeEnd"); } 
-			
-			CONFIG::debug { 
-				var elem:FlowElement = this.targetElement;
-				for (var i:int = nestLevel; i > 0; i--)
-					elem = elem.parent;
-					
-				assert (elem is TextFlow, "ChangeElementIdOperation targetElement root is not a TextFlow!"); 
-				assert (elem == operationState.textFlow, "ChangeElementIdOperation element is not part of selectionState TextFlow"); 
-			}
 
 			// If we're changing the format of the text right before the terminator, change the terminator to match.
 			// This will make it so that when the format change is undone, the terminator will be restored to previous state. Also

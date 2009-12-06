@@ -1021,6 +1021,16 @@ public class CompilerConfiguration implements As3Configuration,
     	setEnableSwcVersionFiltering(enable);
     }
     
+    public static ConfigurationInfo getEnableSwcVersionFilteringInfo()
+    {
+        return new AdvancedConfigurationInfo()
+        {
+            public boolean isHidden()
+            {
+                 return true;
+            }
+        };
+    }
     
     //
     // 'compiler.library-path' option
@@ -1270,6 +1280,22 @@ public class CompilerConfiguration implements As3Configuration,
 	}
 
     //
+    // 'compiler.omit-trace-statements' option
+    //
+
+	private boolean omitTraceStatements = true;
+
+	public boolean omitTraceStatements()
+	{
+		return omitTraceStatements;
+	}
+
+	public void cfgOmitTraceStatements(ConfigurationValue cv, boolean b)
+	{
+		omitTraceStatements = b;
+	}
+
+    //
     // 'compiler.optimize' option
     //
 
@@ -1488,7 +1514,7 @@ public class CompilerConfiguration implements As3Configuration,
     {
         this.showInvalidCssPropertyWarnings = show;
     }
-    
+
     //
     // 'compiler.show-deprecation-warnings' option
     //
@@ -1930,7 +1956,7 @@ public class CompilerConfiguration implements As3Configuration,
     {
         File file = new File(path);
         String fileName = file.getName();
-        int end = fileName.lastIndexOf("-");
+        int end = fileName.indexOf("-");
 
         if (end == -1)
         {
@@ -2966,12 +2992,13 @@ public class CompilerConfiguration implements As3Configuration,
     //
 
     // Allow the user to decide if the compiled application/module should have its
-    // own style manager.
+    // own style manager. Turn off isolate styles for compatibility less than 4.0.
     private boolean isolateStyles = true;
 
     public boolean getIsolateStyles()
     {
-        return isolateStyles;
+        return isolateStyles &&
+               (getCompatibilityVersion() >= flex2.compiler.common.MxmlConfiguration.VERSION_4_0);
     }
 
     public void cfgIsolateStyles( ConfigurationValue cv, boolean isolateStyles )

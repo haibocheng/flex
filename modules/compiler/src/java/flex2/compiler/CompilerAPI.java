@@ -1379,7 +1379,7 @@ public final class CompilerAPI
                        resources,
                        bundlePath,
                        swcContext,
-                       SymbolTable.newSymbolTable(configuration),
+                       new SymbolTable(configuration),
                        nameMappings,
                        configuration,
                        compilers,
@@ -1411,7 +1411,7 @@ public final class CompilerAPI
         for ( IPreCompileExtension extension : extensions )
         {
             extension.run( fileSpec, sourceList, classes, sourcePath, resources, bundlePath, swcContext,
-                           SymbolTable.newSymbolTable( configuration ), configuration, compilers, preLink, licenseMap,
+                           new SymbolTable(configuration), configuration, compilers, preLink, licenseMap,
                            sources );
         }
         
@@ -2615,7 +2615,7 @@ public final class CompilerAPI
             final String tmp = SignatureExtension.signatureDirectory;
             SignatureExtension.signatureDirectory = null;
             {
-                u = asc.parse1(tmpSource, SymbolTable.newSymbolTable(configuration));
+                u = asc.parse1(tmpSource, new SymbolTable(configuration));
             }
             SignatureExtension.signatureDirectory = tmp;
         }

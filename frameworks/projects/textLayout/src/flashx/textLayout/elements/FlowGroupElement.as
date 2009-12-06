@@ -82,6 +82,28 @@ package flashx.textLayout.elements
 			return retFlow;
 		}
 		
+		/* @private */
+		public override function getText(relativeStart:int=0, relativeEnd:int=-1, paragraphSeparator:String="\n"):String
+		{
+			var text:String = super.getText();
+			
+			if (relativeEnd == -1)
+				relativeEnd = textLength;
+
+			var pos:int = relativeStart;
+			for (var idx:int = findChildIndexAtPosition(relativeStart); idx < _numChildren && pos < relativeEnd; idx++)
+			{
+				var child:FlowElement = getChildAt(idx);
+				var copyStart:int = pos - child.parentRelativeStart;
+				var copyEnd:int = Math.min(relativeEnd - child.parentRelativeStart, child.textLength);
+				text += child.getText(copyStart, copyEnd, paragraphSeparator);
+				pos += copyEnd - copyStart;
+				if (paragraphSeparator && child is ParagraphFormattedElement && pos < relativeEnd)
+					text += paragraphSeparator;
+			}
+			return text;
+		}
+		
 		// **************************************** 
 		// Begin TextLayoutFormat Related code
 		// ****************************************
@@ -371,8 +393,12 @@ package flashx.textLayout.elements
 					if (child is FlowGroupElement)
 						found = FlowGroupElement(child).findLeaf(childRelativePos);
 					else
+					{
+						// if its not a FlowGroupElement than it must be a FlowLeafElement
+						CONFIG::debug { assert(child is FlowLeafElement,"Invalid child in FlowGroupElement.findLeaf"); }
 						if (childRelativePos >= 0 && childRelativePos < child.textLength || (child.textLength == 0 && _numChildren == 1))
-							found = child;						
+							found = FlowLeafElement(child);
+					}
 				} while (!found && !child.textLength);
 				
 			}

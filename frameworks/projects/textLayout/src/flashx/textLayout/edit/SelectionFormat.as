@@ -39,6 +39,8 @@ package flashx.textLayout.edit
 		 * <p>A SelectionFormat created with the default values will use black for
 		 * the highlight colors, 1.0 for the alphas, and BlendMode.DIFFERENCE for the blending modes.
 		 * The cursor blink rate is 500 milliseconds.</p>
+		 *
+		 * <p>Setting the <code>pointAlpha</code> and <code>rangeAlpha</code> properties to zero disables selection highlighting.</p>
 		 * 
 		 * @param rangeColor The color for drawing the highlight.
 		 * @param rangeAlpha The transparency value for drawing the highlight. Valid values are between 0
@@ -53,6 +55,8 @@ package flashx.textLayout.edit
 		 * @param pointBlinkRate The rate at which the cursor blinks, in milliseconds.
 		 * 
 		 * @see flash.display.BlendMode
+		 * @see #pointAlpha
+		 * @see #rangeAlpha
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -83,11 +87,16 @@ package flashx.textLayout.edit
 		}
 
 		/**
-		 * The alpha for drawing the highlight of a range selection.
+		 * The alpha for drawing the highlight of a range selection. Valid values are between 0
+		 * (completely transparent) and 1 (completely opaque, which is the default).
+		 *
+		 * <p>Setting the <code>pointAlpha</code> and <code>rangeAlpha</code> properties to zero disables selection highlighting.</p>
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
  	 	 * @langversion 3.0
+ 	 	 *
+ 	 	 * @see #pointAlpha
 		 */						
 		public function get rangeAlpha():Number
 		{
@@ -120,11 +129,16 @@ package flashx.textLayout.edit
 		}
 
 		/**
-		 * The alpha for drawing the cursor.
+		 * The alpha for drawing the cursor. Valid values are between 0
+		 * (completely transparent) and 1 (completely opaque, which is the default).
+		 *
+		 * <p>Setting the <code>pointAlpha</code> and <code>rangeAlpha</code> properties to zero disables selection highlighting.</p>
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
  	 	 * @langversion 3.0
+ 	 	 *
+ 	 	 * @see #rangeAlpha
 		 */						
 		public function get pointAlpha():Number
 		{

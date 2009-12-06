@@ -246,27 +246,27 @@ public class TextGraphicNode extends GraphicContentNode implements TextNode
         
         if (FXG_WIDTH_ATTRIBUTE.equals(name))
         {
-            width = parseDouble(value);
+            width = DOMParserHelper.parseDouble(this, value, name);
         }
         else if (FXG_HEIGHT_ATTRIBUTE.equals(name))
         {
-            height = parseDouble(value);
+            height = DOMParserHelper.parseDouble(this, value, name);
         }
         else if (FXG_PADDINGLEFT_ATTRIBUTE.equals(name))
         {
-            paddingLeft = parseDouble(value);
+            paddingLeft = DOMParserHelper.parseDouble(this, value, name);
         }
         else if (FXG_PADDINGRIGHT_ATTRIBUTE.equals(name))
         {
-            paddingRight = parseDouble(value);
+            paddingRight = DOMParserHelper.parseDouble(this, value, name);
          }
         else if (FXG_PADDINGBOTTOM_ATTRIBUTE.equals(name))
         {
-            paddingBottom = parseDouble(value);
+            paddingBottom = DOMParserHelper.parseDouble(this, value, name);
         }
         else if (FXG_PADDINGTOP_ATTRIBUTE.equals(name))
         {
-            paddingTop = parseDouble(value);
+            paddingTop = DOMParserHelper.parseDouble(this, value, name);
         }
         else if (FXG_FONTFAMILY_ATTRIBUTE.equals(name))
         {
@@ -274,7 +274,7 @@ public class TextGraphicNode extends GraphicContentNode implements TextNode
         }
         else if (FXG_FONTSIZE_ATTRIBUTE.equals(name))
         {
-            fontSize = parseDouble(value);
+            fontSize = DOMParserHelper.parseDouble(this, value, name);
         }
         else if (FXG_FONTSTYLE_ATTRIBUTE.equals(name))
         {
@@ -286,7 +286,7 @@ public class TextGraphicNode extends GraphicContentNode implements TextNode
         }
         else if (FXG_LINEHEIGHT_ATTRIBUTE.equals(name))
         {
-            lineHeight = parsePercent(value);
+            lineHeight = DOMParserHelper.parsePercent(this, value, name);
         }
         else if (FXG_TEXTDECORATION_ATTRIBUTE.equals(name))
         {
@@ -302,7 +302,7 @@ public class TextGraphicNode extends GraphicContentNode implements TextNode
         }
         else if (FXG_TRACKING_ATTRIBUTE.equals(name))
         {
-            tracking = parsePercent(value);
+            tracking = DOMParserHelper.parsePercent(this, value, name);
         }
         else if (FXG_KERNING_ATTRIBUTE.equals(name))
         {
@@ -310,11 +310,11 @@ public class TextGraphicNode extends GraphicContentNode implements TextNode
         }
         else if (FXG_TEXTALPHA_ATTRIBUTE.equals(name))
         {
-            textAlpha = parseDouble(value, ALPHA_MIN_INCLUSIVE, ALPHA_MAX_INCLUSIVE, textAlpha);
+            textAlpha = DOMParserHelper.parseDouble(this, value, name, ALPHA_MIN_INCLUSIVE, ALPHA_MAX_INCLUSIVE, textAlpha);
         }
         else if (FXG_COLOR_ATTRIBUTE.equals(name))
         {
-            color = parseRGB(value, color);
+            color = DOMParserHelper.parseRGB(this, value, name);
         }
         else if (FXG_TEXTALIGN_ATTRIBUTE.equals(name))
         {
@@ -326,24 +326,24 @@ public class TextGraphicNode extends GraphicContentNode implements TextNode
         }
         else if (FXG_TEXTINDENT_ATTRIBUTE.equals(name))
         {
-            textIndent = parseDouble(value);
+            textIndent = DOMParserHelper.parseDouble(this, value, name);
         }
         else if (FXG_MARGINLEFT_ATTRIBUTE.equals(name))
         {
-            marginLeft = parseDouble(value);
+            marginLeft = DOMParserHelper.parseDouble(this, value, name);
         }
         else if (FXG_MARGINRIGHT_ATTRIBUTE.equals(name))
         {
-            marginRight = parseDouble(value);
+            marginRight = DOMParserHelper.parseDouble(this, value, name);
         }
         else if (FXG_MARGINTOP_ATTRIBUTE.equals(name))
         {
-            marginTop = parseDouble(value);
+            marginTop = DOMParserHelper.parseDouble(this, value, name);
         }
         
         else if (FXG_MARGINBOTTOM_ATTRIBUTE.equals(name))
         {
-            marginBottom = parseDouble(value);
+            marginBottom = DOMParserHelper.parseDouble(this, value, name);
         }
         else if (FXG_DIRECTION_ATTRIBUTE.equals(name))
         {
@@ -355,32 +355,32 @@ public class TextGraphicNode extends GraphicContentNode implements TextNode
         }
         else if (FXG_X_ATTRIBUTE.equals(name))
         {
-            x = parseDouble(value);
+            x = DOMParserHelper.parseDouble(this, value, name);
             translateSet = true;
         }
         else if (FXG_Y_ATTRIBUTE.equals(name))
         {
-            y = parseDouble(value);
+            y = DOMParserHelper.parseDouble(this, value, name);
             translateSet = true;
         }
         else if (FXG_ROTATION_ATTRIBUTE.equals(name))
         {
-            rotation = parseDouble(value);
+            rotation = DOMParserHelper.parseDouble(this, value, name);
             rotationSet = true;
         }
         else if (FXG_SCALEX_ATTRIBUTE.equals(name))
         {
-            scaleX = parseDouble(value);
+            scaleX = DOMParserHelper.parseDouble(this, value, name);
             scaleSet = true;
         }
         else if (FXG_SCALEY_ATTRIBUTE.equals(name))
         {
-            scaleY = parseDouble(value);
+            scaleY = DOMParserHelper.parseDouble(this, value, name);
             scaleSet = true;
         }
         else if (FXG_ALPHA_ATTRIBUTE.equals(name))
         {
-            alpha = parseDouble(value, ALPHA_MIN_INCLUSIVE, ALPHA_MAX_INCLUSIVE, alpha);
+            alpha = DOMParserHelper.parseDouble(this, value, name, ALPHA_MIN_INCLUSIVE, ALPHA_MAX_INCLUSIVE, alpha);
             alphaSet = true;
         }
         else if (FXG_BLENDMODE_ATTRIBUTE.equals(name))
@@ -389,16 +389,16 @@ public class TextGraphicNode extends GraphicContentNode implements TextNode
         }
         else if (FXG_MASKTYPE_ATTRIBUTE.equals(name))
         {
-            maskType = parseMaskType(value, maskType);
+            maskType = DOMParserHelper.parseMaskType(this, value, maskType);
             maskTypeSet = true;
         }
         else if (FXG_VISIBLE_ATTRIBUTE.equals(name))
         {
-            visible = parseBoolean(value);
+            visible = DOMParserHelper.parseBoolean(this, value, name);
         }      
         else if ( FXG_LINETHROUGH_ATTRIBUTE.equals(name))
         {
-            lineThrough = parseBoolean(value);
+            lineThrough = DOMParserHelper.parseBoolean(this, value, name);
         }        
         else if (FXG_ID_ATTRIBUTE.equals(name))
         {

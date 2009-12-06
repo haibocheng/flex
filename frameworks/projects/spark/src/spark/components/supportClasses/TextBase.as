@@ -339,6 +339,8 @@ public class TextBase extends UIComponent
         if (_isTruncated != value)
         {
             _isTruncated = value;
+            if (showTruncationTip)
+                toolTip = _isTruncated ? text : null;
             dispatchEvent(new Event("isTruncatedChanged"));
         }
     }
@@ -409,6 +411,40 @@ public class TextBase extends UIComponent
     }
 
     //----------------------------------
+	//  showTruncationTip
+    //----------------------------------
+	
+    /**
+     *  @private
+	 *  Storage for the showTruncationTip property.
+     */
+    private var _showTruncationTip:Boolean = false;
+        
+    /**
+	 *  A property that controls whether the component
+     *  should show a toolTip when the text has been truncated.
+	 *
+	 *  @default false
+     *  
+     *  @langversion 3.0
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
+     */
+	public function get showTruncationTip():Boolean
+    {
+		return _showTruncationTip;
+    }
+
+    /**
+     *  @private
+     */
+    public function set showTruncationTip(value:Boolean):void
+    {
+		_showTruncationTip = value;
+    }
+
+    //----------------------------------
     //  text
     //----------------------------------
 
@@ -461,8 +497,11 @@ public class TextBase extends UIComponent
         var constrainedWidth:Number =
             !isNaN(_widthConstraint) ? _widthConstraint : explicitWidth;
             
+        // for measurement, try not to collapse so small we don't measure
+        // anything
+        var fontSize:Number = getStyle("fontSize") 
         var allLinesComposed:Boolean =
-            composeTextLines(constrainedWidth, explicitHeight);
+            composeTextLines(Math.max(constrainedWidth, fontSize), Math.max(explicitHeight, fontSize));
         
         // Anytime we are composing we need to invalidate the display list
         // as we may have messed up the text lines.

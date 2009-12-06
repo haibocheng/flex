@@ -130,10 +130,11 @@ use namespace mx_internal;
  *    colorCorrection="default"
  *    controlBarContent="null"
  *    controlBarLayout="HorizontalLayout"
+ *    controlBarVisible="true"
  *    frameRate="24"
  *    pageTitle""
  *    preloader="<i>No default</i>"
- *    preloaderBaseColor="<i>No default</i>"
+ *    preloaderChromeColor="<i>No default</i>"
  *    scriptRecursionLimit="1000"
  *    scriptTimeLimit="60"
  *    usePreloader="true"
@@ -437,11 +438,14 @@ public class Application extends SkinnableContainer
     //---------------------------------- 
     
     /**
-     *  A flag that controls whether the controlBar is visible.
-     *  The flag has no meaning if there is no controlBarContent.
-     *  The Panel does not monitor the controlBarGroup so if some
-     *  other code makes it invisible, the Panel may not update
-     *  correctly
+     *  If <code>true</code>, the control bar is visible.
+     *  The flag has no affect if there is no value set for
+     *  the <code>controlBarContent</code> property.
+     *
+     *  <p><b>Note:</b> The Application container does not monitor the 
+     *  <code>controlBarGroup</code> property. 
+     *  If other code makes it invisible, the Application container might 
+     *  not update correctly.</p>
      *
      *  @default true
      *  
@@ -550,16 +554,16 @@ public class Application extends SkinnableContainer
     public var preloader:Object;
     
     //----------------------------------
-    //  preloaderBaseColor
+    //  preloaderChromeColor
     //----------------------------------
     
     [Inspectable(defaultValue="0xCCCCCC", format="Color")]
     
     /**
-     *  Specifies the base color used by the default preloader component. This property
-     *  has the same effect as the <code>baseColor</code> style used by Spark skins.
+     *  Specifies the chrome color used by the default preloader component. This property
+     *  has the same effect as the <code>chromeColor</code> style used by Spark skins.
      *  Typically this property should be set to the same value as the 
-     *  Application container's <code>baseColor</code> style property.
+     *  Application container's <code>chromeColor</code> style property.
      *    
      *  <p>Note: This property cannot be set by ActionScript code; it must be set in MXML code.</p>
      * 
@@ -573,7 +577,7 @@ public class Application extends SkinnableContainer
      * component. It is here so that it gets picked up by the compiler and included 
      * in the info() structure for the generated system manager. The download progress bar
      * grabs the value directly from the info() structure. */
-    public var preloaderBaseColor:uint;
+    public var preloaderChromeColor:uint;
 
     //----------------------------------
     //  scriptRecursionLimit

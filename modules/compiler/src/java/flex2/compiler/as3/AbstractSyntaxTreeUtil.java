@@ -48,6 +48,7 @@ public class AbstractSyntaxTreeUtil
     private static final String PRIVATE = "private".intern();
     private static final String PROTECTED = "protected".intern();
     private static final String PRIVATE_DOC_COMMENT = "<description><![CDATA[\n ]]></description>\n<private><![CDATA[ ]]></private>";
+    private static final String INHERIT_DOC_COMMENT = "<description><![CDATA[\n ]]></description>\n<inheritDoc><![CDATA[ ]]></inheritDoc>";
     private static final String PUBLIC = "public".intern();
     private static final String STATIC = "static".intern();
     private static final String VEC = "vec".intern();
@@ -676,6 +677,11 @@ public class AbstractSyntaxTreeUtil
     public static DocCommentNode generatePrivateDocComment(NodeFactory nodeFactory)
     {
         return generateDocComment(nodeFactory, PRIVATE_DOC_COMMENT);
+    }
+    
+    public static DocCommentNode generateInheritDocComment(NodeFactory nodeFactory)
+    {
+        return generateDocComment(nodeFactory, INHERIT_DOC_COMMENT);
     }
 
     public static Node generatePrivateVariable(NodeFactory nodeFactory,

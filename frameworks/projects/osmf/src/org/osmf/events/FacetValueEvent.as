@@ -31,23 +31,37 @@ package org.osmf.events
 	 */ 
 	public class FacetValueEvent extends Event
 	{
-		
 		/**
-		 * Dispatched when a value is added to a IFacet.
-		 */ 
+		 * The FacetValueEvent.VALUE_ADD constant defines the value
+		 * of the type property of the event object for a facetValueAdd
+		 * event.
+		 * 
+		 * @eventType VALUE_ADD
+		 **/
 		public static const VALUE_ADD:String = "facetValueAdd";
 		
 		/**
-		 * Dispatched when a value is removed from a IFacet.
-		 */ 
+		 * The FacetValueEvent.VALUE_REMOVE constant defines the value
+		 * of the type property of the event object for a facetValueRemove
+		 * event.
+		 * 
+		 * @eventType VALUE_REMOVE
+		 **/
 		public static const VALUE_REMOVE:String = "facetValueRemove";
 				
 		/**
-		 * Constructs a new FacetValueEvent, which signals changes to a Facets values.
-		 */ 
-		public function FacetValueEvent(identifier:IIdentifier, value:*, type:String)
+		 * Constructor.
+		 * 
+		 * @param type Event type.
+		 * @param bubbles Specifies whether the event can bubble up the display list hierarchy.
+ 		 * @param cancelable Specifies whether the behavior associated with the event can be prevented. 
+		 * @param identifier The unique identifier for this key in the facet's collection.
+		 * @param value The affected value.
+		 **/
+		public function FacetValueEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false, identifier:IIdentifier=null, value:*=null)
 		{		
-			super(type);
+			super(type, bubbles, cancelable);
+			
 			_identifier = identifier;			
 			_value = value;
 		}	
@@ -55,6 +69,11 @@ package org.osmf.events
 		/**
 		 * The unique identifier for this key in the facet's
 		 * collection.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		public function get identifier():IIdentifier
 		{
@@ -65,6 +84,11 @@ package org.osmf.events
 		 * For add events, the new value that has been added to the facet.
 		 * For remove event, the value removed from the facet.
 		 * For change events, the new value replacing the old value.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		public function get value():*
 		{
@@ -72,15 +96,14 @@ package org.osmf.events
 		}
 		
 		/**
-		 * @inheritDoc
+		 * @private
 		 */ 
 		override public function clone():Event
 		{
-			return new FacetValueEvent(_identifier, _value, type);
+			return new FacetValueEvent(type, bubbles, cancelable, _identifier, _value);
 		}
 				
 		private var _identifier:IIdentifier;			
 		private var _value:*;
-		
 	}
 }

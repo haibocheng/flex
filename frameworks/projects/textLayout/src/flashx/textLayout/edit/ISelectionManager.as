@@ -19,6 +19,7 @@ package flashx.textLayout.edit
 	
 	import flashx.textLayout.elements.TextFlow;
 	import flashx.textLayout.formats.ITextLayoutFormat;
+	import flashx.textLayout.elements.TextRange;
 
 	/** 
 	 * The ISelectionManager interface defines the interface for handling text selection.
@@ -168,7 +169,18 @@ package flashx.textLayout.edit
 		 * @playerversion AIR 1.5
  	 	 * @langversion 3.0
 		 */
-		function getSelectionState():SelectionState
+		function getSelectionState():SelectionState;
+		
+		/**
+		 * Sets the SelectionState object of the current selection.
+		 * 
+		 * @see flashx.textLayout.edit.SelectionState
+		 * 
+		 * @playerversion Flash 10
+		 * @playerversion AIR 1.5
+		 * @langversion 3.0
+		 */
+		function setSelectionState(state:SelectionState):void;
 
 		/** 
 		 * Redisplays the selection shapes. 
@@ -231,11 +243,12 @@ package flashx.textLayout.edit
 		function get currentSelectionFormat():SelectionFormat;
 
 		/**
-		 * Gets the character format attributes that are common to all characters in the current selection.
+		 * Gets the character format attributes that are common to all characters in the specified text range or current selection.
 		 * 
-		 * <p>Format attributes that do not have the same value for all characters in the selection are set to 
+		 * <p>Format attributes that do not have the same value for all characters in the specified element range or selection are set to 
 		 * <code>null</code> in the returned ITextLayoutFormat instance.</p>
 		 * 
+		 * @param range The optional range of text for which common attributes are requested. If null, the current selection is used. 
 		 * @return The common character style settings
 		 * 
 		 * @includeExample examples\SelectionManager_getCommonCharacterFormat.as -noswf
@@ -244,14 +257,15 @@ package flashx.textLayout.edit
 		 * @playerversion AIR 1.5
  		 * @langversion 3.0
 		 */
-		function getCommonCharacterFormat ():ITextLayoutFormat;
+		function getCommonCharacterFormat (range:TextRange=null):ITextLayoutFormat;
 		 
 		 /**
-		 * Gets the paragraph format attributes that are common to all paragraphs in the current selection.
+		 * Gets the paragraph format attributes that are common to all paragraphs in the specified text range or current selection.
 		 * 
-		 * <p>Format attributes that do not have the same value for all paragraphs in the selection are set to 
+		 * <p>Format attributes that do not have the same value for all paragraphs in the specified element range or selection are set to 
 		 * <code>null</code> in the returned ITextLayoutFormat instance.</p>
 		 * 
+		 * @param range The optional range of text for which common attributes are requested. If null, the current selection is used. 
 		 * @return The common paragraph style settings
 		 * 
 		 * @includeExample examples\SelectionManager_getCommonParagraphFormat.as -noswf
@@ -260,14 +274,15 @@ package flashx.textLayout.edit
 		 * @playerversion AIR 1.5
  		 * @langversion 3.0
 		 */
-		function getCommonParagraphFormat ():ITextLayoutFormat;
+		function getCommonParagraphFormat (range:TextRange=null):ITextLayoutFormat;
 		 
 		/**
-		 * Gets the container format attributes that are common to all containers in the current selection.
+		 * Gets the container format attributes that are common to all containers in the specified text range or current selection.
 		 * 
-		 * <p>Format attributes that do not have the same value for all containers in the selection are set to 
+		 * <p>Format attributes that do not have the same value for all containers in the specified element range or selection are set to 
 		 * <code>null</code> in the returned ITextLayoutFormat instance.</p>
 		 * 
+		 * @param range The optional range of text for which common attributes are requested. If null, the current selection is used. 
 		 * @return The common container style settings
 		 * 
 		 * @includeExample examples\SelectionManager_getCommonContainerFormat.as -noswf
@@ -276,7 +291,7 @@ package flashx.textLayout.edit
 		 * @playerversion AIR 1.5
  		 * @langversion 3.0
 		 */
-		function getCommonContainerFormat ():ITextLayoutFormat;
+		function getCommonContainerFormat (range:TextRange=null):ITextLayoutFormat;
 
 		/**
 		 * The editing mode. 

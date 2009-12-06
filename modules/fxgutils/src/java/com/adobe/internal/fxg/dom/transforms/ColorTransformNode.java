@@ -14,6 +14,7 @@ package com.adobe.internal.fxg.dom.transforms;
 import static com.adobe.fxg.FXGConstants.*;
 
 import com.adobe.fxg.FXGException;
+import com.adobe.internal.fxg.dom.DOMParserHelper;
 
 /**
  * @author Peter Farland
@@ -56,21 +57,21 @@ public class ColorTransformNode extends AbstractTransformNode implements Cloneab
     public void setAttribute(String name, String value)
     {
         if (FXG_ALPHAMULTIPLIER_ATTRIBUTE.equals(name))
-            alphaMultiplier = parseDouble(value);
+            alphaMultiplier = DOMParserHelper.parseDouble(this, value, name);
         else if (FXG_REDMULTIPLIER_ATTRIBUTE.equals(name))
-            redMultiplier = parseDouble(value);
+            redMultiplier = DOMParserHelper.parseDouble(this, value, name);
         else if (FXG_BLUEMULTIPLIER_ATTRIBUTE.equals(name))
-            blueMultiplier = parseDouble(value);
+            blueMultiplier = DOMParserHelper.parseDouble(this, value, name);
         else if (FXG_GREENMULTIPLIER_ATTRIBUTE.equals(name))
-            greenMultiplier = parseDouble(value);
+            greenMultiplier = DOMParserHelper.parseDouble(this, value, name);
         else if (FXG_ALPHAOFFSET_ATTRIBUTE.equals(name))
-            alphaOffset = parseDouble(value, MIN_OFFSET_INCLUSIVE, MAX_OFFSET_INCLUSIVE, alphaOffset);
+            alphaOffset = DOMParserHelper.parseDouble(this, value, name, MIN_OFFSET_INCLUSIVE, MAX_OFFSET_INCLUSIVE, alphaOffset);
         else if (FXG_REDOFFSET_ATTRIBUTE.equals(name))
-            redOffset = parseDouble(value, MIN_OFFSET_INCLUSIVE, MAX_OFFSET_INCLUSIVE, redOffset);
+            redOffset = DOMParserHelper.parseDouble(this, value, name, MIN_OFFSET_INCLUSIVE, MAX_OFFSET_INCLUSIVE, redOffset);
         else if (FXG_BLUEOFFSET_ATTRIBUTE.equals(name))
-            blueOffset = parseDouble(value, MIN_OFFSET_INCLUSIVE, MAX_OFFSET_INCLUSIVE, blueOffset);
+            blueOffset = DOMParserHelper.parseDouble(this, value, name, MIN_OFFSET_INCLUSIVE, MAX_OFFSET_INCLUSIVE, blueOffset);
         else if (FXG_GREENOFFSET_ATTRIBUTE.equals(name))
-            greenOffset = parseDouble(value, MIN_OFFSET_INCLUSIVE, MAX_OFFSET_INCLUSIVE, greenOffset);
+            greenOffset = DOMParserHelper.parseDouble(this, value, name, MIN_OFFSET_INCLUSIVE, MAX_OFFSET_INCLUSIVE, greenOffset);
     }
 
     //--------------------------------------------------------------------------

@@ -42,6 +42,11 @@ package org.osmf.metadata
 		 * Constructs a KeyValueMetadata that holds metadata, seeded with the data param. It is assumed that all metadata is in the 
 		 * dictionary at construction time, hence there is no setData method.  If metadata is added later to a piece of media, it
 		 * is assumed a new IMetadata object is added to the Media, or the original dictionary is kept around and modified.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		public function KeyValueFacet(ns:URL = null)		
 		{			
@@ -58,6 +63,11 @@ package org.osmf.metadata
 				
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function get namespaceURL():URL
 		{
@@ -66,11 +76,16 @@ package org.osmf.metadata
 				
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function getValue(identifier:IIdentifier):*
 		{
 			var objectIdentifier:ObjectIdentifier = identifier as ObjectIdentifier; 
-			if (identifier)
+			if (objectIdentifier)
 			{
 				return data[objectIdentifier.key];
 			}			
@@ -83,6 +98,11 @@ package org.osmf.metadata
 		 * the latter child key in the list is chosen.  Meaning, if two keys conflict in the 
 		 * children Facets, the facet closer to the end of the childrenFacets Vector is chosen.
 		 * Returns a new facet, with all merged values.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function merge(childFacet:IFacet):IFacet
 		{
@@ -108,6 +128,11 @@ package org.osmf.metadata
 		 * 
 		 * @param key the object to associate the value with
 		 * @param value the value to add  
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		public function addValue(key:ObjectIdentifier, value:Object):void
 		{
@@ -118,8 +143,22 @@ package org.osmf.metadata
 			{				
 				var event:Event
 					= oldValue === undefined
-						? new FacetValueEvent(key,value,FacetValueEvent.VALUE_ADD)
-						: new FacetValueChangeEvent(key,value,oldValue);
+						? new FacetValueEvent
+							( FacetValueEvent.VALUE_ADD
+							, false
+							, false
+							, key
+							, value
+							)
+						: new FacetValueChangeEvent
+							( FacetValueChangeEvent.VALUE_CHANGE
+							, false
+							, false
+							, key
+							, value
+							, oldValue
+							)
+						;
 						
 				dispatchEvent(event);
 			}
@@ -131,6 +170,11 @@ package org.osmf.metadata
 		 * 
 		 * @param key the key associated with the value to be removed.
 		 * @returns the removed item
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		public function removeValue(key:ObjectIdentifier):*
 		{
@@ -141,9 +185,11 @@ package org.osmf.metadata
 								
 				dispatchEvent
 					( new FacetValueEvent
-						( key
+						( FacetValueEvent.VALUE_REMOVE
+						, false
+						, false
+						, key
 						, value
-						, FacetValueEvent.VALUE_REMOVE
 						)
 					);
 			}
@@ -152,6 +198,11 @@ package org.osmf.metadata
 		
 		/**
 		 * @returns All of the keys used in this dictionary.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		public function get keys():Vector.<ObjectIdentifier>
 		{

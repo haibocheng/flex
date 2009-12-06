@@ -14,6 +14,7 @@ package flex2.compiler;
 import flex2.compiler.abc.*;
 import flex2.compiler.as3.BytecodeEmitter;
 import flex2.compiler.as3.binding.TypeAnalyzer;
+import flex2.compiler.common.CompilerConfiguration;
 import flex2.compiler.common.Configuration;
 import flex2.compiler.css.StyleConflictException;
 import flex2.compiler.css.Styles;
@@ -170,27 +171,30 @@ public final class SymbolTable
 
 	private static final NoType NoTypeClass = new NoType();
 
-	public SymbolTable(boolean bang, int dialect, boolean suppressWarnings, boolean debug,
-                       int targetAVM, ObjectList<String> use_namespaces)
+    /**
+     * This constructor is useful when an existing ContextStatics should be reused.
+     */
+	public SymbolTable(Configuration configuration, ContextStatics contextStatics)
 	{
 		classTable = new HashMap<String, AbcClass>(300);
 		styles = new Styles();
-		
-		perCompileData = new ContextStatics();
-		perCompileData.use_static_semantics = bang;
-		perCompileData.dialect = dialect;
+        perCompileData = contextStatics;
+
+        CompilerConfiguration compilerConfiguration = configuration.getCompilerConfiguration();
+		perCompileData.use_static_semantics = compilerConfiguration.strict();
+		perCompileData.dialect = compilerConfiguration.dialect();
 		perCompileData.languageID = Context.getLanguageID(Locale.getDefault().getCountry().toUpperCase());
-        perCompileData.setAbcVersion(targetAVM);
+        perCompileData.setAbcVersion(configuration.getTargetPlayerTargetAVM());
         
-        if (!debug)
+        if (!compilerConfiguration.generateDebugTags() && compilerConfiguration.omitTraceStatements())
         {
             // Leave out trace() statements when emitting bytecode
-            //perCompileData.omitTrace = true;
+            perCompileData.omitTrace = true;
         }
 
         // set up use_namespaces anytime before parsing begins
-        assert use_namespaces != null;
-        perCompileData.use_namespaces.addAll(use_namespaces);
+        assert configuration.getTargetPlayerRequiredUseNamespaces() != null;
+        perCompileData.use_namespaces.addAll(configuration.getTargetPlayerRequiredUseNamespaces());
 
 		ContextStatics.useVerboseErrors = false;
 		
@@ -205,22 +209,14 @@ public final class SymbolTable
 		rbNameTable = new HashMap<String, Source>();
 	}
 
-	public SymbolTable(ContextStatics contextStatics)
+    /**
+     * This constructor is useful when starting a fresh compile where
+     * a ContextStatics isn't available or doing a one-off compile
+     * where an existing ContextStatics shouldn't be poluted.
+     */
+	public SymbolTable(Configuration configuration)
 	{
-		classTable = new HashMap<String, AbcClass>(300);
-		styles = new Styles();
-		
-		perCompileData = contextStatics;
-		
-		qNameTable = new QNameMap<Source>(300);
-		multiNames = new HashMap<MultiName, QName>(1024);
-		Context cx = new Context(perCompileData);
-		emitter = new BytecodeEmitter(cx, null, false);
-		cx.setEmitter(emitter);
-		typeAnalyzer = new TypeAnalyzer(this);
-		
-		rbNames = new HashMap<String, QName[]>();
-		rbNameTable = new HashMap<String, Source>();
+        this(configuration, new ContextStatics());
 	}
 
 	private final Map<String, AbcClass> classTable;
@@ -453,20 +449,6 @@ public final class SymbolTable
     public boolean getSuppressWarningsIncremental()
     {
         return suppressWarnings;
-    }
-    
-    /**
-     * This pattern comes up often when creating a new SymbolTable
-     */
-    public static SymbolTable newSymbolTable(Configuration configuration)
-    {
-        return new SymbolTable(
-                      configuration.getCompilerConfiguration().strict(),
-                      configuration.getCompilerConfiguration().dialect(),
-                      configuration.getCompilerConfiguration().suppressWarningsInIncremental(),
-                      configuration.getCompilerConfiguration().generateDebugTags(),
-                      configuration.getTargetPlayerTargetAVM(),
-                      configuration.getTargetPlayerRequiredUseNamespaces());
     }
     
     public void register(String rbName, QName[] qNames, Source source)

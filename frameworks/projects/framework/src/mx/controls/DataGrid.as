@@ -4438,9 +4438,9 @@ public class DataGrid extends DataGridBase implements IIMESupport
         var dataGridEvent:DataGridEvent =
             new DataGridEvent(DataGridEvent.ITEM_EDIT_BEGINNING, false, true);
             // ITEM_EDIT events are cancelable
-        dataGridEvent.columnIndex = columnIndex;
+        dataGridEvent.columnIndex = Math.min(columnIndex, columns.length - 1);
         dataGridEvent.dataField = _columns[columnIndex].dataField;
-        dataGridEvent.rowIndex = rowIndex;
+        dataGridEvent.rowIndex = Math.min(rowIndex, collection.length - 1);
         dataGridEvent.itemRenderer = itemRenderer;
         if (!dispatchEvent(dataGridEvent))
             lastEditedItemPosition = { columnIndex: columnIndex, rowIndex: rowIndex };
@@ -4802,6 +4802,12 @@ public class DataGrid extends DataGridBase implements IIMESupport
         if (r && r != itemEditorInstance && 
                     (lastItemDown == r || itemRendererContains(lastItemDown, lastItemFocused)))
         {
+            // if lastItemDown != r, we clicked in one cell and dragged to another.
+            // if lastItemFocused is in that cell, then we give lastItemDown the
+            // edit session
+            if (lastItemDown != r)
+                r = lastItemDown;
+
             lastItemFocused = null;
             pos = itemRendererToIndices(r);
 

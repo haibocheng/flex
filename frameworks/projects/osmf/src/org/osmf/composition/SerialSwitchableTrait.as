@@ -23,8 +23,7 @@ package org.osmf.composition
 {
 	import flash.events.Event;
 	
-	import org.osmf.events.SwitchingChangeEvent;
-	import org.osmf.events.TraitEvent;
+	import org.osmf.events.SwitchEvent;
 	import org.osmf.media.IMediaTrait;
 	import org.osmf.traits.ISwitchable;
 	import org.osmf.traits.MediaTraitType;
@@ -32,25 +31,40 @@ package org.osmf.composition
 	/**
 	 * Dispatched when a stream switch is requested, completed, or failed.
 	 * 
-	 * @eventType org.osmf.events.SwitchingChangeEvent.SWITCHING_CHANGE
+	 * @eventType org.osmf.events.SwitchEvent.SWITCHING_CHANGE
 	 */
-	[Event(name="switchingChange",type="org.osmf.events.SwitchingChangeEvent")]
+	[Event(name="switchingChange",type="org.osmf.events.SwitchEvent")]
 	
 	/**
 	 * Dispatched when the number of indicies or associated bitrates have changed.
 	 * 
-	 * @eventType org.osmf.events.TraitEvent.INDICES_CHANGE
+	 * @eventType org.osmf.events.SwitchEvent.INDICES_CHANGE
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 10
+	 *  @playerversion AIR 1.0
+	 *  @productversion OSMF 1.0
 	 */
-	[Event(name="indicesChange",type="org.osmf.events.TraitEvent")]
+	[Event(name="indicesChange",type="org.osmf.events.SwitchEvent")]
 	
 	/**
 	 * The Composite Serial switchable trait will aggregate switchable traits, acting as a single
 	 * switchable trait.  This trait will match settinngs between child traits when switching between children.
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 10
+	 *  @playerversion AIR 1.0
+	 *  @productversion OSMF 1.0
 	 */ 
 	internal class SerialSwitchableTrait extends CompositeMediaTraitBase implements ISwitchable, IReusable
 	{
 		/**
 		 * Constructs a Composite Serial switchable trait.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		public function SerialSwitchableTrait(traitAggregator:TraitAggregator)
 		{
@@ -59,6 +73,11 @@ package org.osmf.composition
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 	
 		public function get autoSwitch():Boolean
 		{
@@ -67,6 +86,11 @@ package org.osmf.composition
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		public function set autoSwitch(value:Boolean):void
 		{
@@ -75,6 +99,11 @@ package org.osmf.composition
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		public function get currentIndex():int
 		{
@@ -83,6 +112,11 @@ package org.osmf.composition
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		public function getBitrateForIndex(index:int):Number
 		{
@@ -91,6 +125,11 @@ package org.osmf.composition
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		public function get maxIndex():int
 		{
@@ -99,6 +138,11 @@ package org.osmf.composition
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		public function set maxIndex(value:int):void
 		{			
@@ -107,6 +151,11 @@ package org.osmf.composition
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		public function get switchUnderway():Boolean
 		{
@@ -115,6 +164,11 @@ package org.osmf.composition
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		public function switchTo(index:int):void
 		{	
@@ -123,7 +177,7 @@ package org.osmf.composition
 		
 		public function prepare():void
 		{
-			//nothing to do here, required for IReusable.
+			attach();
 		}
 		
 		private function get switchable():ISwitchable
@@ -136,6 +190,11 @@ package org.osmf.composition
 		 * Adds the child as the current listened child.  Sets the autoswitch, property to 
 		 * carry over from the previous child.  If autoswitch is false, attempts to match the bitrate
 		 * for the next media element.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		override protected function processAggregatedChild(child:IMediaTrait):void
 		{		
@@ -144,38 +203,43 @@ package org.osmf.composition
 			{				
 				switchable.autoSwitch = currentChild.autoSwitch;
 				if (!currentChild.autoSwitch)
-				{
+				{					
 					for (var itr:Number = 0; itr <= ISwitchable(child).maxIndex; itr++)
-					{
-						if (switchable.getBitrateForIndex(itr) == getBitrateForIndex(currentIndex) ||
-							itr == maxIndex)
-						{																
-							switchable.switchTo(itr);	
-							break;	
-						}
-						else if (switchable.getBitrateForIndex(itr) > getBitrateForIndex(currentIndex))							
-						{										
+					{						
+						if (switchable.getBitrateForIndex(itr) > getBitrateForIndex(currentIndex))							
+						{														
 							switchable.switchTo(Math.max(itr-1, 0));	
 							break;	
-						}				 
+						}	
+						else if (switchable.getBitrateForIndex(itr) == getBitrateForIndex(currentIndex) ||
+							itr == switchable.maxIndex)
+						{																								
+							switchable.switchTo(itr);	
+							break;	
+						}									 
 					}					
 				}
-				currentChild.removeEventListener(SwitchingChangeEvent.SWITCHING_CHANGE,  redispatchEvent);	
-				currentChild.removeEventListener(TraitEvent.INDICES_CHANGE, redispatchEvent);										
+				currentChild.removeEventListener(SwitchEvent.SWITCHING_CHANGE,  redispatchEvent);	
+				currentChild.removeEventListener(SwitchEvent.INDICES_CHANGE, redispatchEvent);										
 			}	
 										
 			currentChild = switchable;
-			child.addEventListener(SwitchingChangeEvent.SWITCHING_CHANGE,  redispatchEvent);	
-			child.addEventListener(TraitEvent.INDICES_CHANGE, redispatchEvent);					
+			child.addEventListener(SwitchEvent.SWITCHING_CHANGE,  redispatchEvent);	
+			child.addEventListener(SwitchEvent.INDICES_CHANGE, redispatchEvent);					
 		}
 			
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		override protected function processUnaggregatedChild(child:IMediaTrait):void
 		{				
-			child.removeEventListener(SwitchingChangeEvent.SWITCHING_CHANGE,  redispatchEvent);	
-			child.removeEventListener(TraitEvent.INDICES_CHANGE, redispatchEvent);	
+			child.removeEventListener(SwitchEvent.SWITCHING_CHANGE,  redispatchEvent);	
+			child.removeEventListener(SwitchEvent.INDICES_CHANGE, redispatchEvent);	
 		}
 		
 		private function redispatchEvent(event:Event):void

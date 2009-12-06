@@ -17,13 +17,13 @@ import flash.events.Event;
 import flash.events.FocusEvent;
 
 import mx.accessibility.AccImpl;
+import mx.accessibility.AccConst;
 import mx.core.UIComponent;
 import mx.core.mx_internal;
 
 import spark.components.supportClasses.SkinnableTextBase;
 
 use namespace mx_internal;
-
 
 /**
  *  SkinnableTextBaseAccImpl is a subclass of AccessibilityImplementation
@@ -37,22 +37,6 @@ use namespace mx_internal;
 public class SkinnableTextBaseAccImpl extends AccImpl
 {
     include "../core/Version.as";
-
-    //--------------------------------------------------------------------------
-    //
-    //  Class constants
-    //
-    //--------------------------------------------------------------------------
-
-    /**
-     *  @private
-     */
-    private static const STATE_SYSTEM_READONLY:uint = 0x00000040;
-
-    /**
-     *  @private
-     */
-    private static const EVENT_OBJECT_VALUECHANGE:uint = 0x800E;
 
     //--------------------------------------------------------------------------
     //
@@ -113,7 +97,7 @@ public class SkinnableTextBaseAccImpl extends AccImpl
     {
         super(master);
 
-        role = 0x2a; // ROLE_SYSTEM_TEXT
+        role = AccConst.ROLE_SYSTEM_TEXT;
     }
 
     //--------------------------------------------------------------------------
@@ -132,8 +116,98 @@ public class SkinnableTextBaseAccImpl extends AccImpl
      */
     override protected function get eventsToHandle():Array
     {
-        return super.eventsToHandle.concat(["change"]);
+        return super.eventsToHandle.concat([ Event.CHANGE ]);
     }
+
+    //--------------------------------------------------------------------------
+    //
+    //  Properties: ISimpleTextSelection
+    //
+    //--------------------------------------------------------------------------
+
+    //----------------------------------
+    //  selectionActiveIndex
+    //----------------------------------
+
+    /**
+     *  A character position, relative to the beginning of the
+     *  <code>text</code> String of the SkinnableTextBase,
+	 *  specifying the end of the selection
+     *  that moves when the selection is extended with the arrow keys.
+     *
+     *  <p>The active position may be either the start
+     *  or the end of the selection.</p>
+     *
+     *  <p>For example, if you drag-select from position 12 to position 8,
+     *  then <code>selectionAnchorPosition</code> will be 12
+     *  and <code>selectionActivePosition</code> will be 8,
+     *  and when you press Left-Arrow <code>selectionActivePosition</code>
+     *  will become 7.</p>
+     *
+     *  <p>A value of -1 indicates "not set".</p>
+	 *
+	 *  <p>In Player 10.1 and later, and AIR 2.0 and later,
+	 *  an AccessibilityImplementation can implement
+	 *  <code>selectionAnchorIndex</code> and <code>selectionAnchorIndex</code>
+	 *  in order to make an accessibility client aware of the text selection
+	 *  in TLF text via Adobe's ISimpleTextSelection COM interface.</p>
+     *
+     *  @default -1
+     *
+	 *  @see spark.accessibility.SkinnableTextBaseAccImpl#selectionAnchorIndex
+     *  @see spark.components.SkinnableTextBase#selectionActivePosition
+     *  
+     *  @langversion 3.0
+     *  @playerversion Flash 10.1
+     *  @playerversion AIR 2.0
+     *  @productversion Flex 4
+     */
+	public function get selectionActiveIndex():int
+	{
+		return SkinnableTextBase(master).selectionActivePosition;
+	}
+
+    //----------------------------------
+    //  selectionAnchorIndex
+    //----------------------------------
+
+    /**
+     *  A character position, relative to the beginning of the
+     *  <code>text</code> String of the SkinnableTextBase,
+	 *  specifying the end of the selection
+     *  that stays fixed when the selection is extended with the arrow keys.
+     *
+     *  <p>The anchor position may be either the start
+     *  or the end of the selection.</p>
+     *
+     *  <p>For example, if you drag-select from position 12 to position 8,
+     *  then <code>selectionAnchorPosition</code> will be 12
+     *  and <code>selectionActivePosition</code> will be 8,
+     *  and when you press Left-Arrow <code>selectionActivePosition</code>
+     *  will become 7.</p>
+     *
+     *  <p>A value of -1 indicates "not set".</p>
+	 *
+	 *  <p>In Player 10.1 and later, and AIR 2.0 and later,
+	 *  an AccessibilityImplementation can implement
+	 *  <code>selectionAnchorIndex</code> and <code>selectionAnchorIndex</code>
+	 *  in order to make an accessibility client aware of the text selection
+	 *  in TLF text via Adobe's ISimpleTextSelection COM interface.</p>
+     *
+     *  @default -1
+     *
+	 *  @see spark.accessibility.SkinnableTextBaseAccImpl#selectionActiveIndex
+     *  @see spark.components.SkinnableTextBase#selectionAnchorPosition
+     *  
+     *  @langversion 3.0
+     *  @playerversion Flash 10.1
+     *  @playerversion AIR 2.0
+     *  @productversion Flex 4
+     */
+	public function get selectionAnchorIndex():int
+	{
+		return SkinnableTextBase(master).selectionAnchorPosition;
+	}
 
     //--------------------------------------------------------------------------
     //
@@ -168,7 +242,7 @@ public class SkinnableTextBaseAccImpl extends AccImpl
     {
         var accState:uint = getState(childID);
         if (!SkinnableTextBase(master).editable)
-            accState |= STATE_SYSTEM_READONLY;
+            accState |= AccConst.STATE_SYSTEM_READONLY;
         return accState;
     }
 
@@ -192,10 +266,10 @@ public class SkinnableTextBaseAccImpl extends AccImpl
 
         switch (event.type)
         {
-            case "change":
+            case Event.CHANGE:
             {
                 Accessibility.sendEvent(master, 0,
-                                        EVENT_OBJECT_VALUECHANGE, true);
+                                        AccConst.EVENT_OBJECT_VALUECHANGE, true);
                 break;
             }
         }

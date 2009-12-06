@@ -11,6 +11,7 @@
 
 package com.adobe.internal.fxg.dom.richtext;
 
+import com.adobe.fxg.FXGException;
 import com.adobe.fxg.dom.FXGNode;
 import com.adobe.internal.fxg.dom.DelegateNode;
 import com.adobe.internal.fxg.dom.TextNode;
@@ -33,7 +34,11 @@ public class TextPropertyNode extends DelegateNode
         {
             ((TextNode)delegate).addTextProperty(getNodeName(), (TextNode)child);
         }
-        else
+        else if (this instanceof TextPropertyNode && !(delegate instanceof TextNode))
+        {
+            throw new FXGException(child.getStartLine(), child.getStartColumn(), "InvalidChildNode",  getNodeName(), delegate.getNodeName());                        
+        }
+        else    
         {
             super.addChild(child);
         }

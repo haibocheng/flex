@@ -16,14 +16,11 @@ import flash.utils.getTimer;
 import flash.xml.XMLDocument;
 import flash.xml.XMLNode;
 
-import mx.collections.IList;
-import mx.core.mx_internal;
 import mx.logging.ILogger;
 import mx.logging.Log;
 import mx.rpc.soap.types.ICustomSOAPType;
-import mx.rpc.wsdl.WSDLMessagePart;
-import mx.rpc.wsdl.WSDLConstants;
 import mx.rpc.wsdl.WSDLEncoding;
+import mx.rpc.wsdl.WSDLMessagePart;
 import mx.rpc.wsdl.WSDLOperation;
 import mx.rpc.xml.ContentProxy;
 import mx.rpc.xml.DecodingContext;
@@ -31,10 +28,10 @@ import mx.rpc.xml.SchemaConstants;
 import mx.rpc.xml.SchemaDatatypes;
 import mx.rpc.xml.TypeIterator;
 import mx.rpc.xml.XMLDecoder;
-import mx.utils.ObjectProxy;
-import mx.utils.object_proxy;
 import mx.utils.StringUtil;
+import mx.utils.URLUtil;
 import mx.utils.XMLUtil;
+import mx.utils.object_proxy;
 
 use namespace object_proxy;
 
@@ -864,7 +861,26 @@ public class SOAPDecoder extends XMLDecoder implements ISOAPDecoder
         _referencesResolved = false;
         _elementsWithId = null;
     }
-    
+
+    /**
+     * Determines whether a name is in an internal (SOAP or XSD specific)
+     * namespace (as opposed to a user's namespace).
+     * @private 
+     */
+    override protected function isInternalNamespace(name:QName):Boolean
+    {
+        var uri:String = (name != null) ? name.uri : null;
+        if (uri)
+        {
+            if (URLUtil.urisEqual(uri, soapConstants.encodingURI) ||
+                URLUtil.urisEqual(uri, soapConstants.envelopeURI))
+            {
+                return true;
+            }
+        }
+
+        return super.isInternalNamespace(name);
+    }
 
     /**
      * Overrides XMLDecoder.parseValue to allow us to detect a legacy case
@@ -891,7 +907,6 @@ public class SOAPDecoder extends XMLDecoder implements ISOAPDecoder
         return super.parseValue(name, value);
     }
     
-    
     /**
      * Overrides XMLDecoder.preProcessXML to allow us to handle multi-ref SOAP
      * encoding.
@@ -915,12 +930,13 @@ public class SOAPDecoder extends XMLDecoder implements ISOAPDecoder
      */
     private function resolveReferences(root:XML, cleanupElementsWithIdCache:Boolean=true):void
     {
-        if (_referencesResolved) return;
-        
+        if (_referencesResolved)
+            return;
+
         var index:uint = 0;
         if (_elementsWithId == null)
             _elementsWithId = document..*.(attribute("id").length() > 0);
-    
+
         // Note that we must consider all child nodes here, not just elements
         // as we need the accurate index in terms of child XML nodes to replace
         // a node with the referent.
@@ -928,39 +944,43 @@ public class SOAPDecoder extends XMLDecoder implements ISOAPDecoder
         {
             if (child.nodeKind() == "element")
             {
-                var element:XML = child;
-                var href:String = getAttributeFromNode("href", element);
+                var href:String = getAttributeFromNode("href", child);
                 if (href != null)
                 {
                     var hashPosition:int = href.indexOf("#");
                     if (hashPosition >= 0)
                         href = href.substring(hashPosition + 1);
-    
+
                     // Find the first element with a matching id attribute 
                     var matches:XMLList = _elementsWithId.(@id == href);
                     var referent:XML;
-                    
+
                     if (matches.length() > 0)
                         referent = matches[0];
                     else
                         throw new Error("The element referenced by id '" + href + "' was not found.");
-                        
-                    referent.setName(element.name());
-                    
+
+                    referent.setName(child.name());
+
                     if (referent.hasComplexContent())
                         resolveReferences(referent, false);
-                        
+
+                    // Replace the reference with the referent
                     root.replace(index, referent);
+
+                    // Then remove the id attribute from replaced value
+                    referent = root.child(index)[0];
+                    delete referent.@id;
                 }
-                else if (element.hasComplexContent())
+                else if (child.hasComplexContent())
                 {
-                    resolveReferences(element, false);
+                    resolveReferences(child, false);
                 }
             }
 
             index++;
         }
-        
+
         if (cleanupElementsWithIdCache)
         {
             _elementsWithId = null;

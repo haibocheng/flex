@@ -18,9 +18,11 @@ package flashx.textLayout.edit {
 	
 	import flashx.textLayout.debug.assert;
 	import flashx.textLayout.elements.FlowLeafElement;
+	import flashx.textLayout.elements.TextFlow;
 	import flashx.textLayout.elements.TextRange;
 	import flashx.textLayout.formats.BlockProgression;
 	import flashx.textLayout.formats.IMEStatus;
+	import flashx.textLayout.formats.ITextLayoutFormat;
 	import flashx.textLayout.operations.ApplyElementUserStyleOperation;
 	import flashx.textLayout.operations.InsertTextOperation;
 	import flashx.textLayout.tlf_internal;
@@ -38,6 +40,7 @@ package flashx.textLayout.edit {
 		/** Maintain position of text we've inserted while in the middle of processing IME. */
 		private var _imeAnchorPosition:int;		// start of IME text
 		private var _imeLength:int;				// length of IME text
+		private var _closing:Boolean;
 		CONFIG::debug { 
 			private var _imeOperation:IOperation; 	// IME in-progress edits - used for debugging to confirm that operation we're undoing is the one we did via IME
 		}
@@ -46,6 +49,7 @@ package flashx.textLayout.edit {
 		{
 			_editManager = editManager;
 			_imeAnchorPosition = _editManager.absoluteStart;
+			_closing = false;
 			if (_editManager.undoManager == null)
 			{
 				_undoManager = new UndoManager();
@@ -134,9 +138,9 @@ package flashx.textLayout.edit {
 
 			var imeValue:String;
 			
-			// Currently we're replacing the entire string each time, might be we could use the compositionStartIndex, endIndex &
-			// only update what changed.
-			var selState:SelectionState = new SelectionState(_editManager.textFlow, _imeAnchorPosition, _imeAnchorPosition + _imeLength);
+			// Insert the supplied string, using the current editing format.
+			var pointFormat:ITextLayoutFormat = _editManager.getSelectionState().pointFormat;
+			var selState:SelectionState = new SelectionState(_editManager.textFlow, _imeAnchorPosition, _imeAnchorPosition + _imeLength, pointFormat);
 			
 			_editManager.beginIMEOperation();
 			
@@ -195,8 +199,10 @@ package flashx.textLayout.edit {
 		
 		private function endIMESession():void
 		{
-			if (!_editManager)
+			if (!_editManager || _closing)
 				return;
+			
+			_closing = true;
 			
 			// Undo the IME operation. We're going to re-add the text, without all the special attributes, as part of handling
 			// the textInput event that comes next.
@@ -222,15 +228,18 @@ package flashx.textLayout.edit {
 		
 		public function getTextBounds(startIndex:int, endIndex:int):Rectangle
 		{
-		//	trace("getTextBounds", startIndex, endIndex);
+			var boundsResult:Array = GeometryUtil.getHighlightBounds(new TextRange(_editManager.textFlow, startIndex, endIndex));
+		    //bail out if we don't have any results to show
+			if(boundsResult.length == 0)
+				return new Rectangle(0,0,0,0);
 			
-			var boundsResult:Array = GeometryUtil.getHighlightBounds(new TextRange(_editManager.textFlow, _imeAnchorPosition + startIndex, _imeAnchorPosition + endIndex));
-		    var bounds:Rectangle = boundsResult[0].rect; 
+			var bounds:Rectangle = boundsResult[0].rect; 
 		    var textLine:TextLine = boundsResult[0].textLine; 
 		    var resultTopLeft:Point = textLine.localToGlobal(bounds.topLeft);
 		    var resultBottomRight:Point = textLine.localToGlobal(bounds.bottomRight);
-		   // trace("getTextBounds returning", resultTopLeft.x, resultTopLeft.y, resultBottomRight.x - resultTopLeft.x, resultBottomRight.y - resultTopLeft.y);
-		    return new Rectangle(resultTopLeft.x, resultTopLeft.y, resultBottomRight.x - resultTopLeft.x, resultBottomRight.y - resultTopLeft.y);
+			//trace("getTextBounds returning", resultTopLeft.x, resultTopLeft.y, resultBottomRight.x - resultTopLeft.x, resultBottomRight.y - resultTopLeft.y);
+			
+			return new Rectangle(resultTopLeft.x, resultTopLeft.y, resultBottomRight.x - resultTopLeft.x, resultBottomRight.y - resultTopLeft.y);
 		}
 		
 		public function get compositionStartIndex():int
@@ -250,5 +259,54 @@ package flashx.textLayout.edit {
 		//	trace("verticalTextLayout");
 			return _editManager.textFlow.computedFormat.blockProgression == BlockProgression.RL;
 		}
+
+		public function get selectionActiveIndex():int
+		{
+			//trace("selectionActiveIndex");
+			return _editManager.activePosition;
+		}
+		
+		public function get selectionAnchorIndex():int
+		{
+			//trace("selectionAnchorIndex");
+			return _editManager.anchorPosition;
+		}
+		
+		public function selectRange(anchorIndex:int, activeIndex:int):void
+		{
+			_editManager.selectRange(anchorIndex, activeIndex);
+		}
+
+		/** 
+		 * Gets the specified range of text from a component implementing ITextSupport.
+		 * To retrieve all text in the component, do not specify values for <code>startIndex</code> and <code>endIndex</code>.
+		 * Components which wish to support inline IME or web searchability should call into this method.
+		 * Components overriding this method should ensure that the default values of <code>-1</code> 
+		 * for <code>startIndex</code> and <code>endIndex</code> are supported.
+		 * 
+		 * @playerversion Flash 10.0
+		 * @langversion 3.0
+		 */
+		public function getTextInRange(startIndex:int, endIndex:int):String
+		{
+			//trace("getTextInRange");
+			// Check for valid indices
+			var textFlow:TextFlow = _editManager.textFlow;
+			if (startIndex < -1 || endIndex < -1 || startIndex > (textFlow.textLength - 1) || endIndex > (textFlow.textLength - 1))
+				return null;
+			
+			// Make sure they're in the right order
+			if (endIndex < startIndex)
+			{
+				var tempIndex:int = endIndex;
+				endIndex = startIndex;
+				startIndex = tempIndex;
+			}
+			
+			if (startIndex == -1)
+				startIndex = 0;
+			
+			return textFlow.getText(startIndex, endIndex);
+		} 
 	}
 }

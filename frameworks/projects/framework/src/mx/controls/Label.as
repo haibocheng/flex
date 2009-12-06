@@ -158,7 +158,7 @@ include "../styles/metadata/TextStyles.as"
 [Exclude(name="focusPane", kind="property")]
 [Exclude(name="mouseFocusEnabled", kind="property")]
 [Exclude(name="tabEnabled", kind="property")]
-[Exclude(name="baseColor", kind="style")]
+[Exclude(name="chromeColor", kind="style")]
 [Exclude(name="focusBlendMode", kind="style")]
 [Exclude(name="focusSkin", kind="style")]
 [Exclude(name="focusThickness", kind="style")]
@@ -168,6 +168,8 @@ include "../styles/metadata/TextStyles.as"
 //--------------------------------------
 //  Other metadata
 //--------------------------------------
+
+[AccessibilityClass(implementation="mx.accessibility.LabelAccImpl")]
 
 [DefaultBindingProperty(destination="text")]
 
@@ -349,6 +351,18 @@ public class Label extends UIComponent
         trace(myLabel.text);
             This is bold.
     */
+
+    //--------------------------------------------------------------------------
+    //
+    //  Class mixins
+    //
+    //--------------------------------------------------------------------------
+
+    /**
+     *  @private
+     *  Placeholder for mixin by LabelAccImpl.
+     */
+    mx_internal static var createAccessibilityImplementation:Function;
 
     //--------------------------------------------------------------------------
     //
@@ -1284,6 +1298,16 @@ public class Label extends UIComponent
     //
     //--------------------------------------------------------------------------
 
+
+    /**
+     *  @private
+     */
+    override protected function initializeAccessibility():void
+    {
+        if (Label.createAccessibilityImplementation != null)
+            Label.createAccessibilityImplementation(this);
+    }
+    
     /**
      *  @private
      */

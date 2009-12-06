@@ -46,18 +46,20 @@ package flashx.textLayout.accessibility
 	import flash.accessibility.Accessibility;
 	import flash.accessibility.AccessibilityImplementation;
 	import flash.accessibility.AccessibilityProperties;
-    import flash.display.DisplayObject;
-    import flash.events.Event;
+	import flash.display.DisplayObject;
+	import flash.events.Event;
 	
-	import flashx.textLayout.debug.assert;	
-    import flashx.textLayout.elements.FlowElement;
-    import flashx.textLayout.elements.FlowGroupElement;
-    import flashx.textLayout.elements.FlowLeafElement;
-    import flashx.textLayout.elements.ParagraphElement;
-    import flashx.textLayout.elements.TextFlow;
-    import flashx.textLayout.edit.EditingMode;
-    import flashx.textLayout.edit.ISelectionManager;
-    import flashx.textLayout.events.CompositionCompleteEvent;
+	import flashx.textLayout.edit.EditingMode;
+	import flashx.textLayout.edit.ISelectionManager;
+	import flashx.textLayout.elements.FlowElement;
+	import flashx.textLayout.elements.FlowLeafElement;
+	import flashx.textLayout.elements.GlobalSettings;
+	import flashx.textLayout.elements.ParagraphElement;
+	import flashx.textLayout.elements.TextFlow;
+	import flashx.textLayout.events.CompositionCompleteEvent;
+	import flashx.textLayout.tlf_internal;
+	
+	use namespace tlf_internal;
     //TODO this is in text_edit... which violates MVC yet again... what to do?
     //import flashx.textLayout.events.SelectionEvent;
     
@@ -394,6 +396,58 @@ package flashx.textLayout.accessibility
    			}
    			return rslt;
 		}
+		
+		/** 
+		 * The zero-based character index value of the first character in the current selection.
+		 * Components which wish to support inline IME or Accessibility should call into this method.
+		 *
+		 * @return the index of the character at the anchor end of the selection, or <code>-1</code> if no text is selected.
+		 * 
+		 * @playerversion Flash 10.0
+		 * @langversion 3.0
+		 */
+		public function get selectionActiveIndex():int
+		{
+			var selMgr:ISelectionManager = textFlow.interactionManager;
+			var selIndex:int = -1;
+			if(selMgr && selMgr.editingMode != EditingMode.READ_ONLY)
+			{
+				selIndex = selMgr.activePosition;
+			}
+			
+			return selIndex;
+		}
+		
+		/** 
+		 * The zero-based character index value of the last character in the current selection.
+		 * Components which wish to support inline IME or Accessibility should call into this method.
+		 *
+		 * @return the index of the character at the active end of the selection, or <code>-1</code> if no text is selected.
+		 * 
+		 * @playerversion Flash 10.0
+		 * @langversion 3.0
+		 */
+		public function get selectionAnchorIndex():int
+		{
+			var selMgr:ISelectionManager = textFlow.interactionManager;
+			var selIndex:int = -1;
+			if(selMgr && selMgr.editingMode != EditingMode.READ_ONLY)
+			{
+				selIndex = selMgr.anchorPosition;
+			}
+			
+			return selIndex;
+		}
+		
+		/** Enable search index for Ichabod
+		 * Returns the entire text of the TextFlow, or null if search index is not enabled
+		 * @see GlobalSettings.searchIndexEnabled
+		 */
+		public function get searchText():String
+		{
+			return GlobalSettings.enableSearch ? textFlow.getText() : null;
+		}
+		
 	}
 }
 

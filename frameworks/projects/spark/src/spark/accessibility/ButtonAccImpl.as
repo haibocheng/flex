@@ -18,6 +18,7 @@ import flash.events.KeyboardEvent;
 import flash.ui.Keyboard;
 
 import mx.accessibility.AccImpl;
+import mx.accessibility.AccConst;
 import mx.core.UIComponent;
 import mx.core.mx_internal;
 
@@ -39,27 +40,6 @@ use namespace mx_internal;
 public class ButtonAccImpl extends AccImpl
 {
     include "../core/Version.as";
-
-    //--------------------------------------------------------------------------
-    //
-    //  Class constants
-    //
-    //--------------------------------------------------------------------------
-
-    /**
-     *  @private
-     */
-    private static const STATE_SYSTEM_PRESSED:uint = 0x00000008;
-
-    /**
-     *  @private
-     */
-    private static const EVENT_OBJECT_NAMECHANGE:uint = 0x800C;
-
-    /**
-     *  @private
-     */
-    private static const EVENT_OBJECT_STATECHANGE:uint = 0x800A;
 
     //--------------------------------------------------------------------------
     //
@@ -121,7 +101,7 @@ public class ButtonAccImpl extends AccImpl
     {
         super(master);
 
-        role = 0x2B; // ROLE_SYSTEM_PUSHBUTTON
+        role = AccConst.ROLE_SYSTEM_PUSHBUTTON;
     }
 
     //--------------------------------------------------------------------------
@@ -154,8 +134,6 @@ public class ButtonAccImpl extends AccImpl
      *  IAccessible method for returning the state of the Button.
      *  States are predefined for all the components in MSAA.
      *  Values are assigned to each state.
-     *  Depending upon the button being pressed or released,
-     *  a value is returned.
      *
      *  @param childID uint
      *
@@ -164,9 +142,6 @@ public class ButtonAccImpl extends AccImpl
     override public function get_accState(childID:uint):uint
     {
         var accState:uint = getState(childID);
-
-        if (master is ToggleButtonBase && ToggleButtonBase(master).selected)
-            accState |= STATE_SYSTEM_PRESSED;
 
         return accState;
     }
@@ -253,14 +228,14 @@ public class ButtonAccImpl extends AccImpl
         {
             case "click":
             {
-                Accessibility.sendEvent(master, 0, EVENT_OBJECT_STATECHANGE);
+                Accessibility.sendEvent(master, 0, AccConst.EVENT_OBJECT_STATECHANGE);
                 Accessibility.updateProperties();
                 break;
             }
 
             case "labelChanged":
             {
-                Accessibility.sendEvent(master, 0, EVENT_OBJECT_NAMECHANGE);
+                Accessibility.sendEvent(master, 0, AccConst.EVENT_OBJECT_NAMECHANGE);
                 Accessibility.updateProperties();
                 break;
             }

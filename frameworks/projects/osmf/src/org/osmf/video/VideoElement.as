@@ -1,4 +1,4 @@
-/*****************************************************
+﻿/*****************************************************
 *  
 *  Copyright 2009 Adobe Systems Incorporated.  All Rights Reserved.
 *  
@@ -21,34 +21,28 @@
 *****************************************************/
 package org.osmf.video
 {
+	import flash.events.ErrorEvent;
+	import flash.events.Event;
+	import flash.events.IOErrorEvent;
 	import flash.events.NetStatusEvent;
+	import flash.events.SecurityErrorEvent;
+	import flash.events.StatusEvent;
 	import flash.media.Video;
 	import flash.net.NetStream;
+	import flash.utils.ByteArray;
 	
-	CONFIG::FLASH_10_1
-	{
-	import flash.system.SystemUpdaterType;
-	import flash.system.SystemUpdater;
-	import flash.net.drm.DRMContentData;	
-	import flash.events.DRMStatusEvent;
-	import org.osmf.traits.IContentProtectable;
-	import org.osmf.net.NetStreamContentProtectableTrait;
-	import flash.events.DRMErrorEvent;
-	import flash.events.DRMAuthenticateEvent;
-	import org.osmf.metadata.KeyValueFacet;
-	import flash.events.DRMStatusEvent;
-	import org.osmf.metadata.ObjectIdentifier;
-	import flash.events.DRMErrorEvent;
-	import flash.events.DRMStatusEvent;
-	import org.osmf.net.NetStreamContentProtectableTrait;
-	}
-	
+	import org.osmf.events.ContentProtectionEvent;
 	import org.osmf.events.MediaError;
 	import org.osmf.events.MediaErrorCodes;
 	import org.osmf.events.MediaErrorEvent;
 	import org.osmf.media.IMediaResource;
 	import org.osmf.media.IURLResource;
 	import org.osmf.media.LoadableMediaElement;
+	import org.osmf.metadata.KeyValueFacet;
+	import org.osmf.metadata.MetadataNamespaces;
+	import org.osmf.metadata.ObjectIdentifier;
+	import org.osmf.metadata.TemporalFacet;
+	import org.osmf.metadata.TemporalFacetEvent;
 	import org.osmf.net.NetClient;
 	import org.osmf.net.NetLoadedContext;
 	import org.osmf.net.NetLoader;
@@ -63,42 +57,31 @@ package org.osmf.video
 	import org.osmf.net.dynamicstreaming.DynamicNetStream;
 	import org.osmf.net.dynamicstreaming.DynamicStreamingResource;
 	import org.osmf.net.dynamicstreaming.NetStreamSwitchableTrait;
+	import org.osmf.traits.IContentProtectable;
 	import org.osmf.traits.ILoadable;
 	import org.osmf.traits.MediaTraitType;
 	import org.osmf.traits.SeekableTrait;
 	import org.osmf.traits.SpatialTrait;
 	import org.osmf.traits.ViewableTrait;
 	import org.osmf.utils.MediaFrameworkStrings;
-	import flash.events.Event;
 
-	import org.osmf.traits.PlayableTrait;
-	import org.osmf.traits.IPlayable;
-	import org.osmf.media.IContainerGateway;
-
-	import flash.utils.ByteArray;
-	import org.osmf.metadata.MetadataNamespaces;
-	import flash.events.IOErrorEvent;
-	import flash.events.SecurityErrorEvent;
-	import flash.events.ErrorEvent;
-	import org.osmf.metadata.TemporalFacet;
-	import org.osmf.metadata.TemporalFacetEvent;
 	
-	import org.osmf.events.TraitEvent;
-	import flash.events.StatusEvent;
+	CONFIG::FLASH_10_1
+	{
+	import flash.events.DRMAuthenticateEvent;
+	import flash.events.DRMErrorEvent;
+	import flash.events.DRMStatusEvent;
+	import flash.net.drm.DRMContentData;	
+	import flash.system.SystemUpdaterType;
+	import flash.system.SystemUpdater;
 	
-	import org.osmf.traits.IContentProtectable;
-	
-	import org.osmf.events.AuthenticationFailedEvent;
-	import org.osmf.events.AuthenticationCompleteEvent;
-	
-	
+	import org.osmf.net.NetStreamContentProtectableTrait;
+	}
 	
 	/**
 	* VideoElement is a media element specifically created for video playback.
 	* It supports both streaming and progressive formats.
-	* <p>The VideoElement has IAudible, IBufferable, IPlayable, IPausable,
-	* ISeekable, ISpatial, ITemporal, and IViewable traits.
-	* It uses a NetLoader class to load and unload its media.
+	* <p>The VideoElement uses a NetLoader class to load and unload its media.
 	* Developers requiring custom loading logic for video
 	* can pass their own loaders to the VideoElement constructor. 
 	* These loaders should subclass NetLoader.</p>
@@ -135,29 +118,35 @@ package org.osmf.video
 		 * @param resource An object implementing IMediaResource that points to the video 
 		 * the VideoElement will use.
 		 * 
-		 * @throws ArgumentError If loader is null.
+		 * @throws ArgumentError If loader is null, or resource is neither an
+		 * IURLResource nor a DynamicStreamingResource.
 		 */
-		public function VideoElement(loader:NetLoader, resource:IMediaResource = null)
+		public function VideoElement(loader:NetLoader, resource:IMediaResource=null)
 		{	
 			super(loader, resource);
-
-			// The resource argument must either implement IURLResource or be a DynamicStreamingResource object			
+			
+			// The resource argument must either implement IURLResource or be
+			// a DynamicStreamingResource object			
 			if (resource != null)
 			{
-				var urlRes:IURLResource = resource as IURLResource;
-				var dynRes:DynamicStreamingResource = resource as DynamicStreamingResource;
+				var urlResource:IURLResource = resource as IURLResource;
+				var dsResource:DynamicStreamingResource = resource as DynamicStreamingResource;
 				
-				if (urlRes == null && dynRes == null) 
+				if (urlResource == null && dsResource == null) 
 				{
 					throw new ArgumentError(MediaFrameworkStrings.INVALID_PARAM);
 				}
 			}
 		}
-       	
-       	
+		       	
        	/**
        	 * The NetClient used by this VideoElement's NetStream.  Available after the 
        	 * element has been loaded.
+       	 *  
+       	 *  @langversion 3.0
+       	 *  @playerversion Flash 10
+       	 *  @playerversion AIR 1.0
+       	 *  @productversion OSMF 1.0
        	 */ 
        	public function get client():NetClient
        	{
@@ -167,13 +156,16 @@ package org.osmf.video
 	    /**
 	     * @private
 		 **/
-		override protected function processLoadedState():void
+		override protected function processReadyState():void
 		{
 			var loadableTrait:ILoadable = getTrait(MediaTraitType.LOADABLE) as ILoadable;
 			var context:NetLoadedContext = NetLoadedContext(loadableTrait.loadedContext);
 			stream = context.stream;			
-						
+			
+			// Set the video's dimensions so that it doesn't appear at the wrong size.
+			// We'll set the correct dimensions once the metadata is loaded.  (FM-206)
 			video = new Video();
+			video.width = video.height = 0;
 			video.attachNetStream(stream);
 			
 			// Hook up our metadata listeners
@@ -184,40 +176,40 @@ package org.osmf.video
 						
 			CONFIG::FLASH_10_1
     		{
-    			//Listen for all errors
+    			// Listen for all errors
     			stream.addEventListener(DRMErrorEvent.DRM_ERROR, onDRMErrorEvent);
     						    			 			
-    			//DRMContent data Sidecar
+    			// DRMContent data Sidecar
     			var metadataFacet:KeyValueFacet = resource.metadata.getFacet(MetadataNamespaces.DRM_METADATA) as KeyValueFacet;
     			if (metadataFacet != null)
     			{    				
     				var metadata:ByteArray = metadataFacet.getValue(new ObjectIdentifier(MediaFrameworkStrings.DRM_CONTENT_METADATA_KEY));
-    				addProtectableTrait(metadata).addEventListener(AuthenticationCompleteEvent.AUTHENTICATION_COMPLETE, onMetadataAuth);	   
+    				addProtectableTrait(metadata).addEventListener(ContentProtectionEvent.AUTHENTICATION_COMPLETE, onMetadataAuth);	   
     				return;  //Don't add traits until the "auth" has completed. 			
 	    		}
 	    		else
 	    		{
-	    			//Non sidecar
+	    			// Non sidecar
     				stream.addEventListener(StatusEvent.STATUS, onStatus);
 	    		}			
     		}
 			finishLoad();			
 		}
 		
-		//DRM API's
+		// DRM APIs
 		CONFIG::FLASH_10_1
     	{
   			private function onStatus(event:StatusEvent):void
-			{				
+			{
 				if (event.code == MediaFrameworkStrings.DRM_STATUS_CODE 
 					&& getTrait(MediaTraitType.CONTENT_PROTECTABLE) == null)
 				{			
-					createProtectableTrait().addEventListener(AuthenticationCompleteEvent.AUTHENTICATION_COMPLETE, reloadAfterAuth);	  			
+					createProtectableTrait().addEventListener(ContentProtectionEvent.AUTHENTICATION_COMPLETE, reloadAfterAuth);	  			
 	    		}
 	  		}
 	  		
-	  		//Inline metadata + credentials.  The NetStream is dead at this point, restart with new credentials
-	  		private function reloadAfterAuth(event:AuthenticationCompleteEvent):void
+	  		// Inline metadata + credentials.  The NetStream is dead at this point, restart with new credentials
+	  		private function reloadAfterAuth(event:ContentProtectionEvent):void
 	  		{	  				  			
 	  			ILoadable(getTrait(MediaTraitType.LOADABLE)).unload();	  	
 	  			ILoadable(getTrait(MediaTraitType.LOADABLE)).load();  		  					
@@ -245,7 +237,14 @@ package org.osmf.video
 				}
 				else
 				{					
-					dispatchEvent(new MediaErrorEvent(new MediaError(event.errorID)));
+					dispatchEvent
+						( new MediaErrorEvent
+							( MediaErrorEvent.MEDIA_ERROR
+							, false
+							, false
+							, new MediaError(event.errorID)
+							)
+						);
 				}				
 			}	
 			
@@ -258,10 +257,13 @@ package org.osmf.video
 		
 		private function finishLoad():void
 		{
+			var loadableTrait:ILoadable = getTrait(MediaTraitType.LOADABLE) as ILoadable;
+			var context:NetLoadedContext = NetLoadedContext(loadableTrait.loadedContext);
+
 			var viewable:ViewableTrait = new ViewableTrait();
 			viewable.view = video;
 			var seekable:SeekableTrait = new NetStreamSeekableTrait(stream);
-			var temporal:NetStreamTemporalTrait = new NetStreamTemporalTrait(stream); 
+			var temporal:NetStreamTemporalTrait = new NetStreamTemporalTrait(stream, resource); 
 			spatial = new SpatialTrait();
 			spatial.setDimensions(video.width, video.height);
 			seekable.temporal = temporal;
@@ -275,8 +277,6 @@ package org.osmf.video
 	    	addTrait(MediaTraitType.AUDIBLE, new NetStreamAudibleTrait(stream));
 	    	addTrait(MediaTraitType.BUFFERABLE, new NetStreamBufferableTrait(stream));
 
-			var loadableTrait:ILoadable = getTrait(MediaTraitType.LOADABLE) as ILoadable;
-			var context:NetLoadedContext = NetLoadedContext(loadableTrait.loadedContext);
 			// NetStreamDownloadableTrait will only be added when it is a progressive video.
 			if (isProgressiveVideo(context))
 			{
@@ -308,7 +308,6 @@ package org.osmf.video
 	    	removeTrait(MediaTraitType.AUDIBLE);
 	    	removeTrait(MediaTraitType.BUFFERABLE);
     		removeTrait(MediaTraitType.SWITCHABLE);
-
 	    	
 	    	CONFIG::FLASH_10_1
     		{    			
@@ -318,7 +317,6 @@ package org.osmf.video
     		}
     		
     		removeTrait(MediaTraitType.DOWNLOADABLE);
-
 	    		    		    	
 	    	// Null refs to garbage collect.	    	
 			spatial = null;
@@ -380,14 +378,14 @@ package org.osmf.video
 			_temporalFacetEmbedded.dispatchEvent(new TemporalFacetEvent(TemporalFacetEvent.POSITION_REACHED, cuePoint));     		
      	}     	
      	     	
-     	//fired when the drm subsystem is updated.  NetStream needs to be recreated.
+     	// Fired when the DRM subsystem is updated.  NetStream needs to be recreated.
      	private function onUpdateComplete(event:Event):void
      	{     		
     		(getTrait(MediaTraitType.LOADABLE) as ILoadable).unload();
     		(getTrait(MediaTraitType.LOADABLE) as ILoadable).load();		
      	}
      	
-     	private function  onUpdateError(event:Event):void
+     	private function onUpdateError(event:Event):void
      	{     	
      		dispatchEvent(new ErrorEvent(MediaErrorEvent.MEDIA_ERROR, false, false, "Error Updating DRM: " + event.toString()));
      		(getTrait(MediaTraitType.LOADABLE) as ILoadable).unload();
@@ -411,8 +409,7 @@ package org.osmf.video
 					break;
 				case NetStreamCodes.NETSTREAM_PLAY_NOSUPPORTEDTRACKFOUND:
 					error = new MediaError(MediaErrorCodes.NO_SUPPORTED_TRACK_FOUND);
-					break;
-								
+					break;	
 			}
 			
 			CONFIG::FLASH_10_1
@@ -432,7 +429,7 @@ package org.osmf.video
 						
 			if (error != null)
 			{
-				dispatchEvent(new MediaErrorEvent(error));
+				dispatchEvent(new MediaErrorEvent(MediaErrorEvent.MEDIA_ERROR, false, false, error));
 			}
      	}
      	
@@ -441,7 +438,7 @@ package org.osmf.video
      	 */ 
      	private var stream:NetStream;
      	
-     	private var video:Video;	 
+      	private var video:Video;	 
 	    private var spatial:SpatialTrait;
 	    
 		private var _temporalFacetEmbedded:TemporalFacet;	// facet for cue points embedded in the stream	    		    

@@ -12,6 +12,13 @@
 package spark.utils
 {
 
+import flash.text.TextFormat;
+import flash.text.engine.ElementFormat;
+import flash.text.engine.FontDescription;
+import flash.text.engine.FontLookup;
+import flash.text.engine.TextBlock;
+import flash.text.engine.TextElement;
+import flash.text.engine.TextLine;
 import flash.utils.describeType;
 
 import flashx.textLayout.elements.FlowLeafElement;
@@ -147,6 +154,8 @@ public class TextUtil
 		var resourceManager:IResourceManager = ResourceManager.getInstance();
 		return resourceManager.getString("textLayout", resourceName, args);
 	}
+
+
 }
 
 }

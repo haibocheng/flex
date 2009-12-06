@@ -26,9 +26,9 @@ package org.osmf.traits
 	/**
 	 * Dispatched when the ISpatial trait's width and/or height property has changed.
 	 * 
-	 * @eventType org.osmf.events.DimensionChangeEvent.DIMENSION_CHANGE
+	 * @eventType org.osmf.events.DimensionEvent.DIMENSION_CHANGE
 	 */	
-	[Event(name="dimensionChange",type="org.osmf.events.DimensionChangeEvent")]
+	[Event(name="dimensionChange",type="org.osmf.events.DimensionEvent")]
 	
 	/**
 	 * ISpatial defines the trait interface for media that expose intrinsic dimensions.
@@ -48,17 +48,32 @@ package org.osmf.traits
 	 * 
 	 * @see org.osmf.composition
 	 * @see org.osmf.media.MediaElement
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 10
+	 *  @playerversion AIR 1.0
+	 *  @productversion OSMF 1.0
 	 */
 	public interface ISpatial extends IMediaTrait
 	{
 		/**
 		 * Intrinsic width of the spatial media in pixels.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
-		function get width():int;
+		function get width():Number;
 		
 		/**
 		 * Intrinsic height of the spatial media in pixels.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
-		function get height():int;
+		function get height():Number;
 	}
 }

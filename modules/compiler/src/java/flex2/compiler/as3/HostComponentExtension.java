@@ -88,7 +88,7 @@ public final class HostComponentExtension implements Extension
         {
             CompilerContext context = unit.getContext();
             Context cx = (Context) context.getAscContext();
-            validateRequiredSkinPartsAndStates(cx, unit.hostComponentMetaData, typeTable);
+            validateRequiredSkinPartsAndStates(cx, unit, typeTable);
         }
     }
 
@@ -277,8 +277,9 @@ public final class HostComponentExtension implements Extension
         }
     }
 
-    private void validateRequiredSkinPartsAndStates(Context cx, MetaDataNode metaData, TypeTable typeTable)
+    private void validateRequiredSkinPartsAndStates(Context cx, CompilationUnit unit, TypeTable typeTable)
     {
+    	MetaDataNode metaData = unit.hostComponentMetaData;
         String hostComponentClassName = metaData.getValue(0);
         AbcClass hostComponentClass = typeTable.getClass(NameFormatter.toColon(hostComponentClassName));
 
@@ -287,11 +288,9 @@ public final class HostComponentExtension implements Extension
             cx.localizedError2(cx.input.origin, metaData.pos(),
                                new HostComponentClassNotFound(hostComponentClassName));
         }
-        else if (metaData.def != null)
+        else if (unit.hostComponentOwnerClass != null)
         {
-            String skinClassName = NodeMagic.getClassName((ClassDefinitionNode) metaData.def);
-            AbcClass skinClass = typeTable.getClass(skinClassName);
-
+            AbcClass skinClass = typeTable.getClass(unit.hostComponentOwnerClass);
             validateRequiredSkinParts(hostComponentClass, skinClass, cx, metaData.pos(), typeTable);
             validateRequiredSkinStates(hostComponentClass, skinClass, cx, metaData.pos());
         }

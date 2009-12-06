@@ -23,14 +23,23 @@ package flashx.textLayout.property
 		private var _range:Object;
 		
 		public function EnumStringProperty(nameValue:String, defaultValue:String, inherited:Boolean, category:String, ... rest)
-		{
-			//TODO: implement function
+		{ 
 			super(nameValue, defaultValue, inherited, category);
-			_range = new Object();
+			_range = createRange(rest); 
+		}
+		
+		/** @private */
+		tlf_internal static var nextEnumHashValue:uint = 217287;
+		
+		/** @private */
+		tlf_internal static function createRange(rest:Array):Object
+		{
+			var range:Object = new Object();
 			// rest is the list of possible values
 			for (var i:int = 0; i < rest.length; i++)
-				_range[rest[i]] = nextEnumHashValue++;
-			_range[FormatValue.INHERIT] = nextEnumHashValue++;				
+				range[rest[i]] = nextEnumHashValue++;
+			range[FormatValue.INHERIT] = nextEnumHashValue++;	
+			return range;
 		}
 		
 		/** Returns object whose properties are the legal enum values */

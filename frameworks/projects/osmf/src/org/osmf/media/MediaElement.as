@@ -28,7 +28,7 @@ package org.osmf.media
 	
 	import org.osmf.events.GatewayChangeEvent;
 	import org.osmf.events.MediaErrorEvent;
-	import org.osmf.events.TraitsChangeEvent;
+	import org.osmf.events.MediaElementEvent;
 	import org.osmf.metadata.Metadata;
 	import org.osmf.traits.IDisposable;
 	import org.osmf.traits.MediaTraitType;
@@ -37,16 +37,16 @@ package org.osmf.media
 	/**
 	 * Dispatched when an IMediaTrait is added to the media element.
 	 *
-	 * @eventType org.osmf.events.MediaTraitEvent.TRAIT_ADD
+	 * @eventType org.osmf.events.MediaElementEvent.TRAIT_ADD
 	 **/
-	[Event(name="traitAdd",type="org.osmf.events.TraitsChangeEvent")]
+	[Event(name="traitAdd",type="org.osmf.events.MediaElementEvent")]
 	
 	/**
 	 * Dispatched when an IMediaTrait is removed from the media element.
 	 *
-	 * @eventType org.osmf.events.MediaTraitEvent.TRAIT_REMOVE
+	 * @eventType org.osmf.events.MediaElementEvent.TRAIT_REMOVE
 	 **/
-	[Event(name="traitRemove",type="org.osmf.events.TraitsChangeEvent")]
+	[Event(name="traitRemove",type="org.osmf.events.MediaElementEvent")]
 
 	/**
 	 * Dispatched when an error which impacts the operation of the media
@@ -85,6 +85,11 @@ package org.osmf.media
      * the multiple resources used in the media composition.</p>
      * @see IMediaTrait
      * @see IMediaResource
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 10
+	 *  @playerversion AIR 1.0
+	 *  @productversion OSMF 1.0
 	 */
 	public class MediaElement extends EventDispatcher
 	{
@@ -163,6 +168,11 @@ package org.osmf.media
 		
 		/**
 		 * The gateway that this element uses.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function get gateway():IMediaGateway
 		{
@@ -179,7 +189,13 @@ package org.osmf.media
 					containerGateway.removeElement(this);	
 				}
 				
-				var event:GatewayChangeEvent = new GatewayChangeEvent(_gateway, value);
+				var event:GatewayChangeEvent = new GatewayChangeEvent
+					( GatewayChangeEvent.GATEWAY_CHANGE
+					, false
+					, false
+					, _gateway
+					, value
+					);
 					
 				_gateway = value;
 				containerGateway = _gateway as IContainerGateway;
@@ -195,6 +211,11 @@ package org.osmf.media
 		
 		/**
 		 * @returns The metadata container associated with this MediaElement
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		public function get metadata():Metadata
 		{
@@ -210,6 +231,11 @@ package org.osmf.media
 		
 		/**
 		 * Creates metadata		
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		 protected function createMetadata():Metadata
 		 {
@@ -219,7 +245,7 @@ package org.osmf.media
 		
 		/**
 		 * Adds a new media trait to this media element.  If successful,
-		 * dispatches a MediaTraitEvent.
+		 * dispatches a MediaElementEvent.
 		 * 
          * @param type The type of media trait to add.
 		 * @param trait The media trait to add.
@@ -247,7 +273,7 @@ package org.osmf.media
 				result.addEventListener(MediaErrorEvent.MEDIA_ERROR, onMediaError);
 				
 				// Signal addition:
-				dispatchEvent(new TraitsChangeEvent(TraitsChangeEvent.TRAIT_ADD, type));
+				dispatchEvent(new MediaElementEvent(MediaElementEvent.TRAIT_ADD, false, false, type));
 			}
 			else if (result != instance)
 			{
@@ -257,7 +283,7 @@ package org.osmf.media
 		
 		/**
 		 * Removes a media trait from this media element.  If successful,
-		 * dispatches a MediaTraitEvent.
+		 * dispatches a MediaElementEvent.
 		 * 
          * @param type The Class of the media trait to remove.
 		 * 
@@ -284,7 +310,7 @@ package org.osmf.media
 				}
 
 				// Signal removal is about to occur:
-				dispatchEvent(new TraitsChangeEvent(TraitsChangeEvent.TRAIT_REMOVE, type));
+				dispatchEvent(new MediaElementEvent(MediaElementEvent.TRAIT_REMOVE, false, false, type));
 				
 				_traitTypes.splice(_traitTypes.indexOf(type),1);
 				delete _traits[type];

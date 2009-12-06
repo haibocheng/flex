@@ -349,6 +349,15 @@ public class Label extends TextBase
      *  used to create the font.
      */
     private var embeddedFontContext:IFlexModuleFactory;
+    
+    /**
+     *  @private
+     *  When we render the text using FTE, this object represents the formatting 
+     *  for our text element(s). Every time format related styles change, this 
+     *  object is released because it is invalid. It is regenerated just in time 
+     *  to render the text.
+     */
+    private var elementFormat:ElementFormat;
 
     //--------------------------------------------------------------------------
     //
@@ -383,6 +392,30 @@ public class Label extends TextBase
 
     //--------------------------------------------------------------------------
     //
+    //  Overidden Methods: ISimpleStyleClient
+    //
+    //--------------------------------------------------------------------------
+    
+    /**
+     *  @private
+     */
+    override public function stylesInitialized():void
+    {
+        super.stylesInitialized();
+        elementFormat = null;
+    }
+    
+    /**
+     *  @private
+     */
+    override public function styleChanged(styleProp:String):void
+    {
+        super.styleChanged(styleProp);
+        elementFormat = null;
+    }
+    
+    //--------------------------------------------------------------------------
+    //
     //  Overridden methods: TextBase
     //
     //--------------------------------------------------------------------------
@@ -398,18 +431,19 @@ public class Label extends TextBase
      *  Returns true if all lines were composed, otherwise false.
      */
     override mx_internal function composeTextLines(width:Number = NaN,
-												   height:Number = NaN):Boolean
+                                                   height:Number = NaN):Boolean
     {
         super.composeTextLines(width, height);
         
-        var elementFormat:ElementFormat = createElementFormat();
+        if (!elementFormat)
+            elementFormat = createElementFormat(); 
             
-		// Set the composition bounds to be used by createTextLines().
-		// If the width or height is NaN, it will be computed by this method
-		// by the time it returns.
-		// The bounds are then used by the addTextLines() method
-		// to determine the isOverset flag.
-		// The composition bounds are also reported by the measure() method.
+        // Set the composition bounds to be used by createTextLines().
+        // If the width or height is NaN, it will be computed by this method
+        // by the time it returns.
+        // The bounds are then used by the addTextLines() method
+        // to determine the isOverset flag.
+        // The composition bounds are also reported by the measure() method.
         bounds.x = 0;
         bounds.y = 0;
         bounds.width = width;
@@ -420,19 +454,19 @@ public class Label extends TextBase
         removeTextLines();
         releaseTextLines();
         
-		// Create the TextLines.
-		var allLinesComposed:Boolean = createTextLines(elementFormat);
+        // Create the TextLines.
+        var allLinesComposed:Boolean = createTextLines(elementFormat);
         
         // Need truncation if all the following are true
         // - truncation options exist (0=no trunc, -1=fill up bounds then trunc,
         //      n=n lines then trunc)
         // - compose width is specified
-        // - explicit line breaking is not used
         // - content doesn't fit
-        if (maxDisplayedLines && getStyle("lineBreak") == "toFit" &&
-            !doesComposedTextFit(height, allLinesComposed, maxDisplayedLines))
+        var lb:String = getStyle("lineBreak");
+        if (maxDisplayedLines && (lb == "toFit" || lb == "explicit") &&
+            !doesComposedTextFit(height, width, allLinesComposed, maxDisplayedLines, lb))
         {
-            truncateText(width, height);
+            truncateText(width, height, lb);
         }
         
         // Detach the TextLines from the TextBlock that created them.
@@ -607,46 +641,28 @@ public class Label extends TextBase
 		return elementFormat;
 	}
 	
-	/**
-	 *  @private
-	 *  Uses the component's CSS styles to determine the module factory
-	 *  that should creates its TextLines.
-	 */
-	private function getEmbeddedFontContext():IFlexModuleFactory
-	{
-		var moduleFactory:IFlexModuleFactory;
-		
-		var fontLookup:String = getStyle("fontLookup");
-		if (fontLookup != FontLookup.DEVICE)
+    /**
+     *  @private
+     *  Uses the component's CSS styles to determine the module factory
+     *  that should creates its TextLines.
+     */
+    private function getEmbeddedFontContext():IFlexModuleFactory
+    {
+        var moduleFactory:IFlexModuleFactory;
+        
+        var fontLookup:String = getStyle("fontLookup");
+        if (fontLookup != FontLookup.DEVICE)
         {
-			var font:String = getStyle("fontFamily");
-			var bold:Boolean = getStyle("fontWeight") == "bold";
-			var italic:Boolean = getStyle("fontStyle") == "italic";
-			
-            moduleFactory = embeddedFontRegistry.getAssociatedModuleFactory(
-            	font, bold, italic,
-                this, fontContext);
-
-            // If we found the font, then it is embedded. 
-            // But some fonts are not listed in info()
-            // and are therefore not in the above registry.
-            // So we call isFontFaceEmbedded() which gets the list
-            // of embedded fonts from the player.
-            if (!moduleFactory) 
-            {
-                var sm:ISystemManager;
-                if (fontContext != null && fontContext is ISystemManager)
-                	sm = ISystemManager(fontContext);
-                else if (parent is IUIComponent)
-                	sm = IUIComponent(parent).systemManager;
-
-                staticTextFormat.font = font;
-                staticTextFormat.bold = bold;
-                staticTextFormat.italic = italic;
+            var font:String = getStyle("fontFamily");
+            var bold:Boolean = getStyle("fontWeight") == "bold";
+            var italic:Boolean = getStyle("fontStyle") == "italic";
+            
+            var localLookup:ISystemManager = 
+                fontContext && fontContext is ISystemManager ? 
+                ISystemManager(fontContext) : systemManager;
                 
-                if (sm != null && sm.isFontFaceEmbedded(staticTextFormat))
-                    moduleFactory = sm;
-            }
+            moduleFactory = embeddedFontRegistry.getAssociatedModuleFactory(
+                font, bold, italic, this, fontContext, localLookup, true);
         }
 
         if (!moduleFactory && fontLookup == FontLookup.EMBEDDED_CFF)
@@ -657,7 +673,7 @@ public class Label extends TextBase
         }
         
         return moduleFactory;
-	}
+    }
 
     /**
      *  @private
@@ -881,6 +897,9 @@ public class Label extends TextBase
         			
 		// For truncation, need to know if all lines have been composed.
         var createdAllLines:Boolean = false;
+        // sometimes we need to create an extra line in order to compute
+        // truncation
+        var extraLine:Boolean;
         
 		// Generate TextLines, stopping when we run out of text
 		// or reach the bottom of the requested bounds.
@@ -920,7 +939,7 @@ public class Label extends TextBase
             
 			if (!nextTextLine)
             {
-				createdAllLines = true;
+				createdAllLines = !extraLine;
                 break;
             }
 			
@@ -936,7 +955,11 @@ public class Label extends TextBase
 			if (verticalAlign == "top" && 
 			    nextY - nextTextLine.ascent > innerHeight)
 			{
-				break;
+                // make an extra line so we can compute truncation
+                if (!extraLine) 
+				    extraLine = true;
+                else
+                    break;
 			}
 
 			// We'll keep this line. Put it into the textLines array.
@@ -1120,9 +1143,9 @@ public class Label extends TextBase
      *  Determines if the composed text fits in the given height and 
      *  line count limit. 
      */ 
-    private function doesComposedTextFit(height:Number,
+    private function doesComposedTextFit(height:Number, width:Number,
                                          createdAllLines:Boolean,
-                                         lineCountLimit:int):Boolean
+                                         lineCountLimit:int, lineBreak:String):Boolean
     {
         // Not all text composed because it didn't fit within bounds.
         if (!createdAllLines)
@@ -1132,6 +1155,14 @@ public class Label extends TextBase
         if (lineCountLimit != -1 && textLines.length > lineCountLimit)
             return false;
         
+        if (lineBreak == "explicit")
+        {
+            // if explicit, if the right edge of any lines go outside the
+            // desired width
+            if (bounds.right > width)
+                return false;
+        }
+
         // No lines or no height restriction.
         if (!textLines.length || isNaN(height))
             return true;
@@ -1151,14 +1182,23 @@ public class Label extends TextBase
      *  Adapted from justification code in TLF's
      *  TextLineFactory.textLinesFromString().
      */
-	private function truncateText(width:Number, height:Number):void
+    private function truncateText(width:Number, height:Number, lineBreak:String):void
 	{
 	    var lineCountLimit:int = maxDisplayedLines;
         var somethingFit:Boolean = false;
         var truncLineIndex:int = 0;    
 
+        if (lineBreak == "explicit")
+        {
+            truncateExplicitLineBreakText(width, height);
+            return;
+        }
+
         // Compute the truncation line.
         truncLineIndex = computeLastAllowedLineIndex(height, lineCountLimit);
+        // add extra line in case we wordwrapped some characters
+        // onto extra lines, but don't go off the end
+        truncLineIndex = Math.min(truncLineIndex + 1, textLines.length - 1);
                                      
         if (truncLineIndex >= 0)
         {
@@ -1226,9 +1266,10 @@ public class Label extends TextBase
                     var createdAllLines:Boolean = createTextLinesFromTextBlock(
                     	staticTextBlock, textLines, bounds);
         
-                    if (doesComposedTextFit(height, 
+                    if (doesComposedTextFit(height, width,
                                             createdAllLines, 
-                                            lineCountLimit))
+                                            lineCountLimit, lineBreak))
+
                     {
                         somethingFit = true;
                         break; 
@@ -1241,8 +1282,12 @@ public class Label extends TextBase
                     
                     // Try again by truncating at the beginning of the 
                     // preceding atom.
+                    var oldCharPosition:int = truncateAtCharPosition;
                     truncateAtCharPosition = getNextTruncationPosition(
-                    	truncLineIndex, truncateAtCharPosition);                         
+                    	Math.min(truncLineIndex, textLines.length - 1), truncateAtCharPosition);  
+                    // check to see if we've run out of chars
+                    if (oldCharPosition == truncateAtCharPosition)
+                        break;
                 }
                 while (true);
             }
@@ -1269,6 +1314,70 @@ public class Label extends TextBase
         setIsTruncated(true);
     }
         
+    /**
+     *  @private
+     *  width and height are the ones used to do the compose, not the measured
+     *  results resulting from the compose.
+     */
+    private function truncateExplicitLineBreakText(width:Number, height:Number):void
+	{
+        // 1. Measure the space that the truncation indicator will take
+        // by composing the truncation resource using the same bounds
+        // and formats.  The measured indicator lines could be cached but
+        // as well as being dependent on the indicator string, they are 
+        // dependent on the given width.            
+        staticTextElement.text = truncationIndicatorResource;
+        var indicatorLines:Vector.<DisplayObject> =
+            new Vector.<DisplayObject>();
+        var indicatorBounds:Rectangle = new Rectangle(0, 0, width, NaN);
+
+        createTextLinesFromTextBlock(staticTextBlock, 
+                                     indicatorLines, 
+                                     indicatorBounds);
+                                           
+        releaseLinesFromTextBlock();
+
+        // check each line to see if it needs truncation
+        var n:int = textLines.length;
+        for (var i:int = 0; i < n; i++)
+        {
+            var line:TextLine = textLines[i] as TextLine;
+            // if the line is wider than bounds or off the left side
+            // TODO (aharui): What if text runs off left side because of
+            // alignment or direction?
+            if ((line.x + line.width) > width)
+            {
+                // clip this line
+                var lineLength:int = line.rawTextLength;
+                // start chopping from the end until it fits
+                while (--lineLength > 0)
+                {
+                    var lineStr:String = text.substr(line.textBlockBeginIndex, lineLength);
+                    lineStr += truncationIndicatorResource;
+                    staticTextElement.text = lineStr;
+                    var clippedLines:Vector.<DisplayObject> =
+            	        new Vector.<DisplayObject>();
+
+                    createTextLinesFromTextBlock(staticTextBlock, 
+                                                 clippedLines, 
+                                                 indicatorBounds);
+                                           
+                    releaseLinesFromTextBlock();
+                    if (clippedLines.length == 1 && 
+                        (clippedLines[0].x + clippedLines[0].width) <= width)
+                    {
+                        // replace with the clipped line
+                        clippedLines[0].x = line.x;
+                        clippedLines[0].y = line.y;
+                        textLines[i] = clippedLines[0];
+                        break;
+                    }
+                    
+                }
+            }
+        }
+    }
+
     /** 
 	 *  @private
      *  Calculates the last line that fits in the given height and line count 
@@ -1278,6 +1387,9 @@ public class Label extends TextBase
                                                  lineCountLimit:int):int
     {           
         var truncationLineIndex:int = textLines.length - 1;
+        // return -1 if no textLines (usually because zero size)
+        if (truncationLineIndex < 0)
+            return truncationLineIndex;
         
         if (!isNaN(height))
         {
@@ -1366,9 +1478,21 @@ public class Label extends TextBase
             }
             
             if (truncateAtCharPosition < line.textBlockBeginIndex)
+            {
                 truncationLineIndex--;
+                // if we run out of chars, just return the same
+                // position to warn the caller to stop
+                if (truncationLineIndex < 0)
+                    return truncateAtCharPosition;
+            }
             else
+            {
                 truncationLineIndex++;
+                // if we run out of chars, just return the same
+                // position to warn the caller to stop
+                if (truncationLineIndex >= textLines.length)
+                    return truncateAtCharPosition;
+            }
                 
             line = TextLine(textLines[truncationLineIndex]);
         }

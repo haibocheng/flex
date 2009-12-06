@@ -870,11 +870,11 @@ public class Library implements Builder, Cloneable
 
         if (data.perCompileData != null)
         {
-            symbolTable = new SymbolTable(data.perCompileData);
+            symbolTable = new SymbolTable(localOEMConfiguration.configuration, data.perCompileData);
         }
         else
         {
-            symbolTable = SymbolTable.newSymbolTable(localOEMConfiguration.configuration);
+            symbolTable = new SymbolTable(localOEMConfiguration.configuration);
             data.perCompileData = symbolTable.perCompileData;
 
             if (librarySwcCache != null)
@@ -1473,7 +1473,7 @@ public class Library implements Builder, Cloneable
             data.swcChecksum != swcContext.checksum())
         {
             // create a symbol table
-            SymbolTable symbolTable = new SymbolTable(data.perCompileData);
+            SymbolTable symbolTable = new SymbolTable(tempOEMConfiguration.configuration, data.perCompileData);
             data.configuration = tempOEMConfiguration.configuration;
             data.nsComponents = nsComponents;
             data.classes = classes;

@@ -36,9 +36,8 @@ public class DSwfInfo implements SwfInfo
 	private boolean		m_swdLoading;
 	private int			m_swfSize;
 	private int			m_swdSize;
-	private int			m_bpCount;
-	private int			m_offsetCount;
 	private int			m_scriptsExpected;
+	private int			m_unnamedIndex;
 	private int			m_minId;		// first script id in the swf
 	private int			m_maxId;		// last script id in this swf
 	private byte[]		m_swf;			// actual swf contents
@@ -76,6 +75,7 @@ public class DSwfInfo implements SwfInfo
 	public boolean		isUnloaded()											{ return m_unloaded; }
 	public boolean		isProcessingComplete()									{ return isPopulated(); } 
 	public boolean		containsSource(SourceFile f)							{ return m_source.contains(f.getId()); }
+	public int			getUnnamedIndex()										{ return m_unnamedIndex; }
 
 	/* getters */
 	public long			getId()					{ return m_id; }
@@ -90,8 +90,6 @@ public class DSwfInfo implements SwfInfo
 	public int			getSourceExpectedCount()	{ return m_scriptsExpected; }
     public int          getVmVersion()          { return m_vmVersion;  }
 
-//	public int			getBreakpointCount() throws InProgressException	{ swdLoading(); return m_bpCount; }
-//	public int			getOffsetCount() 		{ swdLoading(); return m_offsetCount; }
 	public int			getSourceCount() 	{ return m_source.size(); }
 	public int			getFirstSourceId() 	{ return m_minId; }
 	public int			getLastSourceId() 	{ return m_maxId; }
@@ -182,17 +180,22 @@ public class DSwfInfo implements SwfInfo
 		return yes;
 	}
 
-	public void freshen(long id, String path, String url, String host, long port, boolean swdLoading, long swfSize, long swdSize, long bpCount, long offsetCount, long scriptCount, Map<Long,Integer> map, int minId, int maxId)
+	public void freshen(long id, String path, String url, int unnamedIndex,
+			String host, long port, boolean swdLoading, long swfSize,
+			long swdSize, long scriptCount, Map<Long, Integer> map, int minId,
+			int maxId)
 	{
 		m_id = (int)id;
-		m_path = path;
-		m_url = url;
+		if (m_path == UNKNOWN)
+		{
+			m_path = path;
+			m_url = url;
+			m_unnamedIndex = unnamedIndex;
+		}
 		m_host = host;
 		m_port = (int)port;
 		m_swfSize = (int)swfSize;
 		m_swdSize = (int)swdSize;
-		m_bpCount = (int)bpCount;
-		m_offsetCount = (int)offsetCount;
 		m_local2Global = map;
 		m_minId = (swdSize > 0) ? minId : 0;
 		m_maxId = (swdSize > 0) ? maxId : 0;
@@ -301,6 +304,7 @@ public class DSwfInfo implements SwfInfo
 	}
 
 	/* for debugging */
+	@Override
 	public String toString() {
 		return m_path;
 	}

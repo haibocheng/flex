@@ -1,4 +1,4 @@
-/*****************************************************
+﻿/*****************************************************
 *  
 *  Copyright 2009 Adobe Systems Incorporated.  All Rights Reserved.
 *  
@@ -44,6 +44,11 @@ package org.osmf.audio
 		
 		/** 
 		 * inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		override protected function postProcessSeekingChange(seeking:Boolean):void
 		{
@@ -57,12 +62,22 @@ package org.osmf.audio
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		override public function canSeekTo(time:Number):Boolean
 		{
+			// Validate that the time is in range.  Note that we return true
+			// if the time is less than the duration *or* the current time.  The
+			// latter is for the case where the media has no (NaN) duration, but
+			// is still progressing.  Presumably it should be possible to seek
+			// backwards.
 			return 		isNaN(time) == false
-					&&	time <= soundAdapter.estimatedDuration
-					&&	time >= 0
+					&& 	time >= 0
+					&&	(time <= soundAdapter.estimatedDuration || time <= soundAdapter.currentTime);
 		}
 			
 		private var lastSeekTime:Number;		

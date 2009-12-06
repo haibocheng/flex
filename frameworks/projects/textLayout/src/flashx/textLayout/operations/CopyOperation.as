@@ -69,5 +69,9 @@ package flashx.textLayout.operations
 			return originalSelectionState;	
 
 		}		
+		
+		/** @private */
+		public override function canUndo():Boolean
+		{ return false; }
 	}
 }

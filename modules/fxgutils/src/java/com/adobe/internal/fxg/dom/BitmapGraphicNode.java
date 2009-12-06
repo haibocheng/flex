@@ -55,15 +55,15 @@ public class BitmapGraphicNode extends GraphicContentNode
     public void setAttribute(String name, String value)
     {
         if (FXG_WIDTH_ATTRIBUTE.equals(name))
-            width = parseDouble(value);
+            width = DOMParserHelper.parseDouble(this, value, name);
         else if (FXG_HEIGHT_ATTRIBUTE.equals(name))
-            height = parseDouble(value);
+            height = DOMParserHelper.parseDouble(this, value, name);
         else if (FXG_SOURCE_ATTRIBUTE.equals(name))
             source = value;
         else if ((getFileVersion().equalTo(FXGVersion.v1_0)) && (FXG_REPEAT_ATTRIBUTE.equals(name)))
-            repeat = parseBoolean(value);
+            repeat = DOMParserHelper.parseBoolean(this, value, name);
         else if (!(getFileVersion().equalTo(FXGVersion.v1_0)) && (FXG_FILLMODE_ATTRIBUTE.equals(name)))
-            fillMode = parseFillMode(value, fillMode);
+            fillMode = DOMParserHelper.parseFillMode(this, value, fillMode);
         else
             super.setAttribute(name, value);
     }

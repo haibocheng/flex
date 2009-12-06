@@ -21,9 +21,9 @@
 *****************************************************/
 package org.osmf.display
 {
-	import org.osmf.events.DimensionChangeEvent;
+	import org.osmf.events.DimensionEvent;
 	import org.osmf.events.MediaPlayerCapabilityChangeEvent;
-	import org.osmf.events.ViewChangeEvent;
+	import org.osmf.events.ViewEvent;
 	import org.osmf.media.MediaElement;
 	import org.osmf.media.MediaPlayer;
 	
@@ -63,23 +63,28 @@ package org.osmf.display
 		/**
 		 * The MediaPlayer that controls this media element.  Defaults to an instance of org.osmf.MediaPlayer.  The player needs to have it's element set either 
 		 * on the MediaPlayer or on this object (see element) after this property is set.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		public function set mediaPlayer(value:MediaPlayer):void
 		{
 			if (_player != null)
 			{
-				_player.removeEventListener(ViewChangeEvent.VIEW_CHANGE, onView);	
+				_player.removeEventListener(ViewEvent.VIEW_CHANGE, onView);	
 				_player.removeEventListener(MediaPlayerCapabilityChangeEvent.VIEWABLE_CHANGE, onViewable);	
-				_player.removeEventListener(DimensionChangeEvent.DIMENSION_CHANGE, onDimensions);	
+				_player.removeEventListener(DimensionEvent.DIMENSION_CHANGE, onDimensions);	
 				_player.removeEventListener(MediaPlayerCapabilityChangeEvent.SPATIAL_CHANGE, onSpatial);	
 				view = null;
 			}
 			_player = value;
 			if (_player != null)
 			{
-				_player.addEventListener(ViewChangeEvent.VIEW_CHANGE, onView);	
+				_player.addEventListener(ViewEvent.VIEW_CHANGE, onView);	
 				_player.addEventListener(MediaPlayerCapabilityChangeEvent.VIEWABLE_CHANGE, onViewable);	
-				_player.addEventListener(DimensionChangeEvent.DIMENSION_CHANGE, onDimensions);	
+				_player.addEventListener(DimensionEvent.DIMENSION_CHANGE, onDimensions);	
 				_player.addEventListener(MediaPlayerCapabilityChangeEvent.SPATIAL_CHANGE, onSpatial);	
 				if (_player.viewable)
 				{
@@ -97,7 +102,7 @@ package org.osmf.display
 			return _player;
 		}				
 						
-		private function onView(event:ViewChangeEvent):void
+		private function onView(event:ViewEvent):void
 		{	
 			view = event.newView;				
 		}
@@ -107,7 +112,7 @@ package org.osmf.display
 			view = event.enabled ? _player.view : null;				
 		}
 				
-		private function onDimensions(event:DimensionChangeEvent):void
+		private function onDimensions(event:DimensionEvent):void
 		{
 			setIntrinsicSize(event.newWidth, event.newHeight);
 		}
@@ -120,6 +125,11 @@ package org.osmf.display
 		/**
 		 * The player class that exposes most of the MediaElement's interface, such as the viewable and dimensional 
 		 * properties.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		private var _player:MediaPlayer ;
 	}

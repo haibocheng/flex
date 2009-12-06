@@ -190,32 +190,32 @@ public abstract class GraphicContentNode extends AbstractFXGNode
     {
         if (FXG_X_ATTRIBUTE.equals(name))
         {
-            x = parseDouble(value);
+            x = DOMParserHelper.parseDouble(this, value, name);
             translateSet = true;
         }
         else if (FXG_Y_ATTRIBUTE.equals(name))
         {
-            y = parseDouble(value);
+            y = DOMParserHelper.parseDouble(this, value, name);
             translateSet = true;
         }
         else if (FXG_ROTATION_ATTRIBUTE.equals(name))
         {
-            rotation = parseDouble(value);
+            rotation = DOMParserHelper.parseDouble(this, value, name);
             rotationSet = true;
         }
         else if (FXG_SCALEX_ATTRIBUTE.equals(name))
         {
-            scaleX = parseDouble(value);
+            scaleX = DOMParserHelper.parseDouble(this, value, name);
             scaleSet = true;
         }
         else if (FXG_SCALEY_ATTRIBUTE.equals(name))
         {
-            scaleY = parseDouble(value);
+            scaleY = DOMParserHelper.parseDouble(this, value, name);
             scaleSet = true;
         }
         else if (FXG_ALPHA_ATTRIBUTE.equals(name))
         {
-            alpha = parseDouble(value, ALPHA_MIN_INCLUSIVE, ALPHA_MAX_INCLUSIVE, alpha);
+            alpha = DOMParserHelper.parseDouble(this, value, name, ALPHA_MIN_INCLUSIVE, ALPHA_MAX_INCLUSIVE, alpha);
             alphaSet = true;
         }
         else if (FXG_BLENDMODE_ATTRIBUTE.equals(name))
@@ -224,7 +224,7 @@ public abstract class GraphicContentNode extends AbstractFXGNode
         }
         else if (FXG_VISIBLE_ATTRIBUTE.equals(name))
         {
-            visible = parseBoolean(value);
+            visible = DOMParserHelper.parseBoolean(this, value, name);
         }
         else if (FXG_ID_ATTRIBUTE.equals(name))
         {
@@ -232,7 +232,7 @@ public abstract class GraphicContentNode extends AbstractFXGNode
         }
         else if (FXG_MASKTYPE_ATTRIBUTE.equals(name))
         {
-            maskType = parseMaskType(value, maskType);
+            maskType = DOMParserHelper.parseMaskType(this, value, maskType);
             maskTypeSet = true;
         }
         else if (getFileVersion().equalTo(FXGVersion.v1_0))
@@ -243,11 +243,11 @@ public abstract class GraphicContentNode extends AbstractFXGNode
         }
         else if (FXG_LUMINOSITYCLIP_ATTRIBUTE.equals(name))
         {
-            luminosityClip = parseBoolean(value);
+            luminosityClip = DOMParserHelper.parseBoolean(this, value, name);
         }
         else if (FXG_LUMINOSITYINVERT_ATTRIBUTE.equals(name))
         {
-            luminosityInvert =  parseBoolean(value);            
+            luminosityInvert =  DOMParserHelper.parseBoolean(this, value, name);            
         }
         else
         {

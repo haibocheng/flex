@@ -30,7 +30,7 @@
              */
             override protected function initializationComplete():void
             {
-                useBaseColor = true;
+                useChromeColor = true;
                 super.initializationComplete();
             }
         
@@ -52,6 +52,21 @@
                 }
                 
                 if (highlightStroke) highlightStroke.radiusX = cornerRadius;
+                if (hldownstroke1) hldownstroke1.radiusX = cornerRadius;
+                if (hldownstroke2) hldownstroke2.radiusX = cornerRadius;
+                
+                // Use the accentColor style, at 24%, as the offset for the fill and
+                // highlightStroke color transform.
+                var accentColor:uint = getStyle("accentColor");
+                var colorTransform:ColorTransform = new ColorTransform();
+                colorTransform.redOffset = (((accentColor & (0xFF << 16)) >> 16)) * 0.24;
+                colorTransform.greenOffset = (((accentColor & (0xFF << 8)) >> 8)) * 0.24;
+                colorTransform.blueOffset = ((accentColor & 0xFF)) * 0.24;
+                colorTransform.alphaMultiplier = 1;
+                
+                fill.transform.colorTransform = colorTransform;
+                if (highlightStroke)
+                    highlightStroke.transform.colorTransform = colorTransform;
                     
                 super.updateDisplayList(unscaledWidth, unscaledHeight);
             }
@@ -93,17 +108,17 @@
     <s:Rect id="fill" left="1" right="1" top="1" bottom="1" radiusX="2">
         <s:fill>
             <s:LinearGradient rotation="90">
-                <s:GradientEntry color="0xAFCFED" 
-                               color.selectedUpStates="0x98BAD6"
-                               color.overStates="0x98BAD6" 
-                               color.downStates="0x8BB1D0" 
+                <s:GradientEntry color="0xAFABB0" 
+                               color.selectedUpStates="0x989699"
+                               color.overStates="0x989699" 
+                               color.downStates="0x8B8D93" 
                                alpha="0.85" 
                                alpha.selectedOver="1" />
-                <s:GradientEntry color="0x88B3E3" 
-                               color.selectedUpStates="0x6792C2"
-                               color.over="0x6792C2" 
-                               color.selectedOver="0x6792C2"
-                               color.downStates="0x6792C2" 
+                <s:GradientEntry color="0x888FA6" 
+                               color.selectedUpStates="0x676E9E"
+                               color.over="0x676E9E" 
+                               color.selectedOver="0x676E9E"
+                               color.downStates="0x676E9E" 
                                alpha="0.85"
                                alpha.selectedOver="1" />
             </s:LinearGradient>
@@ -111,56 +126,70 @@
     </s:Rect>
     
     <!-- layer 3: fill lowlight -->
-    <s:Rect id="lowlight" left="1" right="1" bottom="1" height="9" radiusX="2">
+    <s:Rect id="lowlight" left="1" right="1" top="1" bottom="1" radiusX="2">
         <s:fill>
-            <s:LinearGradient rotation="90">
-                <s:GradientEntry color="0x000000" alpha="0.0099" />
-                <s:GradientEntry color="0x000000" alpha="0.0627" />
+            <s:LinearGradient rotation="270">
+                <s:GradientEntry color="0x000000" ratio="0.0" alpha="0.0627" />
+                <s:GradientEntry color="0x000000" ratio="0.48" alpha="0.0099" />
+                <s:GradientEntry color="0x000000" ratio="0.48001" alpha="0" />
             </s:LinearGradient>
         </s:fill>
     </s:Rect>
     
     <!-- layer 4: fill highlight -->
-    <s:Rect id="highlight" left="1" right="1" top="1" height="9" radiusX="2">
+    <s:Rect id="highlight" left="1" right="1" top="1" bottom="1" radiusX="2">
         <s:fill>
-            <s:SolidColor color="0xFFFFFF" 
-                        alpha="0.33" 
-                        alpha.selectedUpStates="0.22"
-                        alpha.overStates="0.22" 
-                        alpha.downStates="0.12" />
+            <s:LinearGradient rotation="90">
+                <s:GradientEntry color="0xFFFFFF"
+                                 ratio="0.0"
+                                 alpha="0.33" 
+                                 alpha.selectedUpStates="0.22" 
+                                 alpha.overStates=".22"
+                                 alpha.downStates="0.12"/>
+                <s:GradientEntry color="0xFFFFFF"
+                                 ratio="0.48"
+                                 alpha="0.33"
+                                 alpha.selectedUpStates="0.22"
+                                 alpha.overStates=".22"
+                                 alpha.downStates="0.12" />
+                <s:GradientEntry color="0xFFFFFF"
+                                 ratio="0.48001"
+                                 alpha="0" />
+            </s:LinearGradient>
         </s:fill>
     </s:Rect>
     
     <!-- layer 5: highlight stroke (all states except down) -->
     <s:Rect id="highlightStroke" left="1" right="1" top="1" bottom="1" radiusX="2" excludeFrom="downStates">
         <s:stroke>
-            <s:LinearGradientStroke rotation="90" weight="1">
-                <s:GradientEntry color="0xD6E9F7" alpha.overStates="0.22" alpha.selectedUpStates="0.33" />
-                <s:GradientEntry color="0x90B6E3" alpha.overStates="0.22" alpha.selectedUpStates="0.33" />
+           <s:LinearGradientStroke rotation="90" weight="1">
+                <s:GradientEntry color="0xD6C5BA" alpha.overStates="0.22" alpha.selectedUpStates="0.33" />
+                <s:GradientEntry color="0x9092A6" alpha.overStates="0.22" alpha.selectedUpStates="0.33" />
             </s:LinearGradientStroke>
         </s:stroke>
     </s:Rect>
     
     <!-- layer 6: highlight stroke (down state only) -->
-    <s:Rect left="1" top="1" bottom="1" width="1" includeIn="downStates, selectedUpStates, selectedOver">
-        <s:fill>
-            <s:SolidColor color="0x000000" alpha="0.07" />
-        </s:fill>
+    <s:Rect id="hldownstroke1" left="1" right="1" top="1" bottom="1" radiusX="2"
+            includeIn="downStates, selectedUpStates, selectedOver">
+        <s:stroke>
+            <s:LinearGradientStroke rotation="90" weight="1">
+                <s:GradientEntry color="0x000000" alpha="0.25" ratio="0.0" />
+                <s:GradientEntry color="0x000000" alpha="0.25" ratio="0.001" />
+                <s:GradientEntry color="0x000000" alpha="0.07" ratio="0.0011" />
+                <s:GradientEntry color="0x000000" alpha="0.07" ratio="0.965" />
+                <s:GradientEntry color="0x000000" alpha="0.00" ratio="0.9651" />
+            </s:LinearGradientStroke>
+        </s:stroke>
     </s:Rect>
-    <s:Rect right="1" top="1" bottom="1" width="1" includeIn="downStates, selectedUpStates, selectedOver">
-        <s:fill>
-            <s:SolidColor color="0x000000" alpha="0.07" />
-        </s:fill>
-    </s:Rect>
-    <s:Rect left="2" top="1" right="2" height="1" includeIn="downStates, selectedUpStates, selectedOver">
-        <s:fill>
-            <s:SolidColor color="0x000000" alpha="0.25" />
-        </s:fill>
-    </s:Rect>
-    <s:Rect left="1" top="2" right="1" height="1" includeIn="downStates, selectedUpStates, selectedOver">
-        <s:fill>
-            <s:SolidColor color="0x000000" alpha="0.09" />
-        </s:fill>
+    <s:Rect id="hldownstroke2" left="2" right="2" top="2" bottom="2" radiusX="2"
+            includeIn="downStates, selectedUpStates, selectedOver">
+        <s:stroke>
+            <s:LinearGradientStroke rotation="90" weight="1">
+                <s:GradientEntry color="0x000000" alpha="0.09" ratio="0.0" />
+                <s:GradientEntry color="0x000000" alpha="0.00" ratio="0.0001" />
+            </s:LinearGradientStroke>
+        </s:stroke>
     </s:Rect>
     
     <!-- layer 7: border - put on top of the fill so it doesn't disappear when scale is less than 1 -->

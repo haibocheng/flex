@@ -2,6 +2,8 @@ package com.adobe.internal.fxg.dom.filters;
 
 import static com.adobe.fxg.FXGConstants.*;
 
+import com.adobe.internal.fxg.dom.DOMParserHelper;
+
 /**
  * @author Peter Farland
  */
@@ -44,27 +46,27 @@ public class DropShadowFilterNode extends AbstractFilterNode
     public void setAttribute(String name, String value)
     {
         if (FXG_ALPHA_ATTRIBUTE.equals(name))
-            alpha = parseDouble(value, ALPHA_MIN_INCLUSIVE, ALPHA_MAX_INCLUSIVE, alpha);
+            alpha = DOMParserHelper.parseDouble(this, value, name, ALPHA_MIN_INCLUSIVE, ALPHA_MAX_INCLUSIVE, alpha);
         else if (FXG_ANGLE_ATTRIBUTE.equals(name))
-            angle = parseDouble(value);
+            angle = DOMParserHelper.parseDouble(this, value, name);
         else if (FXG_BLURX_ATTRIBUTE.equals(name))
-            blurX = parseDouble(value);
+            blurX = DOMParserHelper.parseDouble(this, value, name);
         else if (FXG_BLURY_ATTRIBUTE.equals(name))
-            blurY = parseDouble(value);
+            blurY = DOMParserHelper.parseDouble(this, value, name);
         else if (FXG_COLOR_ATTRIBUTE.equals(name))
-            color = parseRGB(value, color);
+            color = DOMParserHelper.parseRGB(this, value, name);
         else if (FXG_DISTANCE_ATTRIBUTE.equals(name))
-            distance = parseDouble(value);
+            distance = DOMParserHelper.parseDouble(this, value, name);
         else if (FXG_HIDEOBJECT_ATTRIBUTE.equals(name))
-            hideObject = parseBoolean(value);
+            hideObject = DOMParserHelper.parseBoolean(this, value, name);
         else if (FXG_INNER_ATTRIBUTE.equals(name))
-            inner = parseBoolean(value);
+            inner = DOMParserHelper.parseBoolean(this, value, name);
         else if (FXG_KNOCKOUT_ATTRIBUTE.equals(name))
-            knockout = parseBoolean(value);
+            knockout = DOMParserHelper.parseBoolean(this, value, name);
         else if (FXG_QUALITY_ATTRIBUTE.equals(name))
-            quality = parseInt(value, QUALITY_MIN_INCLUSIVE, QUALITY_MAX_INCLUSIVE, quality);
+            quality = DOMParserHelper.parseInt(this, value, name, QUALITY_MIN_INCLUSIVE, QUALITY_MAX_INCLUSIVE, quality);
         else if (FXG_STRENGTH_ATTRIBUTE.equals(name))
-            strength = parseDouble(value);
+            strength = DOMParserHelper.parseDouble(this, value, name);
         else
             super.setAttribute(name, value);
     }

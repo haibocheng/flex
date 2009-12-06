@@ -25,9 +25,9 @@ component is defined by the NumericStepperTextInputSkin class.
 
     <fx:Metadata>
     <![CDATA[ 
-    /** 
-     * @copy spark.skins.spark.ApplicationSkin#hostComponent
-     */
+        /** 
+         * @copy spark.skins.spark.ApplicationSkin#hostComponent
+         */
         [HostComponent("spark.components.NumericStepper")]
     ]]>
     </fx:Metadata> 
@@ -47,7 +47,7 @@ component is defined by the NumericStepperTextInputSkin class.
          */
         override protected function initializationComplete():void
         {
-            useBaseColor = true;
+            useChromeColor = true;
             super.initializationComplete();
         }
         
@@ -85,15 +85,17 @@ component is defined by the NumericStepperTextInputSkin class.
          */
         override public function styleChanged(styleProp:String):void
         {
+            var allStyles:Boolean = !styleProp || styleProp == "styleName";
+
             super.styleChanged(styleProp);
             
-            if (!styleProp || styleProp == "cornerRadius")
+            if (allStyles || styleProp == "cornerRadius")
             {
                 cornerRadiusChanged = true;
                 invalidateProperties();
             }
             
-            if (!styleProp || styleProp.indexOf("border") == 0)
+            if (allStyles || styleProp.indexOf("border") == 0)
             {
                 borderStylesChanged = true;
                 invalidateProperties();
@@ -106,14 +108,17 @@ component is defined by the NumericStepperTextInputSkin class.
         <s:State name="disabled" />
     </s:states>
 
-    <!--- Defines the appearance of the NumericStepper component's up button. The default class is SpinnerIncrementButtonSkin. -->
+    <!--- The default class is SpinnerIncrementButtonSkin.
+          @copy spark.components.Spinner#incrementButton -->
     <s:Button id="incrementButton" right="0" top="0" height="50%" 
               skinClass="spark.skins.spark.SpinnerIncrementButtonSkin" />
-    <!--- Defines the appearance of the NumericStepper component's down button. The default class is SpinnerDecrementButtonSkin. -->
+    <!--- The default class is SpinnerDecrementButtonSkin.
+          @copy spark.components.Spinner#decrementButton -->
     <s:Button id="decrementButton" right="0" bottom="0" height="50%" 
               skinClass="spark.skins.spark.SpinnerDecrementButtonSkin" />
                            
-    <!--- Defines the appearance of the NumericStepper component's TextInput subcomponent. The default class is NumericStepperTextInputSkin. -->
+    <!--- The default class is NumericStepperTextInputSkin.
+          @copy spark.components.NumericStepper#textDisplay -->
     <s:TextInput id="textDisplay" left="0" top="0" right="18" bottom="0"
         skinClass="spark.skins.spark.NumericStepperTextInputSkin" />
         

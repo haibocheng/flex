@@ -23,7 +23,7 @@ package org.osmf.composition
 {
 	import flash.errors.IllegalOperationError;
 	
-	import org.osmf.events.SeekingChangeEvent;
+	import org.osmf.events.SeekEvent;
 	import org.osmf.media.IMediaTrait;
 	import org.osmf.media.MediaElement;
 	import org.osmf.traits.ISeekable;
@@ -32,11 +32,23 @@ package org.osmf.composition
 	import org.osmf.utils.MediaFrameworkStrings;
 
 	/**
-	 * Dispatched when this trait's <code>seeking</code> property changes.
+	 * Dispatched when this trait begins a seek operation.
 	 * 
-	 * @eventType org.osmf.events.SeekingChangeEvent.SEEKING_CHANGE
+	 * @eventType org.osmf.events.SeekEvent.SEEK_BEGIN
 	 */
-	[Event(name="seekingChange",type="org.osmf.events.SeekingChangeEvent")]
+	[Event(name="seekBegin",type="org.osmf.events.SeekEvent")]
+
+	/**
+	 * Dispatched when this trait ends a seek operation.
+	 * 
+	 * @eventType org.osmf.events.SeekEvent.SEEK_END
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 10
+	 *  @playerversion AIR 1.0
+	 *  @productversion OSMF 1.0
+	 */
+	[Event(name="seekEnd",type="org.osmf.events.SeekEvent")]
 
 	/**
 	 * Implementation of ISeekable which can be a composite media trait.
@@ -60,6 +72,11 @@ package org.osmf.composition
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function get seeking():Boolean
 		{
@@ -68,6 +85,11 @@ package org.osmf.composition
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function seek(time:Number):void
 		{
@@ -99,6 +121,11 @@ package org.osmf.composition
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function canSeekTo(time:Number):Boolean
 		{
@@ -131,7 +158,8 @@ package org.osmf.composition
 				return;
 			}
 
-			child.addEventListener(SeekingChangeEvent.SEEKING_CHANGE, onSeekingChanged, false, 0, true);
+			child.addEventListener(SeekEvent.SEEK_BEGIN, onSeekingChanged, false, 0, true);
+			child.addEventListener(SeekEvent.SEEK_END, onSeekingChanged, false, 0, true);
 		}
 
 		/**
@@ -144,16 +172,17 @@ package org.osmf.composition
 				return;
 			}
 
-			child.removeEventListener(SeekingChangeEvent.SEEKING_CHANGE, onSeekingChanged);
+			child.removeEventListener(SeekEvent.SEEK_BEGIN, onSeekingChanged);
+			child.removeEventListener(SeekEvent.SEEK_END, onSeekingChanged);
 		}
 		
 		/**
-		 * This is event handler for SeekingChangeEvent, typically dispatched from the ISeekable trait
+		 * This is event handler for SeekiEvent, typically dispatched from the ISeekable trait
 		 * of a child/children. This must be overridden by derived classes. 
 		 * 
-		 * @param event The SeekingChangeEvent.
+		 * @param event The SeekEvent.
   		 **/
-		protected function onSeekingChanged(event:SeekingChangeEvent):void
+		protected function onSeekingChanged(event:SeekEvent):void
 		{
 			throw new IllegalOperationError(MediaFrameworkStrings.FUNCTION_MUST_BE_OVERRIDDEN);
 		}
@@ -212,12 +241,13 @@ package org.osmf.composition
 			if (_seeking != value)
 			{
 				_seeking	= value;
+				
 				// Child seektable traits will be instructed to seek and the composite
 				// seek trait will be dispateched a lot of SeekingChangeEvent. So the
 				// composite trait needs to remember where the composition seeks to.
 				seekToTime	= seekTo;
 				
-				dispatchEvent(new SeekingChangeEvent(_seeking, seekTo));
+				dispatchEvent(new SeekEvent(_seeking ? SeekEvent.SEEK_BEGIN : SeekEvent.SEEK_END, false, false, seekTo));
 			}
 		}
 		

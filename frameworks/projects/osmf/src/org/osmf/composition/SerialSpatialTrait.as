@@ -21,7 +21,7 @@
 *****************************************************/
 package org.osmf.composition
 {
-	import org.osmf.events.DimensionChangeEvent;
+	import org.osmf.events.DimensionEvent;
 	import org.osmf.media.MediaElement;
 	import org.osmf.traits.ISpatial;
 	import org.osmf.traits.IViewable;
@@ -30,9 +30,9 @@ package org.osmf.composition
 	/**
 	 * Dispatched when the width and/or height of the ISpatial media has changed.
 	 * 
-	 * @eventType org.osmf.events.DimensionChangeEvent.DIMENSION_CHANGE
+	 * @eventType org.osmf.events.DimensionEvent.DIMENSION_CHANGE
 	 */	
-	[Event(name="dimensionChange",type="org.osmf.events.DimensionChangeEvent")]
+	[Event(name="dimensionChange",type="org.osmf.events.DimensionEvent")]
 
 	/**
 	 * Implementation of ISpatial for serial compositions.
@@ -43,6 +43,11 @@ package org.osmf.composition
 	 * If the owning element does not contain a viewable trait that implements ISpatial,
 	 * then the serial composite spatial trait will forward the active child's spatial
 	 * trait.
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 10
+	 *  @playerversion AIR 1.0
+	 *  @productversion OSMF 1.0
 	 */
 	internal class SerialSpatialTrait extends CompositeSpatialTrait
 	{
@@ -115,6 +120,11 @@ package org.osmf.composition
 		
 		/**
 		 * Invoked on the serial's current child changing. 
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
 		private function onCurrentChildChange(event:TraitAggregatorEvent):void
 		{

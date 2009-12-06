@@ -32,15 +32,39 @@ package flash.tools.debugger;
 public interface SwfInfo
 {
 	/**
-	 * The full path of the SWF.
+	 * The full path of the SWF. If the SWF does not have a path (e.g. if it was
+	 * loaded via Loader.loadBytes()), then this returns "<unnamed-N>", where
+	 * "N" is the value returned by <code>getUnnamedIndex()</code>.
 	 */
 	public String getPath();
 
 	/**
-	 * The URL for the SWF.  Includes any options
-	 * at the end of the URL. For example ?debug=true
+	 * The URL for the SWF. Includes any options at the end of the URL. For
+	 * example ?debug=true. If the SWF does not have a URL (e.g. if it was
+	 * loaded via Loader.loadBytes()), then tihs returns "unnamed:N", where "N"
+	 * is the value returned by <code>getUnnamedIndex()</code>.
 	 */
 	public String getUrl();
+
+	/**
+	 * Returns 0 for swfs that have a name, or a 1-based index for swfs that
+	 * don't have a name.
+	 * <p>
+	 * Most swfs have a name; for those swfs, <code>getPath()</code> and
+	 * <code>getUrl()</code> will return the path and URL of the swf. But there
+	 * are some swfs for which no name is available, such as those that were
+	 * loaded via <code>Loader.loadBytes()</code>. This includes framework RSLs
+	 * with digests.
+	 * <p>
+	 * For swfs for which no name is available, <code>getUnnamedIndex()</code>
+	 * returns a 1-based index to uniquely identify this child swf, and
+	 * <code>getPath()</code> and <code>getUrl()</code> also return special
+	 * values.
+	 * 
+	 * @see #getPath()
+	 * @see #getUrl()
+	 */
+	public int getUnnamedIndex();
 
 	/**
 	 * The size of this SWF in bytes

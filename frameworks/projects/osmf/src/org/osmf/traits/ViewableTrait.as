@@ -23,15 +23,15 @@ package org.osmf.traits
 {
 	import flash.display.DisplayObject;
 	
-	import org.osmf.events.ViewChangeEvent;
+	import org.osmf.events.ViewEvent;
 
 	/**
 	 * Dispatched when the trait's <code>view</code> property has changed.
 	 * This occurs when a different DisplayObject is assigned to represent the media.
 	 * 
-	 * @eventType org.osmf.events.ViewChangeEvent.VIEW_CHANGE
+	 * @eventType org.osmf.events.ViewEvent.VIEW_CHANGE
 	 */	
-	[Event(name="viewChange",type="org.osmf.events.ViewChangeEvent")]
+	[Event(name="viewChange",type="org.osmf.events.ViewEvent")]
 
 	/**
 	 * The ViewableTrait class provides a base IViewable implementation. 
@@ -39,6 +39,11 @@ package org.osmf.traits
 	 * subclass or as is by a media element that listens for and handles
 	 * its change events.
 	 * 
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 10
+	 *  @playerversion AIR 1.0
+	 *  @productversion OSMF 1.0
 	 */
 	public class ViewableTrait extends MediaTraitBase implements IViewable
 	{		
@@ -47,11 +52,16 @@ package org.osmf.traits
 		
 		/**
 		 * Defines the trait's view. If the view is different from the one
-		 * that is currently set, a ViewChangeEvent will be dispatched.
+		 * that is currently set, a viewChange event will be dispatched.
 		 * 
 		 * @see canProcessViewChange
 		 * @see processViewChange
 		 * @see postProcessViewChange
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
 		final public function set view(value:DisplayObject):void
 		{
@@ -71,6 +81,11 @@ package org.osmf.traits
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function get view():DisplayObject
 		{
@@ -88,6 +103,11 @@ package org.osmf.traits
 		 * @param newView Proposed new <code>view</code> value.
 		 * @return Returns <code>true</code> by default. Subclasses that override 
 		 * this method can return <code>false</code> to abort processing.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
 		protected function canProcessViewChange(newView:DisplayObject):Boolean
 		{
@@ -98,6 +118,11 @@ package org.osmf.traits
 		 * Called immediately before the <code>view</code> property is changed. 
 		 * <p>Subclasses implement this method to communicate the change to the media.</p>
 		 * @param newView New <code>view</code> value.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
 		protected function processViewChange(newView:DisplayObject):void
 		{
@@ -111,10 +136,15 @@ package org.osmf.traits
 		 *  
 		 * @param oldView Previous <code>view</code> value.
 		 * 
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
 		protected function postProcessViewChange(oldView:DisplayObject):void
 		{
-			dispatchEvent(new ViewChangeEvent(oldView,_view));
+			dispatchEvent(new ViewEvent(ViewEvent.VIEW_CHANGE, false, false, oldView, _view));
 		}
 	}
 }

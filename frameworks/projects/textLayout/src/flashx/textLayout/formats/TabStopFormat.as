@@ -1,8 +1,8 @@
 //========================================================================================
 //  $File: //a3t/argon/dev/textLayout_core/src/flashx/textLayout/formats/TabStopFormat.as $
-//  $DateTime: 2009/11/04 13:50:40 $
-//  $Revision: #10 $
-//  $Change: 726402 $
+//  $DateTime: 2009/11/12 13:11:47 $
+//  $Revision: #11 $
+//  $Change: 727658 $
 //  
 //  ADOBE CONFIDENTIAL
 //  
@@ -183,10 +183,13 @@ package flashx.textLayout.formats
 
 		/**
 		 * Concatenates the values of properties in the <code>incoming</code> ITabStopFormat instance
-		 * with the values of this TabStopFormat object. Properties whose values are <code>undefined</code> in this
-		 * (the receiving) TabStopFormat object will get new values if they are <em>not</em> <code>undefined</code> in
-		 * the <code>incoming</code> object.
+		 * with the values of this TabStopFormat object. In this (the receiving) TabStopFormat object, properties whose values are <code>FormatValue.INHERIT</code>,
+		 * and inheriting properties whose values are <code>undefined</code> will get new values from the <code>incoming</code> object.
+		 * Non-inheriting properties whose values are <code>undefined</code> will get their default values.
+		 * All other property values will remain unmodified.
+		 * 
 		 * @param incoming instance from which values are concatenated.
+		 * @see flashx.textLayout.formats.FormatValue#INHERIT
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
@@ -201,11 +204,12 @@ package flashx.textLayout.formats
 
 		/**
 		 * Concatenates the values of properties in the <code>incoming</code> ITabStopFormat instance
-		 * with the values of this TabStopFormat object. Properties whose values are <code>undefined</code> in this
-		 * (the receiving) TabStopFormat object will get new values if they are <em>not</em> <code>undefined</code> in
-		 * the <code>incoming</code> object.
+		 * with the values of this TabStopFormat object. In this (the receiving) TabStopFormat object, properties whose values are <code>FormatValue.INHERIT</code>,
+		 * and inheriting properties whose values are <code>undefined</code> will get new values from the <code>incoming</code> object.
+		 * All other property values will remain unmodified.
 		 * 
 		 * @param incoming instance from which values are concatenated.
+		 * @see flashx.textLayout.formats.FormatValue#INHERIT
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5

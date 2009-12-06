@@ -187,12 +187,9 @@ public final class Source implements Comparable<Source>
 		return isPreprocessed;
 	}
 
-	public void setLogger(LocalLogger logger)
+	void setLogger(LocalLogger logger)
 	{
-		if (this.logger == null)
-		{
-			this.logger = logger;
-		}
+        this.logger = logger;
 	}
 
 	LocalLogger getLogger()

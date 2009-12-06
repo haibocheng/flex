@@ -436,7 +436,7 @@ public class Fcsh extends Tool
                 Map licenseMap = configuration.getLicensesConfiguration().getLicenseMap();
 
                 // create a symbol table
-                SymbolTable symbolTable = new SymbolTable(s.perCompileData);
+                SymbolTable symbolTable = new SymbolTable(configuration, s.perCompileData);
                 s.configuration = configuration;
 
                 Map<String, Source> classes = new HashMap<String, Source>(); 
@@ -592,7 +592,7 @@ public class Fcsh extends Tool
                 Map licenseMap = configuration.getLicensesConfiguration().getLicenseMap();
 
                 // create a symbol table
-                SymbolTable symbolTable = new SymbolTable(s.perCompileData);
+                SymbolTable symbolTable = new SymbolTable(configuration, s.perCompileData);
                 s.configuration = configuration;
 
                 VirtualFile projector = configuration.getProjector();
@@ -925,7 +925,7 @@ public class Fcsh extends Tool
 
                s.checksum = cfgbuf.checksum_ts() + swcContext.checksum();
 
-            final SymbolTable symbolTable = SymbolTable.newSymbolTable(configuration);
+            final SymbolTable symbolTable = new SymbolTable(configuration);
             s.perCompileData = symbolTable.perCompileData;
 
             Map licenseMap = configuration.getLicensesConfiguration().getLicenseMap();
@@ -1157,7 +1157,7 @@ public class Fcsh extends Tool
 
                s.checksum = cfgbuf.checksum_ts() + swcContext.checksum();
 
-            final SymbolTable symbolTable = SymbolTable.newSymbolTable(configuration);
+            final SymbolTable symbolTable = new SymbolTable(configuration);
             s.perCompileData = symbolTable.perCompileData;
 
             Map licenseMap = configuration.getLicensesConfiguration().getLicenseMap();

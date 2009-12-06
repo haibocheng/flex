@@ -24,7 +24,6 @@
 package org.osmf.media
 {
 	import org.osmf.metadata.Metadata;
-	import org.osmf.metadata.Metadata;
 	import org.osmf.utils.URL;
 	
 	/**
@@ -40,9 +39,9 @@ package org.osmf.media
 		 * 
 		 * @param url The URL of the resource.
 		 **/
-		public function URLResource(urlObj:URL)
+		public function URLResource(url:URL)
 		{
-			_url = (urlObj == null) ? new URL(null) : urlObj;	
+			_url = (url == null) ? new URL(null) : url;	
 		}
 		
 		/**
@@ -55,10 +54,15 @@ package org.osmf.media
 		
 		/**
 		 *  @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		public function get metadata():Metadata
 		{
-			if(!_metadata)
+			if (!_metadata)
 			{
 				_metadata = new Metadata();
 			}

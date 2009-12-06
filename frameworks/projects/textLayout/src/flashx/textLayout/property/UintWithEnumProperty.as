@@ -26,10 +26,7 @@ package flashx.textLayout.property
 		public function UintWithEnumProperty(nameValue:String, defaultValue:Object, inherited:Boolean, category:String,  ... rest)
 		{
 			// rest is the list of possible values
-			_range = new Object();
-			for (var i:int = 0; i < rest.length; i++)
-				_range[rest[i]] = nextEnumHashValue++;
-			_range[FormatValue.INHERIT] =  nextEnumHashValue++;
+			_range = EnumStringProperty.createRange(rest); 
 				
 			var defaultIsEnum:Boolean = defaultValue is String && _range.hasOwnProperty(defaultValue);
 			var numberDefault:Number = defaultIsEnum ? 0 : Number(defaultValue);

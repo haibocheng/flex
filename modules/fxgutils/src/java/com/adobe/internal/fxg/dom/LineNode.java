@@ -56,13 +56,13 @@ public class LineNode extends AbstractShapeNode
     public void setAttribute(String name, String value)
     {
         if (FXG_XFROM_ATTRIBUTE.equals(name))
-            xFrom = parseDouble(value);
+            xFrom = DOMParserHelper.parseDouble(this, value, name);
         else if (FXG_YFROM_ATTRIBUTE.equals(name))
-            yFrom = parseDouble(value);
+            yFrom = DOMParserHelper.parseDouble(this, value, name);
         else if (FXG_XTO_ATTRIBUTE.equals(name))
-            xTo = parseDouble(value);
+            xTo = DOMParserHelper.parseDouble(this, value, name);
         else if (FXG_YTO_ATTRIBUTE.equals(name))
-            yTo = parseDouble(value);
+            yTo = DOMParserHelper.parseDouble(this, value, name);
         else
             super.setAttribute(name, value);
     }

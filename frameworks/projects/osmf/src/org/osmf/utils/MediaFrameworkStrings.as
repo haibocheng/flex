@@ -54,13 +54,13 @@ package org.osmf.utils
 		
 		public static const MUST_SET_ILOADER_FOR_LOAD:String 			= "Must set ILoader on an ILoadable before calling ILoader.load";
 		public static const MUST_SET_ILOADER_FOR_UNLOAD:String 			= "Must set ILoader on an ILoadable before calling ILoader.unload";
-		public static const ILOADER_CANT_HANDLER_RESOURCE:String 		= "ILoader unable to handle the given IMediaResource";
-		public static const LOADED_CONTEXT_NULL:String 					= "LoadedContext is null for LoadState.LOADED";
-		public static const LOADED_CONTEXT_NOT_NULL:String 				= "LoadedContext is non-null for LoadState.CONSTRUCTED";
+		public static const ILOADER_CANT_HANDLE_RESOURCE:String 		= "ILoader unable to handle the given IMediaResource";
+		public static const LOADED_CONTEXT_NULL:String 					= "LoadedContext is null for LoadState.READY";
+		public static const LOADED_CONTEXT_NOT_NULL:String 				= "LoadedContext is non-null for LoadState.UNINITIALIZED";
 		
 		// LoaderBase
 		
-		public static const ALREADY_LOADED:String 						= "Loader - attempt to load an already loaded object";
+		public static const ALREADY_READY:String 						= "Loader - attempt to load an already loaded object";
 		public static const ALREADY_LOADING:String 						= "Loader - attempt to load a loading object";
 		public static const ALREADY_UNLOADED:String 					= "Loader - attempt to unload an already unloaded object";
 		public static const ALREADY_UNLOADING:String 					= "Loader - attempt to unload a unloading object";
@@ -76,7 +76,7 @@ package org.osmf.utils
 		
 		// MediaPlayer
 		
-		public static const TRAIT_NOT_SUPPORTED:String 					= "MediaPlayer - attempt to use a trait not on the media";		
+		public static const TRAIT_NOT_SUPPORTED:String 					= "MediaPlayer - method called on null media or media that isn't *trait*";		
 		
 		// Metadata
 		
@@ -192,10 +192,5 @@ package org.osmf.utils
 		public static const DRM_NO_ANALOG_PROTECTION_AVAIL:String		= "NoAnalogProtectionAvail	  Can't play back because connected analog device doesn't have the correct capabilities";
 		public static const DRM_NO_DIGITAL_PLAYBACK_ALLOWED:String		= "NoDigitalPlaybackAllowed	  Can't playback on digital device, should never happen in real life.";
 		public static const DRM_NO_DIGITAL_PROTECTION_AVAIL:String		= "NoDigitalProtectionAvail	  The connected digital device doesn't have the correct capabilities";
-				
-		// Downloadable
-		
-		public static const BYTES_DOWNLOADED:String						= "bytesDownloaded";
-		public static const BYTES_TOTAL:String							= "bytesTotal";
 	}
 }

@@ -16,6 +16,7 @@ import static com.adobe.fxg.FXGConstants.*;
 import com.adobe.fxg.FXGException;
 import com.adobe.fxg.dom.FXGNode;
 import com.adobe.internal.fxg.dom.AbstractFXGNode;
+import com.adobe.internal.fxg.dom.DOMParserHelper;
 import com.adobe.internal.fxg.dom.types.AlignmentBaseline;
 import com.adobe.internal.fxg.dom.types.BaselineShift;
 import com.adobe.internal.fxg.dom.types.BreakOpportunity;
@@ -145,7 +146,7 @@ public abstract class AbstractRichTextLeafNode extends AbstractRichTextNode
         }
         else if (FXG_FONTSIZE_ATTRIBUTE.equals(name))
         {
-            fontSize = parseDouble(value, FONTSIZE_MIN_INCLUSIVE, FONTSIZE_MAX_INCLUSIVE, fontSize);
+            fontSize = DOMParserHelper.parseDouble(this, value, name, FONTSIZE_MIN_INCLUSIVE, FONTSIZE_MAX_INCLUSIVE, fontSize);
         }
         else if (FXG_FONTSTYLE_ATTRIBUTE.equals(name))
         {
@@ -161,7 +162,7 @@ public abstract class AbstractRichTextLeafNode extends AbstractRichTextNode
         }        
         else if (FXG_LINEHEIGHT_ATTRIBUTE.equals(name))
         {
-            lineHeight = parseNumberPercentWithSeparateRange(value, 
+            lineHeight = DOMParserHelper.parseNumberPercentWithSeparateRange(this, value, name, 
             		LINEHEIGHT_PERCENT_MIN_INCLUSIVE, LINEHEIGHT_PERCENT_MAX_INCLUSIVE, 
             		LINEHEIGHT_PIXEL_MIN_INCLUSIVE, LINEHEIGHT_PIXEL_MAX_INCLUSIVE, lineHeight); 
 
@@ -172,15 +173,15 @@ public abstract class AbstractRichTextLeafNode extends AbstractRichTextNode
         }
         else if ( FXG_LINETHROUGH_ATTRIBUTE.equals(name))
         {
-            lineThrough = parseBoolean(value);
+            lineThrough = DOMParserHelper.parseBoolean(this, value, name);
         }                   
         else if (FXG_COLOR_ATTRIBUTE.equals(name))
         {
-            color = parseRGB(value, color);
+            color = DOMParserHelper.parseRGB(this, value, name);
         }
         else if (FXG_TEXTALPHA_ATTRIBUTE.equals(name))
         {
-            textAlpha = parseDouble(value, ALPHA_MIN_INCLUSIVE, ALPHA_MAX_INCLUSIVE, textAlpha);
+            textAlpha = DOMParserHelper.parseDouble(this, value, name, ALPHA_MIN_INCLUSIVE, ALPHA_MAX_INCLUSIVE, textAlpha);
         }
         else if (FXG_WHITESPACECOLLAPSE_ATTRIBUTE.equals(name))
         {
@@ -188,15 +189,15 @@ public abstract class AbstractRichTextLeafNode extends AbstractRichTextNode
         }
         else if (FXG_BACKGROUNDALPHA_ATTRIBUTE.equals(name))
         {
-        	backgroundAlpha = getAlphaInherit(this, value, ALPHA_MIN_INCLUSIVE, ALPHA_MAX_INCLUSIVE, backgroundAlpha.getNumberInheritAsDbl(), "UnknownBackgroundAlpha");
+        	backgroundAlpha = getAlphaInherit(this, name, value, ALPHA_MIN_INCLUSIVE, ALPHA_MAX_INCLUSIVE, backgroundAlpha.getNumberInheritAsDbl(), "UnknownBackgroundAlpha");
         }
         else if (FXG_BACKGROUNDCOLOR_ATTRIBUTE.equals(name))
         {
-            backgroundColor = getColorWithEnum(this, value);
+            backgroundColor = getColorWithEnum(this, name, value);
         }
         else if (FXG_BASELINESHIFT_ATTRIBUTE.equals(name))
         {
-            baselineShift = getBaselineShift(this, value, BASELINESHIFT_MIN_INCLUSIVE, BASELINESHIFT_MAX_INCLUSIVE, baselineShift.getBaselineShiftAsDbl());
+            baselineShift = getBaselineShift(this, name, value, BASELINESHIFT_MIN_INCLUSIVE, BASELINESHIFT_MAX_INCLUSIVE, baselineShift.getBaselineShiftAsDbl());
         }
         else if (FXG_BREAKOPPORTUNITY_ATTRIBUTE.equals(name))
         {
@@ -232,11 +233,11 @@ public abstract class AbstractRichTextLeafNode extends AbstractRichTextNode
         }        
         else if (FXG_TRACKINGLEFT_ATTRIBUTE.equals(name))
         {
-            trackingLeft = parseNumberPercent(value, TRACKING_MIN_INCLUSIVE, TRACKING_MAX_INCLUSIVE, trackingLeft);
+            trackingLeft = DOMParserHelper.parseNumberPercent(this, value, name, TRACKING_MIN_INCLUSIVE, TRACKING_MAX_INCLUSIVE, trackingLeft);
         }
         else if (FXG_TRACKINGRIGHT_ATTRIBUTE.equals(name))
         {
-            trackingRight = parseNumberPercent(value, TRACKING_MIN_INCLUSIVE, TRACKING_MAX_INCLUSIVE, trackingRight);
+            trackingRight = DOMParserHelper.parseNumberPercent(this, value, name, TRACKING_MIN_INCLUSIVE, TRACKING_MAX_INCLUSIVE, trackingRight);
         } 
         else if (FXG_TEXTROTATION_ATTRIBUTE.equals(name))
         {
@@ -262,6 +263,7 @@ public abstract class AbstractRichTextLeafNode extends AbstractRichTextNode
      * Convert an FXG String value to a BaselineShift enumeration.
      * 
      * @param value - the FXG String value.
+     * @param name - the FXG attribute name.
      * @param min - the smallest double value that the result must be greater
      * or equal to.
      * @param max - the largest double value that the result must be smaller
@@ -274,14 +276,14 @@ public abstract class AbstractRichTextLeafNode extends AbstractRichTextNode
      * BaselineShift rule or the value falls out of the specified range 
      * (inclusive).
      */
-    private BaselineShift getBaselineShift(FXGNode node, String value, double min, double max, double defaultValue)
+    private BaselineShift getBaselineShift(FXGNode node, String name, String value, double min, double max, double defaultValue)
     {
         try
         {
         	
-            return BaselineShift.newInstance(parseNumberPercent(value, min, max, defaultValue));            
+            return BaselineShift.newInstance(DOMParserHelper.parseNumberPercent(this, value, name, min, max, defaultValue));            
         }
-        catch(NumberFormatException e)
+        catch(FXGException e)
         {
             if (FXG_BASELINESHIFT_SUPERSCRIPT_VALUE.equals(value))
             {
@@ -303,6 +305,7 @@ public abstract class AbstractRichTextLeafNode extends AbstractRichTextNode
      * Convert an FXG String value to a NumberInherit object.
      * 
      * @param value - the FXG String value.
+     * @param name - the FXG attribute name.
      * @param min - the smallest double value that the result must be greater
      * or equal to.
      * @param max - the largest double value that the result must be smaller
@@ -315,12 +318,12 @@ public abstract class AbstractRichTextLeafNode extends AbstractRichTextNode
      * @throws FXGException if the String did not match a known
      * NumberInherit rule.
      */
-    private NumberInherit getAlphaInherit(FXGNode node, String value, double min, double max, double defaultValue, String errorCode)        
+    private NumberInherit getAlphaInherit(FXGNode node, String name, String value, double min, double max, double defaultValue, String errorCode)        
     {
         try
         {
-            return NumberInherit.newInstance(parseDouble(value, ALPHA_MIN_INCLUSIVE, ALPHA_MAX_INCLUSIVE, defaultValue));           
-        }catch(NumberFormatException e)
+            return NumberInherit.newInstance(DOMParserHelper.parseDouble(this, value, name, ALPHA_MIN_INCLUSIVE, ALPHA_MAX_INCLUSIVE, defaultValue));           
+        }catch(FXGException e)
         {
             if (FXG_INHERIT_VALUE.equals(value))
             {
@@ -337,12 +340,14 @@ public abstract class AbstractRichTextLeafNode extends AbstractRichTextNode
     /**
      * Convert an FXG String value to a NumberInherit object.
      * 
+     * @param node - the FXG node.
+     * @param attribute - the FXG attribute name.
      * @param value - the FXG String value.
      * @return the matching NumberInherit rule.
      * @throws FXGException if the String did not match a known
      * NumberInherit rule.
      */
-    private ColorWithEnum getColorWithEnum(FXGNode node, String value)        
+    private ColorWithEnum getColorWithEnum(FXGNode node, String attribute, String value)        
     {
         if (FXG_COLORWITHENUM_TRANSPARENT_VALUE.equals(value))
         {
@@ -354,7 +359,7 @@ public abstract class AbstractRichTextLeafNode extends AbstractRichTextNode
         }
         else
         {
-            return ColorWithEnum.newInstance(parseRGB(value));           
+            return ColorWithEnum.newInstance(DOMParserHelper.parseRGB(this, value, attribute));           
         }
     }
 }

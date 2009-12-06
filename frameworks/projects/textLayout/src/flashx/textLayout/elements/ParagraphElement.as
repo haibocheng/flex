@@ -93,6 +93,7 @@ package flashx.textLayout.elements
 		/** @private */
 		tlf_internal function createTextBlock():void
 		{
+			CONFIG::debug { assert(_textBlock == null,"createTextBlock called when there is already a textblock"); }
 			_textBlock = new TextBlock();
 			CONFIG::debug { Debugging.traceFTECall(_textBlock,null,"new TextBlock"); }
 			for (var i:int = 0; i < numChildren; i++)
@@ -157,12 +158,10 @@ package flashx.textLayout.elements
 			return _textBlock; 
 		}
 		
-		/** Newer players have a flush method on the textBlock.  Record it here for access.  @private */
-		static tlf_internal const textBlockHasReleaseLineCreationData:Boolean = Configuration.versionIsAtLeast(10,1);
 		/** @private */
 		tlf_internal function releaseLineCreationData():void
 		{
-			CONFIG::debug { assert(textBlockHasReleaseLineCreationData,"bad call to releaseLineCreationData"); }
+			CONFIG::debug { assert(Configuration.playerEnablesArgoFeatures,"bad call to releaseLineCreationData"); }
 			if (_textBlock)
 				_textBlock["releaseLineCreationData"]();
 		}
@@ -258,11 +257,16 @@ package flashx.textLayout.elements
 		/** @private */
 		tlf_internal override function insertBlockElement(child:FlowElement, block:ContentElement):void
 		{
+			if (_textBlock == null)
+			{
+				child.releaseContentElement();
+				createTextBlock();	// does the whole tree
+				return;
+			}
 			var gc:Vector.<ContentElement>;	// scratch var
 			var group:GroupElement;			// scratch
 			if (numChildren == 1)
 			{
-				var tb:TextBlock = _textBlock;
 				if (block is GroupElement)
 				{
 					// this case forces the Group to be in a Group so that following FlowLeafElements aren't in a SubParagraphGroupElement's group
@@ -272,13 +276,13 @@ package flashx.textLayout.elements
 					CONFIG::debug { Debugging.traceFTECall(null,gc,"push",block); }
 					group = new GroupElement(gc);
 					CONFIG::debug { Debugging.traceFTECall(group,null,"new GroupElement",gc); }
-					tb.content = group;
+					_textBlock.content = group;
 					CONFIG::debug { Debugging.traceFTEAssign(_textBlock,"content",group); }
 				}
 				else
 				{
-					tb.content = block;
-					CONFIG::debug { Debugging.traceFTEAssign(tb,"content",block);  }
+					_textBlock.content = block;
+					CONFIG::debug { Debugging.traceFTEAssign(_textBlock,"content",block);  }
 				}
 			}
 			else
@@ -377,26 +381,21 @@ package flashx.textLayout.elements
 			ensureTerminatorAfterReplace(null);
 		}
 		
-		/** Returns the text of the paragraph as a single string. 
-		 *
-		 * @returns The text of the paragraph.
-		 *	 
-		 * @includeExample examples\ParagraphElement_getText.as -noswf
-		 *
-		 * @playerversion Flash 10
-		 * @playerversion AIR 1.5
-	 	 * @langversion 3.0
-	 	 *
+		/** @private
  		 */
-		public function getText():String
+		public override function getText(relativeStart:int=0, relativeEnd:int=-1, paragraphSeparator:String="\n"):String
 		{
-			if (!_textBlock)
-				createTextBlock();
-			if (!_textBlock.content)
-				return "";
-			var text:String = _textBlock.content.rawText;
-
-			return text.substring(0, text.length - 1);
+			// Optimization for getting text of the entire paragraph
+			if (relativeStart == 0 && (relativeEnd == -1 || relativeEnd >= textLength-1) && _textBlock)
+			{
+				if (_textBlock.content)
+				{
+					var text:String = _textBlock.content.rawText;
+					return text.substring(0, text.length - 1);
+				}
+				return "";		// content is null
+			}
+			return super.getText(relativeStart, relativeEnd, paragraphSeparator);
 		}
 		
 		/** Returns the paragraph that follows this one, or null if there are no more paragraphs. 
@@ -703,7 +702,7 @@ package flashx.textLayout.elements
 			}
 			
 			// empty paragraphs not allowed after normalize
-			if (numChildren == 0)
+			if (numChildren == 0 || textLength == 0)
 			{
 				var s:SpanElement = new SpanElement();
 				replaceChildren(numChildren,numChildren,s);

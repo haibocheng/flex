@@ -574,8 +574,8 @@ public class LocalLogger implements Logger
 			return (new StringBuilder(" [")
 				.append(new GeneratedCodeMarker().getMessage())).append(": ")
 				.append(new PathInfo(p).getMessage()).append(", ")
-				.append(new LineInfo(line.intValue()).getMessage()).append(", ")
-				.append(new ColumnInfo(col.intValue()).getMessage()).append("]")
+				.append(new LineInfo(line == null ? 0 : line.intValue()).getMessage()).append(", ")
+				.append(new ColumnInfo(col == null ? 0 : col.intValue()).getMessage()).append("]")
 				.toString();
 		}
 		else

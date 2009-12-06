@@ -512,9 +512,10 @@ public class PlayerSession implements Session, DProtocolNotifierIF, Runnable
 					// so we have to look for all of these.
 					String[] macStandalonePlayerNames =
 					{
-						"Flash Player",		// New name as of 12/4/06   //$NON-NLS-1$
-						"SAFlashPlayer",	// An older name            //$NON-NLS-1$
-						"standalone"		// Another older name       //$NON-NLS-1$
+						"Flash Player Debugger",	// New name as of Player 10.1	//$NON-NLS-1$
+						"Flash Player",				// New name as of 12/4/06		//$NON-NLS-1$
+						"SAFlashPlayer",			// An older name				//$NON-NLS-1$
+						"standalone"				// Another older name			//$NON-NLS-1$
 					};
 
 					for (int i=0; !closedAnyWindows && i<macStandalonePlayerNames.length; ++i)

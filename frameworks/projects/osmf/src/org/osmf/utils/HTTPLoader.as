@@ -81,13 +81,18 @@ package org.osmf.utils
 		/**
 		 * Loads an URL over HTTP.
 		 * 
-		 * <p>Updates the ILoadable's <code>loadedState</code> property to LOADING
-		 * while loading and to LOADED upon completing a successful load of the 
+		 * <p>Updates the ILoadable's <code>loadState</code> property to LOADING
+		 * while loading and to READY upon completing a successful load of the 
 		 * URL.</p> 
 		 * 
 		 * @see org.osmf.traits.LoadState
 		 * @see flash.display.Loader#load()
 		 * @param ILoadable ILoadable to be loaded.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		override public function load(loadable:ILoadable):void
 		{
@@ -135,36 +140,59 @@ package org.osmf.utils
 			{
 				toggleLoaderListeners(loader, false);
 				
-				updateLoadable(loadable, LoadState.LOADED, new HTTPLoadedContext(loader));
+				updateLoadable(loadable, LoadState.READY, new HTTPLoadedContext(loader));
 			}
 
 			function onIOError(ioEvent:IOErrorEvent, ioEventDetail:String=null):void
 			{	
 				toggleLoaderListeners(loader, false);
 				
-				updateLoadable(loadable, LoadState.LOAD_FAILED);
-				loadable.dispatchEvent(new MediaErrorEvent(new MediaError(MediaErrorCodes.HTTP_IO_LOAD_ERROR, 
-																				ioEvent ? ioEvent.text : ioEventDetail)));
+				updateLoadable(loadable, LoadState.LOAD_ERROR);
+				loadable.dispatchEvent
+					( new MediaErrorEvent
+						( MediaErrorEvent.MEDIA_ERROR
+						, false
+						, false
+						, new MediaError
+							( MediaErrorCodes.HTTP_IO_LOAD_ERROR
+							, ioEvent ? ioEvent.text : ioEventDetail
+							)
+						)
+					);
 			}
 
 			function onSecurityError(securityEvent:SecurityErrorEvent, securityEventDetail:String=null):void
 			{	
 				toggleLoaderListeners(loader, false);
 				
-				updateLoadable(loadable, LoadState.LOAD_FAILED);
-				loadable.dispatchEvent(new MediaErrorEvent(new MediaError(MediaErrorCodes.HTTP_SECURITY_LOAD_ERROR, 
-																			securityEvent ? securityEvent.text : securityEventDetail)));
+				updateLoadable(loadable, LoadState.LOAD_ERROR);
+				loadable.dispatchEvent
+					( new MediaErrorEvent
+						( MediaErrorEvent.MEDIA_ERROR
+						, false
+						, false
+						, new MediaError
+							( MediaErrorCodes.HTTP_SECURITY_LOAD_ERROR
+							, securityEvent ? securityEvent.text : securityEventDetail
+							)
+						)
+					);
 			}
 		}
 		
 		/**
 		 * Unloads the resource.  
 		 * 
-		 * <p>Updates the ILoadable's <code>loadedState</code> property to UNLOADING
-		 * while unloading and to CONSTRUCTED upon completing a successful unload.</p>
+		 * <p>Updates the ILoadable's <code>loadState</code> property to UNLOADING
+		 * while unloading and to UNINITIALIZED upon completing a successful unload.</p>
 		 *
 		 * @param ILoadable ILoadable to be unloaded.
 		 * @see org.osmf.traits.LoadState
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		override public function unload(loadable:ILoadable):void
 		{
@@ -172,7 +200,7 @@ package org.osmf.utils
 
 			// Nothing to do.
 			updateLoadable(loadable, LoadState.UNLOADING, loadable.loadedContext);			
-			updateLoadable(loadable, LoadState.CONSTRUCTED);
+			updateLoadable(loadable, LoadState.UNINITIALIZED);
 		}
 		
 		/**

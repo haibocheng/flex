@@ -18,6 +18,7 @@ import flash.display.InteractiveObject;
 import flash.events.Event;
 import flash.utils.getDefinitionByName;
 
+import mx.core.IFlexModule;
 import mx.core.IUIComponent;
 import mx.core.mx_internal;
 
@@ -54,9 +55,14 @@ public dynamic class FlexContentHolder extends ContainerMovieClip
         super();
         showInAutomationHierarchy = false;
         
+        // grab our width and height before setting scaleX=scaleY=1
         _width = this.width;
         _height = this.height;
         
+        // set scaleX, scaleY to 1 in case the user scaled the 
+        // FlexContentHolder when creating this ContainerMovieClip.
+        // If we don't set scale here, then the content in the container
+        // would be scaled as well
         $scaleX = $scaleY = 1;
         
         removeEventListener(Event.ADDED, addedHandler);
@@ -239,7 +245,7 @@ public dynamic class FlexContentHolder extends ContainerMovieClip
             addChild(DisplayObject(flexContent));
             
             var uiComponentClass:Class;
-            
+                        
             // Dynamically load the UIComponent class, but don't fail on error.
             // This allows us to work in Flex (where UIComponent is defined), and 
             // in Flash (where it UIComponent is not defined).
@@ -300,6 +306,18 @@ public dynamic class FlexContentHolder extends ContainerMovieClip
                     if (doubleClickEnabled)
                         InteractiveObject(flexContent).doubleClickEnabled = true;
                     
+                // Propagate moduleFactory to the child, but don't overwrite an existing moduleFactory.
+                if (flexContent is IFlexModule && IFlexModule(flexContent).moduleFactory == null)
+                {
+                    if (uicParent is IFlexModule && IFlexModule(uicParent).moduleFactory != null)
+                        IFlexModule(flexContent).moduleFactory = IFlexModule(uicParent).moduleFactory;
+                        
+                    else if (document is IFlexModule && uicParent.document.moduleFactory != null)
+                        IFlexModule(flexContent).moduleFactory = uicParent.document.moduleFactory;
+                        
+                    else if (uicParent is IFlexModule && IFlexModule(uicParent).moduleFactory != null)
+                        IFlexModule(flexContent).moduleFactory = IFlexModule(uicParent).moduleFactory;
+                }
                 
                 // Sets up the inheritingStyles and nonInheritingStyles objects
                 // and their proto chains so that getStyle() works.
@@ -360,8 +378,11 @@ public dynamic class FlexContentHolder extends ContainerMovieClip
         if (!myParent.scaleContentWhenResized)
         {
             // apply the scale to the width/height
-            containerWidth *= myParent.scaleXDueToSizing;
-            containerHeight *= myParent.scaleYDueToSizing;
+            if (myParent._layoutFeatures != null)
+            {
+                containerWidth *= myParent._layoutFeatures.stretchX;
+                containerHeight *= myParent._layoutFeatures.stretchY;
+            }
         }
         
         // Size the flex content to what they want to be, 

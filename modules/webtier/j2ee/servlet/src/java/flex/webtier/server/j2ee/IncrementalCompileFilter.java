@@ -186,8 +186,7 @@ public class IncrementalCompileFilter extends BaseCompileFilter
             compilerConfig.addThemeCssFiles(swcContext.getThemeStyleSheets());
             t.checksum = configuration.getChecksum_ts() + swcContext.checksum();
 
-            // SymbolTable symbolTable = new SymbolTable(compilerConfig.strict(), compilerConfig.dialect(), compilerConfig.suppressWarningsInIncremental());
-            SymbolTable symbolTable = SymbolTable.newSymbolTable(t.configuration);
+            SymbolTable symbolTable = new SymbolTable(t.configuration);
             
             t.perCompileData = symbolTable.perCompileData;
 
@@ -257,11 +256,9 @@ public class IncrementalCompileFilter extends BaseCompileFilter
             
             // Flex 3 Version of this API
             if (flex2.compiler.CompilerAPI.validateCompilationUnits(t.fileSpec, t.sourceList, t.sourcePath, t.bundlePath, t.resources, swcContext, t.perCompileData, recompile, flexConfig) > 0)
-            //if (flex2.compiler.CompilerAPI.validateCompilationUnits(t.fileSpec, t.sourceList, t.sourcePath, t.bundlePath, t.resources, swcContext, t.perCompileData, recompile, flexConfig) > 0)
-            //if (flex2.compiler.API.validateCompilationUnits(t.fileSpec, t.sourceList, t.sourcePath, t.bundlePath, t.resources, swcContext, t.perCompileData, recompile, compilerConfig.strict()) > 0)
             {
                 t.configuration = flexConfig;
-                SymbolTable symbolTable = new SymbolTable(t.perCompileData);
+                SymbolTable symbolTable = new SymbolTable(t.configuration, t.perCompileData);
 
                 List units = flex2.compiler.CompilerAPI.compile(t.fileSpec, t.sourceList, t.sourcePath, t.resources,
                                                         t.bundlePath, swcContext, symbolTable, mappings, t.configuration, compilers,

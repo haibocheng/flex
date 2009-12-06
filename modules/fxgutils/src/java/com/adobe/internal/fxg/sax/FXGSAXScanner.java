@@ -273,6 +273,7 @@ public class FXGSAXScanner extends DefaultHandler
             // current document processed.
             root.setDocumentName(documentName);
             root.setVersionGreaterThanCompiler(root.getVersion().greaterThan(versionHandler.getVersion()));
+            root.setReservedNodes(versionHandler.getElementNodes(uri));
         }
         else
         {

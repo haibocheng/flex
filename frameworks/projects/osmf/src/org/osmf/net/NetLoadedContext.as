@@ -30,7 +30,11 @@ package org.osmf.net
 	import org.osmf.media.IURLResource;
 	import org.osmf.traits.ILoadedContext;
 
+	[ExcludeClass]
+	
     /**
+     * @private
+     *  
 	 * The NetLoadedContext contains information about the output of a load operation
 	 * performed by a NetLoader. 
 	 * This information is used by plugins for managing media playback 
@@ -45,6 +49,11 @@ package org.osmf.net
 		 * 	@param connection Connection created by the load operation.
 		 * 	@param stream Stream created by the load operation.
 		 * 	@see NetLoader#load()
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		public function NetLoadedContext(	connection:NetConnection,
 											stream:NetStream,
@@ -62,6 +71,11 @@ package org.osmf.net
 		
 		/**
 		 * The connected NetConnection, used for streaming audio and video.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 
 	    public function get connection():NetConnection
@@ -72,6 +86,11 @@ package org.osmf.net
         /**
 		 * The NetStream associated with the NetConnection, used
          * for streaming audio and video.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 	    public function get stream():NetStream
 	    {	   	
@@ -83,6 +102,11 @@ package org.osmf.net
 		 * If the NetConnection is shared, then the NetConnection should
 		 * be closed by calling closeNetConnectionByResource() on the 
 		 * NetConnectionFactory instance rather than on the NetConnection itself.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 	    public function get netConnectionFactory():NetConnectionFactory
 	    {	   	
@@ -91,6 +115,11 @@ package org.osmf.net
 	   	
 	   	/**
 		 * The IURLResource used to generate the NetConnection
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 	    public function get resource():IURLResource
 	    {	   	
@@ -99,6 +128,11 @@ package org.osmf.net
 	   	
 	   	/**
 		 * Specifies whether or not the NetConnection may be shared between ILoadable instances
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 	    public function get shareable():Boolean
 	    {	   	

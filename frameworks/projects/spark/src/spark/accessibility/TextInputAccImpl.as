@@ -12,6 +12,7 @@
 package spark.accessibility
 {
 
+import mx.accessibility.AccConst;
 import mx.core.UIComponent;
 import mx.core.mx_internal;
 
@@ -32,22 +33,6 @@ use namespace mx_internal;
 public class TextInputAccImpl extends SkinnableTextBaseAccImpl
 {
     include "../core/Version.as";
-
-    //--------------------------------------------------------------------------
-    //
-    //  Class constants
-    //
-    //--------------------------------------------------------------------------
-
-    /**
-     *  @private
-     */
-    private static const STATE_SYSTEM_PROTECTED:uint = 0x20000000;
-
-    /**
-     *  @private
-     */
-    private static const E_ACCESSDENIED:uint = 0x80070005;
 
     //--------------------------------------------------------------------------
     //
@@ -147,7 +132,7 @@ public class TextInputAccImpl extends SkinnableTextBaseAccImpl
     {
         var accState:uint = super.get_accState(childID);
         if (TextInput(master).displayAsPassword)
-            accState |= STATE_SYSTEM_PROTECTED;
+            accState |= AccConst.STATE_SYSTEM_PROTECTED;
         return accState;
     }
 }

@@ -101,7 +101,7 @@ package flashx.textLayout.elements
 		/** @private */
 		override tlf_internal function releaseContentElement():void
 		{
-			if (_attachedListenerStatus != NO_ATTACHED_LISTENERS || groupElement == null)
+			if (!canReleaseContentElement() || groupElement == null)
 				return;
 			for (var i:int = 0; i < numChildren; i++)
 			{
@@ -169,10 +169,21 @@ package flashx.textLayout.elements
 		/** @private */
 		tlf_internal override function insertBlockElement(child:FlowElement, block:ContentElement):void
 		{
-			var idx:int = this.getChildIndex(child);
-			var gc:Vector.<ContentElement> = new Vector.<ContentElement>();
-			gc.push(block);
-			groupElement.replaceElements(idx,idx,gc);
+			if (groupElement)
+			{
+				var idx:int = this.getChildIndex(child);
+				var gc:Vector.<ContentElement> = new Vector.<ContentElement>();
+				gc.push(block);
+				groupElement.replaceElements(idx,idx,gc);
+			}
+			else
+			{
+				child.releaseContentElement();
+				
+				var para:ParagraphElement = getParagraph();
+				if (para)
+					para.createTextBlock();
+			}
 		}
 		
 

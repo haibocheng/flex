@@ -26,13 +26,16 @@ package org.osmf.net.dynamicstreaming
 {
 	import flash.events.NetStatusEvent;
 	
-	import org.osmf.events.SwitchingChangeEvent;
+	import org.osmf.events.SwitchEvent;
 	import org.osmf.net.NetStreamCodes;
 	import org.osmf.traits.SwitchableTrait;
 
+	[ExcludeClass]
+	
 	/**
-	 * The NetStreamSwitchableTrait class implements an ISwitchable interface that uses a DynamicNetStream.
 	 * @private
+	 * 
+	 * The NetStreamSwitchableTrait class implements an ISwitchable interface that uses a DynamicNetStream.
 	 * @see DynamicNetStream
 	 */   
 	public class NetStreamSwitchableTrait extends SwitchableTrait
@@ -42,29 +45,44 @@ package org.osmf.net.dynamicstreaming
 		 * 
 		 * @param ns The DynamicNetStream object the class will work with.
 		 * @param res The DynamicStreamingResource the class will use.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function NetStreamSwitchableTrait(ns:DynamicNetStream, res:DynamicStreamingResource)
 		{
-			super(!ns.useManualSwitchMode, ns.renderingIndex, res.numItems);	
+			super(!ns.useManualSwitchMode, ns.renderingIndex, res.streamItems.length);	
 			
 			_ns = ns;
 			_resource = res;
 									
 			_ns.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
-			_ns.addEventListener(SwitchingChangeEvent.SWITCHING_CHANGE, onNetStreamSwitchingChange);
+			_ns.addEventListener(SwitchEvent.SWITCHING_CHANGE, onNetStreamSwitchingChange);
 		}
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		override public function getBitrateForIndex(index:int):Number
 		{
 			validateIndex(index);
-			return _resource.getItemAt(index).bitrate;
+			return _resource.streamItems[index].bitrate;
 		}	
 				
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		override protected function processSwitchTo(value:int):void
 		{
@@ -73,6 +91,11 @@ package org.osmf.net.dynamicstreaming
 			
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		override protected function processAutoSwitchChange(value:Boolean):void
 		{
@@ -81,6 +104,11 @@ package org.osmf.net.dynamicstreaming
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		override protected function processMaxIndexChange(value:int):void
 		{
@@ -92,6 +120,11 @@ package org.osmf.net.dynamicstreaming
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		override protected function postProcessSwitchTo(detail:SwitchingDetail=null):void
 		{
@@ -108,14 +141,14 @@ package org.osmf.net.dynamicstreaming
 			switch (event.info.code) 
 			{
 				case NetStreamCodes.NETSTREAM_PLAY_FAILED:					
-					processSwitchState(SwitchingChangeEvent.SWITCHSTATE_FAILED);					
+					processSwitchState(SwitchEvent.SWITCHSTATE_FAILED);					
 					break;
 			}			
 		}
 		
-		private function onNetStreamSwitchingChange(event:SwitchingChangeEvent):void
+		private function onNetStreamSwitchingChange(event:SwitchEvent):void
 		{
-			if (event.newState == SwitchingChangeEvent.SWITCHSTATE_COMPLETE)
+			if (event.newState == SwitchEvent.SWITCHSTATE_COMPLETE)
 			{
 				currentIndex = _ns.renderingIndex;
 			}

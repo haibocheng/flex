@@ -75,11 +75,13 @@ package flashx.textLayout.operations
 			if (absoluteStart != absoluteEnd)	
 			{
 				TextFlowEdit.replaceRange(textFlow, absoluteStart, absoluteEnd, null);
-				textFlow.interactionManager.notifyInsertOrDelete(absoluteStart, absoluteStart - absoluteEnd);
+				if (textFlow.interactionManager)
+					textFlow.interactionManager.notifyInsertOrDelete(absoluteStart, absoluteStart - absoluteEnd);
 			}
 			
 			var nextInsertPosition:int = TextFlowEdit.replaceRange(textFlow, absoluteStart, absoluteStart, _textScrap);
-			textFlow.interactionManager.notifyInsertOrDelete(absoluteStart, nextInsertPosition - absoluteStart);				
+			if (textFlow.interactionManager)
+				textFlow.interactionManager.notifyInsertOrDelete(absoluteStart, nextInsertPosition - absoluteStart);				
 			_numCharsAdded = (nextInsertPosition - absoluteStart) /*- (absoluteEnd - absoluteStart) */;
 		}
 		
@@ -89,7 +91,8 @@ package flashx.textLayout.operations
 			if (_textScrap != null)
 			{
 				TextFlowEdit.replaceRange(textFlow, absoluteStart, absoluteStart + _numCharsAdded, _tScrapUnderSelection);
-				textFlow.interactionManager.notifyInsertOrDelete(absoluteStart, -_numCharsAdded);
+				if (textFlow.interactionManager)
+					textFlow.interactionManager.notifyInsertOrDelete(absoluteStart, -_numCharsAdded);
 			}
 			return originalSelectionState;	
 		}

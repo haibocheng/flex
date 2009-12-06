@@ -64,7 +64,7 @@ package flashx.textLayout.operations
 		{
 			super(operationState);
 			
-			if (absoluteStart < absoluteEnd)
+			if (absoluteStart != absoluteEnd)
 				delSelOp = new DeleteTextOperation(operationState);
 				
 			_source = source;
@@ -172,7 +172,8 @@ package flashx.textLayout.operations
 			}
 			
 			ParaEdit.createImage(leafNodeParent, selPos - leafNodeParent.getAbsoluteStart(), _source, imageWidth, imageHeight, options, pointFormat);
-			textFlow.interactionManager.notifyInsertOrDelete(absoluteStart, 1);
+			if (textFlow.interactionManager)
+				textFlow.interactionManager.notifyInsertOrDelete(absoluteStart, 1);
 			
 			return true;
 		}
@@ -185,7 +186,8 @@ package flashx.textLayout.operations
 			var elementIdx:int = leafNode.parent.getChildIndex(leafNode);
 			leafNodeParent.replaceChildren(elementIdx, elementIdx + 1, null);			
 					
-			textFlow.interactionManager.notifyInsertOrDelete(absoluteStart, -1);
+			if (textFlow.interactionManager)
+				textFlow.interactionManager.notifyInsertOrDelete(absoluteStart, -1);
 
 			return delSelOp ? delSelOp.undo() : originalSelectionState; 
 		}

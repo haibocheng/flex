@@ -13,6 +13,8 @@ package com.adobe.internal.fxg.dom.filters;
 
 import static com.adobe.fxg.FXGConstants.*;
 
+import com.adobe.internal.fxg.dom.DOMParserHelper;
+
 /**
  * @author Peter Farland
  */
@@ -46,11 +48,11 @@ public class BlurFilterNode extends AbstractFilterNode
     public void setAttribute(String name, String value)
     {
         if (FXG_BLURX_ATTRIBUTE.equals(name))
-            blurX = parseDouble(value);
+            blurX = DOMParserHelper.parseDouble(this, value, name);
         else if (FXG_BLURY_ATTRIBUTE.equals(name))
-            blurY = parseDouble(value);
+            blurY = DOMParserHelper.parseDouble(this, value, name);
         else if (FXG_QUALITY_ATTRIBUTE.equals(name))
-            quality = parseInt(value, QUALITY_MIN_INCLUSIVE, QUALITY_MAX_INCLUSIVE, quality);
+            quality = DOMParserHelper.parseInt(this, value, name, QUALITY_MIN_INCLUSIVE, QUALITY_MAX_INCLUSIVE, quality);
 		else
             super.setAttribute(name, value);
     }

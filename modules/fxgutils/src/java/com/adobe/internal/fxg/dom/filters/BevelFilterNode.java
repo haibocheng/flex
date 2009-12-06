@@ -13,6 +13,7 @@ package com.adobe.internal.fxg.dom.filters;
 
 import static com.adobe.fxg.FXGConstants.*;
 
+import com.adobe.internal.fxg.dom.DOMParserHelper;
 import com.adobe.internal.fxg.dom.types.BevelType;
 
 /**
@@ -57,27 +58,27 @@ public class BevelFilterNode extends AbstractFilterNode
     public void setAttribute(String name, String value)
     {
         if (FXG_BLURX_ATTRIBUTE.equals(name))
-            blurX = parseDouble(value);
+            blurX = DOMParserHelper.parseDouble(this, value, name);
         else if (FXG_BLURY_ATTRIBUTE.equals(name))
-            blurY = parseDouble(value);
+            blurY = DOMParserHelper.parseDouble(this, value, name);
         else if (FXG_QUALITY_ATTRIBUTE.equals(name))
-            quality = parseInt(value, QUALITY_MIN_INCLUSIVE, QUALITY_MAX_INCLUSIVE, quality);
+            quality = DOMParserHelper.parseInt(this, value, name, QUALITY_MIN_INCLUSIVE, QUALITY_MAX_INCLUSIVE, quality);
         else if (FXG_ANGLE_ATTRIBUTE.equals(name))
-            angle = parseDouble(value);
+            angle = DOMParserHelper.parseDouble(this, value, name);
         else if (FXG_DISTANCE_ATTRIBUTE.equals(name))
-            distance = parseDouble(value);
+            distance = DOMParserHelper.parseDouble(this, value, name);
         else if (FXG_HIGHLIGHTALPHA_ATTRIBUTE.equals(name))
-            highlightAlpha = parseDouble(value, ALPHA_MIN_INCLUSIVE, ALPHA_MAX_INCLUSIVE, highlightAlpha);
+            highlightAlpha = DOMParserHelper.parseDouble(this, value, name, ALPHA_MIN_INCLUSIVE, ALPHA_MAX_INCLUSIVE, highlightAlpha);
         else if (FXG_HIGHLIGHTCOLOR_ATTRIBUTE.equals(name))
-            highlightColor = parseRGB(value, highlightColor);
+            highlightColor = DOMParserHelper.parseRGB(this, value, name);
         else if (FXG_KNOCKOUT_ATTRIBUTE.equals(name))
-            knockout = parseBoolean(value);
+            knockout = DOMParserHelper.parseBoolean(this, value, name);
         else if (FXG_SHADOWALPHA_ATTRIBUTE.equals(name))
-            shadowAlpha = parseDouble(value, ALPHA_MIN_INCLUSIVE, ALPHA_MAX_INCLUSIVE, shadowAlpha);
+            shadowAlpha = DOMParserHelper.parseDouble(this, value, name, ALPHA_MIN_INCLUSIVE, ALPHA_MAX_INCLUSIVE, shadowAlpha);
         else if (FXG_SHADOWCOLOR_ATTRIBUTE.equals(name))
-            shadowColor = parseRGB(value, shadowColor);
+            shadowColor = DOMParserHelper.parseRGB(this, value, name);
         else if (FXG_STRENGTH_ATTRIBUTE.equals(name))
-            strength = parseDouble(value);
+            strength = DOMParserHelper.parseDouble(this, value, name);
         else if (FXG_TYPE_ATTRIBUTE.equals(name))
             type = getBevelType(value);
 		else

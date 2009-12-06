@@ -28,9 +28,9 @@ package org.osmf.layout
 	import flash.events.EventDispatcher;
 	import flash.utils.Dictionary;
 	
-	import org.osmf.events.DimensionChangeEvent;
-	import org.osmf.events.TraitsChangeEvent;
-	import org.osmf.events.ViewChangeEvent;
+	import org.osmf.events.DimensionEvent;
+	import org.osmf.events.MediaElementEvent;
+	import org.osmf.events.ViewEvent;
 	import org.osmf.logging.ILogger;
 	import org.osmf.media.MediaElement;
 	import org.osmf.metadata.Metadata;
@@ -43,19 +43,29 @@ package org.osmf.layout
 	/**
 	 * Dispatched when a layout child's _view has changed.
 	 * 
-	 * @eventType org.osmf.events.ViewChangeEvent.VIEW_CHANGE
+	 * @eventType org.osmf.events.ViewEvent.VIEW_CHANGE
 	 */	
-	[Event(name="viewChange",type="org.osmf.events.ViewChangeEvent")]
+	[Event(name="viewChange",type="org.osmf.events.ViewEvent")]
 	
 	/**
 	 * Dispatched when a layout element's intrinsical width and height changed.
 	 * 
-	 * @eventType org.osmf.events.DimensionChangeEvent.DIMENSION_CHANGE
+	 * @eventType org.osmf.events.DimensionEvent.DIMENSION_CHANGE
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 10
+	 *  @playerversion AIR 1.0
+	 *  @productversion OSMF 1.0
 	 */	
-	[Event(name="dimensionChange",type="org.osmf.events.DimensionChangeEvent")]
+	[Event(name="dimensionChange",type="org.osmf.events.DimensionEvent")]
 
 	/**
 	 * Class wraps a MediaElement into a ILayoutChild.
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 10
+	 *  @playerversion AIR 1.0
+	 *  @productversion OSMF 1.0
 	 */	
 	public class MediaElementLayoutTarget extends EventDispatcher implements ILayoutTarget, ILayoutContext
 	{
@@ -79,8 +89,8 @@ package org.osmf.layout
 			{
 				this._mediaElement = mediaElement;
 				
-				_mediaElement.addEventListener(TraitsChangeEvent.TRAIT_ADD, onMediaElementTraitsChange);
-				_mediaElement.addEventListener(TraitsChangeEvent.TRAIT_REMOVE, onMediaElementTraitsChange);
+				_mediaElement.addEventListener(MediaElementEvent.TRAIT_ADD, onMediaElementTraitsChange);
+				_mediaElement.addEventListener(MediaElementEvent.TRAIT_REMOVE, onMediaElementTraitsChange);
 				
 				updateViewableTrait();
 				updateSpatialTrait();
@@ -92,6 +102,11 @@ package org.osmf.layout
 
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function get layoutRenderer():ILayoutRenderer
 		{
@@ -108,6 +123,11 @@ package org.osmf.layout
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function get metadata():Metadata
 		{
@@ -116,6 +136,11 @@ package org.osmf.layout
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function get view():DisplayObject
 		{
@@ -124,6 +149,11 @@ package org.osmf.layout
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function get container():DisplayObjectContainer
 		{
@@ -132,6 +162,11 @@ package org.osmf.layout
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function get firstChildIndex():uint
 		{
@@ -140,6 +175,11 @@ package org.osmf.layout
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function get intrinsicWidth():Number
 		{
@@ -152,6 +192,11 @@ package org.osmf.layout
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function get intrinsicHeight():Number
 		{
@@ -164,6 +209,11 @@ package org.osmf.layout
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function updateIntrinsicDimensions():void
 		{
@@ -175,6 +225,11 @@ package org.osmf.layout
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 	 	public function set calculatedWidth(value:Number):void
 	 	{
@@ -196,6 +251,11 @@ package org.osmf.layout
 	 	
 	 	/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function set calculatedHeight(value:Number):void
 		{
@@ -214,6 +274,11 @@ package org.osmf.layout
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function set projectedWidth(value:Number):void
 	 	{
@@ -235,6 +300,11 @@ package org.osmf.layout
 	 	
 	 	/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function set projectedHeight(value:Number):void
 		{
@@ -290,7 +360,7 @@ package org.osmf.layout
 		
 		private static const layoutTargets:Dictionary = new Dictionary(true);
 		
-		private function onMediaElementTraitsChange(event:TraitsChangeEvent):void
+		private function onMediaElementTraitsChange(event:MediaElementEvent):void
 		{
 			if (event.traitType == MediaTraitType.VIEWABLE)
 			{
@@ -311,13 +381,13 @@ package org.osmf.layout
 			
 			if (oldTrait)
 			{
-				oldTrait.removeEventListener(ViewChangeEvent.VIEW_CHANGE, viewChangeEventHandler);
+				oldTrait.removeEventListener(ViewEvent.VIEW_CHANGE, viewChangeEventHandler);
 			}
 			
 			if (viewableTrait)
 			{
 				processViewChange(viewableTrait.view);
-				viewableTrait.addEventListener(ViewChangeEvent.VIEW_CHANGE, viewChangeEventHandler, false, 0, true);
+				viewableTrait.addEventListener(ViewEvent.VIEW_CHANGE, viewChangeEventHandler, false, 0, true);
 			}
 			else
 			{
@@ -326,7 +396,7 @@ package org.osmf.layout
 			
 			if 	(oldView != _view)
 			{
-				dispatchEvent(new ViewChangeEvent(oldView, _view));
+				dispatchEvent(new ViewEvent(ViewEvent.VIEW_CHANGE, false, false, oldView, _view));
 			}
 		}
 		
@@ -340,23 +410,23 @@ package org.osmf.layout
 			
 			if (oldTrait)
 			{
-				oldTrait.removeEventListener(DimensionChangeEvent.DIMENSION_CHANGE, dimensionChangeEventHandler);
+				oldTrait.removeEventListener(DimensionEvent.DIMENSION_CHANGE, dimensionChangeEventHandler);
 			}
 			
 			if (spatialTrait)
 			{
-				spatialTrait.addEventListener(DimensionChangeEvent.DIMENSION_CHANGE, dimensionChangeEventHandler, false, 0, true);
+				spatialTrait.addEventListener(DimensionEvent.DIMENSION_CHANGE, dimensionChangeEventHandler, false, 0, true);
 			}
 			
 			if 	(	oldWidth != intrinsicWidth
 				||	oldHeight != intrinsicHeight
 				)
 			{
-				dispatchEvent(new DimensionChangeEvent(oldWidth, oldHeight, intrinsicWidth, intrinsicHeight));
+				dispatchEvent(new DimensionEvent(DimensionEvent.DIMENSION_CHANGE, false, false, oldWidth, oldHeight, intrinsicWidth, intrinsicHeight));
 			}
 		}
 		
-		private function viewChangeEventHandler(event:ViewChangeEvent):void
+		private function viewChangeEventHandler(event:ViewEvent):void
 		{
 			processViewChange(event.newView);
 			
@@ -394,6 +464,11 @@ package org.osmf.layout
 /**
  * Internal class, used to prevent the MediaElementLayoutTarget constructor
  * to run successfully on being invoked outside of this class.
+ *  
+ *  @langversion 3.0
+ *  @playerversion Flash 10
+ *  @playerversion AIR 1.0
+ *  @productversion OSMF 1.0
  */
 class ConstructorLock
 {

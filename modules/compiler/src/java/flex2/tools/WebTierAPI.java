@@ -145,7 +145,7 @@ public final class WebTierAPI extends Tool
 					target.bundlePath, target.resources, swcContext, null, false, configuration);
 
 			// create a SymbolTable...
-			final SymbolTable symbolTable = SymbolTable.newSymbolTable(configuration);
+			final SymbolTable symbolTable = new SymbolTable(configuration);
 			target.perCompileData = symbolTable.perCompileData;
 
 			// compile

@@ -11,6 +11,7 @@
 
 package com.adobe.internal.fxg.dom;
 
+import com.adobe.fxg.FXGException;
 import com.adobe.fxg.dom.FXGNode;
 
 /**
@@ -20,6 +21,14 @@ import com.adobe.fxg.dom.FXGNode;
  */
 public class ContentPropertyNode extends DelegateNode
 {
+    public void setDelegate(FXGNode delegate)
+    {
+        if (delegate instanceof RichTextNode && ((RichTextNode)delegate).content != null)
+            throw new FXGException(getStartLine(), getStartColumn(), "MultipleContentElements");             
+   
+        super.setDelegate(delegate);
+    }
+    
     //--------------------------------------------------------------------------
     //
     // FXGNode Implementation

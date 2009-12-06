@@ -23,16 +23,16 @@ package org.osmf.traits
 {
 	import flash.errors.IllegalOperationError;
 	
-	import org.osmf.events.LoadableStateChangeEvent;
+	import org.osmf.events.LoadEvent;
 	import org.osmf.media.IMediaResource;
 	import org.osmf.utils.MediaFrameworkStrings;
 
 	/**
 	 * Dispatched when the state of the ILoadable has changed.
 	 *
-	 * @eventType org.osmf.events.LoadableEvent.LOADABLE_STATE_CHANGE
+	 * @eventType org.osmf.events.LoadEvent.LOAD_STATE_CHANGE
 	 **/
-	[Event(name="loadableStateChange", type="org.osmf.events.LoadableStateChangeEvent")]
+	[Event(name="loadStateChange", type="org.osmf.events.LoadEvent")]
 
 	/**
 	 * The LoadableTrait class provides a base ILoadable implementation.
@@ -56,12 +56,17 @@ package org.osmf.traits
 		 * @param resource The IMediaResource instance that represents the media resource 
 		 * to be loaded.
 		 * 
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
 		public function LoadableTrait(loader:ILoader, resource:IMediaResource)
 		{			
 			this.loader = loader;			
 			_resource = resource;
-			_loadState = LoadState.CONSTRUCTED;
+			_loadState = LoadState.UNINITIALIZED;
 		}
 		
 		// ILoadable
@@ -84,19 +89,18 @@ package org.osmf.traits
 		/**
 		 * The load state of this trait.
 		 **/
-		public function get loadState():LoadState
+		public function get loadState():String
 		{
 			return _loadState;
 		}
 		
-		final public function set loadState(value:LoadState):void
+		final public function set loadState(value:String):void
 		{
 			if (_loadState != value)
 			{
-				var oldState:LoadState = _loadState;
 				_loadState = value;
 				
-				dispatchEvent(new LoadableStateChangeEvent(oldState, _loadState));
+				dispatchEvent(new LoadEvent(LoadEvent.LOAD_STATE_CHANGE, false, false, _loadState));
 			}
 		}
 		
@@ -104,7 +108,7 @@ package org.osmf.traits
 		 * The context resulting from this trait's successful <code>load()</code>
 		 * operation.
 		 * 
-         * <p>The context is <code>null</code> before this trait's state is <code>LOADED</code> 
+         * <p>The context is <code>null</code> before this trait's state is <code>READY</code> 
 		 * and after the media has been unloaded.</p>
 		 **/
  		public function get loadedContext():ILoadedContext
@@ -120,27 +124,27 @@ package org.osmf.traits
 		/**
 		 * Loads this the media into this loadable trait.
 		 * Updates the load state.
-         * Dispatches the <code>loadableStateChange</code> event with every state change.
+         * Dispatches the <code>loadStateChange</code> event with every state change.
          *
          * <p>Typical states are <code>LOADING</code> while the media is loading,
-         * <code>LOADED</code> after it has successfully completed loading, 
-         * and <code>LOAD_FAILED</code> if it fails to complete loading.</p>
+         * <code>READY</code> after it has successfully completed loading, 
+         * and <code>LOAD_ERROR</code> if it fails to complete loading.</p>
 		 * 
-         * <p>If the LoadState is <code>LOADING</code> or <code>LOADED</code>
+         * <p>If the LoadState is <code>LOADING</code> or <code>READY</code>
          * when the method is called, throws an error.</p>
          *  
          * @see LoadState
 		 * @throws IllegalOperationError If this trait is unable to load
 		 * itself or if the LoadState is <code>LOADING</code> or
-         * <code>LOADED</code>.
+         * <code>READY</code>.
 		 **/
 		public function load():void
 		{
 			if (loader)
 			{	
-				if (_loadState == LoadState.LOADED)
+				if (_loadState == LoadState.READY)
 				{
-					throw new IllegalOperationError(MediaFrameworkStrings.ALREADY_LOADED);
+					throw new IllegalOperationError(MediaFrameworkStrings.ALREADY_READY);
 				}
 				if (_loadState == LoadState.LOADING)
 				{
@@ -159,20 +163,20 @@ package org.osmf.traits
 		
 		/**
          * Unloads this loadable trait. Updates the load state.
-         * Dispatches the <code>loadableStateChange</code> event with every state change.
+         * Dispatches the <code>loadStateChange</code> event with every state change.
 		 * 
          * <p>Typical states are <code>UNLOADING</code> while the media is unloading,
-         * <code>CONSTRUCTED</code> after it has successfully completed unloading, 
-         * and <code>LOAD_FAILED</code> if it fails to complete unloading.</p>
+         * <code>UNINITIALIZED</code> after it has successfully completed unloading, 
+         * and <code>LOAD_ERROR</code> if it fails to complete unloading.</p>
 		 * 
- 		 * <p>If the LoadState is not <code>LOADED</code> when the
+ 		 * <p>If the LoadState is not <code>READY</code> when the
  		 * method is called, throws an error.</p>
 		 * 
 		 * @param loadable The loadable trait to unload.
          * @see LoadState
 		 * 
 		 * @throws IllegalOperationError If this trait is unable to unload
-		 * itself, or if the LoadState is not <code>LOADED</code>.
+		 * itself, or if the LoadState is not <code>READY</code>.
 		 **/
 		public function unload():void
 		{
@@ -182,7 +186,7 @@ package org.osmf.traits
 				{
 					throw new IllegalOperationError(MediaFrameworkStrings.ALREADY_UNLOADING);
 				}
-				if (_loadState == LoadState.CONSTRUCTED)
+				if (_loadState == LoadState.UNINITIALIZED)
 				{
 					throw new IllegalOperationError(MediaFrameworkStrings.ALREADY_UNLOADED);
 				}
@@ -200,7 +204,7 @@ package org.osmf.traits
 		private var loader:ILoader;
 		private var _resource:IMediaResource;
 		
-		private var _loadState:LoadState;
+		private var _loadState:String;
 		private var _loadedContext:ILoadedContext;
 	}
 }

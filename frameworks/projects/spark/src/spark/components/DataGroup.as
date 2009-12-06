@@ -167,6 +167,35 @@ public class DataGroup extends GroupBase implements IItemRendererOwner
     
     //--------------------------------------------------------------------------
     //
+    //  Overridden properties
+    //
+    //--------------------------------------------------------------------------
+
+    //----------------------------------
+    //  baselinePosition
+    //----------------------------------
+
+    /**
+     *  @inheritDoc
+     *  
+     *  @langversion 3.0
+     *  @playerversion Flash 9
+     *  @playerversion AIR 1.1
+     *  @productversion Flex 3
+     */
+    override public function get baselinePosition():Number
+    {
+        if (!validateBaselinePosition())
+            return NaN;
+
+        if (numElements == 0)
+            return super.baselinePosition;
+
+        return getElementAt(0).baselinePosition + getElementAt(0).y;
+    }
+
+    //--------------------------------------------------------------------------
+    //
     //  Properties
     //
     //--------------------------------------------------------------------------
@@ -251,7 +280,33 @@ public class DataGroup extends GroupBase implements IItemRendererOwner
             IInvalidating(obj).validateNow();
         setTypicalLayoutElement(renderer);
         super.removeChild(obj);
-    }    
+    } 
+    
+    /**
+     *  @private 
+     *  Create and validate a new item renderer (IR) for dataProvider[index].  
+     * 
+     *  This method creates a new IR which is not a child of this DataGroup.  It does not 
+     *  return the existing IR at the specified index and it does not cache the IRs it 
+     *  creates.   This method is intended to be used by clients which need to measure 
+     *  virtual IRs that may not be visible/allocated.
+     */
+    mx_internal function createItemRendererFor(index:int):IVisualElement
+    {
+        if ((index < 0) || (dataProvider == null) || (index >= dataProvider.length))
+            return null;
+        
+        const item:Object = dataProvider.getItemAt(index);
+        const renderer:IVisualElement = createRendererForItem(item);
+        
+        super.addChild(DisplayObject(renderer)); 
+        setUpItemRenderer(renderer, index, item);
+        if (renderer is IInvalidating)
+            IInvalidating(renderer).validateNow();
+        super.removeChild(DisplayObject(renderer));
+        
+        return renderer;
+    }
     
     /**
      *  @private
@@ -534,7 +589,7 @@ public class DataGroup extends GroupBase implements IItemRendererOwner
             {
                 for (index = indexToRenderer.length - 1; index >= 0; index--)
                 {
-                    // FIXME (rfrishbe): we can't key off of the oldDataProvider for 
+                    // TODO (rfrishbe): we can't key off of the oldDataProvider for 
                     // the item because it might not be there anymore (for instance, 
                     // in a dataProvider reset where the new data is loaded into 
                     // the dataProvider--the dataProvider doesn't actually change, 
@@ -544,6 +599,9 @@ public class DataGroup extends GroupBase implements IItemRendererOwner
                     //       and there is an itemRenderer or itemRendererFunction
                     //   2.  The item itself
                     
+                    // Probably could fix above by also storing indexToData[], but that doesn't 
+                    // seem worth it.  Sending in the wrong item here doesn't result in a big error...
+                    // just the event with have the wrong item associated with it
                     renderer = indexToRenderer[index] as IVisualElement;
                     if (renderer is IDataRenderer && (itemRenderer != null || itemRendererFunction != null))
                         item = IDataRenderer(renderer).data;
@@ -559,7 +617,7 @@ public class DataGroup extends GroupBase implements IItemRendererOwner
                 var startIndex:int = virtualLayoutStartIndex; // itemRemoved decrements virtualLayoutStartIndex
                 for (index = endIndex; (index >= 0) && (index >= startIndex); index--)
                 {
-                    // FIXME (rfrishbe): same as above
+                    // TODO (rfrishbe): same as above
                     
                     renderer = indexToRenderer[index] as IVisualElement;
                     if (renderer is IDataRenderer && (itemRenderer != null || itemRendererFunction != null))

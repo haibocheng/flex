@@ -42,31 +42,61 @@ package org.osmf.layout
 	 * Defines a metadata facet that holds a number of layout related attributes.
 	 * 
 	 * The default layout renderer adheres specific semantics to each attribute.
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 10
+	 *  @playerversion AIR 1.0
+	 *  @productversion OSMF 1.0
 	 */	
 	public class LayoutAttributesFacet extends EventDispatcher implements IFacet
 	{
 		/**
 		 * Intentifier for the facet's order property.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public static const ORDER:StringIdentifier = new StringIdentifier("order");
 		
 		/**
 		 * Intentifier for the facet's registrationPoint property.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public static const REGISTRATION_POINT:StringIdentifier = new StringIdentifier("registrationPoint");
 		
 		/**
 		 * Intentifier for the facet's order property.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public static const SCALE_MODE:StringIdentifier = new StringIdentifier("scaleMode");
 		
 		/**
 		 * Intentifier for the facet's alignment property.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public static const ALIGNMENT:StringIdentifier = new StringIdentifier("alignment");
 		
 		/**
 		 * Intentifier for the facet's snapToPixel property.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public static const SNAP_TO_PIXEL:StringIdentifier = new StringIdentifier("snapToPixel");
 		
@@ -82,6 +112,11 @@ package org.osmf.layout
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function get namespaceURL():URL
 		{
@@ -90,6 +125,11 @@ package org.osmf.layout
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function getValue(identifier:IIdentifier):*
 		{
@@ -127,6 +167,11 @@ package org.osmf.layout
 		 * This facet does not merge.
 		 * 
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		public function merge(childFacet:IFacet):IFacet
 		{
@@ -141,6 +186,11 @@ package org.osmf.layout
 		 * 
 		 * Defines the desired position of the target in the display list
 		 * of its context.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */	
 		public function get order():Number
 		{
@@ -151,7 +201,7 @@ package org.osmf.layout
 			if (_order != value)
 			{
 				var event:FacetValueChangeEvent
-					= new FacetValueChangeEvent(ORDER, value, _order);
+					= new FacetValueChangeEvent(FacetValueChangeEvent.VALUE_CHANGE, false, false, ORDER, value, _order);
 					
 				_order = value;
 						
@@ -164,6 +214,11 @@ package org.osmf.layout
 		 * 
 		 * Defines the desired position of the target in the display list
 		 * of its context.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function get registrationPoint():RegistrationPoint
 		{
@@ -174,7 +229,7 @@ package org.osmf.layout
 			if (_registrationPoint != value)
 			{
 				var event:FacetValueChangeEvent
-					= new FacetValueChangeEvent(REGISTRATION_POINT, value, _registrationPoint);
+					= new FacetValueChangeEvent(FacetValueChangeEvent.VALUE_CHANGE, false, false, REGISTRATION_POINT, value, _registrationPoint);
 					
 				_registrationPoint = value;
 						
@@ -186,17 +241,22 @@ package org.osmf.layout
 		 * The default layout renderer interprets this value as follows:
 		 * 
 		 * Defines the desired scale mode to be applied to the target.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
-		public function get scaleMode():ScaleMode
+		public function get scaleMode():String
 		{
 			return _scaleMode;
 		}
-		public function set scaleMode(value:ScaleMode):void
+		public function set scaleMode(value:String):void
 		{
 			if (_scaleMode != value)
 			{
 				var event:FacetValueChangeEvent
-					= new FacetValueChangeEvent(SCALE_MODE, value, _scaleMode);
+					= new FacetValueChangeEvent(FacetValueChangeEvent.VALUE_CHANGE, false, false, SCALE_MODE, value, _scaleMode);
 					
 				_scaleMode = value;
 						
@@ -209,6 +269,11 @@ package org.osmf.layout
 		 * 
 		 * Defines the desired alignment mode to be applied to the target when
 		 * scaling of the target leaves a blank space.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function get alignment():RegistrationPoint
 		{
@@ -219,7 +284,7 @@ package org.osmf.layout
 			if (_alignment != value)
 			{
 				var event:FacetValueChangeEvent
-					= new FacetValueChangeEvent(ALIGNMENT, value, _alignment);
+					= new FacetValueChangeEvent(FacetValueChangeEvent.VALUE_CHANGE, false, false, ALIGNMENT, value, _alignment);
 					
 				_alignment = value;
 						
@@ -232,6 +297,11 @@ package org.osmf.layout
 		 * 
 		 * If set to true, the target's calculated position and size will
 		 * be rounded.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */		
 		public function get snapToPixel():Boolean
 		{
@@ -242,7 +312,7 @@ package org.osmf.layout
 			if (_snapToPixel != value)
 			{
 				var event:FacetValueChangeEvent
-					= new FacetValueChangeEvent(SNAP_TO_PIXEL, value, _snapToPixel);
+					= new FacetValueChangeEvent(FacetValueChangeEvent.VALUE_CHANGE, false, false, SNAP_TO_PIXEL, value, _snapToPixel);
 					
 				_snapToPixel = value;
 						
@@ -255,7 +325,7 @@ package org.osmf.layout
 		
 		private var _order:Number = NaN;
 		private var _registrationPoint:RegistrationPoint;
-		private var _scaleMode:ScaleMode;
+		private var _scaleMode:String; // ScaleMode
 		private var _alignment:RegistrationPoint;
 		private var _snapToPixel:Boolean;
 	}

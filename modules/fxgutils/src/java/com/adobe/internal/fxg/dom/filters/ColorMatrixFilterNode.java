@@ -13,6 +13,9 @@ package com.adobe.internal.fxg.dom.filters;
 
 import java.util.StringTokenizer;
 
+import com.adobe.fxg.FXGException;
+import com.adobe.internal.fxg.dom.DOMParserHelper;
+
 import static com.adobe.fxg.FXGConstants.*;
 
 /**
@@ -75,12 +78,18 @@ public class ColorMatrixFilterNode extends AbstractFilterNode
         byte index = 0;
         float[] result = new float[20];
         StringTokenizer tokenizer = new StringTokenizer(value, ",", false);
-        while (tokenizer.hasMoreTokens() && index < 20)
-        {
-            String token = tokenizer.nextToken();
-            float f = parseFloat(token);
-            result[index++] = f;
+        try{
+            while (tokenizer.hasMoreTokens() && index < 20)
+            {
+                String token = tokenizer.nextToken();
+                float f = DOMParserHelper.parseFloat(this, token);
+                result[index++] = f;
+            }
         }
+        catch(FXGException e)
+        {
+            throw new FXGException(getStartLine(), getStartColumn(), "InvalidColorMatrix", value);
+        }                
         return result;
     }
 }

@@ -67,15 +67,15 @@ public interface ParserConstants {
   int START_DEFINITION = 61;
   int END_DEFINITION = 62;
   int START_ELEMENT = 63;
-  int END_ELEMENT = 64;
-  int CDATA = 65;
+  int CDATA = 64;
+  int END_ELEMENT = 65;
   int SKIP_ELEMENT = 66;
 
   String[] tokenImage = {
     "<EOF>",
     "<START_ELEMENT>",
-    "<END_ELEMENT>",
     "<CDATA>",
+    "<END_ELEMENT>",
     "DesignLayer",
     "/DesignLayer",
     "Declarations",

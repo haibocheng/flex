@@ -17,6 +17,7 @@ import java.util.List;
 import static com.adobe.fxg.FXGConstants.*;
 import com.adobe.fxg.FXGException;
 import com.adobe.fxg.dom.FXGNode;
+import com.adobe.internal.fxg.dom.DOMParserHelper;
 import com.adobe.internal.fxg.dom.GradientEntryNode;
 import com.adobe.internal.fxg.dom.ScalableGradientNode;
 import com.adobe.internal.fxg.dom.transforms.MatrixNode;
@@ -145,31 +146,31 @@ public class LinearGradientFillNode extends AbstractFillNode implements Scalable
     {
         if (FXG_X_ATTRIBUTE.equals(name))
         {
-            x = parseDouble(value);
+            x = DOMParserHelper.parseDouble(this, value, name);
             translateSet = true;
         }
         else if (FXG_Y_ATTRIBUTE.equals(name))
         {
-            y = parseDouble(value);
+            y = DOMParserHelper.parseDouble(this, value, name);
             translateSet = true;
         }
         else if (FXG_ROTATION_ATTRIBUTE.equals(name))
         {
-            rotation = parseDouble(value);
+            rotation = DOMParserHelper.parseDouble(this, value, name);
             rotationSet = true;
         }
         else if (FXG_SCALEX_ATTRIBUTE.equals(name))
         {
-            scaleX = parseDouble(value);
+            scaleX = DOMParserHelper.parseDouble(this, value, name);
             scaleSet = true;
         }
         else if (FXG_SPREADMETHOD_ATTRIBUTE.equals(name))
         {
-            spreadMethod = parseSpreadMethod(value, spreadMethod);
+            spreadMethod = DOMParserHelper.parseSpreadMethod(this, value, spreadMethod);
         }
         else if (FXG_INTERPOLATIONMETHOD_ATTRIBUTE.equals(name))
         {
-            interpolationMethod = parseInterpolationMethod(value, interpolationMethod);
+            interpolationMethod = DOMParserHelper.parseInterpolationMethod(this, value, interpolationMethod);
         }
         else
         {

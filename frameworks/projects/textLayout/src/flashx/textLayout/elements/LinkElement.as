@@ -722,26 +722,31 @@ package flashx.textLayout.elements
 				controllerIndex++;
 			}
 		}
+		
+		private static function findRootForEventHandlers(linkElement:LinkElement):DisplayObject
+		{
+			var textFlow:TextFlow = linkElement.getTextFlow();
+			if (textFlow)
+			{
+				var flowComposer:IFlowComposer = textFlow.flowComposer;
+				if (flowComposer && flowComposer.numControllers != 0)
+					return flowComposer.getControllerAt(0).getContainerRoot();
+			}
+			return null;
+		}
 				
 		private static function attachContainerEventHandlers(linkElement:LinkElement):void
 		{
-			var flowComposer:IFlowComposer = linkElement.getTextFlow().flowComposer;
-			var root:DisplayObject = flowComposer.getControllerAt(0).getContainerRoot();
+			var root:DisplayObject = findRootForEventHandlers(linkElement);
 			if (root)
-			{
 				root.addEventListener(MouseEvent.MOUSE_MOVE, stageMouseMoveHandler, false, 0, true);
-			}
 		}
 
 		private static function detachContainerEventHandlers(linkElement:LinkElement):void
 		{
-			var flowComposer:IFlowComposer = linkElement.getTextFlow().flowComposer;
-			if (flowComposer)
-			{
-				var root:DisplayObject = flowComposer.getControllerAt(0).getContainerRoot();
-				if (root)
-					root.removeEventListener(MouseEvent.MOUSE_MOVE, stageMouseMoveHandler);
-			}
+			var root:DisplayObject = findRootForEventHandlers(linkElement);
+			if (root)
+				root.removeEventListener(MouseEvent.MOUSE_MOVE, stageMouseMoveHandler);
 		}
 		
 		private function mouseOverHandler(evt:MouseEvent):void

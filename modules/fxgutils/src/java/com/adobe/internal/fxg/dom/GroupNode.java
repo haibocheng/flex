@@ -105,22 +105,22 @@ public class GroupNode extends GraphicContentNode implements MaskingNode
     {
         if (FXG_SCALEGRIDLEFT_ATTRIBUTE.equals(name))
         {
-            scaleGridLeft = parseDouble(value);
+            scaleGridLeft = DOMParserHelper.parseDouble(this, value, name);
             definesScaleGrid = true;
         }
         else if (FXG_SCALEGRIDTOP_ATTRIBUTE.equals(name))
         {
-            scaleGridTop = parseDouble(value);
+            scaleGridTop = DOMParserHelper.parseDouble(this, value, name);
             definesScaleGrid = true;
         }
         else if (FXG_SCALEGRIDRIGHT_ATTRIBUTE.equals(name))
         {
-            scaleGridRight = parseDouble(value);
+            scaleGridRight = DOMParserHelper.parseDouble(this, value, name);
             definesScaleGrid = true;
         }
         else if (FXG_SCALEGRIDBOTTOM_ATTRIBUTE.equals(name))
         {
-            scaleGridBottom = parseDouble(value);
+            scaleGridBottom = DOMParserHelper.parseDouble(this, value, name);
             definesScaleGrid = true;
         }
         else

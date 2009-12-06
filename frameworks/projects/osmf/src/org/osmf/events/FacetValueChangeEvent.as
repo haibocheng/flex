@@ -21,7 +21,8 @@
 *****************************************************/
 package org.osmf.events
 {
-	import org.osmf.metadata.IFacet;
+	import flash.events.Event;
+	
 	import org.osmf.metadata.IIdentifier;
 
 	/**
@@ -32,25 +33,52 @@ package org.osmf.events
 	public class FacetValueChangeEvent extends FacetValueEvent
 	{
 		/**
-		 * Dispatched when a value is updated on a IFacet.
-		 */ 
+		 * The FacetValueChangeEvent.VALUE_CHANGE constant defines the value
+		 * of the type property of the event object for a facetValueChange
+		 * event.
+		 * 
+		 * @eventType VALUE_CHANGE
+		 **/
 		public static const VALUE_CHANGE:String = "facetValueChange";
 		
-		public function FacetValueChangeEvent(identifier:IIdentifier, value:*, oldValue:*)
+		/**
+		 * Constructor.
+		 * 
+		 * @param type Event type.
+		 * @param bubbles Specifies whether the event can bubble up the display list hierarchy.
+ 		 * @param cancelable Specifies whether the behavior associated with the event can be prevented. 
+		 * @param identifier The unique identifier for this key in the facet's collection.
+		 * @param value The affected value.
+		 * @param oldValue The previous value.
+		 **/
+		public function FacetValueChangeEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false, identifier:IIdentifier=null, value:*=null, oldValue:*=null)
 		{
-			super(identifier, value, VALUE_CHANGE);
+			super(type, bubbles, cancelable, identifier, value);
+			
 			_oldValue = oldValue;
 		}
 		
 		/**
-		 * @returns the value of the 
+		 * The previous value.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */ 
 		public function get oldValue():*
 		{
 			return _oldValue;
 		}
 		
+		/**
+		 * @private
+		 */ 
+		override public function clone():Event
+		{
+			return new FacetValueChangeEvent(type, bubbles, cancelable, identifier, value, _oldValue);
+		}
+
 		private var _oldValue:*;
-		
 	}
 }

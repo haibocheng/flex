@@ -517,6 +517,12 @@ public abstract class GenerativeSecondPassEvaluator extends EvaluatorAdapter
 			MetaDataNode md = (MetaDataNode) it.next();
 			if (md.id != null && md.id.equals( StandardDefs.MD_BINDABLE ) && ((md.values == null) || (md.values.length == 0)))
 				continue;
+			
+			if (md instanceof DocCommentNode)
+			{
+				md.def = def;
+			}
+
 			def.addMetaDataNode( md );
 		}
 	}

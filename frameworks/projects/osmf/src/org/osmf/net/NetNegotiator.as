@@ -44,20 +44,20 @@ package org.osmf.net
 	import org.osmf.utils.URL;
 	
 	/**
-	 * Dispatched when the negotiator has successfully connected
+	 * Dispatched when the negotiator has successfully connected.
 	 *
 	 * @eventType org.osmf.events.NetNegotiatorEvent.CONNECTED
 	 * 
 	 **/
-	[ Event( name="connected", type="org.osmf.events.NetNegotiatorEvent") ]
+	[Event( name="connected", type="org.osmf.events.NetNegotiatorEvent")]
 	
 	/**
-	 * Dispatched when the negotiator has failed to connect
+	 * Dispatched when the negotiator has failed to connect.
 	 *
 	 * @eventType org.osmf.events.NetNegotiatorEvent.CONNECTION_FAILED
 	 * 
 	 **/
-	[ Event( name="connectionfailed", type="org.osmf.events.NetNegotiatorEvent") ]
+	[Event( name="connectionfailed", type="org.osmf.events.NetNegotiatorEvent")]
 	
 	
 	/**
@@ -74,6 +74,11 @@ package org.osmf.net
 		/**
 		 * Constructor
 		 * 
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		public function NetNegotiator(target:IEventDispatcher=null):void
 		{
@@ -104,6 +109,11 @@ package org.osmf.net
 		 * 
 		 * @param url the URL to be loaded
 		 * @returns a Vector of NetConnectionAttempt objects. 
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		protected function buildPortProtocolSequence(url:URL):Vector.<NetConnectionAttempt>  {
 			var portProtocols:Vector.<NetConnectionAttempt> = new Vector.<NetConnectionAttempt>;
@@ -144,6 +154,11 @@ package org.osmf.net
 		 * @param url the URL to be loaded
 		 * @param protocol the protocol as a String
 		 * @param port the port as a String
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		protected function buildConnectionAddress(url:URL, protocol:String, port:String):String
 		{
@@ -240,7 +255,14 @@ package org.osmf.net
     				break;
 				case NetConnectionCodes.CONNECT_SUCCESS:
 					shutDownUnsuccessfullConnections();
-					dispatchEvent(new NetNegotiatorEvent(NetNegotiatorEvent.CONNECTED,event.currentTarget as NetConnection));
+					dispatchEvent
+						( new NetNegotiatorEvent
+							( NetNegotiatorEvent.CONNECTED
+							, false
+							, false
+							, event.currentTarget as NetConnection
+							)
+						);
 					break;
 			}
 		}
@@ -275,7 +297,15 @@ package org.osmf.net
 		private function handleFailedConnectionSession(mediaError:MediaError = null):void
 		{
 			shutDownUnsuccessfullConnections();
-			dispatchEvent(new NetNegotiatorEvent(NetNegotiatorEvent.CONNECTION_FAILED,null,mediaError));
+			dispatchEvent
+				( new NetNegotiatorEvent
+					( NetNegotiatorEvent.CONNECTION_FAILED
+					, false
+					, false
+					, null
+					, mediaError
+					)
+				);
 		}
 		
 		/** 
@@ -351,6 +381,5 @@ package org.osmf.net
 		private static const PROTOCOL_EMPTY:String = "";
 		private static const MP3_EXTENSION:String = ".mp3";
 	}
-	
 }
-	
+

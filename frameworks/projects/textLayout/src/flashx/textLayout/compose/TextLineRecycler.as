@@ -10,7 +10,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 package flashx.textLayout.compose
 {	
-	import flash.text.engine.TextBlock;
 	import flash.text.engine.TextLine;
 	import flash.utils.Dictionary;
 	
@@ -30,8 +29,17 @@ package flashx.textLayout.compose
 	 */ 
 	public class TextLineRecycler
 	{
-		/** Does this player support TextLine recycling. */
-		static public const textBlockHasRecreateTextLine:Boolean = Configuration.versionIsAtLeast(10,1);
+		static private var _textLineRecyclerEnabled:Boolean = Configuration.playerEnablesArgoFeatures;
+		
+		/** Controls if the TLF recycler enabled.   It can only be enabled in 10.1 or later players.
+		 * @playerversion Flash 10
+		 * @playerversion AIR 1.5
+		 * @langversion 3.0
+		 */
+		static public function get textLineRecyclerEnabled():Boolean
+		{ return _textLineRecyclerEnabled; }
+		static public function set textLineRecyclerEnabled(value:Boolean):void
+		{ _textLineRecyclerEnabled = value ? Configuration.playerEnablesArgoFeatures : false; }
 		
 		// manage a cache of TextLine's that can be reused
 		// This version uses a dictionary that holds the TextLines as weak references
@@ -47,7 +55,7 @@ package flashx.textLayout.compose
 		static public function addLineForReuse(textLine:TextLine):void
 		{
 			CONFIG::debug { assert(textLine.parent == null && textLine.userData == null && (textLine.validity == "invalid"||textLine.validity == "static"),"textLine not ready for reuse"); }
-			if (textBlockHasRecreateTextLine)
+			if (_textLineRecyclerEnabled)
 			{
 				CONFIG::debug 
 				{
@@ -70,7 +78,7 @@ package flashx.textLayout.compose
 
 		static public function getLineForReuse():TextLine
 		{
-			if (textBlockHasRecreateTextLine)
+			if (_textLineRecyclerEnabled)
 			{
 				for (var obj:Object in reusableLineCache)
 				{
@@ -87,45 +95,5 @@ package flashx.textLayout.compose
 		{
 			reusableLineCache = new Dictionary(true);
 		}
-		
-		// manage a cache of TextLine's that can be reused
-		// This version remembers up to 100 unused TextLines for reuse
-		/* static private var reusableLineCache:Array = new Array(); */
-		
-		/**
-		 * Add a TextLine to the pool for reuse. TextLines for reuse should have null userData and null parent. 
-		 * @playerversion Flash 10
-		 * @playerversion AIR 1.5
-		 * @langversion 3.0
-		 */
-
-		/* static public function addLineForReuse(textLine:TextLine):void
-		{
-			CONFIG::debug { assert(textLine.parent == null && textLine.userData == null,"textLine not ready for reuse"); }
-			if (textBlockHasRecreateTextLine)
-			{
-				CONFIG::debug 
-				{
-					for each (var line:TextLine in reusableLineCache)
-					{
-						 assert(line != textLine,"READDING LINE TO CACHE");
-					}
-				}
-				if (reusableLineCache.length < 100)
-					reusableLineCache.push(textLine);
-			}
-		} */
-		
-		/**
-		 * Return a TextLine from the pool for reuse. 
-		 * @playerversion Flash 10
-		 * @playerversion AIR 1.5
-		 * @langversion 3.0
-		 */
-
-		/* static public function getLineForReuse():TextLine
-		{
-			return reusableLineCache.pop();
-		} */		
 	}
 }

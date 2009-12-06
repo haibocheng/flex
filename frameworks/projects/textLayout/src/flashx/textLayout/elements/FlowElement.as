@@ -79,8 +79,6 @@ package flashx.textLayout.elements
 	 	*/
 		public function FlowElement()
 		{
-			super();
-			
 			// not a valid FlowElement class
 			if (abstract)
 				throw new Error(GlobalSettings.getResourceStringFunction("invalidFlowElementConstruct"));
@@ -264,6 +262,24 @@ package flashx.textLayout.elements
 			return shallowCopy(relativeStart, relativeEnd);
 		}
 		
+		/** 
+		 * Gets the specified range of text from a flow element.
+		 * 
+		 * @param relativeStart The starting position of the range of text to be retrieved, relative to the start of the FlowElement
+		 * @param relativeEnd The ending position of the range of text to be retrieved, relative to the start of the FlowElement, -1 for up to the end of the element
+		 * @param paragraphSeparator character to put between paragraphs
+		 * 
+		 * @return The requested text.
+		 * 
+		 * @playerversion Flash 10
+		 * @playerversion AIR 1.5
+	 	 * @langversion 3.0
+		 */
+		public function getText(relativeStart:int=0, relativeEnd:int=-1, paragraphSeparator:String="\n"):String
+		{
+			return "";
+		}
+
 		/** 
 		 * Splits this FlowElement object at the position specified by the <code>relativePosition</code> parameter, which is
 		 * a relative position in the text for this element. This method splits only SpanElement and FlowGroupElement 

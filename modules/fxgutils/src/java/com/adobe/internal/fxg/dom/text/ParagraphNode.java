@@ -17,6 +17,7 @@ import static com.adobe.fxg.FXGConstants.*;
 
 import com.adobe.fxg.dom.FXGNode;
 import com.adobe.internal.fxg.dom.CDATANode;
+import com.adobe.internal.fxg.dom.DOMParserHelper;
 import com.adobe.internal.fxg.dom.TextNode;
 
 /**
@@ -129,23 +130,23 @@ public class ParagraphNode extends AbstractCharacterTextNode
         }
         else if (FXG_TEXTINDENT_ATTRIBUTE.equals(name))
         {
-            textIndent = parseDouble(value);
+            textIndent = DOMParserHelper.parseDouble(this, value, name);
         }
         else if (FXG_MARGINLEFT_ATTRIBUTE.equals(name))
         {
-            marginLeft = parseDouble(value);
+            marginLeft = DOMParserHelper.parseDouble(this, value, name);
         }
         else if (FXG_MARGINRIGHT_ATTRIBUTE.equals(name))
         {
-            marginRight = parseDouble(value);
+            marginRight = DOMParserHelper.parseDouble(this, value, name);
         }
         else if (FXG_MARGINTOP_ATTRIBUTE.equals(name))
         {
-            marginTop = parseDouble(value);
+            marginTop = DOMParserHelper.parseDouble(this, value, name);
         }
         else if (FXG_MARGINBOTTOM_ATTRIBUTE.equals(name))
         {
-            marginBottom = parseDouble(value);
+            marginBottom = DOMParserHelper.parseDouble(this, value, name);
         }
         else if (FXG_DIRECTION_ATTRIBUTE.equals(name))
         {

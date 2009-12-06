@@ -24,11 +24,23 @@ package org.osmf.traits
 	import org.osmf.media.IMediaTrait;
 
 	/**
-	 * Dispatched when this trait's <code>seeking</code> property changes.
+	 * Dispatched when this trait begins a seek operation.
 	 * 
-	 * @eventType org.osmf.events.SeekingChangeEvent.SEEKING_CHANGE
+	 * @eventType org.osmf.events.SeekEvent.SEEK_BEGIN
 	 */
-	[Event(name="seekingChange",type="org.osmf.events.SeekingChangeEvent")]
+	[Event(name="seekBegin",type="org.osmf.events.SeekEvent")]
+
+	/**
+	 * Dispatched when this trait ends a seek operation.
+	 * 
+	 * @eventType org.osmf.events.SeekEvent.SEEK_END
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 10
+	 *  @playerversion AIR 1.0
+	 *  @productversion OSMF 1.0
+	 */
+	[Event(name="seekEnd",type="org.osmf.events.SeekEvent")]
 	
 	/**
 	 * ISeekable defines the trait interface for media that can be instructed to jump to a 
@@ -45,11 +57,21 @@ package org.osmf.traits
 	 * 
 	 * @see org.osmf.composition
 	 * @see org.osmf.media.MediaElement
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 10
+	 *  @playerversion AIR 1.0
+	 *  @productversion OSMF 1.0
 	 */	
 	public interface ISeekable extends IMediaTrait
 	{
 		/**
 		 * Indicates whether the media is currently seeking.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */				
 		function get seeking():Boolean;
 
@@ -57,13 +79,17 @@ package org.osmf.traits
 		 * Instructs the ISeekable to jump to the specified <code>time</code> (in
 		 * seconds).
 		 * 
-		 * If a seek is attempted, dispatches a seekingChange event, unless
-		 * the trait is already in a seeking state.
+		 * If a seek is attempted, dispatches a seekingChange event.
 		 * If <code>time</code> is non numerical or negative, does not attempt to seek. 
 		 *  
 		 * @param time The time to seek to in seconds. Coerced to zero if
 		 * the value is non numerical or negative.
 		 * 
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */				
 		function seek(time:Number):void;
 
@@ -78,6 +104,11 @@ package org.osmf.traits
 		 * @param time Time to seek to in seconds.
 		 * @return Returns <code>true</code> if the media can seek to the specified time.
 		 * 
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */				
 		function canSeekTo(time:Number):Boolean;
 	}

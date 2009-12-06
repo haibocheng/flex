@@ -28,6 +28,7 @@ package org.osmf.layout
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
 	
+	import org.osmf.display.ScaleModeUtils;
 	import org.osmf.logging.ILogger;
 	import org.osmf.metadata.MetadataNamespaces;
 	import org.osmf.metadata.MetadataUtils;
@@ -55,6 +56,11 @@ package org.osmf.layout
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		override protected function processContextChange(oldContext:ILayoutTarget, newContext:ILayoutTarget):void
 		{
@@ -63,6 +69,11 @@ package org.osmf.layout
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		override protected function get usedMetadataFacets():Vector.<URL>
 		{
@@ -71,6 +82,11 @@ package org.osmf.layout
 		
 		/**
 		 * @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.0
+		 *  @productversion OSMF 1.0
 		 */
 		override protected function compareTargets(x:ILayoutTarget, y:ILayoutTarget):Number
 		{
@@ -375,8 +391,10 @@ package org.osmf.layout
 					&&	intrinsicOrCalculatedHeight
 					)
 				{
-					var size:Point = attributes.scaleMode.getScaledSize
-						( rect.width, rect.height
+					var size:Point = ScaleModeUtils.getScaledSize
+						( attributes.scaleMode
+						, rect.width
+						, rect.height
 						, intrinsicOrCalculatedWidth
 						, intrinsicOrCalculatedHeight
 						);

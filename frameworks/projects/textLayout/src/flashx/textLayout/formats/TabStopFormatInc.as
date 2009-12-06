@@ -1,8 +1,8 @@
 //========================================================================================
 //  $File: //a3t/argon/dev/textLayout_core/src/flashx/textLayout/formats/TabStopFormatInc.as $
-//  $DateTime: 2009/11/04 13:50:40 $
-//  $Revision: #10 $
-//  $Change: 726402 $
+//  $DateTime: 2009/11/12 13:11:47 $
+//  $Revision: #11 $
+//  $Change: 727658 $
 //  
 //  ADOBE CONFIDENTIAL
 //  

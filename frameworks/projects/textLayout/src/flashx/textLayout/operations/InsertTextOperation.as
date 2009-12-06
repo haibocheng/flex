@@ -21,7 +21,6 @@ package flashx.textLayout.operations
 	import flashx.textLayout.formats.ITextLayoutFormat;
 	import flashx.textLayout.formats.TextLayoutFormat;
 	import flashx.textLayout.tlf_internal;
-	import flashx.textLayout.debug.assert;
 
 	use namespace tlf_internal;
 
@@ -61,20 +60,22 @@ package flashx.textLayout.operations
 		public function InsertTextOperation(operationState:SelectionState, text:String, deleteSelectionState:SelectionState = null)
 		{
 			super(operationState);
-
-			if (deleteSelectionState != null)
-				this._deleteSelectionState = deleteSelectionState;
-			else if (absoluteStart != absoluteEnd)
-				this._deleteSelectionState = operationState;
-			if (_deleteSelectionState != null && _deleteSelectionState.absoluteStart == _deleteSelectionState.absoluteEnd)
-				_deleteSelectionState = null;		// nothing to delete
 			
-			this._characterFormat = operationState.pointFormat;
-			
+			_characterFormat = operationState.pointFormat;
 			_text = text;
 			
-			if (_deleteSelectionState)
+			initialize(deleteSelectionState);
+		}
+		
+		private function initialize(deleteSelectionState:SelectionState):void
+		{	
+			if (deleteSelectionState == null)
+				deleteSelectionState = originalSelectionState;
+			if (deleteSelectionState.anchorPosition != deleteSelectionState.activePosition)
+			{
+				_deleteSelectionState = deleteSelectionState;		// nothing to delete		
 				delSelOp = new DeleteTextOperation(_deleteSelectionState);
+			}
 		}
 		
 		/** 
@@ -126,8 +127,7 @@ package flashx.textLayout.operations
 			_characterFormat = new TextLayoutFormat(value);
 		}
 		
-		/** @private */
-		public override function doOperation():Boolean
+		private function doInternal():void
 		{
 			var leafEl:FlowLeafElement = textFlow.findLeaf(absoluteStart);
 			var tcyEl:TCYElement = null;
@@ -183,11 +183,26 @@ package flashx.textLayout.operations
 			
 			// force insert to use the leaf given if we have a good one
 			ParaEdit.insertText(range.firstParagraph, range.firstLeaf, paraSelBegIdx, _text, useExistingLeaf);
-			textFlow.interactionManager.notifyInsertOrDelete(absoluteStart, _text.length);
+			if (textFlow.interactionManager)
+				textFlow.interactionManager.notifyInsertOrDelete(absoluteStart, _text.length);
 			
 			if (_characterFormat && !TextLayoutFormat.isEqual(_characterFormat, range.firstLeaf.format))
 				ParaEdit.applyTextStyleChange(textFlow,absoluteStart,absoluteStart+_text.length,_characterFormat,null);
-				
+		}
+		
+		/** @private */
+		public override function doOperation():Boolean
+		{
+			doInternal();
+			if (originalSelectionState.selectionManagerOperationState && textFlow.interactionManager)
+			{
+				var state:SelectionState = textFlow.interactionManager.getSelectionState();
+				if (state.pointFormat)
+				{
+					state.pointFormat = null;
+					textFlow.interactionManager.setSelectionState(state);
+				}
+			}
 			return true;
 		}
 	
@@ -199,7 +214,8 @@ package flashx.textLayout.operations
 			var paraSelBegIdx:int = absoluteStart-para.getAbsoluteStart();
 
 			ParaEdit.deleteText(para, paraSelBegIdx, _text.length);
-			textFlow.interactionManager.notifyInsertOrDelete(absoluteStart, -_text.length);
+			if (textFlow.interactionManager)
+				textFlow.interactionManager.notifyInsertOrDelete(absoluteStart, -_text.length);
 			
 			var newSelectionState:SelectionState = originalSelectionState;
 			if (delSelOp != null)
@@ -237,7 +253,7 @@ package flashx.textLayout.operations
 		 */
 		public override function redo():SelectionState
 		{ 
-			doOperation();
+			doInternal();
 			return new SelectionState(textFlow,absoluteStart+_text.length,absoluteStart+_text.length,null);
 		}
 

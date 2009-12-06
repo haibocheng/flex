@@ -309,26 +309,30 @@ public class PreLink implements flex2.compiler.PreLink
                             LinkState state = new LinkState(linkables, new HashSet(), configuration.getIncludes(), new HashSet<String>());
 
                             // C: generate style classes for components which we want to link in.
-                            List styleSources = stylesContainer.processDependencies(state.getDefNames(), resources, 
-                                                                                    u.getSource().getRelativePath().replace('/', '.'),
-                                                                                    u.getSource().getShortName());
+                            List<Source> styleSources =
+                                stylesContainer.processDependencies(state.getDefNames(), resources, 
+                                                                    u.getSource().getRelativePath().replace('/', '.'),
+                                                                    u.getSource().getShortName());
 
-                            // put all the names into sourceSet
-                            Set<String> sourceSet = new HashSet<String>(sources.size());
-                            for (int j = 0, size = sources.size(); j < size; j++)
-                            {
-                                Source s = sources.get(j);
-                                sourceSet.add(s.getName());
-                            }
+                            // Sweep through and remove any previous style sources.
+                            Iterator<Source> iterator = sources.iterator();
 
-                            for (int j = 0, size = styleSources.size(); j < size; j++)
+                            while (iterator.hasNext())
                             {
-                                Source styleSrc = (Source) styleSources.get(j);
-                                if (!sourceSet.contains(styleSrc.getName()))
+                                Source source = iterator.next();
+
+                                for (Source styleSource : styleSources)
                                 {
-                                    sources.add(styleSrc);
+                                    if (source.getName().equals(styleSource.getName()))
+                                    {
+                                        iterator.remove();
+                                        break;
+                                    }
                                 }
                             }
+
+                            // Now add the new style sources.
+                            sources.addAll(styleSources);
                         }
                         catch (LinkerException e)
                         {

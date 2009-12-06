@@ -88,14 +88,12 @@ package flashx.textLayout.edit
 		 * @param containerFormat The format whose set values indicate properties to undefine to ContainerController objects in the selected range.
 		 * @param operationState	specifies the text to which this operation applies; 
 		 * if <code>null</code>, the operation applies to the current selection.
-		 *
-		 * @includeExample examples\EditManager_applyFormat.as -noswf
 		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
 		 * @langversion 3.0
 		 */		
-		function undefineFormat(leafFormat:ITextLayoutFormat, paragraphFormat:ITextLayoutFormat, containerFormat:ITextLayoutFormat, operationState:SelectionState = null):void
+		function clearFormat(leafFormat:ITextLayoutFormat, paragraphFormat:ITextLayoutFormat, containerFormat:ITextLayoutFormat, operationState:SelectionState = null):void
 
 		/** 
 		 * Changes the format applied to the leaf elements in the 
@@ -456,13 +454,11 @@ package flashx.textLayout.edit
 		 * @param operationState	specifies the text to which this operation applies; 
 		 * if <code>null</code>, the operation applies to the current selection.
 		 * 
-		 * @includeExample examples\EditManager_applyFormatToElement.as -noswf
-		 * 
 		 * @playerversion Flash 10
 		 * @playerversion AIR 1.5
 		 * @langversion 3.0
 		 */	
-		function undefineFormatOnElement(targetElement:FlowElement, format:ITextLayoutFormat, operationState:SelectionState = null):void;
+		function clearFormatOnElement(targetElement:FlowElement, format:ITextLayoutFormat, operationState:SelectionState = null):void;
 		
 		/** 
 		 * Splits the paragraph at the current position.

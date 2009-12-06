@@ -33,6 +33,8 @@ package flashx.textLayout
 		import flashx.textLayout.operations.ApplyTCYOperation; ApplyTCYOperation;
 		import flashx.textLayout.operations.ApplyElementIDOperation; ApplyElementIDOperation;
 		import flashx.textLayout.operations.ApplyElementStyleNameOperation; ApplyElementStyleNameOperation;
+		import flashx.textLayout.operations.ClearFormatOperation; ClearFormatOperation;
+		import flashx.textLayout.operations.ClearFormatOnElementOperation; ClearFormatOnElementOperation;
 		import flashx.textLayout.operations.CompositeOperation; CompositeOperation;
 		import flashx.textLayout.operations.CopyOperation; CopyOperation;
 		import flashx.textLayout.operations.CutOperation; CutOperation;
@@ -44,8 +46,6 @@ package flashx.textLayout
 		import flashx.textLayout.operations.RedoOperation; RedoOperation;
 		import flashx.textLayout.operations.ApplyElementUserStyleOperation; ApplyElementUserStyleOperation;
 		import flashx.textLayout.operations.SplitParagraphOperation; SplitParagraphOperation;
-		import flashx.textLayout.operations.UndefineFormatOperation; UndefineFormatOperation;
-		import flashx.textLayout.operations.UndefineFormatOnElementOperation; UndefineFormatOnElementOperation;
 		import flashx.textLayout.operations.UndoOperation; UndoOperation;
 
 		import flashx.textLayout.utils.NavigationUtil; NavigationUtil;

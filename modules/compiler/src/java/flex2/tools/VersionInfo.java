@@ -13,6 +13,8 @@ package flex2.tools;
 
 import flash.util.Trace;
 
+import java.io.InputStream;
+import java.io.IOException;
 import java.util.Properties;
 
 public class VersionInfo
@@ -94,10 +96,12 @@ public class VersionInfo
         {
             BUILD_NUMBER_STRING = "";
 
+            InputStream in = null;
             try
             {
                 Properties p = new Properties();
-                p.load(VersionInfo.class.getResourceAsStream("version.properties"));                
+                in = VersionInfo.class.getResourceAsStream("version.properties");
+                p.load(in);                
                 String build = p.getProperty("build");
                 if ((build != null) && (! build.equals("")))
                 {
@@ -117,6 +121,19 @@ public class VersionInfo
                 if (Trace.error)
                 {
                     t.printStackTrace();
+                }
+            }
+            finally
+            {
+                if (in != null)
+                {
+                    try
+                    {
+                        in.close();
+                    }
+                    catch (IOException ex)
+                    {
+                    }
                 }
             }
         }

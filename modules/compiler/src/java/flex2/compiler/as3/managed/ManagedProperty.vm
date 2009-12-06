@@ -50,11 +50,17 @@ class ManagedProperty
 ## this is a special case in which we need to add [Binding] metadata
 ## and not modify the function
     [Bindable(event="propertyChange")]
+    /**
+     * @private
+     */
     $entry.attributeString function get uid():String
     {
         return this.$entry.qualifiedBackingPropertyName;
     }
 
+    /**
+     * @private
+     */
     $entry.attributeString function set uid(value:String):void
     {
         $entry.backingPropertyName = value;
@@ -105,6 +111,9 @@ class ManagedProperty
     [Transient]
 #end    
     [Bindable(event="propertyChange")]
+    /**
+     * @private
+     */    
     public function get uid():String
     {
         if ($uidBackingProp == null)
@@ -114,6 +123,9 @@ class ManagedProperty
         return $uidBackingProp;
     }
 
+    /**
+     * @private
+     */
     public function set uid(value:String):void
     {
         var oldValue:String = $uidBackingProp;
@@ -143,6 +155,9 @@ class ManagedProperty
     private var _eventDispatcher:flash.events.EventDispatcher = 
         new flash.events.EventDispatcher(flash.events.IEventDispatcher(this));
 
+	/**
+	 * @inheritDoc
+	 */
     public function addEventListener(type:String, listener:Function,
                                      useCapture:Boolean = false,
                                      priority:int = 0,
@@ -152,16 +167,25 @@ class ManagedProperty
 										  priority, weakRef);
     }
 
+	/**
+	 * @inheritDoc
+	 */
     public function dispatchEvent(event:flash.events.Event):Boolean
     {
         return _eventDispatcher.dispatchEvent(event);
     }
 
+	/**
+	 * @inheritDoc
+	 */
     public function hasEventListener(type:String):Boolean
     {
         return _eventDispatcher.hasEventListener(type);
     }
 
+	/**
+	 * @inheritDoc
+	 */
     public function removeEventListener(type:String,
                                         listener:Function,
                                         useCapture:Boolean = false):void
@@ -169,6 +193,9 @@ class ManagedProperty
         _eventDispatcher.removeEventListener(type, listener, useCapture);
     }
 
+	/**
+	 * @inheritDoc
+	 */
     public function willTrigger(type:String):Boolean
     {
         return _eventDispatcher.willTrigger(type);

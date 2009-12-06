@@ -265,6 +265,13 @@ public class FTETextField extends Sprite
 	 */
 	private static var recreateTextLine:Function;
 	
+    /**
+     *  @private
+     *  This is the max textLine.x + textLine.textWidth of all the composed
+     *  lines.  It is used to determine whether the text must be clipped.
+     */
+    private var clipWidth:Number;
+    
 	//--------------------------------------------------------------------------
 	//
 	//  Class methods
@@ -1069,6 +1076,14 @@ public class FTETextField extends Sprite
 	 */
 	public function get htmlText():String
 	{
+		// When you set the htmlText and then get it,
+		// what you get is not necessarily what you set.
+		// The easiest way to handle this is to make sure
+		// that the text is composed (which will null out _htmlText
+		// if there is no styleSheet) and then execute the code
+		// below to export HTML from the TextFlow.
+		validateNow();
+		
 		// When 'text' is set, _htmlText is nulled out
 		// to indicate that it is invalid
 		// and must be recalculated.
@@ -2151,9 +2166,19 @@ public class FTETextField extends Sprite
         // x is relative to textLine.x.
         var x:Number = Math.round(textLine.localToGlobal(new Point(0, 0)).x);
         var width:Number = Math.round(textLine.textWidth);
-		var ascent:Number = Math.round(textLine.ascent + textLine.descent)
+		
+		// TextField computes ascent and descent differently than FTE does.
+		// Adding FTE's ascent and descent produces
+		// a reasonable approximation of TextField's ascent.
+		// TextField's ascent, descent, and leading are always rounded.
+		// Rounding FTE's ascent and descent separately, then adding,
+		// produces a "TextField ascent" of 12 + 3 or 15 for Arial 12
+		// (Flex's default font) on Windows, exactly matching a real
+		// TextField's ascent in this most-common case.
+		var ascent:Number = Math.round(textLine.ascent) + Math.round(textLine.descent)
 		var descent:Number = Math.round(textLine.descent);
-		var leading:Number = Number(_defaultTextFormat.leading);
+		var leading:Number = Math.round(Number(_defaultTextFormat.leading));
+		
 		var height:Number = ascent + descent + leading;
 		
 		return new TextLineMetrics(x, width, height, ascent, descent, leading);
@@ -2436,7 +2461,32 @@ public class FTETextField extends Sprite
 				if (!wordWrap)
 				{
 					_width = _textWidth + PADDING_LEFT + PADDING_RIGHT;
-					
+                    
+                    var blockIndent:Number = Number(_defaultTextFormat.blockIndent);
+                    var indent:Number = Number(_defaultTextFormat.indent);
+                    var leftMargin:Number = Number(_defaultTextFormat.leftMargin);
+                    var rightMargin:Number = Number(_defaultTextFormat.rightMargin);
+                    
+                    // Factor in indents and margins if the combined total
+                    // is positive.
+                    if (blockIndent + indent + leftMargin > 0)
+                        _width += blockIndent + indent + leftMargin;
+                    
+                    // Right margin seems to always be considered but if its
+                    // negative the width can't get smaller than the text width.
+                    _width += rightMargin;
+                    if (rightMargin >  0)
+                    {
+                        clipWidth = _width;                       
+                    }
+                    else
+                    {
+                        if (_width - PADDING_LEFT - PADDING_RIGHT < _textWidth ) 
+                            _width = _textWidth + PADDING_LEFT + PADDING_RIGHT;
+                        // force clipping
+                        clipWidth = origWidth + 1;
+                    }
+                    
 					// adjust x for CENTER and RIGHT cases
 					if (_autoSize == TextFieldAutoSize.RIGHT)
 						x += origWidth - _width;
@@ -2447,7 +2497,7 @@ public class FTETextField extends Sprite
 					setFlag(FLAG_GRAPHICS_INVALID);
 			}
 			
-			if (_textWidth > origWidth || _textHeight > origHeight)
+			if (clipWidth > origWidth || _textHeight > origHeight)
 			{
 				// need to clip
                 //trace("clip", "_textWidth", _textWidth, "origWidth", origWidth);
@@ -2575,6 +2625,7 @@ public class FTETextField extends Sprite
 		
 		_textWidth = 0;
 		_textHeight = 0;
+        clipWidth = 0;
 	}
 	
 	/**
@@ -2588,9 +2639,19 @@ public class FTETextField extends Sprite
 		var innerHeight:Number =
 			compositionHeight - PADDING_TOP - PADDING_BOTTOM;
 			
+		// FTE's emBox's top gives the ascent and its bottom gives the descent.
+		// TextField computes ascent and descent differently than FTE does.
+		// Adding FTE's ascent and descent produces
+		// a reasonable approximation of TextField's ascent.
+		// TextField's ascent, descent, and leading are always rounded.
+		// Rounding FTE's ascent and descent separately, then adding,
+		// produces a "TextField ascent" of 12 + 3 or 15 for Arial 12
+		// (Flex's default font) on Windows, exactly matching a real
+		// TextField's ascent in this most-common case.
 		var emBox:Rectangle = elementFormat.getFontMetrics().emBox;
-		var ascent:int = Math.round(emBox.height);
+		var ascent:int = Math.round(-emBox.top) + Math.round(emBox.bottom);
 		var descent:int = Math.round(emBox.bottom);
+		var leading:Number = Math.round(Number(_defaultTextFormat.leading));
 		
 		// Break the text into paragraphs at CR characters.
 		// (Each LF character has already been turned into a CR.)
@@ -2616,7 +2677,7 @@ public class FTETextField extends Sprite
 										 
 			// TextField puts the same leading between paragraphs
 			// as between lines in a paragraph.
-			paragraphY += _defaultTextFormat.leading;
+			paragraphY += leading;
 			
 			i = j + 1;
 		}
@@ -2634,6 +2695,8 @@ public class FTETextField extends Sprite
 		_textHeight = Math.round(
 			numChildren * (ascent + descent) +
 			(numChildren - 1) * Number(_defaultTextFormat.leading));
+
+        clipWidth = Math.round(clipWidth);
 	}
 
 	/**
@@ -2741,7 +2804,9 @@ public class FTETextField extends Sprite
                     totalIndent += indent;
                 
                 if (totalIndent < 0)
-                    totalIndent = 0;
+                    totalIndent = 0;                
+               else if (totalIndent > _width - PADDING_LEFT - PADDING_RIGHT)                
+                    totalIndent = _width - PADDING_LEFT - PADDING_RIGHT;
                 
                 if (!wordWrap)
                     rightMargin = 0;
@@ -2807,7 +2872,7 @@ public class FTETextField extends Sprite
             // Adjust for positive indent/left margin.  Do it here rather
             // than at the end when alignment is done so the first 
             // line of each paragraph is indented properly.
-            textLine.x += totalIndent;            
+            textLine.x = totalIndent;            
             
 			if (_defaultTextFormat.underline)
 			{
@@ -2836,7 +2901,7 @@ public class FTETextField extends Sprite
 	
 	/**
 	 *  @private
-     *  Returns with _textWidth set.
+     *  Returns with _textWidth and clipWidth set.
 	 */
 	private function alignTextLines(innerWidth:Number):void
 	{
@@ -2861,9 +2926,7 @@ public class FTETextField extends Sprite
 		var leftOffset:Number = PADDING_LEFT;
 		var centerOffset:Number = leftOffset + innerWidth / 2;
 		var rightOffset:Number = leftOffset + innerWidth;
-        
-        _textWidth = 0;
-        
+                
         // Reposition each line if necessary.
         // based on the horizontal alignment,
         // and adjusting for the padding.
@@ -2872,25 +2935,19 @@ public class FTETextField extends Sprite
         {
             var textLine:TextLine = TextLine(getChildAt(i));
             
+            _textWidth = Math.max(_textWidth, textLine.textWidth);
+            
             var width:Number = textLine.x + textLine.textWidth + rightMargin;
             
             // Only align if there is width to do so.
-            if (leftAligned || width > innerWidth)
+            if (leftAligned || width >= innerWidth)
                 textLine.x += leftOffset;
             else if (centerAligned)
                 textLine.x += centerOffset - width / 2;
             else if (rightAligned)
                 textLine.x += rightOffset - width;
-                                    
-            // Text width should include indents and margins so that
-            // autoSize will be correct.  A negative rightMargin increases
-            // the width for the purposes of alignment only.  
-            // The text still needs to be clipped based on its actual width.
-            width = rightMargin > 0 ?
-                    textLine.x + textLine.textWidth + rightMargin :
-                    textLine.x + textLine.textWidth;
-                        
-            _textWidth = Math.max(_textWidth, width);
+                
+            clipWidth = Math.max(clipWidth, textLine.x + textLine.textWidth);
             
             textLine.y += PADDING_TOP;
         }
@@ -2903,6 +2960,12 @@ public class FTETextField extends Sprite
 									 compositionHeight:Number):void
 	{
 		textFlow = htmlImporter.importToFlow(_htmlText);
+		
+		// Unless there is a styleSheet, _htmlText is now invalid
+		// and needs to be regenerated on demand,
+		// because with htmlText what-you-set-is-not-what-you-get.
+		if (!styleSheet)
+			_htmlText = null;
         
 		if (!textFlow)
             return;
@@ -2940,9 +3003,13 @@ public class FTETextField extends Sprite
 		textContainerManager.updateContainer();
 		
 		var bounds:Rectangle = textContainerManager.getContentBounds();
+        
 		_textWidth = Math.round(bounds.width);
 		_textHeight = Math.round(bounds.height);
-	}
+    
+        // TLF takes care of clipping so none should be needed here.
+        clipWidth = _textWidth;
+    }
 
 	/**
 	 *  @private
@@ -3252,7 +3319,7 @@ class FTETextFieldHostFormat implements ITextLayoutFormat
 	
 	public function get leadingModel():*
 	{
-		return LeadingModel.ASCENT_DESCENT_UP;
+		return LeadingModel.APPROXIMATE_TEXT_FIELD;
 	}
 	
 	public function get ligatureLevel():*
@@ -3269,7 +3336,7 @@ class FTETextFieldHostFormat implements ITextLayoutFormat
 	
 	public function get lineHeight():*
 	{
-		return textField._defaultTextFormat.leading + 2; // FIXME (gosmith)
+		return textField._defaultTextFormat.leading;
 	}
 	
 	public function get lineThrough():*

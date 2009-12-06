@@ -1,0 +1,1261 @@
+<?xml version="1.0"?>
+<apiPackage id="flash.desktop"><apiName>flash.desktop</apiName><apiDetail/><apiClassifier id="flash.desktop:InvokeEventReason"><apiName>InvokeEventReason</apiName><shortdesc>
+	 InvokeEventReason 类枚举 InvokeEvent 对象的 reason 属性返回的值。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5.1"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 InvokeEventReason 类枚举 <codeph>InvokeEvent</codeph> 对象的 <codeph>reason</codeph> 属性返回的值。
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="flash.events.xml#InvokeEvent/reason"><linktext>flash.events.InvokeEvent.reason</linktext></link></related-links><apiValue id="flash.desktop:InvokeEventReason:LOGIN"><apiName>LOGIN</apiName><shortdesc>
+			指示因用户登录而发生了 InvokeEvent 事件。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5.1"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>login</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+			指示因用户登录而发生了 InvokeEvent 事件。
+			
+			</apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:InvokeEventReason:STANDARD"><apiName>STANDARD</apiName><shortdesc>
+			指示因除登录之外的其它原因而发生了 InvokeEvent 事件。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5.1"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>standard</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+			指示因除登录之外的其它原因而发生了 InvokeEvent 事件。
+			
+			</apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.desktop:InteractiveIcon"><apiName>InteractiveIcon</apiName><shortdesc>
+	 InteractiveIcon 类是一个基类，它表示与应用程序关联的操作系统图标。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.desktop:Icon</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 InteractiveIcon 类是一个基类，它表示与应用程序关联的操作系统图标。 
+	 
+	 <p>使用 NativeApplication 对象的 <codeph>icon</codeph> 属性可获取应用程序图标的实例。图标类型将是 InteractiveIcon 的子类之一，在 Mac OS X <sup>®</sup> 中为 DockIcon，在 Windows <sup>®</sup> 和 Linux 中为 SystemTrayIcon。</p>
+	 
+	 <p>不能直接实例化 InteractiveIcon 类。调用 <codeph>new InteractiveIcon()</codeph> 构造函数将引发 ArgumentError 异常。</p>
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="flash.desktop.xml#NativeApplication/icon"><linktext>flash.desktop.NativeApplication.icon</linktext></link><link href="flash.desktop.xml#NativeApplication/supportsDockIcon"><linktext>flash.desktop.NativeApplication.supportsDockIcon</linktext></link><link href="flash.desktop.xml#NativeApplication/supportsSystemTrayIcon"><linktext>flash.desktop.NativeApplication.supportsSystemTrayIcon</linktext></link></related-links><apiValue id="flash.desktop:InteractiveIcon:bitmaps:set"><apiName>bitmaps</apiName><shortdesc>
+		  
+	 作为不同大小的 BitmapData 对象数组的图标图像。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Array</apiValueClassifier></apiValueDef><apiDesc>
+		  
+	 作为不同大小的 BitmapData 对象数组的图标图像。
+	   
+	 <p>当在给定的操作系统上下文中显示图标时，将使用数组中最接近所显示大小的位图（必要时进行缩放）。常用的大小包括 16x16、32x32、48x48 和 128x128。（在不远的将来，某些操作系统将可以使用 512x512 像素的图标。）</p>
+	 
+	 <p>在某些上下文中，如果没有为 <codeph>bitmaps</codeph> 属性分配任何数据，则操作系统可以使用默认的系统图标。在其它上下文中，不显示图标。</p>
+	 
+	 <p>要设置或更改图标外观，请将 BitmapData 对象数组分配给 <codeph>bitmaps</codeph> 属性：</p>
+	 
+	 <codeblock>
+	 icon.bitmaps = new Array(icon16x16.bitmapData, icon128x128.bitmapData);
+	 </codeblock>
+	  
+	 <p>直接修改 <codeph>bitmaps</codeph> 数组没有任何效果。</p>
+	 
+	 <p>要清除图标图像，请为 <codeph>bitmaps</codeph> 属性分配一个空数组。</p>
+	 
+	 <p>
+	 <b>注意：</b>在为图标加载图像文件时，PNG 文件格式通常提供最佳 Alpha 混合。GIF 格式只支持打开或关闭透明度（无混合）。JPG 格式完全不支持透明度。  
+	 </p>
+	  
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:InteractiveIcon:height:get"><apiName>height</apiName><shortdesc>
+		 图标的当前显示高度，以像素为单位。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+		 图标的当前显示高度，以像素为单位。
+		 
+		 <p>某些图标上下文支持动态大小。<codeph>height</codeph> 属性指示从当前上下文的 <codeph>bitmaps</codeph> 数组中选择的图标的高度。如果操作系统已缩放了该图标，则实际显示高度可能会有所不同。</p>
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:InteractiveIcon:width:get"><apiName>width</apiName><shortdesc>
+		 图标的当前显示宽度，以像素为单位。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+		 图标的当前显示宽度，以像素为单位。 
+		 
+		 <p>某些图标上下文支持动态大小。<codeph>width</codeph> 属性指示从当前上下文的 <codeph>bitmaps</codeph> 数组中选择的图标的宽度。如果操作系统已缩放了该图标，则实际显示宽度可能会有所不同。</p>
+		 
+		 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.desktop:NativeDragActions"><apiName>NativeDragActions</apiName><shortdesc>
+NativeDragActions 类定义一些字符串常量，它们表示拖放操作的名称。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+NativeDragActions 类定义一些字符串常量，它们表示拖放操作的名称。
+ 
+ <p>NativeDragActions 常量用作 NativeDragManager 和 NativeDragEvent 类的 <codeph>dropAction</codeph> 属性的值。</p>
+ 
+ </apiDesc></apiClassifierDetail><related-links><link href="flash.desktop.xml#NativeDragManager"><linktext>flash.desktop.NativeDragManager</linktext></link><link href="flash.events.xml#NativeDragEvent"><linktext>flash.events.NativeDragEvent</linktext></link></related-links><apiValue id="flash.desktop:NativeDragActions:COPY"><apiName>COPY</apiName><shortdesc>
+	定义用于复制操作的字符串。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>copy</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	定义用于复制操作的字符串。
+	
+    </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeDragActions:LINK"><apiName>LINK</apiName><shortdesc>
+	定义用于链接操作的字符串。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>link</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	定义用于链接操作的字符串。
+	
+    </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeDragActions:MOVE"><apiName>MOVE</apiName><shortdesc>
+	 定义用于移动操作的字符串。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>move</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 定义用于移动操作的字符串。
+      
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeDragActions:NONE"><apiName>NONE</apiName><shortdesc>
+	定义在未指定任何操作时使用的字符串。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>none</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	定义在未指定任何操作时使用的字符串。
+	 
+	 <p>在 <codeph>nativeDragComplete</codeph> 事件中，<codeph>none</codeph> 动作指示用户放弃了拖放操作。</p>
+	 
+     </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.desktop:ClipboardFormats"><apiName>ClipboardFormats</apiName><shortdesc>
+ClipboardFormats 类定义一些常量，它们表示用于 Clipboard 类的标准数据格式的名称。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><internal>Clipboard, ClipboardFormats and ClipboardTransferMode were all added to AIR 1.0. These are also being added, with some exceptions listed in this file, to FP10.
+</internal></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ClipboardFormats 类定义一些常量，它们表示用于 Clipboard 类的标准数据格式的名称。Flash Player 10 仅支持 TEXT_FORMAT、RICH_TEXT_FORMAT 和 HTML_FORMAT。
+
+</apiDesc></apiClassifierDetail><related-links><link href="flash.desktop.xml#Clipboard"><linktext>flash.desktop.Clipboard</linktext></link></related-links><apiValue id="flash.desktop:ClipboardFormats:BITMAP_FORMAT"><apiName>BITMAP_FORMAT</apiName><shortdesc>
+	图像数据（仅限 AIR）。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><internal>Not supported in FP10.
+	</internal></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>air:bitmap</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	图像数据（仅限 AIR）。
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:ClipboardFormats:FILE_LIST_FORMAT"><apiName>FILE_LIST_FORMAT</apiName><shortdesc>
+	文件数组（仅限 AIR）。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><internal>Not supported in FP10.
+	</internal></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>air:file list</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	文件数组（仅限 AIR）。
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:ClipboardFormats:HTML_FORMAT"><apiName>HTML_FORMAT</apiName><shortdesc>
+	HTML 数据。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>air:html</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	HTML 数据。
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:ClipboardFormats:RICH_TEXT_FORMAT"><apiName>RICH_TEXT_FORMAT</apiName><shortdesc>
+	RTF 格式数据。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.1"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>air:rtf</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	RTF 格式数据。
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:ClipboardFormats:TEXT_FORMAT"><apiName>TEXT_FORMAT</apiName><shortdesc>
+	字符串数据。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>air:text</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	字符串数据。
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:ClipboardFormats:URL_FORMAT"><apiName>URL_FORMAT</apiName><shortdesc>
+	URL 字符串（仅限 AIR）。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><internal>Not supported in FP10.
+	</internal></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>air:url</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	URL 字符串（仅限 AIR）。
+	
+	</apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.desktop:NativeApplication"><apiName>NativeApplication</apiName><shortdesc>
+	 NativeApplication 类表示此 AIR 应用程序。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>flash.events:EventDispatcher</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 NativeApplication 类表示此 AIR 应用程序。
+	 
+	 <p>
+	 NativeApplication 类提供应用程序信息、应用程序范围内的函数，并分派应用程序级别的事件。
+	 </p>
+	 <p>
+	 NativeApplication 对象是一个在启动时自动创建的单一对象。使用静态属性 <codeph>NativeApplication.nativeApplication</codeph> 获取应用程序的 NativeApplication 实例。
+	 </p>
+	 
+	 </apiDesc></apiClassifierDetail><adobeApiEvent id="flash.desktop:NativeApplication_flash.events.Event.USER_PRESENT_userPresent"><apiName>userPresent</apiName><shortdesc>
+	 当操作系统在空闲一段时间后检测到鼠标或键盘活动时分派。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.USER_PRESENT</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 当操作系统在空闲一段时间后检测到鼠标或键盘活动时分派。
+	 
+	 <p>视为空闲的时间段可以使用 <codeph>idleThreshold</codeph> 属性来配置。用户已经处于空闲状态的时间可以从 <codeph>timeSinceLastUserInput</codeph> 属性确定。</p>
+	 
+	 </apiDesc></adobeApiEventDetail><related-links><link href="flash.desktop.xml#NativeApplication/idleThreshold"><linktext>idleThreshold</linktext></link><link href="flash.desktop.xml#NativeApplication/timeSinceLastUserInput"><linktext>timeSinceLastUserInput</linktext></link></related-links></adobeApiEvent><adobeApiEvent id="flash.desktop:NativeApplication_flash.events.Event.USER_IDLE_userIdle"><apiName>userIdle</apiName><shortdesc>
+	 当用户处于空闲状态的时间长度达到 idleThreshold 属性指定的时间时分派。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.USER_IDLE</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 当用户处于空闲状态的时间长度达到 <codeph>idleThreshold</codeph> 属性指定的时间时分派。 
+	 
+	 <p>用户已经处于空闲状态的时间可以从 <codeph>timeSinceLastUserInput</codeph> 属性确定。</p>
+	 
+	 </apiDesc></adobeApiEventDetail><related-links><link href="flash.desktop.xml#NativeApplication/idleThreshold"><linktext>idleThreshold</linktext></link><link href="flash.desktop.xml#NativeApplication/timeSinceLastUserInput"><linktext>timeSinceLastUserInput</linktext></link></related-links></adobeApiEvent><adobeApiEvent id="flash.desktop:NativeApplication_flash.events.Event.NETWORK_CHANGE_networkChange"><apiName>networkChange</apiName><shortdesc>
+	 当新的网络连接变为可用或现有网络连接中断时分派。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.NETWORK_CHANGE</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 当新的网络连接变为可用或现有网络连接中断时分派。 
+	 
+	 <p><codeph>networkChange</codeph> 事件并不一定意味着主机已经联机或脱机；它可能只是从一种类型的连接过渡到另一种类型的连接。应用程序可以使用此事件来帮助优化监视远程资源可用性的任务。分派 <codeph>networkChange</codeph> 事件之时往往是验证任何远程资源可用性的绝佳时机。
+	 </p> 
+	 <p><b>注意：</b>在网络更改和传送此事件之间可能有短时间的延迟。</p>
+	 
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.desktop:NativeApplication_flash.events.Event.EXITING_exiting"><apiName>exiting</apiName><shortdesc>
+	 在启动应用程序的退出序列时分派。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.EXITING</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 在启动应用程序的退出序列时分派。 
+	 
+	 <p>当操作系统启动应用程序退出序列时将分派 exiting 事件，例如，当用户在 Mac OS X 上发出 <codeph>Cmd-Q</codeph> 键序列，或当 NativeApplication 对象的 <codeph>autoExit</codeph> 属性为 <codeph>true</codeph> 且关闭最后一个应用程序窗口时。取消此事件将阻止应用程序退出。</p>
+	 
+	 <p><b>注意：</b>调用 NativeApplication 的<codeph>exit()</codeph> 方法不会导致分派 <codeph>exiting</codeph> 事件。要在退出前警告各个组件，请在调用 <codeph>exit()</codeph> 之前分派 <codeph>exiting</codeph> 事件</p>
+	 
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.desktop:NativeApplication_flash.events.Event.DEACTIVATE_deactivate"><apiName>deactivate</apiName><shortdesc>
+	 将桌面焦点切换到不同的应用程序时分派。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.DEACTIVATE</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 将桌面焦点切换到不同的应用程序时分派。
+	 
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.desktop:NativeApplication_flash.events.Event.ACTIVATE_activate"><apiName>activate</apiName><shortdesc>
+	 当此应用程序变为活动桌面应用程序时分派。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.ACTIVATE</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 当此应用程序变为活动桌面应用程序时分派。
+	  
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.desktop:NativeApplication_flash.events.BrowserInvokeEvent.Browser_INVOKE_browserInvoke"><apiName>browserInvoke</apiName><shortdesc>
+	 用户浏览器中运行的 SWF 文件调用应用程序时将分派此事件。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.BrowserInvokeEvent.Browser_INVOKE</apiEventType><adobeApiEventClassifier>flash.events.BrowserInvokeEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 用户浏览器中运行的 SWF 文件调用应用程序时将分派此事件。 
+	 
+	 <p>只有当应用程序在应用程序描述符文件中指定如下内容时才允许浏览器调用：</p>
+	 
+	 <codeblock>&lt;allowBrowserInvocation>true&lt;/allowBrowserInvocation></codeblock>
+	 
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.desktop:NativeApplication_flash.events.InvokeEvent.INVOKE_invoke"><apiName>invoke</apiName><shortdesc>
+	 在调用应用程序时分派。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.InvokeEvent.INVOKE</apiEventType><adobeApiEventClassifier>flash.events.InvokeEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 在调用应用程序时分派。 
+	 
+	 <p>第二次调用某个应用程序时，不会启动该应用程序的另一个实例。第一个实例将接收附加的 invoke 事件。应用程序负责适当地处理随后的 <codeph>invoke</codeph> 事件。</p>
+	 
+	 <p><b>注意：</b>所有 <codeph>invoke</codeph> 事件都排队处理。如果为此事件注册了侦听器，该侦听器将接收队列中的所有事件以及任何新事件。排队的事件可以在任何新的 <codeph>invoke</codeph> 事件之前或之后传送。</p>
+	 
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><apiOperation id="flash.desktop:NativeApplication:activate"><apiName>activate</apiName><shortdesc>
+         激活此应用程序。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>window</apiItemName><apiOperationClassifier>flash.display:NativeWindow</apiOperationClassifier><apiData>null</apiData><apiDesc>要与应用程序一起激活的窗口的 NativeWindow 对象。
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+         激活此应用程序。 
+         
+         <p>在由操作系统确定的某些情况下，此方法将不会激活应用程序。多数操作系统都限制应用程序自行激活的能力，以避免意外或恶意地使用户无法使用其它应用程序。</p>
+         
+         <p>如果操作系统允许激活，则激活指定的窗口并将其放到桌面的前景；即放在其它应用程序窗口的前面。（如果 <codeph>window</codeph> 参数为 <codeph>null</codeph>，则激活此应用程序的可视窗口。）</p>
+         
+         <p>如果应用程序没有可视窗口，则 <codeph>activate()</codeph> 方法没有任何效果。</p>
+		 
+		 <p>激活操作是同步的。</p>
+		 
+		 </apiDesc></apiOperationDetail><adobeApiEvent id="flash.desktop:NativeApplication:activate_activate"><apiName>activate</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>激活状态更改时分派。
+         
+         </apiDesc></adobeApiEventDetail><shortdesc>激活状态更改时分派。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.desktop:NativeApplication:addEventListener"><apiName>addEventListener</apiName><shortdesc>
+		
+	使用 EventDispatcher 对象注册事件侦听器对象，以使侦听器能够接收事件通知。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>type</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>事件的类型。
+	
+	</apiDesc></apiParam><apiParam><apiItemName>listener</apiItemName><apiOperationClassifier>Function</apiOperationClassifier><apiDesc>处理事件的侦听器函数。此函数必须接受 Event 对象作为其唯一的参数，并且不能返回任何结果<ph platform="actionscript">，如下面的示例所示：</ph> <ph platform="javascript">。</ph>
+	
+    <codeblock platform="actionscript">function(evt:Event):void</codeblock>
+	
+	<p>函数可以有任何名称。</p>
+	
+	</apiDesc></apiParam><apiParam><apiItemName>useCapture</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc><ph platform="javascript">此参数适用于 SWF 内容所使用的 ActionScript 3.0 显示列表体系结构中的显示对象。</ph><ph platform="actionscript">确定侦听器是运行于捕获阶段还是目标阶段和冒泡阶段。如果将 <codeph>useCapture</codeph> 设置为 <codeph>true</codeph>，则侦听器只在捕获阶段处理事件，而不在目标或冒泡阶段处理事件。如果 <codeph>useCapture</codeph> 为 <codeph>false</codeph>，则侦听器只在目标或冒泡阶段处理事件。要在所有三个阶段都侦听事件，请调用 <codeph>addEventListener</codeph> 两次：一次将 <codeph>useCapture</codeph> 设置为 <codeph>true</codeph>，一次将 <codeph>useCapture</codeph> 设置为 <codeph>false</codeph>。</ph>
+	
+	</apiDesc></apiParam><apiParam><apiItemName>priority</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiData>0</apiData><apiDesc>事件侦听器的优先级。优先级由一个带符号的 32 位整数指定。数字越大，优先级越高。优先级为 <i>n</i> 的所有侦听器会在优先级为 <i>n</i> -1 的侦听器之前得到处理。如果两个或更多个侦听器共享相同的优先级，则按照它们的添加顺序进行处理。默认优先级为 0。
+	
+	</apiDesc></apiParam><apiParam><apiItemName>useWeakReference</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>确定对侦听器的引用是强引用，还是弱引用。强引用（默认值）可防止您的侦听器被当作垃圾回收。弱引用则没有此作用。 <p>类级别成员函数不属于垃圾回收的对象，因此可以对类级别成员函数将 <codeph>useWeakReference</codeph> 设置为 <codeph>true</codeph> 而不会使它们受垃圾回收的影响。如果对作为嵌套内部函数的侦听器将 <codeph>useWeakReference</codeph> 设置为 <codeph>true</codeph>，则该函数将作为垃圾回收并且不再是永久函数。如果创建对该内部函数的引用（将该函数保存到另一个变量中），则该函数将不作为垃圾回收并仍将保持永久。</p>
+	
+	</apiDesc></apiParam></apiOperationDef><apiDesc>
+		
+	使用 EventDispatcher 对象注册事件侦听器对象，以使侦听器能够接收事件通知。<ph platform="actionscript">可以为特定类型的事件、阶段和优先级在显示列表中的所有节点上注册事件侦听器。</ph>
+	
+	<p platform="javascript">AIR 运行时中的 JavaScript 代码使用此方法注册 AIR API 定义的事件的事件侦听器。对于其它 JavaScript 事件（如 DOM <codeph>body</codeph> 对象的 <codeph>onload</codeph> 事件），您可以像对浏览器中运行的内容一样使用标准事件处理技术。</p>
+	
+	<p>成功注册一个事件侦听器后，无法通过额外调用 <codeph>addEventListener()</codeph> 来更改其优先级。要更改侦听器的优先级，必须首先调用 <codeph>removeListener()</codeph>。然后，可以使用新的优先级再次注册该侦听器。 </p>
+	
+	<p>请记住，注册该侦听器后，如果继续调用具有不同 <codeph>type</codeph> 或 <codeph>useCapture</codeph> 值的 <codeph>addEventListener()</codeph>，则会创建单独的侦听器注册。<ph platform="actionscript">例如，如果首先注册 <codeph>useCapture</codeph> 设置为 <codeph>true</codeph> 的侦听器，则该侦听器只在捕获阶段进行侦听。如果使用同一个侦听器对象再次调用 <codeph>addEventListener()</codeph>，并将 <codeph>useCapture</codeph> 设置为 <codeph>false</codeph>，那么便会拥有两个单独的侦听器：一个在捕获阶段进行侦听，另一个在目标和冒泡阶段进行侦听。</ph>
+	</p>
+	
+	<p platform="actionscript">不能只为目标阶段或冒泡阶段注册事件侦听器。这些阶段在注册期间是成对出现的，因为冒泡阶段只适用于目标节点的始祖。</p>
+	
+	<p>如果不再需要某个事件侦听器，可调用 <codeph>removeEventListener()</codeph> 删除它，否则会产生内存问题。事件侦听器不会自动从内存中删除，因为只要调度对象存在，垃圾回收器就不会删除侦听器（除非 <codeph>useWeakReference</codeph> 参数设置为 <codeph>true</codeph>）。</p>
+		
+	<p>复制 EventDispatcher 实例时并不复制其中附加的事件侦听器。（如果新近创建的节点需要一个事件侦听器，必须在创建该节点后附加该侦听器。）但是，如果移动 EventDispatcher 实例，则其中附加的事件侦听器也会随之移动。</p>
+	
+	
+	<p platform="actionscript">如果在正在处理事件的节点上注册事件侦听器，则不会在当前阶段触发事件侦听器，但会在事件流的稍后阶段触发，如冒泡阶段。</p>
+	
+	<p platform="actionscript">如果从正在处理事件的节点中删除事件侦听器，则该事件侦听器仍由当前操作触发。删除事件侦听器后，决不会再次调用该事件侦听器（除非再次注册以备将来处理）。 </p>
+	
+	</apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.desktop:NativeApplication:clear"><apiName>clear</apiName><shortdesc>
+         在具有焦点的显示对象上调用一个内部删除命令。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc><codeph>true</codeph>
+         
+		 </apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+         在具有焦点的显示对象上调用一个内部删除命令。
+		 
+         <p>如果具有焦点的对象不实现该命令，则将忽略此函数调用。只有源于 TextField 或 HTMLLoader 类的显示对象当前实现此命令。</p>
+         
+         <p><b>注意：</b><codeph>clear()</codeph> 命令会删除所选的文本。如果未选择任何内容，则不会清除所有文本。</p>
+         
+         </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.desktop:NativeApplication:copy"><apiName>copy</apiName><shortdesc>
+         在具有焦点的显示对象上调用一个内部复制命令。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+         在具有焦点的显示对象上调用一个内部复制命令。
+         
+         <p>如果组件不实现该命令，则将忽略此函数调用。只有源于 TextField 或 HTMLLoader 类的显示对象当前实现此命令。</p>
+		 
+		 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.desktop:NativeApplication:cut"><apiName>cut</apiName><shortdesc>
+         在具有焦点的显示对象上调用一个内部剪切命令。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc><codeph>true</codeph>
+         
+		 </apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+         在具有焦点的显示对象上调用一个内部剪切命令。
+		 
+         <p>如果组件不实现该命令，则将忽略此函数调用。只有源于 TextField 或 HTMLLoader 类的显示对象当前实现此命令。</p>
+         
+         </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.desktop:NativeApplication:dispatchEvent"><apiName>dispatchEvent</apiName><shortdesc>
+		
+	将事件分派到事件流中。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiDesc>如果成功分派了事件，则值为 <codeph>true</codeph>。值 <codeph>false</codeph> 表示失败或对事件调用了 <codeph>preventDefault()</codeph>。
+	
+	</apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn><apiParam><apiItemName>event</apiItemName><apiOperationClassifier>flash.events:Event</apiOperationClassifier><apiDesc>分派到事件流中的 Event 对象。如果正在重新分派事件，则会自动创建此事件的一个克隆。  在分派了事件后，其 <codeph>target</codeph> 属性将无法更改，因此您必须创建此事件的一个新副本以能够重新分派。
+	
+	</apiDesc></apiParam></apiOperationDef><apiDesc>
+		
+	将事件分派到事件流中。事件目标是对其调用 <codeph>dispatchEvent()</codeph> 方法的 EventDispatcher 对象。
+	
+	</apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.desktop:NativeApplication:exit"><apiName>exit</apiName><shortdesc>
+		 终止此应用程序。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>errorCode</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiData>0</apiData><apiDesc>此应用程序退出时报告给操作系统的退出代码。
+		 
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+		 终止此应用程序。 
+		 
+		 <p>对 <codeph>exit()</codeph> 方法的调用<i>将会</i> 返回；只有在当前正在执行的代码（比如当前的事件处理函数）完成后，关机序列才会开始。未处理的异步操作将被取消，可能完成，也可能未完成。</p>
+		 
+		 <p>请注意，不会分派 <codeph>exiting</codeph> 事件。如果应用程序逻辑需要 <codeph>exiting</codeph> 事件，请调用 <codeph>NativeApplication.nativeApplication.dispatchEvent()</codeph>，并传入一个类型为 <codeph>exiting</codeph> 的 Event 对象。同样，在关闭应用程序窗口之前，不会分派 <codeph>closing</codeph> 和 <codeph>close</codeph> 事件。如果在应用程序退出之前应该通知各个窗口，则可以为每个打开的窗口分派 <codeph>closing</codeph> 事件。如果需要窗口的 <codeph>close</codeph> 事件，请在退出之前调用该窗口的 <codeph>close()</codeph> 方法。</p>
+		 
+		 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.desktop:NativeApplication:getDefaultApplication"><apiName>getDefaultApplication</apiName><shortdesc>
+		 获取用于打开具有指定扩展名的文件的默认应用程序。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>如果 <codeph>extension</codeph> 参数不包含在应用程序描述符中声明的文件扩展名之一。
+		 
+		 </apiDesc><apiItemName>Error</apiItemName><apiOperationClassifier>Error</apiOperationClassifier></apiException><apiReturn><apiDesc>默认应用程序的路径。
+		 
+		 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn><apiParam><apiItemName>extension</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>包含需要关注的文件类型扩展名的 String（不带“.”）。
+		 
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+		 获取用于打开具有指定扩展名的文件的默认应用程序。
+		 
+		 <p><b>注意：</b>此方法只能用于在应用程序描述符的 <codeph>fileTypes</codeph> 语句中声明的文件类型。</p>
+		 
+		 </apiDesc></apiOperationDetail><related-links><link href="flash.desktop.xml#NativeApplication/applicationDescriptor"><linktext>applicationDescriptor</linktext></link></related-links></apiOperation><apiOperation id="flash.desktop:NativeApplication:isSetAsDefaultApplication"><apiName>isSetAsDefaultApplication</apiName><shortdesc>
+		 指定此应用程序当前是否为打开具有指定扩展名的文件的默认应用程序。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>如果 <codeph>extension</codeph> 参数不包含在应用程序描述符中声明的文件扩展名之一。
+		 
+		 </apiDesc><apiItemName>Error</apiItemName><apiOperationClassifier>Error</apiOperationClassifier></apiException><apiReturn><apiDesc>如果此应用程序是默认的应用程序，则为 <codeph>true</codeph>。
+		 
+		 </apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn><apiParam><apiItemName>extension</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>包含需要关注的文件类型扩展名的 String（不带“.”）。
+		 
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+		 指定此应用程序当前是否为打开具有指定扩展名的文件的默认应用程序。
+		 
+		 </apiDesc></apiOperationDetail><related-links><link href="flash.desktop.xml#NativeApplication/applicationDescriptor"><linktext>applicationDescriptor</linktext></link></related-links></apiOperation><apiOperation id="flash.desktop:NativeApplication:paste"><apiName>paste</apiName><shortdesc>
+         在具有焦点的显示对象上调用一个内部粘贴命令。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc><codeph>true</codeph>
+         
+		 </apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+         在具有焦点的显示对象上调用一个内部粘贴命令。
+		 
+         <p>如果组件不实现该命令，则将忽略此函数调用。只有源于 TextField 或 HTMLLoader 类的显示对象当前实现此命令。</p>
+         
+         </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.desktop:NativeApplication:removeAsDefaultApplication"><apiName>removeAsDefaultApplication</apiName><shortdesc>
+		 撤消将此应用程序作为打开具有指定扩展名的文件的默认应用程序。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>如果 <codeph>extension</codeph> 参数不包含在应用程序描述符中声明的文件扩展名之一。
+		 
+		 </apiDesc><apiItemName>Error</apiItemName><apiOperationClassifier>Error</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>extension</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>包含需要关注的文件类型扩展名的 String（不带“.”）。
+         
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+		 撤消将此应用程序作为打开具有指定扩展名的文件的默认应用程序。
+		 
+		 <p><b>注意：</b>此方法只能用于在应用程序描述符的 <codeph>fileTypes</codeph> 语句中列出的文件类型。</p>
+		 
+		 </apiDesc></apiOperationDetail><related-links><link href="flash.desktop.xml#NativeApplication/applicationDescriptor"><linktext>applicationDescriptor</linktext></link></related-links></apiOperation><apiOperation id="flash.desktop:NativeApplication:removeEventListener"><apiName>removeEventListener</apiName><shortdesc>
+		
+	从 EventDispatcher 对象中删除侦听器。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>type</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>事件的类型。
+	
+	</apiDesc></apiParam><apiParam><apiItemName>listener</apiItemName><apiOperationClassifier>Function</apiOperationClassifier><apiDesc>要删除的侦听器对象。
+	
+	</apiDesc></apiParam><apiParam><apiItemName>useCapture</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc><ph platform="javascript">此参数适用于 SWF 内容所使用的 ActionScript 3.0 显示列表体系结构中的显示对象。</ph><ph platform="actionscript">指出是为捕获阶段还是目标阶段和冒泡阶段注册了侦听器。如果为捕获阶段以及目标和冒泡阶段注册了侦听器，则需要对 <codeph>removeEventListener()</codeph> 进行两次调用才能将这两个侦听器删除，一次调用将 <codeph>useCapture()</codeph> 设置为 <codeph>true</codeph>，另一次调用将 <codeph>useCapture()</codeph> 设置为 <codeph>false</codeph>。</ph>
+	
+	</apiDesc></apiParam></apiOperationDef><apiDesc>
+		
+	从 EventDispatcher 对象中删除侦听器。如果没有向 EventDispatcher 对象注册任何匹配的侦听器，则对此方法的调用没有任何效果。
+	
+	</apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.desktop:NativeApplication:selectAll"><apiName>selectAll</apiName><shortdesc>
+         在具有焦点的显示对象上调用一个内部全选命令。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc><codeph>true</codeph>
+         
+		 </apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+         在具有焦点的显示对象上调用一个内部全选命令。
+		 
+         <p>如果组件不实现该命令，则将忽略此函数调用。只有源于 TextField 或 HTMLLoader 类的显示对象当前实现此命令。</p>
+         
+         </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.desktop:NativeApplication:setAsDefaultApplication"><apiName>setAsDefaultApplication</apiName><shortdesc>
+		 将此应用程序设置为打开具有指定扩展名的文件的默认应用程序。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>如果 <codeph>extension</codeph> 参数不包含在应用程序描述符中声明的文件扩展名之一。
+		 
+		 </apiDesc><apiItemName>Error</apiItemName><apiOperationClassifier>Error</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>extension</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>包含需要关注的文件类型扩展名的 String（不带“.”）。
+		 
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+		 将此应用程序设置为打开具有指定扩展名的文件的默认应用程序。
+		 
+		 <p><b>注意：</b>此方法只能用于在应用程序描述符的 <codeph>fileTypes</codeph> 语句中声明的文件类型。</p>
+		 
+		 </apiDesc></apiOperationDetail><related-links><link href="flash.desktop.xml#NativeApplication/applicationDescriptor"><linktext>applicationDescriptor</linktext></link></related-links></apiOperation><apiValue id="flash.desktop:NativeApplication:activeWindow:get"><apiName>activeWindow</apiName><shortdesc>
+         活动的应用程序窗口。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>flash.display:NativeWindow</apiValueClassifier></apiValueDef><apiDesc>
+         活动的应用程序窗口。 
+		 
+		 <p>如果活动的桌面窗口不属于此应用程序，或者没有活动的窗口，则 <codeph>activeWindow</codeph> 为 <codeph>null</codeph>。</p>
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeApplication:applicationDescriptor:get"><apiName>applicationDescriptor</apiName><shortdesc> 
+		 此 AIR 应用程序的应用程序描述符文件内容。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>XML</apiValueClassifier></apiValueDef><apiDesc> 
+		 此 AIR 应用程序的应用程序描述符文件内容。
+		 
+		 <p platform="javascript">SWF 文件中的 ActionScript 3.0 代码支持用于处理 XML 数据的 E4X 语法。但在基于 HTML 的 AIR 应用程序中，需要使用 DOMParser 对象的 <codeph>parseFromString()</codeph> 方法将此属性的 XML 值转换为 DOMParser 对象。</p>
+		 
+		 </apiDesc><example conref="examples\NativeApplication.applicationDescriptor.1.as"> 下面的示例从应用程序描述符文件中读取 <codeph>copyright</codeph> 和 <codeph>version</codeph> 元素。请注意，必须使用应用程序描述符 XML 中定义的默认命名空间。
+<codeblock>
+var appDescriptor:XML = NativeApplication.nativeApplication.applicationDescriptor;
+var ns:Namespace = appDescriptor.namespace();
+var appCopyright:String = appDescriptor.ns::copyright;
+var appVersion:String = appDescriptor.ns::version;
+trace("appId:", appCopyright);
+trace("version:", appVersion);
+</codeblock><swfblock conref="examples\NativeApplication.applicationDescriptor.1.swf"/></example></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeApplication:applicationID:get"><apiName>applicationID</apiName><shortdesc> 
+		 此应用程序的应用程序 ID。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+		 此应用程序的应用程序 ID。 
+		 
+		 <p>此 ID 的值在应用程序描述符文件中设置。</p>
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeApplication:autoExit:get"><apiName>autoExit</apiName><shortdesc>
+		 指定在关闭所有窗口后是否应自动终止应用程序。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+		 指定在关闭所有窗口后是否应自动终止应用程序。  
+		 
+		 <p>当 <codeph>autoExit</codeph> 为 <codeph>true</codeph>（默认值）时，如果关闭了所有窗口，则应用程序将终止。分派 <codeph>exiting</codeph> 和 <codeph>exit</codeph> 事件。如果 <codeph>autoExit</codeph> 为 <codeph>false</codeph>，则必须调用 <codeph>NativeApplication.nativeApplication.exit()</codeph> 才能终止应用程序。 </p> 
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeApplication:icon:get"><apiName>icon</apiName><shortdesc>
+		 应用程序图标。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>flash.desktop:InteractiveIcon</apiValueClassifier></apiValueDef><apiDesc>
+		 应用程序图标。
+		 
+		 <p>使用 <codeph>NativeApplication.supportsDockIcon</codeph> 和 <codeph>NativeApplication.supportsSystemTrayIcon</codeph> 可确定 icon 类。类型将是 InteractiveIcon 的子类之一。在 Mac<sup>®</sup> OS X 上，<codeph>NativeApplication.icon</codeph> 是一个类型为 <codeph>DockIcon</codeph> 的对象。在 Windows<sup>®</sup> 上，<codeph>NativeApplication.icon</codeph> 是一个类型为 <codeph>SystemTrayIcon</codeph> 的对象。在 Linux 中，并非始终支持应用程序图标。在这种情况下，<codeph>icon</codeph> 属性为 <codeph>null</codeph>。</p>  
+		 
+		 <p><codeph>icon</codeph> 对象是自动创建的，但不会使用图像数据自动初始化此对象。有些操作系统（如 Mac OS X）提供默认图像。在其它操作系统中（如 Windows），除非为图标分配了图像数据，否则不显示图标。要分配图标图像，请使用包含至少一个 BitmapData 对象的数组来设置 <codeph>icon.bitmaps</codeph> 属性。如果数组中包括多个 BitmapData 对象，则操作系统将选择大小最接近图标显示尺寸的图像，必要时缩放图像。</p>  
+   		 
+         </apiDesc></apiValueDetail><related-links><link href="flash.desktop.xml#NativeApplication/supportsDockIcon"><linktext>supportsDockIcon</linktext></link><link href="flash.desktop.xml#DockIcon"><linktext>flash.desktop.DockIcon</linktext></link><link href="flash.desktop.xml#NativeApplication/supportsSystemTrayIcon"><linktext>supportsSystemTrayIcon</linktext></link><link href="flash.desktop.xml#SystemTrayIcon"><linktext>flash.desktop.SystemTrayIcon</linktext></link></related-links></apiValue><apiValue id="flash.desktop:NativeApplication:idleThreshold:get"><apiName>idleThreshold</apiName><shortdesc>
+		 在没有键盘或鼠标输入的情况下必须经过多少秒才会分派 userIdle 事件。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>int</apiValueClassifier><apiException><apiDesc>如果尝试将此属性设置为一个无效值。值的可接受范围为 5（5 秒）到 86,400（1 天），这两个值自身包括在内。
+		 
+		 </apiDesc><apiItemName>ArgumentError</apiItemName><apiOperationClassifier>ArgumentError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+		 在没有键盘或鼠标输入的情况下必须经过多少秒才会分派 <codeph>userIdle</codeph> 事件。 
+		 
+		 <p>默认情况下，空闲阈值为 300 秒（5 分钟）。值的可接受范围为 5（5 秒）到 86,400（1 天），这两个值自身包括在内。</p>
+		 
+		 </apiDesc></apiValueDetail><related-links><link href="flash.desktop.xml#NativeApplication/event:userIdle"><linktext>userIdle</linktext></link><link href="flash.desktop.xml#NativeApplication/event:userPresent"><linktext>userPresent</linktext></link></related-links></apiValue><apiValue id="flash.desktop:NativeApplication:menu:get"><apiName>menu</apiName><shortdesc>
+		 应用程序菜单。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>flash.display:NativeMenu</apiValueClassifier></apiValueDef><apiDesc>
+		 应用程序菜单。
+		 
+		 <p>当 <codeph>NativeApplication.nativeApplication.supportsMenu</codeph> 为 <codeph>true</codeph> 时支持应用程序菜单。不是所有操作系统都支持应用程序菜单。例如，Mac OS X 支持应用程序菜单，但 Windows 或 Linux 不支持。允许在 <codeph>NativeApplication.nativeApplication.supportsMenu</codeph> 为 <codeph>false</codeph> 时将 NativeMenu 对象分配给此属性，但不执行任何操作。务必使用 <codeph>NativeApplication.nativeApplication.supportsMenu</codeph> 属性来确定操作系统是否支持应用程序菜单。使用其它方法（如 <codeph>Capabilities.os</codeph>）确定支持情况可能导致编程错误（如果没有考虑到某些可行的目标操作系统）。</p>
+		 
+         <p><b>注意：</b>在 Mac OS X 中，<codeph>menu</codeph> 属性引用操作系统提供的默认应用程序菜单。您可以通过添加和删除项目、子菜单以及添加事件侦听器来修改现有菜单结构。也可以通过将新 NativeMenu 对象分配给此 <codeph>menu</codeph> 属性来完全替换默认菜单。</p>
+		 
+		 </apiDesc></apiValueDetail><related-links><link href="flash.display.xml#NativeMenu"><linktext>flash.display.NativeMenu</linktext></link><link href="flash.display.xml#NativeWindow/supportsMenu"><linktext>flash.display.NativeWindow.supportsMenu</linktext></link></related-links></apiValue><apiValue id="flash.desktop:NativeApplication:nativeApplication:get"><apiName>nativeApplication</apiName><shortdesc> 
+		 NativeApplication 对象的单一实例。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>flash.desktop:NativeApplication</apiValueClassifier><apiException><apiDesc>如果由应用程序安全沙箱外部的内容访问。
+		 
+		 </apiDesc><apiItemName>Error</apiItemName><apiOperationClassifier>Error</apiOperationClassifier></apiException></apiValueDef><apiDesc> 
+		 NativeApplication 对象的单一实例。
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeApplication:openedWindows:get"><apiName>openedWindows</apiName><shortdesc>
+		 包含此应用程序的所有已打开的本机窗口的数组。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Array</apiValueClassifier></apiValueDef><apiDesc>
+		 包含此应用程序的所有已打开的本机窗口的数组。
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeApplication:publisherID:get"><apiName>publisherID</apiName><shortdesc> 
+		 此应用程序的发布者 ID。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+		 此应用程序的发布者 ID。 
+		 
+		 <p>此 ID 的值在应用程序发布者 ID 文件中设置，该文件在安装时从用于对应用程序签名的证书链中生成。</p>
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeApplication:runtimePatchLevel:get"><apiName>runtimePatchLevel</apiName><shortdesc> 
+		 承载此应用程序的运行时的修补级别。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>uint</apiValueClassifier></apiValueDef><apiDesc> 
+		 承载此应用程序的运行时的修补级别。
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeApplication:runtimeVersion:get"><apiName>runtimeVersion</apiName><shortdesc> 
+		 承载此应用程序的运行时的版本号。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+		 承载此应用程序的运行时的版本号。
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeApplication:startAtLogin:set"><apiName>startAtLogin</apiName><shortdesc>
+        指定在当前用户登录时是否自动启动此应用程序。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier><apiException><apiDesc>在 Windows 上，如果已经设置了另一个同名（但可执行文件的路径不同）的应用程序在此用户登录时启动。
+        
+        </apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException><apiException><apiDesc>如果未安装此应用程序（由 AIR Debug Launcher (ADL) 启动就属于这种情况）。
+        
+		</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+        指定在当前用户登录时是否自动启动此应用程序。
+        
+        <p>
+        <codeph>startAtLogin</codeph> 属性反映操作系统定义用于指定某个应用程序应该在用户登录时自动启动的机制的状态。用户可以使用操作系统的用户界面手动更改该状态。不管该状态上次是由 AIR 应用程序进行修改还是由操作系统进行更改，此属性都将反映当前状态。   
+        </p>
+        </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeApplication:supportsDockIcon:get"><apiName>supportsDockIcon</apiName><shortdesc> 
+	   指示 AIR 是否支持当前操作系统上的应用程序停靠图标。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc> 
+	   指示 AIR 是否支持当前操作系统上的应用程序停靠图标。
+	  
+	  <p>如果为 <codeph>true</codeph>，则 <codeph>NativeApplication.icon</codeph> 属性的类型为 <codeph>DockIcon</codeph>。</p>
+	  
+      <p>Mac OS X 和各种 Linux<sup>®</sup> 用户界面提供应用程序停靠，其中包含正在运行或频繁使用的应用程序的图标。</p>
+	  
+	  <p>务必使用 <codeph>NativeApplication.supportsDockIcon</codeph> 属性来确定操作系统是否支持应用程序停靠图标。使用其它方法（如 <codeph>Capabilities.os</codeph>）确定支持情况可能导致编程错误（如果没有考虑到某些可行的目标操作系统）。</p>
+      
+      </apiDesc></apiValueDetail><related-links><link href="flash.desktop.xml#NativeApplication/icon"><linktext>icon</linktext></link></related-links></apiValue><apiValue id="flash.desktop:NativeApplication:supportsMenu:get"><apiName>supportsMenu</apiName><shortdesc> 
+	   指定当前操作系统是否支持全局应用程序菜单栏。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc> 
+	   指定当前操作系统是否支持全局应用程序菜单栏。
+	  
+	  <p>如果为 <codeph>true</codeph>，则可以使用 <codeph>NativeApplication.menu</codeph> 属性来定义（或访问）本机应用程序菜单。</p> 
+	  
+	  <p>务必使用 <codeph>NativeApplication.supportsMenu</codeph> 属性来确定操作系统是否支持应用程序菜单栏。使用其它方法（如 <codeph>Capabilities.os</codeph>）确定支持情况可能导致编程错误（如果没有考虑到某些可行的目标操作系统）。</p>
+	  
+      </apiDesc></apiValueDetail><related-links><link href="flash.desktop.xml#NativeApplication/menu"><linktext>menu</linktext></link><link href="flash.display.xml#NativeWindow/supportsMenu"><linktext>flash.display.NativeWindow.supportsMenu</linktext></link></related-links></apiValue><apiValue id="flash.desktop:NativeApplication:supportsSystemTrayIcon:get"><apiName>supportsSystemTrayIcon</apiName><shortdesc> 
+	  指定 AIR 是否支持当前操作系统上的系统任务栏图标。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc> 
+	  指定 AIR 是否支持当前操作系统上的系统任务栏图标。
+	  
+	  <p>如果为 <codeph>true</codeph>，则 <codeph>NativeApplication.icon</codeph> 属性的类型为 <codeph>SystemTrayIcon</codeph>。</p>
+	  
+	  <p>务必使用 <codeph>NativeApplication.supportsSystemTrayIcon</codeph> 属性来确定操作系统是否支持系统任务栏图标。使用其它方法（如 <codeph>Capabilities.os</codeph>）确定支持情况可能导致编程错误（如果没有考虑到某些可行的目标操作系统）。</p>
+	  
+      <p><b>注意：</b>在 Windows 上，任务栏的系统任务栏区域正式称为<i>通知区域</i>。</p> 
+      
+      </apiDesc></apiValueDetail><related-links><link href="flash.desktop.xml#NativeApplication/icon"><linktext>icon</linktext></link></related-links></apiValue><apiValue id="flash.desktop:NativeApplication:timeSinceLastUserInput:get"><apiName>timeSinceLastUserInput</apiName><shortdesc>
+         自上次鼠标或键盘输入后经过的时间（以秒为单位）。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+         自上次鼠标或键盘输入后经过的时间（以秒为单位）。
+		 
+		 </apiDesc></apiValueDetail><related-links><link href="flash.desktop.xml#NativeApplication/event:userIdle"><linktext>userIdle</linktext></link><link href="flash.desktop.xml#NativeApplication/event:userPresent"><linktext>userPresent</linktext></link></related-links></apiValue></apiClassifier><apiClassifier id="flash.desktop:Updater"><apiName>Updater</apiName><shortdesc>
+     Updater 类用于将当前运行的应用程序更新为不同的版本。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+     Updater 类用于将当前运行的应用程序更新为不同的版本。要使用该类，请实例化一个 Updater 对象，然后调用其 <codeph>update()</codeph> 方法。
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="air.update.xml#ApplicationUpdater"><linktext>air.update.ApplicationUpdater</linktext></link><link href="air.update.xml#ApplicationUpdaterUI"><linktext>air.update.ApplicationUpdaterUI</linktext></link></related-links><apiConstructor id="flash.desktop:Updater:Updater"><apiName>Updater</apiName><shortdesc>
+         Updater 类的构造函数。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/></apiConstructorDef><apiDesc>
+         Updater 类的构造函数。请注意，<codeph>update()</codeph> 方法不是该类的静态成员。必须实例化一个 Updater 对象，然后对它调用 <codeph>update()</codeph> 方法。
+		 
+		 </apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="flash.desktop:Updater:update"><apiName>update</apiName><shortdesc>
+         使用指定的 AIR 文件中包含的应用程序版本更新当前运行的应用程序。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>在 ADL 中运行时调用该方法。 
+		 
+		 </apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>airFile</apiItemName><apiOperationClassifier>flash.filesystem:File</apiOperationClassifier><apiDesc>指向包含应用程序更新版本的 AIR 文件的 File 对象。
+		 
+		 </apiDesc></apiParam><apiParam><apiItemName>version</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>新 AIR 文件中所需要的版本。要使更新成功，AIR 文件的应用程序描述符文件的主 <codeph>application</codeph> 元素的 <codeph>version</codeph> 属性中的字符串必须与此值匹配。
+		 
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+         使用指定的 AIR 文件中包含的应用程序版本更新当前运行的应用程序。AIR 文件中的应用程序必须具有与当前正在运行的应用程序相同的应用程序标识符 (<codeph>appID</codeph>)。
+		 
+         <p>调用此方法将导致当前应用程序退出（如同调用了 <codeph>NativeApplication.exit()</codeph> 方法）。这是必要的，因为 Adobe AIR 无法在应用程序正在运行时完全更新该应用程序。一旦成功安装了应用程序的新版本，该应用程序即会启动。如果运行时无法成功安装新版本（例如，如果新版本的应用程序 ID 与现有的版本不匹配），AIR 安装程序会向用户显示错误消息，然后重新启动旧版本。</p>
+		 
+		 <p>无论更新是否成功，更新过程都会重新启动该应用程序。更新可能因为各种原因而失败，包括应用程序无法控制（比如用户没有足够的权限来安装该应用程序）等原因。应用程序应该谨慎检测失败，避免反复重新尝试相同的失败更新。所造成的无限循环必将禁用该应用程序。检查更新是否成功的方法之一是在启动更新前将当前版本号码写到一个文件中，当应用程序重新启动后将该号码与版本号码进行比较。</p>
+		 
+		 <p>在使用 AIR Debug Launcher (ADL) 应用程序测试某个应用程序时，调用 <codeph>update()</codeph> 方法会导致 IllegalOperationError 异常。</p>
+		 
+		 <p>在 Mac OS 中，要安装某一应用程序的更新版本，用户需要具有足够的系统权限才能将新版本安装到应用程序目录中。在 Windows 或 Linux 中，用户需要具有管理权限。 </p>
+		 
+		 <p>如果应用程序的更新版本要求 运行时的更新版本，则应安装新的运行时版本。要更新运行时，用户需要具有计算机的管理员权限。</p>
+		 
+		 <p><i>注意：</i>出于安全方面的原因，需要指定 <codeph>version</codeph> 参数。通过要求应用程序验证 AIR 文件中的版本号码，应用程序不会在不经意间安装较旧的版本，较旧的版本可能包含在安全性方面已经得到修复的易受攻击性。</p>
+		 
+		 </apiDesc><example conref="examples\Updater.update.1.as"> 请注意，<codeph>update()</codeph> 方法<i>不是</i> 该类的静态方法。可以实例化一个 Updater 对象并调用该对象的 <codeph>update()</codeph> 方法。
+<codeblock>
+import flash.fileSystem.File;
+import flash.desktop.Updater;
+ 
+var updater:Updater = new Updater();
+var airFile:File = File.applicationStore.resolvePath("Example Application.air");
+var version:String = "2.01";
+updater.update(airFile, version);
+</codeblock></example></apiOperationDetail><related-links><link href="air.update.xml#ApplicationUpdater"><linktext>air.update.ApplicationUpdater</linktext></link><link href="air.update.xml#ApplicationUpdaterUI"><linktext>air.update.ApplicationUpdaterUI</linktext></link></related-links></apiOperation></apiClassifier><apiClassifier id="flash.desktop:SystemTrayIcon"><apiName>SystemTrayIcon</apiName><shortdesc>
+	 SystemTrayIcon 类表示 Windows&amp;#xAE; 任务栏通知区域（系统任务栏）样式的图标。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.desktop:InteractiveIcon</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 SystemTrayIcon 类表示 Windows<sup>®</sup> 任务栏通知区域（系统任务栏）样式的图标。
+	 
+	 <p>不是所有操作系统都有系统任务栏图标。检查 <codeph>NativeApplication.supportsSystemTrayIcon</codeph> 以确定在当前系统上是否支持系统任务栏图标。</p>
+	 
+	 <p>无法创建 SystemTrayIcon 类的实例。从“全局的”NativeApplication 对象的 <codeph>icon</codeph> 属性中获取表示系统任务栏图标的对象。
+	 </p>
+	 
+	 <p>如果支持系统任务栏图标，则 icon 将为 <i>SystemTrayIcon</i> 类型。否则，<codeph>icon</codeph> 的类型将是 InteractiveIcon 的另一个子类，通常是 DockIcon。</p>
+	 
+	 
+	 <p><b>重要说明：</b>在 AIR 不支持系统任务栏图标的操作系统上尝试对 <codeph>NativeApplication.icon</codeph> 对象调用 SystemTrayIcon 类方法将生成运行时异常。</p>
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="flash.desktop.xml#NativeApplication/icon"><linktext>flash.desktop.NativeApplication.icon</linktext></link><link href="flash.desktop.xml#NativeApplication/supportsSystemTrayIcon"><linktext>flash.desktop.NativeApplication.supportsSystemTrayIcon</linktext></link><link href="flash.desktop.xml#DockIcon"><linktext>flash.desktop.DockIcon</linktext></link></related-links><adobeApiEvent id="flash.desktop:SystemTrayIcon_flash.events.ScreenMouseEvent.RIGHT_CLICK_rightClick"><apiName>rightClick</apiName><shortdesc>
+	 在鼠标右键单击时由此 SystemTrayIcon 对象分派。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.ScreenMouseEvent.RIGHT_CLICK</apiEventType><adobeApiEventClassifier>flash.events.ScreenMouseEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 在鼠标右键单击时由此 SystemTrayIcon 对象分派。
+	 
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.desktop:SystemTrayIcon_flash.events.ScreenMouseEvent.RIGHT_MOUSE_UP_rightMouseUp"><apiName>rightMouseUp</apiName><shortdesc>
+	 在鼠标右键弹起时由此 SystemTrayIcon 对象分派。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.ScreenMouseEvent.RIGHT_MOUSE_UP</apiEventType><adobeApiEventClassifier>flash.events.ScreenMouseEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 在鼠标右键弹起时由此 SystemTrayIcon 对象分派。
+	 
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.desktop:SystemTrayIcon_flash.events.ScreenMouseEvent.RIGHT_MOUSE_DOWN_rightMouseDown"><apiName>rightMouseDown</apiName><shortdesc>
+	 在鼠标右键按下时由此 SystemTrayIcon 对象分派。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.ScreenMouseEvent.RIGHT_MOUSE_DOWN</apiEventType><adobeApiEventClassifier>flash.events.ScreenMouseEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 在鼠标右键按下时由此 SystemTrayIcon 对象分派。
+	 
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.desktop:SystemTrayIcon_flash.events.ScreenMouseEvent.CLICK_click"><apiName>click</apiName><shortdesc>
+ 	 在鼠标单击时由此 SystemTrayIcon 对象分派。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.ScreenMouseEvent.CLICK</apiEventType><adobeApiEventClassifier>flash.events.ScreenMouseEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ 	 在鼠标单击时由此 SystemTrayIcon 对象分派。
+ 	 
+ 	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.desktop:SystemTrayIcon_flash.events.ScreenMouseEvent.MOUSE_UP_mouseUp"><apiName>mouseUp</apiName><shortdesc>
+ 	 在鼠标弹起时由此 SystemTrayIcon 对象分派。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.ScreenMouseEvent.MOUSE_UP</apiEventType><adobeApiEventClassifier>flash.events.ScreenMouseEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ 	 在鼠标弹起时由此 SystemTrayIcon 对象分派。
+ 	 
+ 	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.desktop:SystemTrayIcon_flash.events.ScreenMouseEvent.MOUSE_DOWN_mouseDown"><apiName>mouseDown</apiName><shortdesc>
+ 	 在鼠标按下时由此 SystemTrayIcon 对象分派。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.ScreenMouseEvent.MOUSE_DOWN</apiEventType><adobeApiEventClassifier>flash.events.ScreenMouseEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ 	 在鼠标按下时由此 SystemTrayIcon 对象分派。
+ 	 
+ 	 </apiDesc></adobeApiEventDetail></adobeApiEvent><apiValue id="flash.desktop:SystemTrayIcon:MAX_TIP_LENGTH"><apiName>MAX_TIP_LENGTH</apiName><shortdesc>
+		 允许的系统任务栏图标工具提示长度。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>63</apiData><apiValueClassifier>Number</apiValueClassifier></apiValueDef><apiDesc>
+		 允许的系统任务栏图标工具提示长度。
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:SystemTrayIcon:bitmaps:get"><apiName>bitmaps</apiName><shortdesc> 
+		
+		  
+	 作为不同大小的 BitmapData 对象数组的图标图像。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Array</apiValueClassifier></apiValueDef><apiDesc> 
+		
+		  
+	 作为不同大小的 BitmapData 对象数组的图标图像。
+	   
+	 <p>当在给定的操作系统上下文中显示图标时，将使用数组中最接近所显示大小的位图（必要时进行缩放）。常用的大小包括 16x16、32x32、48x48 和 128x128。（在不远的将来，某些操作系统将可以使用 512x512 像素的图标。）</p>
+	 
+	 <p>在某些上下文中，如果没有为 <codeph>bitmaps</codeph> 属性分配任何数据，则操作系统可以使用默认的系统图标。在其它上下文中，不显示图标。</p>
+	 
+	 <p>要设置或更改图标外观，请将 BitmapData 对象数组分配给 <codeph>bitmaps</codeph> 属性：</p>
+	 
+	 <codeblock>
+	 icon.bitmaps = new Array(icon16x16.bitmapData, icon128x128.bitmapData);
+	 </codeblock>
+	  
+	 <p>直接修改 <codeph>bitmaps</codeph> 数组没有任何效果。</p>
+	 
+	 <p>要清除图标图像，请为 <codeph>bitmaps</codeph> 属性分配一个空数组。</p>
+	 
+	 <p>
+	 <b>注意：</b>在为图标加载图像文件时，PNG 文件格式通常提供最佳 Alpha 混合。GIF 格式只支持打开或关闭透明度（无混合）。JPG 格式完全不支持透明度。  
+	 </p>
+	  
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:SystemTrayIcon:height:get"><apiName>height</apiName><shortdesc> 
+		
+		 图标的当前显示高度，以像素为单位。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc> 
+		
+		 图标的当前显示高度，以像素为单位。
+		 
+		 <p>某些图标上下文支持动态大小。<codeph>height</codeph> 属性指示从当前上下文的 <codeph>bitmaps</codeph> 数组中选择的图标的高度。如果操作系统已缩放了该图标，则实际显示高度可能会有所不同。</p>
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:SystemTrayIcon:menu:get"><apiName>menu</apiName><shortdesc>
+		 系统任务栏图标菜单。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>flash.display:NativeMenu</apiValueClassifier></apiValueDef><apiDesc>
+		 系统任务栏图标菜单。
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:SystemTrayIcon:tooltip:get"><apiName>tooltip</apiName><shortdesc>
+		 为系统任务栏图标弹出的工具提示。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 为系统任务栏图标弹出的工具提示。如果该字符串比 <codeph>SystemTrayIcon.MAX_TIP_LENGTH</codeph> 长，则将截断提示。
+		 
+	     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:SystemTrayIcon:width:get"><apiName>width</apiName><shortdesc> 
+		
+		 图标的当前显示宽度，以像素为单位。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc> 
+		
+		 图标的当前显示宽度，以像素为单位。 
+		 
+		 <p>某些图标上下文支持动态大小。<codeph>width</codeph> 属性指示从当前上下文的 <codeph>bitmaps</codeph> 数组中选择的图标的宽度。如果操作系统已缩放了该图标，则实际显示宽度可能会有所不同。</p>
+		 
+		 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.desktop:Clipboard"><apiName>Clipboard</apiName><shortdesc>
+ Clipboard 类提供一个容器，用于通过剪贴板传输数据和对象。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><internal>NativeDragManager is AIR only and is not in FP10.
+ </internal></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ Clipboard 类提供一个容器，用于通过剪贴板传输数据和对象。在 AIR 中，Clipboard 类还用于拖放操作。通过静态 <codeph>generalClipboard</codeph> 属性可以访问操作系统剪贴板。
+ 
+ <p>Clipboard 对象可以包含多种格式的相同信息。通过以多种格式提供信息，可以增加另一个应用程序能够使用该信息的机会。使用 <codeph>setData()</codeph> 或 <codeph>setDataHandler()</codeph> 方法向 Clipboard 对象添加数据。</p> 
+ 
+ <p>标准格式是：</p>
+ <ul>
+ <li>BITMAP_FORMAT：一个 BitmapData 对象（仅限 AIR）</li>
+ <li>FILE_LIST_FORMAT：File 对象的数组（仅限 AIR）</li>
+ <li>HTML_FORMAT：HTML 格式的字符串数据</li>
+ <li>TEXT_FORMAT：字符串数据</li>
+ <li>RICH_TEXT_FORMAT：包含 RTF 格式数据的 ByteArray</li>
+ <li>URL_FORMAT：URL 字符串（仅限 AIR）</li>
+ </ul>
+ <p>ClipboardFormats 类中定义了用作标准格式的名称的这些常量。</p>
+ 
+ <p>在 Flash Player 或 AIR 应用程序与操作系统之间进行传输时，标准格式将在 <ph platform="javascript">JavaScript</ph> <ph platform="actionscript">ActionScript</ph> 数据类型和本地剪贴板之间自动转换。</p>
+ 
+ <p>可以使用应用程序定义的格式将 <ph platform="javascript">JavaScript</ph> <ph platform="actionscript">ActionScript</ph> 对象添加到 Clipboard 对象中。如果对象可序列化，则可以使用对该对象的引用和该对象的克隆。对象引用只在原始应用程序中有效。</p>
+ 
+ <p>如果将待传输的信息转换成特殊格式时运算成本很高，则可以提供执行该转换的函数名称。当且仅当接收组件或应用程序能够读取该格式时，才能调用此函数。使用 <codeph>setDataHandler()</codeph> 方法将延迟呈现函数添加到 Clipboard 对象中。</p>
+ 
+ <p><b>关于 AIR 应用程序的注意事项：</b>为 HTML 拖放事件和复制并粘贴事件分派的事件对象所引用的剪贴板对象与 AIR Clipboard 对象的类型不同。JavaScript 剪贴板对象在 AIR 开发人员指南中进行了说明。</p>
+ 
+ <p>在 Linux 上，关闭 AIR 应用程序时，不会保留剪贴板数据。</p>
+  
+ </apiDesc><example conref="examples\ClipboardExample.as"> 对于 Adobe AIR，下面的示例使用 ClipboardExample 类通过系统剪贴板将一个字符串在变量之间进行复制。执行下列步骤可完成该任务：
+ 
+ <ol>
+     <li>将数据（在本例中为一个字符串）写入到 <codeph>Clipboard.generalClipboard</codeph> 中。</li>
+    <li>从 <codeph>Clipboard.generalClipboard</codeph> 读取剪贴板内容。</li>
+ </ol>
+ <p><b>注意：</b>由于对访问剪贴板数据具有安全限制，因此该示例在 Flash Player 中不适用。在 Flash Player 中，只能在 <codeph>paste</codeph> 事件处理函数中调用 Clipboard 对象的 <codeph>getData()</codeph> 方法。</p>
+<codeblock>
+package
+{
+    import flash.display.Sprite;
+    import flash.desktop.Clipboard;
+    import flash.desktop.ClipboardFormats;
+    import flash.desktop.ClipboardTransferMode;
+
+    public class ClipboardExample extends Sprite
+    {
+        public function ClipboardExample()
+        {
+            var sally:String = "Sally";
+            var person:String;
+            
+            copy(sally);
+            person = paste();
+            trace(person); //traces: "Sally"
+        }
+
+        private function copy(text:String):void 
+        {
+            Clipboard.generalClipboard.clear();
+            Clipboard.generalClipboard.setData(ClipboardFormats.TEXT_FORMAT, text);
+        }
+        
+        private function paste():String
+        {
+            if(Clipboard.generalClipboard.hasFormat(ClipboardFormats.TEXT_FORMAT))
+            {
+                return String(Clipboard.generalClipboard.getData(ClipboardFormats.TEXT_FORMAT));
+            } 
+            else 
+            {
+                return null;
+            }
+        }
+        
+    }
+}
+</codeblock></example></apiClassifierDetail><related-links><link href="flash.desktop.xml#NativeDragManager"><linktext>flash.desktop.NativeDragManager</linktext></link><link href="flash.desktop.xml#ClipboardFormats"><linktext>flash.desktop.ClipboardFormats</linktext></link><link href="flash.desktop.xml#ClipboardTransferMode"><linktext>flash.desktop.ClipboardTransferMode</linktext></link></related-links><apiConstructor id="flash.desktop:Clipboard:Clipboard"><apiName>Clipboard</apiName><shortdesc>
+	创建空 Clipboard 对象。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><internal>the example located at examples\Clipboard.clipboard.1.as should not be displayed with FP10 docs because FP10 will throw an error when new Clipboard() is called.
+	</internal></asCustoms></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiException><apiDesc>Flash Player 中不支持 <codeph>new Clipboard()</codeph>，原因是在 Flash Player 中只能使用操作系统的剪贴板。对于涉及操作系统剪贴板的复制并粘贴操作，请使用 Clipboard.generalClipboard 对象，而不要创建新 Clipboard 对象。不会在 AIR 应用程序中引发错误。
+	
+	</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiConstructorDef><apiDesc>
+	创建空 Clipboard 对象。
+	
+	</apiDesc><example conref="examples\Clipboard.clipboard.1.as"> 下面的示例创建一个用于 NativeDragManager 类的新剪贴板。
+ 
+ <p><b>注意：</b>对于涉及操作系统剪贴板的复制并粘贴操作，请使用 <codeph>Clipboard.generalClipboard</codeph> 对象，而不要创建新剪贴板。</p>
+<codeblock>
+ import flash.desktop.Clipboard;
+ 
+ var clipboard:Clipboard = new Clipboard();
+</codeblock></example></apiConstructorDetail><related-links><link href="flash.desktop.xml#Clipboard/generalClipboard"><linktext>generalClipboard</linktext></link></related-links></apiConstructor><apiOperation id="flash.desktop:Clipboard:clear"><apiName>clear</apiName><shortdesc>
+	从此 Clipboard 对象中删除所有数据表示形式。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+	从此 Clipboard 对象中删除所有数据表示形式。
+	
+ 	</apiDesc><example conref="examples\Clipboard.clear.1.as"> 下面的示例清除系统剪贴板：
+<codeblock>
+ Clipboard.generalClipboard.clear();
+</codeblock></example></apiOperationDetail></apiOperation><apiOperation id="flash.desktop:Clipboard:clearData"><apiName>clearData</apiName><shortdesc>
+	删除指定格式的数据表示形式。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>format</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>要删除的数据格式。
+	</apiDesc></apiParam></apiOperationDef><apiDesc>
+	删除指定格式的数据表示形式。
+	
+ 	</apiDesc><example conref="examples\Clipboard.clearData.1.as"> 下面的示例将清除系统剪贴板中具有格式 <codeph>ClipboardFormats.TEXT_FORMAT</codeph> 的任何数据：
+<codeblock>
+ import flash.desktop.ClipboardFormats;
+ 
+ Clipboard.generalClipboard.clearData(ClipboardFormats.TEXT_FORMAT);
+</codeblock></example></apiOperationDetail></apiOperation><apiOperation id="flash.desktop:Clipboard:getData"><apiName>getData</apiName><shortdesc>
+	如果指定格式的数据存在，则获取剪贴板数据。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc><codeph>transferMode</codeph> 不是在 ClipboardTransferMode 类中定义的名称之一。
+	</apiDesc><apiItemName>Error</apiItemName><apiOperationClassifier>Error</apiOperationClassifier></apiException><apiException><apiDesc>范围中不再存在请求的 Clipboard 对象（仅限 AIR）。
+	</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException><apiException><apiDesc>在此上下文中不允许从剪贴板读取或写入剪贴板。在 Flash Player 中，只有在 <codeph>paste</codeph> 事件的处理过程中才能成功调用此方法。在 AIR 中，此限制仅适用于应用程序安全沙箱外部的内容。
+	
+	</apiDesc><apiItemName>SecurityError</apiItemName><apiOperationClassifier>SecurityError</apiOperationClassifier></apiException><apiReturn><apiDesc>一个类型与该数据格式相对应的对象。
+	
+	</apiDesc><apiOperationClassifier>Object</apiOperationClassifier></apiReturn><apiParam><apiItemName>format</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>要返回的数据格式。格式字符串可以包含 ClipboardFormats 类中定义的标准名称之一，也可以包含一个应用程序定义的名称。
+	</apiDesc></apiParam><apiParam><apiItemName>transferMode</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData>originalPreferred</apiData><apiDesc>指定在访问应用程序定义的数据格式时是返回一个引用还是返回序列化副本。该值必须是 ClipboardTransferMode 类中定义的名称之一。对于标准数据格式忽略此值，但始终会返回一个副本。
+	</apiDesc></apiParam></apiOperationDef><apiDesc>
+	如果指定格式的数据存在，则获取剪贴板数据。
+	
+	<p>Flash Player 要求在 <codeph>paste</codeph> 事件的处理函数中调用 <codeph>getData()</codeph>。在 AIR 中，此限制仅适用于应用程序安全沙箱外部的内容。</p>
+	
+	<p>在访问标准数据格式时，将会以相应 Flash Player 或 AIR 类型的新对象的形式返回数据。</p>
+	
+	<p>在访问应用程序定义的格式时，<codeph>transferMode</codeph> 参数的值确定是返回对原始对象的引用，还是返回包含原始对象的序列化副本的匿名对象。如果指定了 <codeph>originalPreferred</codeph> 或 <codeph>clonePreferred</codeph> 模式，则当首选的版本不可用时，Flash Player 或 AIR 将返回替代版本。如果指定了 <codeph>originalOnly</codeph> 或 <codeph>cloneOnly</codeph> 模式，则当请求的版本不可用时，Flash Player 或 AIR 将返回 <codeph>null</codeph>。</p>
+	
+	</apiDesc><example conref="examples\Clipboard.getData.1.as"> 下面的示例将读取系统剪贴板中的文本（如果可用）：
+<codeblock>
+ import flash.desktop.ClipboardFormats;
+
+ var pasteData:String = Clipboard.generalClipboard.getData(ClipboardFormats.TEXT_FORMAT) as String;
+</codeblock></example></apiOperationDetail><related-links><link href="flash.desktop.xml#Clipboard/setData()"><linktext>setData()</linktext></link><link href="flash.desktop.xml#ClipboardFormats"><linktext>flash.desktop.ClipboardFormats</linktext></link><link href="flash.desktop.xml#ClipboardTransferMode"><linktext>flash.desktop.ClipboardTransferMode</linktext></link></related-links></apiOperation><apiOperation id="flash.desktop:Clipboard:hasFormat"><apiName>hasFormat</apiName><shortdesc>
+	检查指定格式的数据在此 Clipboard 对象中是否存在。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>范围中不再存在请求的 Clipboard 对象（仅限 AIR）。
+	</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException><apiException><apiDesc>在此上下文中不允许从剪贴板读取或写入剪贴板。
+	
+	</apiDesc><apiItemName>SecurityError</apiItemName><apiOperationClassifier>SecurityError</apiOperationClassifier></apiException><apiReturn><apiDesc>如果存在指定格式的数据，则为 <codeph>true</codeph>。
+	
+	</apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn><apiParam><apiItemName>format</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>要检查的格式类型.
+	</apiDesc></apiParam></apiOperationDef><apiDesc>
+	检查指定格式的数据在此 Clipboard 对象中是否存在。
+	
+	<p>使用 ClipboardFormats 类中的常量引用标准格式名称。</p>
+	
+	</apiDesc><example conref="examples\Clipboard.hasFormat.1.as"> 下面的示例测试系统剪贴板以确定文本格式的数据是否可用：
+<codeblock>
+if(Clipboard.generalClipboard.hasFormat(ClipboardFormats.TEXT_FORMAT)){
+    //do something 
+}
+</codeblock></example></apiOperationDetail><related-links><link href="flash.desktop.xml#ClipboardFormats"><linktext>flash.desktop.ClipboardFormats</linktext></link></related-links></apiOperation><apiOperation id="flash.desktop:Clipboard:setData"><apiName>setData</apiName><shortdesc>
+	使用指定的数据格式添加要传输的信息的表示形式。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>范围中不再存在请求的 Clipboard 对象（仅限 AIR）。
+	
+	</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException><apiException><apiDesc>在此上下文中不允许从剪贴板读取或写入剪贴板。在 Flash Player 中，只有在处理用户事件（如按键或鼠标单击）的过程中才能成功调用此方法。在 AIR 中，此限制仅适用于应用程序安全沙箱外部的内容。
+	
+	</apiDesc><apiItemName>SecurityError</apiItemName><apiOperationClassifier>SecurityError</apiOperationClassifier></apiException><apiException><apiDesc><codeph>format</codeph> 或 <codeph>data</codeph> 为 <codeph>null</codeph>。
+	
+	</apiDesc><apiItemName>TypeError</apiItemName><apiOperationClassifier>TypeError</apiOperationClassifier></apiException><apiReturn><apiDesc>如果成功设置了数据，则为 <codeph>true</codeph>；否则为 <codeph>false</codeph>。在 Flash Player 中，如果 <codeph>format</codeph> 是不受支持的 ClipboardFormats 成员，则返回 <codeph>false</codeph>。（Flash Player 不支持 <codeph>ClipboardFormats.URL_FORMAT</codeph>、<codeph>ClipboardFormats.FILE_LIST_FORMAT</codeph> 或 <codeph>ClipboardFormats.BITMAP_FORMAT</codeph>）。
+	
+	</apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn><apiParam><apiItemName>format</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>数据的格式。
+	</apiDesc></apiParam><apiParam><apiItemName>data</apiItemName><apiOperationClassifier>Object</apiOperationClassifier><apiDesc>要添加的信息。 
+	</apiDesc></apiParam><apiParam><apiItemName>serializable</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>true</apiData><apiDesc>为可以序列化（和反序列化）的对象指定 <codeph>true</codeph>。
+	
+	</apiDesc></apiParam></apiOperationDef><apiDesc>
+	使用指定的数据格式添加要传输的信息的表示形式。在使用 <codeph>setData()</codeph> 之前，Flash Player 需要发生用户事件（如按键或鼠标单击）。在 AIR 中，此限制仅适用于应用程序安全沙箱外部的内容。
+	
+	<p>可以将相同信息的不同表示形式以不同格式添加到剪贴板，这可提高其它组件或应用程序利用可用数据的能力。例如，在 AIR 应用程序中，图像可以添加为位图数据以供图像编辑应用程序使用、添加为 Bitmap 对象以供其它 AIR 应用程序使用以及添加为编码的 PNG 文件以便传输到本机文件系统。</p>
+	
+	<p>data 参数必须是适用于指定格式的相应数据类型：</p>
+	<adobetable class="innertable">
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	<tgroup cols="3"><thead><row><entry>格式</entry><entry>类型</entry><entry>说明</entry></row></thead><tbody><row><entry><codeph>ClipboardFormats.TEXT_FORMAT</codeph></entry><entry><codeph>String</codeph></entry><entry>字符串数据。</entry></row><row><entry><codeph>ClipboardFormats.HTML_FORMAT</codeph></entry><entry><codeph>String</codeph></entry><entry>HTML 字符串数据</entry></row><row><entry><codeph>ClipboardFormats.URL_FORMAT</codeph></entry><entry><codeph>String</codeph></entry><entry>URL 字符串（仅限 AIR）</entry></row><row><entry><codeph>ClipboardFormats.RICH_TEXT_FORMAT</codeph></entry><entry><codeph>ByteArray</codeph></entry><entry>RTF 数据</entry></row><row><entry><codeph>ClipboardFormats.BITMAP_FORMAT</codeph></entry><entry><codeph>BitmapData</codeph></entry><entry>位图数据（仅限 AIR）</entry></row><row><entry><codeph>ClipboardFormats.FILE_LIST_FORMAT</codeph></entry><entry><codeph>File</codeph> 的数组</entry><entry>文件数组（仅限 AIR）</entry></row><row><entry>自定义格式名称</entry><entry>任意</entry><entry>对象引用和序列化克隆</entry></row></tbody></tgroup></adobetable>
+	
+	<p>自定义格式名称不能以“air:”或“flash:”开头。在 AIR 应用程序中，为了避免在使用自定义格式时发生名称冲突，您可能需要使用应用程序 ID 或包名称作为格式的前缀，例如“com.example.applicationName.dataPacket”。</p>
+	
+	<p>当在 Flash Player 或 AIR 应用程序内或在二者之间传输时，<codeph>serializable</codeph> 参数确定引用和副本是否都可用，或是否只有对象的引用才可用。将 <codeph>serializable</codeph> 设置为 <codeph>true</codeph> 可使该数据对象的引用和副本都可用。将 <codeph>serializable</codeph> 设置为 <codeph>false</codeph> 则只使对象引用可用。对象引用仅在当前应用程序中有效，因此，将 <codeph>serializable</codeph> 设置为 <codeph>false</codeph> 还意味着使用该格式的数据将对其它 Flash Player 或 AIR 应用程序不可用。组件可以通过在访问该格式的数据时设置适当的剪贴板传输模式来选择获取该对象的引用或获取该对象的副本。</p>
+	
+	<p><b>注意：</b>当在支持的应用程序外部粘贴或拖动数据时（仅限 AIR），标准格式始终转换成本机格式，因此，<codeph>serializable</codeph> 参数的值不影响采用标准格式的数据对于非 Flash Player 或非 AIR 应用程序的可用性。</p>
+	
+	<p>要延迟呈现某一格式的数据，请改用 <codeph>setDataHandler()</codeph> 方法。如果同时使用 <codeph>setData()</codeph> 和 <codeph>setDataHandler()</codeph> 方法添加具有相同格式名称的数据表示方式，则永远也不会调用该处理函数。</p>
+	
+	<p><b>注意：</b>在 Mac OS 上，如果将 <codeph>format</codeph> 参数设置为 <codeph>ClipboardFormats.URL_FORMAT</codeph>，则仅当该 URL 有效时才会将其传送。否则，将清空 Clipboard 对象（且调用 <codeph>getData()</codeph> 会返回 <codeph>null</codeph>）。</p>
+	
+	</apiDesc><example conref="examples\Clipboard.setData.1.as"> 下面的示例以文本格式和 HTML 格式向系统剪贴板中添加内容：
+<codeblock>
+ import flash.desktop.ClipboardFormats;
+ 
+ var htmlString:String = "&lt;html>&lt;body>Body content&lt;/body>&lt;/html>";
+ Clipboard.generalClipboard.setData(ClipboardFormats.TEXT_FORMAT, urlString);
+ Clipboard.generalClipboard.setData(ClipboardFormats.HTML_FORMAT, urlString);
+</codeblock></example></apiOperationDetail><related-links><link href="flash.desktop.xml#Clipboard/setDataHandler()"><linktext>setDataHandler()</linktext></link><link href="flash.desktop.xml#Clipboard/getData()"><linktext>getData()</linktext></link><link href="flash.desktop.xml#ClipboardFormats"><linktext>flash.desktop.ClipboardFormats</linktext></link><link href="flash.desktop.xml#ClipboardTransferMode"><linktext>flash.desktop.ClipboardTransferMode</linktext></link></related-links></apiOperation><apiOperation id="flash.desktop:Clipboard:setDataHandler"><apiName>setDataHandler</apiName><shortdesc>
+	添加对某个处理函数的引用，该函数根据需要生成指定格式的数据。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc><codeph>format</codeph> 或 <codeph>handler</codeph> 为 <codeph>null</codeph>。
+	</apiDesc><apiItemName>TypeError</apiItemName><apiOperationClassifier>TypeError</apiOperationClassifier></apiException><apiException><apiDesc>范围中不再存在请求的 Clipboard 对象（仅限 AIR）。
+	</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException><apiException><apiDesc>在此上下文中不允许从剪贴板读取或写入剪贴板。在 Flash Player 中，只有在处理用户事件（如按键或鼠标单击）的过程中才能成功调用此方法。在 AIR 中，此限制仅适用于应用程序安全沙箱外部的内容。
+	
+	</apiDesc><apiItemName>SecurityError</apiItemName><apiOperationClassifier>SecurityError</apiOperationClassifier></apiException><apiReturn><apiDesc>如果成功设置了处理函数，则为 <codeph>true</codeph>；否则为 <codeph>false</codeph>。
+	
+	</apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn><apiParam><apiItemName>format</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>返回要传输的数据的函数。
+	</apiDesc></apiParam><apiParam><apiItemName>handler</apiItemName><apiOperationClassifier>Function</apiOperationClassifier><apiDesc>数据的格式。 
+	</apiDesc></apiParam><apiParam><apiItemName>serializable</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>true</apiData><apiDesc>如果由 <codeph>handler</codeph> 返回的对象可以序列化（和反序列化），则指定 <codeph>true</codeph>。
+	
+	</apiDesc></apiParam></apiOperationDef><apiDesc>
+	添加对某个处理函数的引用，该函数根据需要生成指定格式的数据。使用此方法可将数据的创建或呈现延迟到实际访问数据时。在使用 <codeph>setDataHandler()</codeph> 之前，Flash Player 需要发生用户事件（如按键或鼠标单击）。在 AIR 中，此限制仅适用于应用程序安全沙箱外部的内容。
+	
+	<p>处理函数必须返回适合指定格式的相应数据类型：</p>
+	<adobetable class="innertable">
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	      
+	<tgroup cols="2"><thead><row><entry>格式</entry><entry>返回类型</entry></row></thead><tbody><row><entry><codeph>ClipboardFormats.TEXT_FORMAT</codeph></entry><entry><codeph>String</codeph></entry></row><row><entry><codeph>ClipboardFormats.HTML_FORMAT</codeph></entry><entry><codeph>String</codeph></entry></row><row><entry><codeph>ClipboardFormats.URL_FORMAT</codeph></entry><entry><codeph>String</codeph>（仅限 AIR）</entry></row><row><entry><codeph>ClipboardFormats.RICH_TEXT_FORMAT</codeph></entry><entry><codeph>ByteArray</codeph></entry></row><row><entry><codeph>ClipboardFormats.BITMAP_FORMAT</codeph></entry><entry><codeph>BitmapData</codeph>（仅限 AIR）</entry></row><row><entry><codeph>ClipboardFormats.FILE_LIST_FORMAT</codeph></entry><entry><codeph>File</codeph> 数组（仅限 AIR）</entry></row><row><entry>自定义格式名称</entry><entry>非 void</entry></row></tbody></tgroup></adobetable>
+	
+	<p>当且仅当读取指定格式的数据时才会调用该处理函数。请注意，在添加处理函数时和读取数据时之间，基础数据可能会发生更改，除非应用程序采取一些措施来保护数据。多次读取剪贴板中由处理函数表示的数据时发生的行为没有保证。Flash Player 或 AIR 可能会返回由第一个函数调用生成的数据，也可能会再次调用该函数。不要依赖任一行为。</p>
+	
+	<p>要直接向此 Clipboard 对象添加数据，请改用 <codeph>setData()</codeph> 方法。如果使用相同的格式名称调用 <codeph>setData()</codeph> 和 <codeph>setDataHandler()</codeph> 方法，则永不调用该处理函数。</p>
+	
+	<p><b>注意：</b>在 Mac OS 上，如果将 <codeph>format</codeph> 参数设置为 <codeph>ClipboardFormats.URL_FORMAT</codeph>，则仅当该处理函数返回有效 URL 时才会传送该 URL。否则，将清空 Clipboard 对象（且调用 <codeph>getData()</codeph> 会返回 <codeph>null</codeph>）。</p>
+	
+	</apiDesc><example conref="examples\Clipboard.setDataHandler.1.as"> 下面的示例通过延迟数据函数向系统剪贴板添加一个随机数。
+<codeblock>
+ import flash.desktop.ClipboardFormats;
+ 
+ Clipboard.generalClipboard.setDataHandler(ClipboardFormats.TEXT_FORMAT, randomNumberGenerator);
+
+ public function randomNumberGenerator():String{
+     return Math.random().toString();
+ }
+</codeblock></example></apiOperationDetail><related-links><link href="flash.desktop.xml#Clipboard/setData()"><linktext>setData()</linktext></link><link href="flash.desktop.xml#ClipboardFormats"><linktext>flash.desktop.ClipboardFormats</linktext></link></related-links></apiOperation><apiValue id="flash.desktop:Clipboard:formats:get"><apiName>formats</apiName><shortdesc>
+	一个字符串数组，其中包含此 Clipboard 对象中的可用数据格式的名称。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Array</apiValueClassifier></apiValueDef><apiDesc>
+	一个字符串数组，其中包含此 Clipboard 对象中的可用数据格式的名称。
+	
+	<p>用作标准格式名称的字符串常量在 ClipboardFormats 类中定义。应用程序定义的其它字符串也可以用作格式名称，以将数据作为对象传输。</p>
+	
+	</apiDesc><example conref="examples\Clipboard.formats.1.as"> 下面的示例读取系统剪贴板的 <codeph>formats</codeph> 数组：
+<codeblock>
+ var availableFormats:Array = Clipboard.generalClipboard.formats;
+</codeblock></example></apiValueDetail><related-links><link href="flash.desktop.xml#ClipboardFormats"><linktext>flash.desktop.ClipboardFormats</linktext></link></related-links></apiValue><apiValue id="flash.desktop:Clipboard:generalClipboard:get"><apiName>generalClipboard</apiName><shortdesc>
+	 操作系统剪贴板。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>flash.desktop:Clipboard</apiValueClassifier></apiValueDef><apiDesc>
+	 操作系统剪贴板。
+	 
+	 <p>粘贴到系统剪贴板中的任何数据均对其它应用程序可用。这可能包括网络浏览器中运行的不安全的远程代码。</p>
+	 
+	 <p><b>注意：</b>在 Flash Player 10 应用程序中，从剪贴板执行的粘贴操作会首先需要发生用户事件（例如，按下“粘贴”命令的快捷键或用鼠标单击上下文菜单中的“粘贴”命令）。只有在 InteractiveObject 已收到粘贴事件并对其进行操作的情况下，<codeph>Clipboard.getData()</codeph> 才会返回剪贴板内容。任何其它情况下都不能成功调用 <codeph>Clipboard.getData()</codeph>。在 AIR 中，对于应用程序沙箱之外的内容适用同样的限制。</p>
+	 
+	 <p><codeph>generalClipboard</codeph> 对象是自动创建的。不能为此属性分配 Clipboard 的另一个实例。改用 <codeph>getData()</codeph> 和 <codeph>setData()</codeph> 方法可以读取现有对象中的数据和将数据写入现有对象。</p>
+	 
+	 <p>在向剪贴板中写入新数据之前，应始终清理剪贴板，以确保擦除所有格式的旧数据。</p>
+	 
+	 </apiDesc><example conref="examples\Clipboard.generalClipboard.1.as"> 写入到操作系统的剪贴板中：
+<codeblock>
+ import flash.desktop.ClipboardFormats;
+ 
+ var copy:String = "A string to copy to the system clipboard.";
+ Clipboard.generalClipboard.clear();
+ Clipboard.generalClipboard.setData(ClipboardFormats.TEXT_FORMAT, copy);
+</codeblock></example><example conref="examples\Clipboard.generalClipboard.2.as"> 从操作系统的剪贴板中读取：
+<codeblock>
+ import flash.desktop.ClipboardFormats;
+ 
+ var pasteData:String  = Clipboard.generalClipboard.getData(ClipboardFormats.TEXT_FORMAT) as String;
+</codeblock></example></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.desktop:NotificationType"><apiName>NotificationType</apiName><shortdesc>
+ NotificationType 类定义在 DockIcon bounce() 方法的 priority 参数和 NativeWindow notifyUser() 方法的 type 参数中使用的常量。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ NotificationType 类定义在 DockIcon <codeph>bounce()</codeph> 方法的 <codeph>priority</codeph> 参数和 NativeWindow <codeph>notifyUser()</codeph> 方法的 <codeph>type</codeph> 参数中使用的常量。
+ 
+ </apiDesc></apiClassifierDetail><related-links><link href="flash.desktop.xml#DockIcon/bounce()"><linktext>flash.desktop.DockIcon.bounce()</linktext></link><link href="flash.display.xml#NativeWindow/notifyUser()"><linktext>flash.display.NativeWindow.notifyUser()</linktext></link></related-links><apiValue id="flash.desktop:NotificationType:CRITICAL"><apiName>CRITICAL</apiName><shortdesc>
+	 指定通知警告实质上是关键性的，用户应立即进行处理。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>critical</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 指定通知警告实质上是关键性的，用户应立即进行处理。
+	 
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NotificationType:INFORMATIONAL"><apiName>INFORMATIONAL</apiName><shortdesc>
+	 指定通知警告实质上是信息性的，用户可以安全地将其忽略。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>informational</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 指定通知警告实质上是信息性的，用户可以安全地将其忽略。
+	 
+     </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.desktop:ClipboardTransferMode"><apiName>ClipboardTransferMode</apiName><shortdesc>
+ ClipboardTransferMode 类定义一些常量，它们表示用作 Clipboard.getData() 方法的 transferMode 参数值的模式。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><internal>Clipboard, ClipboardFormats and ClipboardTransferMode were all added to AIR 1.0. These are also being added, with some exceptions listed in this file, to FP10.
+ </internal></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ ClipboardTransferMode 类定义一些常量，它们表示用作 <codeph>Clipboard.getData()</codeph> 方法的 <codeph>transferMode</codeph> 参数值的模式。
+ 
+ <p>传输模式提供有关访问剪贴板中所包含的对象时是返回一个引用还是返回一个副本的提示。</p>
+ 
+ </apiDesc></apiClassifierDetail><related-links><link href="flash.desktop.xml#Clipboard/getData()"><linktext>flash.desktop.Clipboard.getData()</linktext></link></related-links><apiValue id="flash.desktop:ClipboardTransferMode:CLONE_ONLY"><apiName>CLONE_ONLY</apiName><shortdesc>
+    Clipboard 对象应仅返回副本。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>cloneOnly</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+    Clipboard 对象应仅返回副本。
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:ClipboardTransferMode:CLONE_PREFERRED"><apiName>CLONE_PREFERRED</apiName><shortdesc>
+    如果可用，Clipboard 对象应返回副本；如果不可用，则返回引用。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>clonePreferred</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+    如果可用，Clipboard 对象应返回副本；如果不可用，则返回引用。
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:ClipboardTransferMode:ORIGINAL_ONLY"><apiName>ORIGINAL_ONLY</apiName><shortdesc>
+    Clipboard 对象应仅返回引用。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>originalOnly</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+    Clipboard 对象应仅返回引用。
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:ClipboardTransferMode:ORIGINAL_PREFERRED"><apiName>ORIGINAL_PREFERRED</apiName><shortdesc>
+    如果可用，Clipboard 对象应返回引用；如果不可用，则返回副本。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>originalPreferred</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+    如果可用，Clipboard 对象应返回引用；如果不可用，则返回副本。
+	
+	</apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.desktop:NativeDragManager"><apiName>NativeDragManager</apiName><shortdesc>
+ NativeDragManager 类协调拖放操作。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ NativeDragManager 类协调拖放操作。使用本机拖放 API 可以使用户在 AIR 应用程序和本机操作系统之间、两个应用程序之间以及一个应用程序内不同组件之间拖动数据。
+ 
+ <p>可以传输以下几种数据：</p>
+ <ul>
+ <li>位图</li>
+ <li>文件</li>
+ <li>文本</li>
+ <li>URL 字符串</li>
+ <li>序列化对象</li>
+ <li>对象引用（仅在源应用程序内有效）</li>
+ </ul>
+ 
+ <p><b>注意：</b>所有 NativeDragManager 成员都是静态的。不需要创建此类的实例。</p>
+ 
+ <p>拖放操作是一种用户界面动作，从用户单击某一可见项并将其拖动到别处开始。在执行拖动动作期间，当动作越过 AIR 应用程序窗口时，显示列表上的交互式对象将分派本机拖动事件。这些事件的处理函数可以调用 NativeDragManager 类的方法，以指示是否可以在对象上放置拖动项。作为响应，NativeDragManager 会更改鼠标指针以向用户提供反馈。</p>
+ 
+ <p><b>拖动动作</b></p>
+ <p>拖放动作通常用于三种类型的操作，这些操作称为<i>动作</i>。由于这些动作的含义取决于应用程序的上下文，因此，运行时不会针对动作强制执行任何特定行为。不过，适当地实现这些动作会改善用户使用应用程序时的体验。
+ </p> 
+ 
+ <p>可能的动作包括：</p>
+ <ul>
+ <li>复制 -- 制作数据的副本，保持原始数据不变。（当在应用程序内拖动对象时，应该注意复制原始对象本身，而不要复制对该对象的引用。）</li>
+ <li>移动 -- 将数据从其原始上下文中移动到由放置目标定义的上下文中，比如将一个项目从一个列表移动到另一个列表中。</li>
+ <li>链接 -- 创建对原始数据的引用或原始数据的快捷方式，将项目保留在其原始上下文中。</li>
+ </ul>
+ 
+ <p>通过在开始拖动操作的 <codeph>NativeDragManager.doDrag()</codeph> 调用中提供 <codeph>allowedActions</codeph> 参数，可以为拖动动作设置允许的动作。如果未提供 <codeph>allowedActions</codeph> 参数，则允许所有动作。潜在的拖动目标可以使用 NativeDragEvent 对象的 <codeph>allowedActions</codeph> 属性来检查哪些动作是允许的，并且不应接受仅允许不兼容动作的拖动（但运行时并不强制执行这一点）。</p>
+ 
+ <p>如果拖动目标只实现一个动作，则此对象可以设置 <codeph>nativeDragEnter</codeph> 和 <codeph>nativeDragOver</codeph> 事件处理函数中的 NativeDragManager 的 <codeph>dropAction</codeph> 属性。拖动之前设置该属性将允许拖动管理器更新鼠标指针，以指示支持的动作并防止用户使用功能键选择不兼容的动作。如果指定的动作不是允许的动作之一，则不允许拖动，即使目标调用 <codeph>acceptDrop()</codeph> 方法。</p>
+ 
+ <p>在接受拖动时，潜在的拖动目标应通过设置 <codeph>NativeDragManager.dropAction</codeph> 属性以响应 <codeph>nativeDragDrop</codeph> 事件来指定所选的动作。此动作将被报告回 <codeph>nativeDragComplete</codeph> 事件中的启动显示对象。如果拖动目标未设置动作，则会从允许的动作中选择一个默认动作，这些动作的优先顺序为：复制、移动、链接。启动对象负责更新其内部状态以响应所选的动作。</p> 
+ 
+ <p>用作动作名称的字符串常量在 NativeDragActions 类中定义。</p>
+  
+ <p><b>事件序列</b></p>
+ <p>拖动动作从调用 <codeph>mouseDown</codeph> 或 <codeph>mouseMove</codeph> 事件处理函数内的 <codeph>NativeDragManager.doDrag()</codeph> 方法开始，然后继续执行以下事件序列以响应用户动作：</p>
+ <ul>
+ <li><codeph>nativeDragStart</codeph> 事件 -- 在调用 <codeph>NativeDragManager.doDrag()</codeph> 时，作为参数传递给该方法的交互式对象将成为启动器对象，并分派 <codeph>nativeDragStart</codeph> 事件。</li> 
+ 
+ <li><codeph>nativeDragUpdate</codeph> 事件 -- 在执行拖动时，启动器对象将继续分派 <codeph>nativeDragUpdate</codeph> 事件。</li>
+ 
+ <li><codeph>nativeDragEnter</codeph>、<codeph>nativeDragOver</codeph> 事件 -- 当拖动动作越过交互式对象时，该对象将分派 <codeph>nativeDragEnter</codeph> 事件。当拖动动作停留在交互式对象上时，该对象将继续分派 <codeph>nativeDragOver</codeph> 事件。在响应这些事件中的任一事件时，作为潜在放置目标的对象应检查事件对象的属性，以确定它是否可以接受放置。如果数据格式和允许的动作适当，则这些事件的事件处理函数必须调用 <codeph>NativeDragManager.acceptDrop()</codeph>，传入对将作为拖动目标的显示对象（通常是分派 <codeph>nativeDragEnter</codeph> 或 <codeph>nativeDragOver</codeph> 事件的对象）的引用。然后用户可以将拖动项拖动到目标上。</li>
+ 
+ <li><codeph>nativeDragExit</codeph> 事件 -- 当拖动动作移出交互式对象时，该对象将分派 <codeph>nativeDragExit</codeph> 事件。如果先前对 <codeph>NativeDragManager.acceptDrop()</codeph> 方法的调用已经将该对象指定为拖动目标，该调用将不再有效，如果动作再次进入交互式对象，则必须再次调用 <codeph>acceptDrop()</codeph>。</li>
+ 
+ <li><codeph>nativeDragDrop</codeph> 事件 -- 当用户在目标显示对象上松开鼠标按键时，该对象将分派 <codeph>nativeDragDrop</codeph> 事件。此事件的处理函数可以访问该事件对象的 <codeph>transferable</codeph> 属性中的数据，并应设置 <codeph>NativeDragManager.dropAction</codeph> 属性以指示启动器对象应采取哪种动作。</li>
+ 
+ <li><codeph>nativeDragComplete</codeph> -- 当用户在拖动动作结束并释放鼠标时，启动器对象将分派 <codeph>nativeDragComplete</codeph> 事件（无论放置本身是否已完成）。此事件的处理函数可以检查事件对象的 <codeph>dropAction</codeph> 属性以确定应该对其内部数据状态进行何种修改（如果有），比如从列表中删除已拖动出去的项目。如果 <codeph>dropAction</codeph> 为 <codeph>NativeDragActions.NONE</codeph>，则拖动项目没有放到符合条件的目标上。</li>
+ </ul>
+ 
+ <p><b>应用程序之间的动作</b></p>
+ <p>当拖动动作从非 AIR 应用程序进入 AIR 应用程序窗口时，不会有启动器对象分派 <codeph>nativeDragStart</codeph> 或 <codeph>nativeDragComplete</codeph> 事件。在该动作期间分派的事件将遵循与在同一 AIR 应用程序内开始和结束的动作相同的模式。</p>
+ 
+ <p>当拖动动作离开 AIR 应用程序窗口时，不会有目标对象分派 <codeph>nativeDragEnter</codeph>、<codeph>nativeDragOver</codeph> 或 <codeph>nativeDragDrop</codeph> 事件。启动器对象仍将分派 <codeph>nativeDragComplete</codeph> 事件，该事件会报告由本机操作系统设置的拖动动作（如果不接受放置，则报告 <codeph>none</codeph>）。</p>
+ 
+ <p>如果拖动动作从一个 AIR 应用程序移动到另一个 AIR 应用程序，启动器和目标显示对象将照常在其各自的应用程序内分派事件。</p>
+ 
+ <p><b>传输信息</b></p>
+ <p>在拖放动作期间传输的数据包含在 Clipboard 对象中。此数据对象是使用启动拖动动作的 <codeph>NativeDragManager.doDrag()</codeph> 方法添加到拖动操作中的。潜在的放置目标可以通过本机拖动事件对象的 <codeph>clipboard</codeph> 属性访问 Clipboard 对象。一旦拖动操作开始后，只能在 NativeDragEvent 的事件处理函数中访问 Clipboard 对象。对该对象的任何其它访问尝试都将生成运行时错误。</p>
+ 
+ <p><b>安全注意事项</b></p>
+ <p>启动器和潜在目标对象的安全沙箱确定可以何种方式访问所拖动的数据。如果两个对象在同一个沙箱中，则可以从任一 NativeDragEvent 对象访问数据。不过，如果启动器和目标对象在不同的沙箱中，则只能在 <codeph>nativeDragDrop</codeph> 事件的事件处理函数内的目标沙箱中访问数据。其它本机拖动事件处理函数仍然可以访问事件的 <codeph>clipboard</codeph> 属性中所引用的 Clipboard 对象，以确定可以使用哪些数据格式，但调用 <codeph>clipboard.getData()</codeph> 方法会生成安全错误。</p>
+ 
+ </apiDesc></apiClassifierDetail><related-links><link href="flash.events.xml#NativeDragEvent"><linktext>flash.events.NativeDragEvent</linktext></link><link href="flash.desktop.xml#NativeDragActions"><linktext>flash.desktop.NativeDragActions</linktext></link><link href="flash.desktop.xml#NativeDragOptions"><linktext>flash.desktop.NativeDragOptions</linktext></link><link href="flash.desktop.xml#Clipboard"><linktext>flash.desktop.Clipboard</linktext></link></related-links><apiOperation id="flash.desktop:NativeDragManager:acceptDragDrop"><apiName>acceptDragDrop</apiName><shortdesc>
+	 通知 NativeDragManager 对象：指定的目标交互式对象可以接受与当前拖动事件对应的放置。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>target</apiItemName><apiOperationClassifier>flash.display:InteractiveObject</apiOperationClassifier></apiParam></apiOperationDef><apiDesc>
+	 通知 NativeDragManager 对象：指定的目标交互式对象可以接受与当前拖动事件对应的放置。
+	 
+     <p>只有在指定目标对象上具有可处理拖动项中至少一种数据格式和至少一种允许动作的 <codeph>nativeDragDrop</codeph> 处理函数时，才应该调用此方法。</p>
+     
+	 <p>只能在 <codeph>nativeDragEnter</codeph> 或 <codeph>nativeDragOver</codeph> 事件处理函数内调用此函数。</p>
+	 
+     </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.desktop:NativeDragManager:doDrag"><apiName>doDrag</apiName><shortdesc>
+	 启动拖放操作。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>dragInitiator</apiItemName><apiOperationClassifier>flash.display:InteractiveObject</apiOperationClassifier><apiDesc>通常是从中开始拖动动作的对象。接收 <codeph>nativeDragStart</codeph> 和 <codeph>nativeDragComplete</codeph> 事件。
+	 
+	 </apiDesc></apiParam><apiParam><apiItemName>clipboard</apiItemName><apiOperationClassifier>flash.desktop:Clipboard</apiOperationClassifier><apiDesc>所拖动数据的容器对象。
+	 
+     </apiDesc></apiParam><apiParam><apiItemName>dragImage</apiItemName><apiOperationClassifier>flash.display:BitmapData</apiOperationClassifier><apiData>null</apiData><apiDesc>在拖动动作期间在鼠标指针下显示的可选代理图像。如果为 <codeph>null</codeph>，则不显示任何图像。
+     
+     </apiDesc></apiParam><apiParam><apiItemName>offset</apiItemName><apiOperationClassifier>flash.geom:Point</apiOperationClassifier><apiData>null</apiData><apiDesc>鼠标热点和拖动图像左上角之间的偏移。负坐标会将图像相对于该热点向上和向左移动。如果为 <codeph>null</codeph>，拖动图像的左上角将位于鼠标热点。 
+     
+     </apiDesc></apiParam><apiParam><apiItemName>allowedActions</apiItemName><apiOperationClassifier>flash.desktop:NativeDragOptions</apiOperationClassifier><apiData>null</apiData><apiDesc>限制此操作允许的拖放动作。如果为 <codeph>null</codeph>，则允许所有动作。
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 启动拖放操作。
+	 
+	 <p>启动拖动操作：</p>
+	 <ol>
+	 <li>创建一个新的 Clipboard 对象。</li>
+	 <li>以一种或多种格式添加要传输的数据。</li>
+	 <li>或者，创建一个 BitmapData 对象作为拖动期间的代理图像。</li>
+	 <li>或者，创建一个 NativeDragOptions 对象以限制此操作中允许的动作。（如果 <codeph>allowedActions</codeph> 参数保留为 <codeph>null</codeph>，则允许所有动作。）</li>
+     <li>调用 <codeph>NativeDragManager.doDrag()</codeph>。</li>
+	 </ol>
+	 
+     <p>启动器对象在调用此方法后将分派一个 <codeph>nativeDragStart</codeph> 事件，在拖动进行过程中将分派几个 <codeph>nativeDragStart</codeph> 事件，而当用户释放鼠标按钮以结束拖动动作时将分派一个 <codeph>nativeDragComplete</codeph> 事件。<codeph>nativeDragComplete</codeph> 事件的处理函数可以检查该事件的 <codeph>dropAction</codeph> 属性以确定拖放操作是否成功完成。如果 <codeph>dropAction</codeph> 为 <codeph>NativeDragActions.NONE</codeph>，则拖动项目没有放到符合条件的目标上。</p>
+	 
+     <p>只能从 <codeph>mouseDown</codeph> 或 <codeph>mouseMove</codeph> 事件处理函数内调用此方法。（如果在响应 <codeph>mouseMove</codeph> 事件时调用，鼠标按钮也必须处于按下状态。）</p>
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.desktop.xml#NativeDragActions"><linktext>flash.desktop.NativeDragActions</linktext></link></related-links></apiOperation><apiValue id="flash.desktop:NativeDragManager:dragInitiator:get"><apiName>dragInitiator</apiName><shortdesc>
+	传递给启动拖动操作的 NativeDragManager.doDrag() 调用的交互式对象。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>flash.display:InteractiveObject</apiValueClassifier></apiValueDef><apiDesc>
+	传递给启动拖动操作的 <codeph>NativeDragManager.doDrag()</codeph> 调用的交互式对象。
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeDragManager:dropAction:get"><apiName>dropAction</apiName><shortdesc>
+	放置目标指定的拖动操作。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="readwrite"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	放置目标指定的拖动操作。
+	 
+     <p><codeph>dropAction</codeph> 属性应该在 <codeph>nativeDragDrop</codeph> 事件的处理函数中设置。如果在 <codeph>nativeDragComplete</codeph> 之前未设置 <codeph>dropAction</codeph>，则 NativeDragManager 将用列表中允许的第一个动作设置此值：复制、移动或链接（按此顺序）。</p>
+     
+     </apiDesc></apiValueDetail><related-links><link href="flash.desktop.xml#NativeDragActions"><linktext>flash.desktop.NativeDragActions</linktext></link></related-links></apiValue><apiValue id="flash.desktop:NativeDragManager:isDragging:get"><apiName>isDragging</apiName><shortdesc>
+	报告拖动操作当前是否正在进行中。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	报告拖动操作当前是否正在进行中。
+	 
+     </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.desktop:NativeDragOptions"><apiName>NativeDragOptions</apiName><shortdesc>
+ NativeDragOptions 类定义一些常量，它们表示拖放操作中允许的拖放动作的名称。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ NativeDragOptions 类定义一些常量，它们表示拖放操作中允许的拖放动作的名称。
+ 
+ <p>拖动动作是反馈机制的一部分，旨在使启动对象和目标对象在拖放交换中得以协调。动作只是对操作系统的一个<i>提示</i>。实现适当的行为取决于事务中涉及的拖动启动器和目标对象。</p>
+ 
+ <p>启动对象应只允许它支持的动作。例如，只有在启动对象的内部逻辑将在目标接受移动动作的放置时删除源数据的情况下，启动对象才应允许<i>移动</i> 动作。</p>
+ 
+ 
+ <p>新 NativeDragOptions 对象的所有属性都初始化为 <codeph>true</codeph>（允许所有动作）。</p>
+ 
+ </apiDesc></apiClassifierDetail><related-links><link href="flash.desktop.xml#NativeDragManager"><linktext>flash.desktop.NativeDragManager</linktext></link><link href="flash.events.xml#NativeDragEvent"><linktext>flash.events.NativeDragEvent</linktext></link></related-links><apiOperation id="flash.desktop:NativeDragOptions:toString"><apiName>toString</apiName><shortdesc>
+	
+	 返回指定对象的字符串表示形式。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>对象的字符串表示形式。
+	 
+	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	
+	 返回指定对象的字符串表示形式。
+	 
+     <p platform="actionscript"><b>注意：</b>Object 类的方法是在 Object 的原型上动态创建的。要在 Object 的子类中重新定义该方法，请不要使用 <codeph>override</codeph> 关键字。例如，Object 的一个子类实现 <codeph>function toString():String</codeph> 而不使用基类覆盖。</p>
+     
+     </apiDesc></apiOperationDetail></apiOperation><apiValue id="flash.desktop:NativeDragOptions:allowCopy"><apiName>allowCopy</apiName><shortdesc>
+	允许使用放置目标来复制拖动的数据。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>true</apiData><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	允许使用放置目标来复制拖动的数据。
+	
+    </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeDragOptions:allowLink"><apiName>allowLink</apiName><shortdesc>
+	 允许使用放置目标来创建指向拖动的数据的链接。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>true</apiData><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	 允许使用放置目标来创建指向拖动的数据的链接。
+	 
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeDragOptions:allowMove"><apiName>allowMove</apiName><shortdesc>
+	允许使用放置目标来移动拖动的数据。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>true</apiData><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	允许使用放置目标来移动拖动的数据。
+	
+    </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.desktop:DockIcon"><apiName>DockIcon</apiName><shortdesc>
+	 DockIcon 类表示 MacOS X&amp;#xAE; 样式的停靠图标。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.desktop:InteractiveIcon</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 DockIcon 类表示 MacOS X<sup>®</sup> 样式的停靠图标。
+	 
+	 <p>可以使用 DockIcon 类来更改标准图标的外观，例如使图标具有动画效果或添加信息性图形。也可以向停靠图标菜单中添加项目。您添加的菜单项将显示在标准菜单项之上。</p>
+	 
+	 <p>无法创建 DockIcon 类的实例。从 <codeph>NativeApplication.icon</codeph> 获取表示操作系统停靠图标的对象。
+	 </p>
+	 
+	 <p>不是所有操作系统都有停靠图标。检查 <codeph>NativeApplication.supportsDockIcon</codeph> 以确定在当前系统上是否支持停靠图标。如果支持停靠图标，则 <codeph>NativeApplication.icon</codeph> 属性为 DockIcon 类型。否则，<codeph>NativeApplication.icon</codeph> 的类型为 InteractiveIcon 的另一个子类，通常为 SystemTrayIcon。</p>
+	 
+	 <p><b>重要说明：</b>在 AIR 不支持停靠图标的操作系统上尝试对 <codeph>NativeApplication.icon</codeph> 对象调用 DockIcon 类方法会生成运行时异常。</p>
+	 
+	 </apiDesc><example conref="examples\DockIconExample.as"> 下例加载了一系列图像，通过停靠图标菜单启动计时器后，将使图标图像具有动画效果。（要使示例能够运行，必须提供一组图标图像并更改 imageURLs 数组中的 URL。）
+<codeblock>
+
+ package {
+    import flash.desktop.DockIcon;
+    import flash.desktop.NativeApplication;
+    import flash.display.Loader;
+    import flash.display.NativeMenu;
+    import flash.display.NativeMenuItem;
+    import flash.display.Sprite;
+    import flash.events.Event;
+    import flash.events.TimerEvent;
+    import flash.net.URLRequest;
+    import flash.utils.Timer;
+
+    public class AnimatedDockIcon extends Sprite
+    {
+        private var imageURLs:Array =  ['gfx/frame01.png',
+                                        'gfx/frame02.png',
+                                        'gfx/frame03.png',
+                                        'gfx/frame04.png'];
+        
+        private var images:Array = new Array();
+        private var animTimer:Timer = new Timer(100);
+                                        
+        public function AnimatedDockIcon()
+        {
+            NativeApplication.nativeApplication.autoExit = false;
+            
+            addEventListener(Event.COMPLETE, loadImages);
+            loadImages();
+            
+            animTimer.addEventListener(TimerEvent.TIMER,advanceFrame);
+            addMenu();
+            stage.nativeWindow.close();
+        }
+        
+        private function addMenu():void{
+            var menu:NativeMenu = new NativeMenu();
+            var start:NativeMenuItem = menu.addItem(new NativeMenuItem("Start animation"));
+            var stop:NativeMenuItem = menu.addItem(new NativeMenuItem("Stop animation"));
+            start.addEventListener(Event.SELECT, startTimer);
+            stop.addEventListener(Event.SELECT, stopTimer);
+            
+            var dockIcon:DockIcon =    NativeApplication.nativeApplication.icon as DockIcon;
+            dockIcon.menu = menu;
+        }
+        
+        private function startTimer(event:Event):void{
+            animTimer.start();
+        }
+
+        private function stopTimer(event:Event):void{
+            animTimer.stop();
+        }
+
+        private var currentFrame:int = 0;
+        private function advanceFrame(event:Event):void{
+            if(currentFrame &lt; images.length){
+                currentFrame++;
+            } else {
+                currentFrame = 0;
+            }
+            NativeApplication.nativeApplication.icon.bitmaps = [images[currentFrame]];
+        }
+        
+
+        private function loadImages(event:Event = null):void{
+            if(event != null){
+                images.push(event.target.content.bitmapData);
+            }
+            if(imageURLs.length > 0){
+                var urlString:String = imageURLs.pop();
+                var loader:Loader = new Loader();
+                loader.contentLoaderInfo.addEventListener(Event.COMPLETE, loadImages, false, 0, true);
+                loader.load(new URLRequest(urlString));
+            } else {
+                var complete:Event = new Event(Event.COMPLETE,false,false);
+                dispatchEvent(complete);
+            }
+        }
+    }
+}
+</codeblock></example></apiClassifierDetail><related-links><link href="flash.desktop.xml#NativeApplication/icon"><linktext>flash.desktop.NativeApplication.icon</linktext></link><link href="flash.desktop.xml#NativeApplication/supportsDockIcon"><linktext>flash.desktop.NativeApplication.supportsDockIcon</linktext></link><link href="flash.desktop.xml#SystemTrayIcon"><linktext>flash.desktop.SystemTrayIcon</linktext></link></related-links><apiOperation id="flash.desktop:DockIcon:bounce"><apiName>bounce</apiName><shortdesc>
+		 通知用户已发生了可能需要引起注意的事件。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiDefaultValue>NotificationType.Informational
+		 
+		 </apiDefaultValue><apiParam><apiItemName>priority</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData>informational</apiData><apiDesc>回弹停靠的紧急程度。
+		 
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+		 通知用户已发生了可能需要引起注意的事件。
+		 
+		 <p>当且仅当应用程序处于后台时，调用此方法将回弹停靠图标。如果 <codeph>priority</codeph> 为 <codeph>NotificationType.Informational</codeph>，则图标将回弹一次。如果 <codeph>priority</codeph> 为 <codeph>NotificationType.Critical</codeph>，则图标将一直回弹，直到应用程序处于前景中。</p>
+		 
+		 </apiDesc><example conref="examples\DockIcon.bounce.1.as"> 在下例中，在用户激活应用程序之前，将一直回弹停靠图标：
+<codeblock>
+ import flash.display.DockIcon;
+ import flash.display.NotificationType;
+ import flash.desktop.NativeApplication;
+
+ if(NativeApplication.supportsDockIcon){
+     var dockIcon:DockIcon = NativeApplication.nativeApplication.icon As DockIcon;
+     dockIcon.bounce(NotificationType.CRITICAL);
+ }
+ 
+</codeblock></example></apiOperationDetail><related-links><link href="flash.desktop.xml#NotificationType"><linktext>flash.desktop.NotificationType</linktext></link><link href="flash.display.xml#NativeWindow/notifyUser()"><linktext>flash.display.NativeWindow.notifyUser()</linktext></link></related-links></apiOperation><apiValue id="flash.desktop:DockIcon:bitmaps:set"><apiName>bitmaps</apiName><shortdesc> 
+		
+		  
+	 作为不同大小的 BitmapData 对象数组的图标图像。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Array</apiValueClassifier></apiValueDef><apiDesc> 
+		
+		  
+	 作为不同大小的 BitmapData 对象数组的图标图像。
+	   
+	 <p>当在给定的操作系统上下文中显示图标时，将使用数组中最接近所显示大小的位图（必要时进行缩放）。常用的大小包括 16x16、32x32、48x48 和 128x128。（在不远的将来，某些操作系统将可以使用 512x512 像素的图标。）</p>
+	 
+	 <p>在某些上下文中，如果没有为 <codeph>bitmaps</codeph> 属性分配任何数据，则操作系统可以使用默认的系统图标。在其它上下文中，不显示图标。</p>
+	 
+	 <p>要设置或更改图标外观，请将 BitmapData 对象数组分配给 <codeph>bitmaps</codeph> 属性：</p>
+	 
+	 <codeblock>
+	 icon.bitmaps = new Array(icon16x16.bitmapData, icon128x128.bitmapData);
+	 </codeblock>
+	  
+	 <p>直接修改 <codeph>bitmaps</codeph> 数组没有任何效果。</p>
+	 
+	 <p>要清除图标图像，请为 <codeph>bitmaps</codeph> 属性分配一个空数组。</p>
+	 
+	 <p>
+	 <b>注意：</b>在为图标加载图像文件时，PNG 文件格式通常提供最佳 Alpha 混合。GIF 格式只支持打开或关闭透明度（无混合）。JPG 格式完全不支持透明度。  
+	 </p>
+	  
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:DockIcon:height:get"><apiName>height</apiName><shortdesc> 
+		
+		 图标的当前显示高度，以像素为单位。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc> 
+		
+		 图标的当前显示高度，以像素为单位。
+		 
+		 <p>某些图标上下文支持动态大小。<codeph>height</codeph> 属性指示从当前上下文的 <codeph>bitmaps</codeph> 数组中选择的图标的高度。如果操作系统已缩放了该图标，则实际显示高度可能会有所不同。</p>
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:DockIcon:menu:set"><apiName>menu</apiName><shortdesc>
+		 此停靠图标的系统提供菜单。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>flash.display:NativeMenu</apiValueClassifier></apiValueDef><apiDesc>
+		 此停靠图标的系统提供菜单。
+		 
+		 <p>菜单中的任何项目都将显示在标准项目之上。标准项目无法修改或删除。</p>
+		 
+		 </apiDesc><example conref="examples\DockIcon.menu.1.as"> 下面的示例将一个项目添加到停靠图标菜单：
+<codeblock>
+ import flash.desktop.NativeApplication;
+ import flash.events.Event;
+ 
+private function createDockIconMenu():void{
+    if(NativeApplication.supportsDockIcon){                
+        var dockIcon:DockIcon = NativeApplication.nativeApplication.icon as DockIcon;
+        
+        var dockMenu:NativeMenu = new NativeMenu();
+        var command:NativeMenuItem = dockMenu.addItem(new NativeMenuItem("Command"));
+        command.addEventListener(Event.SELECT, onCommand);
+        
+        dockIcon.menu = dockMenu;
+    }
+}
+
+ private function onCommand(event:Event):void{
+     //do command...
+ }
+</codeblock></example></apiValueDetail></apiValue><apiValue id="flash.desktop:DockIcon:width:get"><apiName>width</apiName><shortdesc> 
+		
+		 图标的当前显示宽度，以像素为单位。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc> 
+		
+		 图标的当前显示宽度，以像素为单位。 
+		 
+		 <p>某些图标上下文支持动态大小。<codeph>width</codeph> 属性指示从当前上下文的 <codeph>bitmaps</codeph> 数组中选择的图标的宽度。如果操作系统已缩放了该图标，则实际显示宽度可能会有所不同。</p>
+		 
+		 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.desktop:Icon"><apiName>Icon</apiName><shortdesc> 
+	 Icon 类表示操作系统图标。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.events:EventDispatcher</apiBaseClassifier></apiClassifierDef><apiDesc> 
+	 Icon 类表示操作系统图标。 
+	 
+	 <p>Icon 对象只有一个属性 <codeph>bitmaps</codeph>，该属性是 BitmapData 对象的数组。一次只显示一个图像。操作系统选择大小最接近图标当前显示尺寸的图像，必要时进行缩放。</p>
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="flash.filesystem.xml#File/icon"><linktext>flash.filesystem.File.icon</linktext></link><link href="flash.display.xml#BitmapData"><linktext>flash.display.BitmapData</linktext></link></related-links><apiValue id="flash.desktop:Icon:bitmaps:set"><apiName>bitmaps</apiName><shortdesc> 
+	 作为不同大小的 BitmapData 对象数组的图标图像。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Array</apiValueClassifier></apiValueDef><apiDesc> 
+	 作为不同大小的 BitmapData 对象数组的图标图像。
+	   
+	 <p>当在给定的操作系统上下文中显示图标时，将使用数组中最接近所显示大小的位图（必要时进行缩放）。常用的大小包括 16x16、32x32、48x48 和 128x128。（在不远的将来，某些操作系统将可以使用 512x512 像素的图标。）</p>
+	 
+	 <p>在某些上下文中，如果没有为 <codeph>bitmaps</codeph> 属性分配任何数据，则操作系统可以使用默认的系统图标。在其它上下文中，不显示图标。</p>
+	 
+	 <p>要设置或更改图标外观，请将 BitmapData 对象数组分配给 <codeph>bitmaps</codeph> 属性：</p>
+	 
+	 <codeblock>
+	 icon.bitmaps = new Array(icon16x16.bitmapData, icon128x128.bitmapData);
+	 </codeblock>
+	  
+	 <p>直接修改 <codeph>bitmaps</codeph> 数组没有任何效果。</p>
+	 
+	 <p>要清除图标图像，请为 <codeph>bitmaps</codeph> 属性分配一个空数组。</p>
+	 
+	 <p>
+	 <b>注意：</b>在为图标加载图像文件时，PNG 文件格式通常提供最佳 Alpha 混合。GIF 格式只支持打开或关闭透明度（无混合）。JPG 格式完全不支持透明度。  
+	 </p>
+	  
+	 </apiDesc></apiValueDetail><related-links><link href="flash.filesystem.xml#File/icon"><linktext>flash.filesystem.File.icon</linktext></link><link href="flash.display.xml#BitmapData"><linktext>flash.display.BitmapData</linktext></link></related-links></apiValue></apiClassifier></apiPackage>

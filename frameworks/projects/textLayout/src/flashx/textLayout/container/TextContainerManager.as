@@ -22,10 +22,9 @@ package flashx.textLayout.container
 	import flash.events.MouseEvent;
 	import flash.events.TextEvent;
 	import flash.geom.Rectangle;
-	import flash.system.System;
 	import flash.text.engine.TextBlock;
 	import flash.text.engine.TextLine;
-	import flash.text.engine.TextLineValidity;	
+	import flash.text.engine.TextLineValidity;
 	import flash.ui.ContextMenu;
 	import flash.ui.Mouse;
 	import flash.ui.MouseCursor;
@@ -65,7 +64,6 @@ package flashx.textLayout.container
 	import flashx.textLayout.formats.FormatValue;
 	import flashx.textLayout.formats.ITextLayoutFormat;
 	import flashx.textLayout.formats.TextLayoutFormat;
-	import flashx.textLayout.formats.TextLayoutFormatValueHolder;
 	import flashx.textLayout.property.EnumStringProperty;
 	import flashx.textLayout.property.Property;
 	import flashx.textLayout.tlf_internal;
@@ -689,7 +687,8 @@ package flashx.textLayout.container
 			{
 				// Possible issue - this clear call could be delayed until updateToController
 				_container.mouseChildren = true;
-				clearContainerChildren();
+				clearContainerChildren(true);
+				clearComposedLines();
 				_textFlow.flowComposer = new StandardFlowComposer();
 				_textFlow.flowComposer.swfContext = _swfContext;
 				var controller:TMContainerController = new TMContainerController(_container,_compositionWidth,_compositionHeight,this);
@@ -912,6 +911,7 @@ package flashx.textLayout.container
 		{
 			if (_composeRecycledInPlaceLines < _composedLines.length)
 			{
+				CONFIG::debug {assert(argsArray[0] != _composedLines[_composeRecycledInPlaceLines],"Bad args"); }
 				TextLineRecycler.addLineForReuse(argsArray[0]);	// not going to use this one
 				argsArray[0] = _composedLines[_composeRecycledInPlaceLines++];
 			}
@@ -997,12 +997,20 @@ package flashx.textLayout.container
 				else if (_editingMode == EditingMode.READ_WRITE)
 				{
 					if (alwaysRecreateManager || interactionManager == null || interactionManager.editingMode == EditingMode.READ_SELECT)
+					{
 						_textFlow.interactionManager = createEditManager(getUndoManager());
+						if (_textFlow.interactionManager is SelectionManager)
+							SelectionManager(_textFlow.interactionManager).cloneSelectionFormatState(interactionManager);
+					}
 				}
 				else if (_editingMode == EditingMode.READ_SELECT)
 				{
 					if (alwaysRecreateManager || interactionManager == null || interactionManager.editingMode == EditingMode.READ_WRITE)
+					{
 						_textFlow.interactionManager = createSelectionManager();
+						if (_textFlow.interactionManager is SelectionManager)
+							SelectionManager(_textFlow.interactionManager).cloneSelectionFormatState(interactionManager);
+					}
 				}
 				
 				interactionManager = _textFlow.interactionManager;
@@ -1302,6 +1310,9 @@ package flashx.textLayout.container
 						_container.removeChildAt(_composedLines.length);
 						if (textLine)
 						{
+							// lines were rebroken but aren't being displayed
+							if (textLine.validity == TextLineValidity.VALID)
+								textLine.textBlock.releaseLines(textLine,textLine.textBlock.lastLine);
 							textLine.userData = null;
 							TextLineRecycler.addLineForReuse(textLine);
 						}
@@ -1309,7 +1320,7 @@ package flashx.textLayout.container
 				}
 				else
 				{
-					clearContainerChildren();
+					clearContainerChildren(false);
 					
 					for each (textObject in _composedLines)
 						_container.addChild(textObject);
@@ -1448,7 +1459,7 @@ package flashx.textLayout.container
 			return result;
 		}
 		
-		private function clearContainerChildren():void
+		private function clearContainerChildren(recycle:Boolean):void
 		{
 			while(_container.numChildren)
 			{
@@ -1463,8 +1474,11 @@ package flashx.textLayout.container
 						CONFIG::debug { Debugging.traceFTECall(null,textBlock,"releaseLines",textBlock.firstLine, textBlock.lastLine); }	
 						textBlock.releaseLines(textBlock.firstLine,textBlock.lastLine);
 					}					
-					textLine.userData = null;	// clear any userData
-					TextLineRecycler.addLineForReuse(textLine);
+					if (recycle)
+					{
+						textLine.userData = null;	// clear any userData
+						TextLineRecycler.addLineForReuse(textLine);
+					}
 				}
 			}
 		}
@@ -1499,7 +1513,8 @@ package flashx.textLayout.container
 			
 			if (_composeState != COMPOSE_COMPOSER)
 			{
-				clearContainerChildren();
+				clearContainerChildren(true);
+				clearComposedLines();
 				var controller:TMContainerController = new TMContainerController(_container,_compositionWidth,_compositionHeight,this);
 				_textFlow.flowComposer = new StandardFlowComposer();
 				_textFlow.flowComposer.addController(controller);

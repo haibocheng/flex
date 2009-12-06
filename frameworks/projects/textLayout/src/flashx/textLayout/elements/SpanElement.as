@@ -113,12 +113,12 @@ package flashx.textLayout.elements
 				--leafElEndPos;
 				
 			if (leafElStartPos > leafElEndPos)
-				throw RangeError(GlobalSettings.getResourceStringFunction("badShallowCopyRange"));
+				throw RangeError(GlobalSettings.resourceStringFunction("badShallowCopyRange"));
 			
 			var spanText:String = _blockElement ? _blockElement.rawText : _text;
 			if (((leafElStartPos != endSpan) && CharacterUtil.isLowSurrogate(spanText.charCodeAt(leafElStartPos))) ||
 				((leafElEndPos != 0) && CharacterUtil.isHighSurrogate(spanText.charCodeAt(leafElEndPos-1))))
-					throw RangeError(GlobalSettings.getResourceStringFunction("badSurrogatePairCopy"));
+					throw RangeError(GlobalSettings.resourceStringFunction("badSurrogatePairCopy"));
 			
 			retFlow.replaceText(0, retFlow.textLength,  String(spanText).substring(leafElStartPos, leafElEndPos));
 			
@@ -209,7 +209,7 @@ package flashx.textLayout.elements
 					str += String.fromCharCode(0xE000); 
 				}	
 				else if (elem != null)
-					throw new TypeError(GlobalSettings.getResourceStringFunction("badMXMLChildrenArgument",[ getQualifiedClassName(elem) ]));
+					throw new TypeError(GlobalSettings.resourceStringFunction("badMXMLChildrenArgument",[ getQualifiedClassName(elem) ]));
 					
 			}
 			replaceText(0,textLength, str); 
@@ -306,13 +306,13 @@ package flashx.textLayout.elements
 			// Note to callers: If you are calling this function outside a try/catch, do ensure that the 
 			// state of the model is coherent before the call.
 			if (relativeStartPosition < 0 || relativeEndPosition > textLength || relativeEndPosition < relativeStartPosition)
-				throw RangeError(GlobalSettings.getResourceStringFunction("invalidReplaceTextPositions"));	
+				throw RangeError(GlobalSettings.resourceStringFunction("invalidReplaceTextPositions"));	
 
 
 			var spanText:String = _blockElement ? _blockElement.rawText : _text;
 			if ((relativeStartPosition != 0 && relativeStartPosition != textLength && CharacterUtil.isLowSurrogate(spanText.charCodeAt(relativeStartPosition))) ||
 				(relativeEndPosition != 0 && relativeEndPosition != textLength && CharacterUtil.isHighSurrogate(spanText.charCodeAt(relativeEndPosition-1))))
-					throw RangeError (GlobalSettings.getResourceStringFunction("invalidSurrogatePairSplit"));
+					throw RangeError (GlobalSettings.resourceStringFunction("invalidSurrogatePairSplit"));
 				
 			if (hasParagraphTerminator)
 			{
@@ -432,10 +432,10 @@ package flashx.textLayout.elements
 			// Note to callers: If you are calling this function outside a try/catch, do ensure that the 
 			// state of the model is coherent before the call.
 			if (relativePosition < 0 || relativePosition > textLength)
-				throw RangeError(GlobalSettings.getResourceStringFunction("invalidSplitAtPosition"));
+				throw RangeError(GlobalSettings.resourceStringFunction("invalidSplitAtPosition"));
 			
 			if ((relativePosition < textLength) && CharacterUtil.isLowSurrogate(String(text).charCodeAt(relativePosition)))
-				throw RangeError (GlobalSettings.getResourceStringFunction("invalidSurrogatePairSplit"));
+				throw RangeError (GlobalSettings.resourceStringFunction("invalidSurrogatePairSplit"));
 			
 			var newSpan:SpanElement = new SpanElement();
 			// clone styling information

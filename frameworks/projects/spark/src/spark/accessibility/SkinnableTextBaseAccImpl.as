@@ -38,6 +38,7 @@ public class SkinnableTextBaseAccImpl extends AccImpl
 {
     include "../core/Version.as";
 
+
     //--------------------------------------------------------------------------
     //
     //  Class methods
@@ -116,7 +117,7 @@ public class SkinnableTextBaseAccImpl extends AccImpl
      */
     override protected function get eventsToHandle():Array
     {
-        return super.eventsToHandle.concat([ Event.CHANGE ]);
+        return super.eventsToHandle.concat([ Event.CHANGE, FocusEvent.FOCUS_IN ]);
     }
 
     //--------------------------------------------------------------------------
@@ -206,7 +207,7 @@ public class SkinnableTextBaseAccImpl extends AccImpl
      */
 	public function get selectionAnchorIndex():int
 	{
-		return SkinnableTextBase(master).selectionAnchorPosition;
+        return SkinnableTextBase(master).selectionAnchorPosition;
 	}
 
     //--------------------------------------------------------------------------
@@ -241,6 +242,8 @@ public class SkinnableTextBaseAccImpl extends AccImpl
     override public function get_accState(childID:uint):uint
     {
         var accState:uint = getState(childID);
+        if (SkinnableTextBase(master).focusManager.getFocus() == master)
+            accState |= AccConst.STATE_SYSTEM_FOCUSED;    
         if (!SkinnableTextBase(master).editable)
             accState |= AccConst.STATE_SYSTEM_READONLY;
         return accState;
@@ -272,6 +275,12 @@ public class SkinnableTextBaseAccImpl extends AccImpl
                                         AccConst.EVENT_OBJECT_VALUECHANGE, true);
                 break;
             }
+            case FocusEvent.FOCUS_IN:
+            {
+                Accessibility.sendEvent(master, 0,
+                                        AccConst.EVENT_OBJECT_FOCUS, true);
+                break;
+            }            
         }
     }
 

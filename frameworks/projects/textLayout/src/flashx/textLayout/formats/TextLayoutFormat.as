@@ -1,8 +1,8 @@
 //========================================================================================
 //  $File: //a3t/argon/dev/textLayout_core/src/flashx/textLayout/formats/TextLayoutFormat.as $
-//  $DateTime: 2009/11/18 15:42:10 $
-//  $Revision: #26 $
-//  $Change: 728525 $
+//  $DateTime: 2009/12/01 17:11:44 $
+//  $Revision: #27 $
+//  $Change: 730048 $
 //  
 //  ADOBE CONFIDENTIAL
 //  
@@ -1480,7 +1480,7 @@ package flashx.textLayout.formats
 
 		/**
 		 * Specifies the baseline position of the first line in the container. Which baseline this property refers to depends on the container-level locale.  For Japanese and Chinese, it is <code>TextBaseline.IDEOGRAPHIC_BOTTOM</code>; for all others it is <code>TextBaseline.ROMAN</code>.
-		 * The offset from the top inset (or right inset if <code>blockProgression</code> is RL) of the container to the baseline of the first line can be either <code>BaselineOffset.ASCENT</code>, meaning equal to the ascent of the line, <code>BaselineOffset.LINE_HEIGHT</code>, meaning equal to the height of that first line, or any fixed-value number to specify an absolute distance. <code>BaselineOffset.AUTO</code> aligns the ascent of the line with the container top inset.<p><img src='../../../images/textLayout_FBO1.jpg' alt='firstBaselineOffset1' /><img src='../../../images/textLayout_FBO2.jpg' alt='firstBaselineOffset2' /><img src='../../../images/textLayout_FBO3.jpg' alt='firstBaselineOffset3' /><img src='../../../images/textLayout_FBO4.jpg' alt='firstBaselineOffset4' /></p>
+		 * The offset from the top inset (or right inset if <code>blockProgression</code> is RL) of the container to the baseline of the first line can be either <code>BaselineOffset.ASCENT</code>, meaning equal to the ascent of the line, <code>BaselineOffset.LINE_HEIGHT</code>, meaning equal to the height of that first line, or any fixed-value number to specify an absolute distance. <code>BaselineOffset.AUTO</code> aligns the ascent of the line with the container top inset.<p><img src='../../../images/textLayout_FBO1.png' alt='firstBaselineOffset1' /><img src='../../../images/textLayout_FBO2.png' alt='firstBaselineOffset2' /><img src='../../../images/textLayout_FBO3.png' alt='firstBaselineOffset3' /><img src='../../../images/textLayout_FBO4.png' alt='firstBaselineOffset4' /></p>
 		 * <p>Legal values as a string are flashx.textLayout.formats.BaselineOffset.AUTO, flashx.textLayout.formats.BaselineOffset.ASCENT, flashx.textLayout.formats.BaselineOffset.LINE_HEIGHT, flashx.textLayout.formats.FormatValue.INHERIT and numbers from 0 to 1000.</p>
 		 * <p>Default value is undefined indicating not set.</p>
 		 * <p>If undefined during the cascade this property will inherit its value from an ancestor. If no ancestor has set this property, it will have a value of AUTO.</p>

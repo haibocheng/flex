@@ -378,17 +378,18 @@ use namespace mx_internal;
  *    autoExit="true"
  *    backgroundFrameRate="1"
  *    dockIconMenu="<i>null</i>"
- *    maxHeight="2880 less the height of the system chrome"
- *    maxWidth="2880 less the width of the system chrome"
  *    menu="<i>null</i>"
- *    minHeight="dependent on the operating system and the AIR systemChrome setting"
- *    minWidth="dependent on the operating system and the AIR systemChrome setting"
  *    showStatusBar="true"
  *    status=""
  *    systemTrayIconMenu="<i>null</i>"
  *    title=""
  *    titleIcon="<i>null</i>"
  *    useNativeDragManager="true"
+ * 
+ *    <strong>Styles</strong>
+ *    backgroundAlpha="1.0"
+ *    backgroundColor="0xFFFFFF"
+ *    resizeAffordanceWidth="6"
  * 
  *    <strong>Effects</strong>
  *    closeEffect="<i>No default</i>"
@@ -414,9 +415,7 @@ use namespace mx_internal;
  *  /&gt;
  *  </pre>
  * 
- *  @see spark.components.Windowed
- *  @see spark.skins.spark.SparkChromeWindowedApplicationSkin
- *  @see spark.skins.spark.WindowedApplicationSkin
+ *  @see spark.components.Window
  *  
  *  @langversion 3.0
  *  @playerversion AIR 1.5

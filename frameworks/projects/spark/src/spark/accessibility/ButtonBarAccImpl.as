@@ -165,7 +165,10 @@ public class ButtonBarAccImpl extends ListBaseAccImpl
     //
     //--------------------------------------------------------------------------
     
-    override protected function eventHandler(event:Event):void
+    /**
+	 *  @private
+	 */
+	override protected function eventHandler(event:Event):void
     {
         // Let AccImpl class handle the events
         // that all accessible UIComponents understand.

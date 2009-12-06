@@ -1,8 +1,8 @@
 //========================================================================================
 //  $File: //a3t/argon/dev/textLayout_core/src/flashx/textLayout/factory/TextLineFactoryBase.as $
-//  $DateTime: 2009/10/29 11:48:02 $
-//  $Revision: #14 $
-//  $Change: 725363 $
+//  $DateTime: 2009/12/03 16:05:58 $
+//  $Revision: #15 $
+//  $Change: 730521 $
 //  
 //  ADOBE CONFIDENTIAL
 //  
@@ -290,6 +290,7 @@ package flashx.textLayout.factory
 				textLine.x += delx;
 				textLine.y += dely;
 				textLine.validity = TextLineValidity.STATIC;
+				CONFIG::debug { Debugging.traceFTEAssign(textLine,"validity",TextLineValidity.STATIC); }
 				callback(textLine);
 			}
 		}

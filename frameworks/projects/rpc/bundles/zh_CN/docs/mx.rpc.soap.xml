@@ -99,15 +99,15 @@
      上次执行此操作过程中返回的标头。它们与 <codeph>lastResult</codeph> 属性相匹配并且与作为 HeaderEvents 单独分派的标头集合相同。
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.rpc.soap:Operation:xmlSpecialCharsFilter:get"><apiName>xmlSpecialCharsFilter</apiName><shortdesc>
-      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Function"/></apiValueDef><apiDesc>
-      除非专门在操作级上进行了覆盖，否则对 Web 服务上的所有操作有效。
+      指定用于在对任何简单内容编码之前转义 XML 特殊字符的自定义函数。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Function"/></apiValueDef><apiDesc>
+      指定用于在对任何简单内容编码之前转义 XML 特殊字符的自定义函数。除非专门在操作级上进行了覆盖，否则对 Web 服务上的所有操作有效。如果未提供函数，则默认为由 IXMLEncoder 的特定实现设置的相应内容。
       
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.rpc.soap:AbstractWebService"><apiName>AbstractWebService</apiName><shortdesc>
   AbstractWebService 是提供对基于 SOAP 的 Web 服务的 RPC 访问的实现的抽象基类。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>mx.rpc:AbstractService</apiBaseClassifier></apiClassifierDef><apiDesc>
   AbstractWebService 是提供对基于 SOAP 的 Web 服务的 RPC 访问的实现的抽象基类。此类在运行时不加载 WSDL 说明。
  
   </apiDesc></apiClassifierDetail><apiConstructor id="mx.rpc.soap:AbstractWebService:AbstractWebService"><apiName>AbstractWebService</apiName><shortdesc>
-     创建一个新的 WebService。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>destination</apiItemName><apiType value="String"/><apiData>null</apiData><apiDesc>
+     创建一个新的 WebService。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>destination</apiItemName><apiType value="String"/><apiData>null</apiData><apiDesc>目标。该值应与 services-config.xml 文件中的目标名称匹配。
      
       </apiDesc></apiParam><apiParam><apiItemName>rootURL</apiItemName><apiType value="String"/><apiData>null</apiData><apiDesc>WebService 在计算相对 URL 时应使用的 URL。
      
@@ -170,8 +170,8 @@
      <p>注意，如果使用默认目标，则必须在客户端上指定 WSDL 和 endpointURI。如果使用非默认的代理目标，则可以在目标配置中指定 WSDL 和 endpointURI。</p>
      
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.rpc.soap:AbstractWebService:convertParametersHandler"><apiName>convertParametersHandler</apiName><shortdesc>
-     </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Function"/></apiValueDef><apiDesc>
-     该函数接受一个参数数组，并返回可能改变的数组。该函数定义应该如下所示：<codeph> function myParametersFunction(parameters:Array):Array </codeph>
+     一个可选函数，主要供具有以下需要的框架开发人员使用：安装用传递给每个 webservice 操作调用的参数进行调用的函数。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Function"/></apiValueDef><apiDesc>
+     一个可选函数，主要供具有以下需要的框架开发人员使用：安装用传递给每个 webservice 操作调用的参数进行调用的函数。该函数接受一个参数数组，并返回可能改变的数组。该函数定义应该如下所示：<codeph> function myParametersFunction(parameters:Array):Array </codeph>
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.rpc.soap:AbstractWebService:convertResultHandler"><apiName>convertResultHandler</apiName><shortdesc>
      一个可选函数，主要供具有以下需要的框架开发人员使用：安装一个挂钩，以便在通知结果处理程序之前处理操作的结果。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Function"/></apiValueDef><apiDesc>
@@ -227,7 +227,7 @@
      
      </apiDesc></apiValueDetail></apiValue><apiValue id="mx.rpc.soap:AbstractWebService:xmlSpecialCharsFilter:get"><apiName>xmlSpecialCharsFilter</apiName><shortdesc>
       用于在对任何简单内容编码之前转义 XML 特殊字符的自定义函数。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Function"/></apiValueDef><apiDesc>
-      用于在对任何简单内容编码之前转义 XML 特殊字符的自定义函数。除非专门在操作级上进行了覆盖，否则对 Web 服务上的所有操作有效。
+      用于在对任何简单内容编码之前转义 XML 特殊字符的自定义函数。除非专门在操作级上进行了覆盖，否则对 Web 服务上的所有操作有效。如果未提供函数，则默认函数为由 IXMLEncoder 的特定实现设置的相应内容。
      
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.rpc.soap:SOAPFault"><apiName>SOAPFault</apiName><shortdesc>
  mx.rpc.Fault 的子类，提供 SOAP 封套 Fault 元素中的 SOAP 特定信息。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>mx.rpc:Fault</apiBaseClassifier></apiClassifierDef><apiDesc>

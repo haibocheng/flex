@@ -15,13 +15,13 @@
       
       Erstellt untergeordnete Objekte der Komponente.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiIsOverride/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
       
-      Erstellen Sie untergeordnete Objekte der Komponente. Dies ist eine erweiterte Methode, die Sie bei der Erstellung einer UIComponent-Unterklasse überschreiben können.
+      Erstellt untergeordnete Objekte der Komponente. Dies ist eine erweiterte Methode, die Sie überschreiben können, wenn Sie eine Unterklasse von UIComponent erstellen.
      
-      <p>Eine Komponente, die andere Komponenten oder Objekte in sich selbst erstellt, wird als „zusammengesetzte Komponente“ bezeichnet. Dies trifft beispielsweise dann zu, wenn das Flex ComboBox-Steuerelement tatsächlich aus einem TextInput-Steuerelement zum Definieren des Textbereichs der ComboBox und einem Schaltflächen-Steuerelement zum Definieren des ComboBox-Pfeils zusammengesetzt ist. Komponenten implementieren die <codeph>createChildren()</codeph>-Methode, um untergeordnete Objekte (z. B. andere Komponenten) innerhalb der Komponente zu erstellen.</p>
+      <p>Eine Komponente, die andere Komponenten oder Objekte in ihr erstellt, wird als zusammengesetzte Komponente bezeichnet. Beispiel: Das Flex-Steuerelement ComboBox besteht in Wahrheit aus dem TextInput-Steuerelement zur Definition des Textbereichs der ComboBox und einem Button-Steuerelement zur Definition des ComboBox-Pfeils. Komponenten implementieren die <codeph>createChildren()</codeph>-Methode, um untergeordnete Objekte (z. B. andere Komponenten) innerhalb der Komponente zu erstellen.</p>
      
-      <p>Sie rufen aus der Überschreibung der <codeph>createChildren()</codeph>-Methode zum Hinzufügen jedes der untergeordneten Objekte die <codeph>addChild()</codeph>-Methode auf. </p>
+      <p>Im Zuge eines Überschreibens der <codeph>createChildren()</codeph>-Methode können Sie die <codeph>addChild()</codeph>-Methode aufrufen, um die einzelnen untergeordneten Objekte zu erstellen. </p>
      
-      <p>Sie können diese Methode nicht direkt aufrufen. Flex ruft die <codeph>createChildren()</codeph>-Methode als Reaktion auf den Aufruf der <codeph>addChild()</codeph>-Methode auf, um die Komponente ihrer übergeordneten Komponente hinzuzufügen. </p>
+      <p>Sie rufen diese Methode nicht direkt auf. Flex ruft die <codeph>createChildren()</codeph>-Methode als Reaktion auf den Aufruf der <codeph>addChild()</codeph>-Methode auf, um die Komponente ihrer übergeordneten Komponente hinzuzufügen. </p>
       
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.dataGridClasses:DataGridHeader:protected:drawColumnDragOverlay"><apiName>drawColumnDragOverlay</apiName><shortdesc>
       Zeichnet die Überlagerung auf die gezogene Spalte in das gegebene Sprite-Objekt an der Position, in der Breite, in der Höhe und mit der Farbe, die festgelegt wurden.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>indicator</apiItemName><apiType value="flash.display:Sprite"/><apiDesc>Ein Sprite-Objekt, das die Grafiken enthalten sollte, die anzeigen, dass eine Spalte gezogen wird.
@@ -110,10 +110,10 @@
          <li>Textstile, wie <codeph>fontSize</codeph>.</li>
          <li>Die Größe eines JPEG-Bilds, das von der Komponente angezeigt wird.</li>
          <li>Die gemessenen oder expliziten Größen der untergeordneten Elemente der Komponente.</li>
-         <li>Umgrenzungen, Ränder und Zwischenräume.</li>
+         <li>Rahmen, Ränder und Zwischenräume.</li>
       </ul>
      
-      <p>In einigen Fällen gibt es keine natürliche Art zur Bestimmung der Standardwerte. Beispielsweise kann eine einfache GreenCircle-Komponente in der <codeph>measure()</codeph>-Methode für measuredWidth = 100 und measuredHeight = 100 festlegen, um eine angemessene Standardgröße anzugeben. In anderen Fällen, wie beispielsweise bei einem Textbereich, kann eine entsprechende Berechnung (wie die Suche nach der richtigen Breite und Höhe zur Anzeige des gesamten Text mit dem Seitenverhältnis eines goldenen Rechtecks) zu zeitaufwändig sein.</p>
+      <p>In einigen Fällen gibt es keine natürliche Art zur Bestimmung der Standardwerte. Beispielsweise kann eine einfache GreenCircle-Komponente in der <codeph>measure()</codeph>-Methode für measuredWidth = 100 und measuredHeight = 100 festlegen, um eine angemessene Standardgröße anzugeben. In anderen Fällen, wie beispielsweise bei einem Textbereich, kann eine entsprechende Berechnung (wie die Suche nach der richtigen Breite und Höhe zur Anzeige des gesamten Texts im Seitenverhältnis eines Goldenen Rechtecks) zu zeitaufwendig sein.</p>
      
       <p>Die Standardimplementierung von <codeph>measure()</codeph> setzt <codeph>measuredWidth</codeph>, <codeph>measuredHeight</codeph>, <codeph>measuredMinWidth</codeph> und <codeph>measuredMinHeight</codeph> auf <codeph>0</codeph>.</p>
       
@@ -129,15 +129,15 @@
       
       </apiDesc></apiParam></apiOperationDef><apiDesc>
       
-      Zeichnet die Objekte und/oder Größen und positioniert die untergeordneten Elemente. Dies ist eine erweiterte Methode, die Sie bei der Erstellung einer UIComponent-Unterklasse überschreiben können.
+      Zeichnet das Objekt und/oder die Größen und platziert die untergeordneten Objekte. Dies ist eine erweiterte Methode, die Sie bei der Erstellung einer UIComponent-Unterklasse überschreiben können.
      
-      <p>Sie können diese Methode nicht direkt aufrufen. Flex ruft die <codeph>updateDisplayList()</codeph>-Methode auf, wenn eine Komponente einem Container mit der <codeph>addChild()</codeph>-Methode hinzugefügt wird und die <codeph>invalidateDisplayList()</codeph>-Methode der Komponente aufgerufen wird. </p>
+      <p>Sie rufen diese Methode nicht direkt auf. Flex ruft die <codeph>updateDisplayList()</codeph>-Methode auf, wenn eine Komponente einem Container mit der <codeph>addChild()</codeph>-Methode hinzugefügt wird und die <codeph>invalidateDisplayList()</codeph>-Methode der Komponente aufgerufen wird. </p>
      
-      <p>Wenn die Komponente keine untergeordneten Objekte hat, wird mit dieser Methode ein programmgesteuertes Zeichnen durchgeführt, indem Methoden auf dem Graphics-Objekt der Komponente verwendet werden, wie z. B. <codeph>graphics.drawRect()</codeph>.</p>
+      <p>Bei Komponenten ohne untergeordnete Elemente verwenden Sie hier das programmgesteuerte Zeichnen mit Methoden der Grafikobjekte einer Komponente wie <codeph>graphics.drawRect()</codeph>.</p>
      
-      <p>Wenn die Komponente untergeordnete Objekte hat, wird mit dieser Methode die <codeph>move()</codeph>-Methode und <codeph>setActualSize()</codeph>-Methode für die zugehörigen untergeordneten Objekte aufgerufen.</p>
+      <p>Bei Komponenten mit untergeordneten Elementen rufen Sie hier die <codeph>move()</codeph>- und <codeph>setActualSize()</codeph>-Methoden in den untergeordneten Elementen auf.</p>
      
-      <p>Komponenten können programmgesteuert zeichnen, auch wenn sie untergeordnete Elemente besitzen. Dazu verwenden Sie die Eigenschaften <codeph>unscaledWidth</codeph> und <codeph>unscaledHeight</codeph> der Komponente als Grenzen.</p>
+      <p>Komponenten können programmgesteuert zeichnen, auch wenn sie untergeordnete Elemente besitzen. Dabei sollten Sie die Eigenschaften <codeph>unscaledWidth</codeph> und <codeph>unscaledHeight</codeph> der Komponente als Grenzen verwenden.</p>
      
       <p>Es ist wichtig, die Eigenschaften <codeph>unscaledWidth</codeph> und <codeph>unscaledHeight</codeph> anstelle der Eigenschaften <codeph>width</codeph> und <codeph>height</codeph> zu verwenden.</p>
      
@@ -231,7 +231,7 @@
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.dataGridClasses:DataGridBase:protected:calculateRowHeight"><apiName>calculateRowHeight</apiName><shortdesc>
       Berechnet die Zeilenhöhe von Spalten in einer Zeile.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiDesc>Die Zeilenhöhe in Pixeln.
       
-      </apiDesc><apiType value="Number"/></apiReturn><apiParam><apiItemName>data</apiItemName><apiType value="Object"/><apiDesc>Das Datenprovider-Element für die Zeile.
+      </apiDesc><apiType value="Number"/></apiReturn><apiParam><apiItemName>data</apiItemName><apiType value="Object"/><apiDesc>Das Datenproviderelement für die Zeile.
      
       </apiDesc></apiParam><apiParam><apiItemName>hh</apiItemName><apiType value="Number"/><apiDesc>Die aktuelle Höhe der Zeile.
      
@@ -297,7 +297,7 @@
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.dataGridClasses:DataGridBase:protected:makeListData"><apiName>makeListData</apiName><shortdesc>
       Erstellt eine neue DataGridListData-Instanz und füllt die Felder mit Daten aus dem Eingabe-Datenproviderelement.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiDesc>Ein neu konstruiertes ListData-Objekt.
       
-      </apiDesc><apiOperationClassifier>mx.controls.listClasses:BaseListData</apiOperationClassifier></apiReturn><apiParam><apiItemName>data</apiItemName><apiType value="Object"/><apiDesc>Das für das Füllen von ListData verwendete Datenproviderelement.
+      </apiDesc><apiOperationClassifier>mx.controls.listClasses:BaseListData</apiOperationClassifier></apiReturn><apiParam><apiItemName>data</apiItemName><apiType value="Object"/><apiDesc>Das Datenproviderelement, das für den Abruf der Daten in ListData verwendet wird.
       </apiDesc></apiParam><apiParam><apiItemName>uid</apiItemName><apiType value="String"/><apiDesc>Die UID des Elements.
       </apiDesc></apiParam><apiParam><apiItemName>rowNum</apiItemName><apiType value="int"/><apiDesc>Die Indexposition des Elements im Datenprovider.
       </apiDesc></apiParam><apiParam><apiItemName>columnNum</apiItemName><apiType value="int"/><apiDesc>Der columnIndex, der mit diesem Element verknüpft ist. 
@@ -417,9 +417,9 @@
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.dataGridClasses:DataGridBase:fontContext:get"><apiName>fontContext</apiName><shortdesc>
       
-      Die module-Factory, die den Schriftartkontext für diese Komponente bereitstellt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>mx.core:IFlexModuleFactory</apiValueClassifier></apiValueDef><apiDesc>
+      Die Modul-Factory, die den Schriftartkontext für diese Komponente bereitstellt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>mx.core:IFlexModuleFactory</apiValueClassifier></apiValueDef><apiDesc>
       
-      Die module-Factory, die den Schriftartkontext für diese Komponente bereitstellt.
+      Die Modul-Factory, die den Schriftartkontext für diese Komponente bereitstellt.
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.dataGridClasses:DataGridBase:headerHeight:get"><apiName>headerHeight</apiName><shortdesc>
       Die Höhe der Spaltenüberschriftzelle in Pixeln.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
@@ -435,7 +435,7 @@
       Die Indexposition der ersten Zeile des Steuerelements, wo ein Bildlauf möglich ist.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="int"/><apiDefaultValue>0
       
       </apiDefaultValue></apiValueDef><apiDesc>
-      Die Indexposition der ersten Zeile des Steuerelements, wo ein Bildlauf möglich ist. Zeilen über dieser Zeile bleiben in der Ansicht fixiert.
+      Die Indexposition der ersten Zeile im Steuerelement, welches einen Bildlauf ausführt. Zeilen über dieser Zeile bleiben in der Ansicht fixiert.
      
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.dataGridClasses:DataGridBase:showHeaders:get"><apiName>showHeaders</apiName><shortdesc>
       Ein Flag, das anzeigt, ob das Steuerelement Spaltenüberschriften anzeigen soll.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Boolean"/><apiDefaultValue>true
@@ -466,7 +466,7 @@
 	  Konstruktor.
 	 
 	  </apiDesc></apiConstructorDetail></apiConstructor><apiValue id="mx.controls.dataGridClasses:DataGridListData:dataField"><apiName>dataField</apiName><shortdesc>
-	  Name des Felds oder der Eigenschaft im Datenprovider, der der Spalte zugeordnet ist.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="String"/></apiValueDef><apiDesc>
+	  Name des Felds oder der Eigenschaft im Datenprovider, der der Spalte zugeordnet ist.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiType value="String"/></apiValueDef><apiDesc>
 	  Name des Felds oder der Eigenschaft im Datenprovider, der der Spalte zugeordnet ist. 
 	  
 	  </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.controls.dataGridClasses:DataGridLockedRowContentHolder"><apiName>DataGridLockedRowContentHolder</apiName><shortdesc>
@@ -553,7 +553,7 @@
 <description>
   Die Klasse, die IUITextField implementiert, das von dieser Komponente für die Darstellung von Text verwendet wird.
  
-  <p>Sie kann auf die mx.core.UITextField-Klasse (zur Verwendung der in Flash Player integrierten klassischen TextField-Klasse) oder die mx.core.UITLFTextField-Klasse (zur Verwendung des Text Layout Frameworks, um verbesserte Textdarstellungen, einschließlich bidirektionalem Layout, zu erhalten) eingestellt werden.</p>
+  <p>Sie kann auf die mx.core.UITextField-Klasse (zur Verwendung der in Flash Player integrierten klassischen TextField-Klasse) oder die mx.core.UIFTETextField-Klasse (zur Verwendung des Text Layout Frameworks, um verbesserte Textdarstellungen, einschließlich bidirektionalem Layout, zu erhalten) eingestellt werden.</p>
  
   </description>
 <default>mx.core.UITextField
@@ -566,7 +566,7 @@
   </langversion><productversion>Flex 4
  </productversion></asCustoms></prolog></style><style enumeration="none,underline" inherit="yes" name="textDecoration" owner="mx.controls.dataGridClasses:DataGridColumn" playerVersion="Flash9" type="String">
 <description>
-  Bestimmt, ob der Text unterstrichen ist. Mögliche Werte sind <codeph>"none"</codeph> und <codeph>"underline"</codeph>.
+  Bestimmt, ob der Text unterstrichen wird. Mögliche Werte sind <codeph>"none"</codeph> und <codeph>"underline"</codeph>.
  
   </description>
 <default>"none"
@@ -581,7 +581,7 @@
 <description>
   Ausrichtung von Text in einem Container. Mögliche Werte sind <codeph>"left"</codeph>, <codeph>"right"</codeph> oder <codeph>"center"</codeph>.
  
-  <p>Der Standardwert für die meisten Steuerelemente ist <codeph>„left“</codeph>. Für die FormItem-Komponente ist der Standardwert <codeph>„right“</codeph>. Für die Button-, LinkButton- und AccordionHeader-Komponenten ist der Standardwert <codeph>„center“</codeph>, und diese Eigenschaft wird nur erkannt, wenn die <codeph>labelPlacement</codeph>-Eigenschaft auf <codeph>„left“</codeph> oder <codeph>„right“</codeph> eingestellt ist. Wenn <codeph>labelPlacement</codeph> auf <codeph>„top“</codeph> oder <codeph>„bottom“</codeph> eingestellt ist, werden der Text und eventuelle Symbole zentriert.</p>
+  <p>Der Standardwert für die meisten Steuerelemente ist <codeph>„left“</codeph>. Für die FormItem-Komponente ist der Standardwert <codeph>„right“</codeph>. Für die Button-, LinkButton- und AccordionHeader-Komponenten ist der Standardwert <codeph>„center“</codeph>, und diese Eigenschaft wird nur erkannt, wenn die <codeph>labelPlacement</codeph>-Eigenschaft auf <codeph>„left“</codeph> oder <codeph>„right“</codeph> eingestellt ist. Wenn <codeph>labelPlacement</codeph> auf <codeph>"top"</codeph> oder <codeph>"bottom"</codeph> gesetzt wird, werden der Text und eventuell vorhandene Symbole zentriert.</p>
   
   </description>
 
@@ -591,11 +591,11 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog></style><style inherit="yes" name="locale" owner="mx.controls.dataGridClasses:DataGridColumn" playerVersion="Flash10" type="String">
 <description>
-  
+  Das Gebietsschema des von dieser Komponente angezeigten Texts.
  
-  <p/>
+  <p>FTE und TLF verwenden dieses Gebietsschema für die Zuordnung von Unicode-Schriftarten zu Schriftartglyphen und für die Suche nach Ausweichschriftarten.</p>
  
-  <p><codeph/></p>
+  <p>Hinweis: Dieser Stil gilt nur, wenn eine MX-Komponente UIFTETextField als ihre <codeph>textFieldClass</codeph> festlegt.</p>
  
   </description>
 <default>"en"
@@ -608,7 +608,7 @@
   </langversion><productversion>Flex 4
  </productversion></asCustoms></prolog></style><style inherit="yes" name="letterSpacing" owner="mx.controls.dataGridClasses:DataGridColumn" playerVersion="Flash9" type="Number">
 <description>
-  Die Anzahl der zusätzlichen Pixel, die zwischen den Zeichen angezeigt werden. Durch einen positiven Wert wird der Zeichenabstand über den normalen Abstand hinaus vergrößert und durch einen negativen Wert verkleinert.
+  Die Anzahl zusätzlicher Pixel, die zwischen den einzelnen Zeichen eingefügt werden sollen. Ein positiver Wert erhöht den normalen Zeichenabstand, ein negativer Wert reduziert ihn.
  
   </description>
 <default>0
@@ -634,7 +634,7 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog></style><style enumeration="normal,bold" inherit="yes" name="fontWeight" owner="mx.controls.dataGridClasses:DataGridColumn" playerVersion="Flash9" type="String">
 <description>
-  Bestimmt, ob der Text fett formatiert ist. Gültige Werte sind <codeph>normal</codeph> und <codeph>bold</codeph>. Der Standardwert für die Button-Steuerelemente ist <codeph>bold</codeph>. Der Standardwert für alle anderen Steuerelemente ist <codeph>normal</codeph>.
+  Bestimmt, ob der Text fett formatiert wird. Gültige Werte sind <codeph>normal</codeph> und <codeph>bold</codeph>. Der Standardwert für die Button-Steuerelemente ist <codeph>bold</codeph>. Der Standardwert für alle anderen Steuerelemente ist <codeph>normal</codeph>.
   
   </description>
 
@@ -644,7 +644,7 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog></style><style inherit="yes" name="fontThickness" owner="mx.controls.dataGridClasses:DataGridColumn" playerVersion="Flash9" type="Number">
 <description>
-  Legt die <codeph>thickness</codeph>-Eigenschaft von internen TextFields-Elementen fest, die Text in Flex-Steuerelementen darstellen. Diese Eigenschaft gibt die Stärke der Glyphenkanten an. Die möglichen Werte sind Zahlen von -200 bis 200. 
+  Legt die <codeph>thickness</codeph>-Eigenschaft von internen TextFields-Elementen fest, die Text in Flex-Steuerelementen darstellen. Diese Eigenschaft definiert die Stärke der Glyphenkanten. Die möglichen Werte sind Zahlen von -200 bis 200. 
   
   <p>Diese Eigenschaft kommt nur zur Anwendung, wenn Sie eine eingebettete Schriftart verwenden und die <codeph>fontAntiAliasType</codeph>-Eigenschaft auf <codeph>„advanced“</codeph> eingestellt ist.</p>
   
@@ -664,7 +664,7 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog><related-links><link href="" invalidHref="flash.text.TextField.xml"><linktext>flash.text.TextField</linktext></link></related-links></style><style enumeration="normal,italic" inherit="yes" name="fontStyle" owner="mx.controls.dataGridClasses:DataGridColumn" playerVersion="Flash9" type="String">
 <description>
-  Legt fest, ob der Text kursiv formatiert wird. Gültige Werte sind <codeph>"normal"</codeph> und <codeph>"italic"</codeph>.
+  Bestimmt, ob der Text kursiv formatiert wird. Gültige Werte sind <codeph>"normal"</codeph> und <codeph>"italic"</codeph>.
  
   </description>
 <default>"normal"
@@ -677,7 +677,7 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog></style><style format="Length" inherit="yes" name="fontSize" owner="mx.controls.dataGridClasses:DataGridColumn" playerVersion="Flash9" type="Number">
 <description>
-  Die Höhe des Texts in Pixel. Der Standardwert ist 10 für alle Steuerelemente mit Ausnahme des ColorPicker-Steuerelements. Für das ColorPicker-Steuerelement lautet der Standardwert 11. 
+  Die Höhe des Texts in Pixeln.    
   
   </description>
 
@@ -687,11 +687,11 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog></style><style inherit="yes" name="fontSharpness" owner="mx.controls.dataGridClasses:DataGridColumn" playerVersion="Flash9" type="Number">
 <description>
-  Legt die Eigenschaft <codeph>sharpness</codeph> von internen Textfeldern fest, die Text in Flex-Steuerelementen darstellen. Diese Eigenschaft gibt die Schärfe der Glyphenkanten an. Die möglichen Werte sind Zahlen von -400 bis 400. 
+  Legt die Eigenschaft <codeph>sharpness</codeph> von internen Textfeldern fest, die Text in Flex-Steuerelementen darstellen. Diese Eigenschaft definiert die Bildschärfe der Glyphenkanten. Die möglichen Werte sind Zahlen von -400 bis 400. 
   
   <p>Diese Eigenschaft kommt nur zur Anwendung, wenn Sie eine eingebettete Schriftart verwenden und die <codeph>fontAntiAliasType</codeph>-Eigenschaft auf <codeph>„advanced“</codeph> eingestellt ist.</p>
   
-  <p>Dieser Stil hat keine Auswirkung auf Systemschriftarten.</p>
+  <p>Dieser Stil hat keine Auswirkungen auf Systemschriftarten.</p>
  
   <p>Dieser Stil wird auf den gesamten Text eines untergeordneten TextField-Steuerelements angewendet. Sie können ihn nicht auf einige Zeichen anwenden und auf andere nicht.</p>
   
@@ -711,7 +711,7 @@
   
   <p>Diese Eigenschaft kommt nur zur Anwendung, wenn Sie eine eingebettete Schriftart verwenden und die <codeph>fontAntiAliasType</codeph>-Eigenschaft auf <codeph>„advanced“</codeph> eingestellt ist.</p>
   
-  <p>Dieser Stil hat keine Auswirkung auf Systemschriftarten.</p>
+  <p>Dieser Stil hat keine Auswirkungen auf Systemschriftarten.</p>
  
   <p>Dieser Stil wird auf den gesamten Text eines untergeordneten TextField-Steuerelements angewendet. Sie können ihn nicht auf einige Zeichen anwenden und auf andere nicht.</p>
  
@@ -730,12 +730,9 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog><related-links><link href="" invalidHref="flash.text.TextField.xml"><linktext>flash.text.TextField</linktext></link><link href="" invalidHref="flash.text.GridFitType.xml"><linktext>flash.text.GridFitType</linktext></link></related-links></style><style inherit="yes" name="fontFamily" owner="mx.controls.dataGridClasses:DataGridColumn" playerVersion="Flash9" type="String">
 <description>
-  Der Name der zu verwendenden Schriftart. Anders als in einer vollständigen CSS-Implementierung werden durch Kommas getrennte Listen nicht unterstützt. Sie können den Namen einer beliebigen Schriftartfamilie verwenden. Wenn Sie eine generische Schriftartbezeichnung wählen, wird diese in eine entsprechende Geräteschriftart konvertiert.
- 
-  </description>
-<default>"Verdana"
+  Name der zu verwendenden Schriftart. Anders als bei einer reinen CSS-Implementierung werden kommagetrennte Listen nicht unterstützt. Sie können eine beliebige Schriftfamilienbezeichnung verwenden. Wenn Sie eine generische Schriftartbezeichnung wählen, wird diese in eine entsprechende Geräteschriftart konvertiert. <codeph/> <codeph/>
   
-  </default>
+  </description>
 
 <playerversion>AIR 1.1
   </playerversion>
@@ -743,11 +740,11 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog></style><style enumeration="normal,advanced" inherit="yes" name="fontAntiAliasType" owner="mx.controls.dataGridClasses:DataGridColumn" playerVersion="Flash9" type="String">
 <description>
-  Legt die Eigenschaft <codeph>antiAliasType</codeph> von internen Textfeldern fest. Die möglichen Werte sind <codeph>"normal"</codeph> (<codeph>flash.text.AntiAliasType.NORMAL</codeph>) und <codeph>"advanced"</codeph> (<codeph>flash.text.AntiAliasType.ADVANCED</codeph>). 
+  Stellt die <codeph>antiAliasType</codeph>-Eigenschaften interner TextFields-Elemente ein. Die möglichen Werte sind <codeph>"normal"</codeph> (<codeph>flash.text.AntiAliasType.NORMAL</codeph>) und <codeph>"advanced"</codeph> (<codeph>flash.text.AntiAliasType.ADVANCED</codeph>). 
   
-  <p>Der Standardwert ist <codeph>„advanced“</codeph>, wodurch ein Anti-Aliasing für die Schriftart aktiviert wird. Auf <codeph>"normal"</codeph> eingestellt, um das erweiterte Anti-Aliasing zu deaktivieren.</p>
+  <p>Der Standardwert ist <codeph>„advanced“</codeph>, wodurch ein Anti-Aliasing für die Schriftart aktiviert wird. Auf <codeph>„normal“</codeph> eingestellt, um das erweiterte Anti-Aliasing zu deaktivieren.</p>
   
-  <p>Dieser Stil hat keine Auswirkung auf Systemschriftarten.</p>
+  <p>Dieser Stil hat keine Auswirkungen auf Systemschriftarten.</p>
   
   <p>Dieser Stil wird auf alle Texte in einem TextField-Substeuerelement angewendet. Es ist nicht möglich, ihn selektiv auf einzelne Zeichen anzuwenden.</p>
 
@@ -766,7 +763,7 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog><related-links><link href="" invalidHref="flash.text.TextField.xml"><linktext>flash.text.TextField</linktext></link><link href="" invalidHref="flash.text.AntiAliasType.xml"><linktext>flash.text.AntiAliasType</linktext></link></related-links></style><style format="Color" inherit="yes" name="disabledColor" owner="mx.controls.dataGridClasses:DataGridColumn" playerVersion="Flash9" type="uint">
 <description>
-  Farbe des Texts in der Komponente bei Deaktivierung.
+  Farbe des Texts in der Komponente, wenn deaktiviert.
  
   </description>
 <default>0xAAB3B3
@@ -779,15 +776,15 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog></style><style enumeration="ltr,rtl,inherit" inherit="yes" name="direction" owner="mx.controls.dataGridClasses:DataGridColumn" playerVersion="Flash10" type="String">
 <description>
-  
+  Die Laufrichtung des von dieser Komponente angezeigten Texts.
  
-  <p><codeph/><codeph/></p>
+  <p>Zulässige Werte sind <codeph>"ltr"</codeph> für den von links nach rechts verlaufenden Text lateinischer Schriften und <codeph>"rtl"</codeph> für den von rechts nach links laufenden Text z. B. des Arabischen oder Hebräischen.</p>
  
-  <p/>
+  <p>FTE und TLF verwenden diesen Wert in ihrem bidirektionalen Textlayoutalgorithmus, der die Unicode-Zeichenfolge der Glyphenfolge zuordnet.</p>
  
-  <p><codeph/></p>
+  <p>Hinweis: Dieser Stil gilt nur, wenn eine MX-Komponente UIFTETextField als ihre <codeph>textFieldClass</codeph> festlegt.</p>
  
-  <p><codeph/> </p>
+  <p>Die <codeph>direction</codeph> wirkt sich auch auf die Ausrichtung des Texts an den Grenzen des TLFTextField aus. Sie beeinflusst jedoch nicht die Platzierung des TLFTextField innerhalb der Komponente.</p>
  
   </description>
 <default>"ltr"
@@ -800,12 +797,9 @@
   </langversion><productversion>Flex 4
  </productversion></asCustoms></prolog></style><style format="Color" inherit="yes" name="color" owner="mx.controls.dataGridClasses:DataGridColumn" playerVersion="Flash9" type="uint">
 <description>
-  Farbe des Texts in der Komponente, einschließlich der Komponentenbeschriftung.
- 
-  </description>
-<default>0x0B333C
+  Farbe des Texts in der Komponente, einschließlich der Komponentenbeschriftung. <codeph/> <codeph/>
   
-  </default>
+  </description>
 
 <playerversion>AIR 1.1
   </playerversion>
@@ -874,7 +868,7 @@
   </p>
  
   ]]></mxml></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseInterface>mx.core:IIMESupport</apiBaseInterface><apiBaseClassifier>mx.styles:CSSStyleDeclaration</apiBaseClassifier></apiClassifierDef><apiDesc>
-  Mit der DataGridColumn-Klasse wird eine Spalte in einem DataGrid-Steuerelement beschrieben. Pro anzeigbarer Spalte gibt es ein DataGridColumn-Element, auch wenn die Spalte ausgeblendet ist oder außerhalb des Bildschirms liegt. Die Datenprovider-Elemente eines DataGrid-Steuerelements können Eigenschaften enthalten, die nicht angezeigt werden und daher keine DataGridColumn-Klasse benötigen. Mit einer DataGridColumn-Klasse können Sie Folgendes festlegen: Farbe und Schriftart des Texts in einer Spalte, welche Art von Komponente die Daten für die Spalte anzeigt, ob die Spalte bearbeitbar, sortierbar oder in der Größe veränderbar ist, sowie welcher Text für die Spaltenüberschrift verwendet wird.
+  Mit der DataGridColumn-Klasse wird eine Spalte in einem DataGrid-Steuerelement beschrieben. Pro anzeigbarer Spalte gibt es ein DataGridColumn-Element, auch wenn die Spalte ausgeblendet ist oder außerhalb des Bildschirms liegt. Die Datenproviderelemente eines DataGrid-Steuerelements können Eigenschaften enthalten, die nicht angezeigt werden und daher keine DataGridColumn-Klasse benötigen. Mit einer DataGridColumn-Klasse können Sie Folgendes festlegen: Farbe und Schriftart des Texts in einer Spalte, welche Art von Komponente die Daten für die Spalte anzeigt, ob die Spalte bearbeitbar, sortierbar oder in der Größe veränderbar ist, sowie welcher Text für die Spaltenüberschrift verwendet wird.
  
   <p><b>Hinweise:</b><ul>
   <li>Eine DataGridColumn-Klasse enthält nur Informationen über eine Spalte. Sie ist nicht das übergeordnete Objekt der Elementrenderer in der Spalte.</li>
@@ -898,22 +892,22 @@
       Gibt die geeignete Factory zurück und verwendet die Standard-Factory, wenn keine festgelegt ist.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.dataGridClasses:DataGridColumn:itemToDataTip"><apiName>itemToDataTip</apiName><shortdesc>
-      Gibt ein String-Objekt zurück, das der Elementrenderer basierend auf den dataTipField- und dataTipFunction-Eigenschaften als Datentipp für das angegebene Datenobjekt verwendet.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Anzeigbares String-Objekt, das auf den Daten basiert.
+      Gibt ein Stringobjekt zurück, das der Elementrenderer basierend auf den dataTipField- und dataTipFunction-Eigenschaften als Datentipp für das angegebene Datenobjekt anzeigt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Anzeigbares Stringobjekt, das auf den Daten basiert.
       
       </apiDesc><apiType value="String"/></apiReturn><apiParam><apiItemName>data</apiItemName><apiType value="Object"/><apiDesc>Das darzustellende Objekt.
      
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Gibt ein String-Objekt zurück, das der Elementrenderer basierend auf den <codeph>dataTipField</codeph>- und <codeph>dataTipFunction</codeph>-Eigenschaften als Datentipp für das angegebene Datenobjekt verwendet. Wenn die Methode die Parameter nicht in ein String-Objekt konvertieren kann, wird ein einzelnes Leerzeichen zurückgegeben.
+      Gibt ein Stringobjekt zurück, das der Elementrenderer basierend auf den <codeph>dataTipField</codeph>- und <codeph>dataTipFunction</codeph>-Eigenschaften als Datentipp für das angegebene Datenobjekt anzeigt. Falls die Methode den Parameter nicht in einen String konvertieren kann, wird ein einzelnes Leerzeichen zurückgegeben.
      
       <p>Diese Methode wird von Entwicklern verwendet, die Unterklassen der DataGridColumn-Klasse erstellen. Sie ist nicht für die Verwendung durch Anwendungsentwickler vorgesehen.</p>
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.dataGridClasses:DataGridColumn:itemToLabel"><apiName>itemToLabel</apiName><shortdesc>
-      Gibt das String-Objekt zurück, das der Elementrenderer für das angegebene Datenobjekt anzeigt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Anzeigbares String-Objekt, das auf den Daten basiert.
+      Gibt das Stringobjekt zurück, das der Elementrenderer für das angegebene Datenobjekt anzeigt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Anzeigbares Stringobjekt, das auf den Daten basiert.
       
       </apiDesc><apiType value="String"/></apiReturn><apiParam><apiItemName>data</apiItemName><apiType value="Object"/><apiDesc>Das darzustellende Objekt.
      
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Gibt das String-Objekt zurück, das der Elementrenderer für das angegebene Datenobjekt anzeigt. Weisen „DataGridColumn“ oder das zugehörige DataGrid-Steuerelement eine <codeph>labelFunction</codeph>-Eigenschaft auf, deren Wert nicht null ist, wird die Funktion auf das Datenobjekt angewandt. Andernfalls entnimmt die Methode den Inhalt des Feldes, das durch die <codeph>dataField</codeph>-Eigenschaft angegeben wird, oder ruft den String-Wert des Datenobjekts ab. Wenn die Methode die Parameter nicht in ein String-Objekt konvertieren kann, wird ein einzelnes Leerzeichen zurückgegeben.
+      Gibt das Stringobjekt zurück, das der Elementrenderer für das angegebene Datenobjekt anzeigt. Weisen „DataGridColumn“ oder das zugehörige DataGrid-Steuerelement eine <codeph>labelFunction</codeph>-Eigenschaft auf, deren Wert nicht null ist, wird die Funktion auf das Datenobjekt angewandt. Andernfalls entnimmt die Methode den Inhalt des Feldes, das durch die <codeph>dataField</codeph>-Eigenschaft angegeben wird, oder ruft den Stringwert des Datenobjekts ab. Falls die Methode den Parameter nicht in einen String konvertieren kann, wird ein einzelnes Leerzeichen zurückgegeben.
      
       </apiDesc></apiOperationDetail></apiOperation><apiValue id="mx.controls.dataGridClasses:DataGridColumn:draggable"><apiName>draggable</apiName><shortdesc>
       Ein Flag, das anzeigt, ob der Benutzer die Spalte an eine neue Position ziehen darf. Wenn „true“, kann derr Benutzer die Spaltenüberschriften an eine neue Position ziehen.
@@ -948,7 +942,7 @@
       Die Breite des Elementeditors in Pixeln, relativ zur Größe des Elementrenderers. Diese Eigenschaft kann verwendet werden, um den Editor zu veranlassen, den Elementrenderer mit einigen wenigen Pixel zu überlappen, um einen Rahmen rund um den Editor zu kompensieren. Beachten Sie, dass eine Änderung dieser Werte bei angezeigtem Editor keine Auswirkungen auf den aktuellen Editor hat, sondern auf den nächsten Elementrenderer wirkt, der in einem Editor geöffnet wird.
      
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.dataGridClasses:DataGridColumn:editorXOffset"><apiName>editorXOffset</apiName><shortdesc>
-      Die x-Position der linken oberen Ecke des Elementeditors in Pixeln, relativ zur oberen linken Ecke des Elements.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>0</apiData><apiType value="Number"/><apiDefaultValue>0
+      Die x-Position der oberen linken Ecke des Elementeditors in Pixeln, relativ zur oberen linken Ecke des Elements.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>0</apiData><apiType value="Number"/><apiDefaultValue>0
       
       </apiDefaultValue></apiValueDef><apiDesc>
       Die x-Position der oberen linken Ecke des Elementeditors in Pixeln, relativ zur oberen linken Ecke des Elements. Diese Eigenschaft kann verwendet werden, um den Editor zu veranlassen, den Elementrenderer mit einigen wenigen Pixel zu überlappen, um einen Rahmen rund um den Editor zu kompensieren. Beachten Sie, dass eine Änderung dieser Werte bei angezeigtem Editor keine Auswirkungen auf den aktuellen Editor hat, sondern auf den nächsten Elementrenderer wirkt, der in einem Editor geöffnet wird.
@@ -992,22 +986,22 @@
       Ein Flag, das angibt, ob der Datenprovider durch Klicken auf die Überschrift dieser Spalte sortiert werden kann. Wenn diese Eigenschaft und die <codeph>sortableColumns</codeph>-Eigenschaft von DataGrid jeweils auf <codeph>true</codeph> eingestellt sind, löst das DataGrid-Steuerelement ein <codeph>headerRelease</codeph>-Ereignis aus, sobald ein Benutzer die Maustaste auf dieser Spaltenüberschrift loslässt. Wenn keine andere Prozedur die <codeph>preventDefault()</codeph>-Methode für das <codeph>headerRelease</codeph>-Ereignis aufruft, wird die <codeph>dataField</codeph>-Eigenschaft oder die <codeph>sortCompareFunction</codeph>-Funktion in der Spalte verwendet, um die Elemente im Datenprovider neu zu ordnen.
      
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.dataGridClasses:DataGridColumn:dataField:get"><apiName>dataField</apiName><shortdesc>
-      Der Name des Feldes bzw. der Eigenschaft im Datenprovider-Element, das bzw. die mit der Spalte verknüpft ist.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="String"/></apiValueDef><apiDesc>
-      Der Name des Felds oder der Eigenschaft im Datenprovider-Element, das der Spalte zugeordnet ist. Jedes DataGridColumn-Steuerelement erfordert die Einstellung dieser Eigenschaft und/oder der <codeph>labelFunction</codeph>-Eigenschaft, damit der anzeigbare Text für den Elementrenderer berechnet werden kann. Wenn die <codeph>dataField</codeph>- und <codeph>labelFunction</codeph>-Eigenschaften eingestellt sind, werden die Daten mit <codeph>labelFunction</codeph> angezeigt und mit <codeph>dataField</codeph> sortiert. Wenn die in <codeph>dataField</codeph> benannte Eigenschaft nicht existiert, muss <codeph>sortCompareFunction</codeph> eingestellt sein, damit die Sortierung richtig funktioniert.
+      Der Name des Feldes bzw. der Eigenschaft im Datenproviderelement, das bzw. die mit der Spalte verknüpft ist.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="String"/></apiValueDef><apiDesc>
+      Der Name des Felds oder der Eigenschaft im Datenproviderelement, das der Spalte zugeordnet ist. Jedes DataGridColumn-Steuerelement erfordert die Einstellung dieser Eigenschaft und/oder der <codeph>labelFunction</codeph>-Eigenschaft, damit der anzeigbare Text für den Elementrenderer berechnet werden kann. Wenn die <codeph>dataField</codeph>- und <codeph>labelFunction</codeph>-Eigenschaften eingestellt sind, werden die Daten mit <codeph>labelFunction</codeph> angezeigt und mit <codeph>dataField</codeph> sortiert. Wenn die in <codeph>dataField</codeph> benannte Eigenschaft nicht existiert, muss <codeph>sortCompareFunction</codeph> eingestellt sein, damit die Sortierung richtig funktioniert.
      
       <p>Dieser Wert dieser Eigenschaft ist nicht notwendigerweise der String, der in der Spaltenüberschrift angezeigt wird. Diese Eigenschaft wird nur verwendet, um auf die Daten im Datenprovider zuzugreifen. Weitere Informationen finden Sie unter der <codeph>headerText</codeph>-Eigenschaft.</p>
      
       </apiDesc></apiValueDetail><related-links><link href="mx.controls.dataGridClasses.xml#DataGridColumn/headerText"><linktext>headerText</linktext></link></related-links></apiValue><apiValue id="mx.controls.dataGridClasses:DataGridColumn:dataTipField:get"><apiName>dataTipField</apiName><shortdesc>
       Der Name des Felds im Datenprovider, das als Datentipp angezeigt werden soll.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="String"/></apiValueDef><apiDesc>
-      Der Name des Felds im Datenprovider, das als Datentipp angezeigt werden soll. Standardmäßig sucht das DataGrid-Steuerelement nach einer Eigenschaft namens <codeph>label</codeph> in jedem Datenprovider-Element und zeigt es an. Wenn hingegen der Datenprovider keine <codeph>label</codeph>-Eigenschaft enthält, können Sie die <codeph>dataTipField</codeph>-Eigenschaft einstellen, um eine andere Eigenschaft anzugeben. So können Sie beispielsweise den Wert auf „FullName“ setzen, wenn ein Benutzer eine Gruppe von Namen der Personen aus einer Datenbank ansieht.
+      Der Name des Felds im Datenprovider, das als Datentipp angezeigt werden soll. Standardmäßig sucht das DataGrid-Steuerelement nach einer Eigenschaft namens <codeph>label</codeph> in jedem Datenproviderelement und zeigt es an. Wenn hingegen der Datenprovider keine <codeph>label</codeph>-Eigenschaft enthält, können Sie die <codeph>dataTipField</codeph>-Eigenschaft einstellen, um eine andere Eigenschaft anzugeben. So können Sie beispielsweise den Wert auf „FullName“ setzen, wenn ein Benutzer eine Gruppe von Namen der Personen aus einer Datenbank ansieht.
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.dataGridClasses:DataGridColumn:dataTipFunction:get"><apiName>dataTipFunction</apiName><shortdesc>
-      Legt eine Rückruffunktion fest, die mit jedem Element des Datenproviders ausgeführt werden muss, um seinen Datentipp zu ermitteln.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Function"/></apiValueDef><apiDesc>
-      Legt eine Rückruffunktion fest, die mit jedem Element des Datenproviders ausgeführt werden muss, um seinen Datentipp zu ermitteln. Diese Eigenschaft wird von der <codeph>itemToDataTip</codeph>-Methode verwendet.
+      Legt eine Rückruffunktion fest, die mit jedem Element des Datenproviders ausgeführt werden muss, um seinen Datentipp zu bestimmen.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Function"/></apiValueDef><apiDesc>
+      Legt eine Rückruffunktion fest, die mit jedem Element des Datenproviders ausgeführt werden muss, um seinen Datentipp zu bestimmen. Diese Eigenschaft wird von der <codeph>itemToDataTip</codeph>-Methode verwendet.
      
-      <p>Standardmäßig sucht das Steuerelement nach einer Eigenschaft namens <codeph>label</codeph> in jedem Datenprovider-Element und zeigt es als seinen dataTip an. Allerdings haben einige Datenprovider keine <codeph>label</codeph>-Eigenschaft bzw. keine andere Eigenschaft, die Sie für die Anzeige von Daten in den Zeilen verwenden können. Beispiel: Sie verfügen über einen Datenprovider, der die Felder lastName und firstName enthält, aber Sie möchten als dataTip den vollen Namen anzeigen. Sie können eine Funktion für die <codeph>dataTipFunction</codeph>-Eigenschaft festlegen, die ein einzelnes String-Objekt zurückgibt, das den Wert beider Felder enthält. Sie können auch die <codeph>dataTipFunction</codeph>-Eigenschaft verwenden, um Formatierungs- und Lokalisierungsaufgaben zu übernehmen.</p>
+      <p>Standardmäßig sucht das Steuerelement nach einer Eigenschaft namens <codeph>label</codeph> in jedem Datenproviderelement und zeigt es als seinen dataTip an. Allerdings haben einige Datenprovider keine <codeph>label</codeph>-Eigenschaft bzw. keine andere Eigenschaft, die Sie für die Anzeige von Daten in den Zeilen verwenden können. Beispiel: Sie verfügen über einen Datenprovider, der die Felder lastName und firstName enthält, aber Sie möchten als dataTip den vollen Namen anzeigen. Sie können eine Funktion für die <codeph>dataTipFunction</codeph>-Eigenschaft festlegen, die ein einzelnes Stringobjekt zurückgibt, das den Wert beider Felder enthält. Sie können auch die <codeph>dataTipFunction</codeph>-Eigenschaft verwenden, um Formatierungs- und Lokalisierungsaufgaben zu übernehmen.</p>
      
-      <p>Die Funktion muss einen einzelnen Object-Parameter übernehmen, der das Datenproviderelement enthält, und ein String-Objekt zurückgeben.</p>
+      <p>Die Funktion muss einen einzelnen Object-Parameter übernehmen, der das Datenproviderelement enthält, und ein Stringobjekt zurückgeben.</p>
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.dataGridClasses:DataGridColumn:editable:get"><apiName>editable</apiName><shortdesc>
       Ein Flag, das angibt, ob die Elemente in der Spalte bearbeitet werden dürfen.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Boolean"/><apiDefaultValue>true
@@ -1016,8 +1010,8 @@
       Ein Flag, das angibt, ob die Elemente in der Spalte bearbeitet werden dürfen. Wenn der Wert <codeph>true</codeph> ist und die <codeph>editable</codeph>-Eigenschaft von DataGrid ebenfalls <codeph>true</codeph> ist, dürfen die Elemente in der Spalte bearbeitet werden. Durch Anklicken oder Annavigieren mit der Tabulatortaste und den Pfeiltasten können einzelne Elemente bearbeitet werden.
      
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.dataGridClasses:DataGridColumn:enableIME:get"><apiName>enableIME</apiName><shortdesc>
-      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Boolean"/></apiValueDef><apiDesc>
-       
+      Ein Flag, das angibt, ob der IME (Eingabemethodeneditor) aktiviert werden soll, wenn die Komponente den Fokus erhält.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Boolean"/></apiValueDef><apiDesc>
+      Ein Flag, das angibt, ob der IME (Eingabemethodeneditor) aktiviert werden soll, wenn die Komponente den Fokus erhält. Wenn ein Editor aktiv ist, stellt er enableIME entsprechend ein.
      
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.dataGridClasses:DataGridColumn:headerRenderer:get"><apiName>headerRenderer</apiName><shortdesc>
       Die Klassenfactory für die Elementrenderer-Instanzen, die die Spaltenüberschrift für die Spalte anzeigen.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>mx.core:IFactory</apiValueClassifier></apiValueDef><apiDesc>
@@ -1037,7 +1031,7 @@
      
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.dataGridClasses:DataGridColumn:imeMode:get"><apiName>imeMode</apiName><shortdesc>
       Gibt den Modus des Eingabemethoden-Editors an.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="String"/></apiValueDef><apiDesc>
-      Gibt den Modus des Eingabemethodeneditors (IME) an. Mithilfe des Eingabemethoden-Editors können chinesische, japanische oder koreanische Schriftzeichen eingegeben werden. Flex aktiviert den IME-Modus, wenn das <codeph>itemFocusIn</codeph>-Ereignis eintritt, und stellt auf den vorherigen Wert zurück, wenn das <codeph>itemFocusOut</codeph>-Ereignis eintritt. Die flash.system.IMEConversionMode-Klasse definiert Konstanten für gültige Werte dieser Eigenschaft.  
+      Gibt den Modus des Eingabemethoden-Editors an. Mithilfe des Eingabemethoden-Editors können chinesische, japanische oder koreanische Schriftzeichen eingegeben werden. Flex aktiviert den IME-Modus, wenn das <codeph>itemFocusIn</codeph>-Ereignis eintritt, und stellt auf den vorherigen Wert zurück, wenn das <codeph>itemFocusOut</codeph>-Ereignis eintritt. Die flash.system.IMEConversionMode-Klasse definiert Konstanten für gültige Werte dieser Eigenschaft.  
      
       <p>Der Standardwert ist „null“ und in diesem Fall wird der Wert der <codeph>imeMode</codeph>-Eigenschaft des DataGrid-Steuerelements verwendet.</p>
      

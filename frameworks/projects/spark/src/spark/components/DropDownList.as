@@ -52,6 +52,20 @@ use namespace mx_internal;
  *      the item and closes the drop-down list.</li>
  *  </ul>
  *
+ *  <p><b>Note: </b>The Spark list-based controls (the Spark ListBase class and its subclasses
+ *  such as ButtonBar, ComboBox, DropDownList, List, and TabBar) do not support the BasicLayout class
+ *  as the value of the <code>layout</code> property. 
+ *  Do not use BasicLayout with the Spark list-based controls.</p>
+ *  
+ *  <p>The DropDownList control has the following default characteristics:</p>
+ *  <table class="innertable">
+ *     <tr><th>Characteristic</th><th>Description</th></tr>
+ *     <tr><td>Default size</td><td>112 pixels wide and 21 pixels high</td></tr>
+ *     <tr><td>Minimum size</td><td>112 pixels wide and 21 pixels high</td></tr>
+ *     <tr><td>Maximum size</td><td>10000 pixels wide and 10000 pixels high</td></tr>
+ *     <tr><td>Default skin class</td><td>spark.skins.spark.DropDownListSkin</td></tr>
+ *  </table>
+ *
  *  @mxml <p>The <code>&lt;s:DropDownList&gt;</code> tag inherits all of the tag 
  *  attributes of its superclass and adds the following tag attributes:</p>
  *
@@ -59,6 +73,7 @@ use namespace mx_internal;
  *  &lt;s:DropDownList 
  *    <strong>Properties</strong>
  *    prompt=""
+ *    typicalItem="null"
  * 
  *    <strong>Events</strong>
  *    closed="<i>No default</i>"

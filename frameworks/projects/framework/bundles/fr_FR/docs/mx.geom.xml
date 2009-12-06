@@ -56,8 +56,8 @@
 	 Valeur z ajoutée à la transformation 
 	  
 	  </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.geom:Transform"><apiName>Transform</apiName><shortdesc>
-  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.geom:Transform</apiBaseClassifier></apiClassifierDef><apiDesc>
-       
+  La classe mx.geom.Transform ajoute la prise en charge de la synchronisation à la classe flash.geom.Transform. </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.geom:Transform</apiBaseClassifier></apiClassifierDef><apiDesc>
+  La classe mx.geom.Transform ajoute la prise en charge de la synchronisation à la classe flash.geom.Transform. Cette classe possède une propriété target qui est l’objet IVisualElement auquel la transformation a été affectée. Les implémentations IVisualElement définissent généralement la cible sur elles-mêmes lorsque la transformation est associée à leur propriété transform. Les modifications apportées aux propriétés Transform sont automatiquement transmises à la cible. La lecture des propriétés Transform s’effectue directement à partir de la propriété transform de la cible.  
  
   </apiDesc></apiClassifierDetail><apiConstructor id="mx.geom:Transform:Transform"><apiName>Transform</apiName><shortdesc>
       Constructeur
@@ -68,8 +68,8 @@
      
      
       </apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="mx.geom:Transform:getRelativeMatrix3D"><apiName>getRelativeMatrix3D</apiName><shortdesc/><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiType value="flash.geom:Matrix3D"/></apiReturn><apiParam><apiItemName>relativeTo</apiItemName><apiType value="flash.display:DisplayObject"/></apiParam></apiOperationDef></apiOperationDetail></apiOperation><apiValue id="mx.geom:Transform:matrix3D:set"><apiName>matrix3D</apiName><shortdesc/><prolog/><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="flash.geom:Matrix3D"/></apiValueDef></apiValueDetail></apiValue><apiValue id="mx.geom:Transform:target:set"><apiName>target</apiName><shortdesc>
-      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>mx.core:IVisualElement</apiValueClassifier></apiValueDef><apiDesc>
-        
+      Objet IVisualElement avec lequel la transformation reste synchronisée. </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>mx.core:IVisualElement</apiValueClassifier></apiValueDef><apiDesc>
+      Objet IVisualElement avec lequel la transformation reste synchronisée. Les implémentations IVisualElement définissent généralement la cible sur elles-mêmes lorsque la transformation est associée à leur propriété transform.  
      
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.geom:RoundedRectangle"><apiName>RoundedRectangle</apiName><shortdesc>
    RoundedRectangle représente un rectangle aux angles arrondis 
@@ -106,63 +106,63 @@
       Constructeur.
       
       </apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="mx.geom:CompoundTransform:translateBy"><apiName>translateBy</apiName><shortdesc> 
-     </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>x</apiItemName><apiType value="Number"/></apiParam><apiParam><apiItemName>y</apiItemName><apiType value="Number"/></apiParam><apiParam><apiItemName>z</apiItemName><apiType value="Number"/><apiData>0</apiData></apiParam></apiOperationDef><apiDesc> 
-      
+     Applique la valeur delta au composant de translation des transformations.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>x</apiItemName><apiType value="Number"/></apiParam><apiParam><apiItemName>y</apiItemName><apiType value="Number"/></apiParam><apiParam><apiItemName>z</apiItemName><apiType value="Number"/><apiData>0</apiData></apiParam></apiOperationDef><apiDesc> 
+     Applique la valeur delta au composant de translation des transformations. Contrairement à la définition directe des propriétés x, y ou z, cette méthode peut être appelée en toute sécurité sans modifier le concept de transformation de la « source de vérité ». 
 	 
 	 </apiDesc></apiOperationDetail></apiOperation><apiValue id="mx.geom:CompoundTransform:SOURCE_MATRIX"><apiName>SOURCE_MATRIX</apiName><shortdesc/><prolog/><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>2</apiData><apiType value="uint"/></apiValueDef></apiValueDetail></apiValue><apiValue id="mx.geom:CompoundTransform:SOURCE_MATRIX3D"><apiName>SOURCE_MATRIX3D</apiName><shortdesc/><prolog/><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>3</apiData><apiType value="uint"/></apiValueDef></apiValueDetail></apiValue><apiValue id="mx.geom:CompoundTransform:matrix:get"><apiName>matrix</apiName><shortdesc>
-	  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="flash.geom:Matrix"/></apiValueDef><apiDesc>
-	    
+	  Matrice 2D définie directement par l’utilisateur ou composée en combinant le centre, l’échelle, la rotation et la translation de la transformation, dans cet ordre. </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="flash.geom:Matrix"/></apiValueDef><apiDesc>
+	  Matrice 2D définie directement par l’utilisateur ou composée en combinant le centre, l’échelle, la rotation et la translation de la transformation, dans cet ordre.   
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.geom:CompoundTransform:matrix3D:get"><apiName>matrix3D</apiName><shortdesc>
-	  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="flash.geom:Matrix3D"/></apiValueDef><apiDesc>
-	   
+	  Matrice 3D définie directement par l’utilisateur ou composée en combinant le centre, l’échelle, la rotation et la translation de la transformation, dans cet ordre. </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="flash.geom:Matrix3D"/></apiValueDef><apiDesc>
+	  Matrice 3D définie directement par l’utilisateur ou composée en combinant le centre, l’échelle, la rotation et la translation de la transformation, dans cet ordre.  
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.geom:CompoundTransform:rotationX:set"><apiName>rotationX</apiName><shortdesc>
-	  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
-	  
+	  Propriété rotationX, en degrés, de la transformation </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
+	  Propriété rotationX, en degrés, de la transformation 
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.geom:CompoundTransform:rotationY:set"><apiName>rotationY</apiName><shortdesc>
-	  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
-	  
+	  Propriété rotationY, en degrés, de la transformation </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
+	  Propriété rotationY, en degrés, de la transformation 
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.geom:CompoundTransform:rotationZ:set"><apiName>rotationZ</apiName><shortdesc>
-	  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
-	  
+	  Propriété rotationZ, en degrés, de la transformation </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
+	  Propriété rotationZ, en degrés, de la transformation 
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.geom:CompoundTransform:scaleX:set"><apiName>scaleX</apiName><shortdesc>
-	  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
-	  
+	  Propriété scaleX de la transformation.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
+	  Propriété scaleX de la transformation.
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.geom:CompoundTransform:scaleY:set"><apiName>scaleY</apiName><shortdesc>
-	  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
-	  
+	  Propriété scaleY de la transformation.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
+	  Propriété scaleY de la transformation.
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.geom:CompoundTransform:scaleZ:set"><apiName>scaleZ</apiName><shortdesc>
-	  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
-	  
+	  Propriété scaleZ de la transformation.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
+	  Propriété scaleZ de la transformation.
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.geom:CompoundTransform:transformX:set"><apiName>transformX</apiName><shortdesc>
-	  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
-	   Le centre de la transformation est fixe lors de l’application de la rotation et de l’échelle.  
+	  Valeur x du centre de la transformation. </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
+	  Valeur x du centre de la transformation. Le centre de la transformation est fixe lors de l’application de la rotation et de l’échelle.  
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.geom:CompoundTransform:transformY:set"><apiName>transformY</apiName><shortdesc>
-	  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
-	   Le centre de la transformation est fixe lors de l’application de la rotation et de l’échelle.  
+	  Valeur y du centre de la transformation.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
+	  Valeur y du centre de la transformation. Le centre de la transformation est fixe lors de l’application de la rotation et de l’échelle.  
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.geom:CompoundTransform:transformZ:set"><apiName>transformZ</apiName><shortdesc>
-	  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
-	   Le centre de la transformation est fixe lors de l’application de la rotation et de l’échelle.  
+	  Valeur z du centre de la transformation.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
+	  Valeur z du centre de la transformation. Le centre de la transformation est fixe lors de l’application de la rotation et de l’échelle.  
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.geom:CompoundTransform:x:set"><apiName>x</apiName><shortdesc>
-	  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
-	  
+	  Valeur x de la transformation. </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
+	  Valeur x de la transformation. 
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.geom:CompoundTransform:y:set"><apiName>y</apiName><shortdesc>
-	  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
-	  
+	  Valeur y de la transformation </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
+	  Valeur y de la transformation 
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.geom:CompoundTransform:z:set"><apiName>z</apiName><shortdesc>
-	  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
-	  
+	  Valeur z de la transformation </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
+	  Valeur z de la transformation 
 	  
 	  </apiDesc></apiValueDetail></apiValue></apiClassifier></apiPackage>

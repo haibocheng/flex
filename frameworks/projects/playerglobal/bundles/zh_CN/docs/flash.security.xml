@@ -1,0 +1,514 @@
+<?xml version="1.0"?>
+<apiPackage id="flash.security"><apiName>flash.security</apiName><apiDetail/><apiClassifier id="flash.security:XMLSignatureValidator"><apiName>XMLSignatureValidator</apiName><shortdesc>
+	 XMLSignatureValidator 类验证 XML 签名文件是否格式正确且未修改，以及它是否使用链接到受信任数字证书的密钥进行签名（可选）。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.events:EventDispatcher</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 XMLSignatureValidator 类验证 XML 签名文件是否格式正确且未修改，以及它是否使用链接到受信任数字证书的密钥进行签名（可选）。
+	 
+	 <p>XMLSignatureValidator 针对 XML 签名语法和处理实现 W3C 建议的子集，XMLSignatureValidator 不应视为符合该建议的实现。该建议支持的子集包括：</p>
+	 <ul>
+	  <li>除 KeyInfo 元素外的所有核心签名语法。</li>
+	  <li>KeyInfo 元素仅支持 X509Data 元素。</li>
+	  <li>X509Data 元素仅支持 X509Certificate 元素。</li>
+	  <li>SHA256 摘要方法算法。</li>
+	  <li>PKCS1 签名算法。</li>
+	  <li>“不带注释的规范化 XML”规范化方法和转换算法。</li>
+	  <li>采用其它签名语法的 Manifest 元素。</li>
+	 </ul>
+	 
+	 <p>必须提供 IURIDereferencer 实现才能验证 XML 签名。此实现类负责解析签名文件的 SignedInfo 元素中指定的 URI 并返回实现 IDataInput 接口的对象（如 ByteArray）中引用的数据。</p>
+	 
+	 <p>为了验证签名证书是否链接到受信任的证书，XML 签名必须以 X509Certificate 元素的形式包含构建链所需的证书，或者您必须使用 <codeph>addCertificate()</codeph> 方法提供构建该链所需的证书。</p>
+	 
+	 <p><b>验证 XMLSignature：</b></p>
+	 <ol>
+	 <li>创建 XMLSignatureValidator 类的实例。</li>
+	 <li>将该实例的 <codeph>uriDereferencer</codeph> 属性设置为 IURIDereferencer 实现类的实例。</li>
+	 <li>需要时，使用 <codeph>addCertificate</codeph> 方法提供 DER 编码的证书以便构建证书信任链。</li>
+	 <li>调用 XMLSignatureValidator <codeph>verify</codeph> 方法，传入要验证的签名。</li>
+	 <li>XMLSignatureValidator 对象分派 complete 事件后，检查 <codeph>validityStatus</codeph> 属性。</li>  
+	 </ol>
+	 
+	 <p><b>关于签名状态：</b></p>
+	 <p>XML 签名的有效性可以为 valid、invalid 或 unknown。整体状态取决于签名文件各个组件的验证状态：</p>
+	 <ul>
+	 <li><codeph>digestStatus</codeph> — 通过 SignedInfo 元素计算的加密签名的有效性。可以是 <codeph>valid</codeph>、<codeph>invalid</codeph> 或 <codeph>unknown</codeph>。</li>
+	 <li><codeph>identityStatus</codeph> — 签名证书的有效性。如果证书已到期、已吊销或已更改，则该状态为 <codeph>invalid</codeph>。如果无法将证书链接到受信任的根证书，则该状态为 <codeph>unknown</codeph>。如果摘要无效，则不检查证书。如果不检查证书，状态将报告为 <codeph>unknown</codeph>。</li>
+	 <li><codeph>referencesStatus</codeph> — 签名文件的 SignedInfo 元素中引用定址的数据的有效性。可以是 <codeph>valid</codeph>、<codeph>invalid</codeph> 或 <codeph>unknown</codeph>。如果摘要或证书无效，则不检查引用。还可以根据 <codeph>referencesValidationSetting</codeph> 属性的设置跳过引用检查。如果不检查证书，状态将报告为 <codeph>unknown</codeph>。</li>
+	 </ul>
+	 <p>由 <codeph>validityStatus</codeph> 属性报告的签名有效性可以为：</p>
+	 <ul>
+	 <li><codeph>valid</codeph> — 如果 <codeph>referencesStatus</codeph>、<codeph>digestStatus</codeph> 和 <codeph>identityStatus</codeph> 全部为 <codeph>valid</codeph>。</li>
+	 <li><codeph>invalid</codeph> — 如果其中任一状态为 <codeph>invalid</codeph>。</li>
+	 <li><codeph>unknown</codeph> — 如果 <codeph>referencesStatus</codeph>、<codeph>digestStatus</codeph> 或 <codeph>identityStatus</codeph> 为 <codeph>unknown</codeph>。</li>
+	 </ul>
+	 
+	 <p><b>规范化限制：</b></p>
+	 <p>AIR 中的 XML 引擎对 XML 文档进行规范化时，并不总是能生成预期的 XML 字符串。因此，建议避免在已包封或已分离的签名文档中放置元素间空白，且不要重新定义签名文档内的命名空间。在这两种情况下，AIR 都可能无法重新创建具有相同字符序列的文档，进而导致验证失败。</p>
+	   
+	 </apiDesc><example conref="examples\XMLSignatureValidatorExample.as"> 下例加载并验证一个包含 XML 签名的文件。要使用此示例，必须实现一个适合于要验证的签名的 IURIDereferencer（替代示例中所使用的 SignedMessageDereferencer 类）。通过调用 <codeph>SignatureValidatorExample.validateSignature( signatureFile )</codeph> 来运行示例，同时传入引用要验证的 XML 签名文档的文件。
+ 
+<codeblock>
+import flash.events.Event;
+import flash.filesystem.File;
+import flash.filesystem.FileStream;
+import flash.security.ReferencesValidationSetting;
+import flash.security.XMLSignatureValidator; 
+
+import com.example.SignedMessageDereferencer; //A custom class implementing IURIDereferencer
+
+public class SignatureValidatorExample{ 
+    private var xmlSig:XML;
+    private const signatureNS:Namespace = new Namespace( "http://www.w3.org/2000/09/xmldsig#" );
+    
+    public static function validateSignature( signatureFile:File ):void{
+        try{
+            //Set up the XMLSignatureValidator
+            var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+            verifier.addEventListener( Event.COMPLETE, verificationComplete );
+            verifier.uriDereferencer = new SignedMessageDereferencer();
+            verifier.referencesValidationSetting = ReferencesValidationSetting.VALID_OR_UNKNOWN_IDENTITY;
+    
+            //Load the signed document
+            var sigFileStream:FileStream = new FileStream();
+            sigFileStream.open( signatureFile, FileMode.READ );
+            var xmlDoc:XML = XML( sigFileStream.readUTFBytes(sigFileStream.bytesAvailable) );
+            
+            //Get the last Signature element in the document
+            if( xmlDoc.name().localName != "Signature" ){
+                var signatureList:XMLList = xmlDoc..signatureNS::Signature;
+                xmlSig = XML( signatureList[ signatureList.length()-1 ] );
+            } else{
+                xmlSig = xmlDoc;
+            }
+    
+            //Validate the signature
+            verifier.verify( xmlSig );
+            
+        }catch (e:Error){
+            statusDisplay.text = "Verification error.\n" + e;
+        }
+    }
+    
+    private static function verificationComplete(event:Event):void{
+        trace( "Signature Validity: " + verifier.validityStatus );
+        trace( "Digest validity: " + verifier.digestStatus );
+        trace( "Certificate validity: " + verifier.identityStatus );
+        trace( "Data validity: " + verifier.referencesStatus );
+    }
+}
+</codeblock></example></apiClassifierDetail><related-links><link href="flash.security.xml#IURIDereferencer"><linktext>IURIDereferencer</linktext></link><link href="http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/"><linktext>XML 签名语法和处理</linktext></link><link href="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"><linktext>正则 XML</linktext></link><link href="http://www.ietf.org/rfc/rfc2437.txt"><linktext>PKCS #1</linktext></link></related-links><adobeApiEvent id="flash.security:XMLSignatureValidator_flash.events.ErrorEvent.ERROR_error"><apiName>error</apiName><shortdesc>
+	 由于错误而无法完成验证时分派。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.ErrorEvent.ERROR</apiEventType><adobeApiEventClassifier>flash.events.ErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 由于错误而无法完成验证时分派。 
+	 
+	 </apiDesc><example conref="examples\XMLSignatureValidator.error.1.as"> 下例侦听由 XMLSignatureValidator 对象分派的 error 事件，并跟踪错误消息：
+<codeblock>
+private function verificationError(event:ErrorEvent):void{
+    trace("Verification error: " + event.text);                
+}
+</codeblock></example></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.security:XMLSignatureValidator_flash.events.Event.COMPLETE_complete"><apiName>complete</apiName><shortdesc>
+	 在完成验证时分派。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.COMPLETE</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 在完成验证时分派。
+	 
+	 <p><codeph>complete</codeph> 事件并不意味着签名有效。检查 XMLSignatureValidator 对象的 <codeph>validityStatus</codeph> 属性来确定签名验证的结果。</p>
+	 
+	 </apiDesc><example conref="examples\XMLSignatureValidator.complete.1.as"> 下例侦听由 XMLSignatureValidator 对象分派的 complete 事件，并跟踪验证结果：
+<codeblock>
+private function verificationComplete(event:Event):void{
+    var validator:XMLSignatureValidator = event.target as XMLSignatureValidator;
+    trace("Digest status: " + validator.digestStatus);
+    trace("Identity status: " + validator.identityStatus);
+    trace("Reference status: " + validator.referencesStatus);
+    trace("Signature status: " + validator.validityStatus);    
+}
+</codeblock></example></adobeApiEventDetail><related-links><link href="flash.security.xml#XMLSignatureValidator/validityStatus"><linktext>validityStatus</linktext></link></related-links></adobeApiEvent><apiConstructor id="flash.security:XMLSignatureValidator:XMLSignatureValidator"><apiName>XMLSignatureValidator</apiName><shortdesc>
+		 创建 XMLSignatureValidator 对象。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/></apiConstructorDef><apiDesc>
+		 创建 XMLSignatureValidator 对象。
+		 
+		 <p>在调用新对象的 <codeph>verify()</codeph> 方法之前必须设置 <codeph>uriDereferencer</codeph> 属性。</p>
+		 
+		 </apiDesc><example conref="examples\XMLSignatureValidator.constructor.1.as"> 下例创建并设置一个新的 XMLSignatureValidator 对象：
+<codeblock> 
+import com.example.EnvelopedDereferencer; //Your custom IURIDereferencer implementation
+
+//Create the object
+var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+
+//Provide the IURIDerferencer
+verifier.uriDereferencer = new EnvelopedDereferencer(xmlDoc);
+
+//Set validation options
+verifier.referencesValidationSetting = ReferencesValidationSetting.VALID_OR_UNKNOWN_IDENTITY;
+verifier.revocationCheckSetting = RevocationCheckSettings.NEVER;
+verifier.useSystemTrustStore = true;
+
+//Add listeners to handle results
+verifier.addEventListener(Event.COMPLETE, verificationComplete);
+verifier.addEventListener(ErrorEvent.ERROR, verificationError);
+</codeblock></example></apiConstructorDetail><related-links><link href="flash.security.xml#XMLSignatureValidator/uriDereferencer"><linktext>uriDereferencer</linktext></link></related-links></apiConstructor><apiOperation id="flash.security:XMLSignatureValidator:addCertificate"><apiName>addCertificate</apiName><shortdesc>
+	   添加 x509 证书以构建链。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>如果在正在验证签名时调用。
+	   
+	   </apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException><apiReturn><apiType value="any"/></apiReturn><apiParam><apiItemName>cert</apiItemName><apiOperationClassifier>flash.utils:ByteArray</apiOperationClassifier><apiDesc>包含 DER 编码的 x509 数字证书的 ByteArray 对象。
+	   </apiDesc></apiParam><apiParam><apiItemName>trusted</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiDesc>设置为 <codeph>true</codeph> 可将此证书指定为信任锚记。
+	   </apiDesc></apiParam></apiOperationDef><apiDesc>
+	   添加 x509 证书以构建链。 
+	   
+	   <p>添加的证书必须是 DER 编码的 x509 证书。</p>
+	   
+	   <p>如果 <codeph>trusted</codeph> 参数为 <codeph>true</codeph>，则将证书视为信任锚记。</p>
+	   
+	   <p><b>注意：</b>XML 签名可能包括用于构建签名者的证书链的证书。XMLSignatureValidator 类使用这些证书构建链，但不作为受信任的根（默认情况下）。</p>
+	   
+	   </apiDesc><example conref="examples\XMLSignatureValidator.addCertificate.1.as"> 下例从文件系统加载一个证书，并将其添加为受信任的锚记。
+<codeblock>
+ import flash.utils.ByteArray;
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+ var certificate:ByteArray = new ByteArray();
+ 
+ var certFile:File = new File("certificate.cer");
+ var certFileStream:FileStream = new FileStream();
+ certFileStream.open(certFile, FileMode.READ);
+ certFileStream.readBytes(certificate, 0, certFileStream.bytesAvailable);
+
+ verifier.addCertificate(certificate, true);
+</codeblock></example></apiOperationDetail></apiOperation><apiOperation id="flash.security:XMLSignatureValidator:verify"><apiName>verify</apiName><shortdesc>
+		验证指定的签名。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>如果在正在验证签名时调用。 
+		 </apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException><apiException><apiDesc>遇到其它错误时，如格式不正确的 XML 或签名文件中不支持的元素。 
+		</apiDesc><apiItemName>Error</apiItemName><apiOperationClassifier>Error</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>signature</apiItemName><apiOperationClassifier>XML</apiOperationClassifier><apiDesc>要验证的 XML 签名。
+		</apiDesc></apiParam></apiOperationDef><apiDesc>
+		验证指定的签名。 
+		
+		<p>验证是异步进行的。验证成功完成时，XMLSignatureValidator 对象将分派 <codeph>complete</codeph> 事件，或者由于错误无法完成验证时将调用 <codeph>error</codeph> 事件。</p> 
+		
+		<p>无法取消验证过程。当验证过程正在进行时，对 <codeph>verify()</codeph> 方法的后续调用将失败。在当前验证检查完成后，可以再次调用 <codeph>verify()</codeph> 方法。</p> 
+		
+		<p><b>注意：</b>由于 XMLSignatureValidator 只能实现“W3C Recommendation for XML Signature Syntax and Processing”（W3C 推荐的 XML 签名语法和处理标准）的一个子集，因此无法验证所有有效的 XML 签名。</p>
+		 
+		 
+		</apiDesc><example conref="examples\XMLSignatureValidator.verify.1.as"> 下例读取一个包含 XML 签名的文件，并通过调用 <codeph>verify()</codeph> 方法验证该签名。（此示例假定该 IURIDereferencer 实现适合于该签名。）
+<codeblock>
+import flash.filesystem.File;
+import flash.filesystem.FileStream;
+import com.example.SignedMessageDereferencer; //Your IURIDereferencer implementation
+ 
+const xmlSignatureNS:Namespace = new Namespace( "http://www.w3.org/2000/09/xmldsig#" );
+
+var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+verifier.uriDereferencer = new SignedMessageDereferencer();
+
+var signatureFile:File = new File( "path/to/XMLSignatureDocument.xml" );
+var sigFileStream:FileStream = new FileStream();
+sigFileStream.open( signatureFile, FileMode.READ );
+
+var xmlDoc:XML = XML( sigFileStream.readUTFBytes(sigFileStream.bytesAvailable) );
+var xmlSig:XML = XML( xmlDoc..xmlSignatureNS::Signature );
+
+verifier.verify( xmlSig );
+</codeblock></example></apiOperationDetail><adobeApiEvent id="flash.security:XMLSignatureValidator:verify_complete"><apiName>complete</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>在成功完成验证时分派。
+		</apiDesc></adobeApiEventDetail><shortdesc>在成功完成验证时分派。</shortdesc></adobeApiEvent><adobeApiEvent id="flash.security:XMLSignatureValidator:verify_error"><apiName>error</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:ErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>验证引用遇到错误时分派。 
+		</apiDesc></adobeApiEventDetail><shortdesc>验证引用遇到错误时分派。</shortdesc></adobeApiEvent></apiOperation><apiValue id="flash.security:XMLSignatureValidator:digestStatus:get"><apiName>digestStatus</apiName><shortdesc>
+	    通过 SignedInfo 元素计算的加密签名的有效性状态。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier><apiException><apiDesc>如果在正在验证签名时访问。
+		 
+		 </apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	    通过 <codeph>SignedInfo</codeph> 元素计算的加密签名的有效性状态。
+	    
+	    <p>状态为：</p>
+	    <ul>
+	    <li><codeph>valid</codeph> -- 如果签名加密有效。</li>
+	    <li><codeph>invalid</codeph> -- 如果在签名后更改了摘要。</li>
+	    <li><codeph>unknown</codeph> — 如果尚未调用 <codeph>verify()</codeph> 方法。</li>
+		</ul>
+		
+		 <p><b>注意：</b>如果 <codeph>digestStatus</codeph> 无效，则不检查 <codeph>identityStatus</codeph> 和 <codeph>referencesStatus</codeph>，并会将其报告为 <codeph>unknown</codeph>。</p>
+		 
+		 </apiDesc><example conref="examples\XMLSignature.digestStatus.1.as"/></apiValueDetail></apiValue><apiValue id="flash.security:XMLSignatureValidator:identityStatus:get"><apiName>identityStatus</apiName><shortdesc>
+	    签名证书的有效性状态。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier><apiException><apiDesc>如果在正在验证签名时访问。
+ 		</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	    签名证书的有效性状态。 
+	    
+	    <p>该状态可以是：</p>
+	    <ul>
+	    <li><codeph>valid</codeph> -- 证书尚未过期，吊销检查未失败且链接到受信任的根证书。</li>
+	    <li><codeph>unknown</codeph> — 证书尚未过期，吊销检查没有失败，但没有链接到受信任的根证书。尚未验证状态时也会报告 <codeph>unknown</codeph>，不管是因为尚未调用 <codeph>verify()</codeph> 方法还是因为 SignedInfo 元素 (<codeph>digestStatus</codeph>) 的加密签名无效。</li>
+	    <li><codeph>invalid</codeph> — 证书已过期或吊销检查失败。</li>
+	    </ul>
+	    <p>无论证书是否被视为有效，使用 <codeph>addCertificate()</codeph> 方法添加的证书以及 <codeph>revocationCheckSetting</codeph> 和 <codeph>useSystemTrustStore</codeph> 属性的设置都可以进行更改。</p>
+	    
+		<p><b>注意：</b>如果 <codeph>identityStatus</codeph> 无效，则不检查 <codeph>referencesStatus</codeph>，并会将其报告为 <codeph>unknown</codeph>。此外，当 <codeph>identityStatus</codeph> 为 unknown 时，不检查引用，除非 <codeph>referencesValidationSetting</codeph> 为 <codeph>validOrUnknownIdentity</codeph></p>
+		
+ 		</apiDesc><example conref="examples\XMLSignatureValidator.identityStatus.1.as"> 下例得到对签名证书进行验证后的结果（已验证签名之后）：
+<codeblock>
+ import flash.security.XMLSignatureValidator;
+ 
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+ //validate a signature...
+  
+ var identityResult:String = verifier.identityStatus;
+</codeblock></example></apiValueDetail><related-links><link href="flash.security.xml#XMLSignatureValidator/addCertificate()"><linktext>addCertificate()</linktext></link><link href="flash.security.xml#XMLSignatureValidator/revocationCheckSetting"><linktext>revocationCheckSetting</linktext></link><link href="flash.security.xml#XMLSignatureValidator/useSystemTrustStore"><linktext>useSystemTrustStore</linktext></link><link href="flash.security.xml#XMLSignatureValidator/referencesValidationSetting"><linktext>referencesValidationSetting</linktext></link></related-links></apiValue><apiValue id="flash.security:XMLSignatureValidator:referencesStatus:get"><apiName>referencesStatus</apiName><shortdesc>
+	    SignedInfo 元素中引用的数据的有效性状态。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier><apiException><apiDesc>如果在正在验证签名时访问。
+ 		</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	    <codeph>SignedInfo</codeph> 元素中引用的数据的有效性状态。
+	    
+	    <p>该状态可以是：</p>
+	    <ul>
+	    <li><codeph>valid</codeph> -- 如果所有引用都有效。</li>
+	    <li><codeph>invalid</codeph> -- 如果任何引用无效。</li>
+	    <li><codeph>unknown</codeph> - 如果未验证。在以下环境中引用可以保持未验证状态：
+	    <ul> 
+	    	<li>尚未调用 <codeph>verify()</codeph> 方法</li>
+	    	<li>SignedInfo 元素的加密签名 (<codeph>digestStatus</codeph>) 无效。</li>
+	    	<li>签名证书 (<codeph>identityStatus</codeph>) 无效</li>
+	    	<li><codeph>referencesValidationSetting</codeph> 为 <codeph>validIdentity</codeph>（默认设置），且签名证书的 <codeph>identityStatus</codeph> 未知。</li>
+	    	<li><codeph>referencesValidationSetting</codeph> 为 <codeph>never</codeph>。</li>
+	    </ul>
+	    </li>
+		</ul>
+		
+		 <p><b>重要说明：</b>不验证外部资源，除非在签名文档内的 SignedInfo 元素中直接引用这些外部资源。不验证辅助引用所指的外部资源。例如，如果 XML 签名签署了一个 manifest 元素，则仅验证 manifest 元素自身的完整性。不检查 manifest 中列出的文件。</p>
+		 
+		</apiDesc><example conref="examples\XMLSignatureValidator.referencesStatus.1.as"> 下例得到对签名中的引用进行验证后的结果（已验证签名之后）：
+<codeblock>
+ import flash.security.XMLSignatureValidator;
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+ //validate a signature...
+  
+ var dataResult:String = verifier.referencesStatus;
+</codeblock></example></apiValueDetail><related-links><link href="flash.security.xml#XMLSignatureValidator/referencesValidationSetting"><linktext>referencesValidationSetting</linktext></link></related-links></apiValue><apiValue id="flash.security:XMLSignatureValidator:referencesValidationSetting:set"><apiName>referencesValidationSetting</apiName><shortdesc>
+	    指定用作引用检查依据的条件。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>String</apiValueClassifier><apiException><apiDesc>如果在正在验证签名时设置。
+		 </apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException><apiException><apiDesc>如果 <codeph>setting</codeph> 参数包含 ReferencesValidationSetting 类中未定义的值。
+		 
+		</apiDesc><apiItemName>ArgumentError</apiItemName><apiOperationClassifier>ArgumentError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	    指定检查引用时所处的条件。
+		
+		 <p>使用 ReferencesValidationSetting 类中定义的常量来设置此属性。这些设置包括：</p>
+		 <ul>	
+		 <li><codeph>ReferencesValidationSetting.VALID_IDENTITY</codeph> - 仅在签名证书有效且与受信任的根有联系时检查引用。这是默认设置。</li>
+		 <li><codeph>ReferencesValidationSetting.VALID_OR_UNKNOWN_IDENTITY</codeph> - 如果签名证书有效，即使与受信任的根无联系，也会检查引用。</li>
+		 <li><codeph>ReferencesValidationSetting.NEVER</codeph> — 从不检查引用。</li> 
+		 </ul>
+		 
+		 <p>
+		 对于以商业证书签署的签名，或当您以 <codeph>addCertificate()</codeph> 方法提供自己的证书作为受信任的锚记时，将使用默认设置 <codeph>validIdentity</codeph>。在已签名文档无论如何都会被拒绝时，此设置避免了检查引用有效性的开销。
+		 </p>
+		 <p>
+		 对于以自签名证书签署的签名，将使用 <codeph>validOrUnknownIdentity</codeph> 设置。此设置使您可以验证已签名的数据未被更改，但无法确定签名者的身份。 
+		 </p>
+		 <p>
+		 此类验证对您的应用程序并不重要时，使用 <codeph>never</codeph> 设置可避免验证引用的开销。
+		 </p>
+		 </apiDesc><example conref="examples\XMLSignatureValidator.referencesValidationSetting.1.as"> 下例将 XMLSignatureValidator 对象设置为仅在签名证书与信任锚记有联系时检查引用：
+<codeblock>
+ import flash.security.ReferencesValidationSetting;
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator(); 
+ verifier.referencesValidationSetting = ReferencesValidationSetting.VALID_OR_UNKNOWN_IDENTITY;
+</codeblock></example></apiValueDetail><related-links><link href="flash.security.xml#ReferencesValidationSetting"><linktext>ReferencesValidationSetting</linktext></link></related-links></apiValue><apiValue id="flash.security:XMLSignatureValidator:revocationCheckSetting:set"><apiName>revocationCheckSetting</apiName><shortdesc>
+	    指定如何检查证书吊销。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>String</apiValueClassifier><apiException><apiDesc>如果在正在验证签名时设置。
+		</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	    指定如何检查证书吊销。
+		
+		 <p>使用 RevocationSettings 类中定义的常量来设置此属性。这些设置包括：</p>
+		 <ul>	
+		 <li><codeph>RevocationCheckSettings.NEVER</codeph> -- 不检查证书吊销。</li>
+		 <li><codeph>RevocationCheckSettings.BEST_EFFORT</codeph> -- 如果吊销信息可用且可以获取吊销状态，则检查证书吊销。如果无法明确确定吊销状态，则不拒绝该证书。</li>
+		 <li><codeph>RevocationCheckSettings.REQUIRED_IF_AVAILABLE</codeph> -- 如果证书包括吊销信息，则必须明确确定吊销状态以验证该证书。</li> 
+		 <li><codeph>RevocationCheckSettings.ALWAYS_REQUIRED</codeph> -- 始终检查证书吊销。拒绝没有吊销信息的证书。</li>
+		 </ul>
+		 
+		 </apiDesc><example conref="examples\XMLSignature.revocationCheckSetting.1.as"/></apiValueDetail><related-links><link href="flash.security.xml#RevocationCheckSettings"><linktext>RevocationCheckSettings</linktext></link></related-links></apiValue><apiValue id="flash.security:XMLSignatureValidator:signerCN:get"><apiName>signerCN</apiName><shortdesc>
+	   签名证书的“公共名称”字段。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	   签名证书的“公共名称”字段。  
+	   
+	   </apiDesc><example conref="examples\XMLSignatureValidator.signerCN.1.as"> 下例读取签名证书的公用名称（已验证签名之后）：
+<codeblock>
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+ //validate a signature...
+  
+ var commonName:String = verifier.signerCN;
+</codeblock></example></apiValueDetail></apiValue><apiValue id="flash.security:XMLSignatureValidator:signerDN:get"><apiName>signerDN</apiName><shortdesc>
+	   签名证书的“识别名称”字段。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	   签名证书的“识别名称”字段。  
+	   
+	   </apiDesc><example conref="examples\XMLSignatureValidator.signerDN.1.as"> 下例读取签名证书的判别名（已验证签名之后）：
+<codeblock>
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+ //validate a signature...
+  
+ var distinguishedName:String = verifier.signerDN;
+</codeblock></example></apiValueDetail></apiValue><apiValue id="flash.security:XMLSignatureValidator:signerExtendedKeyUsages:get"><apiName>signerExtendedKeyUsages</apiName><shortdesc>
+	   包含签名证书中列出的扩展密钥用法 OID 的数组。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Array</apiValueClassifier><apiException><apiDesc>如果在正在验证签名时访问。
+	   
+	   </apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	   包含签名证书中列出的扩展密钥用法 OID 的数组。
+	   
+	   <p>每种扩展密钥用法均以数字 OID 形式进行报告。</p>
+	   
+	   </apiDesc><example conref="examples\XMLSignatureValidator.signerExtendedKeyUsages.1.as"> 下例读取签名证书的扩展密钥 OID（已验证签名之后）：
+<codeblock>
+ import flash.security.XMLSignatureValidator;
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+ //validate a signature...
+  
+ var extendedKeyOIDs:Array = verifier.signerExtendedKeyUsages;
+</codeblock></example></apiValueDetail></apiValue><apiValue id="flash.security:XMLSignatureValidator:signerTrustSettings:get"><apiName>signerTrustSettings</apiName><shortdesc>
+		包含签名证书的信任设置的数组。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Array</apiValueClassifier><apiException><apiDesc>如果在正在验证签名时访问。
+		
+		</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+		包含签名证书的信任设置的数组。
+		
+		<p>信任设置是从系统和证书中嵌入的密钥用法 OID 中派生的。用作表示已识别的信任设置的字符串的常量在 SignerTrustSettings 类中定义。</p>
+		 
+		 <p><codeph>unknown</codeph> 或 <codeph>invalid</codeph> 证书的 <codeph>signerTrustSettings</codeph> 数组为空数组。</p>
+		
+		<p>修改该数组不会更改证书信任设置。 </p>
+		
+  	    </apiDesc><example conref="examples\XMLSignatureValidator.signerTrustSettings.1.as"> 下例读取签名证书的信任设置（已验证签名之后）：
+<codeblock>
+ import flash.security.XMLSignatureValidator;
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+ //validate a signature...
+  
+ var certificateTrustedFor:Array = verifier.signerTrustSettings;
+</codeblock></example></apiValueDetail><related-links><link href="flash.security.xml#SignerTrustSettings"><linktext>SignerTrustSettings</linktext></link></related-links></apiValue><apiValue id="flash.security:XMLSignatureValidator:uriDereferencer:set"><apiName>uriDereferencer</apiName><shortdesc>
+	     IURIDereferencer 实现。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>flash.security:IURIDereferencer</apiValueClassifier><apiException><apiDesc>如果在正在验证签名时设置。
+		 </apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	     IURIDereferencer 实现。
+		 
+		 <p>尝试验证签名之前必须提供 IURIDereferencer 实现。</p>
+		 
+		 </apiDesc><example conref="examples\XMLSignatureValidator.uriDereferencer.1.as"> 下例创建 SignedMessageDereferencer 的一个实例（它实现了 IURIDereferencer 接口），并将其设置为用于签名验证的去引用器：
+<codeblock>
+ import com.example.SignedMessageDereferencer; //A custom class implementing IURIDereferencer
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator(); 
+ verifier.uriDereferencer = new SignedMessageDereferencer();
+</codeblock></example></apiValueDetail><related-links><link href="flash.security.xml#IURIDereferencer"><linktext>IURIDereferencer</linktext></link></related-links></apiValue><apiValue id="flash.security:XMLSignatureValidator:useSystemTrustStore:set"><apiName>useSystemTrustStore</apiName><shortdesc>
+	    指定使用系统信任存储中的证书来构建链。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier><apiException><apiDesc>如果在正在验证签名时设置。
+		 
+		 </apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	    指定使用系统信任存储中的证书来构建链。
+	    
+	    <p>如果为 <codeph>true</codeph>，则使用系统信任存储中的信任锚记作为受信任的根。默认情况下不使用系统信任存储。</p>
+		
+		</apiDesc><example conref="examples\XMLSignatureValidator.useSystemTrustStore.1.as"> 下例创建一个 XMLSignatureValidator 实例，并将其设置为在验证 XML 签名时使用受信任证书的系统存储库：
+<codeblock>
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator(); 
+ verifier.useSystemTrustStore = true;
+</codeblock></example></apiValueDetail></apiValue><apiValue id="flash.security:XMLSignatureValidator:validityStatus:get"><apiName>validityStatus</apiName><shortdesc>
+	    经过验证的 XML 签名的有效性状态。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier><apiException><apiDesc>如果在正在验证签名时访问。
+		
+		</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	    经过验证的 XML 签名的有效性状态。
+	    
+		<p>验证 XML 签名的途径是验证 SignedInfo 元素的加密签名、签名证书以及 SignedInfo 元素中引用所指的数据。这些元素中每个元素的有效性分别由 <codeph>digestStatus</codeph>、<codeph>identityStatus()</codeph> 和 <codeph>referencesStatus</codeph> 属性进行报告。</p>
+		
+	    <p>XML 签名的有效性可以为 valid、invalid 或 unknown。整体状态取决于签名文件各个组件的验证状态：</p>
+	    <ul>
+	    <li><codeph>digestStatus</codeph> -- 通过 SignedInfo 元素计算的加密签名的有效性。</li>
+	    <li><codeph>identityStatus</codeph> -- 签名证书的有效性。</li>
+	    <li><codeph>referencesStatus</codeph> -- 签名 SignedInfo 元素中引用摘要的有效性。</li>
+	    </ul>
+	    <p>由 <codeph>validityStatus</codeph> 属性报告的签名有效性可以为：</p>
+	    <ul>
+	    <li><codeph>valid</codeph> — 如果 <codeph>referencesStatus</codeph>、<codeph>digestStatus</codeph> 和 <codeph>identityStatus</codeph> 全部为 <codeph>valid</codeph>。</li>
+	    <li><codeph>invalid</codeph> — 如果其中任一状态为 <codeph>invalid</codeph>。</li>
+	    <li><codeph>unknown</codeph> - 如果其中任何一个状态为 <codeph>unknown</codeph>。</li>
+	    </ul>
+		
+		</apiDesc><example conref="examples\XMLSignatureValidator.validityStatus.1.as"> 下例得到验证 XML 签名的结果 
+<codeblock>
+ import flash.security.XMLSignatureValidator;
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+ //validate the signature...
+  
+ var validationResult:String = verifier.validityStatus;
+</codeblock></example></apiValueDetail><related-links><link href="flash.security.xml#XMLSignatureValidator/digestStatus"><linktext>digestStatus</linktext></link><link href="flash.security.xml#XMLSignatureValidator/identityStatus"><linktext>identityStatus</linktext></link><link href="flash.security.xml#XMLSignatureValidator/referencesStatus"><linktext>referencesStatus</linktext></link><link href="flash.security.xml#SignatureStatus"><linktext>SignatureStatus</linktext></link></related-links></apiValue></apiClassifier><apiClassifier id="flash.security:IURIDereferencer"><apiName>IURIDereferencer</apiName><shortdesc>
+	IURIDereferencer 定义用于解析 XML 签名中 URI 的对象接口。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiInterface/><apiAccess value="public"/><apiStatic/><apiBaseClassifier/></apiClassifierDef><apiDesc>
+	IURIDereferencer 定义用于解析 XML 签名中 URI 的对象接口。
+	 
+	<p>IURIDereferencer 实现负责解析 XML 签名文件的 SignedInfo 元素中指定的 URI，并返回实现 IDataInput 接口的对象（如 ByteArray）中引用的数据。<ph platform="javascript">要使用 IURIDereferencer 接口，必须创建实现该接口的 ActionScript 类。在 JavaScript 中，可以使用 <codeph>script</codeph> 标签加载包含上述 ActionScript 类的 SWF 文件。</ph></p>
+	
+	<p>此接口具有一个方法：<codeph>dereference()</codeph>。典型实现也需要一个方法，用于将包含要解析的 URI 的 XML 签名对象传递到取消引用程序。</p> 
+	 
+	 <p>IURIDereferencer 接口与 XMLSignatureValidator 类一起使用。</p>
+	
+	</apiDesc><example conref="examples\IURIDereferencerExample.as"/></apiClassifierDetail><related-links><link href="flash.security.xml#XMLSignatureValidator"><linktext>XMLSignatureValidator</linktext></link><link href="flash.security.xml#XMLSignatureValidator/uriDereferencer"><linktext>XMLSignatureValidator.uriDereferencer</linktext></link></related-links><apiOperation id="flash.security:IURIDereferencer:flash.security:IURIDereferencer:dereference"><apiName>dereference</apiName><shortdesc>
+		解析和取消引用指定的 URI。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>由 URI 引用的数据。
+		</apiDesc><apiOperationClassifier>flash.utils:IDataInput</apiOperationClassifier></apiReturn><apiParam><apiItemName>uri</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>要取消引用的 URI。
+		</apiDesc></apiParam></apiOperationDef><apiDesc>
+		解析和取消引用指定的 URI。
+		
+		</apiDesc></apiOperationDetail></apiOperation></apiClassifier><apiClassifier id="flash.security:SignerTrustSettings"><apiName>SignerTrustSettings</apiName><shortdesc>
+	SignerTrustSettings 类定义 XMLSignatureValidator 对象的 SignerTrustSettings 属性使用的常量。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	SignerTrustSettings 类定义 XMLSignatureValidator 对象的 <codeph>SignerTrustSettings</codeph> 属性使用的常量。
+	
+	</apiDesc></apiClassifierDetail><related-links><link href="flash.security.xml#XMLSignatureValidator/signerTrustSettings"><linktext>XMLSignatureValidator.signerTrustSettings</linktext></link></related-links><apiValue id="flash.security:SignerTrustSettings:CODE_SIGNING"><apiName>CODE_SIGNING</apiName><shortdesc> 
+	   信任该证书以进行代码签名。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>codeSigning</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	   信任该证书以进行代码签名。这暗示证书链接到受信任的根，信任该根以进行代码签名，并且签名证书在其扩展密钥用法扩展中具有 CodeSigning OID。
+	   
+	   </apiDesc></apiValueDetail></apiValue><apiValue id="flash.security:SignerTrustSettings:PLAYLIST_SIGNING"><apiName>PLAYLIST_SIGNING</apiName><shortdesc> 
+	   信任该证书以对播放列表进行签名。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>playlistSigning</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	   信任该证书以对播放列表进行签名。这暗示证书链接到受信任的根，并且在其扩展密钥用法扩展中具有播放列表签名 OID。
+	   
+	   </apiDesc></apiValueDetail></apiValue><apiValue id="flash.security:SignerTrustSettings:SIGNING"><apiName>SIGNING</apiName><shortdesc> 
+	  通常会信任该证书以进行签名。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>signing</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	  通常会信任该证书以进行签名。 
+	  
+	  </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.security:SignatureStatus"><apiName>SignatureStatus</apiName><shortdesc>
+	SignatureStatus 类定义 XMLSignatureValidator 对象的 validityStatus 属性使用的常量。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	SignatureStatus 类定义 XMLSignatureValidator 对象的 <codeph>validityStatus</codeph> 属性使用的常量。
+	
+	</apiDesc></apiClassifierDetail><related-links><link href="flash.security.xml#XMLSignatureValidator/validityStatus"><linktext>XMLSignatureValidator.validityStatus</linktext></link></related-links><apiValue id="flash.security:SignatureStatus:INVALID"><apiName>INVALID</apiName><shortdesc> 
+	无效状态。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>invalid</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	无效状态。
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.security:SignatureStatus:UNKNOWN"><apiName>UNKNOWN</apiName><shortdesc> 
+	未知状态。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>unknown</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	未知状态。
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.security:SignatureStatus:VALID"><apiName>VALID</apiName><shortdesc> 
+	有效状态。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>valid</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	有效状态。
+	
+	</apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.security:ReferencesValidationSetting"><apiName>ReferencesValidationSetting</apiName><shortdesc>
+	ReferencesValidationSetting 类定义 XMLSignatureValidator 对象的 referencesValidationSetting 属性所使用的常量。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	ReferencesValidationSetting 类定义 XMLSignatureValidator 对象的 <codeph>referencesValidationSetting</codeph> 属性所使用的常量。
+	
+	</apiDesc></apiClassifierDetail><related-links><link href="flash.security.xml#XMLSignatureValidator/ReferencesValidationSetting"><linktext>XMLSignatureValidator.ReferencesValidationSetting</linktext></link></related-links><apiValue id="flash.security:ReferencesValidationSetting:NEVER"><apiName>NEVER</apiName><shortdesc> 
+	从不检查引用。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>never</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	从不检查引用。
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.security:ReferencesValidationSetting:VALID_IDENTITY"><apiName>VALID_IDENTITY</apiName><shortdesc> 
+	仅在签名证书有效且受信任时检查引用。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>validIdentity</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	仅在签名证书有效且受信任时检查引用。
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.security:ReferencesValidationSetting:VALID_OR_UNKNOWN_IDENTITY"><apiName>VALID_OR_UNKNOWN_IDENTITY</apiName><shortdesc> 
+	即使签名证书不受信任（与已知的受信任根无联系），也检查引用。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>validOrUnknownIdentity</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	即使签名证书不受信任（与已知的受信任根无联系），也检查引用。
+	
+	</apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.security:RevocationCheckSettings"><apiName>RevocationCheckSettings</apiName><shortdesc>
+	RevocationCheckSettings 类定义 XMLSignatureValidator 对象的 revocationCheckSetting 属性使用的常量。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	RevocationCheckSettings 类定义 XMLSignatureValidator 对象的 <codeph>revocationCheckSetting</codeph> 属性使用的常量。
+	
+	</apiDesc></apiClassifierDetail><related-links><link href="flash.security.xml#XMLSignatureValidator/revocationCheckSetting"><linktext>XMLSignatureValidator.revocationCheckSetting</linktext></link></related-links><apiValue id="flash.security:RevocationCheckSettings:ALWAYS_REQUIRED"><apiName>ALWAYS_REQUIRED</apiName><shortdesc>
+		始终检查证书吊销。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>alwaysRequired</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		始终检查证书吊销。拒绝没有吊销信息的证书。
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="flash.security:RevocationCheckSettings:BEST_EFFORT"><apiName>BEST_EFFORT</apiName><shortdesc>
+		如果吊销信息可用且可以获取吊销状态，则检查证书吊销。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>bestEffort</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		如果吊销信息可用且可以获取吊销状态，则检查证书吊销。如果无法明确确定吊销状态，则不拒绝该证书。
+		</apiDesc></apiValueDetail></apiValue><apiValue id="flash.security:RevocationCheckSettings:NEVER"><apiName>NEVER</apiName><shortdesc>
+		不检查证书吊销。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>never</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		不检查证书吊销。
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="flash.security:RevocationCheckSettings:REQUIRED_IF_AVAILABLE"><apiName>REQUIRED_IF_AVAILABLE</apiName><shortdesc>
+		如果证书包括吊销信息，则检查证书吊销。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>requiredIfInfoAvailable</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		如果证书包括吊销信息，则检查证书吊销。如果信息可用，但无法明确确定吊销状态，则拒绝证书。
+		
+		</apiDesc></apiValueDetail></apiValue></apiClassifier></apiPackage>

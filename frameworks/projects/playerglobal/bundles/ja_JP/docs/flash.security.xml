@@ -1,0 +1,514 @@
+<?xml version="1.0"?>
+<apiPackage id="flash.security"><apiName>flash.security</apiName><apiDetail/><apiClassifier id="flash.security:XMLSignatureValidator"><apiName>XMLSignatureValidator</apiName><shortdesc>
+	 XMLSignatureValidator クラスは、XML 署名ファイルが整形式で変更されていないかどうかを検証します。また、オプションで、このファイルが信頼された電子証明書にリンクされているキーを使用して署名されているかどうかを検証します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.events:EventDispatcher</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 XMLSignatureValidator クラスは、XML 署名ファイルが整形式で変更されていないかどうかを検証します。また、オプションで、このファイルが信頼された電子証明書にリンクされているキーを使用して署名されているかどうかを検証します。
+	 
+	 <p>XMLSignatureValidator は、W3C Recommendation for XML-Signature Syntax and Processing のサブセットを実装しているため、適合する実装と見なされません。この勧告でサポートされているサブセットには次のようなものがあります。</p>
+	 <ul>
+	  <li>KeyInfo エレメントを除くすべての主要な署名シンタックス。</li>
+	  <li>KeyInfo エレメントは X509Data エレメントのみをサポートします。</li>
+	  <li>X509Data エレメントは X509Certificate エレメントのみをサポートします。</li>
+	  <li>SHA256 ダイジェストメソッドアルゴリズム。</li>
+	  <li>PKCS1 署名アルゴリズム。</li>
+	  <li>"Canonical XML without comments" Canonicalization Method and Transform アルゴリズム。</li>
+	  <li>追加署名シンタックスによるマニフェストエレメント。</li>
+	 </ul>
+	 
+	 <p>XML 署名を検証するために、IURIDereferencer 実装を提供する必要があります。この実装クラスは、署名ファイルの SignedInfo エレメントで指定されている URI を解決し、IDataInput インターフェイスを実装するオブジェクト (ByteArray など) で参照データを返します。</p>
+	 
+	 <p>署名証明書が信頼された証明書にチェーンされていることを検証するためには、XML 署名に X509Certificate エレメントでチェーンを構築するために必要な証明書が含まれているか、または <codeph>addCertificate()</codeph> メソッドを使用してチェーンの構築に必要な証明書を提供する必要があります。</p>
+	 
+	 <p><b>XMLSignature を検証するには:</b></p>
+	 <ol>
+	 <li>XMLSignatureValidator クラスのインスタンスを作成します。</li>
+	 <li>このインスタンスの <codeph>uriDereferencer</codeph> プロパティを IURIDereferencer 実装クラスのインスタンスに設定します。</li>
+	 <li>必要に応じて、<codeph>addCertificate()</codeph> メソッドを使用し、証明書信頼チェーンを作成するために DER エンコードされた証明書を提供します。</li>
+	 <li>XMLSignatureValidator <codeph>verify</codeph> メソッドを呼び出して、検証する署名を渡します。</li>
+	 <li>XMLSignatureValidator オブジェクトが complete イベントを送出した後、<codeph>validityStatus</codeph> プロパティをチェックします。</li>  
+	 </ol>
+	 
+	 <p><b>署名のステータスについて :</b></p>
+	 <p>XML 署名の有効性は valid、invalid、または unknown です。全体のステータスは、署名ファイルの個々のコンポーネントの検証ステータスによって決まります。</p>
+	 <ul>
+	 <li><codeph>digestStatus</codeph> -- SignedInfo エレメントに対して計算された暗号署名の有効性。<codeph>valid</codeph>、<codeph>invalid</codeph>、<codeph>unknown</codeph> のいずれかです。</li>
+	 <li><codeph>identityStatus</codeph> -- 署名証明書の有効性。証明書が期限切れになっている、失効している、または変更されている場合、ステータスは <codeph>invalid</codeph> になります。信頼されたルート証明書に証明書をチェーンできない場合、ステータスは <codeph>unknown</codeph> になります。ダイジェストが無効の場合、証明書はチェックされません。チェックされない場合、ステータスは <codeph>unknown</codeph> として報告されます。</li>
+	 <li><codeph>referencesStatus</codeph> -- 署名ファイルの SignedInfo エレメントにおける参照によって指示されるデータの有効性。<codeph>valid</codeph>、<codeph>invalid</codeph>、<codeph>unknown</codeph> のいずれかです。ダイジェストまたは証明書が無効の場合、参照はチェックされません。参照のチェックは、<codeph>referencesValidationSetting</codeph> プロパティの設定に基づいてスキップされる場合もあります。チェックされない場合、ステータスは <codeph>unknown</codeph> として報告されます。</li>
+	 </ul>
+	 <p><codeph>validityStatus</codeph> プロパティによって報告される署名の有効性には、次のようなものがあります。</p>
+	 <ul>
+	 <li><codeph>valid</codeph> -- <codeph>referencesStatus</codeph>、<codeph>digestStatus</codeph> および <codeph>identityStatus</codeph> がすべて <codeph>valid</codeph> の場合。</li>
+	 <li><codeph>invalid</codeph> -- 個々のステータスのいずれかが <codeph>invalid</codeph> の場合。</li>
+	 <li><codeph>unknown</codeph> -- <codeph>referencesStatus</codeph>、<codeph>digestStatus</codeph> または <codeph>identityStatus</codeph> が <codeph>unknown</codeph> の場合。</li>
+	 </ul>
+	 
+	 <p><b>標準化の制限：</b></p>
+	 <p>XML ドキュメントを標準化するとき、AIR の XML エンジンで予想どおりの XML ストリングが常に生成されるとは限りません。この理由により、エンベロープに入れられたまたはデタッチされたシグネチャドキュメント内ではエレメント間に空白文字を挿入しないこと、およびシグネチャドキュメント内部で名前空間を再定義しないことをお勧めします。どちらの場合も、AIR で元のドキュメントと同じ文字並びのドキュメントが再生成されない可能性があり、そのため検証が失敗します。</p>
+	   
+	 </apiDesc><example conref="examples\XMLSignatureValidatorExample.as"> 次の例では、XML 署名を含むファイルをロードして検証します。この例を使用するには、検証される署名に適合する IURIDereferencer を実装する必要があります (この例で使用されている SignedMessageDereferencer クラスを置き換えます)。<codeph>SignatureValidatorExample.validateSignature( signatureFile )</codeph> を呼び出し、検証する XML 署名ドキュメントを参照するファイルを渡すことで、この例を実行します。
+ 
+<codeblock>
+import flash.events.Event;
+import flash.filesystem.File;
+import flash.filesystem.FileStream;
+import flash.security.ReferencesValidationSetting;
+import flash.security.XMLSignatureValidator; 
+
+import com.example.SignedMessageDereferencer; //A custom class implementing IURIDereferencer
+
+public class SignatureValidatorExample{ 
+    private var xmlSig:XML;
+    private const signatureNS:Namespace = new Namespace( "http://www.w3.org/2000/09/xmldsig#" );
+    
+    public static function validateSignature( signatureFile:File ):void{
+        try{
+            //Set up the XMLSignatureValidator
+            var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+            verifier.addEventListener( Event.COMPLETE, verificationComplete );
+            verifier.uriDereferencer = new SignedMessageDereferencer();
+            verifier.referencesValidationSetting = ReferencesValidationSetting.VALID_OR_UNKNOWN_IDENTITY;
+    
+            //Load the signed document
+            var sigFileStream:FileStream = new FileStream();
+            sigFileStream.open( signatureFile, FileMode.READ );
+            var xmlDoc:XML = XML( sigFileStream.readUTFBytes(sigFileStream.bytesAvailable) );
+            
+            //Get the last Signature element in the document
+            if( xmlDoc.name().localName != "Signature" ){
+                var signatureList:XMLList = xmlDoc..signatureNS::Signature;
+                xmlSig = XML( signatureList[ signatureList.length()-1 ] );
+            } else{
+                xmlSig = xmlDoc;
+            }
+    
+            //Validate the signature
+            verifier.verify( xmlSig );
+            
+        }catch (e:Error){
+            statusDisplay.text = "Verification error.\n" + e;
+        }
+    }
+    
+    private static function verificationComplete(event:Event):void{
+        trace( "Signature Validity: " + verifier.validityStatus );
+        trace( "Digest validity: " + verifier.digestStatus );
+        trace( "Certificate validity: " + verifier.identityStatus );
+        trace( "Data validity: " + verifier.referencesStatus );
+    }
+}
+</codeblock></example></apiClassifierDetail><related-links><link href="flash.security.xml#IURIDereferencer"><linktext>IURIDereferencer</linktext></link><link href="http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/"><linktext>XML-Signature Syntax and Processing</linktext></link><link href="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"><linktext>Canonical XML</linktext></link><link href="http://www.ietf.org/rfc/rfc2437.txt"><linktext>PKCS #1</linktext></link></related-links><adobeApiEvent id="flash.security:XMLSignatureValidator_flash.events.ErrorEvent.ERROR_error"><apiName>error</apiName><shortdesc>
+	 エラーが原因で検証が完了しなかった場合に送出されます。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.ErrorEvent.ERROR</apiEventType><adobeApiEventClassifier>flash.events.ErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 エラーが原因で検証が完了しなかった場合に送出されます。 
+	 
+	 </apiDesc><example conref="examples\XMLSignatureValidator.error.1.as"> 次の例では、XMLSignatureValidator オブジェクトによって送出されるエラーイベントを監視し、エラーメッセージをトレースします。
+<codeblock>
+private function verificationError(event:ErrorEvent):void{
+    trace("Verification error: " + event.text);                
+}
+</codeblock></example></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.security:XMLSignatureValidator_flash.events.Event.COMPLETE_complete"><apiName>complete</apiName><shortdesc>
+	 検証が完了したときに送出されます。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.COMPLETE</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 検証が完了したときに送出されます。
+	 
+	 <p><codeph>complete</codeph> イベントは署名が有効であることを意味するものではありません。XMLSignatureValidator オブジェクトの <codeph>validityStatus</codeph> プロパティをチェックして、署名検証の結果を判別します。</p>
+	 
+	 </apiDesc><example conref="examples\XMLSignatureValidator.complete.1.as"> 次の例では、XMLSignatureValidator オブジェクトによって送出される完了イベントを監視し、検証結果をトレースします。
+<codeblock>
+private function verificationComplete(event:Event):void{
+    var validator:XMLSignatureValidator = event.target as XMLSignatureValidator;
+    trace("Digest status: " + validator.digestStatus);
+    trace("Identity status: " + validator.identityStatus);
+    trace("Reference status: " + validator.referencesStatus);
+    trace("Signature status: " + validator.validityStatus);    
+}
+</codeblock></example></adobeApiEventDetail><related-links><link href="flash.security.xml#XMLSignatureValidator/validityStatus"><linktext>validityStatus</linktext></link></related-links></adobeApiEvent><apiConstructor id="flash.security:XMLSignatureValidator:XMLSignatureValidator"><apiName>XMLSignatureValidator</apiName><shortdesc>
+		 XMLSignatureValidator オブジェクトを作成します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/></apiConstructorDef><apiDesc>
+		 XMLSignatureValidator オブジェクトを作成します。
+		 
+		 <p><codeph>uriDereferencer</codeph> プロパティの設定は、新しいオブジェクトの <codeph>verify()</codeph> メソッドを呼び出す前に行う必要があります。</p>
+		 
+		 </apiDesc><example conref="examples\XMLSignatureValidator.constructor.1.as"> 次の例では、新しい XMLSignatureValidator オブジェクトを作成して設定します。
+<codeblock> 
+import com.example.EnvelopedDereferencer; //Your custom IURIDereferencer implementation
+
+//Create the object
+var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+
+//Provide the IURIDerferencer
+verifier.uriDereferencer = new EnvelopedDereferencer(xmlDoc);
+
+//Set validation options
+verifier.referencesValidationSetting = ReferencesValidationSetting.VALID_OR_UNKNOWN_IDENTITY;
+verifier.revocationCheckSetting = RevocationCheckSettings.NEVER;
+verifier.useSystemTrustStore = true;
+
+//Add listeners to handle results
+verifier.addEventListener(Event.COMPLETE, verificationComplete);
+verifier.addEventListener(ErrorEvent.ERROR, verificationError);
+</codeblock></example></apiConstructorDetail><related-links><link href="flash.security.xml#XMLSignatureValidator/uriDereferencer"><linktext>uriDereferencer</linktext></link></related-links></apiConstructor><apiOperation id="flash.security:XMLSignatureValidator:addCertificate"><apiName>addCertificate</apiName><shortdesc>
+	   チェーン構築用の x509 証明書を追加します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>署名の検証中に呼び出された場合。
+	   
+	   </apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException><apiReturn><apiType value="any"/></apiReturn><apiParam><apiItemName>cert</apiItemName><apiOperationClassifier>flash.utils:ByteArray</apiOperationClassifier><apiDesc>DER エンコードされた x509 電子証明書を含む ByteArray オブジェクトです。
+	   </apiDesc></apiParam><apiParam><apiItemName>trusted</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiDesc><codeph>true</codeph> に設定した場合、この証明書が信頼アンカーに指定されます。
+	   </apiDesc></apiParam></apiOperationDef><apiDesc>
+	   チェーン構築用の x509 証明書を追加します。 
+	   
+	   <p>追加される証明書は、DER エンコードされた x509 証明書でなければなりません。</p>
+	   
+	   <p><codeph>trusted</codeph> パラメーターが <codeph>true</codeph> の場合、証明書は信頼アンカーと見なされます。</p>
+	   
+	   <p><b>メモ :</b> XML 署名に、署名者の証明書チェーンを構築するための証明書が含まれていることがあります。XMLSignatureValidator クラスは、チェーンを構築するためにこれらの証明書を使用しますが、信頼されたルートとしては構築されません (デフォルト)。</p>
+	   
+	   </apiDesc><example conref="examples\XMLSignatureValidator.addCertificate.1.as"> 次の例では、ファイルシステムから証明書をロードし、信頼アンカーとして追加します。
+<codeblock>
+ import flash.utils.ByteArray;
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+ var certificate:ByteArray = new ByteArray();
+ 
+ var certFile:File = new File("certificate.cer");
+ var certFileStream:FileStream = new FileStream();
+ certFileStream.open(certFile, FileMode.READ);
+ certFileStream.readBytes(certificate, 0, certFileStream.bytesAvailable);
+
+ verifier.addCertificate(certificate, true);
+</codeblock></example></apiOperationDetail></apiOperation><apiOperation id="flash.security:XMLSignatureValidator:verify"><apiName>verify</apiName><shortdesc>
+		指定された署名を検証します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>署名の検証中に呼び出された場合。 
+		 </apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException><apiException><apiDesc>署名ファイル内に整形式でない XML やサポートされていないエレメントがあるなど、その他のエラーが発生した場合。 
+		</apiDesc><apiItemName>Error</apiItemName><apiOperationClassifier>Error</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>signature</apiItemName><apiOperationClassifier>XML</apiOperationClassifier><apiDesc>検証する XML 署名です。
+		</apiDesc></apiParam></apiOperationDef><apiDesc>
+		指定された署名を検証します。 
+		
+		<p>検証は非同期です。XMLSignatureValidator オブジェクトは、検証が正常に完了すると <codeph>complete</codeph> イベントを送出し、エラーが原因で検証が完了できないと <codeph>error</codeph> イベントを送出します。</p> 
+		
+		<p>検証処理はキャンセルできません。検証処理の実行中は、後続の <codeph>verify()</codeph> メソッドの呼び出しは失敗します。現在の検証が完了すると、もう一度 <codeph>verify()</codeph> メソッドを呼び出すことができます。</p> 
+		
+		<p><b>注意 :</b> XMLSignatureValidator は、W3C recommendation for XML Signature Syntax and Processing のサブセットのみを実装するため、有効な XML 署名のすべてを検証できるわけではありません。</p>
+		 
+		 
+		</apiDesc><example conref="examples\XMLSignatureValidator.verify.1.as"> 次の例では、XML 署名を含むファイルを読み取り、<codeph>verify()</codeph> メソッドを呼び出してそれを検証します (この例では、IURIDereferencer の実装が署名に適合していると想定します)。
+<codeblock>
+import flash.filesystem.File;
+import flash.filesystem.FileStream;
+import com.example.SignedMessageDereferencer; //Your IURIDereferencer implementation
+ 
+const xmlSignatureNS:Namespace = new Namespace( "http://www.w3.org/2000/09/xmldsig#" );
+
+var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+verifier.uriDereferencer = new SignedMessageDereferencer();
+
+var signatureFile:File = new File( "path/to/XMLSignatureDocument.xml" );
+var sigFileStream:FileStream = new FileStream();
+sigFileStream.open( signatureFile, FileMode.READ );
+
+var xmlDoc:XML = XML( sigFileStream.readUTFBytes(sigFileStream.bytesAvailable) );
+var xmlSig:XML = XML( xmlDoc..xmlSignatureNS::Signature );
+
+verifier.verify( xmlSig );
+</codeblock></example></apiOperationDetail><adobeApiEvent id="flash.security:XMLSignatureValidator:verify_complete"><apiName>complete</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>検証が正常に完了したときに送出されます。
+		</apiDesc></adobeApiEventDetail><shortdesc>検証が正常に完了したときに送出されます。</shortdesc></adobeApiEvent><adobeApiEvent id="flash.security:XMLSignatureValidator:verify_error"><apiName>error</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:ErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>参照の検証がエラーを検出した場合に送出されます。 
+		</apiDesc></adobeApiEventDetail><shortdesc>参照の検証がエラーを検出した場合に送出されます。</shortdesc></adobeApiEvent></apiOperation><apiValue id="flash.security:XMLSignatureValidator:digestStatus:get"><apiName>digestStatus</apiName><shortdesc>
+	    SignedInfo エレメントに対して計算された暗号署名の有効性ステータス。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier><apiException><apiDesc>署名の検証中にアクセスされた場合。
+		 
+		 </apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	    <codeph>SignedInfo</codeph> エレメントに対して計算された暗号署名の有効性ステータス。
+	    
+	    <p>ステータスを以下に示します。</p>
+	    <ul>
+	    <li><codeph>valid</codeph> — 署名が暗号として有効である場合。</li>
+	    <li><codeph>invalid</codeph> — 署名後ダイジェストが変更された場合。</li>
+	    <li><codeph>unknown</codeph> -- <codeph>verify()</codeph> メソッドが呼び出されていない場合。</li>
+		</ul>
+		
+		 <p><b>メモ：</b><codeph>digestStatus</codeph> が invalid の場合、<codeph>identityStatus</codeph> と <codeph>referencesStatus</codeph> はチェックされず、<codeph>unknown</codeph> として報告されます。</p>
+		 
+		 </apiDesc><example conref="examples\XMLSignature.digestStatus.1.as"/></apiValueDetail></apiValue><apiValue id="flash.security:XMLSignatureValidator:identityStatus:get"><apiName>identityStatus</apiName><shortdesc>
+	    署名証明書の有効性ステータス。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier><apiException><apiDesc>署名の検証中にアクセスされた場合。
+ 		</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	    署名証明書の有効性ステータス。 
+	    
+	    <p>ステータスは次のいずれかです。</p>
+	    <ul>
+	    <li><codeph>valid</codeph> -- 証明書の有効期限は切れておらず、失効のチェックに失敗せず、信頼されたルート証明書へのチェーンがあります。</li>
+	    <li><codeph>unknown</codeph> -- 証明書の有効期限は切れておらず、失効のチェックに失敗しなかったが、信頼されたルート証明書へのチェーンがありません。<codeph>unknown</codeph> のステータスは、<codeph>verify()</codeph> メソッドが呼び出されていないか、SignedInfo エレメント (<codeph>digestStatus</codeph>) の暗号署名が無効であるために、ステータスが検証されていない場合にも報告されます。</li>
+	    <li><codeph>invalid</codeph> -- 証明書の有効期限が切れているか、失効のチェックに失敗しました。</li>
+	    </ul>
+	    <p><codeph>addCertificate()</codeph> メソッド、<codeph>revocationCheckSetting</codeph> プロパティおよび <codeph>useSystemTrustStore</codeph> プロパティの設定を使用して追加された証明書は、証明書が有効と見なされるかどうかを変更できます。</p>
+	    
+		<p><b>メモ：</b><codeph>identityStatus</codeph> が invalid の場合、<codeph>referencesStatus</codeph> はチェックされず、<codeph>unknown</codeph> として報告されます。さらに、<codeph>identityStatus</codeph> は、<codeph>referencesValidationSetting</codeph> が <codeph>validOrUnknownIdentity</codeph> でない限り、unknown になります。</p>
+		
+ 		</apiDesc><example conref="examples\XMLSignatureValidator.identityStatus.1.as"> 次の例では、署名の検証後に、署名証明書の検証結果を取得します。
+<codeblock>
+ import flash.security.XMLSignatureValidator;
+ 
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+ //validate a signature...
+  
+ var identityResult:String = verifier.identityStatus;
+</codeblock></example></apiValueDetail><related-links><link href="flash.security.xml#XMLSignatureValidator/addCertificate()"><linktext>addCertificate()</linktext></link><link href="flash.security.xml#XMLSignatureValidator/revocationCheckSetting"><linktext>revocationCheckSetting</linktext></link><link href="flash.security.xml#XMLSignatureValidator/useSystemTrustStore"><linktext>useSystemTrustStore</linktext></link><link href="flash.security.xml#XMLSignatureValidator/referencesValidationSetting"><linktext>referencesValidationSetting</linktext></link></related-links></apiValue><apiValue id="flash.security:XMLSignatureValidator:referencesStatus:get"><apiName>referencesStatus</apiName><shortdesc>
+	    SignedInfo エレメントの参照内のデータの有効性のステータス。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier><apiException><apiDesc>署名の検証中にアクセスされた場合。
+ 		</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	    <codeph>SignedInfo</codeph> エレメントの参照内のデータの有効性のステータス。
+	    
+	    <p>ステータスは次のいずれかです。</p>
+	    <ul>
+	    <li><codeph>valid</codeph> -- すべての参照が有効な場合。</li>
+	    <li><codeph>invalid</codeph> -- いずれかの参照が無効な場合。</li>
+	    <li><codeph>unknown</codeph> — 無効な場合。参照は、次の状況の場合に未検証のままになる可能性があります。
+	    <ul> 
+	    	<li><codeph>verify()</codeph> メソッドが呼び出されなかった場合。</li>
+	    	<li>SignedInfo エレメントの暗号署名（<codeph>digestStatus</codeph>）が無効な場合。</li>
+	    	<li>署名証明書（<codeph>identityStatus</codeph>）が無効な場合。</li>
+	    	<li><codeph>referencesValidationSetting</codeph> が <codeph>validIdentity</codeph>（デフォルトの設定）であり、署名証明書の <codeph>identityStatus</codeph> が unknown である場合。</li>
+	    	<li><codeph>referencesValidationSetting</codeph> が <codeph>never</codeph> の場合。</li>
+	    </ul>
+	    </li>
+		</ul>
+		
+		 <p><b>重要 :</b> 外部リソースは、署名ドキュメントの SignedInfo エレメント内で直接参照されていない限り、検証されません。二次参照によって参照される外部リソースは検証されません。例えば、XML 署名がマニフェストエレメントに署名している場合は、マニフェストエレメント自体の整合性だけが検証されます。マニフェストにリストされているファイルはチェックされません。</p>
+		 
+		</apiDesc><example conref="examples\XMLSignatureValidator.referencesStatus.1.as"> 次の例では、署名の検証後に、署名内の参照の検証結果を取得します。
+<codeblock>
+ import flash.security.XMLSignatureValidator;
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+ //validate a signature...
+  
+ var dataResult:String = verifier.referencesStatus;
+</codeblock></example></apiValueDetail><related-links><link href="flash.security.xml#XMLSignatureValidator/referencesValidationSetting"><linktext>referencesValidationSetting</linktext></link></related-links></apiValue><apiValue id="flash.security:XMLSignatureValidator:referencesValidationSetting:set"><apiName>referencesValidationSetting</apiName><shortdesc>
+	    参照がチェックされる条件を指定します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>String</apiValueClassifier><apiException><apiDesc>署名の検証中に設定された場合。
+		 </apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException><apiException><apiDesc>ReferencesValidationSetting クラスに定義されていない値が <codeph>setting</codeph> パラメーターに含まれている場合。
+		 
+		</apiDesc><apiItemName>ArgumentError</apiItemName><apiOperationClassifier>ArgumentError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	    参照がチェックされる条件を指定します。
+		
+		 <p>このプロパティを設定するには、ReferencesValidationSetting クラスに定義されている定数を使用します。この設定には次のようなものがあります。</p>
+		 <ul>	
+		 <li><codeph>ReferencesValidationSetting.VALID_IDENTITY</codeph> — 署名証明書が有効であり、信頼されたルートにチェーンされている場合のみ、参照をチェックします。これはデフォルトの設定です。</li>
+		 <li><codeph>ReferencesValidationSetting.VALID_OR_UNKNOWN_IDENTITY</codeph> — 署名証明書が有効な場合に、参照をチェックします。信頼できるルートにチェーンされていない場合でも実行します。</li>
+		 <li><codeph>ReferencesValidationSetting.NEVER</codeph> — 参照をチェックしません。</li> 
+		 </ul>
+		 
+		 <p>
+		 デフォルトの設定である <codeph>validIdentity</codeph> を使用するのは、商用証明書を使用して署名された署名を使用する場合、または <codeph>addCertificate()</codeph> メソッドを使用して独自の証明書を信頼アンカーとして供給する場合です。この設定により、署名されたドキュメントが拒否される場合の参照の有効性をチェックするオーバーヘッドが回避されます。
+		 </p>
+		 <p>
+		 自己署名証明書を使用して署名された署名では、<codeph>validOrUnknownIdentity</codeph> 設定を使用します。この設定では、署名されたデータが変更されていないことを検証できますが、署名者のアイデンティティについては何の保証も与えられません。 
+		 </p>
+		 <p>
+		 アプリケーションのコンテキストの中でこのような検証が重要でない場合は、<codeph>never</codeph> 設定を使用して、参照を検証するオーバーヘッドを回避します。
+		 </p>
+		 </apiDesc><example conref="examples\XMLSignatureValidator.referencesValidationSetting.1.as"> 次の例では、署名証明書が信頼アンカーにチェーンしている場合のみ参照をチェックするように XMLSignatureValidator オブジェクトを設定します。
+<codeblock>
+ import flash.security.ReferencesValidationSetting;
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator(); 
+ verifier.referencesValidationSetting = ReferencesValidationSetting.VALID_OR_UNKNOWN_IDENTITY;
+</codeblock></example></apiValueDetail><related-links><link href="flash.security.xml#ReferencesValidationSetting"><linktext>ReferencesValidationSetting</linktext></link></related-links></apiValue><apiValue id="flash.security:XMLSignatureValidator:revocationCheckSetting:set"><apiName>revocationCheckSetting</apiName><shortdesc>
+	    証明書の失効のチェック方法を指定します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>String</apiValueClassifier><apiException><apiDesc>署名の検証中に設定された場合。
+		</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	    証明書の失効のチェック方法を指定します。
+		
+		 <p>このプロパティを設定するために、RevocationSettings クラスで定義されている定数を使用します。この設定には次のようなものがあります。</p>
+		 <ul>	
+		 <li><codeph>RevocationCheckSettings.NEVER</codeph> -- 証明書の失効をチェックしません。</li>
+		 <li><codeph>RevocationCheckSettings.BEST_EFFORT</codeph> -- 失効情報があり、失効ステータスを取得できる場合、証明書の失効をチェックします。失効ステータスが明確に判別できない場合、証明書は拒否されません。</li>
+		 <li><codeph>RevocationCheckSettings.REQUIRED_IF_AVAILABLE</codeph> -- 	証明書に失効情報が含まれている場合、証明書を検証するために失効ステータスを明確に判別できる必要があります。</li> 
+		 <li><codeph>RevocationCheckSettings.ALWAYS_REQUIRED</codeph> -- 常に証明書の失効をチェックします。失効情報がない証明書は拒否されます。</li>
+		 </ul>
+		 
+		 </apiDesc><example conref="examples\XMLSignature.revocationCheckSetting.1.as"/></apiValueDetail><related-links><link href="flash.security.xml#RevocationCheckSettings"><linktext>RevocationCheckSettings</linktext></link></related-links></apiValue><apiValue id="flash.security:XMLSignatureValidator:signerCN:get"><apiName>signerCN</apiName><shortdesc>
+	   署名証明書の共通名フィールド。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	   署名証明書の共通名フィールド。  
+	   
+	   </apiDesc><example conref="examples\XMLSignatureValidator.signerCN.1.as"> 次の例では、署名の検証後に、署名証明書の共通名を読み取ります。
+<codeblock>
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+ //validate a signature...
+  
+ var commonName:String = verifier.signerCN;
+</codeblock></example></apiValueDetail></apiValue><apiValue id="flash.security:XMLSignatureValidator:signerDN:get"><apiName>signerDN</apiName><shortdesc>
+	   署名証明書の識別名フィールド。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	   署名証明書の識別名フィールド。  
+	   
+	   </apiDesc><example conref="examples\XMLSignatureValidator.signerDN.1.as"> 次の例では、署名の検証後に、署名証明書の識別名を読み取ります。
+<codeblock>
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+ //validate a signature...
+  
+ var distinguishedName:String = verifier.signerDN;
+</codeblock></example></apiValueDetail></apiValue><apiValue id="flash.security:XMLSignatureValidator:signerExtendedKeyUsages:get"><apiName>signerExtendedKeyUsages</apiName><shortdesc>
+	   署名証明書にリストされている拡張キー使用法 OID を含む配列です。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Array</apiValueClassifier><apiException><apiDesc>署名の検証中にアクセスされた場合。
+	   
+	   </apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	   署名証明書にリストされている拡張キー使用法 OID を含む配列です。
+	   
+	   <p>各拡張キー使用法は、数値形式の OID で報告されます。</p>
+	   
+	   </apiDesc><example conref="examples\XMLSignatureValidator.signerExtendedKeyUsages.1.as"> 次の例では、署名の検証後に、署名証明書の拡張キー OID を読み取ります。
+<codeblock>
+ import flash.security.XMLSignatureValidator;
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+ //validate a signature...
+  
+ var extendedKeyOIDs:Array = verifier.signerExtendedKeyUsages;
+</codeblock></example></apiValueDetail></apiValue><apiValue id="flash.security:XMLSignatureValidator:signerTrustSettings:get"><apiName>signerTrustSettings</apiName><shortdesc>
+		署名証明書の信頼設定を含む配列。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Array</apiValueClassifier><apiException><apiDesc>署名の検証中にアクセスされた場合。
+		
+		</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+		署名証明書の信頼設定を含む配列。
+		
+		<p>信頼設定は、証明書に埋め込まれたシステム OID およびキー使用法 OID から派生します。有効な信頼設定を表すストリングの定数は、SignerTrustSettings クラスで定義されています。</p>
+		 
+		 <p><codeph>unknown</codeph> または <codeph>invalid</codeph> の証明書の <codeph>signerTrustSettings</codeph> 配列は空です。</p>
+		
+		<p>配列を変更しても、証明書の信頼設定は変更されません。 </p>
+		
+  	    </apiDesc><example conref="examples\XMLSignatureValidator.signerTrustSettings.1.as"> 次の例では、署名の検証後に、署名証明書の信頼設定を読み取ります。
+<codeblock>
+ import flash.security.XMLSignatureValidator;
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+ //validate a signature...
+  
+ var certificateTrustedFor:Array = verifier.signerTrustSettings;
+</codeblock></example></apiValueDetail><related-links><link href="flash.security.xml#SignerTrustSettings"><linktext>SignerTrustSettings</linktext></link></related-links></apiValue><apiValue id="flash.security:XMLSignatureValidator:uriDereferencer:set"><apiName>uriDereferencer</apiName><shortdesc>
+	     IURIDereferencer 実装。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>flash.security:IURIDereferencer</apiValueClassifier><apiException><apiDesc>署名の検証中に設定された場合。
+		 </apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	     IURIDereferencer 実装。
+		 
+		 <p>IURIDereferencer 実装は、署名を検証しようとする前に提供する必要があります。</p>
+		 
+		 </apiDesc><example conref="examples\XMLSignatureValidator.uriDereferencer.1.as"> 次の例では、SignedMessageDereferencer のインスタンスを作成します。IURIDereferencer インターフェイスが実装され、署名の検証で使用される逆参照として設定されます。
+<codeblock>
+ import com.example.SignedMessageDereferencer; //A custom class implementing IURIDereferencer
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator(); 
+ verifier.uriDereferencer = new SignedMessageDereferencer();
+</codeblock></example></apiValueDetail><related-links><link href="flash.security.xml#IURIDereferencer"><linktext>IURIDereferencer</linktext></link></related-links></apiValue><apiValue id="flash.security:XMLSignatureValidator:useSystemTrustStore:set"><apiName>useSystemTrustStore</apiName><shortdesc>
+	    システムの信頼ストアの証明書をチェーンの構築に使用するように指定します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier><apiException><apiDesc>署名の検証中に設定された場合。
+		 
+		 </apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	    システムの信頼ストアの証明書をチェーンの構築に使用するように指定します。
+	    
+	    <p><codeph>true</codeph> の場合、システムの信頼ストアの信頼アンカーは信頼されたルートとして使用されます。デフォルトでは、システムの信頼ストアは使用されません。</p>
+		
+		</apiDesc><example conref="examples\XMLSignatureValidator.useSystemTrustStore.1.as"> 次の例では、XMLSignatureValidator インスタンスを作成し、XML 署名の検証時に信頼された証明書のシステムリポジトリを使用するように設定します。
+<codeblock>
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator(); 
+ verifier.useSystemTrustStore = true;
+</codeblock></example></apiValueDetail></apiValue><apiValue id="flash.security:XMLSignatureValidator:validityStatus:get"><apiName>validityStatus</apiName><shortdesc>
+	    検証された XML 署名の有効性ステータス。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier><apiException><apiDesc>署名の検証中にアクセスされた場合。
+		
+		</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	    検証された XML 署名の有効性ステータス。
+	    
+		<p>XML 署名は、SignedInfo エレメントの暗号署名、署名証明書、および SignedInfo エレメントの参照によって指定されるデータを検証することによって検証されます。これらの各エレメントの有効性は、<codeph>digestStatus</codeph>、<codeph>identityStatus()</codeph> および <codeph>referencesStatus</codeph> プロパティによってそれぞれ個別に報告されます。</p>
+		
+	    <p>XML 署名の有効性は valid、invalid、または unknown です。全体のステータスは、署名ファイルの個々のコンポーネントの検証ステータスによって決まります。</p>
+	    <ul>
+	    <li><codeph>digestStatus</codeph> -- SignedInfo エレメントに対して計算された暗号署名の有効性。</li>
+	    <li><codeph>identityStatus</codeph> -- 署名証明書の有効性。</li>
+	    <li><codeph>referencesStatus</codeph> -- 署名の SignedInfo エレメントにおける参照のダイジェストの有効性。</li>
+	    </ul>
+	    <p><codeph>validityStatus</codeph> プロパティによって報告される署名の有効性には、次のようなものがあります。</p>
+	    <ul>
+	    <li><codeph>valid</codeph> -- <codeph>referencesStatus</codeph>、<codeph>digestStatus</codeph> および <codeph>identityStatus</codeph> がすべて <codeph>valid</codeph> の場合。</li>
+	    <li><codeph>invalid</codeph> -- 個々のステータスのいずれかが <codeph>invalid</codeph> の場合。</li>
+	    <li><codeph>unknown</codeph> -- 個々のステータスのいずれかが <codeph>unknown</codeph> の場合。</li>
+	    </ul>
+		
+		</apiDesc><example conref="examples\XMLSignatureValidator.validityStatus.1.as"> 次の例では、XML 署名の検証結果を取得します。 
+<codeblock>
+ import flash.security.XMLSignatureValidator;
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+ //validate the signature...
+  
+ var validationResult:String = verifier.validityStatus;
+</codeblock></example></apiValueDetail><related-links><link href="flash.security.xml#XMLSignatureValidator/digestStatus"><linktext>digestStatus</linktext></link><link href="flash.security.xml#XMLSignatureValidator/identityStatus"><linktext>identityStatus</linktext></link><link href="flash.security.xml#XMLSignatureValidator/referencesStatus"><linktext>referencesStatus</linktext></link><link href="flash.security.xml#SignatureStatus"><linktext>SignatureStatus</linktext></link></related-links></apiValue></apiClassifier><apiClassifier id="flash.security:IURIDereferencer"><apiName>IURIDereferencer</apiName><shortdesc>
+	IURIDereferencer は、XML 署名の URI を解決するオブジェクトのインターフェイスを定義します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiInterface/><apiAccess value="public"/><apiStatic/><apiBaseClassifier/></apiClassifierDef><apiDesc>
+	IURIDereferencer は、XML 署名の URI を解決するオブジェクトのインターフェイスを定義します。
+	 
+	<p>IURIDereferencer 実装は、XML 署名ファイルの SignedInfo エレメントで指定されている URI を解決し、IDataInput インターフェイスを実装するオブジェクト（ByteArray など）で参照データを返します。<ph platform="javascript">IURIDereferencer インターフェイスを使用するには、インターフェイスを実装する ActionScript クラスを作成する必要があります。JavaScript では、<codeph>script</codeph> タグを使用して、その ActionScript クラスが含まれている SWF ファイルをロードできます。</ph></p>
+	
+	<p>このインターフェイスには、<codeph>dereference()</codeph> という 1 つのメソッドがあります。一般的な実装では、dereferencer に解決される URI を含む XML 署名オブジェクトを渡すメソッドも必要な場合があります。</p> 
+	 
+	 <p>IURIDereferencer インターフェイスは、XMLSignatureValidator クラスと共に使用されます。</p>
+	
+	</apiDesc><example conref="examples\IURIDereferencerExample.as"/></apiClassifierDetail><related-links><link href="flash.security.xml#XMLSignatureValidator"><linktext>XMLSignatureValidator</linktext></link><link href="flash.security.xml#XMLSignatureValidator/uriDereferencer"><linktext>XMLSignatureValidator.uriDereferencer</linktext></link></related-links><apiOperation id="flash.security:IURIDereferencer:flash.security:IURIDereferencer:dereference"><apiName>dereference</apiName><shortdesc>
+		指定された URI を解決し、逆参照します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>URI によって参照されるデータ。
+		</apiDesc><apiOperationClassifier>flash.utils:IDataInput</apiOperationClassifier></apiReturn><apiParam><apiItemName>uri</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>逆参照する URI。
+		</apiDesc></apiParam></apiOperationDef><apiDesc>
+		指定された URI を解決し、逆参照します。
+		
+		</apiDesc></apiOperationDetail></apiOperation></apiClassifier><apiClassifier id="flash.security:SignerTrustSettings"><apiName>SignerTrustSettings</apiName><shortdesc>
+	SignerTrustSettings クラスは、XMLSignatureValidator オブジェクトの SignerTrustSettings プロパティで使用される定数を定義します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	SignerTrustSettings クラスは、XMLSignatureValidator オブジェクトの <codeph>SignerTrustSettings</codeph> プロパティで使用される定数を定義します。
+	
+	</apiDesc></apiClassifierDetail><related-links><link href="flash.security.xml#XMLSignatureValidator/signerTrustSettings"><linktext>XMLSignatureValidator.signerTrustSettings</linktext></link></related-links><apiValue id="flash.security:SignerTrustSettings:CODE_SIGNING"><apiName>CODE_SIGNING</apiName><shortdesc> 
+	   証明書がコード署名について信頼されています。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>codeSigning</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	   証明書がコード署名について信頼されています。これは、信頼されたルートへの証明書チェーンがあること、そのルートがコード署名について信頼されていること、および署名証明書の拡張キー使用法拡張に CodeSigning OID が含まれていることを意味します。
+	   
+	   </apiDesc></apiValueDetail></apiValue><apiValue id="flash.security:SignerTrustSettings:PLAYLIST_SIGNING"><apiName>PLAYLIST_SIGNING</apiName><shortdesc> 
+	   証明書が再生リストの署名について信頼されています。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>playlistSigning</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	   証明書が再生リストの署名について信頼されています。これは、信頼されたルートへの証明書チェーンがあること、および拡張キー使用法拡張に再生リスト署名 OID が含まれていることを意味します。
+	   
+	   </apiDesc></apiValueDetail></apiValue><apiValue id="flash.security:SignerTrustSettings:SIGNING"><apiName>SIGNING</apiName><shortdesc> 
+	  証明書が署名について全般的に信頼されています。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>signing</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	  証明書が署名について全般的に信頼されています。 
+	  
+	  </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.security:SignatureStatus"><apiName>SignatureStatus</apiName><shortdesc>
+	SignatureStatus クラスは、XMLSignatureValidator オブジェクトの validityStatus プロパティで使用される定数を定義します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	SignatureStatus クラスは、XMLSignatureValidator オブジェクトの <codeph>validityStatus</codeph> プロパティで使用される定数を定義します。
+	
+	</apiDesc></apiClassifierDetail><related-links><link href="flash.security.xml#XMLSignatureValidator/validityStatus"><linktext>XMLSignatureValidator.validityStatus</linktext></link></related-links><apiValue id="flash.security:SignatureStatus:INVALID"><apiName>INVALID</apiName><shortdesc> 
+	Invalid ステータス。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>invalid</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	Invalid ステータス。
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.security:SignatureStatus:UNKNOWN"><apiName>UNKNOWN</apiName><shortdesc> 
+	Unknown ステータス。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>unknown</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	Unknown ステータス。
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.security:SignatureStatus:VALID"><apiName>VALID</apiName><shortdesc> 
+	Valid ステータス。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>valid</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	Valid ステータス。
+	
+	</apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.security:ReferencesValidationSetting"><apiName>ReferencesValidationSetting</apiName><shortdesc>
+	ReferencesValidationSetting クラスは、XMLSignatureValidator オブジェクトの referencesValidationSetting プロパティで使用される定数を定義します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	ReferencesValidationSetting クラスは、XMLSignatureValidator オブジェクトの <codeph>referencesValidationSetting</codeph> プロパティで使用される定数を定義します。
+	
+	</apiDesc></apiClassifierDetail><related-links><link href="flash.security.xml#XMLSignatureValidator/ReferencesValidationSetting"><linktext>XMLSignatureValidator.ReferencesValidationSetting</linktext></link></related-links><apiValue id="flash.security:ReferencesValidationSetting:NEVER"><apiName>NEVER</apiName><shortdesc> 
+	参照をチェックしません。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>never</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	参照をチェックしません。
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.security:ReferencesValidationSetting:VALID_IDENTITY"><apiName>VALID_IDENTITY</apiName><shortdesc> 
+	署名証明書が有効であり、信頼される場合のみ、参照をチェックします。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>validIdentity</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	署名証明書が有効であり、信頼される場合のみ、参照をチェックします。
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.security:ReferencesValidationSetting:VALID_OR_UNKNOWN_IDENTITY"><apiName>VALID_OR_UNKNOWN_IDENTITY</apiName><shortdesc> 
+	署名証明書が信頼されない（既知の信頼されたルートにチェーンしていない）場合でも、参照をチェックします。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>validOrUnknownIdentity</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	署名証明書が信頼されない (既知の信頼されたルートにチェーンしていない) 場合でも、参照をチェックします。
+	
+	</apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.security:RevocationCheckSettings"><apiName>RevocationCheckSettings</apiName><shortdesc>
+	RevocationCheckSettings クラスは、XMLSignatureValidator オブジェクトの revocationCheckSetting プロパティで使用される定数を定義します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	RevocationCheckSettings クラスは、XMLSignatureValidator オブジェクトの <codeph>revocationCheckSetting</codeph> プロパティで使用される定数を定義します。
+	
+	</apiDesc></apiClassifierDetail><related-links><link href="flash.security.xml#XMLSignatureValidator/revocationCheckSetting"><linktext>XMLSignatureValidator.revocationCheckSetting</linktext></link></related-links><apiValue id="flash.security:RevocationCheckSettings:ALWAYS_REQUIRED"><apiName>ALWAYS_REQUIRED</apiName><shortdesc>
+		常に証明書の失効をチェックします。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>alwaysRequired</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		常に証明書の失効をチェックします。失効情報がない証明書は拒否されます。
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="flash.security:RevocationCheckSettings:BEST_EFFORT"><apiName>BEST_EFFORT</apiName><shortdesc>
+		失効情報があり、失効ステータスを取得できる場合、証明書の失効をチェックします。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>bestEffort</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		失効情報があり、失効ステータスを取得できる場合、証明書の失効をチェックします。失効ステータスが明確に判別できない場合、証明書は拒否されません。
+		</apiDesc></apiValueDetail></apiValue><apiValue id="flash.security:RevocationCheckSettings:NEVER"><apiName>NEVER</apiName><shortdesc>
+		証明書の失効をチェックしません。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>never</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		証明書の失効をチェックしません。
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="flash.security:RevocationCheckSettings:REQUIRED_IF_AVAILABLE"><apiName>REQUIRED_IF_AVAILABLE</apiName><shortdesc>
+		証明書に失効情報が含まれている場合、証明書の失効をチェックします。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>requiredIfInfoAvailable</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		証明書に失効情報が含まれている場合、証明書の失効をチェックします。情報はあるが失効ステータスが明確に判別できない場合、証明書は拒否されます。
+		
+		</apiDesc></apiValueDetail></apiValue></apiClassifier></apiPackage>

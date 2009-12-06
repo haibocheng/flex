@@ -316,9 +316,18 @@ package flashx.textLayout.elements
 					SpanElement(oldLastLeaf).verifyParagraphTerminator();
 
 			}
-				
-			var applyParams:Array = [beginChildIndex, endChildIndex];
-			super.replaceChildren.apply(this, applyParams.concat(rest));
+			var applyParams:Array;
+			
+			// makes a measurable difference - rest.length zero and one are the common cases
+			if (rest.length == 1)
+				applyParams = [beginChildIndex, endChildIndex, rest[0]];
+			else
+			{
+				applyParams = [beginChildIndex, endChildIndex];
+				if (rest.length != 0)
+					applyParams = applyParams.concat.apply(applyParams, rest);
+			}
+			super.replaceChildren.apply(this, applyParams);
 			
 			ensureTerminatorAfterReplace(oldLastLeaf);
 		}
@@ -374,7 +383,7 @@ package flashx.textLayout.elements
 					super.replaceChildren(numChildren, numChildren, s);
 				}
 				else if (child != null)
-					throw new TypeError(GlobalSettings.getResourceStringFunction("badMXMLChildrenArgument",[ getQualifiedClassName(child) ]));
+					throw new TypeError(GlobalSettings.resourceStringFunction("badMXMLChildrenArgument",[ getQualifiedClassName(child) ]));
 			}
 			
 			// Now ensure para terminator
@@ -705,7 +714,7 @@ package flashx.textLayout.elements
 			if (numChildren == 0 || textLength == 0)
 			{
 				var s:SpanElement = new SpanElement();
-				replaceChildren(numChildren,numChildren,s);
+				replaceChildren(0,0,s);
 				s.normalizeRange(0,s.textLength);
 			}
 		}

@@ -61,7 +61,7 @@ package flashx.textLayout.debug
 				return idDictionary[o];
 			}
 			
-			static private function getClassForType(o:Object):String
+			static tlf_internal function getClassForType(o:Object):String
 			{
 				var s:String = flash.utils.getQualifiedClassName(o);
 				if (s.substr(0,vectPrefix.length) == vectPrefix)
@@ -72,7 +72,7 @@ package flashx.textLayout.debug
 				return s.substr( s.lastIndexOf(":")+1);
 			}
 			
-			static private function makeParameter(obj:Object):String
+			static tlf_internal function makeParameter(obj:Object):String
 			{
 				var str:String;
 				if (obj == null)

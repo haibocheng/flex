@@ -37,28 +37,39 @@ use namespace mx_internal;  // use of ListBase/setCurrentCaretIndex(index);
 
 
 /**
- *  Defines the common behavior for the ButtonBar, TabBar and similar subclasses.   This class does 
- *  not add any new API however it refines selection, keyboard focus and keyboard navigation
- *  behavior for the dataGroup's ItemRenderer elements.   This base class is not intended to be 
- *  instantiated directly.
+ *  The ButtonBarBase class defines the common behavior for the ButtonBar, TabBar and similar subclasses.   
+ *  This class does not add any new API however it refines selection, keyboard focus and keyboard navigation
+ *  behavior for the control's ItemRenderer elements.   
+ *  This base class is not intended to be instantiated directly.
  * 
  *  <p>Clicking on an ItemRenderer selects it by setting the <code>selectedIndex</code> and the 
- *  <code>caretIndex</code> properties.  If <code>requireSelection</code> is false, then clicking 
- *  again deselects it.  If dataProvider is an <code>ISelectableList</code>, then its 
- *  selectedIndex is set as well.</p> 
+ *  <code>caretIndex</code> properties.  If <code>requireSelection</code> is <code>false</code>, then clicking 
+ *  again deselects it.  If the data provider is an <code>ISelectableList</code> object, then its 
+ *  <code>selectedIndex</code> is set as well.</p> 
  * 
- *  <p>Arrow key events are handled by adjusting the <code>caretIndex</code>.   If 
- *  <code>arrowKeysWrapFocus</code> is true, then the caretIndex wraps.  Pressing the 
- *  space bar selects the ItemRenderer at the caretIndex.</p>
+ *  <p>Arrow key events are handled by adjusting the <code>caretIndex</code>.    
+ *  If <code>arrowKeysWrapFocus</code> is <code>true</code>, then the <code>caretIndex</code> wraps.  
+ *  Pressing the Space key selects the ItemRenderer at the <code>caretIndex</code>.</p>
  * 
- *  <p>The showsCaret property of the ItemRenderer at <code>caretIndex</code> is set to true
- *  when the ButtonBarBase has the focus and the caretIndex was reached as a consequence
- *  of a keyboard gesture.   If the caretIndex was set as a side effect of responding to a 
- *  mouse click, then showsCaret is not set.</p>
+ *  <p>The <code>showsCaret</code> property of the ItemRenderer at <code>caretIndex</code> 
+ *  is set to <code>true</code> when the ButtonBarBase object has focus and 
+ *  the <code>caretIndex</code> was reached as a consequence
+ *  of a keyboard gesture.   
+ *  If the <code>caretIndex</code> was set as a side effect of responding to a 
+ *  mouse click, then <code>showsCaret</code> is not set.</p>
  * 
  *  <p>The <code>allowDeselection</code> property of <code>ButtonBarButton</code> 
  *  ItemRenderers is set to <code>!requireSelection</code>.</p>
- * 
+ *
+ *  @mxml
+ *
+ *  <p>The <code>&lt;s:ButtonBarBase&gt;</code> tag inherits all of the tag 
+ *  attributes of its superclass and adds no new tag attributes:</p>
+ *
+ *  <pre>
+ *  &lt;s:ButtonBarBase/&gt;
+ *  </pre> 
+  * 
  *  @langversion 3.0
  *  @playerversion Flash 10
  *  @playerversion AIR 1.5
@@ -89,10 +100,45 @@ public class ButtonBarBase extends ListBase
         setCurrentCaretIndex(0);        
     }
     
+    //--------------------------------------------------------------------------
+    //
+    //  Variables
+    //
+    //--------------------------------------------------------------------------
+
+    /**
+     *  @private
+     *  If false, don't show the focusRing for the tab at caretIndex, see
+     *  itemShowingCaret() below.
+     * 
+     *  If the caret index changes because of something other than a arrow
+     *  or space keypress then we don't show the focus ring, i.e. we do not 
+     *  set showsCaret=true for the item renderer at caretIndex.
+     *     
+     *  This flag is valid at commitProperties() time.  It's set to false
+     *  if at least one selectedIndex change (see item_clickHandler()) occurred 
+     *  because of a mouse click.
+     */
+    private var enableFocusHighlight:Boolean = true;
+    
     /**
      *  @private
      */    
     private var inCollectionChangeHandler:Boolean = false;
+    
+    /**
+     *  @private
+     *  Used to distinguish item_clickHandler() calls initiated by the mouse, from calls
+     *  initiated by pressing the space bar.
+     */
+    private var inKeyUpHandler:Boolean = false;
+    
+    /**
+     *  @private
+     *  Index of item that is currently pressed by the
+     *  spacebar.
+     */
+    private var pressedIndex:Number;
     
     //--------------------------------------------------------------------------
     //
@@ -184,21 +230,6 @@ public class ButtonBarBase extends ListBase
         super.adjustSelection(newIndex, add);
     }
 
-    /** 
-     *  @private
-     *  If false, don't show the focusRing for the tab at caretIndex, see
-     *  itemShowingCaret() below.
-     * 
-     *  If the caret index changes because of something other than a arrow
-     *  or space keypress then we don't show the focus ring, i.e. we do not 
-     *  set showsCaret=true for the item renderer at caretIndex.
-     *     
-     *  This flag is valid at commitProperties() time.  It's set to false
-     *  if at least one selectedIndex change (see item_clickHandler()) occurred 
-     *  because of a mouse click.
-     */
-    private var enableFocusHighlight:Boolean = true;
-    
     /**
      *  @private
      */
@@ -291,6 +322,7 @@ public class ButtonBarBase extends ListBase
     override protected function partAdded(partName:String, instance:Object):void
     {
         super.partAdded(partName, instance);
+
         if (instance == dataGroup)
         {
             dataGroup.addEventListener(RendererExistenceEvent.RENDERER_ADD, dataGroup_rendererAddHandler);
@@ -308,6 +340,7 @@ public class ButtonBarBase extends ListBase
             dataGroup.removeEventListener(RendererExistenceEvent.RENDERER_ADD, dataGroup_rendererAddHandler);
             dataGroup.removeEventListener(RendererExistenceEvent.RENDERER_REMOVE, dataGroup_rendererRemoveHandler);
         }
+
         super.partRemoved(partName, instance);
     }
     
@@ -414,6 +447,13 @@ public class ButtonBarBase extends ListBase
         if (!enabled || !dataGroup || event.isDefaultPrevented())
             return;
         
+        // Block input if space bar is being held down.
+        if (!isNaN(pressedIndex))
+        {
+            event.preventDefault();
+            return;
+        }
+        
         super.keyDownHandler(event);
         
         switch (event.keyCode)
@@ -436,18 +476,14 @@ public class ButtonBarBase extends ListBase
             {
                 const renderer:IItemRenderer = getItemRenderer(caretIndex) as IItemRenderer;
                 if (renderer && ((!renderer.selected && requireSelection) || !requireSelection))
+                {
                     renderer.dispatchEvent(event);
+                    pressedIndex = caretIndex;
+                }
                 break;
             }            
         }
     }
-    
-    /**
-     *  @private
-     *  Used to distinguish item_clickHandler() calls initiated by the mouse, from calls
-     *  initiated by pressing the space bar.
-     */
-    private var inKeyUpHandler:Boolean = false;
     
     /**
      *  @private
@@ -467,9 +503,21 @@ public class ButtonBarBase extends ListBase
             case Keyboard.SPACE:
             {
                 inKeyUpHandler = true;
-                const renderer:IItemRenderer = getItemRenderer(caretIndex) as IItemRenderer;
-                if (renderer && ((!renderer.selected && requireSelection) || !requireSelection))
-                    renderer.dispatchEvent(event);
+                
+                // Need to check pressedIndex for NaN for the case when key up
+                // happens on an already selected renderer and under the condition
+                // that requireSelection=true.
+                if (!isNaN(pressedIndex))
+                {
+                    // Dispatch key up to the previously pressed item in case focus was lost
+                    // through other interaction (e.g. mouse clicks, etc...)
+                    const renderer:IItemRenderer = getItemRenderer(pressedIndex) as IItemRenderer;
+                    if (renderer && ((!renderer.selected && requireSelection) || !requireSelection))
+                    {
+                        renderer.dispatchEvent(event);
+                        pressedIndex = NaN;
+                    }
+                }
                 inKeyUpHandler = false;
                 break;
             }            

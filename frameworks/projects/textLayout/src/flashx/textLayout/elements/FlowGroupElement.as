@@ -193,7 +193,7 @@ package flashx.textLayout.elements
 					effectiveParent.replaceChildren(effectiveParent.numChildren, effectiveParent.numChildren, s);
 				}
 				else if (child != null)
-					throw new TypeError(GlobalSettings.getResourceStringFunction("badMXMLChildrenArgument",[ getQualifiedClassName(child) ]));
+					throw new TypeError(GlobalSettings.resourceStringFunction("badMXMLChildrenArgument",[ getQualifiedClassName(child) ]));
 			}
 		}
 
@@ -657,7 +657,7 @@ package flashx.textLayout.elements
 		public function replaceChildren(beginChildIndex:int, endChildIndex:int, ...rest):void
 		{
 			if (beginChildIndex > _numChildren || endChildIndex > _numChildren)
-				throw RangeError(GlobalSettings.getResourceStringFunction("badReplaceChildrenIndex"));	
+				throw RangeError(GlobalSettings.resourceStringFunction("badReplaceChildrenIndex"));	
 			
 			var thisAbsStart:int = getAbsoluteStart();
 			var absStartIdx:int =  thisAbsStart + (beginChildIndex == _numChildren ? textLength : getChildAt(beginChildIndex).parentRelativeStart);
@@ -727,7 +727,7 @@ package flashx.textLayout.elements
 					continue;
 				
 				var numNestedArgs:int = getNestedArgCount(obj);
-				for (idx; idx<numNestedArgs; idx++)
+				for (idx = 0; idx<numNestedArgs; idx++)
 				{
 					newChild = getNestedArg(obj, idx);
 					if (newChild)
@@ -754,7 +754,7 @@ package flashx.textLayout.elements
 							}
 						}
 						if (!canOwnFlowElement(newChild))
-							throw ArgumentError(GlobalSettings.getResourceStringFunction("invalidChildType"));
+							throw ArgumentError(GlobalSettings.resourceStringFunction("invalidChildType"));
 						
 						// manage as an array or a single child
 						if (childrenToAdd == 0)
@@ -907,7 +907,7 @@ package flashx.textLayout.elements
 		{
 			var index:int = getChildIndex(child);
 			if (index == -1)
-				throw ArgumentError(GlobalSettings.getResourceStringFunction("badRemoveChild"));
+				throw ArgumentError(GlobalSettings.resourceStringFunction("badRemoveChild"));
 				
 			removeChildAt(index);
 			return child;
@@ -951,24 +951,26 @@ package flashx.textLayout.elements
 		public function splitAtIndex(childIndex:int):FlowGroupElement
 		{
 			if (childIndex > _numChildren)
-				throw RangeError(GlobalSettings.getResourceStringFunction("invalidSplitAtIndex"));
+				throw RangeError(GlobalSettings.resourceStringFunction("invalidSplitAtIndex"));
 					
 			var newSibling:FlowGroupElement = shallowCopy() as FlowGroupElement;
+
+			var numChildrenToMove:int = _numChildren-childIndex;
+			if (numChildrenToMove == 1)
+				newSibling.addChild(removeChildAt(childIndex));
+			else if (numChildrenToMove != 0)
+			{
+				var childArray:Array = _childArray.slice(childIndex);
+				this.replaceChildren(childIndex,_numChildren-1);
+				newSibling.replaceChildren(0, 0, childArray);		
+			}
 			
 			if (parent)
 			{
 				var myidx:int = parent.getChildIndex(this);
 				parent.replaceChildren(myidx+1,myidx+1,newSibling);
 			}
-			
-			var elemCount:int = _numChildren;
-			while (childIndex < elemCount)
-			{
-				var childToMove:FlowElement = this.getChildAt(childIndex);
-				replaceChildren(childIndex,childIndex+1,null);
-				elemCount--;
-				newSibling.replaceChildren(newSibling.numChildren,newSibling.numChildren,childToMove);
-			}
+
 			return newSibling;
 		}
 
@@ -991,58 +993,37 @@ package flashx.textLayout.elements
 			// Moves elements from characterIndex forward into the copy
 		 	// returns the new shallowCopy
 			if ((relativePosition < 0) || (relativePosition > textLength))
-				throw RangeError(GlobalSettings.getResourceStringFunction("invalidSplitAtPosition"));
+				throw RangeError(GlobalSettings.resourceStringFunction("invalidSplitAtPosition"));
 			
-			// TODO: binary search
-			var curElementIdx:int = findChildIndexAtPosition(relativePosition);
-			var curFlowElement:FlowElement;
-			if (curElementIdx == -1)
-			{
-				curElementIdx == _numChildren;
-				curFlowElement = null;
-			}
+			var curElementIdx:int;
+			
+			if (relativePosition == textLength)
+				curElementIdx = _numChildren;
 			else
 			{
-				curFlowElement = getChildAt(curElementIdx);
-				if (curFlowElement.parentRelativeStart == relativePosition)
-					return splitAtIndex(curElementIdx);	// easy case.  Just split on this element
-			}
+				curElementIdx = findChildIndexAtPosition(relativePosition);
+				var curFlowElement:FlowElement = getChildAt(curElementIdx);
 				
-			var newSibling:FlowGroupElement = shallowCopy() as FlowGroupElement;						
-						
-			if (curFlowElement is FlowGroupElement)
-			{
-				FlowGroupElement(curFlowElement).splitAtPosition(relativePosition - curFlowElement.parentRelativeStart);
-			} 
-			else
-			{
-				//I would imagine that it has to be a span.  That's the only non-FlowGroupElement
-				//type that can take up more than a textLength of 1.
-				CONFIG::debug { assert(curFlowElement is SpanElement, "SpanElements are the only leaf elements that can currently have > 1 textLength");	}			
-				SpanElement(curFlowElement).splitAtPosition(relativePosition - curFlowElement.parentRelativeStart);
-			}
-			curElementIdx++; //increase by one. It's the new element that we want to move over.
-			
-			while (curElementIdx < _numChildren)
-			{
-				var childToMove:FlowElement = this.getChildAt(curElementIdx);
-				if ((curElementIdx == (_numChildren - 1)) && (childToMove is SpanElement) && (childToMove.textLength == 1) && (childToMove as SpanElement).hasParagraphTerminator)
-				{
-					//splitting right at the newline in a span of length 1 will just cause the span to
-					//be put back.  Resulting in an infinite loop.  Catch this case and break out.
-					break;
+				if (curFlowElement.parentRelativeStart != relativePosition)
+				{										
+					if (curFlowElement is FlowGroupElement)
+					{
+						FlowGroupElement(curFlowElement).splitAtPosition(relativePosition - curFlowElement.parentRelativeStart);
+					} 
+					else
+					{
+						//I would imagine that it has to be a span.  That's the only non-FlowGroupElement
+						//type that can take up more than a textLength of 1.
+						CONFIG::debug { assert(curFlowElement is SpanElement, "SpanElements are the only leaf elements that can currently have > 1 textLength");	}			
+						SpanElement(curFlowElement).splitAtPosition(relativePosition - curFlowElement.parentRelativeStart);
+					}
+					//increase by one. It's the new element that we want to move over.
+					curElementIdx++;
 				}
-				replaceChildren(curElementIdx,curElementIdx+1,null);
-				newSibling.replaceChildren(newSibling.numChildren,newSibling.numChildren,childToMove);
 			}
 			
-			if (parent)
-			{
-				var myidx:int = parent.getChildIndex(this);
-				parent.replaceChildren(myidx+1,myidx+1,newSibling);
-			}
-						
-			return newSibling;
+			//increase by one. It's the new element that we want to move over.
+			return splitAtIndex(curElementIdx);
 		} 		 
 		
 		/** @private */

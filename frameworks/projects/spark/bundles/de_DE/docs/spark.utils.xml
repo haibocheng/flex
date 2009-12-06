@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<apiPackage id="spark.utils"><apiName>spark.utils</apiName><apiDetail/><apiClassifier id="spark.utils:TextFlowUtil"><apiName>TextFlowUtil</apiName><shortdesc>
+  TextFlowUtil ist eine Dienstklasse, die Methoden für das Importieren eines TextFlow von einer Markup-Sprache (und Exportieren eines TextFlow in eine Markup-Sprache) bietet, die vom Text Layout Framework verwendet wird.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+  TextFlowUtil ist eine Dienstklasse, die Methoden für das Importieren eines TextFlow von einer Markup-Sprache (und Exportieren eines TextFlow in eine Markup-Sprache) bietet, die vom Text Layout Framework verwendet wird.
+  
+  </apiDesc></apiClassifierDetail><apiOperation id="spark.utils:TextFlowUtil:export"><apiName>export</apiName><shortdesc>
+      Exportiert einen TextFlow in Form von XML in die vom Text Layout Framework verwendete Markup-Sprache.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiDesc>XML, die die Markup-Sprache des Text Layout Framework enthält.
+      
+      </apiDesc><apiType value="XML"/></apiReturn><apiParam><apiItemName>textFlow</apiItemName><apiType value="flashx.textLayout.elements:TextFlow"/><apiDesc>Der in die Markup-Sprache des Text Layout Framework zu exportierende TextFlow.
+     
+      </apiDesc></apiParam></apiOperationDef><apiDesc>
+      Exportiert einen TextFlow in Form von XML in die vom Text Layout Framework verwendete Markup-Sprache.
+     
+      <p>Das Stamm-Tag der exportierten XML lautet:
+      <pre>
+      &lt;TextFlow xmlns="http://ns.adobe.com/textLayout/2008" ...>
+      </pre>
+      </p>
+     
+      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="spark.utils:TextFlowUtil:importFromString"><apiName>importFromString</apiName><shortdesc>
+      Erstellt einen TextFlow durch Importieren (d. h. Parsen) eines Strings, der die vom Text Layout Framework verwendete Markup-Sprache enthält.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiDesc>Eine neue TextFlow-Instanz wird ausgehend vom Markup erstellt.
+      
+      </apiDesc><apiType value="flashx.textLayout.elements:TextFlow"/></apiReturn><apiParam><apiItemName>markup</apiItemName><apiType value="String"/><apiDesc>Der zu importierende Markup-String.
+     
+      </apiDesc></apiParam><apiParam><apiItemName>whiteSpaceCollapse</apiItemName><apiType value="String"/><apiData>collapse</apiData><apiDesc>Ein String, der angibt, ob im Markup Leerstellen reduziert oder beibehalten werden sollen. Mögliche Werte sind <codeph>WhiteSpaceCollapse.COLLAPSE</codeph> und <codeph>WhiteSpaceCollapse.PRESERVE</codeph> in der flashx.textLayout.formats.WhiteSpaceCollapse-Klasse. Der Standardwert ist <codeph>WhiteSpaceCollapse.COLLAPSE</codeph>.
+     
+      </apiDesc></apiParam></apiOperationDef><apiDesc>
+      Erstellt einen TextFlow durch Importieren (d. h. Parsen) eines Strings, der die vom Text Layout Framework verwendete Markup-Sprache enthält.
+      
+      <p>Beispiel eines Markup-Strings:
+      <pre>
+      "&lt;TextFlow xmlns='http://ns.adobe.com/textLayout/2008'>
+      <p><ph>Hello, </ph><ph fontWeight="bold">World!</ph></p>&lt;/TextFlow>"
+      </pre>
+      </p>
+     
+      <p>Sie können jedoch eine noch komprimiertere Markup-Sprache verwenden, wie etwa:
+      <pre>"Hello, <ph fontWeight="bold">World!</ph>"</pre>. Sie wird im entsprechenden Namespace von einem TextFlow-Tag eingefasst. Span- und Paragraph-Tags werden zur Einhaltung der Struktur eines TextFlow bei Bedarf automatisch eingefügt.</p>
+     
+      <p>Wenn Sie das TextFlow-Tag selbst festlegen, muss es sich im korrekten XML-Namespace für Text Layout Framework-Laufzeit-Markup befinden. Dieser lautet: <codeph>"http://ns.adobe.com/textLayout/2008"</codeph>.</p>
+     
+      <p>Falsches Markup führt dazu, dass diese Methode verschiedene Ausnahmen ausgibt. Die Fehlermeldung enthält Informationen dazu, warum kein Parsing möglich war.</p>
+     
+      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="spark.utils:TextFlowUtil:importFromXML"><apiName>importFromXML</apiName><shortdesc>
+      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiDesc>Eine neue TextFlow-Instanz wird ausgehend vom Markup erstellt.
+      
+      </apiDesc><apiType value="flashx.textLayout.elements:TextFlow"/></apiReturn><apiParam><apiItemName>markup</apiItemName><apiType value="XML"/><apiDesc>Die zu importierende Markup-XML.
+     
+      </apiDesc></apiParam><apiParam><apiItemName>whiteSpaceCollapse</apiItemName><apiType value="String"/><apiData>collapse</apiData><apiDesc>Ein String, der angibt, ob im Markup Leerstellen reduziert oder beibehalten werden sollen. Mögliche Werte sind <codeph>WhiteSpaceCollapse.COLLAPSE</codeph> und <codeph>WhiteSpaceCollapse.PRESERVE</codeph> in der flashx.textLayout.formats.WhiteSpaceCollapse-Klasse. Der Standardwert ist <codeph>WhiteSpaceCollapse.COLLAPSE</codeph>.
+     
+      </apiDesc></apiParam></apiOperationDef><apiDesc>
+      
+      
+      <p>Beispiel für Markup-XML:
+      <pre>
+      &lt;TextFlow xmlns='http://ns.adobe.com/textLayout/2008'>
+        <p><ph>Hello, </ph><ph fontWeight="bold">World!</ph></p>
+      &lt;/TextFlow>
+      </pre>
+      </p>
+     
+      <p>
+      <pre>
+      "Hello, &lt;span fontWeight='bold'>World!&lt;/span>"
+      </pre>
+      <codeph/> </p>
+     
+      <p>Wenn Sie das TextFlow-Tag selbst festlegen, muss es sich im korrekten XML-Namespace für Text Layout Framework-Laufzeit-Markup befinden. Dieser lautet: <codeph>"http://ns.adobe.com/textLayout/2008"</codeph>.</p>
+     
+      <p> </p>
+     
+      </apiDesc></apiOperationDetail></apiOperation></apiClassifier><apiClassifier id="spark.utils:LabelUtil"><apiName>LabelUtil</apiName><shortdesc>
+  Mithilfe der LabelUtil-Klasse bestimmen Komponenten den richtigen Text für die Anzeige auf ihren Renderern oder untergeordneten Elementen.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+  Mithilfe der LabelUtil-Klasse bestimmen Komponenten den richtigen Text für die Anzeige auf ihren Renderern oder untergeordneten Elementen. 
+  
+  </apiDesc></apiClassifierDetail><apiOperation id="spark.utils:LabelUtil:itemToLabel"><apiName>itemToLabel</apiName><shortdesc>
+      Eine Funktion, mit deren Hilfe Komponenten, die Elementrenderer unterstützen, den richtigen Text bestimmen, der vom Renderer für ein Datenelement anzuzeigen ist.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiDesc>Eine Stringdarstellung für das Datenelement 
+     
+      </apiDesc><apiType value="String"/></apiReturn><apiParam><apiItemName>item</apiItemName><apiType value="Object"/><apiDesc>Das Datenelement. Null-Elemente geben den leeren String zurück. 
+     
+      </apiDesc></apiParam><apiParam><apiItemName>labelField</apiItemName><apiType value="String"/><apiData>null</apiData><apiDesc>Das zurückzugebende Feld im Datenelement.
+     
+      </apiDesc></apiParam><apiParam><apiItemName>labelFunction</apiItemName><apiType value="Function"/><apiData>null</apiData><apiDesc>Eine Funktion, die das Datenelement als einzelnen Parameter übernimmt und einen String zurückgibt. 
+     
+      </apiDesc></apiParam></apiOperationDef><apiDesc>
+      Eine Funktion, mit deren Hilfe Komponenten, die Elementrenderer unterstützen, den richtigen Text bestimmen, der vom Renderer für ein Datenelement anzuzeigen ist. Wenn kein <codeph>labelField</codeph>- oder <codeph>labelFunction</codeph>-Parameter festgelegt ist, wird die <codeph>toString()</codeph>-Methode des Datenelements aufgerufen, die eine Darstellung des Datenelements als String zurückgibt.
+      
+      <p>Die <codeph>labelFunction</codeph>-Eigenschaft verweist auf eine Funktion. Die Funktion empfängt ein einzelnes Argument, nämlich das Element im Datenprovider, und gibt einen String zurück:</p>
+      <pre>
+      myLabelFunction(item:Object):String</pre>
+     
+      </apiDesc></apiOperationDetail></apiOperation></apiClassifier><apiClassifier id="spark.utils:BitmapUtil"><apiName>BitmapUtil</apiName><shortdesc>
+  Diese Klasse bietet bitmapbezogene Dienstfunktionen. 
+  
+  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+  Diese Klasse bietet bitmapbezogene Dienstfunktionen. 
+  
+  </apiDesc></apiClassifierDetail><apiOperation id="spark.utils:BitmapUtil:getSnapshot"><apiName>getSnapshot</apiName><shortdesc>
+      Erstellt eine BitmapData-Darstellung des Zielobjekts.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiDesc>Ein BitmapData-Objekt, das das Bild enthält.
+      
+      </apiDesc><apiType value="flash.display:BitmapData"/></apiReturn><apiParam><apiItemName>target</apiItemName><apiType value="mx.core:IUIComponent"/><apiDesc>Das in den resultierenden BitmapData zu erfassende Objekt  
+     
+      </apiDesc></apiParam></apiOperationDef><apiDesc>
+      Erstellt eine BitmapData-Darstellung des Zielobjekts.
+     
+      </apiDesc></apiOperationDetail></apiOperation></apiClassifier></apiPackage>

@@ -61,6 +61,8 @@ include "../styles/metadata/BasicInheritingTextStyles.as"
 
 /**
  *  The alpha of the focus ring for this component.
+ *
+ *  @default 0.55
  * 
  *  @langversion 3.0
  *  @playerversion Flash 10
@@ -122,6 +124,14 @@ include "../styles/metadata/BasicInheritingTextStyles.as"
  *  <p>If you want a container of data items and don't need a skin, then 
  *  it is recommended to use a DataGroup (which cannot be skinned) to 
  *  improve performance and application size.</p>
+ *
+ *  <p>The SkinnableDataContainer container has the following default characteristics:</p>
+ *  <table class="innertable">
+ *     <tr><th>Characteristic</th><th>Description</th></tr>
+ *     <tr><td>Default size</td><td>Large enough to display its children</td></tr>
+ *     <tr><td>Minimum size</td><td>0 pixels</td></tr>
+ *     <tr><td>Maximum size</td><td>10000 pixels wide and 10000 pixels high</td></tr>
+ *  </table>
  * 
  *  @mxml
  *
@@ -132,14 +142,44 @@ include "../styles/metadata/BasicInheritingTextStyles.as"
  *  &lt;s:SkinnableDataContainer
  *    <strong>Properties</strong>
  *    autoLayout="true"
- *    clipAndEnableScrolling="false"
  *    dataProvider="null"
- *    horizontalScrollPosition="null"
  *    itemRenderer="null"
  *    itemRendererFunction="null"
  *    layout="VerticalLayout"
  *    typicalItem="null"
- *    verticalScrollPosition="null"
+ *  
+ *    <strong>Styles</strong>
+ *    alignmentBaseline="useDominantBaseline"
+ *    baselineShift="0.0"
+ *    cffHinting="horizontal_stem"
+ *    color="0"
+ *    digitCase="default"
+ *    digitWidth="default"
+ *    direction="LTR"
+ *    dominantBaseline="auto"
+ *    focusAlpha="0.55"
+ *    focusColor=""
+ *    focusThickness="2"
+ *    fontFamily="Times New Roman"
+ *    fontLookup="device"
+ *    fontSize="12"
+ *    fontStyle="normal"
+ *    fontWeight="normal"
+ *    justificationRule="auto"
+ *    justificationStyle="auto"
+ *    kerning="auto"
+ *    ligatureLevel="common"
+ *    lineHeight="120%"
+ *    lineThrough="false"
+ *    locale="en"
+ *    renderingMode="CFF"
+ *    textAlign="start"
+ *    textAlignLast="start"
+ *    textAlpha="1"
+ *    textJustify="inter_word"
+ *    trackingLeft="0"
+ *    trackingRight="0"
+ *    typographicCase="default"
  *  
  *    <strong>Events</strong>
  *    rendererAdd="<i>No default</i>"
@@ -150,6 +190,8 @@ include "../styles/metadata/BasicInheritingTextStyles.as"
  *  @see SkinnableContainer
  *  @see DataGroup
  *  @see spark.skins.spark.SkinnableDataContainerSkin
+ *
+ *  @includeExample examples/SkinnableDataContainerExample.mxml
  *  
  *  @langversion 3.0
  *  @playerversion Flash 10
@@ -314,6 +356,13 @@ public class SkinnableDataContainer extends SkinnableContainerBase implements II
     
     /**
      *  @copy spark.components.DataGroup#dataProvider
+     *
+     *  @see #itemRenderer
+     *  @see #itemRendererFunction
+     *  @see mx.collections.IList
+     *  @see mx.collections.ArrayCollection
+     *  @see mx.collections.ArrayList
+     *  @see mx.collections.XMLListCollection
      *  
      *  @langversion 3.0
      *  @playerversion Flash 10
@@ -554,6 +603,8 @@ public class SkinnableDataContainer extends SkinnableContainerBase implements II
      */
     override protected function partAdded(partName:String, instance:Object):void
     {
+		super.partAdded(partName, instance);
+
         if (instance == dataGroup)
         {
             // copy proxied values from dataGroupProperties (if set) to dataGroup
@@ -629,6 +680,8 @@ public class SkinnableDataContainer extends SkinnableContainerBase implements II
      */
     override protected function partRemoved(partName:String, instance:Object):void
     {
+		super.partRemoved(partName, instance);
+
         if (instance == dataGroup)
         {
             dataGroup.removeEventListener(

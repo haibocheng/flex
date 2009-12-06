@@ -94,12 +94,13 @@ class BindableProperty
             ${owner}.${entry.qualifiedBackingPropertyName} = value;
 #if ($entry.isStatic)
             var eventDispatcher:flash.events.IEventDispatcher = ${owner}.staticEventDispatcher;
-            if (eventDispatcher != null)
+            if (eventDispatcher != null && eventDispatcher.hasEventListener("propertyChange"))
             {
                 eventDispatcher.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(${owner}, "$entry.qualifiedPropertyName", oldValue, value));
             }
 #else
-            ${owner}.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(${owner}, "$entry.qualifiedPropertyName", oldValue, value));
+           if (${owner}.hasEventListener("propertyChange"))
+               ${owner}.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(${owner}, "$entry.qualifiedPropertyName", oldValue, value));
 #end
         }
     }

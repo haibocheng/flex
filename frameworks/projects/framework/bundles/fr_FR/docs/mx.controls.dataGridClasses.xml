@@ -15,13 +15,13 @@
       
       Crée les objets enfant du composant.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiIsOverride/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
       
-      Crée des objets enfant du composant. Il s’agit d’une méthode avancée que vous pouvez remplacer lorsque vous créez une sous-classe de l’objet UIComponent.
+      Crée les objets enfant du composant. Il s’agit d’une méthode avancée que vous pouvez remplacer lorsque vous créez une sous-classe de la classe UIComponent.
      
       <p>Un composant qui crée d’autres composants ou des objets à l’intérieur de ce composant s’appelle un composant composite. Par exemple, le contrôle ComboBox de Flex est réellement composé d’un contrôle TextInput qui permet de définir la zone de texte du contrôle ComboBox et d’un contrôle Button qui définit la flèche du contrôle ComboBox. Les composants implémentent la méthode <codeph>createChildren()</codeph> pour créer des objets enfant (d’autres composants, par exemple) dans le composant.</p>
      
       <p>Vous appelez la méthode <codeph>addChild()</codeph> au sein d’un remplacement de la méthode <codeph>createChildren()</codeph> pour ajouter chaque objet enfant. </p>
      
-      <p>Vous ne pouvez pas appeler cette méthode directement. Flex appelle la méthode <codeph>createChildren()</codeph> en réponse à l’appel de la méthode <codeph>addChild()</codeph> pour ajouter le composant à son parent. </p>
+      <p>Vous ne devez pas cette méthode directement. Flex appelle la méthode <codeph>createChildren()</codeph> en réponse à l’appel de la méthode <codeph>addChild()</codeph> pour ajouter le composant à son parent. </p>
       
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.dataGridClasses:DataGridHeader:protected:drawColumnDragOverlay"><apiName>drawColumnDragOverlay</apiName><shortdesc>
       Trace l’incrustation de la colonne déplacée dans l’objet Sprite donné aux position, largeur et hauteur définies avec la couleur spécifiée.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>indicator</apiItemName><apiType value="flash.display:Sprite"/><apiDesc>Objet Sprite devant contenir les graphiques qui indiquent qu’une colonne est déplacée.
@@ -94,13 +94,13 @@
       
       Calcule la taille par défaut du composant. Peut également calculer sa taille minimale par défaut.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiIsOverride/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
       
-      Calcule la taille par défaut du composant. Peut également calculer sa taille minimale par défaut. Il s’agit d’une méthode avancée que vous pouvez remplacer lorsque vous créez une sous-classe de l’objet UIComponent.
+      Calcule la taille par défaut du composant. Peut également calculer sa taille minimale par défaut. Il s’agit d’une méthode avancée que vous pouvez remplacer lorsque vous créez une sous-classe de la classe UIComponent.
      
-      <p>Vous ne pouvez pas appeler cette méthode directement. Flex appelle la méthode <codeph>measure()</codeph> lorsque le composant est ajouté à un conteneur à l’aide de la méthode <codeph>addChild()</codeph> et lorsque la méthode <codeph>invalidateSize()</codeph> du composant est appelée. </p>
+      <p>Vous ne devez pas cette méthode directement. Flex appelle la méthode <codeph>measure()</codeph> lorsque le composant est ajouté à un conteneur à l’aide de la méthode <codeph>addChild()</codeph> et lorsque la méthode <codeph>invalidateSize()</codeph> du composant est appelée. </p>
      
       <p>Lorsque vous définissez une hauteur et une largeur spécifiques à un composant, Flex n’appelle pas la méthode <codeph>measure()</codeph>, même si vous appelez explicitement la méthode <codeph>invalidateSize()</codeph>. En d’autres termes, Flex appelle uniquement la méthode <codeph>measure()</codeph> si la propriété <codeph>explicitWidth</codeph> ou <codeph>explicitHeight</codeph> du composant a la valeur NaN. </p>
      
-      <p>Dans votre remplacement de cette méthode, vous devez spécifier les propriétés <codeph>measuredWidth</codeph> et <codeph>measuredHeight</codeph> pour définir la taille par défaut. Vous pouvez également définir les propriétés <codeph>measuredMinWidth</codeph> et <codeph>measuredMinHeight</codeph> pour définir la taille minimale par défaut.</p>
+      <p>Dans votre remplacement de cette méthode, vous devez définir les propriétés <codeph>measuredWidth</codeph> et <codeph>measuredHeight</codeph> pour définir la taille par défaut. Vous pouvez également définir les propriétés <codeph>measuredMinWidth</codeph> et <codeph>measuredMinHeight</codeph> pour définir la taille minimale par défaut.</p>
      
       <p>La plupart des composants calculent ces valeurs en fonction du contenu qu’ils affichent et d’après les propriétés qui affectent l’affichage du contenu. Quelques composants disposent simplement de valeurs par défaut codées de manière irréversible. </p>
      
@@ -466,7 +466,7 @@
 	  Constructeur.
 	 
 	  </apiDesc></apiConstructorDetail></apiConstructor><apiValue id="mx.controls.dataGridClasses:DataGridListData:dataField"><apiName>dataField</apiName><shortdesc>
-	  Nom du champ ou de la propriété dans le fournisseur de données associé à la colonne.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="String"/></apiValueDef><apiDesc>
+	  Nom du champ ou de la propriété dans le fournisseur de données associé à la colonne.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiType value="String"/></apiValueDef><apiDesc>
 	  Nom du champ ou de la propriété dans le fournisseur de données associé à la colonne. 
 	  
 	  </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.controls.dataGridClasses:DataGridLockedRowContentHolder"><apiName>DataGridLockedRowContentHolder</apiName><shortdesc>
@@ -553,7 +553,7 @@
 <description>
   Classe implémentant l’occurrence IUITextField qui permet à ce composant de rendre le texte.
  
-  <p>Elle peut être définie sur la classe mx.core.UITextField (pour utiliser la classe TextField classique intégrée à Flash Player) ou la classe mx.core.UITLFTextField (pour utiliser Text Layout Framework, qui permet d’améliorer le rendu du texte et d’obtenir notamment une mise en forme bidirectionnelle).</p>
+  <p>Elle peut être définie sur la classe mx.core.UITextField (pour utiliser la classe TextField classique intégrée à Flash Player) ou la classe mx.core.UIFTETextField (pour utiliser Text Layout Framework, qui permet d’améliorer le rendu du texte et d’obtenir notamment une mise en forme bidirectionnelle).</p>
  
   </description>
 <default>mx.core.UITextField
@@ -591,11 +591,11 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog></style><style inherit="yes" name="locale" owner="mx.controls.dataGridClasses:DataGridColumn" playerVersion="Flash10" type="String">
 <description>
-  
+  Paramètres régionaux du texte affiché par ce composant. 
  
-  <p/>
+  <p>FTE et TLF utilisent ces paramètres régionaux pour mapper des caractères Unicode à des glyphes de police et rechercher des polices de rechange. </p>
  
-  <p><codeph/></p>
+  <p>Remarque : ce style s’applique uniquement lorsqu’un composant MX spécifie UIFTETextField comme classe <codeph>textFieldClass</codeph>. </p>
  
   </description>
 <default>"en"
@@ -608,7 +608,7 @@
   </langversion><productversion>Flex 4
  </productversion></asCustoms></prolog></style><style inherit="yes" name="letterSpacing" owner="mx.controls.dataGridClasses:DataGridColumn" playerVersion="Flash9" type="Number">
 <description>
-  Nombre de pixels supplémentaires devant apparaître entre chaque caractère. Une valeur positive augmente l’espacement des caractères par rapport à l’espacement normal, alors qu’une valeur négative le réduit.
+  Nombre de pixels supplémentaires qui apparaissent entre chaque caractère. Une valeur positive augmente l’espacement des caractères par rapport à l’espacement normal, alors qu’une valeur négative le réduit.
  
   </description>
 <default>0
@@ -621,7 +621,7 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog></style><style inherit="yes" name="kerning" owner="mx.controls.dataGridClasses:DataGridColumn" playerVersion="Flash9" type="Boolean">
 <description>
-  Valeur booléenne indiquant si le crénage est activé (<codeph>true</codeph>) ou désactivé (<codeph>false</codeph>). Le crénage ajuste le pas entre certaines paires de caractères pour améliorer la lisibilité et ne doit être employé que si nécessaire, dans les titres en grande police, par exemple. Le crénage est supporté uniquement pour les polices incorporées. Certaines polices, telles que Verdana, et les polices à espacement fixe, telles que Courier New, ne prennent pas en charge le crénage.
+  Valeur booléenne indiquant si le crénage est activé (<codeph>true</codeph>) ou désactivé (<codeph>false</codeph>). Le crénage ajuste le pas entre certaines paires de caractères pour améliorer la lisibilité et ne doit être employé que si nécessaire, dans les titres en grande police, par exemple. Le crénage est supporté uniquement pour les polices incorporées. Certaines polices, telles que Verdana et les polices à espacement fixe, telles que Courier New, ne prennent pas en charge le crénage.
  
   </description>
 <default>false
@@ -677,7 +677,7 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog></style><style format="Length" inherit="yes" name="fontSize" owner="mx.controls.dataGridClasses:DataGridColumn" playerVersion="Flash9" type="Number">
 <description>
-  Hauteur du texte, en pixels. La valeur par défaut est 10 pour tous les contrôles, à l’exception de ColorPicker. Pour le contrôle ColorPicker, la valeur par défaut est 11. 
+  Hauteur du texte, en pixels.    
   
   </description>
 
@@ -730,12 +730,9 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog><related-links><link href="" invalidHref="flash.text.TextField.xml"><linktext>flash.text.TextField</linktext></link><link href="" invalidHref="flash.text.GridFitType.xml"><linktext>flash.text.GridFitType</linktext></link></related-links></style><style inherit="yes" name="fontFamily" owner="mx.controls.dataGridClasses:DataGridColumn" playerVersion="Flash9" type="String">
 <description>
-  Nom de la police à utiliser. A la différence d’une implémentation CSS complète, les listes de valeurs séparées par des virgules ne sont pas prises en charge. Vous pouvez utiliser n’importe quel nom de famille de polices. Si vous spécifiez un nom de police générique, il est converti dans la police de périphérique appropriée.
- 
-  </description>
-<default>"Verdana"
+  Nom de la police à utiliser. A la différence d’une implémentation CSS complète, les listes de valeurs séparées par des virgules ne sont pas prises en charge. Vous pouvez utiliser n’importe quel nom de famille de polices. Si vous spécifiez un nom de police générique, il est converti dans la police de périphérique appropriée. <codeph/> <codeph/>
   
-  </default>
+  </description>
 
 <playerversion>AIR 1.1
   </playerversion>
@@ -779,15 +776,15 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog></style><style enumeration="ltr,rtl,inherit" inherit="yes" name="direction" owner="mx.controls.dataGridClasses:DataGridColumn" playerVersion="Flash10" type="String">
 <description>
-  
+  Direction du texte affiché par le composant. 
  
-  <p><codeph/><codeph/></p>
+  <p>Les valeurs autorisées sont <codeph>"ltr"</codeph> pour les textes rédigés de gauche à droite, comme dans les scripts de style latin et <codeph>"rtl"</codeph> pour les textes rédigés de droite à gauche, comme l’arabe ou l’hébreu. </p>
  
-  <p/>
+  <p>FTE et TLF utilisent cette valeur dans leur algorithme de mise en forme de texte bidirectionnel, lequel mappe l’ordre des caractères Unicode sur ordre des glyphes. </p>
  
-  <p><codeph/></p>
+  <p>Remarque : ce style s’applique uniquement lorsqu’un composant MX spécifie UIFTETextField comme classe <codeph>textFieldClass</codeph>. </p>
  
-  <p><codeph/> </p>
+  <p>La <codeph>direction</codeph> a également une incidence sur l’alignement du texte dans les limites de TLFTextField. Elle n’a pas, cependant, d’incidence sur le positionnement de TLFTextField au sein du composant. </p>
  
   </description>
 <default>"ltr"
@@ -800,12 +797,9 @@
   </langversion><productversion>Flex 4
  </productversion></asCustoms></prolog></style><style format="Color" inherit="yes" name="color" owner="mx.controls.dataGridClasses:DataGridColumn" playerVersion="Flash9" type="uint">
 <description>
-  Couleur de texte dans le composant, y compris l’étiquette du composant.
- 
-  </description>
-<default>0x0B333C
+  Couleur du texte du composant, libellé du composant inclus. <codeph/> <codeph/>
   
-  </default>
+  </description>
 
 <playerversion>AIR 1.1
   </playerversion>
@@ -882,7 +876,7 @@
   </p>
  
   </apiDesc></apiClassifierDetail><related-links><link href="mx.controls.xml#DataGrid"><linktext>mx.controls.DataGrid</linktext></link><link href="mx.styles.xml#CSSStyleDeclaration"><linktext>mx.styles.CSSStyleDeclaration</linktext></link></related-links><apiConstructor id="mx.controls.dataGridClasses:DataGridColumn:DataGridColumn"><apiName>DataGridColumn</apiName><shortdesc>
-      Constructeur.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>columnName</apiItemName><apiType value="String"/><apiData>null</apiData><apiDesc>Nom du champ dans le fournisseur de données associé à la colonne, et texte destiné à la cellule d’en-tête de cette colonne. Ceci revient à définir les propriétés <codeph>dataField</codeph> et <codeph>headerText</codeph>.
+      Constructeur.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>columnName</apiItemName><apiType value="String"/><apiData>null</apiData><apiDesc>Nom du champ dans le fournisseur de données associé à la colonne et texte destiné à la cellule d’en-tête de cette colonne. Ceci revient à définir les propriétés <codeph>dataField</codeph> et <codeph>headerText</codeph>.
       
       </apiDesc></apiParam></apiConstructorDef><apiDesc>
       Constructeur.
@@ -908,7 +902,7 @@
       <p>Cette méthode est utilisée par les développeurs qui créent des sous-classes de la classe DataGridColumn. Elle n’est pas utilisée par les développeurs d’application.</p>
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.dataGridClasses:DataGridColumn:itemToLabel"><apiName>itemToLabel</apiName><shortdesc>
-      Retourne la chaîne que le rendu d’élément affiche pour l’objet de données spécifié.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Chaîne affichable en fonction des données.
+      Renvoie la chaîne que le rendu d’élément affiche pour l’objet de données spécifié.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Chaîne affichable en fonction des données.
       
       </apiDesc><apiType value="String"/></apiReturn><apiParam><apiItemName>data</apiItemName><apiType value="Object"/><apiDesc>Objet à afficher.
      
@@ -916,7 +910,7 @@
       Renvoie la chaîne que le rendu d’élément affiche pour l’objet de données spécifié. Si l’objet DataGridColumn ou son contrôle DataGrid présente une propriété <codeph>labelFunction</codeph> non nulle, la fonction est appliquée à l’objet de données. Sinon, la méthode extrait le contenu du champ spécifié par la propriété <codeph>dataField</codeph> ou obtient la valeur de chaîne de l’objet de données. Si la méthode ne peut pas convertir le paramètre en chaîne, elle retourne un espace unique.
      
       </apiDesc></apiOperationDetail></apiOperation><apiValue id="mx.controls.dataGridClasses:DataGridColumn:draggable"><apiName>draggable</apiName><shortdesc>
-      Indicateur précisant si l’utilisateur est autorisé à faire glisser la colonne vers une nouvelle position. Si la valeur est true, l’utilisateur peut faire glisser les en-têtes de colonne vers une nouvelle position
+      Indicateur précisant si l’utilisateur est autorisé à faire glisser la colonne vers une nouvelle position. Si la valeur est true, l’utilisateur peut faire glisser les en-têtes de colonne vers une nouvelle position.
      
       </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>true</apiData><apiType value="Boolean"/><apiDefaultValue>true
       
@@ -927,7 +921,7 @@
       Nom de la propriété de l’éditeur d’élément contenant les nouvelles données de l’élément de la liste.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>text</apiData><apiType value="String"/><apiDefaultValue>"text"
       
       </apiDefaultValue></apiValueDef><apiDesc>
-      Nom de la propriété de l’éditeur d’élément contenant les nouvelles données de l’élément de la liste. Par exemple, la valeur par défaut de <codeph>itemEditor</codeph> étant TextInput, la valeur par défaut de la propriété <codeph>editorDataField</codeph> est <codeph>"texte"</codeph>, qui définit la propriété <codeph>text</codeph> du contrôle TextInput.
+      Nom de la propriété de l’éditeur délément contenant les nouvelles données de l’élément de la liste. Par exemple, la valeur par défaut de <codeph>itemEditor</codeph> étant TextInput, la valeur par défaut de la propriété <codeph>editorDataField</codeph> est <codeph>"texte"</codeph>, qui définit la propriété <codeph>text</codeph> du contrôle TextInput.
      
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.dataGridClasses:DataGridColumn:editorHeightOffset"><apiName>editorHeightOffset</apiName><shortdesc>
       Hauteur de l’éditeur d’élément, en pixels, par rapport à la taille du rendu d’élément.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>0</apiData><apiType value="Number"/><apiDefaultValue>0
@@ -948,16 +942,16 @@
       Largeur de l’éditeur d’élément, en pixels, par rapport à la taille du rendu d’élément. Cette propriété peut être utilisée pour faire en sorte que l’éditeur chevauche le rendu d’élément de quelques pixels, afin de compenser la bordure entourant l’éditeur. Notez que le fait de changer ces valeurs alors que l’éditeur est affiché n’a aucun effet sur l’éditeur en cours, mais cela affectera le prochain rendu d’élément qui ouvrira un éditeur.
      
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.dataGridClasses:DataGridColumn:editorXOffset"><apiName>editorXOffset</apiName><shortdesc>
-      Emplacement x du coin supérieur gauche de l’éditeur d’élément, en pixels, par rapport au coin supérieur gauche de l’élément.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>0</apiData><apiType value="Number"/><apiDefaultValue>0
+      Emplacement x de l’angle supérieur gauche de l’éditeur d’élément, en pixels, par rapport à l’angle supérieur gauche de l’élément.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>0</apiData><apiType value="Number"/><apiDefaultValue>0
       
       </apiDefaultValue></apiValueDef><apiDesc>
-      Emplacement x du coin supérieur gauche de l’éditeur d’élément, en pixels, par rapport au coin supérieur gauche de l’élément. Cette propriété peut être utilisée pour faire en sorte que l’éditeur chevauche le rendu d’élément de quelques pixels, afin de compenser la bordure entourant l’éditeur. Notez que le fait de changer ces valeurs alors que l’éditeur est affiché n’a aucun effet sur l’éditeur en cours, mais cela affectera le prochain rendu d’élément qui ouvrira un éditeur.
+      Emplacement x de l’angle supérieur gauche de l’éditeur d’élément, en pixels, par rapport à l’angle supérieur gauche de l’élément. Cette propriété peut être utilisée pour faire en sorte que l’éditeur chevauche le rendu d’élément de quelques pixels, afin de compenser la bordure entourant l’éditeur. Notez que le fait de changer ces valeurs alors que l’éditeur est affiché n’a aucun effet sur l’éditeur en cours, mais cela affectera le prochain rendu d’élément qui ouvrira un éditeur.
      
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.dataGridClasses:DataGridColumn:editorYOffset"><apiName>editorYOffset</apiName><shortdesc>
-      Emplacement y du coin supérieur gauche de l’éditeur d’élément, en pixels, par rapport au coin supérieur gauche de l’élément.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>0</apiData><apiType value="Number"/><apiDefaultValue>0
+      Emplacement y de l’angle supérieur gauche de l’éditeur d’élément, en pixels, par rapport à l’angle supérieur gauche de l’élément.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>0</apiData><apiType value="Number"/><apiDefaultValue>0
       
       </apiDefaultValue></apiValueDef><apiDesc>
-      Emplacement y du coin supérieur gauche de l’éditeur d’élément, en pixels, par rapport au coin supérieur gauche de l’élément. Cette propriété peut être utilisée pour faire en sorte que l’éditeur chevauche le rendu d’élément de quelques pixels, afin de compenser la bordure entourant l’éditeur. Notez que le fait de changer ces valeurs alors que l’éditeur est affiché n’a aucun effet sur l’éditeur en cours, mais cela affectera le prochain rendu d’élément qui ouvrira un éditeur.
+      Emplacement y de l’angle supérieur gauche de l’éditeur d’élément, en pixels, par rapport à l’angle supérieur gauche de l’élément. Cette propriété peut être utilisée pour faire en sorte que l’éditeur chevauche le rendu d’élément de quelques pixels, afin de compenser la bordure entourant l’éditeur. Notez que le fait de changer ces valeurs alors que l’éditeur est affiché n’a aucun effet sur l’éditeur en cours, mais cela affectera le prochain rendu d’élément qui ouvrira un éditeur.
      
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.dataGridClasses:DataGridColumn:itemEditor"><apiName>itemEditor</apiName><shortdesc>
       Fabrique de classe des occurrences de l’éditeur d’élément à utiliser pour la colonne lorsqu’elle est modifiable.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>mx.core:IFactory</apiValueClassifier><apiDefaultValue>new ClassFactory(mx.controls.TextInput)
@@ -1016,8 +1010,8 @@
       Indicateur précisant si les éléments de la colonne peuvent être modifiés. Si la valeur est <codeph>true</codeph> et si la propriété <codeph>editable</codeph> du DataGrid est également <codeph>true</codeph>, les éléments d’une colonne sont modifiables et peuvent être modifiés individuellement en cliquant sur leur entrée ou en naviguant jusqu’à eux à l’aide des touches de direction et de tabulation.
      
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.dataGridClasses:DataGridColumn:enableIME:get"><apiName>enableIME</apiName><shortdesc>
-      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Boolean"/></apiValueDef><apiDesc>
-       
+      Indicateur qui signale si l’IME doit être activé lorsque le composant reçoit le focus. </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Boolean"/></apiValueDef><apiDesc>
+      Indicateur qui signale si l’IME doit être activé lorsque le composant reçoit le focus. Si un éditeur est relevé, il définit enableIME en conséquence. 
      
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.dataGridClasses:DataGridColumn:headerRenderer:get"><apiName>headerRenderer</apiName><shortdesc>
       Fabrique de classe des occurrences de rendu d’élément qui affichent l’en-tête de la colonne.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>mx.core:IFactory</apiValueClassifier></apiValueDef><apiDesc>
@@ -1037,7 +1031,7 @@
      
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.dataGridClasses:DataGridColumn:imeMode:get"><apiName>imeMode</apiName><shortdesc>
       Spécifie le mode IME (éditeur de méthode d’entrée).</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="String"/></apiValueDef><apiDesc>
-      Spécifie le mode IME (éditeur de méthode d’entrée). L’éditeur IME permet aux utilisateurs d’entrer du texte en chinois, japonais et coréen. Flex définit le mode IME lorsque l’événement <codeph>itemFocusIn</codeph> se produit et rétablit la valeur précédente lorsque l’événement <codeph>itemFocusOut</codeph> a lieu. La classe flash.system.IMEConversionMode définit des constantes pour les valeurs valides de cette propriété.  
+      Spécifie le mode IME (éditeur de méthode d’entrée). L’éditeur IME permet aux utilisateurs d’entrer du texte en chinois, japonais et coréen. Flex définit le mode IME lorsque l’événement <codeph>itemFocusIn</codeph> se produit et rétablit la valeur précédente lorsque l’événement <codeph>itemFocusOut</codeph> a lieu. La classe flash.system.IMEConversionMode définit des constantes pour les valeurs possibles de cette propriété.  
      
       <p>La valeur par défaut est null. Dans ce cas, la valeur de la propriété <codeph>imeMode</codeph> du contrôle DataGrid est utilisée.</p>
      
@@ -1094,9 +1088,9 @@
      
       <p>La fonction doit renvoyer une valeur basée sur la comparaison des objets : </p>
       <ul>
-        <li>-1 si obj1 doit s’afficher avant obj2 par ordre croissant. </li>
+        <li>-1 si obj1 doit apparaître avant obj2 par ordre croissant. </li>
         <li>0 si obj1 = obj2. </li>
-        <li>1 si obj1 doit s’afficher après obj2 par ordre croissant.</li>
+        <li>1 si obj1 doit apparaître après obj2 par ordre croissant.</li>
       </ul>
      
       <p><b>Remarque :</b> les paramètres <codeph>obj1</codeph> et <codeph>obj2</codeph> sont des éléments entiers du fournisseur de données et pas uniquement les données de l’élément.</p>
@@ -1147,7 +1141,7 @@
       
       </apiDesc><apiType value="Array"/></apiReturn></apiOperationDef><apiDesc>
       
-      Retourne un tableau d’objets CSSStyleDeclaration pour le sélecteur de type qui s’applique à ce composant. Retourne la valeur <codeph>null</codeph> si aucun n’existe.
+      Renvoie un tableau d’objets CSSStyleDeclaration pour le sélecteur de type qui s’applique à ce composant. Renvoie la valeur <codeph>null</codeph> si aucun n’existe.
      
       <p>Par exemple, supposons que le composant MyButton étende le contrôle Button. Cette méthode recherche d’abord un sélecteur MyButton. Ensuite, elle recherche un sélecteur de type Button. Enfin, elle recherche un sélecteur de type UIComponent.</p>
      

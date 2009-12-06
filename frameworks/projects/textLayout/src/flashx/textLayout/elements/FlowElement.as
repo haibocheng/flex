@@ -81,7 +81,7 @@ package flashx.textLayout.elements
 		{
 			// not a valid FlowElement class
 			if (abstract)
-				throw new Error(GlobalSettings.getResourceStringFunction("invalidFlowElementConstruct"));
+				throw new Error(GlobalSettings.resourceStringFunction("invalidFlowElementConstruct"));
 		}
 
 		/** Returns true if the class is an abstract base class,
@@ -299,7 +299,7 @@ package flashx.textLayout.elements
 		public function splitAtPosition(relativePosition:int):FlowElement
 		{
 			if ((relativePosition < 0) || (relativePosition > textLength))
-				throw RangeError(GlobalSettings.getResourceStringFunction("invalidSplitAtPosition"));
+				throw RangeError(GlobalSettings.resourceStringFunction("invalidSplitAtPosition"));
 			return this;
 		}
 		

@@ -88,9 +88,9 @@
       提供对特定于目标的失败代码的访问权限。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="String"/></apiValueDef><apiDesc>
       提供对特定于目标的失败代码的访问权限。有关更具体的详细信息，请参阅 <codeph>faultString</codeph> 和 <codeph>faultDetails</codeph> 属性。
      
-      <p><codeph/><codeph/><codeph/><codeph/></p>
+      <p>错误代码的格式由远程目标提供，但通常为：<codeph>host.operation.error</codeph> 或 <codeph>Channel.operation.error</codeph>。例如，<codeph>"Server.Connect.Failed"</codeph> 和 <codeph>Channel.Connect.Failed</codeph>。</p>
       <p>
-     </p>     
+     无论何时 Channel 试图连接到远程目标出现问题，Channel 类及其子类（RTMPChannel、AMFChannel、HTTPChannel 等等）都会发出 Channel.Connect.Failed。通道已连接并且从其基础 NetConnection 获取 Call.Failed 代码之后，AMFChannel 就会发出 Channel.Call.Failed。仅 AMFChannel 类侦听 NetConnection.Call.Failed，后者会被转换为 Channel.Call.Failed。</p>     
      
       </apiDesc></apiValueDetail><related-links><link href="mx.messaging.events.xml#ChannelFaultEvent/faultString"><linktext>faultString</linktext></link><link href="mx.messaging.events.xml#ChannelFaultEvent/faultDetail"><linktext>faultDetail</linktext></link></related-links></apiValue><apiValue id="mx.messaging.events:ChannelFaultEvent:faultDetail"><apiName>faultDetail</apiName><shortdesc>
       提供有关此失败的特定于目标的详细信息。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="String"/></apiValueDef><apiDesc>

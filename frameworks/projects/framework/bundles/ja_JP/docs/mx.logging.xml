@@ -178,7 +178,7 @@
       level 設定に加え、フィルターを使用して、特定のカテゴリのイベントのみを処理するための擬似階層マッピングを提供します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Array"/></apiValueDef><apiDesc>
       <codeph>level</codeph> 設定に加え、フィルターを使用して、特定のカテゴリのイベントのみを処理するための擬似階層マッピングを提供します。
       
-      <p>ロガーはそれぞれ、1 つのカテゴリに属します。 慣例では、これらのカテゴリは、ロガーが使用される完全修飾クラス名にマッピングされます。 例えば、<codeph>mx.rpc.soap.WebService</codeph> クラスのメッセージを記録するロガーは <codeph>"mx.rpc.soap.WebService"</codeph> を <codeph>Log.getLogger()</codeph> 呼び出しに対するパラメーターとして使用します。 このカテゴリでメッセージが送信される場合、そのカテゴリに一致するフィルターを持つターゲットのみがイベントの通知を受け取ります。 フィルター表現には、アスタリスクをワイルドカードとして使用した一致を含めることができます。 ワイルドカード文字は、表現の右端に指定する必要があります。 次に例を示します。rpc~~、mx.~~、~~。 無効な表現が指定された場合は、<codeph>InvalidFilterError</codeph> がスローされます。 フィルター表現では、空白および次の文字を使用することはできません。[]~$^&amp;\/(){}&lt;>+=`!#%?,:;'"@.</p>
+      <p>ロガーはそれぞれ、1 つのカテゴリに属します。 慣例では、これらのカテゴリは、ロガーが使用される完全修飾クラス名にマッピングされます。 例えば、<codeph>mx.rpc.soap.WebService</codeph> クラスのメッセージを記録するロガーは <codeph>"mx.rpc.soap.WebService"</codeph> を <codeph>Log.getLogger()</codeph> 呼び出しに対するパラメーターとして使用します。 このカテゴリでメッセージが送信される場合、そのカテゴリに一致するフィルターを持つターゲットのみがイベントの通知を受け取ります。 フィルター表現には、アスタリスクをワイルドカードとして使用した一致を含めることができます。 ワイルドカード文字は、表現の右端に指定する必要があります。 次に例を示します。rpc~~、mx.~~、~~。 無効な表現が指定された場合は、<codeph>InvalidFilterError</codeph> がスローされます。 フィルター表現では、空白および次の文字を使用することはできません。[]~$^&amp;¥/(){}&lt;>+=`!#%?,:;'"@.</p>
       
       </apiDesc><example>
       <pre>
@@ -408,12 +408,12 @@
       </apiDesc><apiOperationClassifier>mx.logging:ILogger</apiOperationClassifier></apiReturn><apiParam><apiItemName>category</apiItemName><apiType value="String"/><apiDesc>返す必要があるロガーのカテゴリです。
      
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      指定されたカテゴリに関連付けられたロガーを返します。 指定されたカテゴリが存在しない場合、ロガーの新しいインスタンスが返され、そのカテゴリと関連付けられます。 カテゴリの長さは 1 文字以上で、空白を含む次の文字は使用できません。[]~$^&amp;\/(){}&lt;>+=`!#%?,:;'"@指定されたカテゴリの形式が正しくない場合は、このメソッドにより <codeph>InvalidCategoryError</codeph> がスローされます。
+      指定されたカテゴリに関連付けられたロガーを返します。 指定されたカテゴリが存在しない場合、ロガーの新しいインスタンスが返され、そのカテゴリと関連付けられます。 カテゴリの長さは 1 文字以上で、空白を含む次の文字は使用できません。[]~$^&amp;¥/(){}&lt;>+=`!#%?,:;'"@指定されたカテゴリの形式が正しくない場合は、このメソッドにより <codeph>InvalidCategoryError</codeph> がスローされます。
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.logging:Log:hasIllegalCharacters"><apiName>hasIllegalCharacters</apiName><shortdesc>
       このメソッドにより、指定されたストリング値に無効な文字がないかどうかがチェックされます。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiDesc>無効な文字が検出された場合は <codeph>true</codeph> で、それ以外の場合は <codeph>false</codeph> になります。
       
-      </apiDesc><apiType value="Boolean"/></apiReturn><apiParam><apiItemName>value</apiItemName><apiType value="String"/><apiDesc>無効な文字をチェックするストリングです。 次の文字は有効ではありません。[]~$^&amp;\/(){}&lt;>+=`!#%?,:;'"@
+      </apiDesc><apiType value="Boolean"/></apiReturn><apiParam><apiItemName>value</apiItemName><apiType value="String"/><apiDesc>無効な文字をチェックするストリングです。 次の文字は有効ではありません。[]~$^&amp;¥/(){}&lt;>+=`!#%?,:;'"@
       </apiDesc></apiParam></apiOperationDef><apiDesc>
       このメソッドにより、指定されたストリング値に無効な文字がないかどうかがチェックされます。
      

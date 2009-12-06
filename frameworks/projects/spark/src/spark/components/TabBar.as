@@ -58,6 +58,11 @@ use namespace mx_internal;  // ListBase/setCurrentCaretIndex(index);
  *
  *  <p>You can use the TabBar control to set the active child of a ViewStack container, 
  *  as the following example shows:</p>
+ *
+ *  <p><b>Note: </b>The Spark list-based controls (the Spark ListBase class and its subclasses
+ *  such as ButtonBar, ComboBox, DropDownList, List, and TabBar) do not support the BasicLayout class
+ *  as the value of the <code>layout</code> property. 
+ *  Do not use BasicLayout with the Spark list-based controls.</p>
  *  
  *  <pre>
  *  &lt;s:TabBar dataProvider="{myViewStack}"/&gt; 
@@ -77,6 +82,14 @@ use namespace mx_internal;  // ListBase/setCurrentCaretIndex(index);
  *          &lt;s:Label text="Account Info"/&gt; 
  *          &lt;/s:NavigatorContent&gt; 
  *      &lt;/mx:ViewStack&gt; </pre>
+ *
+ *  <p>The TabBar container has the following default characteristics:</p>
+ *  <table class="innertable">
+ *     <tr><th>Characteristic</th><th>Description</th></tr>
+ *     <tr><td>Default size</td><td>Large enough to display the tabs</td></tr>
+ *     <tr><td>Minimum size</td><td>0 pixels</td></tr>
+ *     <tr><td>Maximum size</td><td>10000 pixels wide and 10000 pixels high</td></tr>
+ *  </table>
  *  
  *  @mxml <p>The <code>&lt;s:TabBar&gt;</code> tag inherits all of the tag 
  *  attributes of its superclass and adds the following tag attributes:</p>

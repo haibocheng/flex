@@ -1087,6 +1087,26 @@ public class DataGrid extends DataGridBase implements IIMESupport
         invalidateDisplayList();
     }
 
+    //----------------------------------
+    //  itemRenderer
+    //----------------------------------
+
+    /**
+     *  @private
+     */
+    override public function set itemRenderer(value:IFactory):void
+    {
+        super.itemRenderer = value;
+        if (columns)
+        {
+            var n:int = columns.length;
+            for (var i:int = 0; i < n; i++)
+            {
+                columns[i].resetFactories();
+            }
+        }
+    }
+
     /**
      *  @private
      */
@@ -2333,6 +2353,15 @@ public class DataGrid extends DataGridBase implements IIMESupport
         // we have to scroll up.  We can't have filler rows unless the scrollPosition is 0
         if (verticalScrollPosition > 0 && fillerRows > 0)
         {
+            var bookmark:CursorBookmark = iterator.bookmark;
+            var rowIndex:int = bookmark.getViewIndex();
+            if (verticalScrollPosition != rowIndex - lockedRowCount)
+            {
+                // we got totally out of sync, probably because a filter
+                // removed or added rows
+                super.verticalScrollPosition = Math.max(rowIndex - lockedRowCount, 0);
+            }
+
             if (adjustVerticalScrollPositionDownward(Math.max(rowCount, 1)))
                 return;
         }
@@ -4301,8 +4330,9 @@ public class DataGrid extends DataGridBase implements IIMESupport
             addEventListener(MouseEvent.MOUSE_DOWN, editorMouseDownHandler, true, 0, true);
         systemManager.getSandboxRoot().
             addEventListener(SandboxMouseEvent.MOUSE_DOWN_SOMEWHERE, editorMouseDownHandler, false, 0, true);
-        // we disappear if stage is resized
-        systemManager.addEventListener(Event.RESIZE, editorStageResizeHandler, true, 0, true);
+        // we disappear if stage or our grid is resized
+        systemManager.addEventListener(Event.RESIZE, editorAncestorResizeHandler);
+        addEventListener(Event.RESIZE, editorAncestorResizeHandler);
 
 	// Dispatch our item editor created event
         var event:DataGridEvent =
@@ -4403,7 +4433,8 @@ public class DataGrid extends DataGridBase implements IIMESupport
                 removeEventListener(MouseEvent.MOUSE_DOWN, editorMouseDownHandler, true);
             systemManager.getSandboxRoot().
                 removeEventListener(SandboxMouseEvent.MOUSE_DOWN_SOMEWHERE, editorMouseDownHandler);
-            systemManager.removeEventListener(Event.RESIZE, editorStageResizeHandler, true);
+            systemManager.removeEventListener(Event.RESIZE, editorAncestorResizeHandler);
+            removeEventListener(Event.RESIZE, editorAncestorResizeHandler);
 
             var event:DataGridEvent =
                 new DataGridEvent(DataGridEvent.ITEM_FOCUS_OUT);
@@ -5082,11 +5113,9 @@ public class DataGrid extends DataGridBase implements IIMESupport
     /**
      *  @private
      */
-    private function editorStageResizeHandler(event:Event):void
+    private function editorAncestorResizeHandler(event:Event):void
     {
-        if (event.target is DisplayObjectContainer &&
-            DisplayObjectContainer(event.target).contains(this))
-            endEdit(DataGridEventReason.OTHER);
+        endEdit(DataGridEventReason.OTHER);
     }
 
     /**
@@ -5619,6 +5648,18 @@ public class DataGrid extends DataGridBase implements IIMESupport
             if (lockedColumnCount)
             {
                 drawLinesAndColumnGraphics(lockedColumnContent, visibleLockedColumns, { right: 1})
+            }
+        }
+        else
+        {
+            var lines:Sprite = Sprite(listContent.getChildByName("lines"));
+            if (lines)
+                listContent.setChildIndex(lines, listContent.numChildren - 1);
+            if (lockedColumnCount)
+            {
+                lines = Sprite(lockedColumnContent.getChildByName("lines"));
+                if (lines)
+                    lockedColumnContent.setChildIndex(lines, lockedColumnContent.numChildren - 1);
             }
         }
     }

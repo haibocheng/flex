@@ -18,9 +18,9 @@ import spark.components.SkinnableContainer;
 
 /**
  *  Background image of a container.  
- *  You can have both a <code>backgroundColor</code> and a
- *  <code>backgroundImage</code> set at the same time. 
- *  The background image is displayed on top of the background color.
+ *  If you have both a <code>backgroundColor</code> and a
+ *  <code>backgroundImage</code> set at the same time,  <code>backgroundColor</code>
+ *  is ignored.  
  *  The default value is <code>undefined</code>, meaning "not set".
  *  If this style and the <code>backgroundColor</code> style are undefined,
  *  the component has a transparent background.
@@ -156,7 +156,7 @@ import spark.components.SkinnableContainer;
  *  The BorderContainer class defines a set of CSS styles that control
  *  the appearance of the border and background fill of the container. 
  *
- *  <p><b>Note: </b>Becasue you use CSS styles and class properties to control 
+ *  <p><b>Note: </b>Because you use CSS styles and class properties to control 
  *  the appearance of the BorderContainer, you typically do not create a custom skin for it.
  *  If you do create a custom skin, your skin class should apply any styles to control the 
  *  appearance of the container.</p>
@@ -165,12 +165,13 @@ import spark.components.SkinnableContainer;
  *  If you do not want rounded corners, set the <code>joints</code> property of 
  *  the stroke to <code>JointStyle.MITER</code>. </p>
  *  
- *  <p>The BorderContainer control has the following default characteristics:</p>
+ *  <p>The BorderContainer container has the following default characteristics:</p>
  *  <table class="innertable">
  *     <tr><th>Characteristic</th><th>Description</th></tr>
- *     <tr><td>Default size</td><td>112 pixels by 112 pixels</td></tr>
- *     <tr><td>Minimum size</td><td>0 pixels</td></tr>
- *     <tr><td>Maximum size</td><td>No limit</td></tr>
+ *     <tr><td>Default size</td><td>112 pixels wide by 112 pixels high</td></tr>
+ *     <tr><td>Minimum size</td><td>112 pixels wide by 112 pixels high</td></tr>
+ *     <tr><td>Maximum size</td><td>10000 pixels wide and 10000 pixels high</td></tr>
+ *     <tr><td>Default skin class</td><td>spark.skins.spark.BorderContainerSkin</td></tr>
  *  </table>
  *
  *  @mxml
@@ -198,7 +199,7 @@ import spark.components.SkinnableContainer;
  *  </pre>
  * 
  *  @see spark.skins.spark.BorderContainerSkin
- *  @includeExample examples/BorderExample.mxml
+ *  @includeExample examples/BorderContainerExample.mxml
  * 
  *  @langversion 3.0
  *  @playerversion Flash 10

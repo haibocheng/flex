@@ -37,24 +37,25 @@
       
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.collections:AsyncListView"><apiName>AsyncListView</apiName><shortdesc>
   </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseInterface>mx.collections:IList</apiBaseInterface><apiBaseClassifier>mx.utils:OnDemandEventDispatcher</apiBaseClassifier></apiClassifierDef><apiDesc>
-  <codeph/>
+  <codeph/><codeph/><codeph/>
  
-  <p> <codeph/> <codeph/></p>
+  <p>La méthode getItemAt() gère les erreurs ItemPendingErrors en renvoyant un élément « en attente » provisoire jusqu’à ce que la demande sous-jacente aboutisse ou échoue. L’élément provisoire est produit par l’appel de <codeph>createPendingItemFunction</codeph>. Si la demande aboutit, l’élément actuel remplace l’élément provisoire. Dans le cas contraire, l’élément est remplacé par l’élément renvoyé en appelant <codeph>createFailedItemFunction</codeph>. </p>
  
-  <p><codeph/> </p>
+  <p>Cette classe délègue les méthodes et les propriétés IList à sa <codeph>list</codeph>. Si la liste n’est pas spécifiée, les méthodes qui font muter la collection ne sont pas des opérations et les méthodes qui interrogent la collection renvoyent une valeur « vide » comme null ou zéro, selon le cas. </p>
  
-  <p/>
+  <p>Cette classe est conçue pour être utilisée avec des composants Spark basés sur DataGroup, tels que List et ComboBox, qui n’assurent pas une prise en charge intrinsèque de la gestion des erreurs ItemPendingError. </p>
  
+  <p>  </p>
  
   </apiDesc></apiClassifierDetail><adobeApiEvent id="mx.collections:AsyncListView_mx.events.CollectionEvent.COLLECTION_CHANGE_collectionChange"><apiName>collectionChange</apiName><shortdesc>
-  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>mx.events.CollectionEvent.COLLECTION_CHANGE</apiEventType><adobeApiEventClassifier>mx.events.CollectionEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
-  
+  Distribué lorsque la longueur de la liste a été modifiée ou qu’un élément list est remplacé. </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>mx.events.CollectionEvent.COLLECTION_CHANGE</apiEventType><adobeApiEventClassifier>mx.events.CollectionEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+  Distribué lorsque la longueur de la liste a été modifiée ou qu’un élément list est remplacé. 
  
   </apiDesc></adobeApiEventDetail></adobeApiEvent><apiConstructor id="mx.collections:AsyncListView:AsyncListView"><apiName>AsyncListView</apiName><shortdesc>
-      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>list</apiItemName><apiOperationClassifier>mx.collections:IList</apiOperationClassifier><apiData>null</apiData><apiDesc>
+      Constructeur AsyncListView. </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>list</apiItemName><apiOperationClassifier>mx.collections:IList</apiOperationClassifier><apiData>null</apiData><apiDesc>Valeur initiale de la propriété list, IList auquel nous déléguons. 
       
       </apiDesc></apiParam></apiConstructorDef><apiDesc>
-      
+      Constructeur AsyncListView. 
      
       </apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="mx.collections:AsyncListView:addItem"><apiName>addItem</apiName><shortdesc>
       
@@ -75,16 +76,16 @@
       Ajoute l’élément à l’index spécifié. L’index de tout élément supérieur à l’index de l’élément ajouté est augmenté d’une unité. Si l’index spécifié est inférieur à zéro ou supérieur à la longueur de la liste, une erreur RangeError est renvoyée.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.collections:AsyncListView:getItemAt"><apiName>getItemAt</apiName><shortdesc>
-      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Erreur renvoyée lorsque <codeph>index &lt; 0</codeph> ou <codeph>index >= length</codeph>.
-      </apiDesc><apiItemName>RangeError</apiItemName><apiOperationClassifier>RangeError</apiOperationClassifier></apiException><apiReturn><apiDesc>
-      </apiDesc><apiType value="Object"/></apiReturn><apiParam><apiItemName>index</apiItemName><apiType value="int"/><apiDesc>
+      Renvoie la valeur list.getItemAt(index) </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Erreur renvoyée lorsque <codeph>index &lt; 0</codeph> ou <codeph>index >= length</codeph>.
+      </apiDesc><apiItemName>RangeError</apiItemName><apiOperationClassifier>RangeError</apiOperationClassifier></apiException><apiReturn><apiDesc>Elément de liste présent à l’index spécifié. 
+      </apiDesc><apiType value="Object"/></apiReturn><apiParam><apiItemName>index</apiItemName><apiType value="int"/><apiDesc>Index de liste à partir duquel l’élément doit être récupéré.
       </apiDesc></apiParam><apiParam><apiItemName>prefetch</apiItemName><apiType value="int"/><apiData>0</apiData><apiDesc>Valeur <codeph>int</codeph> indiquant le nombre d’éléments à récupérer au cours de la demande si l’élément n’est pas local, ainsi que leur direction.
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      <codeph/>
+      Renvoie la valeur de <codeph>List.getItemAt(index)</codeph>. 
      
-      <p> <codeph/><codeph/>  <codeph/></p>
+      <p>Cette méthode intercepte les erreurs ItemPendingErrors (IPE) générées en conséquence de l’appel getItemAt(). Si une IPE est renvoyée, un <codeph>IResponder</codeph> est ajouté à l’IPE et un élément « en attente » provisoire , créé à l’aide de <codeph>createPendingItemFunction</codeph> est renvoyé. Si la demande sous-jacente réussit, l’élément en attente est remplacé par le véritable élément. Dans le cas contraire, l’élément en attente est remplacé par une valeur produite par un l’appel de <codeph>createFailedItemFunction</codeph>. </p>
      
-      </apiDesc></apiOperationDetail><related-links><link href="" invalidHref="mx.collections.createPendingItemFunction.xml"><linktext/></link><link href="" invalidHref="mx.collections.createFailedItemFunction.xml"><linktext/></link><link href="mx.collections.errors.xml#ItemPendingError"><linktext>mx.collections.errors.ItemPendingError</linktext></link><link href="mx.rpc.xml#IResponder"><linktext>mx.rpc.IResponder</linktext></link></related-links></apiOperation><apiOperation id="mx.collections:AsyncListView:getItemIndex"><apiName>getItemIndex</apiName><shortdesc>
+      </apiDesc></apiOperationDetail><related-links><link href="" invalidHref="mx.collections.createPendingItemFunction.xml"><linktext>createPendingItemFunction</linktext></link><link href="" invalidHref="mx.collections.createFailedItemFunction.xml"><linktext>createFailedItemFunction</linktext></link><link href="mx.collections.errors.xml#ItemPendingError"><linktext>mx.collections.errors.ItemPendingError</linktext></link><link href="mx.rpc.xml#IResponder"><linktext>mx.rpc.IResponder</linktext></link></related-links></apiOperation><apiOperation id="mx.collections:AsyncListView:getItemIndex"><apiName>getItemIndex</apiName><shortdesc>
       
       Retourne l’index de l’élément s’il se trouve dans la liste, de sorte que getItemAt(index) == élément.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Index de l’élément ou -1 s’il ne se trouve pas dans la liste.
       
@@ -121,14 +122,14 @@
       <p>Pour plus d’informations sur l’utilisation de la classe <codeph>ItemPendingError</codeph>, voir la documentation relative à ItemPendingError et aux collections.</p>
       
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.collections:AsyncListView:removeItemAt"><apiName>removeItemAt</apiName><shortdesc>
+      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Erreur renvoyée lorsque <codeph>index &lt; 0</codeph> ou <codeph>index >= length</codeph>.
+      </apiDesc><apiItemName>RangeError</apiItemName><apiOperationClassifier>RangeError</apiOperationClassifier></apiException><apiReturn><apiDesc>
       
-      Supprime l’élément qui se trouve à l’index spécifié et le retourne.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Elément supprimé.
-     
-      </apiDesc><apiType value="Object"/></apiReturn><apiParam><apiItemName>index</apiItemName><apiType value="int"/><apiDesc>Index auquel l’élément doit être supprimé.
-     
+      </apiDesc><apiType value="Object"/></apiReturn><apiParam><apiItemName>index</apiItemName><apiType value="int"/><apiDesc>Index de liste à partir duquel l’élément doit être récupéré.
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      
-      Supprime l’élément qui se trouve à l’index spécifié et le retourne. Tous les éléments qui se trouvent après cet index se trouvent désormais avancés d’un index.
+       
+     
+      <p><codeph/> </p>
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.collections:AsyncListView:setItemAt"><apiName>setItemAt</apiName><shortdesc>
       
@@ -143,25 +144,22 @@
       Place l’élément à l’index spécifié. Si un élément se trouvait déjà à cet index, le nouvel élément le remplace et il est retourné.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.collections:AsyncListView:toArray"><apiName>toArray</apiName><shortdesc>
-      
-      Retourne un tableau rempli dans le même ordre en tant que qu’implémentation IList.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Tableau.
-      
+      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>
       </apiDesc><apiType value="Array"/></apiReturn></apiOperationDef><apiDesc>
+        
       
-      Retourne un tableau rempli dans le même ordre en tant que qu’implémentation IList. Cette méthode peut renvoyer une erreur ItemPendingError.
-     
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.collections:AsyncListView:toString"><apiName>toString</apiName><shortdesc>
-      Imprime le contenu de cette vue dans une chaîne et la retourne.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Contenu de cette vue, sous forme de chaîne.
+      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>
       
       </apiDesc><apiType value="String"/></apiReturn></apiOperationDef><apiDesc>
-      Imprime le contenu de cette vue dans une chaîne et la retourne.
+       
      
       </apiDesc></apiOperationDetail></apiOperation><apiValue id="mx.collections:AsyncListView:createFailedItemFunction:get"><apiName>createFailedItemFunction</apiName><shortdesc>
-      </shortdesc><prolog/><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Function"/><apiDefaultValue>A function that unconditionally returns null. 
+      Une fonction qui est utilisée pour créer un élément de substitution lorsqu’une demande ayant entraîné le renvoi d’une erreur ItemPendingError échoue. </shortdesc><prolog/><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Function"/><apiDefaultValue>A function that unconditionally returns null. 
       </apiDefaultValue></apiValueDef><apiDesc>
-      <codeph/> <codeph/>
+      Une fonction utilisée pour créer un élément de substitution lorsqu’une demande ayant entraîné le renvoi d’une erreur <codeph>ItemPendingError</codeph> échoue. L’élément existant, généralement un élément en attente créé avec la valeur de <codeph>createPendingItemFunction()</codeph>, est remplacé par l’élément qui a échoué. 
       
-      <p> </p> 
+      <p>La valeur de cette propriété doit être une fonction avec deux paramètres, l’index de l’élément demandé et l’objet « info » d’échec, qui est transmis à partir de la méthode IResponder fault(). Dans la plupart des cas, le deuxième paramètre peut être ignoré, par exemple : </p> 
       <pre>
      function createFailedItem(index:int, info:Object):Object
      {
@@ -170,15 +168,15 @@
        </pre>
       
      
-      <p> 
+      <p>La définition de cette propriété n’affecte pas les éléments en échec qui ont déjà été créés. La définition de cette propriété sur null empêche la création des éléments en échec. 
       </p>
      
-      </apiDesc></apiValueDetail><related-links><link href="mx.collections.xml#AsyncListView/getItemAt"><linktext>getItemAt</linktext></link><link href="" invalidHref="mx.collections.createPendingItemFunction.xml"><linktext/></link><link href="mx.rpc.xml#IResponder/fault"><linktext/></link></related-links></apiValue><apiValue id="mx.collections:AsyncListView:createPendingItemFunction:get"><apiName>createPendingItemFunction</apiName><shortdesc>
-       </shortdesc><prolog/><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Function"/><apiDefaultValue>A function that unconditionally returns null. 
+      </apiDesc></apiValueDetail><related-links><link href="mx.collections.xml#AsyncListView/getItemAt"><linktext>getItemAt</linktext></link><link href="" invalidHref="mx.collections.createPendingItemFunction.xml"><linktext>createPendingItemFunction</linktext></link><link href="mx.rpc.xml#IResponder/fault"><linktext>mx.rpc.IResponder.fault</linktext></link></related-links></apiValue><apiValue id="mx.collections:AsyncListView:createPendingItemFunction:get"><apiName>createPendingItemFunction</apiName><shortdesc>
+       Une fonction utilisée pour créer un élément provisoire lorsque la demande initiale provoque le renvoi d’une erreur ItemPendingError. </shortdesc><prolog/><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Function"/><apiDefaultValue>A function that unconditionally returns null. 
       </apiDefaultValue></apiValueDef><apiDesc>
-       <codeph/>  <codeph/>
+       Une fonction utilisée pour créer un élément provisoire lorsque la demande initiale provoque le renvoi d’une erreur <codeph>ItemPendingError</codeph>. Si la demande aboutit, l’élément provisoire est automatiquement remplacé par l’élément actuel. Si la demande échoue, l’élément est remplacé un autre créé avec <codeph>createFailedItemFunction</codeph>. 
       
-       <p>  
+       <p>La valeur de cette propriété doit être une fonction avec deux paramètres, l’index de l’élément dataProvider demandé et ItemPendingError. Dans la plupart des cas, le deuxième paramètre peut être ignoré, par exemple :  
        <pre>
      function createPendingItem(index:int, ipe:ItemPendingError):Object
      {
@@ -187,27 +185,27 @@
        </pre>
        </p>
      
-      <p> </p>
+      <p>La définition de cette propriété n’affecte pas les éléments en attente provisoires qui ont déjà été créés. La définition de cette propriété sur null empêche la création d’éléments en attente provisoires. </p>
      
-      </apiDesc></apiValueDetail><related-links><link href="mx.collections.xml#AsyncListView/getItemAt"><linktext>getItemAt</linktext></link><link href="" invalidHref="mx.collections.createFailedItemFunction.xml"><linktext/></link><link href="mx.collections.errors.xml#ItemPendingError"><linktext>mx.collections.errors.ItemPendingError</linktext></link></related-links></apiValue><apiValue id="mx.collections:AsyncListView:length:get"><apiName>length</apiName><shortdesc>
+      </apiDesc></apiValueDetail><related-links><link href="mx.collections.xml#AsyncListView/getItemAt"><linktext>getItemAt</linktext></link><link href="" invalidHref="mx.collections.createFailedItemFunction.xml"><linktext>createFailedItemFunction</linktext></link><link href="mx.collections.errors.xml#ItemPendingError"><linktext>mx.collections.errors.ItemPendingError</linktext></link></related-links></apiValue><apiValue id="mx.collections:AsyncListView:length:get"><apiName>length</apiName><shortdesc>
       
       Nombre d’éléments dans cette collection.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="int"/></apiValueDef><apiDesc>
       
       Nombre d’éléments dans cette collection. 0 signifie que la collection ne contient aucun élément. -1 signifie que la longueur de la collection est inconnue. 
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.collections:AsyncListView:list:get"><apiName>list</apiName><shortdesc>
-      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>mx.collections:IList</apiValueClassifier><apiDefaultValue>null  
+      Interface IList « enveloppée » par cette vue de collection, par ex.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>mx.collections:IList</apiValueClassifier><apiDefaultValue>null  
       
       </apiDefaultValue></apiValueDef><apiDesc>
-      
+      IList que cette vue de collection « enveloppe », c’est-à-dire l’objet auquel l’ensemble des méthodes IList sont déléguées. 
      
-      <p><codeph/><codeph/><codeph/></p>
+      <p>Si cette propriété est null, les méthodes de mutation IList, comme <codeph>setItemAt()</codeph> ne sont pas des opérations et les méthodes de requête, telles que <codeph>getItemAt()</codeph>, renvoient null ou zéro (-1 pour <codeph>getItemIndex()</codeph>), selon le cas. </p>
      
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.collections:ItemResponder"><apiName>ItemResponder</apiName><shortdesc>
   La classe ItemResponder fournit une implémentation par défaut de l’interface mx.rpc.IResponder.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseInterface>mx.rpc:IResponder</apiBaseInterface><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
   La classe ItemResponder fournit une implémentation par défaut de l’interface <codeph>mx.rpc.IResponder</codeph>. Elle représente un répondeur qui permet de spécifier les méthodes à appeler au terme d’une demande, qu’elle aboutisse ou qu’elle génère une erreur. L’objet de la classe permet également de fournir des données (un jeton) devant être utilisées par les méthodes de répondeur.
  
- <p>Vous pouvez utiliser un objet <codeph>ItemResponder</codeph> dans l’instruction <codeph>catch</codeph> d’un bloc try pour obtenir des données distantes, comme dans l’exemple de code ci-dessous :</p>
+ <p>Vous pouvez utiliser un objet <codeph>ItemResponder</codeph> dans l’instruction <codeph>catch</codeph> d’un bloc try pour obtenir des données distantes, comme l’illustre l’exemple de code ci-dessous :</p>
  
   <pre><codeph>
      import mx.collections.ItemResponder;
@@ -309,7 +307,7 @@
      
      </apiDesc><apiType value="int"/></apiReturn><apiParam><apiItemName>items</apiItemName><apiType value="Array"/><apiDesc>Tableau dans lequel la recherche doit être réalisée.
      </apiDesc></apiParam><apiParam><apiItemName>values</apiItemName><apiType value="Object"/><apiDesc>Objet contenant les propriétés à rechercher (ou l’objet à rechercher lui-même). L’objet doit se composer de paires nom/valeur, où les noms de champ sont les noms des champs spécifiés par la propriété <codeph>SortFields</codeph>, dans l’ordre dans lequel ils sont utilisés dans cette propriété. Il n’est pas obligatoire de spécifier tous les champs de la propriété <codeph>SortFields</codeph>, mais vous ne pouvez pas ignorer des champs si d’autres champs figurant après dans la séquence sont définis. Par conséquent, si la propriété <codeph>SortFields</codeph> contient trois champs, vous pouvez spécifier les premier et deuxième champs de ce paramètre, mais vous ne pouvez pas spécifier uniquement les premier et troisième champs.
-     </apiDesc></apiParam><apiParam><apiItemName>mode</apiItemName><apiType value="String"/><apiDesc>Chaîne contenant le type de recherche à réaliser. Valeurs valides :
+     </apiDesc></apiParam><apiParam><apiItemName>mode</apiItemName><apiType value="String"/><apiDesc>Chaîne contenant le type de recherche à réaliser. Les valeurs possibles sont :
                     <ul>
                       <li>ANY_INDEX_MODE</li> Retourne une position valide pour les valeurs.
                       <li>FIRST_INDEX_MODE</li> Retourne la position où la première occurrence de la valeur a été retrouvée.
@@ -602,7 +600,7 @@
       Appelle la méthode <codeph>descendants()</codeph> de chaque objet XML de l’objet XMLList et retourne une liste de résultats XMLList. Le paramètre <codeph>name</codeph> est transmis à la méthode <codeph>descendants()</codeph> de l’objet XML. Si vous ne spécifiez pas de paramètre, la chaîne « ~~ » est transmise à la méthode <codeph>descendants()</codeph>.
      
       </apiDesc></apiOperationDetail><related-links><link href="" invalidHref="mx.collections.xml#XML/descendants()"><linktext>XML.descendants()</linktext></link></related-links></apiOperation><apiOperation id="mx.collections:XMLListCollection:elements"><apiName>elements</apiName><shortdesc>
-      Appelle la méthode elements() de chaque objet XML de l’objet XMLList.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Objet XMLList contenant les éléments enfants d’objets XML correspondants dans l’objet XMLList d’origine.
+      Appelle la méthode elements() de chaque objet XML de l’objet XMLList.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Objet XMLList contenant les éléments enfant d’objets XML correspondants dans l’objet XMLList d’origine.
      
       </apiDesc><apiType value="XMLList"/></apiReturn><apiParam><apiItemName>name</apiItemName><apiType value="String"/><apiData>*</apiData><apiDesc>Nom des éléments pour lesquels une correspondance doit être établie.
      
@@ -666,7 +664,7 @@
       Ajoutez l’élément spécifié à la fin de la liste.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>item</apiItemName><apiType value="Object"/><apiDesc>Elément à ajouter
       
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Ajoutez l’élément spécifié à la fin de la liste. Equivaut à addItemAt(élément, longueur) ;
+      Ajoutez l’élément spécifié à la fin de la liste. Equivaut à addItemAt(élément, longueur) ;
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.collections:ArrayList:addItemAt"><apiName>addItemAt</apiName><shortdesc>
       Ajoutez l’élément à l’index spécifié.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>si l’index est inférieur à 0 ou supérieur à la longueur

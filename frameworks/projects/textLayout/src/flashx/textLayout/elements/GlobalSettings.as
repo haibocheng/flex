@@ -66,16 +66,16 @@ package flashx.textLayout.elements
 		 * TLF provides a default implementation with
 		 * default strings.  Clients may replace this function with their own implementation for localization.
 		 */
-		public static function get getResourceStringFunction():Function
+		public static function get resourceStringFunction():Function
 		{ 
-			return _getResourceStringFunction; 
+			return _resourceStringFunction; 
 		}
-		public static function set getResourceStringFunction(val:Function):void
+		public static function set resourceStringFunction(val:Function):void
 		{
-			_getResourceStringFunction = val;
+			_resourceStringFunction = val;
 		}
 		
-		private static var _getResourceStringFunction:Function = defaultGetResourceStringFunction;
+		private static var _resourceStringFunction:Function = defaultResourceStringFunction;
 		
 		/** @private */
 		
@@ -111,7 +111,7 @@ package flashx.textLayout.elements
 		};
 		
 		/** @private */
-		tlf_internal static function defaultGetResourceStringFunction(resourceName:String, parameters:Array = null):String
+		tlf_internal static function defaultResourceStringFunction(resourceName:String, parameters:Array = null):String
 		{
 			var value:String = String(resourceDict[resourceName]);
 			

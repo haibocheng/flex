@@ -49,7 +49,7 @@
   </langversion><productversion>Flex 4
  </productversion></asCustoms></prolog></effect></effects><styles><style format="length" inherit="no" name="resizeAffordanceWidth" owner="spark.components:Window" playerVersion="Flash10" type="Number">
 <description>
-  
+  ウィンドウの外縁から resizeAffordance のピクセル数の位置でクリックが発生した場合、そのようなウィンドウに対するクリックは、ウィンドウの境界線に対するクリックと見なされます。
   
   </description>
 <default>6
@@ -60,21 +60,27 @@
   </playerversion>
 	<prolog><asCustoms><langversion>3.0
   </langversion><productversion>Flex 4
- </productversion></asCustoms></prolog></style><style inherit="no" name="backgroundAlpha" owner="spark.components:Window" playerVersion="Flash10" type="Number">
+ </productversion></asCustoms></prolog></style><style format="Color" inherit="no" name="backgroundColor" owner="spark.components:Window" playerVersion="Flash10" type="uint">
 <description>
-  
+  アプリケーションの背景色です。この色は、アプリケーションのステージカラーおよび HTML 埋め込みタグの背景色として使用されます。
    
   </description>
+<default>0xFFFFFF
+ 
+  </default>
 
 <playerversion>AIR 1.5
   </playerversion>
 	<prolog><asCustoms><langversion>3.0
   </langversion><productversion>Flex 4
- </productversion></asCustoms></prolog></style><style format="Color" inherit="no" name="backgroundColor" owner="spark.components:Window" playerVersion="Flash10" type="uint">
+ </productversion></asCustoms></prolog></style><style inherit="no" name="backgroundAlpha" owner="spark.components:Window" playerVersion="Flash10" type="Number">
 <description>
-  
+  <codeph>backgroundColor</codeph> プロパティで定義されているカラーのアルファレベルです。 
    
   </description>
+<default>1.0
+ 
+  </default>
 
 <playerversion>AIR 1.5
   </playerversion>
@@ -276,7 +282,7 @@
       基になる NativeWindow を作成して開きます。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>openWindowActive</apiItemName><apiType value="Boolean"/><apiData>true</apiData><apiDesc> は、ウィンドウがアクティブ化された状態で開くかどうか（つまり、フォーカスを持っているかどうか）を表します。 デフォルト値は <codeph>true</codeph> です。
       
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      基になる NativeWindow を作成して開きます。
+      基になる NativeWindow を作成して開きます。閉じられた後でも Window オブジェクトは有効な参照として残りますが、ほとんどのプロパティやメソッドにはアクセスできません。閉じたウィンドウを再び開くことはできません。
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="spark.components:Window:orderInBackOf"><apiName>orderInBackOf</apiName><shortdesc>
       ウィンドウを別のウィンドウの背後に移動します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>ウィンドウが正常に背後に移動された場合は <codeph>true</codeph>、ウィンドウが不可視であるか最小化されている場合は <codeph>false</codeph> になります。
@@ -346,7 +352,7 @@
       </apiDefaultValue></apiValueDef><apiDesc>
       <codeph>true</codeph> の場合、ステータスバーは可視です。
      
-      <p/>
+      <p>ステータスバーは、アプリケーションまたはアプリケーションウィンドウのスキンとして WindowedApplicationSkin クラスまたは SparkChromeWindowedApplicationSkin クラスを使用している場合にのみ表示されます。</p>
      
       </apiDesc></apiValueDetail></apiValue><apiValue id="spark.components:Window:status:get"><apiName>status</apiName><shortdesc>
       ステータスバー（表示されている場合）に表示されるストリングです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="String"/><apiDefaultValue>""
@@ -393,7 +399,7 @@
       このウィンドウのウィンドウメニューです。一部のオペレーティングシステムでは、ウィンドウメニューはサポートされていません。その場合、このプロパティは無視されます。
       
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="spark.components:WindowedApplication"><apiName>WindowedApplication</apiName><shortdesc>
-  WindowedApplication は、AIR アプリケーション用の Flex アプリケーションを作成するために使用するアプリケーションコンテナを定義します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion><Exclude kind="effect" name="moveEffect"/><skinStates><SkinState name="disabledAndInactive" owner="spark.components:WindowedApplication" playerVersion="Flash10">
+  WindowedApplication は、AIR アプリケーション用の Flex アプリケーションを作成するために使用するアプリケーションコンテナを定義します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion><Exclude kind="effect" name="moveEffect"/><Exclude kind="property" name="controlBarVisible"/><Exclude kind="property" name="controlBarLayout"/><Exclude kind="property" name="controlBarGroup"/><Exclude kind="property" name="controlBarContent"/><skinStates><SkinState name="disabledAndInactive" owner="spark.components:WindowedApplication" playerVersion="Flash10">
 <description>
   アプリケーションは無効で非アクティブです。
   
@@ -442,7 +448,7 @@
   </langversion><productversion>Flex 4
  </productversion></asCustoms></prolog></effect></effects><styles><style format="length" inherit="no" name="resizeAffordanceWidth" owner="spark.components:WindowedApplication" playerVersion="Flash10" type="Number">
 <description>
-  
+  ウィンドウの外縁から resizeAffordance のピクセル数の位置でクリックが発生した場合、そのようなウィンドウに対するクリックは、ウィンドウの境界線に対するクリックと見なされます。
  
   </description>
 <default>6
@@ -453,9 +459,9 @@
   </playerversion>
 	<prolog><asCustoms><langversion>3.0
   </langversion><productversion>Flex 4
- </productversion></asCustoms></prolog></style><style inherit="no" name="backgroundAlpha" owner="spark.components:WindowedApplication" playerVersion="Flash10" type="Number">
+ </productversion></asCustoms></prolog></style><style format="Color" inherit="no" name="backgroundColor" owner="spark.components:WindowedApplication" playerVersion="Flash10" type="uint">
 <description>
-  
+  アプリケーションの背景色です。この色は、アプリケーションのステージカラーおよび HTML 埋め込みタグの背景色として使用されます。
    
   </description>
 
@@ -463,11 +469,14 @@
   </playerversion>
 	<prolog><asCustoms><langversion>3.0
   </langversion><productversion>Flex 4
- </productversion></asCustoms></prolog></style><style format="Color" inherit="no" name="backgroundColor" owner="spark.components:WindowedApplication" playerVersion="Flash10" type="uint">
+ </productversion></asCustoms></prolog></style><style inherit="no" name="backgroundAlpha" owner="spark.components:WindowedApplication" playerVersion="Flash10" type="Number">
 <description>
-  
+  <codeph>backgroundColor</codeph> プロパティで定義されているカラーのアルファレベルです。 
    
   </description>
+<default>1.0
+   
+  </default>
 
 <playerversion>AIR 1.5
   </playerversion>
@@ -557,7 +566,7 @@
   ]]></mxml></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseInterface>mx.core:IWindow</apiBaseInterface><apiBaseClassifier>spark.components:Application</apiBaseClassifier></apiClassifierDef><apiDesc>
   WindowedApplication は、AIR アプリケーション用の Flex アプリケーションを作成するために使用するアプリケーションコンテナを定義します。
  
-  <p>WindowedApplication は、2 つの役割を果たします。また、WindowedApplication はコンテナとして、Flex AIR アプリケーションの最初のウィンドウのレイアウトを定義します。WindowedApplication で定義されたすべてのビジュアルコントロールは、AIR アプリケーションによってロードされる最初のウィンドウのコンテンツになります。</p>
+  <p>WindowedApplication は、2 つの役割を果たします。これは &lt;mx:WindowedApplication> タグの代わりに使用され、Flex ベースの AIR アプリケーションへのエントリポイントとして機能します。また、WindowedApplication はコンテナとして、Flex AIR アプリケーションの最初のウィンドウのレイアウトを定義します。WindowedApplication で定義されたすべてのビジュアルコントロールは、AIR アプリケーションによってロードされる最初のウィンドウのコンテンツになります。</p>
  
   <p>WindowedApplication は、Flex ベースの AIR アプリケーションの最上位アプリケーションです。他の Flex アプリケーションによってロードされるように設計されていません。WindowedApplication で他のアプリケーションをロードする必要がある場合は、これらのアプリケーションのコンテナとして Application クラスを使用します。他のウィンドウが必要な場合は、これらのウィンドウのコンテナとして Window クラスを使用します。</p>
   
@@ -743,7 +752,7 @@
       </apiDefaultValue></apiValueDef><apiDesc>
       <codeph>true</codeph> の場合、ステータスバーは可視です。
      
-      <p/>
+      <p>ステータスバーは、アプリケーションまたはアプリケーションウィンドウのスキンとして WindowedApplicationSkin クラスまたは SparkChromeWindowedApplicationSkin クラスを使用している場合にのみ表示されます。</p>
      
       </apiDesc></apiValueDetail></apiValue><apiValue id="spark.components:WindowedApplication:status:get"><apiName>status</apiName><shortdesc>
       ステータスバー（表示されている場合）に表示されるストリングです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="String"/><apiDefaultValue>""

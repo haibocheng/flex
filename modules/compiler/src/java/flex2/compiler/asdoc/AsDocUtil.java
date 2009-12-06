@@ -47,8 +47,18 @@ import org.w3c.dom.NodeList;
 public class AsDocUtil
 {
     private boolean verbose = false;
-    private boolean errors = false;
+
+	private boolean errors = false;
+	
+	public void setErrors(boolean errors) {
+		this.errors = errors;
+	}
+	
     private String validationErrors = "";
+
+    public void setValidationErrors(String validationErrors) {
+		this.validationErrors = validationErrors;
+	}
 
     AsDocUtil(boolean verbose)
     {

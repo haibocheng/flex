@@ -40,21 +40,21 @@
      
       <p>Wenn eine untergeordnete Komponente Ihrer Komponente die IFocusManagerComponent-Schnittstelle implementiert und nie den Fokus erhalten soll, können Sie zur Optimierung <codeph>focusEnabled</codeph> auf <codeph>false</codeph> setzen, bevor Sie <codeph>addChild()</codeph> in der untergeordneten Komponente aufrufen.</p>
      
-      <p><codeph/><codeph/><codeph/> Dies bedeutet jedoch auch, dass Sie den Wert im Anschluss an <codeph>addChild()</codeph> nicht ändern und erwarten können, dass dies vom FocusManager bemerkt wird.</p>
+      <p>Dann ignoriert FocusManager diese Komponente und überwacht die Eigenschaften <codeph>tabFocusEnabled</codeph>, <codeph>tabChildren</codeph> und <codeph>mouseFocusEnabled</codeph> nicht auf Änderungen. Dies bedeutet jedoch auch, dass Sie den Wert im Anschluss an <codeph>addChild()</codeph> nicht ändern und erwarten können, dass dies vom FocusManager bemerkt wird.</p>
      
       <p>Hinweis: Dem Objekt kann der Fokus trotzdem programmgesteuert über die <codeph>setFocus()</codeph>-Methode zugewiesen werden. Der FocusManager wird lediglich angewiesen, die IFocusManagerComponent-Komponente in der Tabulator- und Mausreihenfolge zu überspringen.</p>
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.core:FlexHTMLLoader:hasFocusableChildren:get"><apiName>hasFocusableChildren</apiName><shortdesc>
-       </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="4.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Boolean"/><apiDefaultValue>false
+      Ein Flag, das angibt, ob untergeordnete Objekte den Fokus erhalten können. Es ähnelt der von Flash Player verwendeten tabChildren-Eigenschaft. Normalerweise hat dieses Flag die Einstellung „false“, da die meisten Komponenten den Fokus selbst erhalten oder den Fokus auf eine einzelne interne Unterkomponente übertragen und angezeigt werden, als hätten sie den Fokus erhalten.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="4.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Boolean"/><apiDefaultValue>false
       
       </apiDefaultValue></apiValueDef><apiDesc>
-      
+      Ein Flag, das angibt, ob untergeordnete Objekte den Fokus erhalten können.
      
-      <p><codeph/></p>
+      <p>Dieses Flag ist der <codeph>tabChildren</codeph>-Eigenschaft in Flash Player ähnlich.</p>
      
-      <p><codeph/>  <codeph/><codeph/> </p>
+      <p>Normalerweise hat dieses Flag die Einstellung <codeph>false</codeph>, da die meisten Komponenten den Fokus selbst erhalten oder den Fokus auf eine einzelne interne Unterkomponente übertragen und angezeigt werden, als hätten sie den Fokus erhalten. TextInput kann beispielsweise das RichEditableText-Steuerelement enthalten, das den Fokus erhalten kann. Wenn TextInput mit Fokus dargestellt wird, hat in Wirklichkeit die RichEditableText-Unterkomponente den Fokus erhalten. TextInput setzt <codeph>hasFocusableChildren</codeph> auf <codeph>false</codeph>, da TextInput als Komponente betrachtet wird, die den Fokus erhalten hat. Bei der internen Struktur handelt es sich um eine Abstraktion.</p>
      
-      <p><codeph/></p>
+      <p>Normalerweise ist dieses Flag nur bei Navigatorkomponenten wie TabNavigator und Accordion auf <codeph>true</codeph> gesetzt, da sie den Fokus auf der Registerkarte erhalten. Jedoch geht der Fokus an die Komponenten der untergeordneten Container weiterer Registerkarten.</p>
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.core:FlexHTMLLoader:mouseFocusEnabled:get"><apiName>mouseFocusEnabled</apiName><shortdesc>
       Gibt an, ob die Komponente den Fokus erhalten kann, wenn darauf geklickt wird.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Boolean"/><apiDefaultValue>true
@@ -63,14 +63,14 @@
       Gibt an, ob die Komponente den Fokus erhalten kann, wenn darauf geklickt wird. Wenn <codeph>false</codeph> angegeben ist, wird der Fokus auf das erste übergeordnete Element übertragen, für das <codeph>mouseFocusEnable</codeph> auf <codeph>true</codeph> gesetzt ist. 
      
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.core:FlexHTMLLoader:tabFocusEnabled:get"><apiName>tabFocusEnabled</apiName><shortdesc>
-       </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="4.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Boolean"/><apiDefaultValue>true
+      Ein Flag, das angibt, ob untergeordnete Objekte den Fokus erhalten können. Es ähnelt der von Flash Player verwendeten tabEnabled-Eigenschaft. Dieses Flag ist normalerweise für Komponenten, die Tastatureingaben verarbeiten können, auf „true“ gesetzt. Für einige Komponenten in Steuerleisten ist das Flag jedoch auf „false“ gesetzt, damit sie einer anderen Komponente (z. B. einem Editor) den Fokus nicht „stehlen“.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="4.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Boolean"/><apiDefaultValue>true
       
       </apiDefaultValue></apiValueDef><apiDesc>
-      
+      Ein Flag, das angibt, ob untergeordnete Objekte den Fokus erhalten können.
      
-      <p><codeph/></p>
+      <p>Dieses Flag ist der <codeph>tabEnabled</codeph>-Eigenschaft in Flash Player ähnlich.</p>
      
-      <p><codeph/><codeph/>
+      <p>Dieses Flag ist normalerweise für Komponenten, die Tastatureingaben verarbeiten können, auf <codeph>true</codeph> gesetzt. Für einige Komponenten in Steuerleisten ist das Flag jedoch auf <codeph>false</codeph> gesetzt, damit sie einer anderen Komponente (z. B. einem Editor) den Fokus nicht „stehlen“.
       </p>
      
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.core:Window"><apiName>Window</apiName><shortdesc>
@@ -486,7 +486,7 @@
       Erstellt das zugrunde liegende NativeWindow und öffnet es.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>openWindowActive</apiItemName><apiType value="Boolean"/><apiData>true</apiData><apiDesc>Gibt an, ob das Fenster aktiviert geöffnet wird (d. h., ob es im Fokus ist). Der Standardwert ist <codeph>true</codeph>.
       
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Erstellt das zugrunde liegende NativeWindow und öffnet es.
+      Erstellt das zugrunde liegende NativeWindow und öffnet es. Nach dem Schließen ist das Window-Objekt zwar immer noch ein gültiger Verweis, aber der Zugriff auf die meisten Eigenschaften und Methoden funktioniert nicht. Geschlossene Fenster können nicht erneut geöffnet werden.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.core:Window:orderInBackOf"><apiName>orderInBackOf</apiName><shortdesc>
       Ordnet das Fenster eine Ebene hinter einem anderen an.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc><codeph>true</codeph>, wenn das Fenster erfolgreich nach hinten gestellt wurde, und <codeph>false</codeph>, wenn das Fenster nicht sichtbar oder minimiert ist.

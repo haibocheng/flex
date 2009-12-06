@@ -112,7 +112,7 @@ public class TextFlowUtil
 		 *  TLF itself has English-only messages,
 		 *  but higher layers like Flex can provide localized versions.
 		 */
-		GlobalSettings.getResourceStringFunction = TextUtil.getResourceString;
+		GlobalSettings.resourceStringFunction = TextUtil.getResourceString;
         
         var format:TextLayoutFormat;
         var config:Configuration;
@@ -277,7 +277,7 @@ public class TextFlowUtil
      *  "Hello, &lt;span fontWeight='bold'&gt;World!&lt;/span&gt;"
      *  </pre>
      *  The parser wraps the markup with a <code>&lt;TextFlow&gt;</code> tag in the proper namespace.
-     *  The parser also inserts &lt;span&gt; and &lt;paragraph&lt; tags
+     *  The parser also inserts &lt;span&gt; and &lt;paragraph&gt; tags
      *  where needed to comply with the structure of a TextFlow object.</p>
      *
      *  <p>If you specify the TextFlow tag yourself,

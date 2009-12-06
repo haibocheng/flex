@@ -49,7 +49,7 @@
   </langversion><productversion>Flex 4
  </productversion></asCustoms></prolog></effect></effects><styles><style format="length" inherit="no" name="resizeAffordanceWidth" owner="spark.components:Window" playerVersion="Flash10" type="Number">
 <description>
-  
+  如果是在距离窗口的外部边缘 resizeAffordance 像素的位置进行单击，则可以将在窗口上的单击视为在窗口边框上的单击。
   
   </description>
 <default>6
@@ -60,21 +60,27 @@
   </playerversion>
 	<prolog><asCustoms><langversion>3.0
   </langversion><productversion>Flex 4
- </productversion></asCustoms></prolog></style><style inherit="no" name="backgroundAlpha" owner="spark.components:Window" playerVersion="Flash10" type="Number">
+ </productversion></asCustoms></prolog></style><style format="Color" inherit="no" name="backgroundColor" owner="spark.components:Window" playerVersion="Flash10" type="uint">
 <description>
-  
+  应用程序的背景色。将此颜色用作应用程序的舞台颜色和 HTML 嵌入标签的背景色。
    
   </description>
+<default>0xFFFFFF
+ 
+  </default>
 
 <playerversion>AIR 1.5
   </playerversion>
 	<prolog><asCustoms><langversion>3.0
   </langversion><productversion>Flex 4
- </productversion></asCustoms></prolog></style><style format="Color" inherit="no" name="backgroundColor" owner="spark.components:Window" playerVersion="Flash10" type="uint">
+ </productversion></asCustoms></prolog></style><style inherit="no" name="backgroundAlpha" owner="spark.components:Window" playerVersion="Flash10" type="Number">
 <description>
-  
+  由 <codeph>backgroundColor</codeph> 属性定义的颜色的 alpha 级别。
    
   </description>
+<default>1.0
+ 
+  </default>
 
 <playerversion>AIR 1.5
   </playerversion>
@@ -276,7 +282,7 @@
       创建基础 NativeWindow 并将其打开。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>openWindowActive</apiItemName><apiType value="Boolean"/><apiData>true</apiData><apiDesc>指定打开的 Window 是否已激活（即它是否具有焦点）。默认值为 <codeph>true</codeph>。
       
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      创建基础 NativeWindow 并将其打开。
+      创建基础 NativeWindow 并将其打开。关闭后，Window 对象仍为一个有效的引用，但是不允许访问大多数的属性和方法。关闭的窗口无法重新打开。
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="spark.components:Window:orderInBackOf"><apiName>orderInBackOf</apiName><shortdesc>
       将窗口排序到另一个窗口的正后方。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>如果窗口成功排序到另一个窗口的后方，则为 <codeph>true</codeph>；如果窗口不可见或处于最小化状态，则为 <codeph>false</codeph>。
@@ -346,7 +352,7 @@
       </apiDefaultValue></apiValueDef><apiDesc>
       如果为 <codeph>true</codeph>，则状态栏可见。
      
-      <p/>
+      <p>只有将 WindowedApplicationSkin 类或 SparkChromeWindowedApplicationSkin 类用作应用程序或任何应用程序窗口的外观时，才会显示状态栏。</p>
      
       </apiDesc></apiValueDetail></apiValue><apiValue id="spark.components:Window:status:get"><apiName>status</apiName><shortdesc>
       如果可见，为显示在状态栏中的字符串。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="String"/><apiDefaultValue>""
@@ -393,7 +399,7 @@
       此窗口的窗口菜单。某些操作系统不支持窗口菜单，此时将忽略此属性。
       
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="spark.components:WindowedApplication"><apiName>WindowedApplication</apiName><shortdesc>
-  WindowedApplication 定义 Application 容器，用于为 AIR 应用程序创建 Flex 应用程序。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion><Exclude kind="effect" name="moveEffect"/><skinStates><SkinState name="disabledAndInactive" owner="spark.components:WindowedApplication" playerVersion="Flash10">
+  WindowedApplication 定义 Application 容器，用于为 AIR 应用程序创建 Flex 应用程序。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion><Exclude kind="effect" name="moveEffect"/><Exclude kind="property" name="controlBarVisible"/><Exclude kind="property" name="controlBarLayout"/><Exclude kind="property" name="controlBarGroup"/><Exclude kind="property" name="controlBarContent"/><skinStates><SkinState name="disabledAndInactive" owner="spark.components:WindowedApplication" playerVersion="Flash10">
 <description>
   应用程序已禁用且处于非活动状态。
   
@@ -442,7 +448,7 @@
   </langversion><productversion>Flex 4
  </productversion></asCustoms></prolog></effect></effects><styles><style format="length" inherit="no" name="resizeAffordanceWidth" owner="spark.components:WindowedApplication" playerVersion="Flash10" type="Number">
 <description>
-  
+  如果是在距离窗口的外部边缘 resizeAffordance 像素的位置进行单击，则可以将在窗口上的单击视为在窗口边框上的单击。
  
   </description>
 <default>6
@@ -453,9 +459,9 @@
   </playerversion>
 	<prolog><asCustoms><langversion>3.0
   </langversion><productversion>Flex 4
- </productversion></asCustoms></prolog></style><style inherit="no" name="backgroundAlpha" owner="spark.components:WindowedApplication" playerVersion="Flash10" type="Number">
+ </productversion></asCustoms></prolog></style><style format="Color" inherit="no" name="backgroundColor" owner="spark.components:WindowedApplication" playerVersion="Flash10" type="uint">
 <description>
-  
+  应用程序的背景色。将此颜色用作应用程序的舞台颜色和 HTML 嵌入标签的背景色。
    
   </description>
 
@@ -463,11 +469,14 @@
   </playerversion>
 	<prolog><asCustoms><langversion>3.0
   </langversion><productversion>Flex 4
- </productversion></asCustoms></prolog></style><style format="Color" inherit="no" name="backgroundColor" owner="spark.components:WindowedApplication" playerVersion="Flash10" type="uint">
+ </productversion></asCustoms></prolog></style><style inherit="no" name="backgroundAlpha" owner="spark.components:WindowedApplication" playerVersion="Flash10" type="Number">
 <description>
-  
+  由 <codeph>backgroundColor</codeph> 属性定义的颜色的 alpha 级别。
    
   </description>
+<default>1.0
+   
+  </default>
 
 <playerversion>AIR 1.5
   </playerversion>
@@ -557,7 +566,7 @@
   ]]></mxml></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseInterface>mx.core:IWindow</apiBaseInterface><apiBaseClassifier>spark.components:Application</apiBaseClassifier></apiClassifierDef><apiDesc>
   WindowedApplication 定义 Application 容器，用于为 AIR 应用程序创建 Flex 应用程序。
  
-  <p>WindowedApplication 有两个作用。此外，作为容器，WindowedApplication 可定义 Flex AIR 应用程序初始窗口的布局，在 WindowedApplication 中定义的任何可见控件都将成为 AIR 应用程序加载的初始窗口中的内容。</p>
+  <p>WindowedApplication 有两个作用。它可以替换 &lt;mx:WindowedApplication> 标签，与基于 Flex 的 AIR 应用程序的入口点具有相同的作用。此外，作为容器，WindowedApplication 可定义 Flex AIR 应用程序初始窗口的布局，在 WindowedApplication 中定义的任何可见控件都将成为 AIR 应用程序加载的初始窗口中的内容。</p>
  
   <p>WindowedApplication 是基于 Flex 的 AIR 应用程序的顶层应用程序。该应用程序没有设计为由其它 Flex 应用程序进行加载。如果 WindowedApplication 需要加载其它应用程序，请使用 Application 类作为这些应用程序的容器。如果需要其它窗口，请使用 Window 类作为这些窗口的容器。</p>
   
@@ -743,7 +752,7 @@
       </apiDefaultValue></apiValueDef><apiDesc>
       如果为 <codeph>true</codeph>，则状态栏可见。
      
-      <p/>
+      <p>只有将 WindowedApplicationSkin 类或 SparkChromeWindowedApplicationSkin 类用作应用程序或任何应用程序窗口的外观时，才会显示状态栏。</p>
      
       </apiDesc></apiValueDetail></apiValue><apiValue id="spark.components:WindowedApplication:status:get"><apiName>status</apiName><shortdesc>
       如果可见，为显示在状态栏中的字符串。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="String"/><apiDefaultValue>""

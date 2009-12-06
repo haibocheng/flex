@@ -11,13 +11,14 @@
 
 package spark.components
 {
+import flash.events.MouseEvent;
 import flash.geom.Point;
 
 import mx.core.mx_internal;
 import mx.events.PropertyChangeEvent;
 import mx.events.ResizeEvent;
 
-import spark.components.supportClasses.ScrollBar;
+import spark.components.supportClasses.ScrollBarBase;
 import spark.core.IViewport;
 import spark.core.NavigationUnit;
 
@@ -31,7 +32,7 @@ use namespace mx_internal;
 [DefaultTriggerEvent("change")]
 
 /**
- *  The VScrollBar (vertical ScrollBar) control lets you control
+ *  The VScrollBar (vertical scrollbar) control lets you control
  *  the portion of data that is displayed when there is too much data
  *  to fit vertically in a display area.
  * 
@@ -71,22 +72,23 @@ use namespace mx_internal;
  *
  *  <pre>
  *  &lt;s:VScrollBar
- *
  *    <strong>Properties</strong>
  *    viewport=""
  *  /&gt;
  *  </pre>
  *   
  *  @includeExample examples/VScrollBarExample.mxml
+ *
  *  @see spark.skins.spark.VScrollBarSkin
  *  @see spark.skins.spark.VScrollBarThumbSkin
  *  @see spark.skins.spark.VScrollBarTrackSkin
+ *
  *  @langversion 3.0
  *  @playerversion Flash 10
  *  @playerversion AIR 1.5
  *  @productversion Flex 4
  */
-public class VScrollBar extends ScrollBar
+public class VScrollBar extends ScrollBarBase
 {
     include "../core/Version.as";
 
@@ -140,11 +142,24 @@ public class VScrollBar extends ScrollBar
      */
     override public function set viewport(newViewport:IViewport):void
     {
+        const oldViewport:IViewport = super.viewport;
+        if (oldViewport == newViewport)
+            return;
+        
+        if (oldViewport)
+        {
+            oldViewport.removeEventListener(MouseEvent.MOUSE_WHEEL, mouseWheelHandler);
+            removeEventListener(MouseEvent.MOUSE_WHEEL, mouseWheelHandler);
+        }
+        
         super.viewport = newViewport;
+
         if (newViewport)
         {
-            updateMaximumAndPageSize();
+            updateMaximumAndPageSize()
             value = newViewport.verticalScrollPosition;;
+            newViewport.addEventListener(MouseEvent.MOUSE_WHEEL, mouseWheelHandler);
+            addEventListener(MouseEvent.MOUSE_WHEEL, mouseWheelHandler);  
         }
     }    
 
@@ -227,27 +242,21 @@ public class VScrollBar extends ScrollBar
     }
         
     /**
-     *  If <code>viewport</code> is not null, 
-     *  changes the vertical scroll position for a page up or page down operation 
-     *  by 
-     *  scrolling the viewport.
-     *  This method calculates the amount to scroll by calling the 
-     *  <code>IViewport.getVerticalScrollPositionDelta()</code> method 
-     *  with either <code>flash.ui.Keyboard.PAGE_UP</code> 
-     *  or <code>flash.ui.Keyboard.PAGE_DOWN</code>.
-     *  It then calls the <code>setValue()</code> method to 
-     *  set the <code>IViewport.verticalScrollPosition</code> property 
-     *  to the appropriate value.
+     *  Increment <code>value</code> by a page if <code>increase</code> is <code>true</code>, 
+     *  or decrement <code>value</code>  by a page if <code>increase</code> is <code>false</code>.
+     *  Increasing the scrollbar's <code>value</code> scrolls the viewport up. 
+     *  Decreasing the <code>value</code> scrolls to the viewport down.
+     *  
+     *  <p>If the <code>viewport</code> property is set, then its 
+     *  <code>getVerticalScrollPositionDelta()</code> method 
+     *  is used to compute the size of the page increment.  
+     *  If <code>viewport</code> is null, then the scrollbar's
+     *  <code>pageSize</code> property is used.</p>
      *
-     *  <p>If <code>viewport</code> is null, 
-     *  calling this method changes the vertical scroll position for 
-     *  a page up or page down operation by calling 
-     *  the <code>changeValueByPage()</code> method.</p>
-     *
-     *  @param increase Whether the page scroll is up (<code>true</code>) or
-     *  down (<code>false</code>). 
+     *  @param increase Whether to increment (<code>true</code>) or
+     *  decrement (<code>false</code>) <code>value</code>. 
      * 
-     *  @see spark.components.supportClasses.ScrollBar#changeValueByPage()
+     *  @see spark.components.supportClasses.ScrollBarBase#changeValueByPage()
      *  @see spark.components.supportClasses.Range#setValue()
      *  @see spark.core.IViewport
      *  @see spark.core.IViewport#verticalScrollPosition
@@ -263,7 +272,7 @@ public class VScrollBar extends ScrollBar
         var oldPageSize:Number;
         if (viewport)
         {
-            // Want to use ScrollBar's changeValueByPage() implementation to get the same
+            // Want to use ScrollBarBase's changeValueByPage() implementation to get the same
             // animated behavior for scrollbars with and without viewports.
             // For now, just change pageSize temporarily and call the superclass
             // implementation.
@@ -327,7 +336,7 @@ public class VScrollBar extends ScrollBar
         var oldStepSize:Number;
         if (viewport)
         {
-            // Want to use ScrollBar's changeValueByStep() implementation to get the same
+            // Want to use ScrollBarBase's changeValueByStep() implementation to get the same
             // animated behavior for scrollbars with and without viewports.
             // For now, just change pageSize temporarily and call the superclass
             // implementation.
@@ -391,5 +400,38 @@ public class VScrollBar extends ScrollBar
             maximum = viewport.contentHeight - viewport.height;
         }
     }
+    
+    /**
+     *  @private
+     *  Scroll vertically by event.delta "steps".  This listener is added to both the scrollbar 
+     *  and the viewport so we short-ciruit if the viewport doesn't exist or isn't visible. 
+     * 
+     *  Note also: the HScrollBar class redispatches mouse wheel events that target the HSB 
+     *  to its viewport.  If a vertical scrollbar exists, this listener will handle those
+     *  events by scrolling vertically.   This is done so that if a VSB exists, the mouse
+     *  wheel always scrolls vertically, even if it's over the HSB.
+     */
+    mx_internal function mouseWheelHandler(event:MouseEvent):void
+    {
+        const vp:IViewport = viewport;
+        if (event.isDefaultPrevented() || !vp || !vp.visible)
+            return;
+        
+        var nSteps:uint = Math.abs(event.delta);
+        var navigationUnit:uint;
+        
+        // Scroll event.delta "steps".  
+        
+        navigationUnit = (event.delta < 0) ? NavigationUnit.DOWN : NavigationUnit.UP;
+        for (var vStep:int = 0; vStep < nSteps; vStep++)
+        {
+            var vspDelta:Number = vp.getVerticalScrollPositionDelta(navigationUnit);
+            if (!isNaN(vspDelta))
+                vp.verticalScrollPosition += vspDelta;
+        }
+
+        event.preventDefault();
+    }
+    
 }
 }

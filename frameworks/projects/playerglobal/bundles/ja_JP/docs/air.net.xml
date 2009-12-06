@@ -1,0 +1,302 @@
+<?xml version="1.0"?>
+<apiPackage id="air.net"><apiName>air.net</apiName><apiDetail/><apiClassifier id="air.net:URLMonitor"><apiName>URLMonitor</apiName><shortdesc>
+ URLMonitor クラスは、HTTP または HTTPS ベースのサービスが使用可能かどうかを監視します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>air.net:ServiceMonitor</apiBaseClassifier></apiClassifierDef><apiDesc>
+ URLMonitor クラスは、HTTP または HTTPS ベースのサービスが使用可能かどうかを監視します。
+ 
+ <p product="flex">このクラスは、ServiceMonitor.swc ファイルに含まれます。Adobe<sup>®</sup> AIR<sup>®</sup> のプロジェクトを作成すると、Adobe<sup>®</sup> Flash<sup>®</sup> Builder™ によって、このクラスが自動的にロードされます。この servicemonitor.swc は Adobe<sup>®</sup> Flex<sup>®</sup> SDK にも含まれています。アプリケーションをコンパイルするときに Flex SDK を使用している場合は、このファイルを含める必要があります。
+ </p>
+ 
+ <p product="flash">Adobe <sup>®</sup> Flash <sup>®</sup> CS3 Professional では、このクラスは ServiceMonitorShim.swc ファイルに含まれます。air.net パッケージのクラスを使用するには、最初にコンポーネントパネルから ServiceMonitorShim コンポーネントをライブラリにドラッグし、次の <codeph>import</codeph> ステートメントを ActionScript 3.0 コードに追加する必要があります。
+ </p>
+ 
+ <codeblock product="flash">import air.net.~~;</codeblock>
+ 
+ <p product="flash">Adobe <sup>®</sup> Flash <sup>®</sup> CS4 Professional で air.net パッケージを使用するには： </p>
+ 
+ <ol product="flash">
+ <li>ファイル／パブリッシュ設定コマンドを選択します。</li>
+ <li>Flash パネルで、ActionScript 3.0 の「設定」ボタンをクリックします。「ライブラリパス」を選択します。</li>
+ <li>「SWC ファイルを参照」ボタンをクリックします。Adobe Flash CS4 インストールフォルダーで Adobe Flash CS4¥AIK1.1¥frameworks¥libs¥air¥servicemoniter.swc ファイルを参照します。</li>
+ <li>「OK」ボタンをクリックします。</li>
+ <li><codeph>import</codeph> ステートメントの <codeph>import air.net.~~;</codeph> を ActionScript 3.0 コードに追加します。</li>
+ </ol>
+ 
+ <p platform="javascript">このクラスを JavaScript コードで使用するには、ServiceMonitor.swf ファイルを次のようにロードします。</p>
+ 
+ <codeblock platform="javascript">&lt;script src="ServiceMonitor.swf" type="application/x-shockwave-flash"></codeblock>
+ 
+ </apiDesc></apiClassifierDetail><apiConstructor id="air.net:URLMonitor:URLMonitor"><apiName>URLMonitor</apiName><shortdesc>
+     特定の HTTP または HTTPS ベースのサービスに対する URLMonitor オブジェクトを作成します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>urlRequest</apiItemName><apiOperationClassifier>flash.net:URLRequest</apiOperationClassifier><apiDesc>サーバーをポーリングするためのプローブ要求を表す URLRequest オブジェクトです。
+     
+     </apiDesc></apiParam><apiParam><apiItemName>acceptableStatusCodes</apiItemName><apiOperationClassifier>Array</apiOperationClassifier><apiData>null</apiData><apiDesc>正常な結果を表すコードがリストされた数値ステータスコードの配列です。
+     
+     <p><codeph>acceptableStatusCodes</codeph> プロパティに値を指定しない場合は、次のステータスコードが正常な応答として認識されます。</p>
+     
+     <ul>
+      <li>200（OK） </li>
+      <li>202（受け付けられました） </li>
+      <li>204（コンテンツなし） </li>
+      <li>205（コンテンツのリセット） </li>
+      <li>206（部分的なコンテンツ。Range ヘッダーを伴う要求に対する応答） </li>
+     </ul>
+     
+     </apiDesc></apiParam></apiConstructorDef><apiDesc>
+     特定の HTTP または HTTPS ベースのサービスに対する URLMonitor オブジェクトを作成します。
+     
+     <p>URLMonitor を作成した後、呼び出し元は <codeph>start()</codeph> メソッドを呼び出してサービスのステータスの監視を開始する必要があります。</p>
+     
+     <p>Timer オブジェクトと同様に、呼び出し元は、URLMonitor オブジェクトへの参照を維持する必要があります。維持しないと、場合によってはランタイムがオブジェクトを削除し、監視が終了します。</p>
+     
+     <p>サーバーをポーリングするためのプローブ要求を指定する URLRequest パラメーターです。通常、要求メソッドは、<codeph>"GET"</codeph> または <codeph>"HEAD"</codeph> のどちらかです。</p>
+     
+     </apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="air.net:URLMonitor:protected:checkStatus"><apiName>checkStatus</apiName><shortdesc>
+    返された HTTP ステータスコードをチェックするために、バックグラウンドで URL からコンテンツをロードしようとします。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiIsOverride/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+    返された HTTP ステータスコードをチェックするために、バックグラウンドで URL からコンテンツをロードしようとします。 
+    <p>
+    <codeph>acceptableStatusCodes</codeph> プロパティにリストされているステータスコードを受け取った場合、<codeph>available</codeph> プロパティは <codeph>true</codeph> に設定されます。<codeph>acceptableStatusCodes</codeph> リストにないステータスコードを受け取った場合、またはセキュリティエラーや I/O エラーが発生した場合、<codeph>available</codeph> プロパティは <codeph>false</codeph> に設定されます。
+    </p>
+    
+    </apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.net:URLMonitor:toString"><apiName>toString</apiName><shortdesc>
+     
+     
+	 指定されたオブジェクトのストリング表現を返します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiDesc>オブジェクトのストリング表現です。
+	 
+	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+     
+     
+	 指定されたオブジェクトのストリング表現を返します。
+	 
+     <p platform="actionscript"><b>注意：</b>Object クラスのメソッドは、Object のプロトタイプに動的に作成されます。Object のサブクラスでこのメソッドを再定義する場合は、<codeph>override</codeph> キーワードを使用しないでください。例えば、Object のサブクラスでは、基本クラスのオーバーライドを使用する代わりに <codeph>function toString():String</codeph> が実装されます。</p>
+     
+     </apiDesc></apiOperationDetail></apiOperation><apiValue id="air.net:URLMonitor:acceptableStatusCodes:get"><apiName>acceptableStatusCodes</apiName><shortdesc>
+     正常な結果を表す数値ステータスコードです。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Array</apiValueClassifier></apiValueDef><apiDesc>
+     正常な結果を表す数値ステータスコードです。
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="air.net:URLMonitor:urlRequest:get"><apiName>urlRequest</apiName><shortdesc>
+     プローブ要求を表す URLRequest オブジェクトです。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>flash.net:URLRequest</apiValueClassifier></apiValueDef><apiDesc>
+     プローブ要求を表す URLRequest オブジェクトです。
+     
+     </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="air.net:ServiceMonitor"><apiName>ServiceMonitor</apiName><shortdesc>
+ ServiceMonitor クラスは、ネットワークサービスのステータスおよび使用可能かどうかを監視するフレームワークを実装します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiDynamic/><apiBaseClassifier>flash.events:EventDispatcher</apiBaseClassifier></apiClassifierDef><apiDesc>
+ ServiceMonitor クラスは、ネットワークサービスのステータスおよび使用可能かどうかを監視するフレームワークを実装します。ServiceMonitor クラスは、他のすべてのサービスモニターの基本クラスとして機能します。
+ 
+ <p product="flex">このクラスは、ServiceMonitor.swc ファイルに含まれます。Adobe<sup>®</sup> AIR™ のプロジェクトを作成すると、Adobe<sup>®</sup> Flash<sup>®</sup> Builder™ によって、このクラスが自動的にロードされまれます。この servicemonitor.swc ファイルは Adobe<sup>®</sup> Flex<sup>®</sup> SDK にも含まれています。アプリケーションをコンパイルするときに Flex SDK を使用している場合は、このファイルを含める必要があります。
+ </p>
+ 
+ <p product="flash">Adobe <sup>®</sup> Flash <sup>®</sup> CS3 Professional では、このクラスは ServiceMonitorShim.swc ファイルに含まれます。air.net パッケージのクラスを使用するには、最初にコンポーネントパネルから ServiceMonitorShim コンポーネントをライブラリにドラッグし、次の <codeph>import</codeph> ステートメントを ActionScript 3.0 コードに追加する必要があります。
+ </p>
+ 
+ <codeblock product="flash">import air.net.~~;</codeblock>
+ 
+ <p product="flash">Adobe <sup>®</sup> Flash <sup>®</sup> CS4 Professional で air.net パッケージを使用するには： </p>
+ 
+ <ol product="flash">
+ <li>ファイル／パブリッシュ設定コマンドを選択します。</li>
+ <li>Flash パネルで、ActionScript 3.0 の「設定」ボタンをクリックします。「ライブラリパス」を選択します。</li>
+ <li>「SWC ファイルを参照」ボタンをクリックします。Adobe Flash CS4 インストールフォルダーで Adobe Flash CS4¥AIK1.1¥frameworks¥libs¥air¥servicemoniter.swc ファイルを参照します。</li>
+ <li>「OK」ボタンをクリックします。</li>
+ <li><codeph>import</codeph> ステートメントの <codeph>import air.net.~~;</codeph> を ActionScript 3.0 コードに追加します。</li>
+ </ol>
+ 
+ <p platform="javascript">このクラスを JavaScript コードで使用するには、ServiceMonitor.swf ファイルを次のようにロードします。</p>
+ 
+ <codeblock platform="javascript">&lt;script src="ServiceMonitor.swf" type="application/x-shockwave-flash"></codeblock>
+ 
+ </apiDesc></apiClassifierDetail><adobeApiEvent id="air.net:ServiceMonitor_flash.events.StatusEvent.STATUS_status"><apiName>status</apiName><shortdesc>
+ サービスステータスが変化したことを示します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.StatusEvent.STATUS</apiEventType><adobeApiEventClassifier>flash.events.StatusEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ サービスステータスが変化したことを示します。
+ 
+ <p><codeph>code</codeph> プロパティの値は、<codeph>Service.available</codeph> または <codeph>Service.unavailable</codeph> のどちらかですが、<codeph>ServiceMonitor.available</codeph> プロパティの値を確認することをお勧めします。</p>
+ 
+ </apiDesc></adobeApiEventDetail></adobeApiEvent><apiConstructor id="air.net:ServiceMonitor:ServiceMonitor"><apiName>ServiceMonitor</apiName><shortdesc>
+     ServiceMonitor オブジェクトを作成します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/></apiConstructorDef><apiDesc>
+     ServiceMonitor オブジェクトを作成します。 
+     
+     <p platform="actionscript">このクラスは、通常、特定のサービスタイプを監視するためにサブクラス化されます。</p>
+     
+     <p platform="javascript">このクラスは、<codeph>makeJavascriptSubclass()</codeph> メソッドの説明で示されているように、JavaScript で  HTML アプリケーションコンテンツから特化できます。</p>
+     
+     <p>ServiceMonitor オブジェクト（またはサブクラスオブジェクト）を作成した後、<codeph>start()</codeph> メソッドを呼び出してサービスのステータスの監視を開始します。</p>
+     
+     <p>Timer オブジェクトと同様に、呼び出し元は、ServiceMonitor オブジェクトへの参照を維持する必要があります。維持しないと、ランタイムがオブジェクトを削除し、監視が終了します。</p>
+     
+     </apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="air.net:ServiceMonitor:protected:checkStatus"><apiName>checkStatus</apiName><shortdesc>
+     サービスのステータスを確認します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+     サービスのステータスを確認します。
+     
+     <p>サービスのステータスを確認するために、サブクラスはメソッドをオーバーライドします。</p>
+     
+     <p>通常、このメソッドはネットワーク処理を開始します。ネットワーク処理が完了または失敗すると、<codeph>available</codeph> プロパティが設定されます。</p>
+     
+     <p>JavaScript コードは、「スペシャライザ」オブジェクトの <codeph>checkStatus()</codeph> メソッドを定義することで、このメソッドを特化できます。</p>
+     
+     </apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.net:ServiceMonitor:makeJavascriptSubclass"><apiName>makeJavascriptSubclass</apiName><shortdesc>
+     ServiceMonitor パブリックメソッドを JavaScript のコンストラクター関数のプロトタイプに追加します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>constructorFunction</apiItemName><apiOperationClassifier>Object</apiOperationClassifier><apiDesc>JavaScript オブジェクトの <codeph>prototype</codeph> プロパティです。例えば、スペシャライザオブジェクトとして機能するように使用している JavaScript オブジェクトの名前が MyHTTPMonitor の場合、このパラメーターの値として <codeph>MyHTTPMonitor.prototype</codeph> を渡します。
+     
+     </apiDesc></apiParam></apiOperationDef><apiDesc>
+     ServiceMonitor パブリックメソッドを JavaScript のコンストラクター関数のプロトタイプに追加します。
+     
+     <p>ServiceMonitor パブリック関数を ServiceMonitor オブジェクトに転送する JavaScript のコンストラクター関数のプロトタイプに関数を追加します。これは、ActionScript 基本クラスの標準の JavaScript サブクラスに似たものになります。</p>
+     
+     <p>JavaScript クラスは、ServiceMonitor を次のように特化します。</p>
+     
+     <codeblock>
+     // JavaScript Constructor function
+     function MyHTTPMonitor(url, method)
+     {
+         // "that" variable makes "this" available in closures below
+         var that = this;
+         // Required initialization of the service monitor, returns the actual ServiceMonitor object.
+         this.monitor = this.initServiceMonitor();
+         // Initializes URLStream and event handlers.
+         this._urlStream = new air.URLStream();
+         this._urlRequest = new air.URLRequest(url);
+         if (method)
+         {
+             this._urlRequest.method = method;
+         }
+         else
+         {
+             this._urlRequest.method = "GET";
+         }
+         function onStatus(event) {
+             that.monitor.available = Number(event.status) == 200;
+             that._urlStream.close();
+         }
+         function onError(event)
+         {
+             that.monitor.available = false;
+             that._urlStream.close();
+         }
+         this._urlStream.addEventListener(air.HTTPStatusEvent.HTTP_RESPONSE_STATUS, onStatus);
+         this._urlStream.addEventListener(air.SecurityErrorEvent.SECURITY_ERROR, onError);
+         this._urlStream.addEventListener(air.IOErrorEvent.IO_ERROR, onError);
+     }
+     
+     // Augment JavaScript prototype with public methods from ServiceMonitor
+     air.ServiceMonitor.makeJavascriptSubclass(MyHTTPMonitor);
+     
+     // Implement specializer functions, just as you would when subclassing a JavaScript class
+     MyHTTPMonitor.prototype.checkStatus = function()
+     {
+         air.trace('OVERRIDDEN checkStatus!', this);
+         this._urlStream.load(this._urlRequest);
+     }
+     </codeblock>
+     
+     <p>JavaScript クラスを使用するには：</p>
+     
+     <codeblock>
+     var httpMon = new MyHTTPMonitor('http://www.adobe.com')
+     </codeblock>
+     
+     <p>AIRAliases.js ファイルおよび ServiceMonitor.swf ファイルを、必ず <codeph>script</codeph> タグと一緒にロードしてください。</p>
+     
+     </apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.net:ServiceMonitor:start"><apiName>start</apiName><shortdesc>
+     サービスモニターを開始します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+     サービスモニターを開始します。
+     
+     </apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.net:ServiceMonitor:stop"><apiName>stop</apiName><shortdesc>
+     サービスの監視を停止します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+     サービスの監視を停止します。
+     
+     </apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.net:ServiceMonitor:toString"><apiName>toString</apiName><shortdesc>
+     
+	 指定されたオブジェクトのストリング表現を返します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiDesc>オブジェクトのストリング表現です。
+	 
+	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+     
+	 指定されたオブジェクトのストリング表現を返します。
+	 
+     <p platform="actionscript"><b>注意：</b>Object クラスのメソッドは、Object のプロトタイプに動的に作成されます。Object のサブクラスでこのメソッドを再定義する場合は、<codeph>override</codeph> キーワードを使用しないでください。例えば、Object のサブクラスでは、基本クラスのオーバーライドを使用する代わりに <codeph>function toString():String</codeph> が実装されます。</p>
+     
+     </apiDesc></apiOperationDetail></apiOperation><apiValue id="air.net:ServiceMonitor:available:get"><apiName>available</apiName><shortdesc>
+     サービスが現在 "使用可能" と見なされているかどうかを指定します。初期値は false です。ステータスチェックでプロパティが true に設定されるか、プロパティが明示的に true に初期化されるまでは false です。通常、このプロパティはサブクラスまたはスペシャライザの checkStatus() 実装で設定されますが、アプリケーションにサービスが使用可能かどうかに関する独自の情報（例えば、要求の成功または失敗など）があれば、プロパティが明示的に設定されることもあります。
+     
+     </shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+     サービスが現在 "使用可能" と見なされているかどうかを指定します。
+     
+     <p>初期値は false です。ステータスチェックでプロパティが <codeph>true</codeph> に設定されるか、プロパティが明示的に <codeph>true</codeph> に初期化されるまでは <codeph>false</codeph> です。</p>
+     
+     <p>通常、このプロパティはサブクラスまたはスペシャライザの <codeph>checkStatus()</codeph> 実装で設定されますが、アプリケーションにサービスが使用可能かどうかに関する独自の情報（例えば、要求の成功または失敗など）があれば、プロパティが明示的に設定されることもあります。</p>
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="air.net:ServiceMonitor:lastStatusUpdate:get"><apiName>lastStatusUpdate</apiName><shortdesc>
+     最後にステータスが更新された時刻です。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Date</apiValueClassifier></apiValueDef><apiDesc>
+     最後にステータスが更新された時刻です。
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="air.net:ServiceMonitor:pollInterval:get"><apiName>pollInterval</apiName><shortdesc>
+     サーバーをポーリングする間隔（ミリ秒）です。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Number</apiValueClassifier><apiDefaultValue>0
+     
+     </apiDefaultValue></apiValueDef><apiDesc>
+     サーバーをポーリングする間隔（ミリ秒）です。
+     
+     <p>0 の場合、サーバーは定期的にポーリングされず、<codeph>start()</codeph> が呼び出されたときと、ネットワークステータスが変化したときの直後だけポーリングされます。</p>
+     
+     <p>ServiceMonitor オブジェクトは、サービスステータスが変化した場合にのみ（ポーリング間隔ごとに毎回ではなく）、<codeph>status</codeph> イベントを送出します。また、ネットワーク接続が変化した場合にも（ポーリング間隔とは無関係に）、<codeph>status</codeph> イベントを送出します。</p>
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="air.net:ServiceMonitor:running:get"><apiName>running</apiName><shortdesc>
+     モニターが開始されているかどうかを指定します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+     モニターが開始されているかどうかを指定します。
+     
+     </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="air.net:SocketMonitor"><apiName>SocketMonitor</apiName><shortdesc>
+ SocketMonitor オブジェクトは、TCP エンドポイントが使用可能かどうかを監視します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>air.net:ServiceMonitor</apiBaseClassifier></apiClassifierDef><apiDesc>
+ SocketMonitor オブジェクトは、TCP エンドポイントが使用可能かどうかを監視します。
+ 
+ <p product="flex">このクラスは、ServiceMonitor.swc ファイルに含まれます。AIR のプロジェクトを作成すると、Adobe <sup>®</sup> Flash<sup>®</sup> Builder™ によって、このクラスが自動的にロードされます。この servicemonitor.swc ファイルは Flex<sup>®</sup> SDK にも含まれています。アプリケーションをコンパイルするときに Flex SDK を使用している場合は、このファイルを含める必要があります。
+ </p>
+ 
+ <p product="flash">Adobe <sup>®</sup> Flash <sup>®</sup> CS3 Professional では、このクラスは ServiceMonitorShim.swc ファイルに含まれます。air.net パッケージのクラスを使用するには、最初にコンポーネントパネルから ServiceMonitorShim コンポーネントをライブラリにドラッグし、次の <codeph>import</codeph> ステートメントを ActionScript 3.0 コードに追加する必要があります。
+ </p>
+ 
+ <codeblock product="flash">import air.net.~~;</codeblock>
+ 
+ <p product="flash">Adobe <sup>®</sup> Flash <sup>®</sup> CS4 Professional で air.net パッケージを使用するには： </p>
+ 
+ <ol product="flash">
+ <li>ファイル／パブリッシュ設定コマンドを選択します。</li>
+ <li>Flash パネルで、ActionScript 3.0 の「設定」ボタンをクリックします。「ライブラリパス」を選択します。</li>
+ <li>「SWC ファイルを参照」ボタンをクリックします。Adobe Flash CS4 インストールフォルダーで Adobe Flash CS4¥AIK1.1¥frameworks¥libs¥air¥servicemoniter.swc ファイルを参照します。</li>
+ <li>「OK」ボタンをクリックします。</li>
+ <li><codeph>import</codeph> ステートメントの <codeph>import air.net.~~;</codeph> を ActionScript 3.0 コードに追加します。</li>
+ </ol>
+ 
+ <p platform="javascript">このクラスを JavaScript コードで使用するには、ServiceMonitor.swf ファイルを次のようにロードします。</p>
+ 
+ <codeblock platform="javascript">&lt;script src="ServiceMonitor.swf" type="application/x-shockwave-flash"></codeblock>
+ 
+ </apiDesc></apiClassifierDetail><apiConstructor id="air.net:SocketMonitor:SocketMonitor"><apiName>SocketMonitor</apiName><shortdesc>
+	 特定の TCP エンドポイントに対する SocketMonitor オブジェクトを作成します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>host</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>監視するホストです。
+	 </apiDesc></apiParam><apiParam><apiItemName>port</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiDesc>監視するポートです。
+	 
+	 </apiDesc></apiParam></apiConstructorDef><apiDesc>
+	 特定の TCP エンドポイントに対する SocketMonitor オブジェクトを作成します。
+	 
+	 <p>SocketMonitor オブジェクトを作成した後、呼び出し元は <codeph>start</codeph> を呼び出してサービスのステータスの監視を開始する必要があります。</p>
+	 
+	 <p>Timer オブジェクトと同様に、呼び出し元は、SocketMonitor オブジェクトへの参照を維持する必要があります。維持しないと、ランタイムがオブジェクトを削除し、監視が終了します。</p>
+	 
+	 </apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="air.net:SocketMonitor:protected:checkStatus"><apiName>checkStatus</apiName><shortdesc>
+	SocketMonitor オブジェクトの checkStatus() メソッドを呼び出すと、アプリケーションは connect イベントを確認するために、ソケットに接続しようとします。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiIsOverride/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+	SocketMonitor オブジェクトの <codeph>checkStatus()</codeph> メソッドを呼び出すと、アプリケーションは <codeph>connect</codeph> イベントを確認するために、ソケットに接続しようとします。
+	
+	</apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.net:SocketMonitor:toString"><apiName>toString</apiName><shortdesc>
+	 
+     
+	 指定されたオブジェクトのストリング表現を返します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiDesc>オブジェクトのストリング表現です。
+	 
+	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 
+     
+	 指定されたオブジェクトのストリング表現を返します。
+	 
+     <p platform="actionscript"><b>注意：</b>Object クラスのメソッドは、Object のプロトタイプに動的に作成されます。Object のサブクラスでこのメソッドを再定義する場合は、<codeph>override</codeph> キーワードを使用しないでください。例えば、Object のサブクラスでは、基本クラスのオーバーライドを使用する代わりに <codeph>function toString():String</codeph> が実装されます。</p>
+     
+     </apiDesc></apiOperationDetail></apiOperation><apiValue id="air.net:SocketMonitor:host:get"><apiName>host</apiName><shortdesc>
+	 監視されるホストです。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 監視されるホストです。
+	 
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="air.net:SocketMonitor:port:get"><apiName>port</apiName><shortdesc>
+	 監視されるポートです。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+	 監視されるポートです。
+	 
+	 </apiDesc></apiValueDetail></apiValue></apiClassifier></apiPackage>

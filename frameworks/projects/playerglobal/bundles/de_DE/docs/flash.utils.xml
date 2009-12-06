@@ -1,0 +1,1585 @@
+<?xml version="1.0"?>
+<apiPackage id="flash.utils"><apiName>flash.utils</apiName><apiDetail/><apiClassifier id="flash.utils:Proxy"><apiName>Proxy</apiName><shortdesc>
+ Mit der Proxyklasse können Sie das Standardverhalten von ActionScript-Vorgängen für Objekte (beispielsweise das Abrufen und Ändern von Eigenschaften) überschreiben.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ Mit der Proxyklasse können Sie das Standardverhalten von ActionScript-Vorgängen für Objekte (beispielsweise das Abrufen und Ändern von Eigenschaften) überschreiben.
+ 
+ <p>Die Proxyklasse hat keinen Konstruktor und darf nicht instanziiert werden. Erstellen Sie stattdessen eine Unterklasse der Proxyklasse, um Methoden wie <codeph>getProperty</codeph> zu überschreiben und benutzerdefiniertes Verhalten umzusetzen. Wenn Sie versuchen, eine nicht überschriebene Methode der Proxyklasse zu verwenden, wird eine Ausnahme ausgelöst.</p>
+ <p>Beachten Sie auch, dass Ihr eigener Programmcode, mit dem die Methoden der Proxyklasse überschrieben werden, ebenfalls unbeabsichtigt Ausnahmen auslösen kann. Das Auslösen von Ausnahmen bei Verwendung dieser Methoden verursacht Probleme, da der aufrufende Programmcode (mit Operatoren wie <codeph>in</codeph>, <codeph>is</codeph>, <codeph>delete</codeph> usw.) keine Ausnahmen erwartet. Wenn Sie nicht bereits sicher sind, dass Ihre überschreibenden Methoden keine Ausnahmen auslösen, empfiehlt Adobe die Verwendung von <codeph>try..catch</codeph>-Anweisungen für die Implementierung der Proxy-Klasse, um schwerwiegende Fehler beim Aufruf Ihrer Methoden durch die Operatoren zu vermeiden. Beispiel: </p> 
+ <codeblock>
+ dynamic class MyProxy extends Proxy {
+     flash_proxy override function callProperty(name:~~, ...rest):~~ {
+       try {
+         // custom code here
+       }
+       catch (e:Error) {
+         // respond to error here
+       }
+ }   
+ </codeblock>
+ 
+ <p>Bei der Proxyklasse handelt es sich um einen Ersatz für die Funktionen <codeph>Object.__resolve</codeph> und <codeph>Object.addProperty</codeph> aus ActionScript 2.0, die in ActionScript 3.0 nicht mehr verfügbar sind. Mit der Funktion <codeph>Object.addProperty()</codeph> konnten in ActionScript 2.0 dynamisch Methoden zum Abrufen und Festlegen von Eigenschaften erstellt werden. Obwohl Methoden zum Abrufen und Festlegen von Eigenschaften in ActionScript 3.0 zur Kompilierungszeit zur Verfügung stehen, können diese Objekte nur unter Verwendung der Proxyklasse dynamisch zugeordnet werden.</p>
+ 
+ <p>Zur Vermeidung von Konflikten mit dem <codeph>public</codeph>-Namespace befinden sich die Methoden der Proxyklasse im <codeph>flash_proxy</codeph>-Namespace.</p>
+ 
+ <p>Wenn Methoden der Proxyklasse ein <codeph>name</codeph>-Argument erfordern, kann <codeph>name</codeph> entweder ein String oder ein QName-Objekt sein (bei Verwendung von Namespaces).</p>
+ 
+ </apiDesc><example conref="examples\ProxyExample.as"><codeblock>
+package {
+    import flash.display.Sprite;
+
+    public class ProxyExample extends Sprite {
+        public function ProxyExample() {
+            var arr:ProxyArray = new ProxyArray();
+            arr.push(1);
+            arr.push(-2);
+            arr.push(3);
+            arr.push(4);
+            arr.push("five");
+            
+            trace(arr.length); // 5
+            trace(arr[0]);     // 1
+            trace(arr[1]);     // -2
+            trace(arr[2]);     // 3
+            trace(arr[3]);     // 4
+
+            trace(arr.sum());  // 6
+
+            arr.clear();
+            trace(arr); // (empty string)
+            
+            arr[0] = "zero";
+            trace(arr); // zero
+        }
+    }
+}
+
+import flash.utils.Proxy;
+import flash.utils.flash_proxy;
+
+dynamic class ProxyArray extends Proxy {
+    private var _item:Array;
+
+    public function ProxyArray() {
+        _item = new Array();
+    }
+
+    override flash_proxy function callProperty(methodName:*, ... args):* {
+        var res:*;
+        switch (methodName.toString()) {
+            case 'clear':
+                _item = new Array();
+                break;
+            case 'sum':
+                var sum:Number = 0;
+                for each (var i:* in _item) {
+                    // ignore non-numeric values
+                    if (!isNaN(i)) {
+                        sum += i;
+                    }
+                }
+                res = sum;
+                break;
+            default:
+                res = _item[methodName].apply(_item, args);
+                break;
+        }
+        return res;
+    }
+
+    override flash_proxy function getProperty(name:*):* {
+        return _item[name];
+    }
+
+    override flash_proxy function setProperty(name:*, value:*):void {
+        _item[name] = value;
+    }
+}
+</codeblock></example></apiClassifierDetail><apiOperation id="flash.utils:Proxy:flash_proxy:callProperty"><apiName>callProperty</apiName><shortdesc>
+	 Überschreibt das Verhalten einer Objekteigenschaft, die als Funktion aufgerufen werden kann.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="flash_proxy"/><apiReturn><apiDesc>Der Rückgabewert der aufgerufenen Methode.
+     </apiDesc><apiType value="any"/></apiReturn><apiParam><apiItemName>name</apiItemName><apiType value=""/><apiDesc>Der Name der aufgerufenen Methode.
+	 </apiDesc></apiParam><apiParam><apiItemName>rest</apiItemName><apiType value="restParam"/><apiDesc>Ein Array mit den Argumenten für die aufgerufene Methode.
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Überschreibt das Verhalten einer Objekteigenschaft, die als Funktion aufgerufen werden kann. Beim Aufrufen einer Methode des Objekts wird diese Methode aufgerufen. Einige Objekte können als Funktion aufgerufen werden und ebenso einige Objekteigenschaften. 
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="#Function/call()"><linktext>Function.call()</linktext></link><link href="http://www.ecma-international.org/publications/standards/Ecma-262.htm"><linktext>ECMA-262 Language Specification, 3rd Edition, Abschnitt 15</linktext></link></related-links></apiOperation><apiOperation id="flash.utils:Proxy:flash_proxy:deleteProperty"><apiName>deleteProperty</apiName><shortdesc>
+	 Überschreibt die Anforderung zum Löschen einer Eigenschaft.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="flash_proxy"/><apiReturn><apiDesc><codeph>true</codeph>, wenn die Eigenschaft gelöscht wurde; andernfalls <codeph>false</codeph>.
+     </apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn><apiParam><apiItemName>name</apiItemName><apiType value=""/><apiDesc>Der Name der zu löschenden Eigenschaft.
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Überschreibt die Anforderung zum Löschen einer Eigenschaft. Beim Löschen eine Eigenschaft mit dem <codeph>delete</codeph>-Operator wird zum Ausführen des Löschvorgangs diese Methode aufgerufen. 
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="../../operators.html#delete"><linktext>delete-Operator</linktext></link><link href="http://www.ecma-international.org/publications/standards/Ecma-262.htm"><linktext>ECMA-262 Language Specification, 3rd Edition, Abschnitt 8.6.2.5</linktext></link></related-links></apiOperation><apiOperation id="flash.utils:Proxy:flash_proxy:getDescendants"><apiName>getDescendants</apiName><shortdesc>
+	 Überschreibt die Verwendung des descendant-Operators.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="flash_proxy"/><apiReturn><apiDesc>Die Ergebnisse des <codeph>descendant</codeph>-Operators.
+     </apiDesc><apiType value="any"/></apiReturn><apiParam><apiItemName>name</apiItemName><apiType value=""/><apiDesc>Der Name der Eigenschaft, nachdem in dem entsprechenden Objekt gesucht werden soll.
+     </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Überschreibt die Verwendung des <codeph>descendant</codeph>-Operators. Bei Verwendung des <codeph>descendant</codeph>-Operators wird diese Methode aufgerufen.
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="../../operators.html#descendant_accessor"><linktext>descendant-Operator</linktext></link><link href="http://www.ecma-international.org/publications/standards/Ecma-357.htm"><linktext>E4X-Spezifikation</linktext></link></related-links></apiOperation><apiOperation id="flash.utils:Proxy:flash_proxy:getProperty"><apiName>getProperty</apiName><shortdesc>
+     Überschreibt alle Anforderungen des Werts einer Eigenschaft.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="flash_proxy"/><apiReturn><apiDesc>Die angegebene Eigenschaft oder <codeph>undefined</codeph>, wenn die Eigenschaft nicht vorhanden ist.
+     </apiDesc><apiType value="any"/></apiReturn><apiParam><apiItemName>name</apiItemName><apiType value=""/><apiDesc>Der Name der abzurufenden Eigenschaft.
+     </apiDesc></apiParam></apiOperationDef><apiDesc>
+     Überschreibt alle Anforderungen des Werts einer Eigenschaft. Wenn die Eigenschaft nicht vorhanden ist, gibt die Methode <codeph>undefined</codeph> zurück. Weitere Informationen zu diesem Verhalten finden Sie in der ECMA-262 Language Specification, 3rd Edition, Abschnitt 8.6.2.1.
+	 
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="../../statements.html#get"><linktext>get-Anweisung</linktext></link><link href="http://www.ecma-international.org/publications/standards/Ecma-262.htm"><linktext>ECMA-262 Language Specification, 3rd Edition, Abschnitt 8.6.2.1</linktext></link></related-links></apiOperation><apiOperation id="flash.utils:Proxy:flash_proxy:hasProperty"><apiName>hasProperty</apiName><shortdesc>
+	 Überschreibt eine Anforderung zur Überprüfung, ob ein Objekt über eine Eigenschaft mit einem bestimmten Namen verfügt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="flash_proxy"/><apiReturn><apiDesc><codeph>true</codeph>, wenn die Eigenschaft vorhanden ist; andernfalls <codeph>false</codeph>.
+     </apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn><apiParam><apiItemName>name</apiItemName><apiType value=""/><apiDesc>Der Name der zu überprüfenden Eigenschaft.
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Überschreibt eine Anforderung zur Überprüfung, ob ein Objekt über eine Eigenschaft mit einem bestimmten Namen verfügt. 
+     
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="#Object/hasOwnProperty()"><linktext>Object.hasOwnProperty()</linktext></link><link href="http://www.ecma-international.org/publications/standards/Ecma-262.htm"><linktext>ECMA-262 Language Specification, 3rd Edition, Abschnitt 8.6.2.4</linktext></link></related-links></apiOperation><apiOperation id="flash.utils:Proxy:flash_proxy:isAttribute"><apiName>isAttribute</apiName><shortdesc>
+	 Überprüft, ob der angegebene „QName“ auch als Attribut gekennzeichnet ist.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="flash_proxy"/><apiReturn><apiDesc>Gibt <codeph>true</codeph> zurück, wenn das Argument für <codeph>name</codeph> ein QName ist, der auch als Attribut gekennzeichnet ist.
+     </apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn><apiParam><apiItemName>name</apiItemName><apiType value=""/><apiDesc>Der Name der zu überprüfenden Eigenschaft.
+     </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Überprüft, ob der angegebene „QName“ auch als Attribut gekennzeichnet ist. 
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="#QName"><linktext>QName-Klasse</linktext></link></related-links></apiOperation><apiOperation id="flash.utils:Proxy:flash_proxy:nextName"><apiName>nextName</apiName><shortdesc>
+	 Ermöglicht die Aufzählung der Eigenschaften des über die Proxyklasse zugänglich gemachten Objekts nach Indexnummer, um die Namen der Eigenschaften abzurufen.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="flash_proxy"/><apiReturn><apiDesc>Der Name der Eigenschaft als String.
+	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn><apiParam><apiItemName>index</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiDesc>Der auf null basierende Indexwert der Objekteigenschaft.
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Ermöglicht die Aufzählung der Eigenschaften des über die Proxyklasse zugänglich gemachten Objekts nach Indexnummer, um die Namen der Eigenschaften abzurufen. Es kann jedoch keine Aufzählung der Eigenschaften der Proxyklasse selbst erstellt werden. Diese Funktion unterstützt die Implementierung von <codeph>for...in</codeph> und <codeph>for each..in</codeph>-Schleifen für das Objekt mit dem Ziel des Abrufens der gewünschten Namen.
+	 <p>Beispiel (mit Code aus <codeph>Proxy.nextNameIndex()</codeph>):</p>
+     <codeblock>
+     protected var _item:Array; // array of object's properties
+     override flash_proxy function nextNameIndex (index:int):int {
+         // initial call
+         if (index == 0) {
+             _item = new Array();
+             for (var x:~~ in _target) {
+                _item.push(x);
+             }
+         }
+     
+         if (index &lt; _item.length) {
+             return index + 1;
+         } else {
+             return 0;
+         }
+     }
+     override flash_proxy function nextName(index:int):String {
+         return _item[index - 1];
+     }
+     </codeblock>
+ 	 
+ 	 </apiDesc></apiOperationDetail><related-links><link href="flash.utils.xml#Proxy/nextNameIndex()"><linktext>Proxy.nextNameIndex()</linktext></link><link href="flash.utils.xml#Proxy/nextValue()"><linktext>Proxy.nextValue()</linktext></link></related-links></apiOperation><apiOperation id="flash.utils:Proxy:flash_proxy:nextNameIndex"><apiName>nextNameIndex</apiName><shortdesc>
+	 Ermöglicht die Aufzählung der Eigenschaften des über die Proxyklasse zugänglich gemachten Objekts nach Indexnummer.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="flash_proxy"/><apiReturn><apiDesc>Der Indexwert der Eigenschaft.
+	 </apiDesc><apiOperationClassifier>int</apiOperationClassifier></apiReturn><apiParam><apiItemName>index</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiDesc>Der auf null basierende Indexwert, ab dem die Aufzählung erfolgen soll.
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Ermöglicht die Aufzählung der Eigenschaften des über die Proxyklasse zugänglich gemachten Objekts nach Indexnummer. Es kann jedoch keine Aufzählung der Eigenschaften der Proxyklasse selbst erstellt werden. Diese Funktion unterstützt die Implementierung von <codeph>for...in</codeph> und <codeph>for each..in</codeph>-Schleifen für das Objekt mit dem Ziel des Abrufens von Eigenschaftsindexwerten.
+	 <p>Beispiel:</p>
+	 <codeblock>
+     protected var _item:Array; // array of object's properties
+     override flash_proxy function nextNameIndex (index:int):int {
+         // initial call
+         if (index == 0) {
+             _item = new Array();
+             for (var x:~~ in _target) {
+                _item.push(x);
+             }
+         }
+     
+         if (index &lt; _item.length) {
+             return index + 1;
+         } else {
+             return 0;
+         }
+     }
+     override flash_proxy function nextName(index:int):String {
+         return _item[index - 1];
+     }
+	 </codeblock>
+     
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.utils.xml#Proxy/nextName()"><linktext>Proxy.nextName()</linktext></link><link href="flash.utils.xml#Proxy/nextValue()"><linktext>Proxy.nextValue()</linktext></link></related-links></apiOperation><apiOperation id="flash.utils:Proxy:flash_proxy:nextValue"><apiName>nextValue</apiName><shortdesc>
+ 	 Ermöglicht die Aufzählung der Eigenschaften des über die Proxyklasse zugänglich gemachten Objekts nach Indexnummer, um die Werte der Eigenschaften abzurufen.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="flash_proxy"/><apiReturn><apiDesc>Der Wert der Eigenschaft.
+	 </apiDesc><apiType value="any"/></apiReturn><apiParam><apiItemName>index</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiDesc>Der auf null basierende Indexwert der Objekteigenschaft.
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+ 	 Ermöglicht die Aufzählung der Eigenschaften des über die Proxyklasse zugänglich gemachten Objekts nach Indexnummer, um die Werte der Eigenschaften abzurufen. Es kann jedoch keine Aufzählung der Eigenschaften der Proxyklasse selbst erstellt werden. Diese Funktion unterstützt die Implementierung von <codeph>for...in</codeph> und <codeph>for each..in</codeph>-Schleifen für das Objekt mit dem Ziel des Abrufens der gewünschten Werte.
+	 
+	 <p>Beispiel (mit Code aus <codeph>Proxy.nextNameIndex()</codeph>):</p>
+     <codeblock>
+     protected var _item:Array; // array of object's properties
+     override flash_proxy function nextNameIndex (index:int):int {
+         // initial call
+         if (index == 0) {
+             _item = new Array();
+             for (var x:~~ in _target) {
+                _item.push(x);
+             }
+         }
+     
+         if (index &lt; _item.length) {
+             return index + 1;
+         } else {
+             return 0;
+         }
+     }
+     override flash_proxy function nextName(index:int):String {
+         return _item[index - 1];
+     }
+     </codeblock>   
+     </apiDesc></apiOperationDetail><related-links><link href="flash.utils.xml#Proxy/nextNameIndex()"><linktext>Proxy.nextNameIndex()</linktext></link><link href="flash.utils.xml#Proxy/nextName()"><linktext>Proxy.nextName()</linktext></link></related-links></apiOperation><apiOperation id="flash.utils:Proxy:flash_proxy:setProperty"><apiName>setProperty</apiName><shortdesc>
+	 Überschreibt einen Aufruf zum Ändern des Werts einer Eigenschaft.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="flash_proxy"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>name</apiItemName><apiType value=""/><apiDesc>Der Name der zu ändernden Eigenschaft.
+	 </apiDesc></apiParam><apiParam><apiItemName>value</apiItemName><apiType value=""/><apiDesc>Der Wert, der für die Eigenschaft festgelegt werden soll.
+     </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Überschreibt einen Aufruf zum Ändern des Werts einer Eigenschaft. Wenn die Eigenschaft noch nicht vorhanden ist, erstellt diese Methode eine Eigenschaft mit dem angegebenen Namen und Wert. 
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="../../statements.html#set"><linktext>set-Anweisung</linktext></link><link href="http://www.ecma-international.org/publications/standards/Ecma-262.htm"><linktext>ECMA-262 Language Specification, 3rd Edition, Abschnitt 8.6.2.2</linktext></link></related-links></apiOperation></apiClassifier><apiClassifier id="flash.utils:ByteArray"><apiName>ByteArray</apiName><shortdesc>
+ Die ByteArray-Klasse bietet Methoden und Eigenschaften, die Lese- und Schreibvorgänge für Binärdaten sowie deren Verarbeitung optimieren.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>ByteArray
+  
+  </keyword></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseInterface>flash.utils:IDataInput</apiBaseInterface><apiBaseInterface>flash.utils:IDataOutput</apiBaseInterface><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ Die ByteArray-Klasse bietet Methoden und Eigenschaften, die Lese- und Schreibvorgänge für Binärdaten sowie deren Verarbeitung optimieren.
+ 
+ <p><i>Hinweis:</i> Die ByteArray-Klasse ist für fortgeschrittene Entwickler bestimmt, die Datenzugriff auf Byteebene benötigen.</p>
+ 
+ <p>Im Speicher abgelegte Daten sind in einem Bytearray angeordnet (die kompakteste Darstellung des Datentyps), doch eine Instanz der ByteArray-Klasse kann mit dem Standardoperator <codeph>[]</codeph> (Array-Zugriff) bearbeitet werden. Sie kann auch als im Speicher abgelegte Datei gelesen und geschrieben werden. Die dazu verwendeten Methoden entsprechen denen der Klassen URLStream und Socket.</p>
+ 
+ <p>Zusätzlich werden die zlib-Komprimierung und -Dekomprimierung sowie die Objektserialisierung im AMF-Format (Action Message Format) unterstützt.</p>
+ 
+ <p>Einsatzmöglichkeiten der ByteArray-Klasse:
+ 
+ <ul>
+ 
+  <li>Erstellen eines benutzerdefinierten Protokolls für die Verbindung mit einem Server</li>
+ 
+  <li>Programmieren eines benutzerdefinierten URLEncoder/URLDecoder</li>
+ 
+  <li platform="actionscript">Programmieren eines benutzerdefinierten AMF/Remoting-Pakets</li>
+ 
+  <li>Optimieren der verwendeten Datengröße durch das Verwenden von Datentypen</li>
+ 
+ 	 <li>Arbeiten mit binären Daten, die aus einer Datei in Adobe<sup>®</sup> AIR<sup>®</sup> geladen wurden.</li>
+ 
+ </ul>
+ </p>
+ 
+ </apiDesc><example conref="examples\ByteArrayExample.as"> Im folgenden Beispiel werden mit der Klasse <codeph>ByteArrayExample</codeph> ein boolescher Ausdruck und die Gleitkommadarstellung (mit doppelter Genauigkeit) der Zahl Pi in ein Bytearray geschrieben. Dies wird in den folgenden Schritten erreicht:
+ <ol>
+     <li>Deklarieren Sie eine neue ByteArray-Objektinstanz mit dem Namen <codeph>byteArr</codeph>.</li>
+     <li>Schreiben Sie den Byte-Äquivalenzwert des booleschen Werts <codeph>false</codeph>, prüfen Sie die Länge, und rufen Sie den Wert anschließend ab.</li>
+     <li>Schreiben Sie den Äquivalenzwert der Zahl Pi in Gleitkommadarstellung (mit doppelter Genauigkeit).</li>
+     <li>Rufen Sie die neun einzelnen Byte im Bytearray ab.</li>
+ </ol>
+ 
+ <p><b>Hinweis: </b> Wenn <codeph>trace()</codeph> für ein Byte aufgerufen wird, wird der äquivalente Dezimalwert der Byte aus dem Bytearray gedruckt.</p>
+ 
+ <p>Am Ende wird ein Codesegment eingefügt, mit dem auf Dateiende-Fehler geprüft wird. Hiermit wird sichergestellt, dass nicht über das Ende des Bytestroms hinaus gelesen wird.</p>
+<codeblock>
+package {
+    import flash.display.Sprite;
+    import flash.utils.ByteArray;
+    import flash.errors.EOFError;
+
+    public class ByteArrayExample extends Sprite {        
+        public function ByteArrayExample() {
+            var byteArr:ByteArray = new ByteArray();
+
+            byteArr.writeBoolean(false);
+            trace(byteArr.length);            // 1
+            trace(byteArr[0]);            // 0
+
+            byteArr.writeDouble(Math.PI);
+            trace(byteArr.length);            // 9
+            trace(byteArr[0]);            // 0
+            trace(byteArr[1]);            // 64
+            trace(byteArr[2]);            // 9
+            trace(byteArr[3]);            // 33
+            trace(byteArr[4]);            // 251
+            trace(byteArr[5]);            // 84
+            trace(byteArr[6]);            // 68
+            trace(byteArr[7]);            // 45
+            trace(byteArr[8]);            // 24
+            
+            byteArr.position = 0;
+
+            try {
+                trace(byteArr.readBoolean() == false); // true
+            } 
+            catch(e:EOFError) {
+                trace(e);           // EOFError: Error #2030: End of file was encountered.
+            }
+            
+            try {
+                trace(byteArr.readDouble());        // 3.141592653589793
+            }
+            catch(e:EOFError) {
+                trace(e);           // EOFError: Error #2030: End of file was encountered.
+            }
+            
+            try {
+                trace(byteArr.readDouble());
+            } 
+            catch(e:EOFError) {
+                trace(e);            // EOFError: Error #2030: End of file was encountered.
+            }
+        }
+    }
+}
+</codeblock></example></apiClassifierDetail><related-links><link href="../../operators.html#array_access"><linktext>[] (Array-Zugriff)</linktext></link><link href="flash.net.xml#Socket"><linktext>Socket-Klasse</linktext></link><link href="flash.net.xml#URLStream"><linktext>URLStream-Klasse</linktext></link></related-links><apiConstructor id="flash.utils:ByteArray:ByteArray"><apiName>ByteArray</apiName><shortdesc>
+ Erstellt eine ByteArray-Instanz, die ein gepacktes Bytearray darstellt, damit Sie die Methoden und Eigenschaften dieser Klasse einsetzen können, um die Datenspeicherung und den Datenstrom Ihres Programms zu optimieren.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/></apiConstructorDef><apiDesc>
+ Erstellt eine ByteArray-Instanz, die ein gepacktes Bytearray darstellt, damit Sie die Methoden und Eigenschaften dieser Klasse einsetzen können, um die Datenspeicherung und den Datenstrom Ihres Programms zu optimieren.
+ </apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="flash.utils:ByteArray:clear"><apiName>clear</apiName><shortdesc> 
+	 Löscht den Inhalt des Bytearrays und setzt die length- und position-Eigenschaft auf 0 zurück.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc> 
+	 Löscht den Inhalt des Bytearrays und setzt die <codeph>length</codeph>- und <codeph>position</codeph>-Eigenschaft auf 0 zurück. Wenn diese Methode aufgerufen wird, wird explizit Speicher freigegeben, der von der ByteArray-Instanz verwendet wird.
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:ByteArray:compress"><apiName>compress</apiName><shortdesc>
+	 Komprimiert das Bytearray.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>ByteArray, ByteArray.compress, compress
+	  
+	  </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>algorithm</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData>unknown</apiData><apiDesc>Der beim Komprimieren zu verwendende Komprimierungsalgorithmus. Gültige Werte sind als Konstanten in der CompressionAlgorithm-Klasse definiert. Standardmäßig wird das zlib-Format verwendet. <ph platform="actionscript">Dieser Parameter wird nur für Inhalt, der in Adobe AIR ausgeführt wird, erkannt. Flash Player unterstützt nur den Standardalgorithmus (zlib) und gibt einen Ausnahmefehler zurück, wenn Sie versuchen, einen Wert für diesen Parameter zu übergeben.</ph> Das Aufrufen von <codeph>compress(<ph platform="javascript">air.</ph>CompressionAlgorithm.DEFLATE)</codeph> hat den gleichen Effekt wie das Aufrufen der <codeph>deflate()</codeph>-Methode. 
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Komprimiert das Bytearray. Das gesamte Bytearray wird komprimiert. Für Inhalt, der in Adobe AIR ausgeführt wird, können Sie einen Komprimierungsalgorithmus festlegen, indem Sie einen (in der CompressionAlgorithm-Klasse definierten) Wert als <codeph>algorithm</codeph>-Parameter übergeben. <ph platform="actionscript">Flash Player unterstützt nur den Standardalgorithmus, zlib.</ph>
+	 
+	 <p>Nach dem Aufruf wird die Eigenschaft <codeph>length</codeph> des ByteArray auf die neue Länge eingestellt. Die Eigenschaft <codeph>position</codeph> wird auf das Ende des Byte-Arrays eingestellt.</p>
+	 
+	 <p>Eine Beschreibung des komprimierten Datenformats zlib finden Sie unter <xref href="http://www.ietf.org/rfc/rfc1950.txt" scope="external">http://www.ietf.org/rfc/rfc1950.txt</xref>.</p>
+	 
+	 <p>Eine Beschreibung des Komprimierungsalgorithmus deflate finden Sie unter <xref href="http://www.ietf.org/rfc/rfc1951.txt" scope="external">http://www.ietf.org/rfc/rfc1951.txt</xref>.</p>
+	 
+	 <p>Der deflate-Komprimierungsalgorithmus wird in verschiedenen Komprimierungsformaten verwendet, zum Beispiel zlib, gzip, einige zip-Implementierungen. Wenn Daten in einem dieser Formate komprimiert werden, enthalten Komprimierungsformatdaten (zum Beispiel die .zip-Datei), neben der komprimierten Version der Originaldaten auch Metadaten. Zu dieses Metadaten, die in verschiedenen Dateiformaten enthalten sind, gehören unter anderem Dateiname, Datum und Uhrzeit der Dateiänderung, ursprüngliche Dateigröße, optionale Kommentare und Prüfsummendaten.</p>
+	 
+	 <p>Wenn zum Beispiel ein ByteArray mit dem zlib-Algorithmus komprimiert wird, weist das resultierende ByteArray eine bestimmte Struktur auf. Bestimmte Byte enthalten Metadaten zu den komprimierten Daten, während andere Byte die komprimierte Version der ursprünglichen ByteArray-Daten enthalten. Gemäß der Formatspezifikation für komprimierte Daten im zlib-Format werden diese Byte (der Teil, der die komprimierte Version der Originaldaten enthält) mit dem deflate-Algorithmus komprimiert. Folglich sind diese Byte identisch mit dem Ergebnis, das beim Aufrufen von <codeph>compress(<ph outputclass="javascript">air</ph>CompressionAlgorithm.DEFLATE)</codeph> auf dem ursprünglichen ByteArray zurückgegeben wird. Das Ergebnis von <codeph>compress(<ph outputclass="javascript">air.</ph>CompressionAlgorithm.ZLIB)</codeph> enthält allerdings zusätzliche Metadaten, während das Ergebnis von <codeph>compress(<ph platform="javascript">air.</ph>CompressionAlgorithm.DEFLATE)</codeph> nur die komprimierte Version der ursprünglichen ByteArray-Daten und sonst nichts enthält.</p>
+	 
+	 <p>Um das deflate-Format zum Komprimieren der Daten einer ByteArray-Instanz in einem bestimmten Format wie z. B. gzip oder zip zu verwenden, können Sie nicht einfach <codeph>compress(<ph platform="javascript">air.</ph>CompressionAlgorithm.DEFLATE)</codeph> aufrufen. Sie müssen ein ByteArray erstellen, das gemäß der Spezifikation des Komprimierungsformats strukturiert ist, einschließlich der jeweiligen Metadaten sowie der komprimierten Daten, die Sie mit dem deflate-Format erhalten. Analog hierzu können Sie zum Dekodieren von Daten, die in einem Format wie gzip oder zip komprimiert sind, nicht einfach <codeph>uncompress(<ph platform="javascript">air.</ph>CompressionAlgorithm.DEFLATE)</codeph> für diese Daten aufrufen. Sie müssen zunächst die Metadaten von den komprimierten Daten trennen. Dann können Sie das deflate-Format verwenden, um die Daten zu dekomprimieren.</p>
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.utils.xml#ByteArray/uncompress()"><linktext>uncompress()</linktext></link><link href="flash.utils.xml#CompressionAlgorithm"><linktext>flash.utils.CompressionAlgorithm</linktext></link></related-links></apiOperation><apiOperation id="flash.utils:ByteArray:deflate"><apiName>deflate</apiName><shortdesc>
+	 Komprimiert das Bytearray unter Verwendung des deflate-Komprimierungsalgorithmus.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+	 Komprimiert das Bytearray unter Verwendung des deflate-Komprimierungsalgorithmus. Das gesamte Bytearray wird komprimiert.
+	 
+	 <p>Nach dem Aufruf wird die <codeph>length</codeph>-Eigenschaft des ByteArray auf die neue Länge eingestellt. Die <codeph>position</codeph>-Eigenschaft wird auf das Ende des Bytearrays eingestellt.</p>
+	 
+	 <p>Eine Beschreibung des deflate-Komprimierungsalgorithmus finden Sie unter <xref href="http://www.ietf.org/rfc/rfc1951.txt" scope="external">http://www.ietf.org/rfc/rfc1951.txt</xref>.</p>
+	 
+	 <p>Um das deflate-Format zum Komprimieren der Daten einer ByteArray-Instanz in einem bestimmten Format wie z. B. gzip oder zip zu verwenden, können Sie nicht einfach <codeph>deflate()</codeph> aufrufen. Sie müssen ein ByteArray erstellen, das gemäß der Spezifikation des Komprimierungsformats strukturiert ist, einschließlich der jeweiligen Metadaten sowie der komprimierten Daten, die Sie mit dem deflate-Format erhalten. Analog hierzu können Sie zum Dekodieren von Daten, die in einem Format wie z. B. gzip oder zip komprimiert sind, nicht einfach <codeph>inflate()</codeph> für diese Daten aufrufen. Sie müssen zunächst die Metadaten von den komprimierten Daten trennen. Dann können Sie das deflate-Format verwenden, um die Daten zu dekomprimieren.</p>
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.utils.xml#ByteArray/inflate()"><linktext>inflate()</linktext></link></related-links></apiOperation><apiOperation id="flash.utils:ByteArray:inflate"><apiName>inflate</apiName><shortdesc>
+	 Dekomprimiert das Bytearray unter Verwendung des deflate-Komprimierungsalgorithmus.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>ByteArray, ByteArray.uncompress, uncompress
+	  
+	  </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Die Daten sind keine gültigen komprimierten Daten; sie wurden nicht mit demselben Komprimierungsalgorithmus dekomprimiert, der zum Komprimieren verwendet wurde.
+	 
+	 </apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+	 Dekomprimiert das Bytearray unter Verwendung des deflate-Komprimierungsalgorithmus. Das ByteArray muss mit demselben Komprimierungsalgorithmus komprimiert worden sein. 
+	 
+	 <p>Nach dem Aufruf wird die <codeph>length</codeph>-Eigenschaft des ByteArray auf die neue Länge eingestellt. Die <codeph>position</codeph>-Eigenschaft wird auf 0 gesetzt.</p>
+	 
+	 <p>Eine Beschreibung des deflate-Komprimierungsalgorithmus finden Sie unter <xref href="http://www.ietf.org/rfc/rfc1951.txt" scope="external">http://www.ietf.org/rfc/rfc1951.txt</xref>.</p>
+	 
+	 <p>Um Daten zu dekodieren, die in einem Format komprimiert sind, das den deflate-Komprimierungsalgorithmus verwendet (z. B. Daten im GZIP- oder ZIP-Format) kann nicht einfach <codeph>inflate()</codeph> auf einem ByteArray, das die Daten im komprimierten Format enthält, aufgerufen werden. Sie müssen zunächst die Metadaten, die als Teil des komprimierten Datenformats enthalten sind, von den tatsächlichen komprimierten Daten trennen. Weitere Informationen finden Sie in der Beschreibung der <codeph>compress()</codeph>-Methode.</p>
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.utils.xml#ByteArray/deflate()"><linktext>deflate()</linktext></link></related-links></apiOperation><apiOperation id="flash.utils:ByteArray:readBoolean"><apiName>readBoolean</apiName><shortdesc>
+	 Liest einen booleschen Wert vom Bytedatenstream.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>ByteArray, ByteArray.readBoolean, readBoolean
+	  
+	  </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Es sind nicht genug zu lesende Daten vorhanden.
+     </apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>Gibt <codeph>true</codeph> zurück, wenn das Byte ungleich 0 ist, andernfalls <codeph>false</codeph>.
+	 
+	 </apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 Liest einen booleschen Wert vom Bytedatenstream. Es wird ein einzelnes Byte gelesen und <codeph>true</codeph> zurückgegeben, wenn das Byte ungleich 0 ist, oder andernfalls <codeph>false</codeph>.
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:ByteArray:readByte"><apiName>readByte</apiName><shortdesc>
+	 Liest ein vorzeichenbehaftetes Byte vom Bytedatenstream.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>ByteArray, ByteArray.readByte, readByte
+	  
+	  </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Es sind nicht genug zu lesende Daten vorhanden.
+	 </apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>Eine Ganzzahl zwischen -128 und 127.
+	 </apiDesc><apiOperationClassifier>int</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 Liest ein vorzeichenbehaftetes Byte vom Bytedatenstream.
+	 <p>Der Rückgabewert liegt im Bereich von -128 bis 127.</p>
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:ByteArray:readBytes"><apiName>readBytes</apiName><shortdesc>
+	 Liest die Anzahl der im Parameter „length“ angegebenen Datenbyte aus dem Bytestrom.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>ByteArray, ByteArray.readBytes, readBytes
+	  
+	  </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Es sind nicht genug zu lesende Daten vorhanden.
+     </apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiException><apiDesc>
+	 </apiDesc><apiItemName>RangeError</apiItemName><apiOperationClassifier>RangeError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>bytes</apiItemName><apiOperationClassifier>flash.utils:ByteArray</apiOperationClassifier><apiDesc>Das ByteArray-Objekt, in das die Daten gelesen werden.
+	 </apiDesc></apiParam><apiParam><apiItemName>offset</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiData>0</apiData><apiDesc>Der Offset (die Position) in <codeph>bytes</codeph>, ab dem die gelesenen Daten geschrieben werden sollten.
+	 </apiDesc></apiParam><apiParam><apiItemName>length</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiData>0</apiData><apiDesc>Die Anzahl der zu lesenden Byte. Der Standardwert 0 bewirkt, dass alle verfügbaren Daten gelesen werden.
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Liest die Anzahl der im Parameter <codeph>length</codeph> angegebenen Datenbyte aus dem Bytestrom. Die Byte werden in das ByteArray-Objekt gelesen, das vom Parameter <codeph>bytes</codeph> angegeben wird, und in das Ziel-ByteArray geschrieben, das an der durch <codeph>offset</codeph> festgelegten Position beginnt.
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:ByteArray:readDouble"><apiName>readDouble</apiName><shortdesc>
+	 Liest eine Gleitkommazahl nach IEEE 754 mit doppelter Genauigkeit (64 Bit) vom Bytedatenstream.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>ByteArray, ByteArray.readDouble, readDouble
+	  
+	  </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Es sind nicht genug zu lesende Daten vorhanden.
+	 </apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>Eine Gleitkommazahl mit doppelter Genauigkeit (64 Bit).
+	 
+	 </apiDesc><apiOperationClassifier>Number</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 Liest eine Gleitkommazahl nach IEEE 754 mit doppelter Genauigkeit (64 Bit) vom Bytedatenstream.
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:ByteArray:readFloat"><apiName>readFloat</apiName><shortdesc>
+	 Liest eine Gleitkommazahl nach IEEE 754 mit einfacher Genauigkeit (32 Bit) vom Bytedatenstream.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>ByteArray, ByteArray.readFloat, readFloat
+	  
+	  </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Es sind nicht genug zu lesende Daten vorhanden.
+	 </apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>Eine Gleitkommazahl mit einfacher Genauigkeit (32 Bit).
+	 
+	 </apiDesc><apiOperationClassifier>Number</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 Liest eine Gleitkommazahl nach IEEE 754 mit einfacher Genauigkeit (32 Bit) vom Bytedatenstream.
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:ByteArray:readInt"><apiName>readInt</apiName><shortdesc>
+	 Liest eine vorzeichenbehaftete 32-Bit-Ganzzahl vom Bytedatenstream.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>ByteArray, ByteArray.readInt, readInt
+	  
+	  </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Es sind nicht genug zu lesende Daten vorhanden.
+	 </apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>Eine vorzeichenbehaftete 32-Bit-Ganzzahl zwischen -2147483648 und 2147483647.
+	 </apiDesc><apiOperationClassifier>int</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 Liest eine vorzeichenbehaftete 32-Bit-Ganzzahl vom Bytedatenstream.
+	 
+         <p>Der Rückgabewert liegt im Bereich von -2147483648 bis 2147483647.</p>
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:ByteArray:readMultiByte"><apiName>readMultiByte</apiName><shortdesc>
+	 Liest einen Multibyte-String der angegebenen Länge unter Verwendung des angegebenen Zeichensatzes vom Bytedatenstream.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>ByteArray, ByteArray.readMultiByte, readMultiByte
+	  
+	  </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Es sind nicht genug zu lesende Daten vorhanden.
+	 </apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>Ein UTF-8-kodierter String.
+	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn><apiParam><apiItemName>length</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiDesc>Die Anzahl der aus dem Bytestream zu lesenden Byte.
+	 </apiDesc></apiParam><apiParam><apiItemName>charSet</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Der String, der den zum Interpretieren der Byte zu verwendenden Zeichensatz angibt. Mögliche Zeichensatz-Strings sind unter anderem <codeph>"shift-jis"</codeph>, <codeph>"cn-gb"</codeph> und <codeph>"iso-8859-1"</codeph>. Eine vollständige Liste finden Sie unter <xref href="../../charset-codes.html">Unterstützte Zeichensätze</xref>. 
+     <p><b>Hinweis:</b> Wird der Wert des <codeph>charSet</codeph>-Parameters vom aktuellen System nicht erkannt, verwendet die Anwendung die Standard-Codepage des Systems als Zeichensatz. Beispielsweise könnte ein Wert des Parameters <codeph>charSet</codeph> wie bei <codeph>myTest.readMultiByte(22, "iso-8859-01")</codeph>, wo <codeph>01</codeph> anstelle von <codeph>1</codeph> eingesetzt wird, auf Ihrem Entwicklungsrechner funktionieren, aber auf keinem anderen Rechner. Auf anderen Rechnern greift die Anwendung auf die Standard-Codepage des Systems zurück.</p>
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Liest einen Multibyte-String der angegebenen Länge unter Verwendung des angegebenen Zeichensatzes vom Bytedatenstream.
+	 
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:ByteArray:readObject"><apiName>readObject</apiName><shortdesc>
+	 Liest ein Objekt vom Bytedatenstream, das im serialisierten AMF-Format kodiert ist.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>ByteArray, ByteArray.readObject, readObject
+	 </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Es sind nicht genug zu lesende Daten vorhanden.	 
+	 
+	 </apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>Das deserialisierte Objekt.
+	 </apiDesc><apiType value="any"/></apiReturn></apiOperationDef><apiDesc>
+	 Liest ein Objekt vom Bytedatenstream, das im serialisierten AMF-Format kodiert ist.
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="../../flash/net/package.html#registerClassAlias()"><linktext>flash.net.registerClassAlias()</linktext></link></related-links></apiOperation><apiOperation id="flash.utils:ByteArray:readShort"><apiName>readShort</apiName><shortdesc>
+	 Liest eine vorzeichenbehaftete 16-Bit-Ganzzahl vom Bytedatenstream.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>ByteArray, ByteArray.readShort, readShort
+	  
+	  </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Es sind nicht genug zu lesende Daten vorhanden.
+	 </apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>Eine vorzeichenbehaftete 16-Bit-Ganzzahl zwischen -32768 und 32767.
+	 </apiDesc><apiOperationClassifier>int</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 Liest eine vorzeichenbehaftete 16-Bit-Ganzzahl vom Bytedatenstream.
+	 
+	 <p>Der Rückgabewert liegt im Bereich von -32768 bis 32767.</p>
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:ByteArray:readUTF"><apiName>readUTF</apiName><shortdesc>
+	 Liest einen UTF-8-String vom Bytedatenstream.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>ByteArray, ByteArray.readUTF, readUTF
+	  
+	  </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Es sind nicht genug zu lesende Daten vorhanden.
+	 </apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>Ein UTF-8-kodierter String.
+	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 Liest einen UTF-8-String vom Bytedatenstream. Es wird davon ausgegangen, dass dem String eine short-Ganzzahl ohne Vorzeichen mit der Länge in Byte vorangestellt ist.
+	 
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.utils.xml#IDataInput/readUTF()"><linktext>flash.utils.IDataInput.readUTF()</linktext></link></related-links></apiOperation><apiOperation id="flash.utils:ByteArray:readUTFBytes"><apiName>readUTFBytes</apiName><shortdesc>
+	 Liest eine Folge von UTF-8-Byte, die vom length-Parameter angegeben ist, aus dem Bytedatenstream und gibt einen String zurück.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>ByteArray, ByteArray.readUTFBytes, readUTFBytes
+	  
+	  </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Es sind nicht genug zu lesende Daten vorhanden.
+	 </apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>Ein String der angegebenen Länge, der aus den UTF-8-Byte besteht.
+	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn><apiParam><apiItemName>length</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiDesc>Ein vorzeichenloses short-Element mit der Länge des UTF-8-Strings.
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Liest eine Folge von UTF-8-Byte, die vom <codeph>length</codeph>-Parameter angegeben ist, aus dem Bytedatenstream und gibt einen String zurück.
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:ByteArray:readUnsignedByte"><apiName>readUnsignedByte</apiName><shortdesc>
+	 Liest ein vorzeichenloses Byte vom Bytedatenstream.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>ByteArray, ByteArray.readUnsignedByte, readUnsignedByte
+	  
+	  </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Es sind nicht genug zu lesende Daten vorhanden.
+	 </apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>Eine vorzeichenlose 32-Bit-Ganzzahl zwischen 0 und 255.
+	 </apiDesc><apiOperationClassifier>uint</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 Liest ein vorzeichenloses Byte vom Bytedatenstream.
+	 
+	 <p>Der Rückgabewert liegt im Bereich von 0 bis 255. </p>	
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:ByteArray:readUnsignedInt"><apiName>readUnsignedInt</apiName><shortdesc>
+	 Liest eine vorzeichenlose 32-Bit-Ganzzahl vom Bytedatenstream.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>ByteArray, ByteArray.readUnsignedInt, readUnsignedInt
+	  
+	  </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Es sind nicht genug zu lesende Daten vorhanden.
+	 </apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>Eine vorzeichenlose 32-Bit-Ganzzahl zwischen 0 und 4294967295.
+	 </apiDesc><apiOperationClassifier>uint</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 Liest eine vorzeichenlose 32-Bit-Ganzzahl vom Bytedatenstream.
+	 
+	 <p>Der Rückgabewert liegt im Bereich von 0 bis 4294967295. </p>
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:ByteArray:readUnsignedShort"><apiName>readUnsignedShort</apiName><shortdesc>
+	 Liest eine vorzeichenlose 16-Bit-Ganzzahl vom Bytedatenstream.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>ByteArray, ByteArray.readUnsignedShort, readUnsignedShort
+	  
+	  </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Es sind nicht genug zu lesende Daten vorhanden.
+	 </apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>Eine vorzeichenlose 16-Bit-Ganzzahl zwischen 0 und 65535.
+	 </apiDesc><apiOperationClassifier>uint</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 Liest eine vorzeichenlose 16-Bit-Ganzzahl vom Bytedatenstream.
+	 
+	 <p>Der Rückgabewert liegt im Bereich von 0 bis 65535. </p>
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:ByteArray:toString"><apiName>toString</apiName><shortdesc>
+	 Konvertiert das Bytearray in einen String.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>ByteArray, ByteArray.toString, toString
+	  
+	  </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Die Stringdarstellung des Byte-Arrays.
+	 
+	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 Konvertiert das Bytearray in einen String. Wenn die Daten im Array mit einer Unicode-Bytereihenfolgenkennung beginnen, wird diese von der Anwendung bei der Konvertierung in einen String berücksichtigt. Wenn <codeph>System.useCodePage</codeph> auf <codeph>true</codeph> gesetzt ist, behandelt die Anwendung die Daten im Array beim Konvertieren, als lägen sie in der Kodierung der Codepage des Systems vor.
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:ByteArray:uncompress"><apiName>uncompress</apiName><shortdesc>
+	 Dekomprimiert das Bytearray.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>ByteArray, ByteArray.uncompress, uncompress
+	  
+	  </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Die Daten sind keine gültigen komprimierten Daten; sie wurden nicht mit demselben Komprimierungsalgorithmus dekomprimiert, der zum Komprimieren verwendet wurde.
+	 
+	 </apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>algorithm</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData>unknown</apiData><apiDesc>Der beim Dekomprimieren zu verwendende Komprimierungsalgorithmus. Es muss sich um denselben Komprimierungsalgorithmus handeln, der beim Komprimieren der Daten verwendet wurde. Gültige Werte sind als Konstanten in der CompressionAlgorithm-Klasse definiert. Standardmäßig wird das zlib-Format verwendet. Dieser Parameter wird nur für Inhalt, der in Adobe AIR ausgeführt wird, erkannt. <ph platform="actionscript">Flash Player unterstützt nur den Standardalgorithmus (zlib) und gibt einen Ausnahmefehler zurück, wenn Sie versuchen, einen Wert für diesen Parameter zu übergeben.</ph>
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Dekomprimiert das Bytearray. Für Inhalt, der in Adobe AIR ausgeführt wird, können Sie einen Komprimierungsalgorithmus festlegen, indem Sie einen (in der CompressionAlgorithm-Klasse definierten) Wert als <codeph>algorithm</codeph>-Parameter übergeben. Das ByteArray muss mit demselben Komprimierungsalgorithmus komprimiert worden sein. <ph platform="actionscript">Flash Player unterstützt nur den Standardalgorithmus, zlib.</ph>
+	 
+	 <p>Nach dem Aufruf wird die Eigenschaft <codeph>length</codeph> des ByteArray auf die neue Länge eingestellt. Die Eigenschaft <codeph>position</codeph> wird auf 0 gesetzt.</p>
+	 
+	 <p>Eine Beschreibung des komprimierten Datenformats zlib finden Sie unter <xref href="http://www.ietf.org/rfc/rfc1950.txt" scope="external">http://www.ietf.org/rfc/rfc1950.txt</xref>.</p>
+	 
+	 <p>Eine Beschreibung des Komprimierungsalgorithmus deflate finden Sie unter <xref href="http://www.ietf.org/rfc/rfc1951.txt" scope="external">http://www.ietf.org/rfc/rfc1951.txt</xref>.</p>
+	 
+	 <p>Um Daten zu dekodieren, die in einem Format komprimiert wurden, das den deflate-Komprimierungsalgorithmus verwendet (z. B. gzip oder zip), genügt es nicht, <codeph>uncompress(CompressionAlgorithm.DEFLATE)</codeph> für ein ByteArray mit den komprimierten Daten aufzurufen. Sie müssen zunächst die Metadaten, die als Teil des komprimierten Datenformats enthalten sind, von den tatsächlichen komprimierten Daten trennen. Weitere Informationen finden Sie in der Beschreibung der <codeph>compress()</codeph>-Methode.</p>
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.utils.xml#ByteArray/compress()"><linktext>compress()</linktext></link><link href="flash.utils.xml#CompressionAlgorithm"><linktext>flash.utils.CompressionAlgorithm</linktext></link></related-links></apiOperation><apiOperation id="flash.utils:ByteArray:writeBoolean"><apiName>writeBoolean</apiName><shortdesc>
+	 Schreibt einen booleschen Wert.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>ByteArray, ByteArray.writeBoolean, writeBoolean
+	  
+	  </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>value</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiDesc>Ein boolescher Wert, der angibt, welches Byte geschrieben wird. Ist der Parameter <codeph>true</codeph>, schreibt die Methode eine 1. Bei <codeph>false</codeph> wird eine 0 geschrieben.
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Schreibt einen booleschen Wert. Entsprechend dem Parameter <codeph>value</codeph> wird ein einzelnes Byte geschrieben: 1, wenn der Wert <codeph>true</codeph> ist oder 0, wenn der Wert <codeph>false</codeph> ist.
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:ByteArray:writeByte"><apiName>writeByte</apiName><shortdesc>
+	 Schreibt ein Byte in den Bytedatenstream.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>ByteArray, ByteArray.writeByte, writeByte
+	  
+	  </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>value</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiDesc>Eine 32-Bit-Ganzzahl. Die niedrigstwertigen 8 Bit werden in den Bytedatenstream geschrieben.
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Schreibt ein Byte in den Bytedatenstream. 
+	 <p>Es werden die unteren 8 Bit des Parameters verwendet. Die oberen 24 Bit werden ignoriert. </p>
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:ByteArray:writeBytes"><apiName>writeBytes</apiName><shortdesc>
+	 Schreibt eine Bytefolge der Länge „length aus dem angegebenen Bytearray „bytes“ ab Position „offset“ (auf null basierender Index) in den Bytestream.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>ByteArray, ByteArray.writeBytes, writeBytes
+	  
+	  </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>bytes</apiItemName><apiOperationClassifier>flash.utils:ByteArray</apiOperationClassifier><apiDesc>Das ByteArray-Objekt.
+	 </apiDesc></apiParam><apiParam><apiItemName>offset</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiData>0</apiData><apiDesc>Ein auf null basierender Index, der die Array-Position angibt, ab der geschrieben werden soll.
+	 </apiDesc></apiParam><apiParam><apiItemName>length</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiData>0</apiData><apiDesc>Eine vorzeichenlose Ganzzahl, die angibt, wie viele Byte des Puffers geschrieben werden sollen.
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Schreibt eine Bytefolge der Länge <codeph>length</codeph> aus dem angegebenen Bytearray <codeph>bytes</codeph> ab der Position <codeph>offset</codeph> (auf null basierender Index) in den Bytedatenstream.
+	 
+	 <p>Wird der Parameter <codeph>length</codeph> weggelassen, wird die Standardlänge 0 verwendet. Die Methode schreibt den gesamten Puffer ab der Position <codeph>offset</codeph>. Wird auch der Parameter <codeph>offset</codeph> weggelassen, so wird der gesamte Pufferinhalt geschrieben. </p> <p>Wenn sich die Parameter <codeph>offset</codeph> bzw. <codeph>length</codeph> außerhalb des gültigen Bereichs befinden, werden sie auf den Anfang bzw. auf das Ende des <codeph>bytes</codeph>-Array gesetzt.</p>
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:ByteArray:writeDouble"><apiName>writeDouble</apiName><shortdesc>
+	 Schreibt eine Gleitkommazahl nach IEEE 754 mit doppelter Genauigkeit (64 Bit) in den Bytedatenstream.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>ByteArray, ByteArray.writeDouble, writeDouble
+	  
+	  </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>value</apiItemName><apiOperationClassifier>Number</apiOperationClassifier><apiDesc>Eine Gleitkommazahl mit doppelter Genauigkeit (64 Bit).
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Schreibt eine Gleitkommazahl nach IEEE 754 mit doppelter Genauigkeit (64 Bit) in den Bytedatenstream. 
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:ByteArray:writeFloat"><apiName>writeFloat</apiName><shortdesc>
+	 Schreibt eine Gleitkommazahl nach IEEE 754 mit einfacher Genauigkeit (32 Bit) in den Bytedatenstream.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>ByteArray, ByteArray.writeFloat, writeFloat
+	  
+	  </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>value</apiItemName><apiOperationClassifier>Number</apiOperationClassifier><apiDesc>Eine Gleitkommazahl mit einfacher Genauigkeit (32 Bit).
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Schreibt eine Gleitkommazahl nach IEEE 754 mit einfacher Genauigkeit (32 Bit) in den Bytedatenstream. 
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:ByteArray:writeInt"><apiName>writeInt</apiName><shortdesc>
+	 Schreibt eine vorzeichenbehaftete 32-Bit-Ganzzahl in den Bytedatenstream.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>ByteArray, ByteArray.writeInt, writeInt
+	  
+	  </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>value</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiDesc>Eine Ganzzahl, die in den Bytedatenstream geschrieben werden soll.
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Schreibt eine vorzeichenbehaftete 32-Bit-Ganzzahl in den Bytedatenstream.
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:ByteArray:writeMultiByte"><apiName>writeMultiByte</apiName><shortdesc>
+	 Schreibt einen Multibyte-String unter Verwendung des angegebenen Zeichensatzes in den Bytedatenstream.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>ByteArray, ByteArray.writeMultiByte, writeMultiByte
+	  
+	  </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>value</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Der Stringwert, der geschrieben werden soll.
+	 </apiDesc></apiParam><apiParam><apiItemName>charSet</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Der String, der den zu verwendenden Zeichensatz angibt. Mögliche Zeichensatz-Strings sind unter anderem <codeph>"shift-jis"</codeph>, <codeph>"cn-gb"</codeph> und <codeph>"iso-8859-1"</codeph>. Eine vollständige Liste finden Sie unter <xref href="../../charset-codes.html">Unterstützte Zeichensätze</xref>. 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Schreibt einen Multibyte-String unter Verwendung des angegebenen Zeichensatzes in den Bytedatenstream. 
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:ByteArray:writeObject"><apiName>writeObject</apiName><shortdesc>
+	 Schreibt ein Objekt im serialisierten AMF-Format in den Bytedatenstream.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>ByteArray, ByteArray.writeObject, writeObject
+	 </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>object</apiItemName><apiType value=""/><apiDesc>Das zu serialisierende Objekt.
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Schreibt ein Objekt im serialisierten AMF-Format in den Bytedatenstream.
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="../../flash/net/package.html#registerClassAlias()"><linktext>flash.net.registerClassAlias()</linktext></link></related-links></apiOperation><apiOperation id="flash.utils:ByteArray:writeShort"><apiName>writeShort</apiName><shortdesc>
+	 Schreibt eine 16-Bit-Ganzzahl in den Bytedatenstream.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>ByteArray, ByteArray.writeShort, writeShort
+	  
+	  </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>value</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiDesc>Eine 32-Bit-Ganzzahl, deren niedrigstwertige 16 Bit in den Bytedatenstream geschrieben werden.
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Schreibt eine 16-Bit-Ganzzahl in den Bytedatenstream. Es werden die unteren 16 Bit des Parameters verwendet. Die oberen 16 Bit werden ignoriert.
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:ByteArray:writeUTF"><apiName>writeUTF</apiName><shortdesc>
+	 Schreibt einen UTF-8-String in den Bytedatenstream.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>ByteArray, ByteArray.writeUTF, writeUTF
+	  
+	  </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Wenn die Länge größer als 65535 ist.
+	 
+	 </apiDesc><apiItemName>RangeError</apiItemName><apiOperationClassifier>RangeError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>value</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Der Stringwert, der geschrieben werden soll.
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Schreibt einen UTF-8-String in den Bytedatenstream. Die Länge des UTF-8-Strings in Byte als 16-Bit-Ganzzahl wird zuerst geschrieben, gefolgt von den Byte für die Zeichen des Strings.
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:ByteArray:writeUTFBytes"><apiName>writeUTFBytes</apiName><shortdesc>
+	 Schreibt einen UTF-8-String in den Bytedatenstream.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>ByteArray, ByteArray.writeUTFBytes, writeUTFBytes
+	  
+	  </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>value</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Der Stringwert, der geschrieben werden soll.
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Schreibt einen UTF-8-String in den Bytedatenstream. Entspricht der <codeph>writeUTF()</codeph>-Methode, doch bei <codeph>writeUTFBytes()</codeph> wird dem String kein 16-Bit-Wort mit der Längenangabe vorangestellt.
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:ByteArray:writeUnsignedInt"><apiName>writeUnsignedInt</apiName><shortdesc>
+	 Schreibt eine vorzeichenlose 32-Bit-Ganzzahl in den Bytedatenstream.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>ByteArray, ByteArray.writeUnsignedInt, writeUnsignedInt
+	  
+	  </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>value</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiDesc>Eine vorzeichenlose Ganzzahl, die in den Bytedatenstream geschrieben werden soll.
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Schreibt eine vorzeichenlose 32-Bit-Ganzzahl in den Bytedatenstream.
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiValue id="flash.utils:ByteArray:bytesAvailable:get"><apiName>bytesAvailable</apiName><shortdesc>
+	 Die Anzahl der ab der aktuellen Position im Bytearray bis zum Ende des Arrays zum Lesen verfügbaren Datenbyte.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>available, bytes, position 
+	  
+	  </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>uint</apiValueClassifier></apiValueDef><apiDesc>
+	 Die Anzahl der ab der aktuellen Position im Bytearray bis zum Ende des Arrays zum Lesen verfügbaren Datenbyte.
+	 
+	 <p>Verwenden Sie bei jedem Zugriff auf ein ByteArray-Objekt die <codeph>bytesAvailable</codeph>-Eigenschaft zusammen mit den Lesemethoden, um sicherzustellen, dass gültige Daten gelesen werden.</p>
+	 
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.utils:ByteArray:defaultObjectEncoding:get"><apiName>defaultObjectEncoding</apiName><shortdesc>
+	 Gibt die Standardkodierung für Objekte der ByteArray-Klasse an, die für neue ByteArray-Instanzen verwendet wird.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>ByteArray, ByteArray.defaultObjectEncoding, defaultObjectEncoding
+	  
+	  </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="readwrite"/><apiValueClassifier>uint</apiValueClassifier></apiValueDef><apiDesc>
+	 Gibt die Standardkodierung für Objekte der ByteArray-Klasse an, die für neue ByteArray-Instanzen verwendet wird. Beim Erstellen einer neuen ByteArray-Instanz beginnt die Kodierung für diese Instanz mit dem Wert von <codeph>defaultObjectEncoding</codeph>. Die Eigenschaft <codeph>defaultObjectEncoding</codeph> wird auf <codeph>ObjectEncoding.AMF3</codeph> initialisiert.
+	 
+	 
+	 <p>Beim Schreiben oder Lesen eines Objekts aus Binärdaten wird anhand des Werts von <codeph>objectEncoding</codeph> ermittelt, ob als Format ActionScript 3.0, ActionScript 2.0 oder ActionScript 1.0 verwendet wird. Der Wert ist eine Konstante der ObjectEncoding-Klasse.</p>
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.net.xml#ObjectEncoding"><linktext>ObjectEncoding-Klasse</linktext></link><link href="flash.utils.xml#ByteArray/objectEncoding"><linktext>flash.utils.ByteArray.objectEncoding</linktext></link></related-links></apiValue><apiValue id="flash.utils:ByteArray:endian:get"><apiName>endian</apiName><shortdesc>
+	 Ändert oder liest die Bytereihenfolge für die Daten; entweder Endian.BIG_ENDIAN oder Endian.LITTLE_ENDIAN.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>
+	  
+	  </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 Ändert oder liest die Bytereihenfolge für die Daten; entweder <codeph>Endian.BIG_ENDIAN</codeph> oder <codeph>Endian.LITTLE_ENDIAN</codeph>.
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.utils.xml#Endian"><linktext>Endian-Klasse</linktext></link></related-links></apiValue><apiValue id="flash.utils:ByteArray:length:get"><apiName>length</apiName><shortdesc>
+	 Die Länge des ByteArray-Objekts in Byte.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>ByteArray, ByteArray.length, length
+	  
+	  </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>uint</apiValueClassifier></apiValueDef><apiDesc>
+	 Die Länge des ByteArray-Objekts in Byte.
+	 
+	 <p>Wenn die Länge auf einen Wert eingestellt wird, der größer als die aktuelle Länge ist, wird die rechte Seite des Byte-Arrays mit Nullen gefüllt.</p>
+	 
+	 <p>Wenn für die Länge ein Wert angegeben wird, der kleiner als die aktuelle Länge ist, wird das Bytearray abgeschnitten.</p>
+	 
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.utils:ByteArray:objectEncoding:get"><apiName>objectEncoding</apiName><shortdesc>
+	 Anhand dieses Werts wird ermittelt, ob beim Schreiben oder Lesen einer ByteArray-Instanz als Format ActionScript 3.0, ActionScript 2.0 oder ActionScript 1.0 verwendet werden soll.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>ByteArray, ByteArray.objectEncoding, objectEncoding
+	  
+	  </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>uint</apiValueClassifier></apiValueDef><apiDesc>
+	 Anhand dieses Werts wird ermittelt, ob beim Schreiben oder Lesen einer ByteArray-Instanz als Format ActionScript 3.0, ActionScript 2.0 oder ActionScript 1.0 verwendet werden soll. Der Wert ist eine Konstante der ObjectEncoding-Klasse.
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.net.xml#ObjectEncoding"><linktext>ObjectEncoding-Klasse</linktext></link><link href="flash.utils.xml#ByteArray/defaultObjectEncoding"><linktext>flash.utils.ByteArray.defaultObjectEncoding</linktext></link></related-links></apiValue><apiValue id="flash.utils:ByteArray:position:get"><apiName>position</apiName><shortdesc>
+	 Bewegt den Dateizeiger im ByteArray-Objekt oder gibt dessen aktuelle Position in Byte zurück.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>ByteArray, ByteArray.getFilePointer, 
+	  
+	  </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>uint</apiValueClassifier></apiValueDef><apiDesc>
+	 Bewegt den Dateizeiger im ByteArray-Objekt oder gibt dessen aktuelle Position in Byte zurück. Dies ist die Position, ab der beim nächsten Aufruf einer Lese- oder Schreibmethode Daten gelesen bzw. geschrieben werden.
+	 
+	 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.utils:IDataOutput"><apiName>IDataOutput</apiName><shortdesc>
+Die IDataOutput-Schnittstelle bietet eine Reihe von Methoden zum Schreiben von Binärdaten.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiInterface/><apiAccess value="public"/><apiStatic/><apiBaseClassifier/></apiClassifierDef><apiDesc>
+Die IDataOutput-Schnittstelle bietet eine Reihe von Methoden zum Schreiben von Binärdaten. Diese Schnittstelle ist das I/O-Gegenstück zur IDataInput-Schnittstelle, mit der Binärdaten gelesen werden. Die IDataOutput-Schnittstelle wird von den Klassen FileStream, Socket und ByteArray implementiert.
+<p>Alle IDataInput- und IDataOutput-Vorgänge erfolgen in der Standardeinstellung im Format „bigEndian“ (das höchstwertige Byte der Folge wird an der niedrigsten bzw. ersten Speicheradresse gespeichert) und ungeblockt. </p>
+<p>Vorzeichenerweiterung ist nur beim Lesen von Daten relevant, jedoch nicht beim Schreiben. Sie benötigen deshalb keine unterschiedlichen Schreibmethoden für die Datentypen <codeph>IDataInput.readUnsignedByte()</codeph> und <codeph>IDataInput.readUnsignedShort()</codeph>. Dies bedeutet:</p>
+<ul>
+  <li>Verwenden Sie <codeph>IDataOutput.writeByte()</codeph> mit <codeph>IDataInput.readUnsignedByte()</codeph> und <codeph>IDataInput.readByte()</codeph>.</li>
+  <li>Verwenden Sie <codeph>IDataOutput.writeShort()</codeph> mit <codeph>IDataInput.readUnsignedShort()</codeph> und <codeph>IDataInput.readShort()</codeph>.</li>
+</ul>
+
+</apiDesc><example conref="examples\DataOutputExample.as"> Im folgenden Beispiel werden mit der Klasse <codeph>DataOutputExample</codeph> ein boolescher Ausdruck und die Gleitkommadarstellung (mit doppelter Genauigkeit) der Zahl Pi in ein Bytearray geschrieben. Dies wird in den folgenden Schritten erreicht:
+ <ol>
+     <li>Deklarieren Sie eine neue ByteArray-Objektinstanz mit dem Namen <codeph>byteArr</codeph>.</li>
+     <li>Schreiben Sie den Byte-Äquivalenzwert des booleschen Werts <codeph>false</codeph> und die Gleitkommadarstellung (mit doppelter Genauigkeit) der Zahl Pi.</li>
+     <li>Rufen Sie den booleschen Wert und den Gleitkommawert ab.</li>
+ </ol>
+ 
+ <p>Am Ende wird ein Codesegment eingefügt, mit dem auf Dateiende-Fehler geprüft wird. Hiermit wird sichergestellt, dass nicht über das Ende des Bytestroms hinaus gelesen wird.</p>
+<codeblock>
+package {
+    import flash.display.Sprite;
+    import flash.utils.ByteArray;
+    import flash.errors.EOFError;
+
+    public class DataOutputExample extends Sprite {        
+        public function DataOutputExample() {
+            var byteArr:ByteArray = new ByteArray();
+
+            byteArr.writeBoolean(false);
+            byteArr.writeDouble(Math.PI);
+            
+            byteArr.position = 0;
+
+            try {
+                trace(byteArr.readBoolean()); // false
+            } 
+            catch(e:EOFError) {
+                trace(e);           // EOFError: Error #2030: End of file was encountered.
+            }
+                        
+            try {
+                trace(byteArr.readDouble());    // 3.141592653589793
+            } 
+            catch(e:EOFError) {
+                trace(e);           // EOFError: Error #2030: End of file was encountered.
+            }
+            
+            try {
+                trace(byteArr.readDouble());
+            } 
+            catch(e:EOFError) {
+                trace(e);        // EOFError: Error #2030: End of file was encountered.
+            }
+        }
+    }
+}
+</codeblock></example></apiClassifierDetail><related-links><link href="flash.utils.xml#IDataInput"><linktext>IDataInput-Schnittstelle</linktext></link><link href="flash.utils.xml#IDataOutput/endian"><linktext>endian</linktext></link><link href="flash.filesystem.xml#FileStream"><linktext>FileStream-Klasse</linktext></link><link href="flash.net.xml#Socket"><linktext>Socket-Klasse</linktext></link><link href="flash.net.xml#URLStream"><linktext>URLStream-Klasse</linktext></link><link href="flash.utils.xml#ByteArray"><linktext>ByteArray-Klasse</linktext></link></related-links><apiOperation id="flash.utils:IDataOutput:flash.utils:IDataOutput:writeBoolean"><apiName>writeBoolean</apiName><shortdesc>
+	 Schreibt einen booleschen Wert.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><internal>throws IOError An I/O error occurred?
+	 </internal></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>value</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiDesc>Ein boolescher Wert, der angibt, welches Byte geschrieben wird. Hat der Parameter den Wert <codeph>true</codeph>, wird 1 geschrieben; bei <codeph>false</codeph> wird 0 geschrieben.
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Schreibt einen booleschen Wert. Entsprechend dem Parameter <codeph>value</codeph> wird ein einzelnes Byte geschrieben: 1, wenn der Wert <codeph>true</codeph> ist oder 0, wenn der Wert <codeph>false</codeph> ist.
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:IDataOutput:flash.utils:IDataOutput:writeByte"><apiName>writeByte</apiName><shortdesc>
+	 Schreibt ein Byte.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><internal>throws IOError An I/O error occurred?
+	 </internal></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>value</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiDesc>Ein Byte-Wert als Ganzzahl.
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Schreibt ein Byte. Die unteren 8 Bit des Parameters werden verwendet, die oberen 24 Bit werden ignoriert.
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:IDataOutput:flash.utils:IDataOutput:writeBytes"><apiName>writeBytes</apiName><shortdesc>
+	 Schreibt eine Bytesequenz vom angegebenen Bytearray in den Dateistream, Bytestream oder das Bytearray, beginnend mit dem durch „offset“ festgelegten Byte (unter Verwendung einer auf null basierenden Indexposition) mit einer durch „length“ festgelegten Länge.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><internal>throws IOError An I/O error occurred?
+	 </internal></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>bytes</apiItemName><apiOperationClassifier>flash.utils:ByteArray</apiOperationClassifier><apiDesc>Das zu schreibende Bytearray.
+	 </apiDesc></apiParam><apiParam><apiItemName>offset</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiData>0</apiData><apiDesc>Eine auf null basierende Indexposition, welche die Array-Position festlegt, ab der geschrieben werden soll.
+	 </apiDesc></apiParam><apiParam><apiItemName>length</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiData>0</apiData><apiDesc>Eine vorzeichenlose Ganzzahl, die festlegt, wie viele Byte des Puffers geschrieben werden sollen.
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Schreibt eine <codeph>Byte</codeph>-Sequenz vom angegebenen Bytearray in den Dateistream, Bytestream oder das Bytearray, beginnend mit dem durch <codeph>offset</codeph> festgelegten Byte (unter Verwendung einer auf null basierenden Indexposition) mit einer durch <codeph>length</codeph> festgelegten Länge.
+	 
+	 <p>Wird der Parameter <codeph>length</codeph> weggelassen, wird die Standardlänge 0 verwendet und der gesamte Puffer wird ab der Position <codeph>offset</codeph> geschrieben. Wird auch der Parameter <codeph>offset</codeph> weggelassen, so wird der gesamte Pufferinhalt geschrieben. </p>
+	 
+	 <p>Wenn sich die Parameter <codeph>offset</codeph> bzw. <codeph>length</codeph> außerhalb des gültigen Bereichs befinden, werden sie auf den Anfang bzw. auf das Ende des <codeph>bytes</codeph>-Array gesetzt.</p>
+ 	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:IDataOutput:flash.utils:IDataOutput:writeDouble"><apiName>writeDouble</apiName><shortdesc>
+	 Schreibt eine Gleitkommazahl nach IEEE 754 mit doppelter Genauigkeit (64 Bit).</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><internal>throws IOError An I/O error occurred?
+	 </internal></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>value</apiItemName><apiOperationClassifier>Number</apiOperationClassifier><apiDesc>Eine Gleitkommazahl mit doppelter Genauigkeit (64 Bit).
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Schreibt eine Gleitkommazahl nach IEEE 754 mit doppelter Genauigkeit (64 Bit).
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:IDataOutput:flash.utils:IDataOutput:writeFloat"><apiName>writeFloat</apiName><shortdesc>
+	 Schreibt eine Gleitkommazahl nach IEEE 754 mit einfacher Genauigkeit (32 Bit).</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><internal>throws IOError An I/O error occurred?
+	 </internal></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>value</apiItemName><apiOperationClassifier>Number</apiOperationClassifier><apiDesc>Eine Gleitkommazahl mit einfacher Genauigkeit (32 Bit).
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Schreibt eine Gleitkommazahl nach IEEE 754 mit einfacher Genauigkeit (32 Bit).
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:IDataOutput:flash.utils:IDataOutput:writeInt"><apiName>writeInt</apiName><shortdesc>
+	 Schreibt eine vorzeichenbehaftete 32-Bit-Ganzzahl.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><internal>throws IOError An I/O error occurred?
+	 </internal></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>value</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiDesc>Ein Byte-Wert als vorzeichenbehaftete Ganzzahl.
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Schreibt eine vorzeichenbehaftete 32-Bit-Ganzzahl.
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:IDataOutput:flash.utils:IDataOutput:writeMultiByte"><apiName>writeMultiByte</apiName><shortdesc>
+	 Schreibt einen Multibyte-String unter Verwendung des angegebenen Zeichensatzes in den Dateistream, Bytestream oder Bytearray.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>IDataOutput, IDataOutput.writeMultiByte, writeMultiByte
+	 </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>value</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Der Stringwert, der geschrieben werden soll.
+	 </apiDesc></apiParam><apiParam><apiItemName>charSet</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Der String, der den zu verwendenden Zeichensatz angibt. Mögliche Zeichensatz-Strings sind unter anderem <codeph>"shift-jis"</codeph>, <codeph>"cn-gb"</codeph> und <codeph>"iso-8859-1"</codeph>. Eine vollständige Liste finden Sie unter <xref href="../../charset-codes.html">Unterstützte Zeichensätze</xref>. 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Schreibt einen Multibyte-String unter Verwendung des angegebenen Zeichensatzes in den Dateistream, Bytestream oder Bytearray. 
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:IDataOutput:flash.utils:IDataOutput:writeObject"><apiName>writeObject</apiName><shortdesc>
+	 Schreibt ein Objekt im serialisierten AMF-Format in den Dateistream, Bytestream oder Bytearray.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><internal>throws IOError An I/O error occurred?
+	 </internal></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>object</apiItemName><apiType value=""/><apiDesc>Das zu serialisierende Objekt
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Schreibt ein Objekt im serialisierten AMF-Format in den Dateistream, Bytestream oder Bytearray.
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.utils.xml#IDataOutput/objectEncoding"><linktext>objectEncoding</linktext></link><link href="../../flash/net/package.html#registerClassAlias()"><linktext>flash.net.registerClassAlias()</linktext></link></related-links></apiOperation><apiOperation id="flash.utils:IDataOutput:flash.utils:IDataOutput:writeShort"><apiName>writeShort</apiName><shortdesc>
+	 Schreibt eine 16-Bit-Ganzzahl.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><internal>throws IOError An I/O error occurred?
+	 </internal></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>value</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiDesc>Ein Byte-Wert als Ganzzahl.
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Schreibt eine 16-Bit-Ganzzahl. Die unteren 16 Bit des Parameters werden verwendet, die oberen 16 Bit werden ignoriert.
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:IDataOutput:flash.utils:IDataOutput:writeUTF"><apiName>writeUTF</apiName><shortdesc>
+	 Schreibt einen UTF-8-String in den Dateistream, Bytestream oder Bytearray.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><internal>throws IOError An I/O error occurred?
+	 </internal></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Wenn die Länge größer als 65535 ist.
+	 
+	 </apiDesc><apiItemName>RangeError</apiItemName><apiOperationClassifier>RangeError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>value</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Der Stringwert, der geschrieben werden soll.
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Schreibt einen UTF-8-String in den Dateistream, Bytestream oder Bytearray. Die Länge des UTF-8-Strings in Byte als 16-Bit-Ganzzahl wird zuerst geschrieben, gefolgt von den Byte für die Zeichen des Strings.
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:IDataOutput:flash.utils:IDataOutput:writeUTFBytes"><apiName>writeUTFBytes</apiName><shortdesc>
+	 Schreibt einen UTF-8-String.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><internal>throws IOError An I/O error occurred?
+	 </internal></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>value</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Der Stringwert, der geschrieben werden soll.
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Schreibt einen UTF-8-String. Entspricht <codeph>writeUTF()</codeph>, doch dem String wird kein 16-Bit-Wort mit der Längenangabe vorangestellt.
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:IDataOutput:flash.utils:IDataOutput:writeUnsignedInt"><apiName>writeUnsignedInt</apiName><shortdesc>
+	 Schreibt eine vorzeichenlose 32-Bit-Ganzzahl.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><internal>throws IOError An I/O error occurred?
+	 </internal></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>value</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiDesc>Ein Byte-Wert als vorzeichenlose Ganzzahl.
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Schreibt eine vorzeichenlose 32-Bit-Ganzzahl.
+	 </apiDesc></apiOperationDetail></apiOperation><apiValue id="flash.utils:IDataOutput:flash.utils:IDataOutput:endian:get"><apiName>endian</apiName><shortdesc>
+	 Die Bytereihenfolge der Daten. Entweder die Konstante BIG_ENDIAN oder LITTLE_ENDIAN der Endian-Klasse.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 Die Bytereihenfolge der Daten. Entweder die Konstante <codeph>BIG_ENDIAN</codeph> oder <codeph>LITTLE_ENDIAN</codeph> der Endian-Klasse.
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.utils.xml#Endian"><linktext>Endian-Klasse</linktext></link></related-links></apiValue><apiValue id="flash.utils:IDataOutput:flash.utils:IDataOutput:objectEncoding:get"><apiName>objectEncoding</apiName><shortdesc>
+     Wird verwendet, um festzustellen, ob das Format AMF3 oder AMF0 verwendet wird, wenn binäre Daten mit der writeObject()-Methode geschrieben oder gelesen werden.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>uint</apiValueClassifier></apiValueDef><apiDesc>
+     Wird verwendet, um festzustellen, ob das Format AMF3 oder AMF0 verwendet wird, wenn binäre Daten mit der <codeph>writeObject()</codeph>-Methode geschrieben oder gelesen werden. Der Wert ist eine Konstante der ObjectEncoding-Klasse.
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.utils.xml#IDataInput/readObject()"><linktext>IDataInput.readObject()</linktext></link><link href="flash.utils.xml#IDataOutput/writeObject()"><linktext>writeObject()</linktext></link><link href="flash.net.xml#ObjectEncoding"><linktext>ObjectEncoding-Klasse</linktext></link></related-links></apiValue></apiClassifier><apiClassifier id="flash.utils:Endian"><apiName>Endian</apiName><shortdesc>
+ Die Endian-Klasse enthält Werte, mit denen die Bytereihenfolge für die Darstellung von Multibyte-Zahlen angegeben wird.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ Die Endian-Klasse enthält Werte, mit denen die Bytereihenfolge für die Darstellung von Multibyte-Zahlen angegeben wird. Als Bytereihenfolge sind die beiden Werte „bigEndian“ (höchstwertige Byte zuerst) oder „littleEndian“ (niedrigstwertige Byte zuerst) möglich.
+ 
+ <p>Material im <ph platform="actionscript">Flash Player oder in</ph> Adobe<sup>®</sup> AIR™ kann bei der Datenübertragung mit einem Server direkt das Binärprotokoll dieses Servers verwenden. Einige Server verwenden die Bytereihenfolge „bigEndian“ und andere die Bytereihenfolge „littleEndian“. Die meisten Server im Internet verwenden die Bytereihenfolge „bigEndian“, da dies der Bytereihenfolge in Netzwerken entspricht. Die Bytereihenfolge „littleEndian“ ist verbreitet, da sie von der Intel x86-Prozessorarchitektur verwendet wird. Verwenden Sie die Bytereihenfolge, die dem Protokoll des Servers entspricht, der die Daten sendet oder empfängt.</p>
+ 
+ 
+ </apiDesc></apiClassifierDetail><related-links><link href="flash.utils.xml#ByteArray/endian"><linktext>flash.utils.ByteArray.endian</linktext></link><link href="flash.filesystem.xml#FileStream/endian"><linktext>flash.filesystem.FileStream.endian</linktext></link><link href="flash.utils.xml#IDataInput/endian"><linktext>flash.utils.IDataInput.endian</linktext></link><link href="flash.utils.xml#IDataOutput/endian"><linktext>flash.utils.IDataOutput.endian</linktext></link><link href="flash.net.xml#Socket/endian"><linktext>flash.net.Socket.endian</linktext></link><link href="flash.net.xml#URLStream/endian"><linktext>flash.net.URLStream.endian</linktext></link></related-links><apiValue id="flash.utils:Endian:BIG_ENDIAN"><apiName>BIG_ENDIAN</apiName><shortdesc>
+	 Gibt an, dass das höchstwertige Byte der Multibyte-Zahl an erster Stelle der Bytefolge steht.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>bigEndian</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 Gibt an, dass das höchstwertige Byte der Multibyte-Zahl an erster Stelle der Bytefolge steht.
+	 <p>Die Hexadezimalzahl 0x12345678 besteht aus 4 Byte (2 Hexadezimalziffern pro Byte). Das höchstwertige Byte ist 0x12. Das niedrigstwertige Byte ist 0x78. (Bei der entsprechenden Dezimalzahl 305419896 ist die höchstwertige Ziffer die 3 und die niedrigstwertige Ziffer die 6).</p>
+	 <p>In einem Datenstrom mit der Bytereihenfolge „bigEndian“ (höchstwertiges Byte zuerst) werden die Daten wie folgt geschrieben:</p>
+	 <pre>
+	 12 34 56 78
+	 </pre>
+	 
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.utils:Endian:LITTLE_ENDIAN"><apiName>LITTLE_ENDIAN</apiName><shortdesc>
+	 Gibt an, dass das niedrigstwertige Byte der Multibyte-Zahl an erster Stelle der Bytefolge steht.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>littleEndian</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 Gibt an, dass das niedrigstwertige Byte der Multibyte-Zahl an erster Stelle der Bytefolge steht.
+	 <p>Die Hexadezimalzahl 0x12345678 besteht aus 4 Byte (2 Hexadezimalziffern pro Byte). Das höchstwertige Byte ist 0x12. Das niedrigstwertige Byte ist 0x78. (Bei der entsprechenden Dezimalzahl 305419896 ist die höchstwertige Ziffer die 3 und die niedrigstwertige Ziffer die 6).</p>
+	 <p>In einem Datenstrom mit der Bytereihenfolge „littleEndian“ (niedrigstwertiges Byte zuerst) werden die Daten wie folgt geschrieben:</p>
+	 <pre>
+	 78 56 34 12
+	 </pre>
+	 
+	 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.utils:IExternalizable"><apiName>IExternalizable</apiName><shortdesc>
+ Mithilfe der IExternalizable-Schnittstelle kann die Serialisierung einer Klasse beim Kodieren in einen Datenstrom gesteuert werden.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiInterface/><apiAccess value="public"/><apiStatic/><apiBaseClassifier/></apiClassifierDef><apiDesc>
+ Mithilfe der IExternalizable-Schnittstelle kann die Serialisierung einer Klasse beim Kodieren in einen Datenstrom gesteuert werden. Die <codeph>writeExternal()</codeph>- und <codeph>readExternal()</codeph>-Methode der IExternalizable-Schnittstelle werden von einer Klasse implementiert, um den Inhalt und das Format des Datenstroms (jedoch nicht den Klassennamen oder Typ) eines Objekts und seiner übergeordneten Typen anpassen zu können. Jede einzelne Klasse muss den Status ihrer Instanzen serialisieren und wiederherstellen. Zum Speichern des Status müssen diese Methoden symmetrisch zum übergeordneten Typ sein. Diese Methoden ersetzen das native AMF-Serialisierungsverhalten (Action Message Format). 
+ <p>Wenn eine Klasse die IExternalizable-Schnittstelle weder implementiert noch von einer anderen Klasse erbt, die diese implementiert, werden Instanzen dieser Klasse nur mithilfe der Standardmechanismen für öffentliche Mitglieder serialisiert. Als Folge davon sind private, interne und geschützte Mitglieder einer Klasse nicht verfügbar.</p>
+ <p>Zum Serialisieren privater Mitglieder muss eine Klasse die IExternalizable-Schnittstelle implementieren. Beispielsweise serialisiert die folgende Klasse keines ihrer Mitglieder, da diese als privat deklariert sind:</p>
+ <codeblock>
+ class Example {
+ 
+       private var one:int;
+       private var two:int;
+ }
+ </codeblock>
+ <p>Wenn Sie jedoch die IExternalizable-Schnittstelle implementieren, können die privaten Mitglieder der Klasse wie folgt in den Datenstrom geschrieben bzw. von ihm gelesen werden:</p>
+ <codeblock>
+ class Example implement IExternalizable {
+ 
+       private var one:int;
+       private var two:int;
+ 
+       public function writeExternal(output:IDataOutput) {
+ 
+            output.writeInt(one);
+            output.writeInt(two);
+       }
+ 
+       public function readExternal(input:IDataInput) {
+ 
+            one = input.readInt();
+            two = input.readInt();
+       }
+ }
+ </codeblock>
+ <p><b>Hinweis:</b> Wenn eine Klasse die IExternalizable-Schnittstelle implementiert, wird auf Instanzen dieser Klasse nicht mehr die Standardserialisierung angewendet. Wenn diese Klasse öffentliche Mitglieder einer übergeordneten Klasse erbt, müssen Sie diese Mitglieder ebenfalls sorgfältig verwalten.</p>
+ <p>Wenn die Unterklasse einer Klasse, die die IExternalizable-Schnittstelle implementiert, über eigene private Member verfügt, muss die Unterklasse die Methoden von „IExternalizable“ wie folgt überschreiben:</p>
+ <codeblock>
+ public class Base implements IExternalizable {
+  
+      private var one:Boolean;
+  
+      public function writeExternal(output:IDataOutput):void {
+  
+          output.writeBoolean(one);
+      }
+  
+      public function readExternal(input:IDataInput):void {
+  
+          one = input.readBoolean();
+      }
+ }
+  
+ public class Example extends Base {
+  
+      private var one:String;
+  
+  
+      public override function writeExternal(output:IDataOutput):void {
+  
+          super.writeExternal(output);
+          output.writeUTF(one);
+      }
+  
+      public override function readExternal(input:IDataInput):void {
+      
+          super.readExternal(input);
+          one = input.readUTF();
+      }
+ }
+ </codeblock>
+ <p>Sie können die IExternalizable-Schnittstelle auch zum Komprimieren von Daten verwenden, bevor diese in einen Datenstrom geschrieben werden. Beispiel:</p>
+ <codeblock>
+ class Example implements IExternalizable {
+  
+      public var one:Boolean;
+      public var two:Boolean;
+      public var three:Boolean;
+      public var four:Boolean;
+      public var five:Boolean;
+      public var six:Boolean;
+      public var seven:Boolean;
+      public var eight:Boolean;
+ 
+      public function writeExternal(output:IDataOutput) {
+ 
+          var flag:int = 0;
+ 
+          if (one) flag |= 1;
+          if (two) flag |= 2;
+          if (three) flag |= 4;
+          if (four) flag |= 8;
+          if (five) flag |= 16;
+          if (six) flag |= 32;
+          if (seven) flag |= 64;
+          if (eight) flag |= 128;
+ 
+          output.writeByte(flag);
+      }
+ 
+      public function readExternal(input:IDataInput) {
+ 
+          var flag:int = input.readByte();
+ 
+          one = (flag &amp; 1) != 0;
+          two = (flag &amp; 2) != 0;
+          three = (flag &amp; 4) != 0;
+          four = (flag &amp; 8) != 0;
+          five = (flag &amp; 16) != 0;
+          six = (flag &amp; 32) != 0;
+          seven = (flag &amp; 64) != 0;
+          eight = (flag &amp; 128) != 0;
+      }
+ }
+ </codeblock>
+ </apiDesc></apiClassifierDetail><related-links><link href="flash.net.xml#ObjectEncoding"><linktext>flash.net.ObjectEncoding</linktext></link></related-links><apiOperation id="flash.utils:IExternalizable:flash.utils:IExternalizable:readExternal"><apiName>readExternal</apiName><shortdesc>
+	 Eine Klasse implementiert diese Methode, um sich selbst aus einem Datenstrom zu dekodieren, indem sie die Methoden der IDataInput-Schnittstelle aufruft.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>input</apiItemName><apiOperationClassifier>flash.utils:IDataInput</apiOperationClassifier><apiDesc>Der Name der Klasse, die die IDataInput-Schnittstelle implementiert.
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Eine Klasse implementiert diese Methode, um sich selbst aus einem Datenstrom zu dekodieren, indem sie die Methoden der IDataInput-Schnittstelle aufruft. Diese Methode muss die Werte in derselben Reihenfolge und mit denselben Typen lesen, wie diese von der <codeph>writeExternal()</codeph>-Methode geschrieben wurden.
+     </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:IExternalizable:flash.utils:IExternalizable:writeExternal"><apiName>writeExternal</apiName><shortdesc>
+	 Eine Klasse implementiert diese Methode, um sich selbst in einen Datenstrom zu kodieren, indem sie die Methoden der IDataOutput-Schnittstelle aufruft.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>output</apiItemName><apiOperationClassifier>flash.utils:IDataOutput</apiOperationClassifier><apiDesc>Der Name der Klasse, die die IDataOutput-Schnittstelle implementiert.
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Eine Klasse implementiert diese Methode, um sich selbst in einen Datenstrom zu kodieren, indem sie die Methoden der IDataOutput-Schnittstelle aufruft.
+     </apiDesc></apiOperationDetail></apiOperation></apiClassifier><apiOperation id="globalOperation:flash.utils:describeType"><apiName>describeType</apiName><shortdesc>
+	 Erstellt ein XML-Objekt, das das als Parameter der Methode angegebene ActionScript-Objekt beschreibt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Ein XML-Objekt mit Detailinformationen zu dem als Parameter übergebenen Objekt. Es enthält die folgenden Angaben zum Objekt:
+	 
+	 <ul>
+	  <li>Klasse des Objekts</li> 
+	 	 <li>Attribute der Klasse</li> 
+	 	 <li>Vererbungshierarchie von der Klasse bis zu ihren Basisklassen</li> 
+	 	 <li>Implementierte Schnittstellen durch die Klasse</li> 
+	 	 <li>Deklarierte Instanzeigenschaften der Klasse</li> 
+	 	 <li>Deklarierte statische Eigenschaften der Klasse</li> 
+	 	 <li>Instanzmethoden der Klasse</li>
+	 	 <li>Statische Methoden der Klasse </li>
+	 	 <li>Name, Anzahl der Parameter, Rückgabetyp und Datentypen der Parameter für jede Methode der Klasse </li>
+	 </ul>
+     <p><b>Hinweis:</b> Mit <codeph>describeType()</codeph> werden nur öffentliche Eigenschaften und Methoden angezeigt, nicht solche, die als privat oder paketintern deklariert sind oder sich in benutzerdefinierten Namespaces befinden. </p>
+	 
+ 	 </apiDesc><apiOperationClassifier>XML</apiOperationClassifier></apiReturn><apiParam><apiItemName>value</apiItemName><apiType value=""/><apiDesc>Das Objekt, für das eine Typbeschreibung gewünscht wird. Dieser Methode können beliebige ActionScript-Werte übergeben werden, einschließlich aller verfügbaren ActionScript-Typen, Objektinstanzen, Grunddatentypen wie „uint“ und Klassenobjekte.
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Erstellt ein XML-Objekt, das das als Parameter der Methode angegebene ActionScript-Objekt beschreibt. Diese Methode implementiert das Programmierkonzept von <i>reflection</i> für die ActionScript-Programmiersprache.
+	 <p>Wenn der Parameter <codeph>value</codeph> eine Instanz eines bestimmten Typs ist, enthält das zurückgegebene XML-Objekt alle Instanzeigenschaften dieses Typs, jedoch nicht die statischen Eigenschaften. Sie können dies beim Analysieren des XML-Objekts feststellen, indem Sie das Attribut des Tags <codeph>&lt;type></codeph> <codeph>isStatic</codeph> überprüfen. Dieses Attribut hat den Wert <codeph>false</codeph>, wenn der Parameter <codeph>value</codeph> eine Instanz eines Typs ist.</p>
+	 <p>Um die statischen Eigenschaften eines Typs zu erhalten, müssen Sie als Parameter <codeph>value</codeph> den Typ selbst übergeben. Das zurückgegebene XML-Objekt enthält nicht nur die statischen Eigenschaften des Typs, sondern auch alle entsprechenden Instanzeigenschaften. Die Instanzeigenschaften sind innerhalb eines Tags mit der Bezeichnung <codeph>&lt;factory></codeph> zusammengefasst und unterscheiden sich so von den statischen Eigenschaften. In diesem Fall hat das Attribut <codeph>isStatic</codeph> des Tags <codeph>&lt;type></codeph> den Wert <codeph>true</codeph>.</p>
+	 <p><b>Hinweis:</b> Wenn Sie nur die Vererbungshierarchie eines Objekts überprüfen möchten und die durch <codeph>describeType()</codeph> bereitgestellten weiteren Informationen nicht benötigen, verwenden Sie stattdessen die Funktionen <codeph>getQualifiedClassName()</codeph> und <codeph>getQualifiedSuperclassName()</codeph>.</p>
+	 <p>Die folgende Tabelle beschreibt einige der Tags und Attribute des XML-Objekts, das von <codeph>describeType()</codeph> generiert wurde (alle zurückgegebenen Klassen- und Interfacenamen sind im voll qualifizierten Format):</p>
+	 <adobetable class="innertable">
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	 <tgroup cols="3"><thead><row><entry>Tag</entry><entry>Attribut</entry><entry>Beschreibung</entry></row></thead><tbody><row><entry><codeph>&lt;type></codeph></entry><entry> </entry><entry>Das Haupt-Tag des XML-Objekts.</entry></row><row><entry> </entry><entry>name</entry><entry>Der Name des Datentyps des ActionScript-Objekts.</entry></row><row><entry> </entry><entry>base</entry><entry>Die direkte Superklasse der Definitionsklasse des ActionScript-Objekts. Wenn das ActionScript-Objekt ein Klassenobjekt ist, ist der Wert <codeph>Class</codeph>.</entry></row><row><entry> </entry><entry>isDynamic</entry><entry><codeph>true</codeph>, wenn die Definitionsklasse des ActionScript-Objekts dynamisch ist, sonst <codeph>false</codeph>. Wenn das ActionScript-Objekt ein Klassenobjekt ist, ist der Wert <codeph>true</codeph>, da die Class-Klasse dynamisch ist.</entry></row><row><entry> </entry><entry>isFinal</entry><entry><codeph>true</codeph>, wenn die Definitionsklasse des ActionScript-Objekts final ist, sonst <codeph>false</codeph>.</entry></row><row><entry> </entry><entry>isStatic</entry><entry><codeph>true</codeph>, wenn das ActionScript-Objekt ein Klassenobjekt oder eine Konstruktorfunktion ist, sonst <codeph>false</codeph>. Dieses Attribut hat die Bezeichnung <codeph>isStatic</codeph>, da beim Wert <codeph>true</codeph> alle nicht im Tag <codeph>factory</codeph> verschachtelten Tags statisch sind.</entry></row><row><entry><codeph>&lt;extendsClass></codeph></entry><entry> </entry><entry>Für jede Superklasse der Definitionsklasse des ActionScript-Objekts gibt es ein eigenes <codeph>extendsClass</codeph>-Tag.</entry></row><row><entry> </entry><entry>type</entry><entry>Der Name einer Superklasse, die die Definitionsklasse des ActionScript-Objekts erweitert.</entry></row><row><entry><codeph>&lt;implementsInterface></codeph></entry><entry> </entry><entry>Für jede von der Definitionsklasse des ActionScript-Objekts oder einer ihrer Superklassen implementierten Schnittstelle gibt es ein eigenes <codeph>implementsInterface</codeph>-Tag.</entry></row><row><entry> </entry><entry>type</entry><entry>Der Name einer Schnittstelle, die über die Definitionsklasse des ActionScript-Objekts implementiert wird.</entry></row><row><entry><codeph>&lt;accessor></codeph></entry><entry> </entry><entry>Dies ist eine Eigenschaft, die von Funktionen zum Abrufen und Setzen von Werten definiert wird.</entry></row><row><entry> </entry><entry>name</entry><entry>Der Name der accessor-Eigenschaft.</entry></row><row><entry> </entry><entry>access</entry><entry>Die Zugriffsrechte der Eigenschaft. Mögliche Werte sind u. a. <codeph>readonly</codeph>, <codeph>writeonly</codeph> und <codeph>readwrite</codeph>.</entry></row><row><entry> </entry><entry>type</entry><entry>Der Datentyp der Eigenschaft.</entry></row><row><entry> </entry><entry>declaredBy</entry><entry>Die Klasse, die die verknüpften get-/set-Funktionen enthält.</entry></row><row><entry><codeph>&lt;constant></codeph></entry><entry> </entry><entry>Eine Konstante ist eine mit der <codeph>const</codeph>-Anweisung definierte Eigenschaft.</entry></row><row><entry> </entry><entry>name</entry><entry>Der Name der Konstante.</entry></row><row><entry> </entry><entry>type</entry><entry>Der Datentyp der Konstante.</entry></row><row><entry><codeph>&lt;Methode></codeph></entry><entry> </entry><entry>Eine Methode ist eine als Teil einer Klassendefinition deklarierte Funktion.</entry></row><row><entry> </entry><entry>name</entry><entry>Der Name der Methode.</entry></row><row><entry> </entry><entry>declaredBy</entry><entry>Die Klasse, die die Methodendefinition enthält.</entry></row><row><entry> </entry><entry>returnType</entry><entry>Der Datentyp des Rückgabewerts der Methode.</entry></row><row><entry><codeph>&lt;parameter></codeph></entry><entry> </entry><entry>Für jeden von einer Methode definierten Parameter gibt es ein eigenes <codeph>parameter</codeph>-Tag. Dieses Tag ist immer innerhalb eines <codeph>&lt;method></codeph>-Tags geschachtelt.</entry></row><row><entry> </entry><entry>index</entry><entry>Ein Zahlenwert, der der Position des Parameters in der Parameterliste der Methode entspricht. Der erste Parameter hat den Wert 1.</entry></row><row><entry> </entry><entry>type</entry><entry>Der Datentyp des Parameters.</entry></row><row><entry> </entry><entry>optional</entry><entry><codeph>true</codeph>, wenn der Parameter optional ist, andernfalls <codeph>false</codeph>.</entry></row><row><entry><codeph>&lt;variable></codeph></entry><entry> </entry><entry>Eine Variable ist eine mit der <codeph>var</codeph>-Anweisung definierte Eigenschaft.</entry></row><row><entry> </entry><entry>name</entry><entry>Der Name der Variablen.</entry></row><row><entry> </entry><entry>type</entry><entry>Der Datentyp der Variablen.</entry></row><row><entry><codeph>&lt;factory></codeph></entry><entry> </entry><entry>Wenn das ActionScript-Objekt ein Klassenobjekt oder eine Konstruktorfunktion ist, sind alle Instanzeigenschaften und Methoden innerhalb dieses Tags geschachtelt. Wenn das Attribut <codeph>isStatic</codeph> des <codeph>&lt;type></codeph>-Tags den Wert <codeph>true</codeph> hat, sind alle nicht im <codeph>&lt;factory></codeph>-Tag verschachtelten Eigenschaften und Methoden statisch. Dieses Tag ist nur vorhanden, wenn das ActionScript-Objekt ein Klassenobjekt oder eine Konstruktorfunktion ist.</entry></row></tbody></tgroup></adobetable>
+	 
+	 
+	 </apiDesc><example conref="examples\DescribeTypeExample.as"><codeblock>package {
+    import flash.display.Sprite;
+    import flash.utils.describeType;
+    
+    public class DescribeTypeExample extends Sprite {
+        public function DescribeTypeExample() {
+            var child:Sprite = new Sprite();
+            var description:XML = describeType(child);
+            trace(description..accessor.@name.toXMLString());
+        }
+    }
+}
+</codeblock></example></apiOperationDetail><related-links><link href="flash.utils.xml#/getQualifiedClassName()"><linktext>getQualifiedClassName()</linktext></link><link href="flash.utils.xml#/getQualifiedSuperclassName()"><linktext>getQualifiedSuperclassName()</linktext></link></related-links></apiOperation><apiOperation id="globalOperation:flash.utils:escapeMultiByte"><apiName>escapeMultiByte</apiName><shortdesc>
+	  Gibt in Abhängigkeit vom Wert „System.useCodePage“ eine entweder als UTF-8 oder in der System-Codepage kodierte, mit Escape-Sequenzen versehene Kopie des Eingabestrings zurück.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Eine mit Escape-Sequenzen versehene Kopie des Eingabestrings. Wenn „System.useCodePage“ den Wert <codeph>true</codeph> aufweist, wird zum Umwandeln in Escape-Sequenzen die Codepage des Systems verwendet. Wenn „System.useCodePage“ den Wert <codeph>false</codeph> aufweist, wird zum Umwandeln in Escape-Sequenzen die Kodierung UTF-8 verwendet. Der Eingabestring "CRÃ¼e" wird beispielsweise auf allen Systemen als Escape-Sequenz "CR%C3%BCe" eingegeben, wenn „System.useCodePage“ <codeph>false</codeph> ist. Wenn „system.useCodePage“ <codeph>true</codeph> ist und das System eine lateinische Codepage verwendet, wird "CRÃ¼e" als Escape-Sequenz "CR%FCe" eingegeben. Wenn das System eine andere Codepage als eine lateinische verwendet, die nicht den Buchstaben 'Ã¼' enthält, ist das Ergebnis wahrscheinlich "CR?e".
+	  
+	  </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn><apiParam><apiItemName>value</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Der mit Escape-Sequenzen zu versehende String.
+	  
+      </apiDesc></apiParam></apiOperationDef><apiDesc>
+	  Gibt in Abhängigkeit vom Wert „System.useCodePage“ eine entweder als UTF-8 oder in der System-Codepage kodierte, mit Escape-Sequenzen versehene Kopie des Eingabestrings zurück. Durch die Verwendung von „System.useCodePage“ können mit dem Player auch ältere, in lokalen Codepages kodierte Inhalte wiedergegeben werden, jedoch nur auf Systemen, die diese Codepage verwenden. So werden zum Beispiel als <codeph>Shift-JIS</codeph> kodierte japanische Daten nur unter einem Betriebssystem ordnungsgemäß in Escape-Sequenzen konvertiert und rückkonvertiert, das als Standard-Codepage Japanisch verwendet.
+	  
+	  </apiDesc></apiOperationDetail></apiOperation><apiOperation id="globalOperation:flash.utils:getDefinitionByName"><apiName>getDefinitionByName</apiName><shortdesc>
+	 Gibt einen Verweis auf das Klassenobjekt der im Parameter „name“ angegebenen Klasse zurück.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Es ist keine öffentliche Definition mit dem angegebenen Namen vorhanden.
+	 
+     </apiDesc><apiItemName>ReferenceError</apiItemName><apiOperationClassifier>ReferenceError</apiOperationClassifier></apiException><apiReturn><apiDesc>Gibt einen Verweis auf das Klassenobjekt der im Parameter <codeph>name</codeph> angegebenen Klasse zurück.
+	 
+	 </apiDesc><apiOperationClassifier>Object</apiOperationClassifier></apiReturn><apiParam><apiItemName>name</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Der Name einer Klasse.
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Gibt einen Verweis auf das Klassenobjekt der im Parameter <codeph>name</codeph> angegebenen Klasse zurück.
+	 </apiDesc><example conref="examples\GetDefinitionByNameExample.as"> Im folgenden Beispiel werden mit der Klasse <codeph>GetDefinitionByNameExample</codeph> nacheinander fünf orangefarbene Quadrate erstellt. Dies wird in den folgenden Schritten erreicht:
+ <ol>
+     <li>Es werden Variablen für die orange Hintergrundfarbe und die Größe von 80 Pixel deklariert, die später für die Zeichnung des Quadrats benötigt werden.</li>
+     <li>Im Konstruktor wird die <codeph>ClassReference</codeph>-Variable vom Typ „Class“ dem Typ „Sprite“ zugewiesen.</li>
+     <li>Es wird die ClassReference-Instanz <codeph>instance</codeph> instanziiert.</li>
+     <li>Da es sich bei <codeph>instance</codeph> per Referenz um ein Sprite-Objekt handelt, kann ein Quadrat gezeichnet und der Anzeigeliste mit den für Sprite verfügbaren Methoden hinzugefügt werden.</li>
+ </ol>
+<codeblock>
+package {
+    import flash.display.DisplayObject;
+    import flash.display.Sprite;
+    import flash.utils.getDefinitionByName;
+
+    public class GetDefinitionByNameExample extends Sprite {
+        private var bgColor:uint = 0xFFCC00;
+        private var size:uint = 80;
+
+        public function GetDefinitionByNameExample() {
+            var ClassReference:Class = getDefinitionByName("flash.display.Sprite") as Class;
+            var instance:Object = new ClassReference();
+            instance.graphics.beginFill(bgColor);
+            instance.graphics.drawRect(0, 0, size, size);
+            instance.graphics.endFill();
+            addChild(DisplayObject(instance));
+        }
+    }
+}
+</codeblock></example></apiOperationDetail></apiOperation><apiOperation id="globalOperation:flash.utils:getQualifiedClassName"><apiName>getQualifiedClassName</apiName><shortdesc>
+	  Gibt den vollständig qualifizierten Klassennamen eines Objekts zurück.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Ein String mit dem vollständig qualifizierten Klassennamen.
+	  </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn><apiParam><apiItemName>value</apiItemName><apiType value=""/><apiDesc>Das Objekt, für das ein vollständig qualifizierter Klassenname gewünscht wird. Dieser Methode können beliebige ActionScript-Werte übergeben werden, einschließlich aller verfügbaren ActionScript-Typen, Objektinstanzen, Grunddatentypen wie „uint“ und Klassenobjekte.
+	  
+	  </apiDesc></apiParam></apiOperationDef><apiDesc>
+	  Gibt den vollständig qualifizierten Klassennamen eines Objekts zurück.
+	  
+	  </apiDesc></apiOperationDetail><related-links><link href="flash.utils.xml#/describeType()"><linktext>describeType()</linktext></link><link href="flash.utils.xml#/getQualifiedSuperclassName()"><linktext>getQualifiedSuperclassName()</linktext></link></related-links></apiOperation><apiOperation id="globalOperation:flash.utils:getQualifiedSuperclassName"><apiName>getQualifiedSuperclassName</apiName><shortdesc>
+	Gibt den vollständig qualifizierten Klassennamen der Basisklasse des im Parameter „value“ angegebenen Objekts zurück.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Ein vollständig qualifizierter Basisklassenname oder <codeph>null</codeph>, wenn keiner vorhanden ist.
+	</apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn><apiParam><apiItemName>value</apiItemName><apiType value=""/><apiDesc>Ein beliebiger Wert.
+	</apiDesc></apiParam></apiOperationDef><apiDesc>
+	Gibt den vollständig qualifizierten Klassennamen der Basisklasse des im Parameter <codeph>value</codeph> angegebenen Objekts zurück. Diese Funktion stellt eine schnellere Möglichkeit zum Abrufen des Basisklassennamens dar als <codeph>describeType()</codeph>, gibt jedoch nicht alle der Informationen zurück, die <codeph>describeType()</codeph> liefert.
+	<p>Nachdem Sie mit dieser Funktion den Namen einer Klasse abgerufen haben, können Sie diesen mit der Funktion <codeph>getDefinitionByName()</codeph> in einen Klassenverweis umwandeln.</p>
+	<p><b>Hinweis:</b> Diese Funktion ist auf Instanzhierarchien beschränkt, während die <codeph>describeType()</codeph>-Funktion Klassenobjekthierarchien verwendet, wenn der Parameter <codeph>value</codeph> ein Datentyp ist. Der Aufruf von <codeph>describeType()</codeph> für einen Datentyp gibt die anhand der Klassenobjekthierarchie ermittelte Superklasse zurück. In der Klassenobjekthierarchie erben alle Klassenobjekte von „Class“. Die <codeph>getQualifiedSuperclassName()</codeph>-Funktion ignoriert jedoch die Klassenobjekthierarchie und gibt die Superklasse anhand der vertrauteren Instanzhierarchie zurück. Zum Beispiel gibt der Aufruf von <codeph>getQualifiedSuperclassName(String)</codeph> den Wert <codeph>Object</codeph> zurück, obwohl technisch gesehen das String-Klassenobjekt von „Class“ geerbt wird. Anders ausgedrückt führt der Aufruf mit einer Instanz eines Typs oder mit dem Typ selbst zum selben Ergebnis.</p>
+	</apiDesc></apiOperationDetail><related-links><link href="flash.utils.xml#/describeType()"><linktext>describeType()</linktext></link><link href="flash.utils.xml#/getDefinitionByName()"><linktext>getDefinitionByName()</linktext></link><link href="flash.utils.xml#/getQualifiedClassName()"><linktext>getQualifiedClassName()</linktext></link></related-links></apiOperation><apiOperation id="globalOperation:flash.utils:getTimer"><apiName>getTimer</apiName><shortdesc>
+	 Wird zur Berechnung der relativen Zeit verwendet.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Die Anzahl der Millisekunden seit der Initialisierung der Laufzeitumgebung (bei Verarbeitung von ActionScript 2.0) oder seit dem Start des virtuellen Computers (bei Verarbeitung von ActionScript 3.0). Wenn die Laufzeitumgebung die Wiedergabe einer SWF-Datei startet und später eine weitere SWF-Datei geladen wird, stellt der Rückgabewert die Differenz zum Zeitpunkt des Ladens der ersten SWF-Datei dar.
+	 
+	 </apiDesc><apiOperationClassifier>int</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 Wird zur Berechnung der relativen Zeit verwendet. Für eine Flash-Laufzeitumgebung, die ActionScript 3.0 verarbeitet, gibt diese Methode die Anzahl der Millisekunden an, die seit dem Start des virtuellen Rechners für ActionScript 3.0 (AVM2) verstrichen sind. Für eine Flash-Laufzeitumgebung, die ActionScript 2.0 verarbeitet, gibt diese Methode die Anzahl der Millisekunden an, die seit dem Beginn der Initialisierung durch die Flash-Laufzeitumgebung verstrichen sind. Flash-Laufzeitumgebungen verwenden zwei virtuelle Rechner für die Verarbeitung von ActionScript. AVM1 ist der virtuelle ActionScript-Recher, der für die Ausführung von ActionScript 1.0 und 2.0 verwendet wird. AVM2 ist der virtuelle ActionScript-Rechner, der für die Ausführung von ActionScript 3.0 verwendet wird. Das Verhalten der <codeph>getTimer()</codeph>-Methode für AVM1 unterscheidet sich vom Verhalten für AVM2.
+	 <p>Informationen zu einem Kalenderdatum (Zeitstempel) finden Sie bei den Angaben zum Date-Objekt.</p> 	 
+	 
+	 </apiDesc><example conref="examples\getTimerExample.as"> Im folgenden Beispiel wird mit der Klasse <codeph>GetTimerExample</codeph> ermittelt und angezeigt, wie viele Millisekunden seit dem Wiedergabestart in Flash Player vergangen sind.
+<codeblock>
+package {
+    import flash.utils.getTimer;
+    import flash.display.Sprite;
+
+    public class GetTimerExample extends Sprite {
+        public function GetTimerExample() {
+            var duration:uint = getTimer();
+            trace("duration: " + duration);
+        }
+    }
+}
+</codeblock></example></apiOperationDetail><related-links><link href="flash.display.xml#AVM1Movie"><linktext>flash.display.AVM1Movie</linktext></link><link href="#Date"><linktext>Date-Klasse</linktext></link></related-links></apiOperation><apiOperation id="globalOperation:flash.utils:unescapeMultiByte"><apiName>unescapeMultiByte</apiName><shortdesc>
+	  Gibt in Abhängigkeit vom Wert „System.useCodePage“ eine entweder aus UTF-8 oder aus der System-Codepage dekodierte Kopie des Eingabestrings ohne Escape-Sequenzen zurück.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Eine mit Escape-Sequenzen versehene Kopie des Eingabestrings. Wenn „System.useCodePage“ den Wert <codeph>true</codeph> aufweist, wird zum Umwandeln in Escape-Sequenzen die Codepage des Systems verwendet. Wenn „System.useCodePage“ den Wert <codeph>false</codeph> aufweist, wird zum Umwandeln in Escape-Sequenzen die Kodierung UTF-8 verwendet. Zum Beispiel wird der Eingabestring "Crüe" auf allen Systemen in die Zeichenfolge "Cr%C3%BCe" konvertiert, wenn "System.useCodePage" den Wert <codeph>false</codeph> aufweist. Wenn "System.useCodePage" den Wert <codeph>true</codeph> aufweist und das System die Codepage "Latin" verwendet, wird "Crüe" in "Cr%FCe" umgewandelt. Wenn das System eine andere Codepage verwendet, die nicht den Buchstaben 'ü' enthält, ist das Ergebnis mit hoher Wahrscheinlichkeit "Cr?e". Wenn "System.useCodePage" den Wert <codeph>true</codeph> hat, führt das Entfernen der Escape-Sequenzen aus dem Eingabestring "Cr%C3%BCe" je nach System zu unterschiedlichen falschen Ergebnissen, beispielsweise zu "CrÃ¼e" auf Systemen mit lateinischer Codepage. Ebenso führt das Entfernen der Escape-Sequenzen aus dem Eingabestring "Cr%FCe" zu "Cre", "Cr?e" oder je nach Codepage zu anderen Varianten, wenn „System.useCodePage“ den Wert <codeph>false</codeph> hat.	
+	  
+	  </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn><apiParam><apiItemName>value</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Der mit Escape-Sequenzen versehene String, der rückkonvertiert werden soll.
+	  
+      </apiDesc></apiParam></apiOperationDef><apiDesc>
+	  Gibt in Abhängigkeit vom Wert „System.useCodePage“ eine entweder aus UTF-8 oder aus der System-Codepage dekodierte Kopie des Eingabestrings ohne Escape-Sequenzen zurück. Durch die Verwendung von „System.useCodePage“ können mit dem Player auch ältere, in lokalen Codepages kodierte Inhalte wiedergegeben werden, jedoch nur auf Systemen, die diese Codepage verwenden. So werden zum Beispiel als <codeph>Shift-JIS</codeph> kodierte japanische Daten nur unter einem Betriebssystem ordnungsgemäß in Escape-Sequenzen konvertiert und rückkonvertiert, das als Standard-Codepage Japanisch verwendet.
+	  
+	  </apiDesc></apiOperationDetail></apiOperation><apiOperation id="globalOperation:flash.utils:clearInterval"><apiName>clearInterval</apiName><shortdesc>
+ Bricht den angegebenen setInterval()-Aufruf ab.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>id</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiDesc>Der Bezeichner des <codeph>setInterval()</codeph>-Aufrufs, den Sie wie im folgenden Beispiel einer Variablen zuweisen:
+ 
+ </apiDesc></apiParam></apiOperationDef><apiDesc>
+ Bricht den angegebenen <codeph>setInterval()</codeph>-Aufruf ab.
+ 
+ </apiDesc><example conref="examples\ClearIntervalExample.as"> Im folgenden Beispiel wird mithilfe der <codeph>setInterval()</codeph>-Methode ein Zeitintervall erstellt, und die <codeph>myRepeatingFunction()</codeph>-Methode wird in regelmäßigen Intervallen von einer Sekunde aufgerufen.
+ <p>Bei jedem Aufruf der <codeph>myRepeatingFunction</codeph>-Methode wird der Wert der <codeph>counter</codeph>-Eigenschaft erhöht. Wenn der Wert der <codeph>stopCount</codeph>-Eigenschaft erreicht ist, wird die <codeph>clearInterval() </codeph>-Methode in der <codeph>intervalId</codeph>-Eigenschaft aufgerufen. Hierbei handelt es sich um eine Referenz-ID für das zuvor erstellte Intervall.</p>
+<codeblock>
+package {
+    import flash.display.Sprite;
+    import flash.utils.*;
+
+    public class ClearIntervalExample extends Sprite {
+        private var intervalDuration:Number = 1000; // duration between intervals, in milliseconds
+        private var intervalId:uint;
+        private var counter:uint     = 0;
+        private var stopCount:uint     = 3;
+        
+        public function ClearIntervalExample() {
+            intervalId = setInterval(myRepeatingFunction, intervalDuration, "Hello", "World");
+        }
+
+        public function myRepeatingFunction():void {
+            trace(arguments[0] + " " + arguments[1]);
+
+            counter++;
+            if(counter == stopCount) {
+                trace("Clearing Interval");
+                clearInterval(intervalId);    
+            }
+        }
+    }
+}
+</codeblock></example></apiOperationDetail><related-links><link href="flash.utils.xml#/setInterval()"><linktext>setInterval()</linktext></link></related-links></apiOperation><apiOperation id="globalOperation:flash.utils:clearTimeout"><apiName>clearTimeout</apiName><shortdesc>
+ Bricht den angegebenen setTimeout()-Aufruf ab.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>id</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiDesc>Der Bezeichner des <codeph>setTimeout()</codeph>-Aufrufs, den Sie wie im folgenden Beispiel einer Variablen zuweisen:
+ 
+ </apiDesc></apiParam></apiOperationDef><apiDesc>
+ Bricht den angegebenen Aufruf von <codeph>setTimeout()</codeph> ab.
+ 
+ </apiDesc><example conref="examples\ClearTimeoutExample.as"> Im folgenden Beispiel wird mit der <codeph>setTimeout()</codeph>-Methode eine weitere Methode nach einer angegebenen Verzögerung aufgerufen.
+ <p>Es wird eine Schleife mit einer Million Durchläufen erstellt. Wenn der Computer die Anforderung bearbeiten kann, bevor eine zweite Anforderung ihre Gültigkeit verliert, wird durch <codeph>clearTimeout()</codeph> die <codeph>setTimeout()</codeph>-Anforderung gelöscht, und <codeph>myDelayedFunction()</codeph> wird nicht aufgerufen.</p>
+<codeblock>
+package {
+    import flash.display.Sprite;
+    import flash.utils.*;
+
+    public class ClearTimeoutExample extends Sprite {
+        private var delay:Number = 1000; // delay before calling myDelayedFunction
+        private var intervalId:uint;
+        private var count:uint = 1000000;
+        
+        public function ClearTimeoutExample() {
+            intervalId = setTimeout(myDelayedFunction, delay);
+            startCounting();
+        }
+
+        public function startCounting():void {
+            var i:uint = 0;
+            do {
+                if(i == count-1) {
+                    clearTimeout(intervalId);
+                    trace("Your computer can count to " + count + " in less than " + delay/1000 + " seconds.");    
+                }
+                i++;
+            } while(i &lt; count)            
+        }
+        
+        public function myDelayedFunction():void {
+            trace("Time expired.");
+        }
+    }
+}
+</codeblock></example></apiOperationDetail><related-links><link href="flash.utils.xml#/setTimeout()"><linktext>setTimeout()</linktext></link></related-links></apiOperation><apiOperation id="globalOperation:flash.utils:setInterval"><apiName>setInterval</apiName><shortdesc>
+ Führt eine Funktion in bestimmten Intervallen aus (Angabe in Millisekunden).</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Eindeutiger numerischer Bezeichner für den in Intervallen auszuführenden Prozess. Verwenden Sie diesen Bezeichner, um den Prozess abzubrechen, indem Sie die <codeph>clearInterval()</codeph>-Methode aufrufen.
+ 
+ </apiDesc><apiOperationClassifier>uint</apiOperationClassifier></apiReturn><apiParam><apiItemName>closure</apiItemName><apiOperationClassifier>Function</apiOperationClassifier><apiDesc>Der Name der auszuführenden Funktion. Der Name darf keine Anführungszeichen oder Klammern sowie keine Parameter der aufzurufenden Funktion enthalten. Verwenden Sie beispielsweise <codeph>functionName</codeph> und nicht <codeph>functionName()</codeph> oder <codeph>functionName(param)</codeph>.
+ 
+ </apiDesc></apiParam><apiParam><apiItemName>delay</apiItemName><apiOperationClassifier>Number</apiOperationClassifier><apiDesc>Das Intervall in Millisekunden. 
+ 
+ </apiDesc></apiParam><apiParam><apiItemName>arguments</apiItemName><apiType value="restParam"/><apiDesc>Eine optionale Liste von Parametern, die an die closure-Funktion übergeben werden.
+ 
+ </apiDesc></apiParam></apiOperationDef><apiDesc>
+ Führt eine Funktion in bestimmten Intervallen aus (Angabe in Millisekunden).
+ 
+ <p>Anstelle der <codeph>setInterval()</codeph>-Methode empfiehlt es sich, ein Timerobjekt mit dem angegebenen Intervall zu erstellen und als Parameter <codeph>repeatCount</codeph> den Wert 0 (endlose Wiederholung) zu verwenden.</p>
+ 
+ <p>Wenn Sie die <codeph>clearInterval()</codeph>-Methode verwenden möchten, um den <codeph>setInterval()</codeph>-Aufruf zu stornieren, weisen Sie den <codeph>setInterval()</codeph>-Aufruf einer Variablen zu (die die <codeph>clearInterval()</codeph>-Funktion später referenzieren wird). Wenn Sie die <codeph>clearInterval()</codeph>-Funktion nicht aufrufen, um den <codeph>setInterval()</codeph>-Aufruf zu stornieren, wird das Objekt, das die setTimeout-Schließfunktion enthält, nicht im Garbagekollektor abgelegt. </p>
+ 
+ </apiDesc><example conref="examples\SetIntervalExample.as"> Im folgenden Beispiel wird mithilfe der <codeph>setInterval()</codeph>-Methode ein Zeitintervall erstellt, und die <codeph>myRepeatingFunction()</codeph>-Methode wird in regelmäßigen Intervallen von einer Sekunde aufgerufen.
+<codeblock>
+package {
+    import flash.display.Sprite;
+    import flash.utils.*;
+
+    public class SetIntervalExample extends Sprite {
+        private var intervalDuration:Number = 1000; // duration between intervals, in milliseconds
+        
+        public function SetIntervalExample() {
+            var intervalId:uint = setInterval(myRepeatingFunction, intervalDuration, "Hello", "World");
+        }
+
+        public function myRepeatingFunction():void {
+            trace(arguments[0] + " " + arguments[1]);
+        }
+    }
+}
+</codeblock></example></apiOperationDetail><related-links><link href="flash.utils.xml#/clearInterval()"><linktext>clearInterval()</linktext></link></related-links></apiOperation><apiOperation id="globalOperation:flash.utils:setTimeout"><apiName>setTimeout</apiName><shortdesc>
+ Führt eine bestimmte Funktion nach der angegebenen Verzögerung aus (Angabe in Millisekunden).</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Eindeutiger numerischer Bezeichner für den in Intervallen auszuführenden Prozess. Verwenden Sie diesen Bezeichner, um den Prozess abzubrechen, indem Sie die <codeph>clearTimeout()</codeph>-Methode aufrufen.
+ 
+ </apiDesc><apiOperationClassifier>uint</apiOperationClassifier></apiReturn><apiParam><apiItemName>closure</apiItemName><apiOperationClassifier>Function</apiOperationClassifier><apiDesc>Der Name der auszuführenden Funktion. Der Name darf keine Anführungszeichen oder Klammern sowie keine Parameter der aufzurufenden Funktion enthalten. Verwenden Sie beispielsweise <codeph>functionName</codeph> und nicht <codeph>functionName()</codeph> oder <codeph>functionName(param)</codeph>.
+ 
+ </apiDesc></apiParam><apiParam><apiItemName>delay</apiItemName><apiOperationClassifier>Number</apiOperationClassifier><apiDesc>Die Verzögerung in Millisekunden, bis die Funktion ausgeführt wird. 
+ 
+ </apiDesc></apiParam><apiParam><apiItemName>arguments</apiItemName><apiType value="restParam"/><apiDesc>Eine optionale Liste von Parametern, die an die closure-Funktion übergeben werden.
+ 
+ </apiDesc></apiParam></apiOperationDef><apiDesc>
+ Führt eine bestimmte Funktion nach der angegebenen Verzögerung aus (Angabe in Millisekunden).
+ 
+ <p>Anstatt diese Methode zu verwenden, empfiehlt es sich, ein Timerobjekt mit dem angegebenen Intervall zu erstellen und als <codeph>repeatCount</codeph>-Parameter den Wert 1 (einmalige Ausführung) zu verwenden.</p>
+ 
+ <p>Wenn Sie die <codeph>clearTimeout()</codeph>-Methode verwenden möchten, um den <codeph>setTimeout()</codeph>-Aufruf zu stornieren, weisen Sie dem <codeph>setTimeout()</codeph>-Aufruf eine Variable zu (die die <codeph>clearTimeout()</codeph>-Funktion später referenziert). Wenn Sie die <codeph>clearTimeout()</codeph>-Funktion nicht aufrufen, um den <codeph>setTimeout()</codeph>-Aufruf zu stornieren, wird das Objekt, das die setTimeout-Schließfunktion enthält, nicht im Garbagekollektor abgelegt. </p>
+ 
+ </apiDesc><example conref="examples\SetTimeoutExample.as"> Im folgenden Beispiel wird mit der <codeph>setTimeout()</codeph>-Methode eine weitere Methode nach einer angegebenen Verzögerung aufgerufen.
+<codeblock>
+package {
+    import flash.display.Sprite;
+    import flash.utils.*;
+
+    public class SetTimeoutExample extends Sprite {
+        private var delay:Number = 1000; // delay before calling myDelayedFunction
+        
+        public function SetTimeoutExample() {
+            var intervalId:uint = setTimeout(myDelayedFunction, delay, "Hello", "World");
+        }
+
+        public function myDelayedFunction():void {
+            trace(arguments[0] + " " + arguments[1]);
+        }
+    }
+}
+</codeblock></example></apiOperationDetail><related-links><link href="flash.utils.xml#/clearTimeout()"><linktext>clearTimeout()</linktext></link></related-links></apiOperation><apiClassifier id="flash.utils:Timer"><apiName>Timer</apiName><shortdesc>
+ Die Timer-Klasse ist die Schnittstelle zu Zeitgebern, mit denen sich Code in einer bestimmten zeitlichen Abfolge ausführen lässt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.events:EventDispatcher</apiBaseClassifier></apiClassifierDef><apiDesc>
+ Die Timer-Klasse ist die Schnittstelle zu Zeitgebern, mit denen sich Code in einer bestimmten zeitlichen Abfolge ausführen lässt. Verwenden Sie zum Starten eines Timers die <codeph>start()</codeph>-Methode. Fügen Sie einen Ereignis-Listener für das <codeph>timer</codeph>-Ereignis hinzu, um Programmcode einzurichten, der bei Ablauf des Timers ausgeführt wird.
+ 
+ <p>Sie können festlegen, ob Timerobjekte einmalig oder in bestimmten Abständen wiederholt ausgeführt werden sollen, um Programmcode nach einem Zeitplan auszuführen. <ph platform="actionscript">Je nach Bildrate der SWF-Datei bzw. nach Flash Player-Umgebung (freier Speicher und andere Faktoren) werden Ereignisse im Flash Player oder in Adobe AIR möglicherweise zu leicht versetzten Zeitpunkten ausgelöst. Wenn eine SWF-Datei beispielsweise zur Wiedergabe mit 10 Bildern pro Sekunde eingerichtet ist, bedeutet dies Abstände von 100 Millisekunden. Wenn der Timer so eingestellt ist, dass ein Ereignis bei 80 Millisekunden ausgelöst wird, wird das Ereignis kurz vor dem 100-Millisekunden-Intervall ausgelöst.</ph><ph platform="javascript">Anwendungen können Ereignisse basierend auf der internen Bildrate der Anwendung in leicht versetzten Intervallen auslösen.</ph> Auch speicherintensive Skripten können zum zeitversetzten Auslösen von Ereignissen führen.</p>
+ 
+ </apiDesc><example conref="examples\TimerExample.as"> Im folgenden Beispiel wird anhand der Klasse <codeph>TimerExample</codeph> erläutert, wie die Listener-Methode <codeph>timerHandler()</codeph> für auszulösende TimerEvent-Ereignisse konfiguriert werden kann. Der Timer wird gestartet, wenn <codeph>start()</codeph> aufgerufen wird. Anschließend werden die Timerereignisse ausgelöst.  
+<codeblock>
+package {
+    import flash.utils.Timer;
+    import flash.events.TimerEvent;
+    import flash.display.Sprite;
+
+    public class TimerExample extends Sprite {
+
+        public function TimerExample() {
+            var myTimer:Timer = new Timer(1000, 2);
+            myTimer.addEventListener("timer", timerHandler);
+            myTimer.start();
+        }
+
+        public function timerHandler(event:TimerEvent):void {
+            trace("timerHandler: " + event);
+        }
+    }
+}
+</codeblock></example></apiClassifierDetail><adobeApiEvent id="flash.utils:Timer_flash.events.TimerEvent.TIMER_COMPLETE_timerComplete"><apiName>timerComplete</apiName><shortdesc>
+ Wird ausgelöst, wenn die Anzahl der in „Timer.repeatCount“ festgelegten Anforderungen ausgeführt wurde.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.TimerEvent.TIMER_COMPLETE</apiEventType><adobeApiEventClassifier>flash.events.TimerEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ Wird ausgelöst, sobald die Anzahl der in <codeph>Timer.repeatCount</codeph> festgelegten Anforderungen ausgeführt wurde. 
+ </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.utils:Timer_flash.events.TimerEvent.TIMER_timer"><apiName>timer</apiName><shortdesc>
+ Wird ausgelöst, wenn ein Timerobjekt das in der Timer.delay-Eigenschaft festgelegte Intervall erreicht hat.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.TimerEvent.TIMER</apiEventType><adobeApiEventClassifier>flash.events.TimerEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ Wird ausgelöst, sobald ein Timerobjekt das in der <codeph>Timer.delay</codeph>-Eigenschaft festgelegte Intervall erreicht hat. 
+ </apiDesc></adobeApiEventDetail></adobeApiEvent><apiConstructor id="flash.utils:Timer:Timer"><apiName>Timer</apiName><shortdesc>
+	 Erstellt ein neues Timerobjekt mit den angegebenen Zuständen für „delay“ und „repeatCount“.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiException><apiDesc>Die angegebene Verzögerung ist ein negativer Wert oder keine endliche Zahl.
+	 
+	 </apiDesc><apiItemName>Error</apiItemName><apiOperationClassifier>Error</apiOperationClassifier></apiException><apiParam><apiItemName>delay</apiItemName><apiOperationClassifier>Number</apiOperationClassifier><apiDesc>Die Dauer zwischen zwei Timerereignissen in Millisekunden.
+	 
+	 </apiDesc></apiParam><apiParam><apiItemName>repeatCount</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiData>0</apiData><apiDesc>Gibt die Anzahl der Wiederholungen an. Wenn der Wert 0 ist, wird der Timer unbegrenzt ausgeführt. Wenn der Wert ungleich 0 ist, wird der Timer so oft ausgeführt wie angegeben und dann angehalten.
+	 
+	 </apiDesc></apiParam></apiConstructorDef><apiDesc>
+	 Erstellt ein neues Timerobjekt mit den angegebenen Zuständen für <codeph>delay</codeph> und <codeph>repeatCount</codeph>.
+	 
+	 <p>Der Timer startet nicht automatisch. Sie müssen dazu die <codeph>start()</codeph>-Methode aufrufen.</p>
+	 
+	 </apiDesc><example conref="examples\Timer_constructorExample.as"> Im folgenden Beispiel hat der Benutzer 90 Sekunden Zeit, eine Antwort in ein Eingabetextfeld zu schreiben. Alle 30 Sekunden wird der Benutzer mit einer Statusmeldung darüber informiert, wie viel Zeit ihm noch verbleibt.
+ 
+ <p>Es wird ein Timerobjekt erstellt, das in 30 Sekunden startet (die Verzögerung ist auf 30000 Millisekunden eingestellt) und drei Mal wiederholt wird, sodass sich der Gesamtzeitraum von 90 Sekunden ergibt. (Der Timer stoppt nach dem dritten Mal.)</p>
+ 
+ <p>Für den Timer <codeph>myTimer</codeph> werden zwei Ereignis-Listener hinzugefügt. Der erste wird durch das <codeph>TimerEvent.TIMER</codeph>-Ereignis ausgelöst, das bei jedem Starten des Timers auftritt. Die <codeph>timerHandler()</codeph>-Methode ändert den Text für das <codeph>statusTextField</codeph>-Textfeld, um die verbleibenden Sekunden anzugeben. </p>
+ <p><b>Hinweis:</b> Die Timer-Klasse verfolgt, wie viele Male ein Start erforderlich ist (<codeph>repeats</codeph>), indem die Zahl in der <codeph>currentCount</codeph>-Eigenschaft erhöht wird.)</p> 
+ 
+ <p>Nachdem der Timer zum letzten Mal aufgerufen wurde, wird das <codeph>TimerEvent.TIMER_COMPLETE</codeph>-Ereignis ausgelöst und die <codeph>completeHandler()</codeph>-Methode wird aufgerufen. Die <codeph>completeHandler()</codeph>-Methode ändert den Typ des Textfeldes <codeph>inputTextField</codeph> von <codeph>INPUT</codeph> zu <codeph>DYNAMIC</codeph>, sodass der Benutzer keinen Text mehr eingeben oder ändern kann.</p>
+ 
+<codeblock>
+package {
+    import flash.display.Sprite;
+    import flash.text.TextField;
+    import flash.text.TextFieldType;
+    import flash.text.TextFieldAutoSize;
+    import flash.utils.Timer;
+    import flash.events.TimerEvent;
+    import flash.events.Event;
+
+    public class Timer_constructorExample extends Sprite {
+            private var statusTextField:TextField = new TextField();        
+            private var inputTextField:TextField = new TextField();
+            private var delay:uint = 30000;
+            private var repeat:uint = 3;
+            private var myTimer:Timer = new Timer(delay, repeat);
+            
+        public function Timer_constructorExample() {
+            inputTextField.x = 10;
+            inputTextField.y = 10;
+            inputTextField.border = true;
+            inputTextField.background = true;
+            inputTextField.height = 200;
+            inputTextField.width = 200;
+            inputTextField.multiline = true;
+            inputTextField.wordWrap = true;
+            inputTextField.type = TextFieldType.INPUT;
+
+            statusTextField.x = 10;
+            statusTextField.y = 220;
+            statusTextField.background = true;
+            statusTextField.autoSize = TextFieldAutoSize.LEFT;   
+
+            myTimer.start(); 
+            statusTextField.text = "You have " + ((delay * repeat) / 1000) 
+                                 + " seconds to write your response.";
+
+            myTimer.addEventListener(TimerEvent.TIMER, timerHandler);
+            myTimer.addEventListener(TimerEvent.TIMER_COMPLETE, completeHandler);
+
+            addChild(inputTextField);
+            addChild(statusTextField);
+        }
+
+        private function timerHandler(e:TimerEvent):void{
+            repeat--;
+            statusTextField.text = ((delay * repeat) / 1000) + " seconds left.";
+        }
+
+        private function completeHandler(e:TimerEvent):void {
+            statusTextField.text = "Times Up.";
+            inputTextField.type = TextFieldType.DYNAMIC;    
+        }
+    }
+}
+</codeblock></example></apiConstructorDetail></apiConstructor><apiOperation id="flash.utils:Timer:reset"><apiName>reset</apiName><shortdesc>
+   	 Hält den Timer an, wenn dieser ausgeführt wird, und setzt die currentCount-Eigenschaft (wie der Resert-Knopf einer Stoppuhr) wieder auf 0.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+   	 Hält den Timer an, wenn dieser ausgeführt wird, und setzt die <codeph>currentCount</codeph>-Eigenschaft (wie der Reset-Knopf einer Stoppuhr) wieder auf 0. Wird anschließend <codeph>start()</codeph> aufgerufen, wird die Timer-Instanz die mit dem <codeph>repeatCount</codeph>-Wert festgelegte Anzahl an Wiederholungen ausgeführt.
+   	 
+   	 </apiDesc></apiOperationDetail><related-links><link href="flash.utils.xml#Timer/stop()"><linktext>Timer.stop()</linktext></link></related-links></apiOperation><apiOperation id="flash.utils:Timer:start"><apiName>start</apiName><shortdesc>
+	 Startet den Timer, sofern dieser noch nicht ausgeführt wird.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+	 Startet den Timer, sofern dieser noch nicht ausgeführt wird.
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:Timer:stop"><apiName>stop</apiName><shortdesc>
+	 Hält den Timer an.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+	 Hält den Timer an. Wird nach der <codeph>start()</codeph>-Methode die <codeph>stop()</codeph>-Methode aufgerufen, wird die Timer-Instanz die mit dem <i>repeatCount</i>-Wert festgelegte <codeph>verbleibende</codeph> Anzahl an Wiederholungen ausgeführt.
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.utils.xml#Timer/reset()"><linktext>Timer.reset()</linktext></link></related-links></apiOperation><apiValue id="flash.utils:Timer:currentCount:get"><apiName>currentCount</apiName><shortdesc>
+	 Die Gesamtzahl der Ereignisse, die der Timer ausgelöst hat, seit er bei 0 gestartet wurde.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+	 Die Gesamtzahl der Ereignisse, die der Timer ausgelöst hat, seit er bei 0 gestartet wurde. Wenn der Timer zurückgesetzt wurde, werden nur die seitdem erfolgten Ereignisse gezählt.
+	 
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.utils:Timer:delay:get"><apiName>delay</apiName><shortdesc>
+	 Die Dauer zwischen den Timerereignissen in Millisekunden.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Number</apiValueClassifier><apiException><apiDesc>Es wird eine Ausnahme ausgelöst, wenn die angegebene Verzögerung ein negativer Wert oder keine endliche Zahl ist.
+	 </apiDesc><apiItemName>Error</apiItemName><apiOperationClassifier>Error</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	 Die Dauer zwischen den Timerereignissen in Millisekunden. Wenn Sie das Zeitintervall festlegen, während der Timer ausgeführt wird, wird der Timer mit derselben <codeph>repeatCount</codeph>-Iteration neu gestartet.
+     
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.utils:Timer:repeatCount:get"><apiName>repeatCount</apiName><shortdesc>
+	 Die Gesamtzahl der für den Timer festgelegten Ausführungen.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+	 Die Gesamtzahl der für den Timer festgelegten Ausführungen. Wenn als Anzahl der Wiederholungen 0 festgelegt ist, wird der Timer unbegrenzt ausgeführt, bis die <codeph>stop()</codeph>-Methode aufgerufen oder das Programm beendet wird. Wenn als Anzahl der Wiederholungen ein Wert ungleich 0 festgelegt ist, wird der Timer entsprechend oft ausgeführt. Wenn für <codeph>repeatCount</codeph> ein Wert angegeben ist, der gleich oder kleiner dem Wert von <codeph>currentCount</codeph> ist, wird der Timer angehalten und löst keine Ereignisse mehr aus.
+	 
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.utils:Timer:running:get"><apiName>running</apiName><shortdesc>
+     Der aktuelle Zustand des Timers. Wird der Timer ausgeführt, ist dieser Wert „true“, sonst „false“.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+     Der aktuelle Zustand des Timers. Wird der Timer ausgeführt, ist dieser Wert <codeph>true</codeph>, sonst <codeph>false</codeph>.
+	 
+	 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.utils:CompressionAlgorithm"><apiName>CompressionAlgorithm</apiName><shortdesc>
+ Die CompressionAlgorithm-Klasse definiert Stringkonstanten für die Namen der Komprimierungs- und Dekomprimierungsoptionen.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ Die CompressionAlgorithm-Klasse definiert Stringkonstanten für die Namen der Komprimierungs- und Dekomprimierungsoptionen. Diese Konstanten werden als Werte des <codeph>algorithm</codeph>-Parameters der <codeph>ByteArray.compress()</codeph>- und der <codeph>ByteArray.uncompress()</codeph>-Methode verwendet.
+ 
+ </apiDesc></apiClassifierDetail><related-links><link href="flash.utils.xml#ByteArray/compress()"><linktext>flash.utils.ByteArray.compress()</linktext></link><link href="flash.utils.xml#ByteArray/uncompress()"><linktext>flash.utils.ByteArray.uncompress()</linktext></link></related-links><apiValue id="flash.utils:CompressionAlgorithm:DEFLATE"><apiName>DEFLATE</apiName><shortdesc>
+	 Definiert den String, der für den deflate-Komprimierungsalgorithmus verwendet werden soll.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>deflate</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 Definiert den String, der für den deflate-Komprimierungsalgorithmus verwendet werden soll.
+	 
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.utils:CompressionAlgorithm:ZLIB"><apiName>ZLIB</apiName><shortdesc>
+	Definiert den String, der für den zlib-Komprimierungsalgorithmus verwendet werden soll.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>zlib</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	Definiert den String, der für den zlib-Komprimierungsalgorithmus verwendet werden soll.
+	
+	</apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.utils:IDataInput"><apiName>IDataInput</apiName><shortdesc>
+Die IDataInput-Schnittstelle bietet eine Reihe von Methoden zum Lesen von Binärdaten.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiInterface/><apiAccess value="public"/><apiStatic/><apiBaseClassifier/></apiClassifierDef><apiDesc>
+Die IDataInput-Schnittstelle bietet eine Reihe von Methoden zum Lesen von Binärdaten. Diese Schnittstelle ist das I/O-Gegenstück zur IDataOutput-Schnittstelle, mit der Binärdaten geschrieben werden.
+<p>Alle IDataInput- und IDataOutput-Vorgänge erfolgen in der Standardeinstellung im Format „bigEndian“ (das höchstwertige Byte der Folge wird an der niedrigsten bzw. ersten Speicheradresse gespeichert) und ungeblockt. Wenn nicht genug Daten vorhanden sind, wird eine <codeph>EOFError</codeph>-Ausnahme ausgelöst. Verwenden Sie die <codeph>IDataInput.bytesAvailable</codeph>-Eigenschaft um zu ermitteln, wie viele Daten zum Lesen bereitstehen.</p>
+
+<p>Vorzeichenerweiterung ist nur beim Lesen von Daten relevant, jedoch nicht beim Schreiben. Sie benötigen deshalb keine unterschiedlichen Schreibmethoden für die Datentypen <codeph>IDataInput.readUnsignedByte()</codeph> und <codeph>IDataInput.readUnsignedShort()</codeph>. Dies bedeutet:</p>
+<ul><li>Verwenden Sie <codeph>IDataOutput.writeByte()</codeph> mit <codeph>IDataInput.readUnsignedByte()</codeph> und <codeph>IDataInput.readByte()</codeph>.</li>
+<li>Verwenden Sie <codeph>IDataOutput.writeShort()</codeph> mit <codeph>IDataInput.readUnsignedShort()</codeph> und <codeph>IDataInput.readShort()</codeph>.</li></ul>
+
+</apiDesc><example conref="examples\DataInputExample.as"> Im folgenden Beispiel werden mit der Klasse <codeph>DataInputExample</codeph> ein boolescher Ausdruck und die Gleitkommadarstellung (mit doppelter Genauigkeit) der Zahl Pi in ein Bytearray geschrieben. Dies wird in den folgenden Schritten erreicht:
+ <ol>
+     <li>Deklarieren Sie eine neue ByteArray-Objektinstanz mit dem Namen <codeph>byteArr</codeph>.</li>
+     <li>Schreiben Sie den Byte-Äquivalenzwert des booleschen Werts <codeph>false</codeph> und die Gleitkommadarstellung (mit doppelter Genauigkeit) der Zahl Pi.</li>
+     <li>Rufen Sie den booleschen Wert und den Gleitkommawert ab.</li>
+ </ol>
+ 
+ <p>Am Ende wird ein Codesegment eingefügt, mit dem auf Dateiende-Fehler geprüft wird. Hiermit wird sichergestellt, dass nicht über das Ende des Bytestroms hinaus gelesen wird.</p>
+<codeblock>
+package {
+    import flash.display.Sprite;
+    import flash.utils.ByteArray;
+    import flash.errors.EOFError;
+
+    public class DataInputExample extends Sprite {        
+        public function DataInputExample() {
+            var byteArr:ByteArray = new ByteArray();
+
+            byteArr.writeBoolean(false);
+            byteArr.writeDouble(Math.PI);
+            
+            byteArr.position = 0;
+
+            try {
+                trace(byteArr.readBoolean()); // false
+            } 
+            catch(e:EOFError) {
+                trace(e);           // EOFError: Error #2030: End of file was encountered.
+            }
+            
+            try {
+                trace(byteArr.readDouble());    // 3.141592653589793
+            } 
+            catch(e:EOFError) {
+                trace(e);           // EOFError: Error #2030: End of file was encountered.
+            }
+            
+            try {
+                trace(byteArr.readDouble());
+            } 
+            catch(e:EOFError) {
+                trace(e);        // EOFError: Error #2030: End of file was encountered.
+            }
+        }
+    }
+}
+</codeblock></example></apiClassifierDetail><related-links><link href="flash.utils.xml#IDataOutput"><linktext>IDataOutput-Schnittstelle</linktext></link><link href="flash.utils.xml#IDataInput/endian"><linktext>endian</linktext></link><link href="flash.filesystem.xml#FileStream"><linktext>FileStream-Klasse</linktext></link><link href="flash.net.xml#Socket"><linktext>Socket-Klasse</linktext></link><link href="flash.net.xml#URLStream"><linktext>URLStream-Klasse</linktext></link><link href="flash.utils.xml#ByteArray"><linktext>ByteArray-Klasse</linktext></link><link href="flash.errors.xml#EOFError"><linktext>EOFError-Klasse</linktext></link></related-links><apiOperation id="flash.utils:IDataInput:flash.utils:IDataInput:readBoolean"><apiName>readBoolean</apiName><shortdesc>
+	 Liest einen booleschen Wert vom Dateistream, Bytestream oder Bytearray.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Es sind nicht genug zu lesende Daten vorhanden.
+	 </apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>Ein boolescher Wert. Der Wert ist <codeph>true</codeph>, wenn das Byte ungleich 0 ist, oder andernfalls <codeph>false</codeph>.
+	 </apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 Liest einen booleschen Wert vom Dateistream, Bytestream oder Bytearray. Es wird ein einzelnes Byte gelesen und <codeph>true</codeph> zurückgegeben, wenn das Byte ungleich 0 ist; andernfalls wird <codeph>false</codeph> zurückgegeben.
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:IDataInput:flash.utils:IDataInput:readByte"><apiName>readByte</apiName><shortdesc>
+	 Liest ein vorzeichenbehaftetes Byte vom Dateistream, Bytestream oder Bytearray.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Es sind nicht genug zu lesende Daten vorhanden.
+	 </apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>Der Rückgabewert liegt im Bereich von -128 bis 127.
+	 </apiDesc><apiOperationClassifier>int</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 Liest ein vorzeichenbehaftetes Byte vom Dateistream, Bytestream oder Bytearray.
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:IDataInput:flash.utils:IDataInput:readBytes"><apiName>readBytes</apiName><shortdesc>
+	 Liest die Anzahl der vom length-Parameter angegebenen Datenbyte aus dem Dateistream, Bytestream oder Bytearray.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Es sind nicht genug zu lesende Daten vorhanden.
+	 </apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>bytes</apiItemName><apiOperationClassifier>flash.utils:ByteArray</apiOperationClassifier><apiDesc>Das <codeph>ByteArray</codeph>-Objekt, in das die Daten eingelesen werden.
+	 </apiDesc></apiParam><apiParam><apiItemName>offset</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiData>0</apiData><apiDesc>Der Offset innerhalb des mit dem Parameter <codeph>bytes</codeph> angegebenen Bereichs, ab dem das Lesen der Daten beginnt.
+	 </apiDesc></apiParam><apiParam><apiItemName>length</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiData>0</apiData><apiDesc>Die Anzahl der zu lesenden Byte. Der Standardwert 0 bewirkt, dass alle verfügbaren Daten gelesen werden.
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Liest die Anzahl der vom <codeph>length</codeph>-Parameter angegebenen Datenbyte aus dem Dateistream, Bytestream oder Bytearray. Die Bytedaten werden ab der im Parameter <codeph>bytes</codeph> festgelegten Position in das im Parameter <codeph>offset</codeph> angegebenen ByteArray-Objekt gelesen.
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:IDataInput:flash.utils:IDataInput:readDouble"><apiName>readDouble</apiName><shortdesc>
+	 Liest eine IEEE 754-Gleitkommazahl mit doppelter Genauigkeit vom Dateistream, Bytestream oder Bytearray.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Es sind nicht genug zu lesende Daten vorhanden.
+	 </apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>Eine Gleitkommazahl nach IEEE 754 mit doppelter Genauigkeit.
+	 </apiDesc><apiOperationClassifier>Number</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 Liest eine IEEE 754-Gleitkommazahl mit doppelter Genauigkeit vom Dateistream, Bytestream oder Bytearray.
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:IDataInput:flash.utils:IDataInput:readFloat"><apiName>readFloat</apiName><shortdesc>
+	 Liest eine IEEE 754-Gleitkommazahl mit einfacher Genauigkeit vom Dateistream, Bytestream oder Bytearray.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Es sind nicht genug zu lesende Daten vorhanden.
+	 </apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>Eine Gleitkommazahl nach IEEE 754 mit einfacher Genauigkeit.
+	 </apiDesc><apiOperationClassifier>Number</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 Liest eine IEEE 754-Gleitkommazahl mit einfacher Genauigkeit vom Dateistream, Bytestream oder Bytearray.
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:IDataInput:flash.utils:IDataInput:readInt"><apiName>readInt</apiName><shortdesc>
+	 Liest eine vorzeichenbehaftete 32-Bit-Ganzzahl vom Dateistream, Bytestream oder Bytearray.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Es sind nicht genug zu lesende Daten vorhanden.
+	 </apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>Der Rückgabewert liegt im Bereich von -2147483648 bis 2147483647.
+	 </apiDesc><apiOperationClassifier>int</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 Liest eine vorzeichenbehaftete 32-Bit-Ganzzahl vom Dateistream, Bytestream oder Bytearray.
+     </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:IDataInput:flash.utils:IDataInput:readMultiByte"><apiName>readMultiByte</apiName><shortdesc>
+	 Liest einen Multibyte-String der angegebenen Länge unter Verwendung des angegebenen Zeichensatzes vom Dateistream, Bytestream oder Bytearray.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>IDataInput, IDataInput.readMultiByte, readMultiByte
+	 </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Es sind nicht genug zu lesende Daten vorhanden.
+	 </apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>Ein UTF-8-kodierter String.
+	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn><apiParam><apiItemName>length</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiDesc>Die Anzahl der aus dem Bytestream zu lesenden Byte.
+	 </apiDesc></apiParam><apiParam><apiItemName>charSet</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Der String, der den zum Interpretieren der Byte zu verwendenden Zeichensatz angibt. Mögliche Zeichensatz-Strings sind unter anderem <codeph>"shift-jis"</codeph>, <codeph>"cn-gb"</codeph> und <codeph>"iso-8859-1"</codeph>. Eine vollständige Liste finden Sie unter <xref href="../../charset-codes.html">Unterstützte Zeichensätze</xref>. 
+	 
+     <p><b>Hinweis:</b> Wird der Wert des <codeph>charSet</codeph>-Parameters vom aktuellen System nicht erkannt, verwenden <ph platform="actionscript">Adobe<sup>®</sup> Flash<sup>®</sup> Player oder</ph> Adobe<sup>®</sup> AIR<sup>®</sup> die Standard-Codepage des Systems als Zeichensatz. Beispielsweise kann ein Wert des Parameters <codeph>charSet</codeph> wie bei <codeph>myTest.readMultiByte(22, "iso-8859-01")</codeph>, wo <codeph>01</codeph> anstelle von <codeph>1</codeph> eingesetzt wird, auf Ihrem Entwicklungsrechner funktionieren, aber auf keinem anderen Rechner. Auf dem anderen Computer verwendet der <ph platform="actionscript">Flash Player</ph> oder die AIR-Laufzeitumgebung die Standard-Codepage des Systems.</p>
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Liest einen Multibyte-String der angegebenen Länge unter Verwendung des angegebenen Zeichensatzes vom Dateistream, Bytestream oder Bytearray.
+	 
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:IDataInput:flash.utils:IDataInput:readObject"><apiName>readObject</apiName><shortdesc>
+	 Liest ein Objekt vom Dateistream, Bytestream oder Bytearray, das im serialisierten AMF-Format kodiert ist.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Es sind nicht genug zu lesende Daten vorhanden.
+	 </apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>Das deserialisierte Objekt.
+	 
+	 </apiDesc><apiType value="any"/></apiReturn></apiOperationDef><apiDesc>
+	 Liest ein Objekt vom Dateistream, Bytestream oder Bytearray, das im serialisierten AMF-Format kodiert ist.
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.utils.xml#IDataInput/objectEncoding"><linktext>objectEncoding</linktext></link><link href="../../flash/net/package.html#registerClassAlias()"><linktext>flash.net.registerClassAlias()</linktext></link></related-links></apiOperation><apiOperation id="flash.utils:IDataInput:flash.utils:IDataInput:readShort"><apiName>readShort</apiName><shortdesc>
+	 Liest eine vorzeichenbehaftete 16-Bit-Ganzzahl vom Dateistream, Bytestream oder Bytearray.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Es sind nicht genug zu lesende Daten vorhanden.
+	 </apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>Der Rückgabewert liegt im Bereich von -32768 bis 32767.
+	 </apiDesc><apiOperationClassifier>int</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 Liest eine vorzeichenbehaftete 16-Bit-Ganzzahl vom Dateistream, Bytestream oder Bytearray.
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:IDataInput:flash.utils:IDataInput:readUTF"><apiName>readUTF</apiName><shortdesc>
+	 Liest einen UTF-8-String vom Dateistream, Bytestream oder Bytearray.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Es sind nicht genug zu lesende Daten vorhanden.
+	 </apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>Ein durch die Bytedarstellung von Zeichen erstellter UTF-8-String.
+	 
+	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 Liest einen UTF-8-String vom Dateistream, Bytestream oder Bytearray. Es wird davon ausgegangen, dass dem String eine short-Ganzzahl ohne Vorzeichen mit der Länge in Byte vorangestellt ist.
+	 
+	 <p>Diese Methode entspricht der <codeph>readUTF()</codeph>-Methode der Java<sup>®</sup>-Schnittstelle „IDataInput“.</p>
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:IDataInput:flash.utils:IDataInput:readUTFBytes"><apiName>readUTFBytes</apiName><shortdesc>
+	 Liest eine Folge von UTF-8-Byte aus dem Bytedatenstream oder Bytearray und gibt einen String zurück.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Es sind nicht genug zu lesende Daten vorhanden.
+	 </apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>Ein durch die Bytedarstellung von Zeichen erstellter UTF-8-String der angegebenen Länge.	 
+	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn><apiParam><apiItemName>length</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiDesc>Die Anzahl der zu lesenden Byte.
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Liest eine Folge von UTF-8-Byte aus dem Bytedatenstream oder Bytearray und gibt einen String zurück.
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:IDataInput:flash.utils:IDataInput:readUnsignedByte"><apiName>readUnsignedByte</apiName><shortdesc>
+	 Liest ein vorzeichenloses Byte vom Dateistream, Bytestream oder Bytearray.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Es sind nicht genug zu lesende Daten vorhanden.
+	 </apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>Der Rückgabewert liegt im Bereich von 0 bis 255. 	   
+	 </apiDesc><apiOperationClassifier>uint</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 Liest ein vorzeichenloses Byte vom Dateistream, Bytestream oder Bytearray.
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:IDataInput:flash.utils:IDataInput:readUnsignedInt"><apiName>readUnsignedInt</apiName><shortdesc>
+	 Liest eine vorzeichenlose 32-Bit-Ganzzahl vom Dateistream, Bytestream oder Bytearray.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Es sind nicht genug zu lesende Daten vorhanden.
+	 </apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>Der Rückgabewert liegt im Bereich von 0 bis 4294967295.
+	 </apiDesc><apiOperationClassifier>uint</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 Liest eine vorzeichenlose 32-Bit-Ganzzahl vom Dateistream, Bytestream oder Bytearray.
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.utils:IDataInput:flash.utils:IDataInput:readUnsignedShort"><apiName>readUnsignedShort</apiName><shortdesc>
+	 Liest eine vorzeichenlose 16-Bit-Ganzzahl vom Dateistream, Bytestream oder Bytearray.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Es sind nicht genug zu lesende Daten vorhanden.
+	 </apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>Der Rückgabewert liegt im Bereich von 0 bis 65535. 
+	 </apiDesc><apiOperationClassifier>uint</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 Liest eine vorzeichenlose 16-Bit-Ganzzahl vom Dateistream, Bytestream oder Bytearray.
+	 </apiDesc></apiOperationDetail></apiOperation><apiValue id="flash.utils:IDataInput:flash.utils:IDataInput:bytesAvailable:get"><apiName>bytesAvailable</apiName><shortdesc>
+	 Gibt für die zum Lesen verfügbaren Daten im Eingabepuffer die Anzahl der Byte an.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>uint</apiValueClassifier></apiValueDef><apiDesc>
+	 Gibt für die zum Lesen verfügbaren Daten im Eingabepuffer die Anzahl der Byte an. Aus dem Programmcode der Benutzer muss <codeph>bytesAvailable</codeph> aufgerufen werden, um sicherzustellen, dass genügend Daten verfügbar sind, bevor diese mit einer der Lesemethoden gelesen werden.
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.utils:IDataInput:flash.utils:IDataInput:endian:get"><apiName>endian</apiName><shortdesc>
+	 Die Bytereihenfolge der Daten. Entweder die Konstante BIG_ENDIAN oder LITTLE_ENDIAN der Endian-Klasse.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 Die Bytereihenfolge der Daten. Entweder die Konstante <codeph>BIG_ENDIAN</codeph> oder <codeph>LITTLE_ENDIAN</codeph> der Endian-Klasse.
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.utils.xml#Endian"><linktext>Endian-Klasse</linktext></link></related-links></apiValue><apiValue id="flash.utils:IDataInput:flash.utils:IDataInput:objectEncoding:get"><apiName>objectEncoding</apiName><shortdesc>
+     Wird verwendet, um festzustellen, ob das Format AMF3 oder AMF0 verwendet wird, wenn binäre Daten mit der readObject()-Methode geschrieben oder gelesen werden.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>uint</apiValueClassifier></apiValueDef><apiDesc>
+     Wird verwendet, um festzustellen, ob das Format AMF3 oder AMF0 verwendet wird, wenn binäre Daten mit der <codeph>readObject()</codeph>-Methode geschrieben oder gelesen werden. Der Wert ist eine Konstante der ObjectEncoding-Klasse.
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.utils.xml#IDataInput/readObject()"><linktext>readObject()</linktext></link><link href="flash.utils.xml#IDataOutput/writeObject()"><linktext>IDataOutput.writeObject()</linktext></link><link href="flash.net.xml#ObjectEncoding"><linktext>ObjectEncoding-Klasse</linktext></link></related-links></apiValue></apiClassifier><apiClassifier id="flash.utils:Dictionary"><apiName>Dictionary</apiName><shortdesc>
+ Mit der Dictionary-Klasse können Sie eine dynamische Sammlung von Eigenschaften erstellen, die strikte Gleichheit (===) für Schlüsselvergleiche verwendet.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiDynamic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ Mit der Dictionary-Klasse können Sie eine dynamische Sammlung von Eigenschaften erstellen, die strikte Gleichheit (<codeph>===</codeph>) für Schlüsselvergleiche verwendet. Wenn ein Objekt als Schlüssel verwendet wird, erfolgt die Suche nach dem Objekt mithilfe dessen Identität statt mit dem Wert, der durch den Aufruf von <codeph>toString()</codeph> für das Objekt zurückgegeben wird. Einfache (integrierte) Objekte wie Zahlen in einer Dictionary-Sammlung verhalten sich genauso wie als Eigenschaft eines regulären Objekts.
+ 
+ <p platform="actionscript">Die nachstehenden Anweisungen veranschaulichen die Beziehung zwischen einem Dictionary-Objekt und einem Schlüsselobjekt:</p>
+ 
+ <codeblock platform="actionscript">
+ var dict:Dictionary = new Dictionary();
+ var obj:Object = new Object();
+ var key:Object = new Object();
+ key.toString = function() { return "key" }
+  
+ dict[key] = "Letters";
+ obj["key"] = "Letters";
+  
+ dict[key] == "Letters"; // true
+ obj["key"] == "Letters"; // true 
+ obj[key] == "Letters"; // true because key == "key" is true because key.toString == "key"
+ dict["key"] == "Letters"; // false because "key" === key is false
+ delete dict[key]; //removes the key
+ </codeblock>
+ 
+ <p><b>Wichtig:</b>Die Dictionary-Klasse ist nur für ActionScript 3.0-Code (ausgeführt in SWF-Material) verfügbar. Sie ist nicht verfügbar für JavaScript-Code (ausgeführt in Adobe<sup>®</sup> AIR™).</p>
+ 
+ </apiDesc></apiClassifierDetail><related-links><link href="../../operators.html#strict_equality"><linktext>=== (strikte Gleichheit)</linktext></link></related-links><apiConstructor id="flash.utils:Dictionary:Dictionary"><apiName>Dictionary</apiName><shortdesc>
+	 Erstellt ein neues Dictionary-Objekt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>weakKeys</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>Weist das Dictionary-Objekt an, für Objektschlüssel „schwache“ Verweise zu verwenden. Wenn sich der einzige Verweis auf ein Objekt in dem angegebenen Dictionary-Objekt befindet, unterliegt der Schlüssel dem Garbagekollektor und wird beim Wiedergewinnen des freigegebenen Objektspeichers aus der Tabelle entfernt.
+  	 
+  	 </apiDesc></apiParam></apiConstructorDef><apiDesc>
+	 Erstellt ein neues Dictionary-Objekt. Verwenden Sie den <codeph>delete</codeph>-Operator, um einen Schlüssel aus einem Dictionary-Objekt zu entfernen.
+  	 
+  	 </apiDesc></apiConstructorDetail></apiConstructor></apiClassifier></apiPackage>

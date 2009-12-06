@@ -1,0 +1,368 @@
+<?xml version="1.0"?>
+<apiPackage id="flash.external"><apiName>flash.external</apiName><apiDetail/><apiClassifier id="flash.external:ExternalInterface"><apiName>ExternalInterface</apiName><shortdesc>
+ ExternalInterface クラスは外部 API であり、ActionScript と Flash Player のコンテナとの間で直接通信できるようにするアプリケーションプログラミングインターフェイスです。コンテナの例としては、JavaScript が含まれる HTML ページがあります。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><internal>Verify table is still correct and paragraph below the table still applies.
+ </internal></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiTipTexts><apiTipText>ActionScript とコンテナの間の通信を有効にします。
+ 
+ </apiTipText></apiTipTexts><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ ExternalInterface クラスは外部 API であり、ActionScript と Flash Player のコンテナとの間で直接通信できるようにするアプリケーションプログラミングインターフェイスです。コンテナの例としては、JavaScript が含まれる HTML ページがあります。JavaScript と ActionScript 間のすべての通信に、ExternalInterface を使用することを推奨します。
+ 
+ <p>HTML ページで JavaScript を使用することにより、Flash Player から ActionScript 関数を呼び出すことができます。ActionScript 関数は値を返すことができ、JavaScript は、呼び出しの戻り値として即座にこの値を受け取ります。</p>
+ 
+ <p>この機能は、<codeph>fscommand()</codeph> メソッドに代わるものです。</p>
+ 
+ <p>ExternalInterface クラスは、次のブラウザーとオペレーティングシステムの組み合わせで使用してください。</p>
+ <adobetable class="innertable">
+ 
+ 
+ 
+ 
+ 
+ 
+ <tgroup cols="3"><thead><row><entry>ブラウザー</entry><entry>オペレーティングシステム</entry><entry>オペレーティングシステム</entry></row></thead><tbody><row>
+   <entry>Internet Explorer 5.0 以降</entry>
+   <entry> Windows </entry>
+   <entry> </entry>
+ </row><row>
+   <entry>Netscape 8.0 以降</entry>
+   <entry> Windows </entry>
+   <entry> Mac OS </entry>
+ </row><row>
+   <entry>Mozilla 1.7.5 以降</entry>
+   <entry> Windows </entry>
+   <entry> Mac OS </entry>
+ </row><row>
+   <entry>Firefox 1.0 以降</entry>
+   <entry> Windows </entry>
+   <entry> Mac OS </entry>
+ </row><row>
+   <entry>Safari 1.3 以降</entry>
+   <entry> </entry>
+   <entry> Mac OS </entry>
+ </row></tbody></tgroup></adobetable>
+ 
+ <p>Linux バージョン 9.0.31.0 以降用の Flash Player では、次のブラウザーで ExternalInterface クラスがサポートされます。</p>
+  <adobetable class="innertable">
+    
+    
+    
+    
+  <tgroup cols="1"><thead><row><entry>ブラウザー</entry></row></thead><tbody><row>
+      <entry>Mozilla 1.7.x 以降</entry>
+    </row><row>
+      <entry>Firefox 1.5.0.7 以降</entry>
+    </row><row>
+      <entry>SeaMonkey 1.0.5 以降 </entry>
+    </row></tbody></tgroup></adobetable>
+ <p>ExternalInterface クラスを利用するには、ユーザーの Web ブラウザーが、一部のブラウザーによってプラグインスクリプトとして公開されている ActiveX<sup>®</sup> または NPRuntime API のいずれかをサポートしている必要があります。ブラウザーおよびオペレーティングシステムの組み合わせが上記になくても、NPRuntime API がサポートされる場合、ExternalInterface クラスがサポートされます。<xref href="http://www.mozilla.org/projects/plugins/npruntime.html" scope="external">http://www.mozilla.org/projects/plugins/npruntime.html</xref> を参照してください。</p>
+ <p><b>注意：</b>HTML ページに内に SWF ファイルを埋め込むときには、<codeph>id</codeph> 属性が設定されていることを確認し、<codeph>id</codeph> 属性および <codeph>name</codeph> 属性（<codeph>object</codeph> タグおよび <codeph>embed</codeph> タグ）に次の文字が含まれないようにします。</p>
+ <pre>
+ . - + ~~ / \
+ </pre>
+ <p><b>注意：</b>Flash Player バージョン 9.0.115.0 以降では、<codeph>.</codeph>（ピリオド）文字を <codeph>id</codeph> 属性内および <codeph>name</codeph> 属性内で使用できます。</p>
+ 
+ <p>ブラウザーで実行される Flash Player 10 以降では、このクラスをプログラムで使用してポップアップウィンドウを開く方法は有効でない場合があります。ブラウザー（およびブラウザーの設定）によってはポップアップウィンドウがブロックされる場合があり、すべてのポップアップウィンドウが表示される保証はありません。ただし、ユーザー操作の直接の結果として実行されるコード（マウスのクリックやキー入力イベントのイベントハンドラーなど）に限っては、このクラスを使用してポップアップウィンドウを開く方法が有効です。</p>
+ 
+ <p>ActionScript から、HTML ページに対して次のことを実行できます。
+ <ul> 
+   <li>任意の JavaScript 関数を呼び出す</li>
+   <li>引数の数を名前と共に渡す</li>
+   <li>ブール（Boolean）、数値（Number）、ストリング（String）などの各種データ型を渡す</li>
+   <li>JavaScript 関数からの戻り値を受け取る</li>
+ </ul>
+ </p>
+ 
+ <p>HTML ページの JavaScript から、次のことを実行できます。
+ <ul>
+   <li>ActionScript 関数を呼び出す</li>
+   <li>標準の関数呼び出しの表記法を使用して、引数を渡す</li>
+   <li>JavaScript 関数に値を戻す</li>
+ </ul>
+ </p>
+ 
+ <p>Flash Player は現在、HTML フォームに埋め込まれた SWF ファイルをサポートしていません。</p>
+ 
+ <p><i>メモ：</i>Adobe AIR では、ExternalInterface クラスを使用して、HTMLLoader コントロールに読み込まれた HTML ページの JavaScript とその HTML ページに埋め込まれた SWF コンテンツの ActionScript との間で通信できます。</p>
+ 
+ </apiDesc><example conref="examples\ExternalInterfaceExample.as"> 次の例では、Flash Player および HTML コンテナ間でデータを送信する方法を示します。
+<codeblock>
+
+package {
+    import flash.display.Sprite;
+    import flash.events.*;
+    import flash.external.ExternalInterface;
+    import flash.text.TextField;
+    import flash.utils.Timer;
+    import flash.text.TextFieldType;
+    import flash.text.TextFieldAutoSize;
+
+    public class ExternalInterfaceExample extends Sprite {
+        private var input:TextField;
+        private var output:TextField;
+        private var sendBtn:Sprite;
+
+        public function ExternalInterfaceExample() {
+            input = new TextField();
+            input.type = TextFieldType.INPUT;
+            input.background = true;
+            input.border = true;
+            input.width = 350;
+            input.height = 18;
+            addChild(input);
+
+            sendBtn = new Sprite();
+            sendBtn.mouseEnabled = true;
+            sendBtn.x = input.width + 10;
+            sendBtn.graphics.beginFill(0xCCCCCC);
+            sendBtn.graphics.drawRoundRect(0, 0, 80, 18, 10, 10);
+            sendBtn.graphics.endFill();
+            sendBtn.addEventListener(MouseEvent.CLICK, clickHandler);
+            addChild(sendBtn);
+
+            output = new TextField();
+            output.y = 25;
+            output.width = 450;
+            output.height = 325;
+            output.multiline = true;
+            output.wordWrap = true;
+            output.border = true;
+            output.text = "Initializing...\n";
+            addChild(output);
+
+            if (ExternalInterface.available) {
+                try {
+                    output.appendText("Adding callback...\n");
+                    ExternalInterface.addCallback("sendToActionScript", receivedFromJavaScript);
+                    if (checkJavaScriptReady()) {
+                        output.appendText("JavaScript is ready.\n");
+                    } else {
+                        output.appendText("JavaScript is not ready, creating timer.\n");
+                        var readyTimer:Timer = new Timer(100, 0);
+                        readyTimer.addEventListener(TimerEvent.TIMER, timerHandler);
+                        readyTimer.start();
+                    }
+                } catch (error:SecurityError) {
+                    output.appendText("A SecurityError occurred: " + error.message + "\n");
+                } catch (error:Error) {
+                    output.appendText("An Error occurred: " + error.message + "\n");
+                }
+            } else {
+                output.appendText("External interface is not available for this container.");
+            }
+        }
+        private function receivedFromJavaScript(value:String):void {
+            output.appendText("JavaScript says: " + value + "\n");
+        }
+        private function checkJavaScriptReady():Boolean {
+            var isReady:Boolean = ExternalInterface.call("isReady");
+            return isReady;
+        }
+        private function timerHandler(event:TimerEvent):void {
+            output.appendText("Checking JavaScript status...\n");
+            var isReady:Boolean = checkJavaScriptReady();
+            if (isReady) {
+                output.appendText("JavaScript is ready.\n");
+                Timer(event.target).stop();
+            }
+        }
+        private function clickHandler(event:MouseEvent):void {
+            if (ExternalInterface.available) {
+                ExternalInterface.call("sendToJavaScript", input.text);
+            }
+        }
+    }
+}
+
+
+</codeblock> 上記の ActionScript コードをテストするには、次の HTML テンプレートを使用して、生成された SWF ファイルを埋め込みます。
+ <codeblock rev="2.0">
+ &lt;!-- saved from url=(0014)about:internet -->
+ &lt;html lang="en">
+ &lt;head>
+ &lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ &lt;title>ExternalInterfaceExample&lt;/title>
+ &lt;script language="JavaScript">
+     var jsReady = false;
+     function isReady() {
+         return jsReady;
+     }
+     function pageInit() {
+         jsReady = true;
+         document.forms["form1"].output.value += "\n" + "JavaScript is ready.\n";
+     }
+     function thisMovie(movieName) {
+         if (navigator.appName.indexOf("Microsoft") != -1) {
+             return window[movieName];
+         } else {
+             return document[movieName];
+         }
+     }
+     function sendToActionScript(value) {
+         thisMovie("ExternalInterfaceExample").sendToActionScript(value);
+     }
+     function sendToJavaScript(value) {
+         document.forms["form1"].output.value += "ActionScript says: " + value + "\n";
+     }
+ &lt;/script>
+ &lt;/head>
+ &lt;body onload="pageInit();">
+ 
+     &lt;object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+             id="ExternalInterfaceExample" width="500" height="375"
+             codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab">
+         &lt;param name="movie" value="ExternalInterfaceExample.swf" />
+         &lt;param name="quality" value="high" />
+         &lt;param name="bgcolor" value="#869ca7" />
+         &lt;param name="allowScriptAccess" value="sameDomain" />
+         &lt;embed src="ExternalInterfaceExample.swf" quality="high" bgcolor="#869ca7"
+             width="500" height="375" name="ExternalInterfaceExample" align="middle"
+             play="true" loop="false" quality="high" allowScriptAccess="sameDomain"
+             type="application/x-shockwave-flash"
+             pluginspage="http://www.macromedia.com/go/getflashplayer">
+         &lt;/embed>
+     &lt;/object>
+ 
+     &lt;form name="form1" onsubmit="return false;">
+         &lt;input type="text" name="input" value="" />
+         &lt;input type="button" value="Send" onclick="sendToActionScript(this.form.input.value);" />&lt;br />
+         &lt;textarea cols="60" rows="20" name="output" readonly="true">Initializing...&lt;/textarea>
+     &lt;/form>
+ 
+ &lt;/body>
+ &lt;/html>
+ </codeblock>
+</example></apiClassifierDetail><related-links><link href="flash.system.xml#/fscommand()"><linktext>flash.system.fscommand()</linktext></link></related-links><apiOperation id="flash.external:ExternalInterface:addCallback"><apiName>addCallback</apiName><shortdesc>
+     ActionScript メソッドをコンテナから呼び出し可能なものとして登録します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiException><apiDesc>コンテナが着信コールをサポートしていません。着信コールは Windows 用の Internet Explorer、Mozilla 1.7.5 以降、Firefox 1.0 以降などの NPRuntime API を使用するブラウザーでのみサポートされます。
+     
+     </apiDesc><apiItemName>Error</apiItemName><apiOperationClassifier>Error</apiOperationClassifier></apiException><apiException><apiDesc>指定された名前を使用したコールバックが、アクセスしていない Sandbox 内で既に ActionScript によって追加されています。このコールバックを上書きできません。この問題を回避するには、<codeph>addCallback()</codeph> メソッドの呼び出し元の ActionScript を書き換えて、このスクリプトから <codeph>Security.allowDomain()</codeph> メソッドも呼び出すようにします。
+     
+     </apiDesc><apiItemName>SecurityError</apiItemName><apiOperationClassifier>SecurityError</apiOperationClassifier></apiException><apiException><apiDesc>コンテナ環境がセキュリティサンドボックスに属しているために、呼び出し側のコードにアクセス権がありません。この問題を修正するには、次の手順に従います。
+     
+     <ol>
+     
+      <li>HTML ページに埋め込む SWF ファイルの <codeph>object</codeph> タグの中で次のパラメーターを設定します。
+     
+      <p><codeph>&lt;param name="allowScriptAccess" value="always" /></codeph></p>
+     
+      </li>
+     
+      <li>SWF ファイルで、次の ActionScript を追加します。
+     
+      <p><codeph> flash.system.Security.allowDomain( <i>sourceDomain</i> ) </codeph></p>
+     
+      </li>
+     
+     </ol>
+     
+      
+      </apiDesc><apiItemName>SecurityError</apiItemName><apiOperationClassifier>SecurityError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>functionName</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>コンテナが関数を呼び出すことができる名前です。
+     </apiDesc></apiParam><apiParam><apiItemName>closure</apiItemName><apiOperationClassifier>Function</apiOperationClassifier><apiDesc>呼び出す関数閉包です。これは独立した関数にすることも、オブジェクトインスタンスのメソッドを参照するメソッド閉包とすることもできます。メソッドクロージャを渡すことにより、コールバックを特定のオブジェクトインスタンスのメソッドに指定できます。
+                    <p><b>注意：</b>既存のコールバック関数に対して、closure 値に <codeph>null</codeph> を指定して <codeph>addCallback()</codeph> を繰り返し実行すると、コールバックが削除されます。</p>
+     
+     
+     </apiDesc></apiParam></apiOperationDef><apiDesc>
+     ActionScript メソッドをコンテナから呼び出し可能なものとして登録します。<codeph>addCallBack()</codeph> の呼び出しが成功すると、Flash Player 内に登録されている関数をコンテナ内の JavaScript や ActiveX から呼び出すことができます。
+     
+     <p><b>メモ : </b>ブラウザーで実行される<i>ローカル</i>コンテンツでは、SWF ファイルおよびそれを含む Web ページが信頼できるローカルなセキュリティ Sandbox 内にある場合にのみ、<codeph>ExternalInterface.addCallback()</codeph> メソッドの呼び出しが動作します。詳細については、Flash Player デベロッパーセンターのトピック：<xref href="http://www.adobe.com/go/devnet_security_jp" scope="external">セキュリティ</xref>を参照してください。</p>
+     
+     </apiDesc></apiOperationDetail><related-links><link href="flash.system.xml#Security/allowDomain()"><linktext>flash.system.Security.allowDomain()</linktext></link></related-links></apiOperation><apiOperation id="flash.external:ExternalInterface:call"><apiName>call</apiName><shortdesc> 
+     Flash Player コンテナで公開されている関数を呼び出し、必要に応じて引数を渡します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><internal>Should probably provide a link for the 4th paragraph above for info on Netscape.
+     
+     </internal></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiException><apiDesc>コンテナが送信コールをサポートしていません。送信コールは Windows 用の Internet Explorer、Mozilla 1.7.5 以降、Firefox 1.0 以降などの NPRuntime API を使用するブラウザーでのみサポートされます。
+     
+     </apiDesc><apiItemName>Error</apiItemName><apiOperationClassifier>Error</apiOperationClassifier></apiException><apiException><apiDesc>コンテナ環境がセキュリティサンドボックスに属しているために、呼び出し側のコードにアクセス権がありません。この問題を修正するには、次の手順に従います。
+     
+     <ol>
+     
+      <li>HTML ページに埋め込む SWF ファイルの <codeph>object</codeph> タグの中で次のパラメーターを設定します。
+     
+      <p><codeph>&lt;param name="allowScriptAccess" value="always" /></codeph></p>
+     
+      </li>
+     
+      <li>SWF ファイルで、次の ActionScript を追加します。
+     
+      <p><codeph> flash.system.Security.allowDomain( <i>sourceDomain</i> ) </codeph></p>
+     
+      </li>
+     
+     </ol>
+      
+      </apiDesc><apiItemName>SecurityError</apiItemName><apiOperationClassifier>SecurityError</apiOperationClassifier></apiException><apiReturn><apiDesc>コンテナから受け取った応答です。呼び出しに失敗した場合は、<codeph>null</codeph> が返され、エラーがスローされます。失敗原因としては、コンテナに該当する関数が存在しない場合、インターフェイスが利用できない場合、再帰が発生した場合（Netscape ブラウザーまたは Opera ブラウザーの場合）、セキュリティ上の問題がある場合などがあります。
+     
+     </apiDesc><apiType value="any"/></apiReturn><apiParam><apiItemName>functionName</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>コンテナ内にある呼び出し先関数の英数字の名前です。英数字の関数名を使用すると、ランタイムエラー（エラー 2155）が発生します。<codeph>try..catch</codeph> ブロックを使用して、このエラーを処理できます。
+     </apiDesc></apiParam><apiParam><apiItemName>arguments</apiItemName><apiType value="restParam"/><apiDesc>コンテナ内の関数に渡されるパラメーターです。任意のパラメーターを指定することができ、複数のパラメーターを指定する場合はカンマで区切ります。パラメーターには任意の ActionScript データ型を使用できます。呼び出し先が JavaScript 関数である場合、ActionScript のデータ型は JavaScript のデータ型に自動的に変換されます。呼び出し先が他の ActiveX コンテナである場合、パラメーターは要求メッセージの中にエンコードされます。
+      
+     </apiDesc></apiParam><apiTipTexts><apiTipText>コンテナ内の関数を呼び出します。
+     
+     </apiTipText></apiTipTexts></apiOperationDef><apiDesc> 
+     Flash Player コンテナで公開されている関数を呼び出し、必要に応じてパラメーターを渡します。関数が利用できない場合は <codeph>null</codeph> を返します。それ以外の場合は、関数の戻り値を返します。再帰は、Opera ブラウザーまたは Netscape ブラウザーでは許可されて<i>いません</i>。これらのブラウザーでは、再帰呼び出しで <codeph>null</codeph> 応答が発生します。Internet Explorer ブラウザーおよび Firefox ブラウザーでは、再帰がサポートされています。
+     
+     <p>コンテナが HTML ページである場合、このメソッドは <codeph>script</codeph> エレメントに囲まれた JavaScript 関数を呼び出します。</p>
+     
+     <p>コンテナが別の ActiveX コンテナの場合、このメソッドは、指定された名前で FlashCall ActiveX イベントを送出し、そのイベントはコンテナによって処理されます。</p>
+     
+     <p>コンテナが Netscape プラグインをホストしている場合、新しい NPRuntime インターフェイス用のカスタムサポートを記述するか、HTML コントロールを埋め込んだ後にそのコントロール内に Flash Player を埋め込むことができます。HTML コントロールを埋め込んだ場合、ネイティブコンテナアプリケーションに対する JavaScript インターフェイスを通じて Flash Player と通信できます。</p>
+     
+     <p><b>メモ：</b>ブラウザーで実行される<i>ローカル</i>コンテンツでは、SWF ファイルおよび含んでいる Web ページ（存在する場合）が信頼できるローカルなセキュリティ Sandbox 内にある場合にのみ、<codeph>ExternalInterface.call()</codeph> メソッドの呼び出しが許可されます。SWF ファイルがこのメソッドを使用しないようにすることもできます。その場合は、SWF コンテンツを含んでいる HTML ページに <codeph>object</codeph> タグおよび <codeph>embed</codeph> タグの <codeph>allowNetworking</codeph> パラメーターを設定します。詳細については、Flash Player デベロッパーセンターのトピック：<xref href="http://www.adobe.com/go/devnet_security_jp" scope="external">セキュリティ</xref>を参照してください。</p>
+     
+     <p>Flash Player 10 および Flash Player 9 Update 5 では、ポップアップブロッカーが有効になっている場合、一部の Web ブラウザーでこのメソッドが制限されます。このシナリオでは、このメソッドの呼び出しはマウスのクリックやキー入力などのユーザーイベントに応じて、イベントハンドラーで呼び出した場合にのみ成功します。</p>
+     
+     </apiDesc></apiOperationDetail></apiOperation><apiValue id="flash.external:ExternalInterface:marshallExceptions"><apiName>marshallExceptions</apiName><shortdesc>
+     外部インターフェイスによって、ActionScript 例外を現在のブラウザーに、JavaScript 例外を Flash Player に渡そうとする必要があるかどうかを示します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiData>false</apiData><apiValueClassifier>Boolean</apiValueClassifier><apiTipTexts><apiTipText>ActionScript と JavaScript との間で例外を渡します。     
+     </apiTipText></apiTipTexts></apiValueDef><apiDesc>
+     外部インターフェイスによって、ActionScript 例外を現在のブラウザーに、JavaScript 例外を Flash Player に渡そうとする必要があるかどうかを示します。ActionScript で JavaScript 例外をキャッチし、JavaScript で ActionScript 例外をキャッチするには、このプロパティを明示的に <codeph>true</codeph> に設定する必要があります。
+     
+     </apiDesc><example conref="examples\ExternalInterface.marshallExceptions.1.as"> 次の例では、ActionScript 関数を作成し、<codeph>addCallback()</codeph> メソッドを使用して、埋め込み先のブラウザーと共にその関数を登録します。新しい関数は、ブラウザーで実行される JavaScript コードでキャッチできるように、例外をスローします。この例には、<codeph>try..catch</codeph> ステートメントも含まれており、<codeph>throwit()</codeph> 関数が呼び出されたときにブラウザーからスローされるすべての例外をキャッチします。
+<codeblock>
+
+package
+{
+    import flash.external.*
+    import flash.net.*;
+    import flash.display.*;
+    import flash.system.System;
+    public class ext_test extends Sprite {
+    function ext_test():void {
+        ExternalInterface.marshallExceptions = true;
+        ExternalInterface.addCallback("g", g);
+
+        try {
+        ExternalInterface.call("throwit");
+        } catch(e:Error) {
+        trace(e)
+        }
+    }
+    function g() { throw new Error("exception from actionscript!!!!") }
+    }
+}
+</codeblock></example></apiValueDetail><related-links><link href="flash.external.xml#ExternalInterface/addCallBack()"><linktext>addCallBack()</linktext></link><link href="../../statements.html#try..catch..finally"><linktext>try..catch..finally ステートメント</linktext></link></related-links></apiValue><apiValue id="flash.external:ExternalInterface:available:get"><apiName>available</apiName><shortdesc>
+     この Player が外部インターフェイスを備えたコンテナに含まれているかどうかを示します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier><apiTipTexts><apiTipText>Flash Player が外部インターフェイスを備えたコンテナに含まれているかどうかを示します。
+     
+     </apiTipText></apiTipTexts></apiValueDef><apiDesc>
+     この Player が外部インターフェイスを備えたコンテナに含まれているかどうかを示します。外部インターフェイスが利用できる場合、このプロパティは <codeph>true</codeph> になります。利用できない場合には <codeph>false</codeph> になります。
+     
+     <p><b>注意：</b>HTML で外部 API を使用する場合、JavaScript メソッドを呼び出そうとする前に、HTML のロードが完了していることを必ず確認する必要があります。</p>
+     
+     </apiDesc><example>次の例では、<codeph>available</codeph> プロパティを使用して、外部インターフェイスを備えたコンテナ内に Player が含まれているかどうかを確認します。
+     <codeblock rev="3.0">
+     package {
+       import flash.text.TextField;
+       import flash.display.MovieClip;
+       import flash.external.ExternalInterface;
+     
+       public class extint_test extends MovieClip {
+         public function extint_test() {
+           var isAvailable:Boolean = ExternalInterface.available;
+           var availTxt:TextField = new TextField();
+           availTxt.text = isAvailable.toString();
+           addChild(availTxt);
+         }
+       }
+     }
+     </codeblock>
+     
+      
+      </example></apiValueDetail></apiValue><apiValue id="flash.external:ExternalInterface:objectID:get"><apiName>objectID</apiName><shortdesc>
+     Internet Explorer の場合は object タグの id 属性を返し、Netscape の場合は embed タグの name 属性を返します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+     Internet Explorer の場合は <codeph>object</codeph> タグの <codeph>id</codeph> 属性を返し、Netscape の場合は <codeph>embed</codeph> タグの <codeph>name</codeph> 属性を返します。
+     </apiDesc></apiValueDetail></apiValue></apiClassifier></apiPackage>

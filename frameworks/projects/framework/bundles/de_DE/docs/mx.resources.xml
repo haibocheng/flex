@@ -11,17 +11,7 @@
       </apiDesc></apiParam></apiConstructorDef><apiDesc>
       Konstruktor.
      
-      </apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="mx.resources:Locale:getCurrent"><apiName>getCurrent</apiName><shortdesc>
-      Gibt ein Gebietsschemaobjekt zurück, wenn Sie Ihre Anwendung für ein einziges Gebietsschema kompiliert haben.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiDesc>Gibt ein Gebietsschemaobjekt zurück.
-      
-      </apiDesc><apiOperationClassifier>mx.resources:Locale</apiOperationClassifier></apiReturn><apiParam><apiItemName>sm</apiItemName><apiOperationClassifier>mx.managers:ISystemManager</apiOperationClassifier><apiDesc>Der aktuelle SystemManager.
-     
-      </apiDesc></apiParam><apiDeprecated replacement="ResourceManager.localeChain" sinceVersion="3.0"/></apiOperationDef><apiDesc>
-      Gibt ein Gebietsschemaobjekt zurück, wenn Sie Ihre Anwendung für ein einziges Gebietsschema kompiliert haben. Andernfalls wird <codeph>null</codeph> zurückgegeben.
-      
-      <p>Diese Methode ist veraltet, da das Flex-Framework jetzt ResourceBundles für mehrere Gebietsschemas in derselben Anwendung unterstützt. Sie können die <codeph>getLocale()</codeph>-Methode des IResourceManager verwenden, um herauszufinden, für welches Gebietsschema ResourceManager ResourceBundles hat. Sie können die <codeph>localeChain</codeph>-Eigenschaft des IResourceManager verwenden, um zu ermitteln, welches Gebietsschema ResourceManager nach Ressourcen durchsucht.</p>
-     
-      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.resources:Locale:toString"><apiName>toString</apiName><shortdesc>
+      </apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="mx.resources:Locale:toString"><apiName>toString</apiName><shortdesc>
       Gibt den Gebietsschemastring zurück, welcher benutzt wurde, um die Gebietsschemainstanz zu erstellen.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Gibt den Gebietsschemastring zurück, welcher benutzt wurde, um die Gebietsschemainstanz zu erstellen.
       
       </apiDesc><apiType value="String"/></apiReturn></apiOperationDef><apiDesc>
@@ -339,7 +329,7 @@
       </apiDesc></apiOperationDetail><related-links><link href="mx.resources.xml#IResourceBundle"><linktext>mx.resources.IResourceBundle</linktext></link></related-links></apiOperation><apiOperation id="mx.resources:IResourceManager:mx.resources:IResourceManager:unloadResourceModule"><apiName>unloadResourceModule</apiName><shortdesc>
       Entlädt ein geladenes Ressourcenmodul.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>url</apiItemName><apiType value="String"/><apiDesc>Die URL, die zum Laden des Ressourcenmoduls verwendet wurde.
      
-      </apiDesc></apiParam><apiParam><apiItemName>update</apiItemName><apiType value="Boolean"/><apiData>true</apiData><apiDesc>Gibt an, ob die <codeph>update()</codeph>-Methode aufgerufen werden soll, wenn das Modul den Ladevorgang beendet hat.
+      </apiDesc></apiParam><apiParam><apiItemName>update</apiItemName><apiType value="Boolean"/><apiData>true</apiData><apiDesc>Gibt an, ob die <codeph>update()</codeph>-Methode aufgerufen werden soll, wenn das Modul den Entladevorgang beendet hat.
       
       </apiDesc></apiParam></apiOperationDef><apiDesc>
       Entlädt ein geladenes Ressourcenmodul.
@@ -396,21 +386,7 @@
       </apiDesc></apiParam></apiConstructorDef><apiDesc>
       Konstruktor.
      
-      </apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="mx.resources:ResourceBundle:getBoolean"><apiName>getBoolean</apiName><shortdesc>
-      Ruft einen booleschen Wert von einem ResourceBundle ab.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Der Wert der festgelegten Ressource als boolescher Wert.
-      
-      </apiDesc><apiType value="Boolean"/></apiReturn><apiParam><apiItemName>key</apiItemName><apiType value="String"/><apiDesc>Ein String, der eine Ressource in diesem ResourceBundle identifiziert.
-     
-      </apiDesc></apiParam><apiParam><apiItemName>defaultValue</apiItemName><apiType value="Boolean"/><apiData>true</apiData><apiDesc>Der zurückzugebende Wert, wenn der Ressourcenwert nach der Konvertierung in Kleinbuchstaben weder der String <codeph>"true"</codeph> noch der String <codeph>"false"</codeph> ist. Dieser Parameter ist optional, sein Standardwert ist <codeph>true</codeph>.
-     
-      </apiDesc></apiParam><apiDeprecated replacement="ResourceManager.getInstance().getBoolean()" sinceVersion="3.0"/></apiOperationDef><apiDesc>
-      Ruft einen booleschen Wert von einem ResourceBundle ab.
-     
-      <p>Wenn die Ressource, die vom <codeph>key</codeph>-Parameter festgelegt wird, in diesem Bundle nicht existiert, gibt diese Methode einen Fehler aus.</p>
-     
-      <p>Diese Methode ist veraltet, denn auf alle Ressourcen wird jetzt über die Methoden der IResourceManager-Schnittstelle zugegriffen. Sie sollten Ihren Code so konvertieren, dass stattdessen die <codeph>getBoolean()</codeph>-Methode des IResourceManager aufgerufen wird. Alle Klassen, die UIComponent, den Formatierer oder Validator erweitern, besitzen eine <codeph>resourceManager</codeph>-Eigenschaft, welche einen Verweis auf das Objekt bereitstellt, welches die Schnittstelle implementiert. Andere Klassen können die <codeph>ResourceManager.getInstance()</codeph>-Methode aufrufen, um dieses Objekt zu beziehen.</p>
-     
-      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.resources:ResourceBundle:protected:getContent"><apiName>getContent</apiName><shortdesc>
+      </apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="mx.resources:ResourceBundle:protected:getContent"><apiName>getContent</apiName><shortdesc>
       Wenn eine Eigenschaftendatei in ein ResourceBundle kompiliert wurde, generiert der MXML-Compiler automatisch eine Unterklasse des ResourceBundle.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiDesc>Das Objekt, welches Schlüssel-/Wertepaare für die Ressourcen des Bundle enthält.
       
       </apiDesc><apiType value="Object"/></apiReturn></apiOperationDef><apiDesc>
@@ -418,68 +394,6 @@
      
       <p>Wenn Sie Ihre eigene ResourceBundle-Instanz erzeugen, können Sie die Schlüssel-/Wertepaare des <codeph>content</codeph>-Objekts festlegen.</p>
       
-      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.resources:ResourceBundle:getNumber"><apiName>getNumber</apiName><shortdesc>
-      Ruft eine Zahl vom ResourceBundle ab.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Der Wert der festgelegten Ressource als Zahl.
-      
-      </apiDesc><apiType value="Number"/></apiReturn><apiParam><apiItemName>key</apiItemName><apiType value="String"/><apiDesc>Ein String, der eine Ressource in diesem ResourceBundle identifiziert.
-     
-      </apiDesc></apiParam><apiDeprecated replacement="ResourceManager.getInstance().getNumber()" sinceVersion="3.0"/></apiOperationDef><apiDesc>
-      Ruft eine Zahl vom ResourceBundle ab.
-     
-      <p>Wenn die Ressource, die vom <codeph>key</codeph>-Parameter festgelegt wird, in diesem Bundle nicht existiert, gibt diese Methode einen Fehler aus.</p>
-     
-      <p>Diese Methode ist veraltet, denn auf alle Ressourcen wird jetzt über die Methoden der IResourceManager-Schnittstelle zugegriffen. Sie sollten Ihren Code konvertieren, um stattdessen die <codeph>getNumber()</codeph>, <codeph>getInt()</codeph> oder <codeph>getUint()</codeph>-Methoden des IResourceManager aufzurufen. Alle Klassen, die UIComponent, den Formatierer oder Validator erweitern, besitzen eine <codeph>resourceManager</codeph>-Eigenschaft, welche einen Verweis auf das Objekt bereitstellt, welches die Schnittstelle implementiert. Andere Klassen können die <codeph>ResourceManager.getInstance()</codeph>-Methode aufrufen, um dieses Objekt zu beziehen.</p>
-     
-      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.resources:ResourceBundle:getObject"><apiName>getObject</apiName><shortdesc>
-      Ruft ein Objekt vom ResourceBundle ab.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Ein Objekt, welches dem Wert einer festgelegten Ressource entspricht.
-      
-      </apiDesc><apiType value="Object"/></apiReturn><apiParam><apiItemName>key</apiItemName><apiType value="String"/><apiDesc>Ein String, der eine Ressource in diesem ResourceBundle identifiziert.
-     
-      </apiDesc></apiParam><apiDeprecated replacement="ResourceManager.getInstance().getObject()" sinceVersion="3.0"/></apiOperationDef><apiDesc>
-      Ruft ein Objekt vom ResourceBundle ab.
-     
-      <p>Wenn die Ressource, die vom <codeph>key</codeph>-Parameter festgelegt wird, in diesem Bundle nicht existiert, gibt diese Methode einen Fehler aus.</p>
-     
-      <p>Diese Methode ist veraltet, denn auf alle Ressourcen wird jetzt über die Methoden der IResourceManager-Schnittstelle zugegriffen. Sie sollten Ihren Code so konvertieren, dass stattdessen die <codeph>getObject()</codeph> oder <codeph>getClass()</codeph>-Methode des IResourceManager aufgerufen wird. Alle Klassen, die UIComponent, den Formatierer oder Validator erweitern, besitzen eine <codeph>resourceManager</codeph>-Eigenschaft, welche einen Verweis auf das Objekt bereitstellt, welches die Schnittstelle implementiert. Andere Klassen können die <codeph>ResourceManager.getInstance()</codeph>-Methode aufrufen, um dieses Objekt zu beziehen.</p>
-     
-      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.resources:ResourceBundle:getResourceBundle"><apiName>getResourceBundle</apiName><shortdesc>
-      Wenn Sie Ihre Anwendung für ein einziges Gebietsschema kompiliert haben, kann diese Methode ein ResourceBundle zurückgeben, wenn ein Bundle-Name bereitgestellt wird. Diese Methode ist veraltet, da das Flex-Framework jetzt ResourceBundles für mehrere Gebietsschemas in derselben Anwendung unterstützt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiDesc>Das ResourceBundle, welches mit dem festgelegten Namen und der Domäne übereinstimmt.
-      
-      </apiDesc><apiOperationClassifier>mx.resources:ResourceBundle</apiOperationClassifier></apiReturn><apiParam><apiItemName>baseName</apiItemName><apiType value="String"/><apiDesc>Der Name der Ressource, die zurückgegeben werden soll.
-      
-      </apiDesc></apiParam><apiParam><apiItemName>currentDomain</apiItemName><apiType value="flash.system:ApplicationDomain"/><apiData>null</apiData><apiDesc>ApplicationDomain, in welcher das ResourceBundle liegt.
-     
-      </apiDesc></apiParam><apiDeprecated replacement="ResourceManager.getInstance().getResourceBundle()" sinceVersion="3.0"/></apiOperationDef><apiDesc>
-      Wenn Sie Ihre Anwendung für ein einziges Gebietsschema kompiliert haben, kann diese Methode ein ResourceBundle zurückgeben, wenn ein ResourceBundle-Name bereitgestellt wird
-     
-      <p>Diese Methode ist veraltet, da das Flex-Framework jetzt ResourceBundles für mehrere Gebietsschemas in derselben Anwendung unterstützt. Sie können die <codeph>getResourceBundle()</codeph>-Methode des IResourceManager verwenden, um ein ResourceBundle abzurufen, wenn Sie den Bundle-Namen und das Gebietsschema kennen. Sie sollten jedoch auf Ressourcen nicht mehr direkt von einem ResourceBundle aus zugreifen. Auf alle Ressourcen sollte jetzt über Methoden der IResourceManager-Schnittstelle zugegriffen werden, z. B. <codeph>getString()</codeph>. Alle Klassen, die UIComponent, den Formatierer oder Validator erweitern, besitzen eine <codeph>resourceManager</codeph>-Eigenschaft, welche einen Verweis auf das Objekt bereitstellt, welches die Schnittstelle implementiert. Andere Klassen können <codeph>ResourceManager.getInstance()</codeph> aufrufen, um dieses Objekt zu beziehen.</p>
-      
-      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.resources:ResourceBundle:getString"><apiName>getString</apiName><shortdesc>
-      Ruft einen String von einem ResourceBundle ab.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Der Wert der festgelegten Ressource als String.
-      
-      </apiDesc><apiType value="String"/></apiReturn><apiParam><apiItemName>key</apiItemName><apiType value="String"/><apiDesc>Ein String, der eine Ressource in diesem ResourceBundle identifiziert.
-     
-      </apiDesc></apiParam><apiDeprecated replacement="ResourceManager.getInstance().getString()" sinceVersion="3.0"/></apiOperationDef><apiDesc>
-      Ruft einen String von einem ResourceBundle ab.
-     
-      <p>Wenn die Ressource, die vom <codeph>key</codeph>-Parameter festgelegt wird, in diesem Bundle nicht existiert, gibt diese Methode einen Fehler aus.</p>
-     
-      <p>Diese Methode ist veraltet, denn auf alle Ressourcen wird jetzt über die Methoden der IResourceManager-Schnittstelle zugegriffen. Sie sollten Ihren Code so konvertieren, dass stattdessen die <codeph>getString()</codeph>-Methode des IResourceManager aufgerufen wird. Alle Klassen, die UIComponent, den Formatierer oder Validator erweitern, besitzen eine <codeph>resourceManager</codeph>-Eigenschaft, welche einen Verweis auf das Objekt bereitstellt, welches die Schnittstelle implementiert. Andere Klassen können die <codeph>ResourceManager.getInstance()</codeph>-Methode aufrufen, um dieses Objekt zu beziehen.</p>
-     
-      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.resources:ResourceBundle:getStringArray"><apiName>getStringArray</apiName><shortdesc>
-      Ruft ein Array von Strings von einem ResourceBundle ab.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Der Wert einer festgelegten Ressource als Array von Strings.
-      
-      </apiDesc><apiType value="Array"/></apiReturn><apiParam><apiItemName>key</apiItemName><apiType value="String"/><apiDesc>Ein String, der eine Ressource in diesem ResourceBundle identifiziert.
-     
-      </apiDesc></apiParam><apiDeprecated replacement="ResourceManager.getInstance().getStringArray()" sinceVersion="3.0"/></apiOperationDef><apiDesc>
-      Ruft ein Array von Strings von einem ResourceBundle ab.
-     
-      <p>Das Array wird in der Annahme erstellt, dass der aktuelle Wert der Ressource ein String ist, der durch Kommas getrennte Elemente enthält, z. B. <codeph>"India, China, Japan"</codeph>. Nachdem der String an den Kommas getrennt wurde, werden sämtliche Leerzeichen vor und hinter den Elementen entfernt.</p>
-     
-      <p>Wenn die Ressource, die vom <codeph>key</codeph>-Parameter festgelegt wird, in diesem Bundle nicht existiert, gibt diese Methode einen Fehler aus.</p>
-     
-      <p>Diese Methode ist veraltet, denn auf alle Ressourcen wird jetzt über die Methoden der IResourceManager-Schnittstelle zugegriffen. Sie sollten Ihren Code so konvertieren, dass stattdessen die <codeph>getStringArray()</codeph>-Methode des IResourceManager aufgerufen wird. Alle Klassen, die UIComponent, den Formatierer oder Validator erweitern, besitzen eine <codeph>resourceManager</codeph>-Eigenschaft, welche einen Verweis auf das Objekt bereitstellt, welches die Schnittstelle implementiert. Andere Klassen können <codeph>ResourceManager.getInstance()</codeph> aufrufen, um dieses Objekt zu beziehen.</p>
-     
       </apiDesc></apiOperationDetail></apiOperation><apiValue id="mx.resources:ResourceBundle:bundleName:get"><apiName>bundleName</apiName><shortdesc conref="mx.resources.IResourceBundle#bundleName">
       </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="String"/></apiValueDef><apiDesc conref="mx.resources.IResourceBundle#bundleName">
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.resources:ResourceBundle:content:get"><apiName>content</apiName><shortdesc conref="mx.resources.IResourceBundle#content">

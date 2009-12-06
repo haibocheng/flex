@@ -1294,9 +1294,52 @@ public class PlayerSession implements Session, DProtocolNotifierIF, Runnable
 			return DValue.forPrimitive(Value.UNDEFINED);
 	}
 
+	/*
+	 * @see flash.tools.debugger.Session#callFunction(flash.tools.debugger.Value, java.lang.String, flash.tools.debugger.Value[])
+	 */
 	public Value callFunction(Value thisValue, String funcname, Value[] args) throws PlayerDebugException
 	{
+		Value retval = callPseudoFunction(thisValue, funcname, args);
+		if (retval != null) {
+			return retval;
+		}
+
 		return callFunction(thisValue, false, funcname, args);
+	}
+
+	/**
+	 * Checks to see if the function being called is a debugger pseudofunction such as
+	 * $obj(), and if so, handles that directly rather than calling the player.  Returns
+	 * null if the function being called is not a pseudofunction.
+	 */
+	private Value callPseudoFunction(Value thisValue, String funcname, Value[] args) throws PlayerDebugException{
+		if (thisValue.getType() == VariableType.UNDEFINED || thisValue.getType() == VariableType.NULL) {
+			if ("$obj".equals(funcname)) { //$NON-NLS-1$
+				return callObjPseudoFunction(args);
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Handles a call to the debugger pseudofunction $obj() -- e.g. $obj(1234) returns
+	 * a pointer to the object with id 1234.
+	 */
+	private Value callObjPseudoFunction(Value[] args) throws PlayerDebugException {
+		if (args.length != 1) {
+			return DValue.forPrimitive(DValue.UNDEFINED);
+		}
+		double arg = ECMA.toNumber(this, args[0]);
+		long id = (long) arg;
+		if (id != arg) {
+			return DValue.forPrimitive(DValue.UNDEFINED);
+		}
+		DValue value = m_manager.getValue(id);
+		if (value == null) {
+			return DValue.forPrimitive(DValue.UNDEFINED);
+		}
+		return value;
 	}
 
 	public Value callConstructor(String funcname, Value[] args) throws PlayerDebugException

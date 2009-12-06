@@ -26,6 +26,7 @@ import mx.core.mx_internal;
 import mx.core.UIComponent;
 import mx.events.PropertyChangeEvent;
 
+import spark.events.SkinPartEvent;
 import spark.utils.FTETextUtil;
 
 use namespace mx_internal;
@@ -206,7 +207,7 @@ public class SkinnableComponent extends UIComponent
     //----------------------------------
     
     /**
-     *  An Array that lists the skin parts that will be
+     *  An Array that lists the skin parts 
      *  excluded from bitmaps captured and used to
      *  show focus.  This list is only used if
      *  the skin has a null focusSkinExclusions property.
@@ -455,7 +456,7 @@ public class SkinnableComponent extends UIComponent
     {
         if (skin)
             skin.setActualSize(unscaledWidth, unscaledHeight);
-    }
+     }
 
     /**
      *  @private
@@ -539,17 +540,9 @@ public class SkinnableComponent extends UIComponent
     {
         return null; 
     }
-	
-	/**
-	 *  Need a way to get the currentSkinState
-	 */
-	mx_internal function getCurrentSkinStateInternal():String
-	{
-		return getCurrentSkinState();
-	}
     
     /**
-     *  Marks the component so that the new state of the skin will get set
+     *  Marks the component so that the new state of the skin is set
      *  during a later screen update.
      *  
      *  @langversion 3.0
@@ -797,7 +790,15 @@ public class SkinnableComponent extends UIComponent
      *  @productversion Flex 4
      */
     protected function partAdded(partName:String, instance:Object):void
-    {   
+    {
+		// Dispatch a partAdded event.
+		// This event is an internal implementation detail subject to change.
+		// The accessibility implementation classes listen for this to know
+		// when to add their event listeners to skin parts being added.
+		var event:SkinPartEvent = new SkinPartEvent(SkinPartEvent.PART_ADDED);
+		event.partName = partName;
+		event.instance = instance;
+		dispatchEvent(event);
     }
 
     /**
@@ -820,6 +821,14 @@ public class SkinnableComponent extends UIComponent
      */
     protected function partRemoved(partName:String, instance:Object):void
     {       
+		// Dispatch a partRemoved event.
+		// This event is an internal implementation detail subject to change.
+		// The accessibility implementation classes listen for this to know
+		// when to remove their event listeners from skin parts being removed
+		var event:SkinPartEvent = new SkinPartEvent(SkinPartEvent.PART_REMOVED);
+		event.partName = partName;
+		event.instance = instance;
+		dispatchEvent(event);
     }
     
     //--------------------------------------------------------------------------

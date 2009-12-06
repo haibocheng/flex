@@ -1,0 +1,1908 @@
+<?xml version="1.0"?>
+<apiPackage id="flash.system"><apiName>flash.system</apiName><apiDetail/><apiClassifier id="flash.system:Security"><apiName>Security</apiName><shortdesc>
+ 通过使用 Security 类，可以指定不同域中的内容相互通信的方式。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>Security, XMLNode object, built-in class
+ </keyword></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ 通过使用 Security 类，可以指定不同域中的内容相互通信的方式。
+ 
+ </apiDesc><example conref="examples\SecurityExample.as"> 下例显示如何使用 Sprite 对象上的 <codeph>click</codeph> 事件显示“Flash Player 设置”中的“本地存储设置”面板。使用 <codeph>draw()</codeph> 将一个橙色框添加到舞台上。在 <codeph>draw()</codeph> 中，通过指示 Flash Player 打开其“本地存储设置”面板，将 <codeph>click</codeph> 事件侦听器以名称 <codeph>clickHandler()</codeph> 添加进来，它对应于 <codeph>click</codeph> 事件。
+<codeblock>
+package {
+    import flash.display.Sprite;
+    import flash.text.TextField;
+    import flash.events.*;
+    import flash.system.Security;
+    import flash.system.SecurityPanel;
+
+    public class SecurityExample extends Sprite {
+        private var bgColor:uint = 0xFFCC00;
+        private var size:uint = 100;
+
+        public function SecurityExample() {
+            draw();
+        }
+
+        private function draw():void {
+            var child:Sprite = new Sprite();
+            child.graphics.beginFill(bgColor);
+            child.graphics.drawRect(0, 0, size, size);
+            child.graphics.endFill();
+            child.buttonMode = true;
+
+            var label:TextField = new TextField();
+            label.text = "settings";
+            label.selectable = false;
+            label.mouseEnabled = false;
+            child.addChild(label);
+
+            child.addEventListener(MouseEvent.CLICK, clickHandler);
+            addChild(child);
+        }
+
+        private function clickHandler(event:MouseEvent):void {
+            Security.showSettings(SecurityPanel.LOCAL_STORAGE);
+        }
+    }
+}
+</codeblock></example></apiClassifierDetail><apiOperation id="flash.system:Security:allowDomain"><apiName>allowDomain</apiName><shortdesc>
+     允许所标识的域中的 SWF 文件访问包含 allowDomain() 调用的 SWF 文件中的对象和变量。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>Security, Security.allowDomain, allowDomain
+     </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiException><apiDesc>从 AIR 应用程序安全沙箱中的代码调用此方法会引发 SecurityError 异常。应用程序安全沙箱以外的内容不能跨脚本访问应用程序安全沙箱中的内容。 
+     
+     </apiDesc><apiItemName>SecurityError</apiItemName><apiOperationClassifier>SecurityError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>domains</apiItemName><apiType value="restParam"/><apiDesc>一个或多个字符串或者 URLRequest 对象，它们可命名一些域，您希望允许从这些域中进行访问。可指定特殊域“~~”，以允许从所有域进行访问。  
+     
+     <p product="flashonly">为了从通过在 Flash 创作工具中将“本地回放安全性”选项设为“只访问网络”来进行发布的本地 SWF 文件访问非本地 SWF 文件，指定“~~”是唯一的方法。</p>
+     
+     </apiDesc></apiParam><apiTipTexts><apiTipText>使 SWF 文件和 HTML 文件访问执行调用的 SWF 文件中的对象和变量。
+     
+     </apiTipText></apiTipTexts></apiOperationDef><apiDesc>
+     <ph platform="actionscript">允许所标识的域中的 SWF 文件访问包含 <codeph>allowDomain()</codeph> 调用的 SWF 文件中的对象和变量。</ph>
+     
+     <p platform="javascript">此方法适用于跨脚本访问 ActionScript 3.0 代码（在 SWF 内容中）。它不适用于基于 HTML 的 AIR 应用程序中运行的 JavaScript 代码。</p>
+     
+     <p platform="actionscript"><i>注意：</i>从 AIR 应用程序沙箱中的代码调用此方法会引发 SecurityError 异常。应用程序安全域以外的内容不能直接跨脚本访问应用程序沙箱中的内容。不过，应用程序沙箱以外的内容可以使用沙箱桥与应用程序安全沙箱中的内容进行通信。</p>
+     
+     <p platform="actionscript">如果两个 SWF 文件来自同一个域（例如，http://mysite.com/swfA.swf 和 http://mysite.com/swfB.swf），则 swfA.swf 可以检查和修改 swfB.swf 中的变量、对象、属性、方法等，而且 swfB.swf 也可以对 swfA.swf 执行同样的操作。这被称为<i>跨影片脚本编写</i>或<i>跨脚本编写</i>。</p>
+     
+     <p platform="actionscript">如果两个 SWF 文件来自不同的域（例如，http://siteA.com/swfA.swf 和 http://siteB.com/siteB.swf），则在默认情况下，Flash Player 既不允许 swfA.swf 编写 swfB.swf 的脚本，也不允许 swfB.swf 编写 swfA.swf 的脚本。通过调用 <codeph>Security.allowDomain()</codeph>，一个 SWF 文件可授予其它域中的 SWF 文件编写其脚本的权限。这称为<i>跨域脚本编写</i>。通过调用 <codeph>Security.allowDomain("siteA.com")</codeph>，siteB.swf 可授予 siteA.swf 编写其脚本的权限。</p>
+     
+     <p platform="actionscript">在任何跨域的情况下，明确所涉及的双方非常重要。为了便于进行此讨论，我们将执行跨脚本编写的一方称为<i>访问方</i>（通常是执行访问的 SWF），将另一方称为<i>被访问方</i>（通常是被访问的 SWF 文件）。当 siteA.swf 编写 siteB.swf 的脚本时，siteA.swf 是访问方，siteB.swf 是被访问方。</p>
+     
+     <p platform="actionscript"><adobeimage alt="跨域图表" href="../../images/crossScript_load.jpg"/></p>
+     
+     <p platform="actionscript">使用 <codeph>allowDomain()</codeph> 建立的跨域权限是不对称的。在上一个示例中，siteA.swf 可以编写 siteB.swf 的脚本，但 siteB.swf 无法编写 siteA.swf 的脚本，这是因为 siteA.swf 未调用 <codeph>allowDomain()</codeph> 来授予 siteB.com 中的 SWF 文件编写其脚本的权限。可以通过让两个 SWF 文件都调用 <codeph>allowDomain()</codeph> 来设置对称权限。</p>
+     
+     <p platform="actionscript">除了防止 SWF 文件受到其它 SWF 文件发起的跨域脚本编写影响外，Flash Player 还可防止 SWF 文件受到 HTML 文件发起的跨域脚本编写的影响。可以使用旧版本的 浏览器函数（如 <codeph>SetVariable</codeph>）或通过 <codeph>ExternalInterface.addCallback()</codeph> 创建的回调执行 HTML 到 SWF 的脚本编写。当 HTML 到 SWF 的脚本编写跨域时，被访问的 SWF 文件必须调用 <codeph>allowDomain()</codeph>（这与访问方是一个 SWF 文件时一样），否则操作将失败。</p>
+     
+     <p platform="actionscript">如果将 IP 地址指定为 <codeph>allowDomain()</codeph> 的参数，则不允许所有源自指定 IP 地址的访问方进行访问。相反，只允许 URL 中包含指定 IP 地址的访问方进行访问，而不是允许其域名映射到该 IP 地址的访问方进行访问。</p> 
+     
+     <p platform="actionscript"><b>特定于版本的差异</b></p>
+     <p platform="actionscript">Flash Player 的跨域安全性规则随着版本的升级发生了演变。下表概述了这些差异。</p>
+     
+     <adobetable class="innertable" platform="actionscript">
+     
+     
+     
+     
+     
+     <tgroup cols="5"><thead><row><entry>涉及跨脚本编写的最新 SWF 版本</entry><entry>是否需要 <codeph>allowDomain()</codeph>？</entry><entry>是否需要 <codeph>allowInsecureDomain()</codeph>？</entry><entry>哪个 SWF 文件必须调用 <codeph>allowDomain()</codeph> 或 <codeph>allowInsecureDomain()</codeph>？</entry><entry>在 <codeph>allowDomain()</codeph> 或 <codeph>allowInsecureDomain()</codeph> 中可以指定哪些内容？</entry></row></thead><tbody><row>
+       <entry align="center">第 5 版或更低版本</entry>
+       <entry>否</entry>
+       <entry align="center">否</entry>
+       <entry align="center">不可用</entry>
+       <entry align="center">不可用</entry>
+     </row><row>
+       <entry align="center">6</entry>
+       <entry>是的，如果超级域不匹配</entry>
+       <entry align="center">否</entry>
+       <entry>被访问的 SWF 文件，或者任何与被访问的 SWF 文件具有相同超级域的 SWF 文件</entry>
+       <entry><ul>
+         <li>基于文本的域 (mysite.com)</li>
+         <li>IP 地址 (192.168.1.1)</li>
+       </ul></entry>
+     </row><row>
+       <entry align="center">7</entry>
+       <entry>是的，如果域不是完全匹配</entry>
+       <entry>是的，如果执行 HTTP 到 HTTPS 的访问（即使域完全匹配）</entry>
+       <entry>被访问的 SWF 文件，或者任何与被访问的 SWF 文件具有完全相同域的 SWF 文件</entry>
+       <entry><ul>
+         <li>基于文本的域 (mysite.com)</li>
+         <li>IP 地址 (192.168.1.1)</li>
+       </ul></entry>
+     </row><row>
+       <entry align="center">第 8 版或更高版本</entry>
+       <entry>是的，如果域不是完全匹配</entry>
+       <entry>是的，如果执行 HTTP 到 HTTPS 的访问（即使域完全匹配）</entry>
+       <entry>被访问的 SWF 文件</entry>
+       <entry><ul>
+         <li>基于文本的域 (mysite.com)</li>
+         <li>IP 地址 (192.168.1.1)</li>
+         <li>通配符 (~~)</li>
+       </ul></entry>
+     </row></tbody></tgroup></adobetable>
+      
+     <p platform="actionscript">控制 Flash Player 行为的版本是 <i>SWF 版本</i>（SWF 文件的发布版本），而不是 Flash Player 本身的版本。例如，当 Flash Player 8 正在播放为第 7 版发布的 SWF 文件时，它应用与第 7 版一致的行为。这种做法可确保播放器升级不会更改已部署 SWF 文件中的 <codeph>Security.allowDomain()</codeph> 的行为。</p>
+     
+     <p platform="actionscript">上表中的版本列显示了涉及跨脚本编写操作的最新 SWF 版本。Flash Player 根据执行访问的 SWF 文件的版本或被访问的 SWF 文件的版本（以两者中的较高版本为准）来确定其行为。</p>
+     
+     <p platform="actionscript">下面的段落提供有关涉及 <codeph>Security.allowDomain()</codeph> 的 Flash Player 安全性更改的详细信息。</p>
+     
+     <p platform="actionscript"><b>第 5 版</b>。没有跨域脚本编写限制。</p>
+     
+     <p platform="actionscript"><b>第 6 版</b>。引入了跨域脚本编写安全性。默认情况下，Flash Player 禁止跨域脚本编写；<codeph>Security.allowDomain()</codeph> 可允许跨域脚本编写。为了确定两个文件是否处于同一域中，Flash Player 将使用每个文件的超级域（即文件 URL 中的完全主机名，去掉第一段，最少剩两段）。例如，www.mysite.com 的超级域为 mysite.com。来自 www.mysite.com 和 store.mysite.com 的 SWF 文件无需调用 <codeph>Security.allowDomain()</codeph> 就可以相互编写脚本。</p>
+     
+     <p platform="actionscript"><b>第 7 版</b>。超级域匹配更改为域完全匹配。仅在这两个文件的 URL 中的主机名完全相同时才允许它们相互编写脚本；否则需要调用 <codeph>Security.allowDomain()</codeph>。默认情况下，不再允许从非 HTTPS URL 加载的文件编写从 HTTPS URL 加载的文件的脚本，即使这些文件从完全相同的域加载也是如此。由于非 HTTPS 文件容易在下载的过程中被修改，而经过恶意修改的非 HTTPS 文件能破坏 HTTPS 文件，此限制可防止这样的篡改，所以有助于保护 HTTPS 文件。引入了 <codeph>Security.allowInsecureDomain()</codeph> 以允许被访问的 HTTPS SWF 文件自主禁用此限制，但不鼓励使用 <codeph>Security.allowInsecureDomain()</codeph>。</p>
+     
+     <p platform="actionscript"><b>第 8 版</b>。主要有两项更改：</p>
+     
+     <ul platform="actionscript">
+       <li>现在，只有被访问的 SWF 文件是调用 <codeph>Security.allowDomain()</codeph> 的 SWF 文件时，调用 <codeph>Security.allowDomain()</codeph> 才允许跨脚本编写操作。也就是说，现在，调用 <codeph>Security.allowDomain()</codeph> 的 SWF 文件仅允许对其自身的访问。在以前的版本中，调用 <codeph>Security.allowDomain()</codeph> 允许跨脚本编写操作，其中被访问的 SWF 文件可以是与名为 <codeph>Security.allowDomain()</codeph> 的 SWF 文件在同一个域中的任何 SWF 文件。以前调用 <codeph>Security.allowDomain()</codeph> 会打开执行调用的 SWF 文件的整个域。</li>
+     
+       <li>已添加了对具有 <codeph>Security.allowDomain("~~")</codeph> 和 <codeph>Security.allowInsecureDomain("~~")</codeph> 的通配符值的支持。通配符 (~~) 值允许跨脚本编写操作，操作过程中执行访问的文件可以是从任何位置加载的任何文件。将通配符视为全局权限。根据本地文件安全性规则，需要具有通配符权限才能启用特定类型的操作。具体而言，要使具有网络访问权限的本地 SWF 文件编写 Internet 上的 SWF 文件的脚本，被访问的 Internet SWF 文件必须调用 <codeph>Security.allowDomain("~~")</codeph>，从而反映本地 SWF 文件的来源是未知的。（如果该 Internet SWF 文件是从 HTTPS URL 加载的，则该 Internet SWF 文件必须改为调用 <codeph>Security.allowInsecureDomain("~~")</codeph>）。</li>
+     </ul>
+       
+     <p platform="actionscript">有时您也可能遇到下面这种情况：您从另一个域中加载一个子级 SWF 文件，并想让该子级 SWF 文件编写父级 SWF 文件的脚本，但您不知道该子级 SWF 文件的最终域。例如，当您使用负载平衡重定向或第三方服务器时就可能发生这种情况。</p>
+     
+     <p platform="actionscript">在这种情况下，您可以使用您传递给 <codeph>Loader.load()</codeph> 的 URLRequest 对象的 <codeph>url</codeph> 属性。例如，如果将子级 SWF 文件加载到父级 SWF 中，则可以访问父级 SWF 的 Loader 对象的 <codeph>contentLoaderInfo</codeph> 属性： </p>
+     <codeblock platform="actionscript">Security.allowDomain(loader.contentLoaderInfo.url)</codeblock>
+     
+     <p platform="actionscript">请务必等待，直至子级 SWF 文件开始加载，以便获得 <codeph>url</codeph> 属性的正确值。要确定子级 SWF 何时开始加载，请使用 <codeph>progress</codeph> 事件。</p>
+     
+     <p platform="actionscript">也可能出现相反的情况：即您可能创建一个子级 SWF 文件，并想要允许其父级编辑该子级 SWF 文件的脚本，但不知道该父级将来自哪个域。在这种情况下，可以访问作为该 SWF 根对象的显示对象的 <codeph>loaderInfo</codeph> 属性。在子级 SWF 中，调用 <codeph> Security.allowDomain( this.root.loaderInfo.loaderURL)</codeph>。您不必等待父级 SWF 文件加载；加载子级时，父级已加载完毕。</p>
+     
+     <p platform="actionscript">如果正在为 Flash Player 8 或更高版本进行发布，也可以通过调用 <codeph>Security.allowDomain("~~")</codeph> 处理这些情况。不过，有时这可能是很危险的便捷手段，因为它允许来自任何域的任何其它 SWF 文件访问执行调用的 SWF 文件。通常，使用 <codeph>_url</codeph> 属性更安全。</p> 
+     
+     <p platform="actionscript">有关安全性的详细信息，请参阅以下部分：</p>
+     
+     <ul platform="actionscript">
+     
+     <li product="flex">《ActionScript 3.0 编程》一书中的<xref href="http://www.adobe.com/go/flex3_progAS3_security" scope="external">“安全性”一章</xref><i/>和 LiveDocs 上的最新评论</li>
+     
+     <li product="flash">《ActionScript 3.0 编程》一书中的<xref href="http://www.adobe.com/go/flashcs4_prog_as3_security_en" scope="external">“安全性”一章</xref><i/>和 LiveDocs 上的最新评论</li>
+     
+       <li>Flash Player 开发人员中心主题：<xref href="http://www.adobe.com/go/devnet_security_cn" scope="external">安全性</xref></li>
+     
+     </ul>
+     
+     
+     
+     </apiDesc></apiOperationDetail><related-links><link href="flash.external.xml#ExternalInterface/addCallback()"><linktext>ExternalInterface.addCallback()</linktext></link><link href="flash.events.xml#Event/COMPLETE"><linktext>flash.events.Event.COMPLETE</linktext></link><link href="flash.display.xml#DisplayObject/parent"><linktext>flash.display.DisplayObject.parent</linktext></link><link href="flash.net.xml#URLRequest/url"><linktext>flash.net.URLRequest.url</linktext></link><link href="flash.system.xml#Security/allowInsecureDomain()"><linktext>allowInsecureDomain()</linktext></link></related-links></apiOperation><apiOperation id="flash.system:Security:allowInsecureDomain"><apiName>allowInsecureDomain</apiName><shortdesc>
+     允许所标识的域中的 SWF 文件和 HTML 文件访问执行调用的 SWF 文件（使用 HTTPS 协议承载）中的对象和变量。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>Security, Security.allowInsecureDomain, allowInsecureDomain
+     </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiException><apiDesc>从 AIR 应用程序安全沙箱中的代码调用此方法会导致引发 SecurityError 异常。应用程序安全沙箱以外的内容不能跨脚本访问应用程序安全沙箱中的内容。 
+     
+     </apiDesc><apiItemName>SecurityError</apiItemName><apiOperationClassifier>SecurityError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>domains</apiItemName><apiType value="restParam"/><apiDesc>一个或多个字符串或者 URLRequest 对象，它们可命名一些域，您希望允许从这些域中进行访问。可指定特殊域“~~”，以允许从所有域进行访问。  
+     
+     <p class="flashonly">为了从使用 Flash 创作工具中“本地回放安全性”设置（“文件”>“发布设置”>“Flash”选项卡）的“只访问网络”发布的本地 SWF 文件访问非本地 SWF 文件，指定“*”是唯一的方法。</p>
+     
+     </apiDesc></apiParam><apiTipTexts><apiTipText>让使用 HTTPS 协议承载的 SWF 文件和 HTML 文件访问执行调用的 SWF 文件中的对象和变量。
+     
+     </apiTipText></apiTipTexts></apiOperationDef><apiDesc>
+     <ph platform="actionscript">允许所标识的域中的 SWF 文件和 HTML 文件访问执行调用的 SWF 文件（使用 HTTPS 协议承载）中的对象和变量。</ph>
+     
+     <p platform="javascript">此方法适用于跨脚本访问 ActionScript 3.0 代码（在 SWF 内容中）。它不适用于基于 HTML 的 AIR 应用程序中运行的 JavaScript 代码。</p>
+     
+     
+     <p platform="actionscript">Flash Player 提供 <codeph>allowInsecureDomain()</codeph> 以获得最佳的灵活性，但不建议调用此方法。通过 HTTPS 提供文件，可以为您和您的用户提供若干保护措施，而调用 <codeph>allowInsecureDomain</codeph> 会削弱这些保护措施之一。</p>
+     
+     <p platform="actionscript"><i>注意：</i>从 AIR 应用程序沙箱中的代码调用此方法会引发 SecurityError 异常。应用程序安全域以外的内容不能直接跨脚本访问应用程序沙箱中的内容。不过，应用程序沙箱以外的内容可以使用沙箱桥与应用程序安全沙箱中的内容进行通信。</p>
+     
+     <p platform="actionscript">此方法与 <codeph>Security.allowDomain()</codeph> 的工作方式相同，但是它还允许在使用非 HTTPS 协议加载访问方并使用 HTTPS 加载被访问方的情况下执行操作。在 Flash Player 7 及更高版本中，不允许非 HTTPS 文件编写 HTTPS 文件的脚本。当被访问的 HTTPS SWF 文件使用 <codeph>allowInsecureDomain()</codeph> 方法时，该方法可解除此限制。</p>
+     
+     <p platform="actionscript">仅使用 <codeph>allowInsecureDomain()</codeph> 启用从非 HTTPS 文件到 HTTPS 文件的脚本编写。如果执行访问的非 HTTPS 文件和被访问的 HTTPS 文件来自同一个域（例如，如果 http://mysite.com 上的 SWF 文件要编写 https://mysite.com 的 SWF 文件的脚本），请使用它启用脚本编写。请不要使用此方法在非 HTTPS 文件之间、HTTPS 文件之间或从 HTTPS 文件到非 HTTPS 文件启用脚本编写。对于那些情况，请改用 <codeph>allowDomain()</codeph>。</p>
+     
+     下面的情形说明了在未经仔细考虑的情况下使用 <codeph>allowInsecureDomain()</codeph> 时，它将如何削弱安全性。
+     
+     <p platform="actionscript">请注意，下面的信息只是一种可能的情形，旨在通过一个具体的跨脚本编写示例来帮助您了解 <codeph>allowInsecureDomain()</codeph>。它没有涉及安全体系结构的所有问题，仅应用于背景信息。Flash Player 开发人员中心包含有关 Flash Player 和安全性的大量信息。有关详细信息，请参阅 Flash Player 开发人员中心主题：<xref href="http://www.adobe.com/go/devnet_security_cn" scope="external">安全性</xref>。</p>
+     
+     <p platform="actionscript">假定您要创建一个电子商务站点，它由两个组件构成：一个是产品目录组件，它不必是安全的，因为它仅包含公共信息；另一个是购物车/结帐组件，它必须是安全的，以保护用户的财务信息和个人信息。假定您考虑从 http://mysite.com/catalog.swf 提供产品目录，从 https://mysite.com/cart.swf 提供购物车。对您站点的一个要求便是：第三方应不能通过利用您安全体系结构中的漏洞盗取用户的信用卡号码。</p>
+     
+     <p platform="actionscript">请设想：“中间方”攻击者在您的服务器和您的用户之间进行干预，试图盗取您的用户在购物车申请表中输入的信用卡号码。中间方是指这样的人员：对于在您的用户和服务器之间通过公共 Internet 传输的网络数据包，他能够进行查看或更改。例如，您的某些用户所使用的不道德的 ISP，或者，在用户工作区的怀有不良企图的管理员，都可能是中间方。这种情况并不罕见。</p> 
+     
+     <p platform="actionscript">如果 cart.swf 使用 HTTPS 将信用卡信息传输到服务器，则中间方攻击者无法直接从网络数据包盗取此信息，因为 HTTPS 传输已加密。但是，攻击者可以使用其它技术：在您的 SWF 文件发送到用户时更改其中一个 SWF 文件的内容；将您的 SWF 文件替换为更改后的版本，此版本将用户的信息传输到由攻击者所有的其它服务器。</p>
+     
+     <p platform="actionscript">HTTPS 协议等可阻止此“修改”攻击发生作用，因为除了加密外，HTTPS 传输还是防篡改的。如果中间方攻击者更改数据包，则接收方将检测到更改并丢弃该数据包。因此在这种情况下，攻击者无法更改您的 cart.swf，因为它是通过 HTTPS 传递的。</p>
+     
+     <p platform="actionscript">不过，假设您希望允许 catalog.swf（通过 HTTP 提供）中的按钮将项目添加到 cart.swf（通过 HTTPS 提供）中的购物车，为实现此功能，cart.swf 调用 <codeph>allowInsecureDomain()</codeph>，这样 catalog.swf 就可以编写 cart.swf 的脚本。此操作会导致意外的后果：现在攻击者可以在用户最初下载 catalog.swf 时对它进行更改，这是因为 catalog.swf 是使用 HTTP 发送的，无法防止篡改。现在，攻击者更改过的 catalog.swf 可以编写 cart.swf 的脚本，因为 cart.swf 包含对 <codeph>allowInsecureDomain()</codeph> 的调用。已更改的 catalog.swf 文件可以使用 ActionScript 访问 cart.swf 中的变量，这样就可以读取用户的信用卡信息和其它敏感数据。然后，已更改的 catalog.swf 可以将此数据发送到攻击者的服务器。</p>
+     
+     <p platform="actionscript">显然，这是您所不愿看到的，但是您仍希望站点上两个 SWF 文件之间可以进行跨脚本编写。要重新设计此假设的电子商务站点，以避免 <codeph>allowInsecureDomain()</codeph>，可以采用下面两种可能的方法：</p>
+     
+     <ul platform="actionscript">
+       <li>在应用程序中通过 HTTPS 提供所有 SWF 文件。这是目前为止最简单、最可靠的解决方案。在所述方案中，您将通过 HTTPS 提供 catalog.swf 和 cart.swf。当进行文件切换时（例如将 catalog.swf 从 HTTP 切换到 HTTPS 时），您可能发现占用的带宽和服务器 CPU 负载会稍微增大，您的用户可能发现应用程序加载时间稍长。您需要使用实际服务器进行试验，以确定这些影响的严重程度；通常它们分别不会超过 10-20%，而且有时它们根本不存在。通常，可以通过在服务器上使用 HTTPS 加速硬件或软件来改善效果。通过 HTTPS 提供所有协作 SWF 文件的主要好处是：您可以将 HTTPS URL 用作用户浏览器中的主 URL 而不会从浏览器生成任何混合内容的警告。此外，浏览器的挂锁图标将变为可见，为您的用户提供了公共的、受信任的安全性指示器。</li>
+     
+      <li>使用 HTTPS 到 HTTP 的脚本编写，而不是 HTTP 到 HTTPS 的脚本编写。在所述的方案中，您可以将用户购物车的内容存储在 catalog.swf 中，并让 cart.swf 仅管理结帐流程。在结账时，cart.swf 可以从 catalog.swf 中的 ActionScript 变量中检索购物车内容。对 HTTP 到 HTTPS 的脚本编写的限制是不对称的；虽然无法安全地允许使用通过 HTTP 传送的 catalog.swf 文件编写使用 HTTPS 传送的 cart.swf 文件的脚本，但 HTTPS cart.swf 文件可以编写 HTTP catalog.swf 文件的脚本。此方法比所有 HTTPS 方法都容易受到攻击；您必须谨慎，不要信任通过 HTTP 传递的任何 SWF 文件，因为 HTTP 容易被篡改。例如，当 cart.swf 检索说明购物车内容的 ActionScript 变量时，cart.swf 中的 ActionScript 代码不能信任此变量的值是所需格式的。您必须确认购物车内容不包含可能导致 cart.swf 执行不期望的操作的无效数据。您还必须接受以下风险：中间方可能通过更改 catalog.swf 为 cart.swf 提供有效但不准确的数据（例如，通过在用户的购物车中放入项目）。通常的结帐流程都是通过显示购物车内容和总费用以待用户最终确认，可以在某种程度上缓解此风险，但是此风险仍然存在。</li>
+     </ul>
+     
+     <p platform="actionscript">多年来，Web 浏览器一直强制将 HTTPS 文件和非 HTTPS 文件分开，以上所描述的情形正是此限制的一个很好的理由。Flash Player 为您提供了在绝对必须时避开此安全限制的能力，但在这样做之前一定要仔细考虑后果。</p>
+     
+     <p platform="actionscript">有关安全性的详细信息，请参阅以下部分：</p>
+     
+     <ul platform="actionscript">
+     
+     <li product="flex">《ActionScript 3.0 编程》一书中的<xref href="http://www.adobe.com/go/flex3_progAS3_security" scope="external">“安全性”一章</xref><i/>和 LiveDocs 上的最新评论</li>
+     
+     <li product="flash">《ActionScript 3.0 编程》一书中的<xref href="http://www.adobe.com/go/flashcs4_prog_as3_security_en" scope="external">“安全性”一章</xref><i/>和 LiveDocs 上的最新评论</li>
+     
+       <li>Flash Player 开发人员中心主题：<xref href="http://www.adobe.com/go/devnet_security_cn" scope="external">安全性</xref></li>
+     
+     </ul>
+	 
+     </apiDesc></apiOperationDetail><related-links><link href="flash.system.xml#Security/allowDomain()"><linktext>allowDomain()</linktext></link></related-links></apiOperation><apiOperation id="flash.system:Security:loadPolicyFile"><apiName>loadPolicyFile</apiName><shortdesc>  
+     在 url 参数指定的位置查找策略文件。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>url</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>要加载的策略文件的 URL 位置。
+     </apiDesc></apiParam><apiTipTexts><apiTipText>在 url 参数指定的位置查找策略文件。
+     
+     </apiTipText></apiTipTexts></apiOperationDef><apiDesc>  
+     在 <codeph>url</codeph> 参数指定的位置查找策略文件。Adobe AIR 和 Flash Player 使用策略文件来确定是否允许应用程序从它们自己的服务器以外的服务器加载数据。请注意，虽然方法名称为 <codeph>loadPolicyFile()</codeph>，但是在发出需要策略文件的网络请求之前，实际并不加载此文件。
+     
+	 <p>使用 <codeph>Security.loadPolicyFile()</codeph>，Flash Player 或 AIR 可以从任意位置加载策略文件，如下面的示例所示：</p>
+     
+     <codeblock platform="actionscript">
+     Security.loadPolicyFile("http://www.example.com/sub/dir/pf.xml");
+     </codeblock>
+     
+     <codeblock platform="javascript">
+     air.Security.loadPolicyFile("http://www.example.com/sub/dir/pf.xml");
+     </codeblock>
+     
+     <p>这使 Flash Player 或 AIR 尝试从指定的 URL 检索策略文件。由该位置处的策略文件授予的任何权限将适用于该服务器虚拟目录层次结构中的同一级别或更低级别中的所有内容。 </p>
+     
+     <p platform="actionscript">例如，如果在上一段代码之后添加下面的代码行，则这些代码行不会引发异常：</p>
+     
+     <codeblock platform="actionscript"> import flash.net.~~;
+     var request:URLRequest = new URLRequest("http://www.example.com/sub/dir/vars.txt");
+     var loader:URLLoader = new URLLoader();
+     loader.load(request);
+     
+     var loader2:URLLoader = new URLLoader();
+     var request2:URLRequest = new URLRequest("http://www.example.com/sub/dir/deep/vars2.txt");
+     loader2.load(request2);
+     </codeblock>
+     
+     <p platform="actionscript">但是，下面的代码则会引发安全性异常：</p>
+     
+     <codeblock platform="actionscript"> import flash.net.~~;
+     var request3:URLRequest = new URLRequest("http://www.example.com/elsewhere/vars3.txt");
+     var loader3:URLLoader = new URLLoader();
+     loader3.load(request3);
+     </codeblock>
+     
+     <p>您可以使用 <codeph>loadPolicyFile()</codeph> 加载任意数量的策略文件。在考虑需要策略文件的请求时，Flash Player 或 AIR 始终会等待策略文件下载完成后才会拒绝请求。如果由 <codeph>loadPolicyFile()</codeph> 指定的任何策略文件都未对请求进行授权，作为最终的后备操作，Flash Player 或 AIR 会查询原始的默认位置。</p>
+     
+     <p>在检索主策略文件时，Flash Player 会用三秒钟等待服务器响应。如果未接收到响应，则 Flash Player 假定主策略文件不存在。但是，对 <codeph>loadPolicyFile()</codeph> 的调用没有默认超时值；Flash Player 假定调用的文件存在，在加载文件之前会一直等待。因此，如果要确保加载主策略文件，请使用 <codeph>loadPolicyFile()</codeph> 来显式调用主策略文件。</p>
+     
+      <p>无法加载常用的保留端口提供的策略文件。有关已阻止的端口的完整列表，请参阅《ActionScript 3.0 编程》一书的<ph product="flex"><xref href="http://www.adobe.com/go/flex3_progAS3_security_cn" scope="external">“安全性”一章</xref></ph><ph product="flash"><xref href="http://www.adobe.com/go/flashcs4_prog_as3_security_cn" scope="external">“安全性”一章</xref></ph><i/>中的“限制网络 API”。</p>
+     
+     <p>通过将 <codeph>xmlsocket</codeph> 协议与特定的端口号一起使用，您可以直接从 XMLSocket 服务器中检索策略文件，如以下示例所示。套接字连接不受上述的保留端口限制。</p>
+     
+     <codeblock platform="actionscript">
+     Security.loadPolicyFile("xmlsocket://foo.com:414");
+     </codeblock>
+     
+     <codeblock platform="javascript">
+     air.Security.loadPolicyFile("xmlsocket://foo.com:414");
+     </codeblock>
+     
+     <p>这会导致 Flash Player 或 AIR 尝试从指定的主机和端口检索策略文件。使用指定的端口建立连接后，Flash Player 或 AIR 将传输 <codeph>&lt;policy-file-request /></codeph>，并以 <codeph>null</codeph> 字节终止。服务器必须发送一个 null 字节来终止策略文件，并可以随后关闭该连接；如果服务器不关闭该连接，则 Flash Player 或 AIR 在收到终止 <codeph>null</codeph> 字节后也会这样做。</p>
+     
+     <p platform="actionscript">可以在包含 SWF 内容的 HTML 页中设置 <codeph>object</codeph> 和 <codeph>embed</codeph> 标签的 <codeph>allowNetworking</codeph> 参数，从而防止 SWF 文件使用此方法。</p>
+     
+     <p>有关安全性的详细信息，请参阅以下部分：</p>
+     
+     <ul>
+     
+     <li product="flex">《ActionScript 3.0 编程》一书中的<xref href="http://www.adobe.com/go/flex3_progAS3_security" scope="external">“安全性”一章</xref><i/>和 LiveDocs 上的最新评论</li>
+     
+     <li product="flash">《ActionScript 3.0 编程》一书中的<xref href="http://www.adobe.com/go/flashcs4_prog_as3_security_en" scope="external">“安全性”一章</xref><i/>和 LiveDocs 上的最新评论</li>
+     
+       <li>Flash Player 开发人员中心主题：<xref href="http://www.adobe.com/go/devnet_security_cn" scope="external">安全性</xref></li>
+     
+     </ul>
+     
+     </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.system:Security:showSettings"><apiName>showSettings</apiName><shortdesc>
+     显示 Flash Player 中的“安全设置”面板。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>Security, Security.showSettings(), showSettings()
+     </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>panel</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData>default</apiData><apiDesc>来自 SecurityPanel 类的一个值，它指定您希望显示哪一个“安全设置”面板。如果省略此参数，则使用 <codeph>SecurityPanel.DEFAULT</codeph>。 
+     
+     </apiDesc></apiParam></apiOperationDef><apiDesc>
+     显示 Flash Player 中的“安全设置”面板。此方法不适用于 Adobe AIR 中的内容，在 AIR 应用程序中调用此方法不起作用。
+     
+     </apiDesc></apiOperationDetail><related-links><link href="flash.system.xml#SecurityPanel"><linktext>SecurityPanel</linktext></link></related-links></apiOperation><apiValue id="flash.system:Security:APPLICATION"><apiName>APPLICATION</apiName><shortdesc>
+	 此文件正在 AIR 应用程序中运行，它是随该应用程序的包（AIR 文件）一起安装的。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>application</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 此文件正在 AIR 应用程序中运行，它是随该应用程序的包（AIR 文件）一起安装的。此内容包括在 AIR 应用程序资源目录中（安装应用程序内容的位置）。
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.system.xml#Security/sandboxType"><linktext>sandboxType</linktext></link><link href="flash.system.xml#Security/REMOTE"><linktext>REMOTE</linktext></link><link href="flash.system.xml#Security/LOCAL_WITH_FILE"><linktext>LOCAL_WITH_FILE</linktext></link><link href="flash.system.xml#Security/LOCAL_WITH_NETWORK"><linktext>LOCAL_WITH_NETWORK</linktext></link><link href="flash.system.xml#Security/LOCAL_TRUSTED"><linktext>LOCAL_TRUSTED</linktext></link></related-links></apiValue><apiValue id="flash.system:Security:LOCAL_TRUSTED"><apiName>LOCAL_TRUSTED</apiName><shortdesc>
+     此文件是本地文件，并且用户已使用 Flash Player 设置管理器或 FlashPlayerTrust 配置文件将其设置为受信任的文件。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><refpath>
+     </refpath></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>localTrusted</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+     此文件是本地文件，并且用户已使用 Flash Player 设置管理器或 FlashPlayerTrust 配置文件将其设置为受信任的文件。此 文件既可以从本地数据源读取数据，也可以与 Internet 进行通信。
+     
+     </apiDesc></apiValueDetail><related-links><link href="flash.system.xml#Security/sandboxType"><linktext>sandboxType</linktext></link><link href="flash.system.xml#Security/REMOTE"><linktext>REMOTE</linktext></link><link href="flash.system.xml#Security/LOCAL_WITH_FILE"><linktext>LOCAL_WITH_FILE</linktext></link><link href="flash.system.xml#Security/LOCAL_WITH_NETWORK"><linktext>LOCAL_WITH_NETWORK</linktext></link><link href="flash.system.xml#Security/APPLICATION"><linktext>APPLICATION</linktext></link></related-links></apiValue><apiValue id="flash.system:Security:LOCAL_WITH_FILE"><apiName>LOCAL_WITH_FILE</apiName><shortdesc>
+     此文件是本地文件，尚未受到用户信任，它不是使用网络名称发布的 SWF 文件。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><refpath>
+     </refpath></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>localWithFile</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+     此文件是本地文件，尚未受到用户信任，它不是使用网络名称发布的 SWF 文件。在 Adobe AIR 中，本地文件<i>不</i> 放在应用程序资源目录中，这些文件放在应用程序安全沙箱中。此 文件可以从本地数据源读取数据，但不能与 Internet 进行通信。
+     
+     </apiDesc></apiValueDetail><related-links><link href="flash.system.xml#Security/sandboxType"><linktext>sandboxType</linktext></link><link href="flash.system.xml#Security/REMOTE"><linktext>REMOTE</linktext></link><link href="flash.system.xml#Security/LOCAL_WITH_NETWORK"><linktext>LOCAL_WITH_NETWORK</linktext></link><link href="flash.system.xml#Security/LOCAL_TRUSTED"><linktext>LOCAL_TRUSTED</linktext></link><link href="flash.system.xml#Security/APPLICATION"><linktext>APPLICATION</linktext></link></related-links></apiValue><apiValue id="flash.system:Security:LOCAL_WITH_NETWORK"><apiName>LOCAL_WITH_NETWORK</apiName><shortdesc>
+	 此文件是本地文件，尚未受到用户信任，它是使用网络名称发布的 SWF 文件。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><refpath>
+     </refpath></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>localWithNetwork</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 此文件是本地文件，尚未受到用户信任，它是使用网络名称发布的 SWF 文件。此 文件可与 Internet 通信，但不能从本地数据源读取数据。
+     
+     </apiDesc></apiValueDetail><related-links><link href="flash.system.xml#Security/sandboxType"><linktext>sandboxType</linktext></link><link href="flash.system.xml#Security/REMOTE"><linktext>REMOTE</linktext></link><link href="flash.system.xml#Security/LOCAL_WITH_FILE"><linktext>LOCAL_WITH_FILE</linktext></link><link href="flash.system.xml#Security/LOCAL_TRUSTED"><linktext>LOCAL_TRUSTED</linktext></link><link href="flash.system.xml#Security/APPLICATION"><linktext>APPLICATION</linktext></link></related-links></apiValue><apiValue id="flash.system:Security:REMOTE"><apiName>REMOTE</apiName><shortdesc>
+     此 文件来自 Internet URL，并在基于域的沙箱规则下运行。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><refpath>
+     </refpath></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>remote</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+     此 文件来自 Internet URL，并在基于域的沙箱规则下运行。
+     
+     </apiDesc></apiValueDetail><related-links><link href="flash.system.xml#Security/sandboxType"><linktext>sandboxType</linktext></link><link href="flash.system.xml#Security/LOCAL_WITH_FILE"><linktext>LOCAL_WITH_FILE</linktext></link><link href="flash.system.xml#Security/LOCAL_WITH_NETWORK"><linktext>LOCAL_WITH_NETWORK</linktext></link><link href="flash.system.xml#Security/LOCAL_TRUSTED"><linktext>LOCAL_TRUSTED</linktext></link><link href="flash.system.xml#Security/APPLICATION"><linktext>APPLICATION</linktext></link></related-links></apiValue><apiValue id="flash.system:Security:exactSettings:get"><apiName>exactSettings</apiName><shortdesc>
+     确定 Flash Player 或 AIR 如何选择用于某些内容设置的域，包括摄像头和麦克风权限、存储配额及永久共享对象存储的设置。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>Security, Security.exactSettings, exactSettings
+     </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier><apiException><apiDesc>Flash Player 或 AIR 在决定播放器设置时已至少使用了一次 <codeph>exactSettings</codeph> 的值。
+     
+     </apiDesc><apiItemName>SecurityError</apiItemName><apiOperationClassifier>SecurityError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+     确定 Flash Player 或 AIR 如何选择用于某些内容设置的域，包括摄像头和麦克风权限、存储配额及永久共享对象存储的设置。要让 SWF 文件使用的设置与在 Flash Player 6 中使用的设置相同，可以将 <codeph>exactSettings</codeph> 设置为 <codeph>false</codeph>。
+     
+     <p platform="javascript">此属性适用于 SWF 内容，而不适用于 AIR 应用程序的 JavaScript 代码。</p>
+     
+     <p platform="actionscript">在 Flash Player 6 中，为这些播放器设置使用的域基于 SWF 文件的域的末尾部分。如果 SWF 文件的域包含的段数超过两个，如 www.example.com，则会去除该域的第一段（“www”），并使用该域的剩余部分：example.com。因此，在 Flash Player 6 中，www.example.com 和 store.example.com 都使用 example.com 作为这些设置的域。同样，www.example.co.uk 和 store.example.co.uk 都使用 example.co.uk 作为这些设置的域。在 Flash Player 7 及更高版本中，默认情况下是根据 SWF 文件的精确域来选择播放器设置；例如，来自 www.example.com 的 SWF 文件将使用 www.example.com 的播放器设置，来自 store.example.com 的 SWF 文件将使用 store.example.com 的不同播放器设置。</p>
+     
+     <p platform="actionscript">当 <codeph>Security.exactSettings</codeph> 设置为 <codeph>true</codeph> 时，Flash Player 将为播放器设置使用精确域。当它设置为 <codeph>false</codeph> 时，Flash Player 使用在 Flash Player 6 中使用的域设置。<codeph>exactSettings</codeph> 的默认值是 <codeph>true</codeph>。如果将 <codeph>exactSettings</codeph> 更改为使用其它值而不是默认值，则应在要求 Flash Player 选择播放器设置的任何事件（例如，使用摄像头或麦克风，或者检索永久共享对象）发生之前执行此操作。</p>
+     
+     <p platform="actionscript">如果您以前发布了第 6 版 SWF 文件并从该文件创建了永久共享对象，并且现在您需要在将该 SWF 文件移植到第 7 版或更高版本后从该 SWF 文件中检索这些永久共享对象，或者从第 7 版或更高版本的其它 SWF 文件中检索这些永久对象，则需要在调用 <codeph>SharedObject.getLocal()</codeph> 之前将 <codeph>Security.exactSettings</codeph> 设置为 <codeph>false</codeph>。</p>
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.system:Security:sandboxType:get"><apiName>sandboxType</apiName><shortdesc>
+     指示其中正在运行执行调用的 文件的安全沙箱的类型。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+     指示其中正在运行执行调用的 文件的安全沙箱的类型。
+     
+     <p><codeph>Security.sandboxType</codeph> 具有下列值之一：</p>
+     
+     <ul>
+     <li><codeph>remote</codeph> (<codeph>Security.REMOTE</codeph>)：此文件来自 Internet URL，并在基于域的沙箱规则下运行。</li>
+     <li><codeph>localWithFile</codeph> (<codeph>Security.LOCAL_WITH_FILE</codeph>)：此文件是本地文件，尚未受到用户信任，且不是使用网络名称进行发布的 SWF 文件。此 文件可以从本地数据源读取数据，但不能与 Internet 进行通信。</li>
+     <li><codeph>localWithNetwork</codeph> (<codeph>Security.LOCAL_WITH_NETWORK</codeph>)：此 SWF 文件是本地文件，尚未受到用户信任，且已使用网络名称进行发布。此 SWF 文件可与 Internet 通信，但不能从本地数据源读取数据。</li>
+     <li><codeph>localTrusted</codeph> (<codeph>Security.LOCAL_TRUSTED</codeph>)：此文件是本地文件，并且用户已经使用 Flash Player“设置管理器”或 FlashPlayerTrust 配置文件将其设置为受信任的文件。此 文件既可以从本地数据源读取数据，也可以与 Internet 进行通信。</li>
+     <li><codeph>application</codeph> (<codeph>Security.APPLICATION</codeph>)：此文件在 AIR 应用程序中运行，并且随该应用程序的包（AIR 文件）一起安装。默认情况下，AIR 应用程序沙箱中的文件可以跨脚本访问任何域中的任何文件（尽管不允许 AIR 应用程序沙箱以外的文件跨脚本访问 AIR 文件）。默认情况下，AIR 应用程序沙箱中的文件可以加载任何域中的内容和数据。 </li>
+     
+     </ul>
+     
+     <p>有关安全性的详细信息，请参阅以下部分：</p>
+     
+     <ul>
+     
+     <li class="flexonly">《ActionScript 3.0 编程》一书中的<xref href="http://www.adobe.com/go/flex3_progAS3_security" scope="external">“安全性”一章</xref><i/>和 LiveDocs 上的最新评论</li>
+     <li product="flash">《ActionScript 3.0 编程》一书中的<xref href="http://www.adobe.com/go/flashcs4_prog_as3_security_en" scope="external">“安全性”一章</xref><i/>和 LiveDocs 上的最新评论</li>
+     
+    <li>Flash Player 开发人员中心主题：<xref href="http://www.adobe.com/go/devnet_security_cn" scope="external">安全性</xref></li>
+     
+     </ul>
+     
+     </apiDesc></apiValueDetail><related-links><link href="flash.system.xml#Security/REMOTE"><linktext>REMOTE</linktext></link><link href="flash.system.xml#Security/LOCAL_WITH_FILE"><linktext>LOCAL_WITH_FILE</linktext></link><link href="flash.system.xml#Security/LOCAL_WITH_NETWORK"><linktext>LOCAL_WITH_NETWORK</linktext></link><link href="flash.system.xml#Security/LOCAL_TRUSTED"><linktext>LOCAL_TRUSTED</linktext></link><link href="flash.system.xml#Security/APPLICATION"><linktext>APPLICATION</linktext></link></related-links></apiValue></apiClassifier><apiClassifier id="flash.system:LoaderContext"><apiName>LoaderContext</apiName><shortdesc>
+ LoaderContext 类提供多种选项，以使用 Loader 类来加载 SWF 文件和其它媒体。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ LoaderContext 类提供多种选项，以使用 Loader 类来加载 SWF 文件和其它媒体。LoaderContext 类用作 Loader 类的 <codeph>load()</codeph> 和 <codeph>loadBytes()</codeph> 方法的 <codeph>context</codeph> 参数。
+ 
+ <p>使用 <codeph>Loader.load()</codeph> 方法加载 SWF 文件时，需要做出两个决定：应将所加载的 SWF 文件放置到哪个安全域中，以及应放置到该安全域中的哪个应用程序域中？有关这些选择的更多详细信息，请参阅 <codeph>applicationDomain</codeph> 和 <codeph>securityDomain</codeph> 属性。</p>
+ 
+ <p>使用 <codeph>Loader.loadBytes()</codeph> 方法加载 SWF 文件时，与使用 <codeph>Loader.load()</codeph> 时一样，也要选择应用程序域，但不必指定安全域，这是因为 <codeph>Loader.loadBytes()</codeph> 始终将其加载的 SWF 文件放置到执行加载的 SWF 文件的安全域。</p>
+ 
+ <p>如果是加载图像（JPEG、GIF 或 PNG）而不是 SWF 文件，则无需指定安全域或应用程序域，这是因为这些概念只对 SWF 有意义。此时您只需做出一个决定：是否需要以编程方式访问所加载图像的像素？如果需要，请参阅 <codeph>checkPolicyFile</codeph> 属性。如果要在加载图像时应用解块，请使用 JPEGLoaderContext 类替代 LoaderContext 类。</p>
+ 
+ </apiDesc></apiClassifierDetail><related-links><link href="flash.display.xml#Loader/load()"><linktext>flash.display.Loader.load()</linktext></link><link href="flash.display.xml#Loader/loadBytes()"><linktext>flash.display.Loader.loadBytes()</linktext></link><link href="flash.system.xml#ApplicationDomain"><linktext>flash.system.ApplicationDomain</linktext></link><link href="flash.system.xml#JPEGLoaderContext"><linktext>flash.system.JPEGLoaderContext</linktext></link><link href="flash.system.xml#LoaderContext/applicationDomain"><linktext>flash.system.LoaderContext.applicationDomain</linktext></link><link href="flash.system.xml#LoaderContext/checkPolicyFile"><linktext>flash.system.LoaderContext.checkPolicyFile</linktext></link><link href="flash.system.xml#LoaderContext/securityDomain"><linktext>flash.system.LoaderContext.securityDomain</linktext></link><link href="flash.system.xml#SecurityDomain"><linktext>flash.system.SecurityDomain</linktext></link></related-links><apiConstructor id="flash.system:LoaderContext:LoaderContext"><apiName>LoaderContext</apiName><shortdesc>
+     创建带有指定设置的新 LoaderContext 对象。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>checkPolicyFile</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>指定在加载对象之前是否应检查有无 URL 策略文件。
+     
+     </apiDesc></apiParam><apiParam><apiItemName>applicationDomain</apiItemName><apiOperationClassifier>flash.system:ApplicationDomain</apiOperationClassifier><apiData>null</apiData><apiDesc>指定要用于 Loader 对象的 ApplicationDomain 对象。
+     
+     </apiDesc></apiParam><apiParam><apiItemName>securityDomain</apiItemName><apiOperationClassifier>flash.system:SecurityDomain</apiOperationClassifier><apiData>null</apiData><apiDesc>指定要用于 Loader 对象的 SecurityDomain 对象。
+     
+	 <p><i>注意：</i>AIR 应用程序安全沙箱中的内容无法将其它沙箱中的内容加载到其 SecurityDomain 中。</p>
+     
+     </apiDesc></apiParam></apiConstructorDef><apiDesc>
+     创建带有指定设置的新 LoaderContext 对象。有关这些设置的完整详细信息，请参阅对该类属性的说明。
+     
+     </apiDesc></apiConstructorDetail><related-links><link href="flash.display.xml#Loader/load()"><linktext>flash.display.Loader.load()</linktext></link><link href="flash.display.xml#Loader/loadBytes()"><linktext>flash.display.Loader.loadBytes()</linktext></link><link href="flash.system.xml#ApplicationDomain"><linktext>flash.system.ApplicationDomain</linktext></link><link href="flash.system.xml#SecurityDomain"><linktext>flash.system.SecurityDomain</linktext></link></related-links></apiConstructor><apiValue id="flash.system:LoaderContext:allowLoadBytesCodeExecution"><apiName>allowLoadBytesCodeExecution</apiName><shortdesc>
+	 指定是否可以使用 Loader 对象的 loadBytes() 方法下载具有可执行代码的内容，如 SWF 文件。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>false</apiData><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	 指定是否可以使用 Loader 对象的 <codeph>loadBytes()</codeph> 方法下载具有可执行代码的内容，如 SWF 文件。在此属性设置为 <codeph>false</codeph>（默认值）的情况下，<codeph>loadBytes()</codeph> 方法仅限于执行安全操作，如加载图像。
+ 	 
+	 <p>在位于应用程序安全沙箱的 AIR 内容中，默认值为 <codeph>false</codeph>。在非应用程序内容中，默认值为 <codeph>true</codeph>。</p>
+	 
+	 <p><b>注意：</b>在未来的 AIR 版本中，很可能会替换此 API。发生这种情况时，将需要调整代码以使用新的 API，并在针对新版本的 AIR 发布应用程序之前进行重新编译。</p>
+	 
+     </apiDesc></apiValueDetail><related-links><link href="flash.display.xml#Loader/loadBytes()"><linktext>flash.display.Loader.loadBytes()</linktext></link></related-links></apiValue><apiValue id="flash.system:LoaderContext:applicationDomain"><apiName>applicationDomain</apiName><shortdesc>
+	 指定用于 Loader.load() 或 Loader.loadBytes() 方法的应用程序域。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>null</apiData><apiValueClassifier>flash.system:ApplicationDomain</apiValueClassifier></apiValueDef><apiDesc>
+	 指定用于 <codeph>Loader.load()</codeph> 或 <codeph>Loader.loadBytes()</codeph> 方法的应用程序域。只应在加载使用 ActionScript 3.0 编写的 SWF 文件（不是图像或使用 ActionScript 1.0 或 ActionScript 2.0 编写的 SWF 文件）时才使用此属性。
+	 
+	 <p>每个安全域被分成一个或多个由 ApplicationDomain 对象表示的应用程序域。应用程序域并不是用于安全目的；它们用于管理 ActionScript 代码的协作单元。如果是从其它域加载 SWF 文件，并允许将它放置到另外一个安全域中，则您将无法控制所加载的 SWF 文件被放置到哪个应用程序域中；即使您指定应选择某个应用程序域，也会忽略。但是，如果是将 SWF 文件加载到您自己的安全域中（因为此 SWF 文件来自您自己的域，或者您正在将它导入到您的安全域中），您就可以控制为所加载的 SWF 文件选择哪个应用程序域。</p>
+	 
+	 <p>在 <codeph>LoaderContext.applicationDomain</codeph> 中，您只可以传递您自己的安全域中的应用程序域。如果试图传递任何其它安全域中的应用程序域，则会引发 <codeph>SecurityError</codeph> 异常。</p>
+	 
+	 <p>有四种 <codeph>ApplicationDomain</codeph> 属性可供您选择使用：</p>
+	 
+	 <ul>
+	 <li><b>加载器的 ApplicationDomain 的子级。</b>默认值。可以使用语法 <codeph>new ApplicationDomain(ApplicationDomain.currentDomain)</codeph> 显式表示这种选择。这将允许所加载的 SWF 文件直接使用父级的类，例如，可通过编写 <codeph>new MyClassDefinedInParent()</codeph> 来使用。但是父级则不能使用此语法；如果父级要使用子级的类，它必须调用 <codeph>ApplicationDomain.getDefinition()</codeph> 来检索它们。这种选择的优点是，如果子级定义的类与父级已经定义的类同名，不会出现错误结果；子级只会继承父级对该类的定义，除非子级或父级调用 <codeph>ApplicationDomain.getDefinition()</codeph> 方法来检索子级的冲突定义，否则将不使用此定义。</li>
+	 
+	 <li><b>加载器自己的 ApplicationDomain。</b>使用 <codeph>ApplicationDomain.currentDomain</codeph> 时请使用此应用程序域。加载完成后，父级和子级可以直接使用对方的类。如果子级试图定义的类与父级已定义的类同名，则使用父类并忽略子类。</li>
+	 
+	 <li><b>系统 ApplicationDomain 的子级。</b>使用 <codeph>new ApplicationDomain(null)</codeph> 时请使用此应用程序域。这将完全分离加载方和被加载方，从而允许它们使用相同的名称定义各自版本的类并且不会产生冲突或隐藏。一方查看另一方的类的唯一方式是调用 <codeph>ApplicationDomain.getDefinition()</codeph> 方法。</li>
+	 
+	 <li><b>其它 ApplicationDomain 的子级。</b>有时可能会有更复杂的 ApplicationDomain 层次结构。可以将 SWF 文件从您自己的 SecurityDomain 加载到任何 ApplicationDomain 中。例如，<codeph>new ApplicationDomain(ApplicationDomain.currentDomain.parentDomain.parentDomain)</codeph> 将 SWF 文件加载到当前域父级的父级的新子级中。</li>
+	 </ul>
+	 
+	 <p>加载完成后，为调用 <codeph>ApplicationDomain.getDefinition()</codeph>，任一方（加载方或被加载方）都可能需要找到它自己的 ApplicationDomain 或另一方的 ApplicationDomain。任一方都可以通过使用 <codeph>ApplicationDomain.currentDomain</codeph> 来检索对它自己的应用程序域的引用。执行加载的 SWF 文件可以通过 <codeph>Loader.contentLoaderInfo.applicationDomain</codeph> 来检索对被加载的 SWF 文件的 ApplicationDomain 的引用。如果被加载的 SWF 文件知道自己的加载方式，则它可以找到执行加载的 SWF 文件的 ApplicationDomain 对象。例如，如果子级是以默认方式被加载的，则它可以通过使用 <codeph>ApplicationDomain.currentDomain.parentDomain</codeph> 找到执行加载的 SWF 文件的应用程序域。</p>
+	 
+	 <p>有关详细信息，请参阅<i>《ActionScript 3.0 编程》</i>中“客户端系统环境”一章的“ApplicationDomain 类”一节。</p>
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.display.xml#Loader/load()"><linktext>flash.display.Loader.load()</linktext></link><link href="flash.display.xml#Loader/loadBytes()"><linktext>flash.display.Loader.loadBytes()</linktext></link><link href="flash.system.xml#ApplicationDomain"><linktext>flash.system.ApplicationDomain</linktext></link></related-links></apiValue><apiValue id="flash.system:LoaderContext:checkPolicyFile"><apiName>checkPolicyFile</apiName><shortdesc>
+	 指定在开始加载对象本身之前，应用程序是否应该尝试从所加载对象的服务器下载 URL 策略文件。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>false</apiData><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	 指定在开始加载对象本身之前，应用程序是否应该尝试从所加载对象的服务器下载 URL 策略文件。此标志适用于 <codeph>Loader.load()</codeph> 方法，但不适用于 <codeph>Loader.loadBytes()</codeph> 方法。
+	 
+	 <p>如果您从执行调用的 SWF 文件所在的域之外加载图像（JPEG、GIF 或 PNG），并且您预计将需要从 ActionScript 访问该图像的内容，请将此标志设置为 <codeph>true</codeph>。访问图像内容的示例包括引用 <codeph>Loader.content</codeph> 属性以获得 Bitmap 对象，以及调用 <codeph>BitmapData.draw()</codeph> 方法以获得所加载图像像素的副本。如果您在加载时没有指定 <codeph>checkPolicyFile</codeph> 就尝试执行这些操作之一，您可能会得到一个 <codeph>SecurityError</codeph> 异常，这是因为尚未下载所需的策略文件。</p>
+	 
+	 <p>在 <codeph>LoaderContext.checkPolicyFile</codeph> 设置为 <codeph>true</codeph> 的情况下调用 <codeph>Loader.load()</codeph> 方法时，应用程序直到成功下载了相关的 URL 策略文件或发现不存在此类策略文件时才开始下载 <codeph>URLRequest.url</codeph> 中的指定对象。Flash Player 或 AIR 首先考虑已经下载的策略文件，然后尝试下载调用 <codeph>Security.loadPolicyFile()</codeph> 方法过程中指定的任何待下载策略文件，然后尝试从与 <codeph>URLRequest.url</codeph> 对应的默认位置（即 <codeph>URLRequest.url</codeph> 所在服务器上的 <codeph>/crossdomain.xml</codeph>）下载策略文件。在所有情况下，给定的策略文件必须位于 <codeph>URLRequest.url</codeph>（根据策略文件的位置而定），且策略文件必须通过一个或多个 <codeph>&lt;allow-access-from></codeph> 标签允许进行访问。</p>
+	 
+	 <p>如果将 <codeph>checkPolicyFile</codeph> 设置为 <codeph>true</codeph>，则 <codeph>Loader.load()</codeph> 方法中指定的主下载将在完全处理该策略文件之后开始下载。因此，只要您需要的策略文件存在，一旦您收到来自 Loader 对象的 <codeph>contentLoaderInfo</codeph> 属性的任何 <codeph>ProgressEvent.PROGRESS</codeph> 或 <codeph>Event.COMPLETE</codeph> 事件，就说明该策略文件下载已完成，您就可以安全地开始执行需要该策略文件的操作。</p>
+	 
+	 <p>如果您将 <codeph>checkPolicyFile</codeph> 设置为 <codeph>true</codeph>，并且未找到相关的策略文件，则除非您尝试执行的操作引发了 <codeph>SecurityError</codeph> 异常，否则您将不会收到任何错误指示。但是，一旦 LoaderInfo 对象分派 <codeph>ProgressEvent.PROGRESS</codeph> 或 <codeph>Event.COMPLETE</codeph> 事件，您就可以通过检查 <codeph>LoaderInfo.childAllowsParent</codeph> 属性的值来测试是否找到了相关的策略文件。</p>
+	 
+	 <p>如果不需要对正在加载的图像进行像素级的访问，则不应将 <codeph>checkPolicyFile</codeph> 属性设置为 <codeph>true</codeph>。在这种情况下不必再检查是否存在策略文件，因为这样会延迟下载的开始时间，并且可能会不必要地占用网络带宽。</p>
+	 
+	 <p>如果是使用 <codeph>Loader.load()</codeph> 方法下载 SWF 文件，也尽量不要将 <codeph>checkPolicyFile</codeph> 设置为 <codeph>true</codeph>。这是因为 SWF 到 SWF 的权限不是由策略文件控制的，而是由 <codeph>Security.allowDomain()</codeph> 方法控制的，因此在加载 SWF 文件时 <codeph>checkPolicyFile</codeph> 不起任何作用。在这种情况下不必再检查是否存在策略文件，因为这样会延迟 SWF 文件的下载，并且可能会不必要地占用网络带宽 （Flash Player 或 AIR 无法判断主下载将是 SWF 文件还是图像，这是因为策略文件下载先于主下载进行。）</p>
+	 
+	 <p>如果是从可能使用服务器端 HTTP 重定向的 URL 下载对象，则使用 <codeph>checkPolicyFile</codeph> 时要小心。始终从 <codeph>URLRequest.url</codeph> 中指定的相应初始 URL 检索策略文件。如果由于 HTTP 重定向而导致最终对象来自其它 URL，则最初下载的策略文件可能不适用于该对象的最终 URL，而最终 URL 对于安全性决策非常重要。如果发现处于这种情况，可以在收到 <codeph>ProgressEvent.PROGRESS</codeph> 或 <codeph>Event.COMPLETE</codeph> 事件后检查 <codeph>LoaderInfo.url</codeph> 的值，它会告诉您该对象的最终 URL。接着，用一个基于该对象的最终 URL 的策略文件 URL 调用 <codeph>Security.loadPolicyFile()</codeph> 方法。然后轮询 <codeph>LoaderInfo.childAllowsParent</codeph> 的值，直到它变为 <codeph>true</codeph>。</p>
+	 
+     	 <p>不需要为运行于应用程序沙箱中的 AIR 内容设置此属性。AIR 应用程序沙箱中的内容调用 <codeph>BitmapData.draw()</codeph> 方法时可以使用任何已加载的图像内容作为源。 </p>
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.display.xml#BitmapData/draw()"><linktext>flash.display.BitmapData.draw()</linktext></link><link href="flash.display.xml#Loader/content"><linktext>flash.display.Loader.content</linktext></link><link href="flash.display.xml#Loader/load()"><linktext>flash.display.Loader.load()</linktext></link><link href="flash.display.xml#LoaderInfo/childAllowsParent"><linktext>flash.display.LoaderInfo.childAllowsParent</linktext></link><link href="flash.display.xml#LoaderInfo/url"><linktext>flash.display.LoaderInfo.url</linktext></link><link href="flash.system.xml#Security/allowDomain()"><linktext>flash.system.Security.allowDomain()</linktext></link><link href="flash.system.xml#Security/loadPolicyFile()"><linktext>flash.system.Security.loadPolicyFile()</linktext></link></related-links></apiValue><apiValue id="flash.system:LoaderContext:securityDomain"><apiName>securityDomain</apiName><shortdesc>
+	 指定用于 Loader.load() 操作的安全域。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>null</apiData><apiValueClassifier>flash.system:SecurityDomain</apiValueClassifier></apiValueDef><apiDesc>
+	 指定用于 <codeph>Loader.load()</codeph> 操作的安全域。只应在加载 SWF 文件（而不是图像）时使用此属性。
+	 
+ 	 <p>只有在被加载的 SWF 文件与执行加载的 SWF 文件可能来自不同的域（不同的服务器）时，选择安全域才有意义。从您自己的域加载 SWF 文件时，始终会将它放置到您的安全域中。但是，在从其它域加载 SWF 文件时，您有两种选择：您可以允许将被加载的 SWF 文件放置到其“自然的”安全域中，此安全域与执行加载的 SWF 文件的安全域不同；这是默认设置。另一种选择是通过将 <codeph>myLoaderContext.securityDomain</codeph> 设置为与 <codeph>SecurityDomain.currentDomain</codeph> 相同，指出您希望将被加载的 SWF 文件放置到执行加载的 SWF 文件所在的安全域中。这称作<i>导入加载</i>，就安全性而言，它等同于将被加载的 SWF 文件复制到您自己的服务器，然后从该服务器加载它。为使导入加载成功完成，被加载的 SWF 文件的服务器必须具有一个策略文件，并且该策略文件必须信任执行加载的 SWF 文件的域。</p>
+	 
+	 <p>您只能在 <codeph>LoaderContext.securityDomain</codeph> 中传递您自己的安全域。如果试图传递任何其它安全域，则会引发 <codeph>SecurityError</codeph> 异常。</p>
+	 
+	 <p>AIR 应用程序安全沙箱中的内容无法将其它沙箱中的内容加载到其 SecurityDomain 中。</p>
+     
+	 <p>有关详细信息，请参阅<i>《ActionScript 3.0 编程》</i>中的“安全性”一章。</p>
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.display.xml#Loader/load()"><linktext>flash.display.Loader.load()</linktext></link><link href="flash.system.xml#SecurityDomain"><linktext>flash.system.SecurityDomain</linktext></link></related-links></apiValue></apiClassifier><apiClassifier id="flash.system:IMEConversionMode"><apiName>IMEConversionMode</apiName><shortdesc>
+ 这个类包含与 IME.conversionMode 属性配合使用的常量。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ 这个类包含与 <codeph>IME.conversionMode</codeph> 属性配合使用的常量。将 <codeph>conversionMode</codeph> 设置为 <codeph>ALPHANUMERIC_FULL</codeph> 或 <codeph>JAPANESE_KATAKANA_FULL</codeph> 时，播放器将使用全角字体，而设置为 <codeph>ALPHANUMERIC_HALF</codeph> 或 <codeph>JAPANESE_KATAKANA_HALF</codeph> 时将使用半角字体。
+ </apiDesc></apiClassifierDetail><related-links><link href="flash.system.xml#IME/conversionMode"><linktext>flash.system.IME.conversionMode</linktext></link></related-links><apiValue id="flash.system:IMEConversionMode:ALPHANUMERIC_FULL"><apiName>ALPHANUMERIC_FULL</apiName><shortdesc>
+	 字符串“ALPHANUMERIC_FULL”，与 IME.conversionMode 属性配合使用。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>ALPHANUMERIC_FULL</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 字符串 <codeph>"ALPHANUMERIC_FULL"</codeph>，与 <codeph>IME.conversionMode</codeph> 属性配合使用。此常量可以与所有 IME 配合使用。使用语法 <codeph>IMEConversionMode.ALPHANUMERIC_FULL</codeph>。
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.system.xml#IME/conversionMode"><linktext>flash.system.IME.conversionMode</linktext></link></related-links></apiValue><apiValue id="flash.system:IMEConversionMode:ALPHANUMERIC_HALF"><apiName>ALPHANUMERIC_HALF</apiName><shortdesc>
+	 字符串“ALPHANUMERIC_HALF”，与 IME.conversionMode 属性配合使用。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>ALPHANUMERIC_HALF</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 字符串 <codeph>"ALPHANUMERIC_HALF"</codeph>，与 <codeph>IME.conversionMode</codeph> 属性配合使用。此常量可以与所有 IME 配合使用。使用语法 <codeph>IMEConversionMode.ALPHANUMERIC_HALF</codeph>。
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.system.xml#IME/conversionMode"><linktext>flash.system.IME.conversionMode</linktext></link></related-links></apiValue><apiValue id="flash.system:IMEConversionMode:CHINESE"><apiName>CHINESE</apiName><shortdesc>
+	 字符串“CHINESE”，与 IME.conversionMode 属性配合使用。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>CHINESE</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 字符串 <codeph>"CHINESE"</codeph>，与 <codeph>IME.conversionMode</codeph> 属性配合使用。此常量用于与简体中文 IME 和繁体中文 IME 配合使用。使用语法 <codeph>IMEConversionMode.CHINESE</codeph>。
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.system.xml#IME/conversionMode"><linktext>flash.system.IME.conversionMode</linktext></link></related-links></apiValue><apiValue id="flash.system:IMEConversionMode:JAPANESE_HIRAGANA"><apiName>JAPANESE_HIRAGANA</apiName><shortdesc>
+	 字符串“JAPANESE_HIRAGANA”，与 IME.conversionMode 属性配合使用。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>JAPANESE_HIRAGANA</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 字符串 <codeph>"JAPANESE_HIRAGANA"</codeph>，与 <codeph>IME.conversionMode</codeph> 属性配合使用。此常量用于与日语 IME 配合使用。使用语法 <codeph>IMEConversionMode.JAPANESE_HIRAGANA</codeph>。
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.system.xml#IME/conversionMode"><linktext>flash.system.IME.conversionMode</linktext></link></related-links></apiValue><apiValue id="flash.system:IMEConversionMode:JAPANESE_KATAKANA_FULL"><apiName>JAPANESE_KATAKANA_FULL</apiName><shortdesc>
+	 字符串“JAPANESE_KATAKANA_FULL”，与 IME.conversionMode 属性配合使用。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>JAPANESE_KATAKANA_FULL</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 字符串 <codeph>"JAPANESE_KATAKANA_FULL"</codeph>，与 <codeph>IME.conversionMode</codeph> 属性配合使用。此常量用于与日语 IME 配合使用。使用语法 <codeph>IMEConversionMode.JAPANESE_KATAKANA_FULL</codeph>。
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.system.xml#IME/conversionMode"><linktext>flash.system.IME.conversionMode</linktext></link></related-links></apiValue><apiValue id="flash.system:IMEConversionMode:JAPANESE_KATAKANA_HALF"><apiName>JAPANESE_KATAKANA_HALF</apiName><shortdesc>
+	 字符串“JAPANESE_KATAKANA_HALF”，与 IME.conversionMode 属性配合使用。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>JAPANESE_KATAKANA_HALF</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 字符串 <codeph>"JAPANESE_KATAKANA_HALF"</codeph>，与 <codeph>IME.conversionMode</codeph> 属性配合使用。此常量用于与日语 IME 配合使用。使用语法 <codeph>IMEConversionMode.JAPANESE_KATAKANA_HALF</codeph>。
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.system.xml#IME/conversionMode"><linktext>flash.system.IME.conversionMode</linktext></link></related-links></apiValue><apiValue id="flash.system:IMEConversionMode:KOREAN"><apiName>KOREAN</apiName><shortdesc>
+	 字符串“KOREAN”，与 IME.conversionMode 属性配合使用。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>KOREAN</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 字符串 <codeph>"KOREAN"</codeph>，与 <codeph>IME.conversionMode</codeph> 属性配合使用。此常量用于与韩语 IME 配合使用。使用语法 <codeph>IMEConversionMode.KOREAN</codeph>。
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.system.xml#IME/conversionMode"><linktext>flash.system.IME.conversionMode</linktext></link></related-links></apiValue><apiValue id="flash.system:IMEConversionMode:UNKNOWN"><apiName>UNKNOWN</apiName><shortdesc>
+	 字符串“UNKNOWN”，调用 IME.conversionMode 属性时可返回此字符串。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>UNKNOWN</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 字符串 <codeph>"UNKNOWN"</codeph>，可通过调用 <codeph>IME.conversionMode</codeph> 属性返回它。此值无法被设置，并且仅在播放器无法识别当前活动的 IME 时返回。使用语法 <codeph>IMEConversionMode.UNKNOWN</codeph>。
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.system.xml#IME/conversionMode"><linktext>flash.system.IME.conversionMode</linktext></link></related-links></apiValue></apiClassifier><apiClassifier id="flash.system:SecurityPanel"><apiName>SecurityPanel</apiName><shortdesc>
+ SecurityPanel 类提供一些值，用来指定您希望显示的“安全设置”面板。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ SecurityPanel 类提供一些值，用来指定您希望显示的“安全设置”面板。
+ 
+ <p>此类包含与 <codeph>Security.showSettings()</codeph> 方法一起使用的静态常量。您无法创建 SecurityPanel 类的新实例。</p>
+ 
+ </apiDesc><example conref="examples\SecurityExample.as"> 下例显示如何使用 Sprite 对象上的 <codeph>click</codeph> 事件显示“Flash Player 设置”中的“本地存储设置”面板。使用 <codeph>draw()</codeph> 将一个橙色框添加到舞台上。在 <codeph>draw()</codeph> 中，通过指示 Flash Player 打开其“本地存储设置”面板，将 <codeph>click</codeph> 事件侦听器以名称 <codeph>clickHandler()</codeph> 添加进来，它对应于 <codeph>click</codeph> 事件。
+<codeblock>
+package {
+    import flash.display.Sprite;
+    import flash.text.TextField;
+    import flash.events.*;
+    import flash.system.Security;
+    import flash.system.SecurityPanel;
+
+    public class SecurityExample extends Sprite {
+        private var bgColor:uint = 0xFFCC00;
+        private var size:uint = 100;
+
+        public function SecurityExample() {
+            draw();
+        }
+
+        private function draw():void {
+            var child:Sprite = new Sprite();
+            child.graphics.beginFill(bgColor);
+            child.graphics.drawRect(0, 0, size, size);
+            child.graphics.endFill();
+            child.buttonMode = true;
+
+            var label:TextField = new TextField();
+            label.text = "settings";
+            label.selectable = false;
+            label.mouseEnabled = false;
+            child.addChild(label);
+
+            child.addEventListener(MouseEvent.CLICK, clickHandler);
+            addChild(child);
+        }
+
+        private function clickHandler(event:MouseEvent):void {
+            Security.showSettings(SecurityPanel.LOCAL_STORAGE);
+        }
+    }
+}
+</codeblock></example></apiClassifierDetail><apiValue id="flash.system:SecurityPanel:CAMERA"><apiName>CAMERA</apiName><shortdesc>
+	 当传递给 Security.showSettings() 时，显示“Flash Player 设置”中的“摄像头”面板。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>Security, Security.CAMERA, CAMERA
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>camera</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 当传递给 <codeph>Security.showSettings()</codeph> 时，显示“Flash Player 设置”中的“摄像头”面板。
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.system.xml#Security/showSettings()"><linktext>Security.showSettings()</linktext></link></related-links></apiValue><apiValue id="flash.system:SecurityPanel:DEFAULT"><apiName>DEFAULT</apiName><shortdesc>
+	 当传递给 Security.showSettings() 时，显示用户上次关闭“Flash Player 设置”时处于打开状态的面板。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>Security, Security.DEFAULT, DEFAULT
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>default</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 当传递给 <codeph>Security.showSettings()</codeph> 时，显示用户上次关闭“Flash Player 设置”时处于打开状态的面板。
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.system.xml#Security/showSettings()"><linktext>Security.showSettings()</linktext></link></related-links></apiValue><apiValue id="flash.system:SecurityPanel:DISPLAY"><apiName>DISPLAY</apiName><shortdesc>
+	 当传递给 Security.showSettings() 时，显示“Flash Player 设置”中的“显示”面板。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>Security, Security.DISPLAY, DISPLAY
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>display</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 当传递给 <codeph>Security.showSettings()</codeph> 时，显示“Flash Player 设置”中的“显示”面板。
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.system.xml#Security/showSettings()"><linktext>Security.showSettings()</linktext></link></related-links></apiValue><apiValue id="flash.system:SecurityPanel:LOCAL_STORAGE"><apiName>LOCAL_STORAGE</apiName><shortdesc>
+	 当传递给 Security.showSettings() 时，显示“Flash Player 设置”中的“本地存储设置”面板。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>Security, Security.LOCAL_STORAGE, LOCAL_STORAGE
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>localStorage</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 当传递给 <codeph>Security.showSettings()</codeph> 时，显示“Flash Player 设置”中的“本地存储设置”面板。
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.system.xml#Security/showSettings()"><linktext>Security.showSettings()</linktext></link></related-links></apiValue><apiValue id="flash.system:SecurityPanel:MICROPHONE"><apiName>MICROPHONE</apiName><shortdesc>
+	 当传递给 Security.showSettings() 时，显示“Flash Player 设置”中的“麦克风”面板。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>Security, Security.MICROPHONE, MICROPHONE
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>microphone</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 当传递给 <codeph>Security.showSettings()</codeph> 时，显示“Flash Player 设置”中的“麦克风”面板。
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.system.xml#Security/showSettings()"><linktext>Security.showSettings()</linktext></link></related-links></apiValue><apiValue id="flash.system:SecurityPanel:PRIVACY"><apiName>PRIVACY</apiName><shortdesc>
+	 当传递给 Security.showSettings() 时，显示“Flash Player 设置”中的“隐私设置”面板。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>Security, Security.PRIVACY, PRIVACY
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>privacy</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 当传递给 <codeph>Security.showSettings()</codeph> 时，显示“Flash Player 设置”中的“隐私设置”面板。
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.system.xml#Security/showSettings()"><linktext>Security.showSettings()</linktext></link></related-links></apiValue><apiValue id="flash.system:SecurityPanel:SETTINGS_MANAGER"><apiName>SETTINGS_MANAGER</apiName><shortdesc>
+	 当传递给 Security.showSettings() 时，显示“设置管理器”(在一个单独的浏览器窗口中)。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>Security, Security.SETTINGS_MANAGER, SETTINGS_MANAGER
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>settingsManager</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 当传递给 <codeph>Security.showSettings()</codeph> 时，显示“设置管理器”（在一个单独的浏览器窗口中）。
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.system.xml#Security/showSettings()"><linktext>Security.showSettings()</linktext></link></related-links></apiValue></apiClassifier><apiClassifier id="flash.system:JPEGLoaderContext"><apiName>JPEGLoaderContext</apiName><shortdesc>
+ JPEGLoaderContext 类包含一个属性，可以在加载 JPEG 图像时启用消除马赛克的滤镜。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.system:LoaderContext</apiBaseClassifier></apiClassifierDef><apiDesc>
+ JPEGLoaderContext 类包含一个属性，可以在加载 JPEG 图像时启用消除马赛克的滤镜。消除马赛克的滤镜通过平滑相邻的像素，改善高压缩率设置下的图像质量。要在加载 JPEG 图像时应用解块，请创建一个 JPEGLoaderContext 对象，并设置其 <codeph>deblockingFilter</codeph> 属性。然后使用 JPEGLoaderContext 对象名称作为用于加载图像的 Loader 对象的 <codeph>load()</codeph> 方法中 <codeph>context</codeph> 参数的值。
+ 
+ <p>JPEGLoaderContext 类扩展了 LoaderContext 类。如果需要以编程方式访问所加载图像的像素（例如，如果要使用 <codeph>BitmapData.draw()</codeph> 方法），请将 <codeph>checkPolicyFile</codeph> 属性设置为 <codeph>true</codeph>。对于在应用程序沙箱中运行的 AIR 内容，无需设置 <codeph>checkPolicyFile</codeph> 属性。</p>
+ 
+ </apiDesc></apiClassifierDetail><related-links><link href="flash.display.xml#Loader/load()"><linktext>flash.display.Loader.load()</linktext></link><link href="flash.display.xml#BitmapData/draw()"><linktext>flash.display.BitmapData.draw()</linktext></link></related-links><apiConstructor id="flash.system:JPEGLoaderContext:JPEGLoaderContext"><apiName>JPEGLoaderContext</apiName><shortdesc>
+     以指定的设置创建新的 JPEGLoaderContext 对象。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>deblockingFilter</apiItemName><apiOperationClassifier>Number</apiOperationClassifier><apiData>0.0</apiData><apiDesc>指定解块滤镜的长度。值为 1.0 时，应用完整长度的消除马赛克的滤镜；值为 0.0 时，禁用消除马赛克的滤镜。
+     
+     </apiDesc></apiParam><apiParam><apiItemName>checkPolicyFile</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>指定 Flash Player 在加载对象前是否应检查有无 URL 策略文件。
+     
+     </apiDesc></apiParam><apiParam><apiItemName>applicationDomain</apiItemName><apiOperationClassifier>flash.system:ApplicationDomain</apiOperationClassifier><apiData>null</apiData><apiDesc>指定要用于 Loader 对象的 ApplicationDomain 对象。
+     
+     </apiDesc></apiParam><apiParam><apiItemName>securityDomain</apiItemName><apiOperationClassifier>flash.system:SecurityDomain</apiOperationClassifier><apiData>null</apiData><apiDesc>指定要用于 Loader 对象的 SecurityDomain 对象。
+     
+     </apiDesc></apiParam></apiConstructorDef><apiDesc>
+     以指定的设置创建新的 JPEGLoaderContext 对象。 
+     
+     </apiDesc></apiConstructorDetail><related-links><link href="flash.system.xml#LoaderContext"><linktext>flash.system.LoaderContext</linktext></link><link href="flash.display.xml#Loader/load()"><linktext>flash.display.Loader.load()</linktext></link><link href="flash.display.xml#Loader/loadBytes()"><linktext>flash.display.Loader.loadBytes()</linktext></link><link href="flash.system.xml#ApplicationDomain"><linktext>flash.system.ApplicationDomain</linktext></link><link href="flash.system.xml#SecurityDomain"><linktext>flash.system.SecurityDomain</linktext></link></related-links></apiConstructor><apiValue id="flash.system:JPEGLoaderContext:deblockingFilter"><apiName>deblockingFilter</apiName><shortdesc> 
+	 指定解块滤镜的长度。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>0.0</apiData><apiValueClassifier>Number</apiValueClassifier></apiValueDef><apiDesc> 
+	 指定解块滤镜的长度。值为 1.0 时，应用完整长度的消除马赛克的滤镜；值为 0.0 时，禁用消除马赛克的滤镜。
+	 
+	 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.system:ApplicationDomain"><apiName>ApplicationDomain</apiName><shortdesc>
+ ApplicationDomain 类是分散的类定义组的一个容器。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><internal>Security considerations for application domains are discussed in the 
+ applicationDomain property entries of URLRequest and LoaderInfo. 
+ 
+ </internal></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ ApplicationDomain 类是分散的类定义组的一个容器。应用程序域用于划分位于同一个安全域中的类。它们允许同一个类存在多个定义，并且允许子级重用父级定义。
+ 
+ <p>在通过 Loader 类加载外部 SWF 文件时会使用应用程序域。加载的 SWF 文件中的所有 ActionScript 3.0 定义都存储在由 LoaderContext 对象的 <codeph>applicationDomain</codeph> 属性指定的应用程序域中，此对象是您为 Loader 对象的 <codeph>load()</codeph> 或 <codeph>loadBytes()</codeph> 方法传递的 <codeph>context</codeph> 参数。LoaderInfo 对象还包含一个只读的 <codeph>applicationDomain</codeph> 属性。</p>
+ 
+ <p>SWF 文件中的所有代码被定义为存在于应用程序域中。主应用程序就在当前的应用程序域中运行。系统域中包含所有应用程序域（包括当前域），这意味着它包含所有 Flash Player 类。</p>
+ 
+ <p>除系统域以外，每个应用程序域都有一个关联的父域。主应用程序的应用程序域的父域是系统域。已加载的类仅在其父级中没有相关定义时才进行定义。不能用较新的定义覆盖已加载的类定义。</p>
+ 
+ <p>有关应用程序域的用法示例，请参阅<i>《ActionScript 3.0 编程》</i>。</p>
+ 
+ <p>使用 <codeph>ApplicationDomain()</codeph> 构造函数可以创建 ApplicationDomain 对象。</p>
+ 
+ </apiDesc><example conref="examples\ApplicationDomainExample.as"> 下例演示了如何加载运行时类，以及如何调用位于另一个 SWF 中的类的公共方法。
+ <p><b>注意：</b></p>
+ <ul>
+    <li>由于 ClassLoader 类要加载 SWF 文件，因此需要文件系统级别的本地安全性。</li>
+    <li>要运行此示例，在 ApplicationDomainExample.swf 文件所在的文件夹中必须存在一个名为 RuntimeClasses.swf 的 SWF 文件。</li>
+ </ul>
+ 
+ <p>首先，使用下面的代码创建 RuntimeClasses.swf 文件：</p>
+ <codeblock platform="actionscript">
+ package {
+   import flash.display.Sprite;
+   public class RuntimeClasses extends Sprite
+   {
+     public function RuntimeClasses()
+     {}
+      
+     public function greet():String {
+       return("Hello World");
+     }
+   }
+ }
+ </codeblock>
+ 
+ <p>然后实现下面的代码：</p>
+<codeblock>
+
+package {
+    import flash.display.DisplayObject;
+    import flash.display.Sprite;
+    import flash.errors.IllegalOperationError;
+    import flash.events.Event;
+    import flash.text.TextField;
+
+    public class ApplicationDomainExample extends Sprite {
+        private var loader:ClassLoader;
+        private var tf:TextField = new TextField();
+
+        public function ApplicationDomainExample() {
+            addChild(tf);
+
+            loader = new ClassLoader();
+            loader.addEventListener(ClassLoader.LOAD_ERROR,loadErrorHandler);
+            loader.addEventListener(ClassLoader.CLASS_LOADED,classLoadedHandler);
+            loader.load("RuntimeClasses.swf");
+        }
+
+        private function loadErrorHandler(e:Event):void {
+            tf.text = "Load failed";
+            throw new IllegalOperationError("Cannot load the specified file.");
+        }
+
+        private function classLoadedHandler(e:Event):void {
+            var runtimeClassRef:Class = loader.getClass("RuntimeClasses");
+            var greeter:Object = new runtimeClassRef();
+
+            tf.text = greeter.greet();
+        }
+    }
+}
+
+import flash.display.Loader;
+import flash.errors.IllegalOperationError;
+import flash.events.Event;
+import flash.events.EventDispatcher;
+import flash.events.IOErrorEvent;
+import flash.events.SecurityErrorEvent;
+import flash.net.URLRequest;
+import flash.system.ApplicationDomain;
+import flash.system.LoaderContext;
+
+class ClassLoader extends EventDispatcher {
+    public static var CLASS_LOADED:String = "classLoaded";
+    public static var LOAD_ERROR:String = "loadError";
+    private var loader:Loader;
+    private var swfLib:String;
+    private var request:URLRequest;
+    private var loadedClass:Class;
+
+    public function ClassLoader() {
+
+        loader = new Loader();
+        loader.contentLoaderInfo.addEventListener(Event.COMPLETE,completeHandler);
+        loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR,ioErrorHandler);
+        loader.contentLoaderInfo.addEventListener(SecurityErrorEvent.SECURITY_ERROR,securityErrorHandler);
+    }
+
+    public function load(lib:String):void {
+        swfLib = lib;
+        request = new URLRequest(swfLib);
+        var context:LoaderContext = new LoaderContext();
+        context.applicationDomain=ApplicationDomain.currentDomain;
+        loader.load(request,context);
+    }
+
+    public function getClass(className:String):Class {
+        try {
+            return loader.contentLoaderInfo.applicationDomain.getDefinition(className)  as  Class;
+        } catch (e:Error) {
+            throw new IllegalOperationError(className + " definition not found in " + swfLib);
+        }
+        return null;
+    }
+
+    private function completeHandler(e:Event):void {
+        dispatchEvent(new Event(ClassLoader.CLASS_LOADED));
+    }
+
+    private function ioErrorHandler(e:Event):void {
+        dispatchEvent(new Event(ClassLoader.LOAD_ERROR));
+    }
+
+    private function securityErrorHandler(e:Event):void {
+        dispatchEvent(new Event(ClassLoader.LOAD_ERROR));
+    }
+}
+</codeblock></example><example conref="examples\ApplicationDomainExample.2.as"> 如果有多个 SWF 文件中包含名称相同但实现方式不同的编译类，可以根据此示例将外部加载的 SWF 文件的类相互区分开来。先前，已指示子 SWF 使用 <codeph>ApplicationDomain.currentDomain</codeph>。在本例中，创建一个新的 <codeph>ApplicationDomain</codeph>，因此无论 SWF 第二次加载哪一个 <codeph>Greeter</codeph> 类，该类的属性和方法都不会替换第一个 <codeph>Greeter</codeph> 类的属性和方法。您可以通过修改 <codeph>ClassLoader</codeph> 的 <codeph>load</codeph> 方法中的 <codeph>context.applicationDomain</codeph> 属性来测试这一点。
+ <p><b>注意：</b></p>
+ <ul>
+    <li>由于 ClassLoader 类要加载 SWF 文件，因此需要文件系统级别的本地安全性。</li>
+    <li>要运行此示例，必须存在两个名为 Greeter.swf 的 SWF 文件，分别位于“en”和“es”文件夹中。</li>
+ </ul>
+ 
+ <p>使用以下代码在“en”目录下创建一个 Greeter.as 文件：</p>
+ <codeblock platform="actionscript">
+ package {
+    import flash.display.Sprite;
+    public class Greeter extends Sprite
+    {
+        public function Greeter()
+        {
+        }
+        
+        public function greet():String {
+            return("Good Morning");
+        }
+    }
+ }
+ </codeblock>
+ <p>然后在“es”目录下创建一个十分相似的 Greeter.as 文件：</p>
+ 
+ <codeblock platform="actionscript">
+ package {
+    import flash.display.Sprite;
+    public class Greeter extends Sprite
+    {
+        public function Greeter()
+        {
+        }
+        
+        public function greet():String {
+            return("Buenos Dias");
+        }
+    }
+}
+ </codeblock>
+ 
+ <p>编译两个 SWF 文件，然后实现以下代码：</p>
+<codeblock>
+package {
+    import flash.display.DisplayObject;
+    import flash.display.Sprite;
+    import flash.errors.IllegalOperationError;
+    import flash.events.Event;
+    import flash.text.TextField;
+    import flash.text.TextFieldAutoSize;
+
+    public class ApplicationDomainExample2 extends Sprite {
+        private var spanishGreeterLoader:ClassLoader;
+        private var englishGreeterLoader:ClassLoader;
+        private var tf:TextField = new TextField();
+        private var greetersLoaded:uint = 0;
+
+        public function ApplicationDomainExample2() {
+            tf.autoSize = TextFieldAutoSize.LEFT;
+            addChild(tf);
+
+            spanishGreeterLoader = new ClassLoader();
+            spanishGreeterLoader.addEventListener(ClassLoader.LOAD_ERROR,loadErrorHandler);
+            spanishGreeterLoader.addEventListener(ClassLoader.CLASS_LOADED,classLoadedHandler);
+            spanishGreeterLoader.load("es/Greeter.swf");
+            
+            englishGreeterLoader = new ClassLoader();
+            englishGreeterLoader.addEventListener(ClassLoader.LOAD_ERROR,loadErrorHandler);
+            englishGreeterLoader.addEventListener(ClassLoader.CLASS_LOADED,classLoadedHandler);
+            englishGreeterLoader.load("en/Greeter.swf");
+        }
+
+        private function loadErrorHandler(e:Event):void {
+            tf.text = "Load failed";
+            throw new IllegalOperationError("Cannot load the specified file.");
+        }
+
+        private function classLoadedHandler(e:Event):void {
+            greetersLoaded++;
+            if(greetersLoaded == 2) {
+                greet();    
+            }
+        }
+        
+        private function greet():void {
+            var spanishGreeter:Class = spanishGreeterLoader.getClass("Greeter");
+            var englishGreeter:Class = englishGreeterLoader.getClass("Greeter");
+            var greeter1 = new spanishGreeter();
+            var greeter2 = new englishGreeter();
+            
+            tf.text = greeter1.greet() + "\n" + greeter2.greet();
+        }
+    }
+}
+
+import flash.display.Loader;
+import flash.errors.IllegalOperationError;
+import flash.events.Event;
+import flash.events.EventDispatcher;
+import flash.events.IOErrorEvent;
+import flash.events.SecurityErrorEvent;
+import flash.net.URLRequest;
+import flash.system.ApplicationDomain;
+import flash.system.LoaderContext;
+
+class ClassLoader extends EventDispatcher {
+    public static var CLASS_LOADED:String = "classLoaded";
+    public static var LOAD_ERROR:String = "loadError";
+    private var loader:Loader;
+    private var swfLib:String;
+    private var request:URLRequest;
+    private var loadedClass:Class;
+
+    public function ClassLoader() {
+
+        loader = new Loader();
+        loader.contentLoaderInfo.addEventListener(Event.COMPLETE,completeHandler);
+        loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR,ioErrorHandler);
+        loader.contentLoaderInfo.addEventListener(SecurityErrorEvent.SECURITY_ERROR,securityErrorHandler);
+    }
+
+    public function load(lib:String):void {
+        swfLib = lib;
+        request = new URLRequest(swfLib);
+        var context:LoaderContext = new LoaderContext();
+//        context.applicationDomain = ApplicationDomain.currentDomain;
+        context.applicationDomain = new ApplicationDomain();
+        loader.load(request,context);
+    }
+
+    public function getClass(className:String):Class {
+        try {
+            return loader.contentLoaderInfo.applicationDomain.getDefinition(className)  as  Class;
+        } catch (e:Error) {
+            throw new IllegalOperationError(className + " definition not found in " + swfLib);
+        }
+        return null;
+    }
+
+    private function completeHandler(e:Event):void {
+        dispatchEvent(new Event(ClassLoader.CLASS_LOADED));
+    }
+
+    private function ioErrorHandler(e:Event):void {
+        dispatchEvent(new Event(ClassLoader.LOAD_ERROR));
+    }
+
+    private function securityErrorHandler(e:Event):void {
+        dispatchEvent(new Event(ClassLoader.LOAD_ERROR));
+    }
+}
+</codeblock></example></apiClassifierDetail><related-links><link href="flash.display.xml#Loader/load()"><linktext>flash.display.Loader.load()</linktext></link><link href="flash.display.xml#Loader/loadBytes()"><linktext>flash.display.Loader.loadBytes()</linktext></link><link href="flash.display.xml#LoaderInfo"><linktext>flash.display.LoaderInfo</linktext></link><link href="flash.net.xml#URLRequest"><linktext>flash.net.URLRequest</linktext></link><link href="flash.system.xml#LoaderContext"><linktext>flash.system.LoaderContext</linktext></link></related-links><apiConstructor id="flash.system:ApplicationDomain:ApplicationDomain"><apiName>ApplicationDomain</apiName><shortdesc>
+     创建一个新的应用程序域。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>parentDomain</apiItemName><apiOperationClassifier>flash.system:ApplicationDomain</apiOperationClassifier><apiData>null</apiData><apiDesc>如果未传入父域，此应用程序域将使用系统域作为其父域。
+     
+	 </apiDesc></apiParam></apiConstructorDef><apiDesc>
+     创建一个新的应用程序域。
+     
+     </apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="flash.system:ApplicationDomain:getDefinition"><apiName>getDefinition</apiName><shortdesc>
+     从指定的应用程序域获取一个公共定义。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><internal>throws SecurityError The definition belongs to a domain to which
+     the calling code does not have access.
+     
+	 </internal></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>不存在具有指定名称的公共定义。
+     
+     </apiDesc><apiItemName>ReferenceError</apiItemName><apiOperationClassifier>ReferenceError</apiOperationClassifier></apiException><apiReturn><apiDesc>与此定义关联的对象。
+     
+     </apiDesc><apiOperationClassifier>Object</apiOperationClassifier></apiReturn><apiParam><apiItemName>name</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>定义的名称。
+     </apiDesc></apiParam></apiOperationDef><apiDesc>
+     从指定的应用程序域获取一个公共定义。该定义可以是一个类、一个命名空间或一个函数的定义。
+     
+     </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.system:ApplicationDomain:hasDefinition"><apiName>hasDefinition</apiName><shortdesc>
+     检查指定的应用程序域之内是否存在一个公共定义。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>如果指定的定义存在，则返回 <codeph>true</codeph> 值；否则，返回 <codeph>false</codeph>。
+     
+	 </apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn><apiParam><apiItemName>name</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>定义的名称。
+     </apiDesc></apiParam></apiOperationDef><apiDesc>
+     检查指定的应用程序域之内是否存在一个公共定义。该定义可以是一个类、一个命名空间或一个函数的定义。
+     
+     </apiDesc></apiOperationDetail></apiOperation><apiValue id="flash.system:ApplicationDomain:MIN_DOMAIN_MEMORY_LENGTH:get"><apiName>MIN_DOMAIN_MEMORY_LENGTH</apiName><shortdesc>
+	 获取用作 ApplicationDomain.domainMemory 所需的最小内存对象长度。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>uint</apiValueClassifier><apiTipTexts><apiTipText>
+     </apiTipText></apiTipTexts></apiValueDef><apiDesc>
+	 获取用作 ApplicationDomain.domainMemory 所需的最小内存对象长度。
+	 
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.system:ApplicationDomain:currentDomain:get"><apiName>currentDomain</apiName><shortdesc>
+     获取正在其中执行代码的当前应用程序域。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><internal>Question: Do you call System.currentDomain? or Loader.currentDomain or request.currentDomain?
+     
+	 </internal></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>flash.system:ApplicationDomain</apiValueClassifier></apiValueDef><apiDesc>
+     获取正在其中执行代码的当前应用程序域。
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.system:ApplicationDomain:domainMemory:get"><apiName>domainMemory</apiName><shortdesc>
+	 获取并设置将在此 ApplicationDomain 中对其执行域全局内存操作的对象。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>flash.utils:ByteArray</apiValueClassifier><apiTipTexts><apiTipText>
+     </apiTipText></apiTipTexts></apiValueDef><apiDesc>
+	 获取并设置将在此 ApplicationDomain 中对其执行域全局内存操作的对象。
+	 
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.system:ApplicationDomain:parentDomain:get"><apiName>parentDomain</apiName><shortdesc>
+     获取该应用程序域的父域。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>flash.system:ApplicationDomain</apiValueClassifier></apiValueDef><apiDesc>
+     获取该应用程序域的父域。
+     
+	 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.system:Capabilities"><apiName>Capabilities</apiName><shortdesc>
+ Capabilities 类提供一些属性，这些属性描述了承载 SWF 文件的系统和播放器。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>Capabilities, Capabilities object, built-in class
+  
+  </keyword></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ <ph platform="actionscript">Capabilities 类提供一些属性，这些属性描述了承载 SWF 文件的系统和播放器。例如，手机屏幕可以有 100 个正方形像素（黑白），而 PC 屏幕则可以有 1000 个正方形像素（彩色）。通过使用 Capabilities 对象来确定用户所拥有的设备的类型，可以向尽可能多的用户提供适当的内容。如果熟悉设备的功能，则可以通知服务器发送合适的 SWF 文件，或是通知 SWF 文件变更其播放方式。</ph> <ph platform="javascript">Capabilities 类提供一些属性，这些属性描述了承载 HTML 内容（和 SWF 内容）的系统和运行时。通过使用 Capabilities 对象来确定用户所拥有的计算机的类型，可以向尽可能多的用户提供适当的内容。了解计算机的功能后，您可以加载适当的内容或使用代码更改其呈现方式。</ph>
+ 
+ <p>但 Adobe AIR 的有些功能没有作为 Capabilities 类的属性列出。这些功能是其它类的属性：</p>
+ 
+ <adobetable class="innertable">
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ <tgroup cols="2"><thead><row><entry>属性</entry><entry>说明</entry></row></thead><tbody><row>
+ <entry><codeph>NativeApplication.supportsDockIcon</codeph></entry>
+ <entry>操作系统是否支持系统停靠图标。</entry>
+ </row><row>
+ <entry><codeph>NativeApplication.supportsMenu</codeph></entry>
+ <entry>操作系统是否支持全局应用程序菜单栏。</entry>
+ </row><row>
+ <entry><codeph>NativeApplication.supportsSystemTrayIcon</codeph></entry>
+ <entry>操作系统是否支持系统任务栏图标。</entry>
+ </row><row>
+ <entry><codeph>NativeWindow.supportsMenu</codeph></entry>
+ <entry>操作系统是否支持窗口菜单。</entry>
+ </row><row>
+ <entry><codeph>NativeWindow.supportsTransparency</codeph></entry>
+ <entry>操作系统是否支持透明窗口。</entry>
+ </row></tbody></tgroup></adobetable>
+ 
+ <p><i>请勿</i> 使用 <codeph>Capabilities.os</codeph> 或 <codeph>Capabilities.manufacturer</codeph> 来根据操作系统确定功能。以操作系统来决定功能是个不良习惯，因为如果应用程序没有考虑到所有潜在的目标操作系统，这会产生问题。建议使用与要测试的功能相对应的属性。</p>
+ 
+ <p>可使用 <codeph>GET</codeph> 或 <codeph>POST</codeph> HTTP 方法发送功能信息，这些信息作为一个 URL 编码的字符串存储在 <codeph>Capabilities.serverString</codeph> 属性中。下例显示了支持 MP3、具有 1600 x 1200 像素分辨率、运行 Windows XP 并且安装有输入法编辑器 (IME) 的计算机的服务器字符串：</p>
+ 
+ <pre>A=t&amp;SA=t&amp;SV=t&amp;EV=t&amp;MP3=t&amp;AE=t&amp;VE=t&amp;ACC=f&amp;PR=t&amp;SP=t&amp;
+     SB=f&amp;DEB=t&amp;V=WIN%209%2C0%2C0%2C0&amp;M=Adobe%20Windows&amp;
+     R=1600x1200&amp;DP=72&amp;COL=color&amp;AR=1.0&amp;OS=Windows%20XP&amp;
+     L=en&amp;PT=External&amp;AVD=f&amp;LFD=f&amp;WD=f&amp;IME=t</pre>
+ 
+ <p>下表列出了 Capabilities 类的属性和相应的服务器字符串：
+ <adobetable class="innertable">
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+   
+  
+  
+  
+  
+  
+  
+  
+  
+ <tgroup cols="2"><thead><row><entry align="left">Capabilities 类属性</entry><entry align="left">服务器字符串</entry></row></thead><tbody><row>
+      <entry><codeph>avHardwareDisable</codeph></entry>
+      <entry><codeph>AVD</codeph></entry>
+  </row><row>
+      <entry><codeph>hasAccessibility</codeph></entry>
+      <entry><codeph>ACC</codeph></entry>
+  </row><row>
+      <entry><codeph>hasAudio</codeph></entry>
+      <entry><codeph>A</codeph></entry>
+  </row><row>
+      <entry><codeph>hasAudioEncoder</codeph></entry>
+      <entry><codeph>AE</codeph></entry>
+  </row><row>
+      <entry><codeph>hasEmbeddedVideo</codeph></entry>
+      <entry><codeph>EV</codeph></entry>
+  </row><row>
+      <entry><codeph>hasIME</codeph></entry>
+      <entry><codeph>IME</codeph></entry>
+  </row><row>
+      <entry><codeph>hasMP3</codeph></entry>
+      <entry><codeph>MP3</codeph></entry>
+  </row><row>
+      <entry><codeph>hasPrinting</codeph></entry>
+      <entry><codeph>PR</codeph></entry>
+  </row><row>
+      <entry><codeph>hasScreenBroadcast</codeph></entry>
+      <entry><codeph>SB</codeph></entry>
+  </row><row>
+      <entry><codeph>hasScreenPlayback</codeph></entry>
+      <entry><codeph>SP</codeph></entry>
+  </row><row>
+      <entry><codeph>hasStreamingAudio</codeph></entry>
+      <entry><codeph>SA</codeph></entry>
+  </row><row>
+      <entry><codeph>hasStreamingVideo</codeph></entry>
+      <entry><codeph>SV</codeph></entry>
+  </row><row>
+      <entry><codeph>hasTLS</codeph></entry>
+      <entry><codeph>TLS</codeph></entry>
+  </row><row>
+      <entry><codeph>hasVideoEncoder</codeph></entry>
+      <entry><codeph>VE</codeph></entry>
+  </row><row>
+      <entry><codeph>isDebugger</codeph></entry>
+      <entry><codeph>DEB</codeph></entry>
+  </row><row>
+      <entry><codeph>language</codeph></entry>
+      <entry><codeph>L</codeph></entry>
+  </row><row>
+      <entry><codeph>localFileReadDisable</codeph></entry>
+      <entry><codeph>LFD</codeph></entry>
+  </row><row>
+      <entry><codeph>manufacturer</codeph></entry>
+      <entry><codeph>M</codeph></entry>
+  </row><row>
+      <entry><codeph>maxLevelIDC</codeph></entry>
+      <entry><codeph>ML</codeph></entry>
+  </row><row>
+      <entry><codeph>os</codeph></entry>
+      <entry><codeph>OS</codeph></entry>
+  </row><row>
+      <entry><codeph>pixelAspectRatio</codeph></entry>
+      <entry><codeph>AR</codeph></entry>
+  </row><row>
+      <entry><codeph>playerType</codeph></entry>
+      <entry><codeph>PT</codeph></entry>
+  </row><row>
+      <entry><codeph>screenColor</codeph></entry>
+      <entry><codeph>COL</codeph></entry>
+  </row><row>
+      <entry><codeph>screenDPI</codeph></entry>
+      <entry><codeph>DP</codeph></entry>
+  </row><row>
+      <entry><codeph>screenResolutionX</codeph></entry>
+      <entry><codeph>R</codeph></entry>
+  </row><row>
+      <entry><codeph>screenResolutionY</codeph></entry>
+      <entry><codeph>R</codeph></entry>
+  </row><row>
+      <entry><codeph>version</codeph></entry>
+      <entry><codeph>V</codeph></entry>
+  </row></tbody></tgroup></adobetable>
+ </p>
+  
+ <p>还有一个 <codeph>WD</codeph> 服务器字符串，用于指定是否禁用无窗口模式。如果与 Web 浏览器不兼容或用户在 mms.cfg 文件中进行了相应设置，则可以在 Flash Player 中禁用无窗口模式。没有对应的 Capabilities 属性。</p>
+  
+ <p>Capabilities 类的所有属性都是只读的。</p>
+ 
+ </apiDesc><example conref="examples\CapabilitiesExample.as"> 下例使用对 <codeph>trace()</codeph> 的若干调用只输出在 flash.system.Capabilities 对象中找到的值。
+<codeblock>
+
+package {
+    import flash.display.Sprite;
+    import flash.system.Capabilities;
+
+    public class CapabilitiesExample extends Sprite {
+        public function CapabilitiesExample() {
+            showCapabilities();
+        }
+        
+        private function showCapabilities():void {
+            trace("avHardwareDisable: " + Capabilities.avHardwareDisable);
+            trace("hasAccessibility: " + Capabilities.hasAccessibility);
+            trace("hasAudio: " + Capabilities.hasAudio);
+            trace("hasAudioEncoder: " + Capabilities.hasAudioEncoder);
+            trace("hasEmbeddedVideo: " + Capabilities.hasEmbeddedVideo);
+            trace("hasMP3: " + Capabilities.hasMP3);
+            trace("hasPrinting: " + Capabilities.hasPrinting);
+            trace("hasScreenBroadcast: " + Capabilities.hasScreenBroadcast);
+            trace("hasScreenPlayback: " + Capabilities.hasScreenPlayback);
+            trace("hasStreamingAudio: " + Capabilities.hasStreamingAudio);
+            trace("hasVideoEncoder: " + Capabilities.hasVideoEncoder);
+            trace("isDebugger: " + Capabilities.isDebugger);
+            trace("language: " + Capabilities.language);
+            trace("localFileReadDisable: " + Capabilities.localFileReadDisable);
+            trace("manufacturer: " + Capabilities.manufacturer);
+            trace("os: " + Capabilities.os);
+            trace("pixelAspectRatio: " + Capabilities.pixelAspectRatio);
+            trace("playerType: " + Capabilities.playerType);
+            trace("screenColor: " + Capabilities.screenColor);
+            trace("screenDPI: " + Capabilities.screenDPI);
+            trace("screenResolutionX: " + Capabilities.screenResolutionX);
+            trace("screenResolutionY: " + Capabilities.screenResolutionY);
+            trace("serverString: " + Capabilities.serverString);
+            trace("version: " + Capabilities.version);
+        }
+    }
+}
+</codeblock></example></apiClassifierDetail><apiValue id="flash.system:Capabilities:avHardwareDisable:get"><apiName>avHardwareDisable</apiName><shortdesc>
+     指定对用户的摄像头和麦克风的访问是已经通过管理方式禁止 (true) 还是允许 (false)。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>Capabilities, Capabilities.avHardwareDisable, avHardwareDisable
+	  
+	  </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+     指定对用户的摄像头和麦克风的访问是已经通过管理方式禁止 (<codeph>true</codeph>) 还是允许 (<codeph>false</codeph>)。服务器字符串为 <codeph>AVD</codeph>。
+     
+	 <p>对于 Adobe AIR™ 中的内容，此属性仅适用于应用程序安全沙箱以外的安全沙箱中的内容。应用程序安全沙箱中的内容始终可以访问用户的摄像头和麦克风。</p>
+ 	 
+     </apiDesc></apiValueDetail><related-links><link href="flash.media.xml#Camera/getCamera()"><linktext>flash.media.Camera.getCamera()</linktext></link><link href="flash.media.xml#Microphone/getMicrophone()"><linktext>flash.media.Microphone.getMicrophone()</linktext></link><link href="flash.system.xml#Security/showSettings()"><linktext>Security.showSettings()</linktext></link></related-links></apiValue><apiValue id="flash.system:Capabilities:cpuArchitecture:get"><apiName>cpuArchitecture</apiName><shortdesc>
+	 指定计算机上当前 CPU 的体系结构。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5.1"/></apiVersion></asMetadata><asCustoms><oldexample>The following example traces the value of this read-only property:
+	 <pre>
+	 trace(Capabilities.cpuArchitecture);
+	 </pre>
+	 </oldexample></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 指定计算机上当前 CPU 的体系结构。<codeph>cpuArchitecture</codeph> 属性可以返回以下字符串：“<codeph>PowerPC</codeph>”、“<codeph>x86</codeph>”、“<codeph>SPARC</codeph>”和“<codeph>ARM</codeph>”。服务器字符串为 <codeph>ARCH</codeph>。
+	 
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.system:Capabilities:hasAccessibility:get"><apiName>hasAccessibility</apiName><shortdesc>
+	 指定系统是否支持与辅助功能通信，如果是，则为 true，否则为 false。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>Capabilities, Capabilities.hasAccessibility, hasAccessibility,
+     accessibility
+	  
+	  </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	 指定系统是否支持与辅助功能通信，如果是，则为 <codeph>true</codeph>，否则为 <codeph>false</codeph>。服务器字符串为 <codeph>ACC</codeph>。 
+     
+     </apiDesc></apiValueDetail><related-links><link href="flash.accessibility.xml#Accessibility/active"><linktext>flash.accessibility.Accessibility.active</linktext></link><link href="flash.accessibility.xml#Accessibility/updateProperties()"><linktext>flash.accessibility.Accessibility.updateProperties()</linktext></link></related-links></apiValue><apiValue id="flash.system:Capabilities:hasAudio:get"><apiName>hasAudio</apiName><shortdesc>
+	 指定系统是否有音频功能。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>Capabilities, Capabilities.hasAudio, hasAudio
+	  
+	  </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	 指定系统是否有音频功能。此属性始终为 <codeph>true</codeph>。服务器字符串为 <codeph>A</codeph>。
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.system:Capabilities:hasAudioEncoder:get"><apiName>hasAudioEncoder</apiName><shortdesc>
+	 指定系统是否可以对音频流（如来自麦克风的音频流）进行编码，如果是，则为 true，否则为 false。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>Capabilities, Capabilities.hasAudioEncoder, hasAudioEncoder 
+	  
+	  </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	 指定系统是否可以对音频流（如来自麦克风的音频流）进行编码，如果是，则为 <codeph>true</codeph>，否则为 <codeph>false</codeph>。服务器字符串为 <codeph>AE</codeph>。
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.system:Capabilities:hasEmbeddedVideo:get"><apiName>hasEmbeddedVideo</apiName><shortdesc>
+	 指定系统是否支持嵌入的视频，如果是，则为 true，否则为 false。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>Capabilities, Capabilities.hasEmbeddedVideo, hasEmbeddedVideo, video
+	  
+	  </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	 指定系统是否支持嵌入的视频，如果是，则为 <codeph>true</codeph>，否则为 <codeph>false</codeph>。服务器字符串为 <codeph>EV</codeph>。 
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.system:Capabilities:hasIME:get"><apiName>hasIME</apiName><shortdesc>
+	 指定系统是否安装了输入法编辑器 (IME)，如果是，则为 true，否则为 false。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>Capabilities, Capabilities.hasIME, hasIME, IME 
+	  
+	  </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	 指定系统是否安装了输入法编辑器 (IME)，如果是，则为 <codeph>true</codeph>，否则为 <codeph>false</codeph>。服务器字符串为 <codeph>IME</codeph>。 
+     
+     </apiDesc></apiValueDetail><related-links><link href="flash.system.xml#IME"><linktext>flash.system.IME</linktext></link><link href="flash.system.xml#System/ime"><linktext>flash.system.System.ime</linktext></link></related-links></apiValue><apiValue id="flash.system:Capabilities:hasMP3:get"><apiName>hasMP3</apiName><shortdesc>
+	 指定系统是否具有 MP3 解码器，如果是，则为 true，否则为 false。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>Capabilities, Capabilities.hasMP3, hasMP3, MP3, audio
+	  
+	  </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	 指定系统是否具有 MP3 解码器，如果是，则为 <codeph>true</codeph>，否则为 <codeph>false</codeph>。服务器字符串为 <codeph>MP3</codeph>。
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.system:Capabilities:hasPrinting:get"><apiName>hasPrinting</apiName><shortdesc>
+	 指定系统是否支持打印，如果是，则为 true，否则为 false。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>Capabilities, Capabilities.hasPrinting, hasPrinting, printing 
+	  
+	  </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	 指定系统是否支持打印，如果是，则为 <codeph>true</codeph>，否则为 <codeph>false</codeph>。服务器字符串为 <codeph>PR</codeph>。 
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.system:Capabilities:hasScreenBroadcast:get"><apiName>hasScreenBroadcast</apiName><shortdesc>
+	 指定系统是否支持开发通过 Flash Media Server 运行的屏幕广播应用程序，如果是，则为 true，否则为 false。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>Capabilities, Capabilities.hasScreenBroadcast, hasScreenBroadcast
+	  
+	  </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	 指定系统是否支持开发通过 Flash Media Server 运行的屏幕广播应用程序，如果是，则为 <codeph>true</codeph>，否则为 <codeph>false</codeph>。服务器字符串为 <codeph>SB</codeph>。
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.system:Capabilities:hasScreenPlayback:get"><apiName>hasScreenPlayback</apiName><shortdesc>
+	 指定系统是否支持回放通过 Flash Media Server 运行的屏幕广播应用程序，如果是，则为 true，否则为 false。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>Capabilities, Capabilities.hasScreenPlayback, hasScreenPlayback
+	  
+	  </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	 指定系统是否支持回放通过 Flash Media Server 运行的屏幕广播应用程序，如果是，则为 <codeph>true</codeph>，否则为 <codeph>false</codeph>。服务器字符串为 <codeph>SP</codeph>。
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.system:Capabilities:hasStreamingAudio:get"><apiName>hasStreamingAudio</apiName><shortdesc>
+	 指定系统是否可以播放音频流，如果是，则为 true，否则为 false。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>Capabilities, Capabilities.hasStreamingAudio, hasStreamingAudio, audio
+	  
+	  </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	 指定系统是否可以播放音频流，如果是，则为 <codeph>true</codeph>，否则为 <codeph>false</codeph>。服务器字符串为 <codeph>SA</codeph>。
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.system:Capabilities:hasStreamingVideo:get"><apiName>hasStreamingVideo</apiName><shortdesc>
+	 指定系统是否可以播放视频流，如果是，则为 true，否则为 false。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>Capabilities, Capabilities.hasStreamingVideo, hasStreamingVideo, video
+	  
+	  </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	 指定系统是否可以播放视频流，如果是，则为 <codeph>true</codeph>，否则为 <codeph>false</codeph>。服务器字符串为 <codeph>SV</codeph>。
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.system:Capabilities:hasTLS:get"><apiName>hasTLS</apiName><shortdesc>
+	 指定系统是否通过 NetConnection 支持本机 SSL 套接字，如果是，则为 true，否则为 false。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>Capabilities, Capabilities.hasTLS, hasTLS, TLS 
+	  
+	  </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	 指定系统是否通过 NetConnection 支持本机 SSL 套接字，如果是，则为 <codeph>true</codeph>，否则为 <codeph>false</codeph>。服务器字符串为 <codeph>TLS</codeph>。
+     
+     </apiDesc></apiValueDetail><related-links><link href="flash.net.xml#NetConnection/connectedProxyType"><linktext>flash.net.NetConnection.connectedProxyType</linktext></link><link href="flash.net.xml#NetConnection/proxyType"><linktext>flash.net.NetConnection.proxyType</linktext></link><link href="flash.net.xml#NetConnection/usingTLS"><linktext>flash.net.NetConnection.usingTLS</linktext></link></related-links></apiValue><apiValue id="flash.system:Capabilities:hasVideoEncoder:get"><apiName>hasVideoEncoder</apiName><shortdesc>
+	 指定系统是否可以对视频流（如来自 Web 摄像头的视频流）进行编码，如果是，则为 true，否则为 false。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>Capabilities, Capabilities.hasVideoEncoder, hasVideoEncoder
+	  
+	  </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	 指定系统是否可以对视频流（如来自 Web 摄像头的视频流）进行编码，如果是，则为 <codeph>true</codeph>，否则为 <codeph>false</codeph>。服务器字符串为 <codeph>VE</codeph>。
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.system:Capabilities:isDebugger:get"><apiName>isDebugger</apiName><shortdesc> 
+	 指定系统是特殊的调试版本 (true)，还是正式发布的版本 (false)。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>Capabilities, Capabilities.isDebugger, isDebugger, debugging 
+	  
+	  </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc> 
+	 指定系统是特殊的调试版本 (<codeph>true</codeph>)，还是正式发布的版本 (<codeph>false</codeph>)。服务器字符串为 <codeph>DEB</codeph>。在<ph platform="actionscript"> Flash Player 调试版或</ph> AIR Debug Launcher (ADL) 中运行时，此属性设置为 <codeph>true</codeph>。
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.system:Capabilities:isEmbeddedInAcrobat:get"><apiName>isEmbeddedInAcrobat</apiName><shortdesc>
+     指定播放器是否嵌入用 Acrobat 9.0 或更高版本打开的 PDF 文件中，如果是，则为 true，否则为 false。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.127.0"/><apiPlatform description="" name="AIR" version="1.1"/></apiVersion></asMetadata><asCustoms><keyword>Capabilities, Capabilities.isEmbeddedInAcrobat, isEmbeddedInAcrobat, Acrobat
+     </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+     指定播放器是否嵌入用 Acrobat 9.0 或更高版本打开的 PDF 文件中，如果是，则为 <codeph>true</codeph>，否则为 <codeph>false</codeph>。
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.system:Capabilities:language:get"><apiName>language</apiName><shortdesc>
+	 指定运行内容的系统的语言代码。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>Capabilities, Capabilities.language, language
+     
+     </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 指定运行内容的系统的语言代码。语言指定为 ISO 639-1 中的小写双字母语言代码。对于中文，另外使用 ISO 3166 中的大写双字母国家/地区代码，以区分简体中文和繁体中文。语言代码基于语言的英文名称：例如，<codeph>hu</codeph> 指定匈牙利语。
+     
+     <p>在英文系统上，此属性仅返回语言代码 (<codeph>en</codeph>)，而不返回国家/地区代码。在 Microsoft Windows 系统上，此属性返回用户界面 (UI) 语言，该语言指的是所有菜单、对话框、错误信息和帮助文件所使用的语言。下表列出了可能的值：
+     
+     <adobetable class="innertable">
+     
+     
+     
+     
+     
+         
+         
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     <tgroup cols="2"><thead><row><entry align="left">语言</entry><entry align="left">值</entry></row></thead><tbody><row>
+      <entry>捷克语</entry>
+      <entry><codeph>cs</codeph></entry>
+     </row><row>
+      <entry>丹麦语</entry>
+      <entry><codeph>da</codeph></entry>
+     </row><row>
+      <entry>荷兰语</entry>
+      <entry><codeph>nl</codeph></entry>
+     </row><row>
+      <entry>英语</entry>
+      <entry><codeph>en</codeph></entry>
+     </row><row>
+      <entry>芬兰语</entry>
+      <entry><codeph>fi</codeph></entry>
+     </row><row>
+      <entry>法语</entry>
+      <entry><codeph>fr</codeph></entry>
+     </row><row>
+      <entry>德语</entry>
+      <entry><codeph>de</codeph></entry>
+     </row><row>
+      <entry>匈牙利语</entry>
+      <entry><codeph>hu</codeph></entry>
+     </row><row>
+      <entry>意大利语</entry>
+      <entry><codeph>it</codeph></entry>
+     </row><row>
+      <entry>日语</entry>
+      <entry><codeph>ja</codeph></entry>
+     </row><row>
+      <entry>韩语</entry>
+      <entry><codeph>ko</codeph></entry>
+     </row><row>
+      <entry>挪威语</entry>
+      <entry><codeph>no</codeph></entry>
+     </row><row>
+      <entry>其它/未知</entry>
+      <entry><codeph>xu</codeph></entry>
+     </row><row>
+      <entry>波兰语</entry>
+      <entry><codeph>pl</codeph></entry>
+     </row><row>
+      <entry>葡萄牙语</entry>
+      <entry><codeph>pt</codeph></entry>
+     </row><row>
+      <entry>俄语</entry>
+      <entry><codeph>ru</codeph></entry>
+     </row><row>
+      <entry>简体中文</entry>
+      <entry><codeph>zh-CN</codeph></entry>
+     </row><row>
+      <entry>西班牙语</entry>
+      <entry><codeph>es</codeph></entry>
+     </row><row>
+      <entry>瑞典语</entry>
+      <entry><codeph>sv</codeph></entry>
+     </row><row>
+      <entry>繁体中文</entry>
+      <entry><codeph>zh-TW</codeph></entry>
+     </row><row>
+      <entry>土耳其语</entry>
+      <entry><codeph>tr</codeph></entry>
+     </row></tbody></tgroup></adobetable>
+     </p>
+	 
+	 <p><i>注意：</i><codeph>Capabilities.language</codeph> 属性的值限制为此列表上可能的值。由于此限制，Adobe AIR 应用程序应使用 <codeph>Capabilities.languages</codeph> 数组中的第一个元素决定系统的主用户界面语言。 </p>
+	 
+     <p>服务器字符串为 <codeph>L</codeph>。</p>
+     
+     </apiDesc><example conref="examples\Capabilities_languageExample.as"> 在下面的示例中，根据用户操作系统的语言显示内容。
+ 
+ <p><codeph>Capabilities.language</codeph> 属性返回 ISO 639-1 语言代码（例如，“en”表示英语）。<codeph>switch</codeph> 语句检查语言代码，并将 <codeph>myTextField</codeph> 文本字段的内容设置为特定于该语言的问候语。如果示例不支持该语言代码，则返回默认的错误字符串。</p>
+ 
+<codeblock>
+package {
+    import flash.display.Sprite;
+    import flash.text.TextField;
+    import flash.text.TextFieldAutoSize;
+    import flash.system.Capabilities;
+
+    public class Capabilities_languageExample extends Sprite {
+
+        public function Capabilities_languageExample()  {
+            var myTextField:TextField = new TextField();         
+            myTextField.x = 10;
+            myTextField.y = 10;
+            myTextField.background = true;
+            myTextField.autoSize = TextFieldAutoSize.LEFT;
+            
+            var greetingEnglish:String = "Hello World";
+            var greetingGerman:String = "Hallo Welt";
+            var greetingFrench:String = "Bonjour Monde";
+            var greetingSpanish:String = "Hola Mundo";
+
+            var lang:String = Capabilities.language;
+                         
+            switch (lang) {
+                case "en":
+                    myTextField.text = greetingEnglish;
+                    break;
+                case "de":
+                    myTextField.text = greetingGerman;
+                    break;
+                case "fr":
+                    myTextField.text = greetingFrench;
+                    break;
+                case "es":
+                    myTextField.text = greetingSpanish;
+                    break;
+                default:
+                    myTextField.text = "Sorry your system's language is not supported at this time.";               
+            }
+             
+            this.addChild(myTextField);
+        }
+    }
+}
+</codeblock></example></apiValueDetail><related-links><link href="flash.system.xml#Capabilities/languages"><linktext>语言</linktext></link></related-links></apiValue><apiValue id="flash.system:Capabilities:languages:get"><apiName>languages</apiName><shortdesc>
+	 包含用户的首选用户界面语言相关信息的字符串数组，通过操作系统设置。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.1"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Array</apiValueClassifier></apiValueDef><apiDesc>
+	 包含用户的首选用户界面语言相关信息的字符串数组，通过操作系统设置。字符串将包含由 RFC4646 (<xref href="http://www.ietf.org/rfc/rfc4646.txt" scope="external">http://www.ietf.org/rfc/rfc4646.txt</xref>) 定义的语言标签（如果适用，还包含字型和区域信息），并使用短划线作为分隔符（例如<codeph>“en-US”</codeph>或<codeph>“ja-JP”</codeph>）。数组中的各语言按照由操作系统设置决定的优先顺序列出。 
+	 
+	 <p>各种操作系统在区域设置字符串中返回的区域信息有所不同。一个操作系统可能返回<codeph>“en-us”</codeph>，而另一个操作系统可能返回<codeph>“en”</codeph>。</p>
+	 
+	 <p>返回数组中的第一个条目的主语言 ID 通常与 <codeph>Capabilities.language</codeph> 属性相同。例如，如果 <codeph>Capabilities.languages[0]</codeph> 设为<codeph>“en-US”</codeph>，则 <codeph>language</codeph> 属性将设为<codeph>“en”</codeph>。不过，如果 <codeph>Capabilities.language</codeph> 属性设为<codeph>“xu”</codeph>（指定一个未知语言），则此数组中的第一个元素将与之不同。因此，<codeph>Capabilities.languages[0]</codeph> 可能比 <codeph>Capabilities.language</codeph> 更准确。</p>
+	 
+	 <p>服务器字符串为 <codeph>LS</codeph>。</p>
+	 
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.system:Capabilities:localFileReadDisable:get"><apiName>localFileReadDisable</apiName><shortdesc>
+     指定对用户硬盘的读取权限是已经通过管理方式禁止 (true) 还是允许 (false)。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>Capabilities, Capabilities.localFileReadDisable, localFileReadDisable
+	  
+	  </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+     指定对用户硬盘的读取权限是已经通过管理方式禁止 (<codeph>true</codeph>) 还是允许 (<codeph>false</codeph>)。对于 Adobe AIR 中的内容，此属性仅适用于应用程序安全沙箱以外的安全沙箱中的内容。（应用程序安全沙箱中的内容始终可以从文件系统进行读取。）<ph platform="actionscript">如果此属性设置为 <codeph>true</codeph>，则 Flash Player 将无法从用户的硬盘读取文件（包括随同 Flash Player 一同启动的第一个文件）。</ph>如果此属性设置为 <codeph>true</codeph>，则应用程序安全沙箱以外的 AIR 内容将无法从用户的硬盘读取文件。例如，如果此属性设置为 <codeph>true</codeph>，则读取用户硬盘文件的尝试将会失败。
+	 
+	 <p platform="actionscript">如果此属性设置为 <codeph>true</codeph>，则读取运行时共享库也会被阻止，但不管该属性值为何值，都允许读取本地共享的对象。</p>
+	 
+	 <p>服务器字符串为 <codeph>LFD</codeph>。</p>
+     
+     
+     </apiDesc></apiValueDetail><related-links><link href="flash.display.xml#Loader"><linktext>flash.display.Loader</linktext></link></related-links></apiValue><apiValue id="flash.system:Capabilities:manufacturer:get"><apiName>manufacturer</apiName><shortdesc>
+	 指定 Flash Player 的运行版本或 AIR 运行时的制造商，其格式为“Adobe OSName”。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>Capabilities, Capabilities.manufacturer, manufacturer
+	  
+	  </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 指定<ph platform="actionscript"> Flash Player 的运行版本或</ph> AIR 运行时的制造商，其格式为<codeph>“Adobe</codeph> <codeph><i>OSName</i>”</codeph>。<codeph><i>OSName</i></codeph> 的值可以是<codeph>“Windows”</codeph>、<codeph>“Macintosh”</codeph>、<codeph>“Linux”</codeph>或其它操作系统名称。服务器字符串为 <codeph>M</codeph>。
+     
+	 <p>如果存在更具体的功能属性，<i>请勿</i> 使用 <codeph>Capabilities.manufacturer</codeph> 来根据操作系统确定功能。以操作系统来决定功能是个不良习惯，因为如果应用程序没有考虑到所有潜在的目标操作系统，这会产生问题。建议使用与要测试的功能相对应的属性。有关详细信息，请参阅 Capabilities 类的描述。</p>
+	 
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.system:Capabilities:maxLevelIDC:get"><apiName>maxLevelIDC</apiName><shortdesc>
+     检索客户端硬件支持的最高 H.264 级 IDC。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata><asCustoms><keyword>Capabilities, Capabilities.maxLevelIDC, maxLevelIDC
+     </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+     检索客户端硬件支持的最高 H.264 级 IDC。以此级别运行的媒体不能保证运行；但是，以最高级别运行的媒体可能无法以最高品质运行。此属性对于尝试以客户端的功能为目标的服务器非常有用。使用此属性，服务器可以确定要发送给客户端的视频的级别。
+     
+     <p>服务器字符串为 <codeph>ML</codeph>。</p>
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.system:Capabilities:os:get"><apiName>os</apiName><shortdesc>
+     指定当前的操作系统。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>Capabilities, Capabilities.os, os
+	  
+	  </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+     指定当前的操作系统。<codeph>os</codeph> 属性可返回下列字符串：<codeph>“Windows XP”</codeph>、<codeph>“Windows 2000”</codeph>、<codeph>“Windows NT”</codeph>、<codeph>“Windows 98/ME”</codeph>、<codeph>“Windows 95”</codeph>、<codeph>“Windows CE”</codeph>（仅在 Flash Player SDK 中可用，在台式机版本中不可用）、<codeph>“Linux”</codeph>以及<codeph>“Mac OS X.Y.Z”</codeph>（其中的 X.Y.Z 为版本号，例如：<codeph>Mac OS 10.5.2</codeph>）。服务器字符串为 <codeph>OS</codeph>。
+     
+	 <p>如果存在更具体的功能属性，<i>请勿</i> 使用 <codeph>Capabilities.os</codeph> 来根据操作系统确定功能。以操作系统来决定功能是个不良习惯，因为如果应用程序没有考虑到所有潜在的目标操作系统，这会产生问题。建议使用与要测试的功能相对应的属性。有关详细信息，请参阅 Capabilities 类的描述。</p>
+	 
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.system:Capabilities:pixelAspectRatio:get"><apiName>pixelAspectRatio</apiName><shortdesc> 
+     指定屏幕的像素高宽比。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>Capabilities, Capabilities.pixelAspectRatio, pixelAspectRatio
+	  
+	  </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Number</apiValueClassifier></apiValueDef><apiDesc> 
+     指定屏幕的像素高宽比。服务器字符串为 <codeph>AR</codeph>。
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.system:Capabilities:playerType:get"><apiName>playerType</apiName><shortdesc>
+	 指定运行时环境的类型。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>Capabilities, Capabilities.playerType, playerType
+	  
+	  </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 指定运行时环境的类型。此属性可以是下列值之一：
+	 
+     <ul>
+	   <li><codeph>"ActiveX"</codeph>，用于 Microsoft Internet Explorer 使用的 Flash Player ActiveX 控件</li>
+	   <li><codeph>“Desktop”</codeph>代表 Adobe AIR 运行时（通过 HTML 页加载的 SWF 内容除外，该内容将 <codeph>Capabilities.playerType</codeph> 设置为<codeph>“PlugIn”</codeph>）</li>
+	   <li>“<codeph>External</codeph>”，用于外部 Flash Player<ph outputclass="flashonly"> 或处于测试模式下</ph></li>
+	   <li><codeph>“PlugIn”</codeph>代表 Flash Player 浏览器插件（和通过 AIR 应用程序中的 HTML 页加载的 SWF 内容）</li>
+       <li><codeph>"StandAlone"</codeph>，用于独立的 Flash Player</li>
+     </ul>
+     <p>服务器字符串为 <codeph>PT</codeph>。</p>
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.system:Capabilities:screenColor:get"><apiName>screenColor</apiName><shortdesc>
+     指定屏幕的颜色。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>Capabilities, Capabilities.screenColor, screenColor
+	  
+	  </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+     指定屏幕的颜色。此属性的值可以是<codeph>“color”</codeph>、<codeph>“gray”</codeph>（代表灰度），或是<codeph>“bw”</codeph>（代表黑白）。服务器字符串为 <codeph>COL</codeph>。
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.system:Capabilities:screenDPI:get"><apiName>screenDPI</apiName><shortdesc>
+     指定屏幕的每英寸点数 (dpi) 分辨率，以像素为单位。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>Capabilities, Capabilities.screenDPI, screenDPI
+	  
+	  </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Number</apiValueClassifier></apiValueDef><apiDesc>
+     指定屏幕的每英寸点数 (dpi) 分辨率，以像素为单位。服务器字符串为 <codeph>DP</codeph>。
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.system:Capabilities:screenResolutionX:get"><apiName>screenResolutionX</apiName><shortdesc>
+     指定屏幕的最大水平分辨率。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>Capabilities, Capabilities.screenResolutionX, screenResolutionY
+     </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Number</apiValueClassifier></apiValueDef><apiDesc>
+     指定屏幕的最大水平分辨率。服务器字符串为 <codeph>R</codeph>（它返回屏幕的宽度和高度）。此属性不会随用户的屏幕分辨率而更新，而仅指示 <ph platform="actionscript">Flash Player 或 </ph>Adobe AIR 应用程序启动时的分辨率。而且，该值仅指定主显示器。
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.system:Capabilities:screenResolutionY:get"><apiName>screenResolutionY</apiName><shortdesc> 
+     指定屏幕的最大垂直分辨率。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>Capabilities, Capabilities.screenResolutionY, screenResolutionY
+     </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Number</apiValueClassifier></apiValueDef><apiDesc> 
+     指定屏幕的最大垂直分辨率。服务器字符串为 <codeph>R</codeph>（它返回屏幕的宽度和高度）。此属性不会随用户的屏幕分辨率而更新，而仅指示 <ph platform="actionscript">Flash Player 或 </ph>Adobe AIR 应用程序启动时的分辨率。而且，该值仅指定主显示器。
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.system:Capabilities:serverString:get"><apiName>serverString</apiName><shortdesc> 
+     URL 编码的字符串，用于指定每个 Capabilities 属性的值。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>Capabilities, Capabilities.serverString, serverString
+	  
+	  </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+     URL 编码的字符串，用于指定每个 Capabilities 属性的值。
+	 
+     <p>以下示例显示了一个 URL 编码的字符串：
+     <pre>A=t&amp;SA=t&amp;SV=t&amp;EV=t&amp;MP3=t&amp;AE=t&amp;VE=t&amp;ACC=f&amp;PR=t&amp;SP=t&amp;
+     SB=f&amp;DEB=t&amp;V=WIN%208%2C5%2C0%2C208&amp;M=Adobe%20Windows&amp;
+     R=1600x1200&amp;DP=72&amp;COL=color&amp;AR=1.0&amp;OS=Windows%20XP&amp;
+     L=en&amp;PT=External&amp;AVD=f&amp;LFD=f&amp;WD=f</pre></p>
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.system:Capabilities:supports32BitProcesses:get"><apiName>supports32BitProcesses</apiName><shortdesc>
+     指定系统是否支持运行 32 位的进程。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5.2"/></apiVersion></asMetadata><asCustoms><oldexample>The following example traces the value of this read-only property:
+     <pre>
+     trace(Capabilities.supports32BitProcesses);
+     </pre>
+     </oldexample></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+     指定系统是否支持运行 32 位的进程。服务器字符串为 <codeph>PR32</codeph>。
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.system:Capabilities:supports64BitProcesses:get"><apiName>supports64BitProcesses</apiName><shortdesc>
+     指定系统是否支持运行 64 位的进程。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5.2"/></apiVersion></asMetadata><asCustoms><oldexample>The following example traces the value of this read-only property:
+     <pre>
+     trace(Capabilities.supports64BitProcesses);
+     </pre>
+     </oldexample></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+     指定系统是否支持运行 64 位的进程。服务器字符串为 <codeph>PR64</codeph>。
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.system:Capabilities:version:get"><apiName>version</apiName><shortdesc> 
+	 指定 Flash Player 或 Adobe&amp;#xAE; AIR&amp;#xAE; 平台和版本信息。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><keyword>Capabilities, Capabilities.version, version
+	  
+	  </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	 指定 Flash Player 或 Adobe<sup>®</sup> AIR<sup>®</sup> 平台和版本信息。版本号的格式为：<i>平台 (platform)，主版本号 (majorVersion)，次版本号 (minorVersion)、生成版本号 (buildNumber)，内部生成版本号 (internalBuildNumber)</i>。<i>platform</i> 可能的值包括“<codeph>WIN</codeph>”、“<codeph>MAC</codeph>”和“<codeph>LNX</codeph>”。以下是一些版本信息示例：
+	 
+     <pre>
+     WIN 9,0,0,0  // Flash Player 9 for Windows
+     MAC 7,0,25,0   // Flash Player 7 for Macintosh
+	 LNX 9,0,115,0  // Flash Player 9 for Linux
+     </pre>
+	 
+	 <p>如果存在更具体的功能属性，<i>请勿</i> 使用 <codeph>Capabilities.version</codeph> 来根据操作系统确定功能。以操作系统来决定功能是个不良习惯，因为如果应用程序没有考虑到所有潜在的目标操作系统，这会产生问题。建议使用与要测试的功能相对应的属性。有关详细信息，请参阅 Capabilities 类的描述。</p>
+	 
+     <p>服务器字符串为 <codeph>V</codeph>。</p>
+     
+     </apiDesc></apiValueDetail></apiValue></apiClassifier><apiOperation id="globalOperation:flash.system:fscommand"><apiName>fscommand</apiName><shortdesc>
+ 使 SWF 文件能够与 Flash Player 或承载 Flash Player 的程序（如 Web 浏览器）进行通讯。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><oldexample><p>In the following example, the <code>fscommand()</code> function sets Flash Player to 
+ scale the SWF file to the full monitor screen size when the <code>fullscreen_btn</code> button or 
+ <code>unfullscreen_btn</code> is released:</p>
+ 
+ <pre>this.fullscreen_btn.onRelease = function() {
+   fscommand("fullscreen", true);
+ };
+ this.unfullscreen_btn.onRelease = function() {
+   fscommand("fullscreen", false);
+ };
+ </pre>
+ 
+ <p>The following example uses the <code>fscommand()</code> function applied to a button in Flash to 
+ open a JavaScript message box in an HTML page. The message itself is sent to JavaScript as the 
+ <code>fscommand</code> parameter. </p>
+ 
+ <p>You must add a function to the HTML page that contains the SWF file. This function, 
+ <code><i>myDocument</i></code><code>_DoFSCommand</code>, sits in the HTML page and waits for an 
+ <code>fscommand()</code> function in Flash. When an <code>fscommand</code> is triggered in Flash 
+ (for example, when a user presses the button), the <code>command</code> and <code>args</code> strings 
+ are passed to the <code><i>myDocument</i></code><code>_DoFSCommand </code>function. You can use the 
+ passed strings in your JavaScript or VBScript code in any way you like. In this example, the function 
+ contains a conditional <code>if</code> statement that checks to see if the command string is 
+ "<code>messagebox</code>". If it is, a JavaScript alert box (or "message box") opens 
+ and displays the contents of the <code>args</code> string.</p>
+ 
+ <pre>function myDocument_DoFSCommand(command, args) {
+   if (command == "messagebox") {
+      alert(args);
+   }
+ 
+ </pre>
+ 
+ <p>In the Flash document, add the <code>fscommand()</code> function to a button:</p>
+ 
+ <pre>fscommand("messagebox", "This is a message box called from within Flash.")
+ </pre>
+ 
+ <p>You can also use expressions for the <code>fscommand()</code> function and parameters, as in the 
+ following example:</p>
+ 
+ <pre>fscommand("messagebox", "Hello, " + name + ", welcome to our website!")
+ </pre>
+ 
+ <p>To test the SWF file, select File > Publish Preview > HTML.</p>
+ 
+ <p><strong>Note: </strong>If you publish your SWF file using the Flash with FSCommand template in the 
+ HTML 
+ tab of the Publish Settings dialog box, the <code>myDocument_DoFSCommand</code> function is inserted 
+ automatically. The SWF file's <code>NAME</code> and <code>ID</code> attributes will be the filename. 
+ For example, for the file myDocument.fla, the attributes would be set to <code>myDocument</code>.</p>
+ 
+  
+  </oldexample></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>为了响应用户动作（如鼠标事件或按键事件），将不会调用此函数。
+ 
+ </apiDesc><apiItemName>Error</apiItemName><apiOperationClassifier>Error</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>command</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>传递给主机应用程序的用于任何用途的一个字符串，或传递给 Flash Player 的一个命令。
+ 
+ </apiDesc></apiParam><apiParam><apiItemName>args</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData/><apiDesc>传递给主机应用程序的用于任何用途的一个字符串，或传递给 Flash Player 的一个值。
+ 
+ </apiDesc></apiParam></apiOperationDef><apiDesc>
+ 使 SWF 文件能够与 Flash Player 或承载 Flash Player 的程序（如 Web 浏览器）进行通讯。还可以使用 <codeph>fscommand()</codeph> 函数将消息传递给 Director，或是传递给 Visual Basic、Visual C++ 和其它可承载 ActiveX 控件的程序。
+ 
+  
+ <p><codeph>fscommand()</codeph> 函数使 SWF 文件与 Web 页中的脚本能进行通讯。不过，脚本访问是由 Web 页的 <codeph>allowScriptAccess</codeph> 设置控制的。（您可以在嵌入 SWF 文件的 HTML 代码中设置此属性，例如，在 Internet Explorer 的 <codeph>PARAM</codeph> 标签或 Netscape 的 <codeph>EMBED</codeph> 标签中。） </p>
+  <ul>
+  
+  <li> 当 <codeph>allowScriptAccess</codeph> 设置为 <codeph>"sameDomain"</codeph>（默认值）时，只允许从与网页位于同一域中的 SWF 文件进行脚本访问。 </li> 
+  <li> 当 <codeph>allowScriptAccess</codeph> 设置为 <codeph>"always"</codeph> 时，SWF 文件可以与其嵌入到的 HTML 页进行通信，即使该 SWF 文件来自不同于 HTML 页的域也可以。 </li>
+  <li>当 <codeph>allowScriptAccess</codeph> 设置为 <codeph>"never"</codeph> 时，SWF 文件将无法与任何 HTML 页进行通信。请注意，不推荐使用此值，并且在自己的域中并未使用不受信任的 SWF 文件时也没必要使用此值。如果确实需要使用不受信任的 SWF 文件，则 Adobe 建议您创建一个不同的子域，并将所有不受信任的内容置于其中。 </li>
+ </ul>
+ 
+ <p>可以在包含 SWF 内容的 HTML 页中设置 <codeph>object</codeph> 和 <codeph>embed</codeph> 标签的 <codeph>allowNetworking</codeph> 参数，防止 SWF 文件使用此方法。 </p>
+ 
+ <p>如果执行调用的 SWF 文件位于只能与本地文件系统内容交互的沙箱或只能与远程内容交互的沙箱中，并且包含 SWF 文件的 HTML 页在不受信任的沙箱中，则不允许使用 <codeph>fscommand()</codeph> 函数。</p>
+ 
+ <p>有关与安全性相关的详细信息，请参阅以下部分：</p>
+ <ul>
+ 
+ <li class="flexonly"><xref href="http://www.adobe.com/go/flex3_progAS3_security" scope="external">“安全性”一章</xref>（位于《ActionScript 3.0 编程》<i/>一书中）和有关 LiveDocs 的最新评论</li>
+ <li class="flashonly">《ActionScript 3.0 编程》一书中的<xref href="http://www.adobe.com/go/flashcs4_prog_as3_security_en" scope="external">“安全性”一章</xref><i/>和 LiveDocs 上的最新评论</li>
+ 
+ <li>Flash Player 开发人员中心主题：<xref href="http://www.adobe.com/go/devnet_security_cn" scope="external">安全性</xref></li>
+ </ul>
+ 
+ <p>用法 1：要使用 <codeph>fscommand()</codeph> 将消息发送给 Flash Player，必须使用预定义的命令和参数。下表列出了可以为 <codeph>fscommand()</codeph> 函数的 <codeph>command</codeph> 参数和 <codeph>args</codeph> 参数指定的值。这些值控制在 Flash Player 中播放的 SWF 文件，包括放映文件。<i>放映文件</i> 是以可作为独立应用程序运行（也就是说，不需要使用 Flash Player 即可运行）的格式保存的 SWF 文件。</p>
+ 
+              <adobetable class="innertable">
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+              <tgroup cols="3"><thead><row><entry>命令</entry><entry>参数（参量）</entry><entry>目的</entry></row></thead><tbody><row>
+                      <entry><codeph>quit</codeph></entry>
+                      <entry>无</entry>
+                      <entry>关闭播放器。</entry>
+                  </row><row>
+                      <entry><codeph>fullscreen</codeph></entry>
+                      <entry><codeph>true</codeph> 或 <codeph>false</codeph></entry>
+                      <entry>指定 <codeph>true</codeph> 可将 Flash Player 设置为全屏模式。指定 <codeph>false</codeph> 可将播放器返回到标准菜单视图。</entry>
+                  </row><row>
+                      <entry><codeph>allowscale</codeph></entry> 
+                      <entry><codeph>true</codeph> 或 <codeph>false</codeph></entry>
+                      <entry>指定 <codeph>false</codeph> 可设置播放器始终按 SWF 文件的原始大小绘制 SWF 文件，从不进行缩放。指定 <codeph>true</codeph> 会强制将 SWF 文件缩放到播放器的 100% 大小。</entry>
+                  </row><row>
+                      <entry><codeph>showmenu</codeph></entry>
+                      <entry><codeph>true</codeph> 或 <codeph>false</codeph></entry>
+                      <entry>指定 <codeph>true</codeph> 可启用整个上下文菜单项集合。指定 <codeph>false</codeph> 将隐藏除“关于 Flash Player”和“设置”外的所有上下文菜单项。</entry>
+                  </row><row>
+                      <entry><codeph>exec</codeph></entry>
+                      <entry>指向应用程序的路径 </entry>
+                      <entry>在放映文件内执行应用程序。</entry>
+                  </row><row>
+                      <entry><codeph>trapallkeys</codeph></entry>
+                      <entry><codeph>true</codeph> 或 <codeph>false</codeph></entry>
+                      <entry>指定 <codeph>true</codeph> 可将所有按键事件（包括快捷键）发送到 Flash Player 中的 <codeph>onClipEvent(keyDown/keyUp)</codeph> 处理函数。 </entry>
+                  </row></tbody></tgroup></adobetable>
+ <p>并非表中所列的全部命令在所有应用程序中都可用： 
+ <ul>
+     <li>这些命令在 Web 播放器中都不可用。</li> 
+     <li>所有这些命令在独立的应用程序（例如，放映文件）中都可用。</li>
+     <li>只有 <codeph>allowscale</codeph> 和 <codeph>exec</codeph> 在测试影片播放器中可用。</li>
+ </ul>
+ </p>
+ 
+ <p><codeph>exec</codeph> 命令只能包含字符 A-Z、a-z、0-9、句号 (.) 和下划线 (_)。<codeph>exec</codeph> 命令仅在 fscommand 子目录中运行。也就是说，如果您使用 <codeph>exec</codeph> 命令调用应用程序，该应用程序必须位于名为 fscommand 的子目录中。<codeph>exec</codeph> 命令只在 Flash 放映文件内起作用。</p>
+ 
+ <p>用法 2：要使用 <codeph>fscommand()</codeph> 向 Web 浏览器中的脚本语言（例如 JavaScript）发送消息，可以在 <codeph>command</codeph> 和 <codeph>args</codeph> 参数中传递任意两个参数。这些参数可以是字符串或表达式，并在处理或<i>捕获</i> <codeph>fscommand()</codeph> 函数的 JavaScript 函数中使用。 </p>
+ 
+ <p>在 Web 浏览器中，<codeph>fscommand()</codeph> 调用 JavaScript 函数 <codeph>moviename_DoFScommand</codeph>，该函数位于包含 SWF 文件的 Web 页中。对于 <codeph>moviename</codeph>，提供您用于 <codeph>EMBED</codeph> 标签的 <codeph>NAME</codeph> 属性 (attribute) 或 <codeph>OBJECT</codeph> 标签的 ID 属性 (property) 的 Flash 对象的名称。如果对 SWF 文件赋予名称“myMovie”，则调用 JavaScript 函数 <codeph>myMovie_DoFScommand</codeph>。 </p>
+ 
+ <p>在包含 SWF 文件的网页中，设置 <codeph>allowScriptAccess</codeph> 属性以允许或拒绝 SWF 文件访问网页的能力，如上所述。（您可以在嵌入 SWF 文件的 HTML 代码中设置此属性，例如，在 Internet Explorer 的 <codeph>PARAM</codeph> 标签或 Netscape 的 <codeph>EMBED</codeph> 标签中。） </p>
+ 
+ <p>在浏览器中运行的 Flash Player 10 和更高版本中，以编程方式使用此方法打开弹出窗口可能不会成功。不同的浏览器（和浏览器配置）可能会随时阻止弹出窗口；不能保证可以显示任何弹出窗口。不过，为了尽可能成功，请仅在作为用户操作的直接结果执行的代码中使用此方法打开弹出窗口，例如，在鼠标单击或按键事件的事件处理函数中。</p>
+ 
+ <p>用法 3：<codeph>fscommand()</codeph> 函数可以将消息发送给 Director（Adobe 的 Macromedia Director）。这些消息由 Lingo（Director 脚本语言）解释为字符串、事件或可执行 Lingo 代码。如果消息为字符串或事件，则必须编写 Lingo 代码才能从 <codeph>fscommand()</codeph> 函数接收该消息并在 Director 中执行动作。有关详细信息，请参阅 Director 支持中心，网址为 <xref href="http://www.adobe.com/support/director/" scope="external">www.adobe.com/support/director/</xref>。</p>
+ 
+ <p>用法 4：在 VisualBasic、Visual C++ 和可承载 ActiveX 控件的其它程序中，<codeph>fscommand()</codeph> 利用可被环境的编程语言进行处理的两个字符串发送 VB 事件。有关详细信息，请使用关键字“Flash 方法”搜索 Flash 支持中心，网址为 <xref href="http://www.adobe.com/support/flash/" scope="external">www.adobe.com/support/flash/</xref>。</p>
+ <p><b>注意：</b>ExternalInterface 类可为以下通信提供更好的功能：JavaScript 与 ActionScript 之间的通信（用法 2）；ActionScript 与 VisualBasic、Visual C++ 或可承载 ActiveX 控件的其它程序之间的通信（用法 4）。应继续使用 <codeph>fscommand()</codeph> 将消息发送到 Flash Player（用法 1）和 Director（用法 3）。</p>
+ 
+ </apiDesc><example conref="examples\FSCommandExample.as"> 下例演示如何使用 <codeph>fscommand()</codeph> 来指示 Flash Player 进入全屏模式并且不允许缩放。然后使用 <codeph>draw()</codeph> 将一个橙色框添加到舞台上。在 <codeph>draw()</codeph> 中，指示 Flash Player 使用对 <codeph>fscommand().</codeph> 的另一个调用来退出，将 <codeph>click</codeph> 事件侦听器以名称 <codeph>clickHandler()</codeph> 添加进来，它对应于 <codeph>click</codeph> 事件。
+ 
+ <p><b>注意：</b>此示例应在独立的 Flash Player 中执行，而不是在 Web 浏览器中执行。</p>
+<codeblock>
+package {
+    import flash.display.Sprite;
+    import flash.text.TextField;
+    import flash.system.fscommand;
+    import flash.events.MouseEvent;
+
+    public class FSCommandExample extends Sprite {
+        private var bgColor:uint = 0xFFCC00;
+        private var size:uint = 100;
+
+        public function FSCommandExample() {
+            fscommand("fullscreen", "true");
+            fscommand("allowscale", "false");
+            draw();
+        }
+
+        private function clickHandler(event:MouseEvent):void {
+            fscommand("quit");
+            trace("clickHandler");
+        }
+
+        private function draw():void {
+            var child:Sprite = new Sprite();
+            child.graphics.beginFill(bgColor);
+            child.graphics.drawRect(0, 0, size, size);
+            child.graphics.endFill();
+            child.buttonMode = true;
+            addEventListener(MouseEvent.CLICK, clickHandler);
+
+            var label:TextField = new TextField();
+            label.text = "quit";
+            label.selectable = false;
+            label.mouseEnabled = false;
+            child.addChild(label);
+
+            addChild(child);
+        }
+    }
+}
+</codeblock></example></apiOperationDetail></apiOperation><apiClassifier id="flash.system:IME"><apiName>IME</apiName><shortdesc>
+ 使用 IME 类，您可以在客户端计算机上运行的 Flash Player 应用程序中直接操纵操作系统的输入法编辑器 (IME)。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiTipTexts><apiTipText>允许直接操纵操作系统的输入法编辑器 (IME)。
+ 
+ </apiTipText></apiTipTexts><apiBaseClassifier>flash.events:EventDispatcher</apiBaseClassifier></apiClassifierDef><apiDesc>
+ 使用 IME 类，您可以在客户端计算机上运行的 Flash Player 应用程序中直接操纵操作系统的输入法编辑器 (IME)。可以确定是否安装了 IME、当前是否启用了 IME 以及启用了哪个 IME。您可以在 Flash Player 应用程序中禁用或启用 IME，并且可以执行其它受限制的函数，具体取决于操作系统。
+ 
+ <p>利用 IME，用户可键入多字节语言（例如，中文、日语和韩语）的非 ASCII 文本字符。有关使用 IME 的详细信息，请参阅要为其开发应用程序的操作系统的文档。要获取其它资源，请参阅以下网站：
+ <ul>
+   <li><xref href="http://www.microsoft.com/globaldev/default.mspx" scope="external">http://www.microsoft.com/globaldev/default.mspx</xref></li>
+   <li><xref href="http://developer.apple.com/documentation/" scope="external">http://developer.apple.com/documentation/</xref></li>
+   <li><xref href="http://java.sun.com" scope="external">http://java.sun.com</xref></li>
+  </ul>
+  </p>
+ 
+ <p>如果用户计算机上 IME 未处于活动状态，则对 IME 方法或属性（除 <codeph>Capabilities.hasIME</codeph> 之外）的调用将会失败。一旦手动激活 IME，随后对 IME 方法和属性的 ActionScript 调用即会正常运行。例如，如果使用日语 IME，则必须在调用任何 IME 方法或属性之前将它激活。</p>
+ 
+ <p>下表显示了此类适用的平台范围：</p>
+ 
+ 
+ <adobetable class="innertable">
+  
+ 
+ 
+ 
+  
+  
+ 
+  
+  
+ 
+ <tgroup cols="4"><thead><row><entry>功能</entry><entry>Windows</entry><entry>Mac OSX</entry><entry>Linux</entry></row></thead><tbody><row>
+    <entry>确定是否已安装 IME：<codeph>Capabilities.hasIME</codeph></entry>
+    <entry>是</entry>
+    <entry>是</entry>
+    <entry>是</entry>
+  </row><row>
+    <entry>将 IME 设置为启用或禁用状态：<codeph>IME.enabled</codeph></entry>
+    <entry>是</entry>
+    <entry>是</entry>
+    <entry>是</entry>
+  </row><row>
+    <entry>查明是启用 IME 还是禁用 IME：<codeph>IME.enabled</codeph></entry>
+    <entry>是</entry>
+    <entry>是</entry>
+    <entry>是</entry>
+  </row><row>
+    <entry>获取或设置 IME 转换模式：<codeph>IME.conversionMode</codeph></entry>
+    <entry>是</entry>
+    <entry>是~~~~</entry>
+    <entry>否</entry>
+  </row><row>
+    <entry>向 IME 发送要转换的字符串：<codeph>IME.setCompositionString()</codeph></entry>
+    <entry>是 ~~</entry>
+    <entry>否</entry>
+    <entry>否</entry>
+  </row><row>
+    <entry>在转换之前从 IME 获取原始字符串：<codeph>System.ime.addEventListener()</codeph></entry>
+    <entry>是 ~~</entry>
+    <entry>否</entry>
+    <entry>否</entry>
+  </row><row>
+    <entry>将转换请求发送到 IME：<codeph>IME.doConversion()</codeph></entry>
+    <entry>是 ~~</entry>
+    <entry>否</entry>
+    <entry>否</entry>
+  </row></tbody></tgroup></adobetable>
+ 
+ <p>~~ 并非所有 Windows IME 都支持上述全部操作。唯一支持全部操作的 IME 是日语 IME。</p>
+ 
+ <p>~~~~ 在 Macintosh 上，只有日语 IME 支持这些方法，第三方 IME 不支持这些方法。</p>
+ <p>此类的 ActionScript 3.0 版本不支持 Macintosh Classic。</p>
+ 
+ </apiDesc></apiClassifierDetail><adobeApiEvent id="flash.system:IME_flash.events.IMEEvent.IME_COMPOSITION_imeComposition"><apiName>imeComposition</apiName><shortdesc>
+ 当用户完成输入法编辑器 (IME) 的输入且读取字符串可用时进行分派。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.IMEEvent.IME_COMPOSITION</apiEventType><adobeApiEventClassifier>flash.events.IMEEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ 当用户完成输入法编辑器 (IME) 的输入且读取字符串可用时进行分派。使用 IME 进行输入的文本通常来自使用表意文字而非字母的语言，如日语、中文和韩语。
+ </apiDesc></adobeApiEventDetail></adobeApiEvent><apiOperation id="flash.system:IME:compositionAbandoned"><apiName>compositionAbandoned</apiName><shortdesc/><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef></apiOperationDetail></apiOperation><apiOperation id="flash.system:IME:compositionSelectionChanged"><apiName>compositionSelectionChanged</apiName><shortdesc/><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>start</apiItemName><apiOperationClassifier>int</apiOperationClassifier></apiParam><apiParam><apiItemName>end</apiItemName><apiOperationClassifier>int</apiOperationClassifier></apiParam></apiOperationDef></apiOperationDetail></apiOperation><apiOperation id="flash.system:IME:doConversion"><apiName>doConversion</apiName><shortdesc>
+	 指示 IME 为当前复合字符串选择第一个候选项。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiException><apiDesc>调用未成功。
+	 </apiDesc><apiItemName>Error</apiItemName><apiOperationClassifier>Error</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+	 指示 IME 为当前复合字符串选择第一个候选项。
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.system:IME:setCompositionString"><apiName>setCompositionString</apiName><shortdesc>
+	 设置 IME 复合字符串。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><internal>Need some examples of valid values for the param composition.
+	 </internal></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiException><apiDesc>调用未成功。
+	 </apiDesc><apiItemName>Error</apiItemName><apiOperationClassifier>Error</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>composition</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>要发送到 IME 的字符串。
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 设置 IME 复合字符串。设置了此字符串后，用户就可以在将结果提交到当前具有焦点的文本字段之前选择 IME 候选项。
+	 <p>如果不存在具有焦点的文本字段，则此方法将会失败并引发错误。</p>
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiValue id="flash.system:IME:conversionMode:get"><apiName>conversionMode</apiName><shortdesc>
+	 当前 IME 的转换模式。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="readwrite"/><apiValueClassifier>String</apiValueClassifier><apiException><apiDesc>设置尝试未成功。
+	 </apiDesc><apiItemName>Error</apiItemName><apiOperationClassifier>Error</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	 当前 IME 的转换模式。可能的值为指示转换模式的 IME 模式字符串常量：
+	 <ul>
+	 	<li><codeph>ALPHANUMERIC_FULL</codeph></li>
+	 	<li><codeph>ALPHANUMERIC_HALF</codeph></li>
+ 	 	<li><codeph>CHINESE</codeph></li>
+	 	<li><codeph>JAPANESE_HIRAGANA</codeph></li>
+	 	<li><codeph>JAPANESE_KATAKANA_FULL</codeph></li>
+	 	<li><codeph>JAPANESE_KATAKANA_HALF</codeph></li>
+ 	 	<li><codeph>KOREAN</codeph></li>
+	  <li><codeph>UNKNOWN</codeph>（只读值；此值不能设置）</li>
+	 </ul>
+	 </apiDesc></apiValueDetail><related-links><link href="flash.system.xml#IMEConversionMode/ALPHANUMERIC_FULL"><linktext>flash.system.IMEConversionMode.ALPHANUMERIC_FULL</linktext></link><link href="flash.system.xml#IMEConversionMode/ALPHANUMERIC_HALF"><linktext>flash.system.IMEConversionMode.ALPHANUMERIC_HALF</linktext></link><link href="flash.system.xml#IMEConversionMode/CHINESE"><linktext>flash.system.IMEConversionMode.CHINESE</linktext></link><link href="flash.system.xml#IMEConversionMode/JAPANESE_HIRAGANA"><linktext>flash.system.IMEConversionMode.JAPANESE_HIRAGANA</linktext></link><link href="flash.system.xml#IMEConversionMode/JAPANESE_KATAKANA_FULL"><linktext>flash.system.IMEConversionMode.JAPANESE_KATAKANA_FULL</linktext></link><link href="flash.system.xml#IMEConversionMode/JAPANESE_KATAKANA_HALF"><linktext>flash.system.IMEConversionMode.JAPANESE_KATAKANA_HALF</linktext></link><link href="flash.system.xml#IMEConversionMode/KOREAN"><linktext>flash.system.IMEConversionMode.KOREAN</linktext></link><link href="flash.system.xml#IMEConversionMode/UNKNOWN"><linktext>flash.system.IMEConversionMode.UNKNOWN</linktext></link></related-links></apiValue><apiValue id="flash.system:IME:enabled:get"><apiName>enabled</apiName><shortdesc>
+	 指示系统 IME 已启用 (true) 还是已禁用 (false)。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier><apiException><apiDesc>设置尝试未成功。
+	 </apiDesc><apiItemName>Error</apiItemName><apiOperationClassifier>Error</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	 指示系统 IME 已启用 (<codeph>true</codeph>) 还是已禁用 (<codeph>false</codeph>)。启用的 IME 执行多字节输入；禁用的 IME 执行字母数字输入。 
+	 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.system:System"><apiName>System</apiName><shortdesc>
+ System 类包含与发生在用户计算机上的某些操作相关的属性，如具有共享对象的操作、摄像头和麦克风的本地设置和剪贴板的使用。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>System, System object, built-in class
+ </keyword></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ System 类包含与发生在用户计算机上的某些操作相关的属性，如<ph platform="actionscript">具有共享对象的操作、摄像头和麦克风的本地设置和</ph>剪贴板的使用。
+ 
+ <p>其它属性和方法在 flash.system 包的其它类中：Capabilities 类、<ph platform="actionscript">IME 类</ph>和 Security 类。</p>
+ 
+ <p>此类只包含静态方法和属性。无法创建 System 类的新实例。</p>
+ 
+ </apiDesc><example conref="examples\SystemExample.as"> 下例说明如何通过在对 <codeph>System.setClipboard()</codeph> 方法的调用中使用对 <codeph>System.totalMemory</codeph> 的调用，将有关系统的总内存的信息复制到系统剪贴板。
+<codeblock>
+package {
+    import flash.display.Sprite;
+    import flash.system.System;
+
+    public class SystemExample extends Sprite {
+        public function SystemExample() {
+            System.setClipboard("System.totalMemory: " + System.totalMemory);
+        }
+    }
+}
+</codeblock></example></apiClassifierDetail><related-links><link href="flash.system.xml#Security"><linktext>flash.system.Security</linktext></link><link href="flash.events.xml#IMEEvent"><linktext>flash.events.IMEEvent</linktext></link></related-links><apiOperation id="flash.system:System:disposeXML"><apiName>disposeXML</apiName><shortdesc>
+	 使指定的 XML 对象立即可进行垃圾回收。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage name="ActionScript" version="3.0"/><apiPlatform description="" name="AIR" version="1.5.2"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>node</apiItemName><apiOperationClassifier>XML</apiOperationClassifier><apiDesc>应该可使其进行垃圾回收的 XML 引用。
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 使指定的 XML 对象立即可进行垃圾回收。此方法将删除指定 XML 节点的所有节点之间的父级和子级连接。
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.system:System:exit"><apiName>exit</apiName><shortdesc> 
+     关闭 Flash Player。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage name="ActionScript" version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>System, System.exit(), exit()             
+	 
+	 </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>code</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiDesc>传递给操作系统的值。通常，如果进程正常退出，则该值为 0。
+	 
+     </apiDesc></apiParam></apiOperationDef><apiDesc> 
+     关闭 Flash Player。
+	 
+     <p><i>仅适用于独立的 Flash Player 调试版。</i></p> 
+	 
+     <p>AIR 应用程序应调用 <codeph>NativeApplication.exit()</codeph> 方法来退出应用程序。</p> 
+	 
+     </apiDesc></apiOperationDetail><related-links><link href="flash.desktop.xml#NativeApplication/exit()"><linktext>flash.desktop.NativeApplication.exit()</linktext></link></related-links></apiOperation><apiOperation id="flash.system:System:gc"><apiName>gc</apiName><shortdesc>
+     强制执行垃圾回收进程。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage name="ActionScript" version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+     强制执行垃圾回收进程。
+	 
+     <p><ph platform="actionscript"><i>仅限于 Flash Player 调试版和 AIR 应用程序。</i></ph>在 AIR 应用程序中，<codeph>System.gc()</codeph> 方法仅限在运行于 AIR Debug Launcher (ADL) 中的内容或已安装的应用程序的应用程序安全沙箱中的内容中启用。</p>
+	 
+     </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.system:System:pause"><apiName>pause</apiName><shortdesc> 
+     暂停 Flash Player 或 AIR Debug Launcher (ADL)。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage name="ActionScript" version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>System, System.pause(), pause()   
+	 
+	 </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc> 
+     暂停<ph platform="actionscript"> Flash Player 或</ph> AIR Debug Launcher (ADL)。调用此方法后，除了传送 Socket 事件以外，将停止应用程序中的所有操作。
+	 
+     <p platform="actionscript"><i>仅限于 Flash Player 调试版或 AIR Debug Launcher (ADL)。</i></p>
+     
+     </apiDesc></apiOperationDetail><related-links><link href="flash.system.xml#System/resume()"><linktext>resume()</linktext></link></related-links></apiOperation><apiOperation id="flash.system:System:resume"><apiName>resume</apiName><shortdesc> 
+     调用 System.pause() 后，恢复应用程序。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage name="ActionScript" version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>System, System.resume(), resume()        
+	 
+	 </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc> 
+     调用 <codeph>System.pause()</codeph> 后，恢复应用程序。
+	 
+     <p platform="actionscript"><i>仅限于 Flash Player 调试版或 AIR Debug Launcher (ADL)。</i></p>  
+     
+     </apiDesc></apiOperationDetail><related-links><link href="flash.system.xml#System/pause()"><linktext>pause()</linktext></link></related-links></apiOperation><apiOperation id="flash.system:System:setClipboard"><apiName>setClipboard</apiName><shortdesc>
+	 用指定的文本字符串替换剪贴板的内容。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>System.setClipboard, setClipboard
+	 </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>string</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>要放置在系统剪贴板上的纯文本字符串，用于替换系统剪贴板上的当前内容（如果有）。
+	 
+	 
+	 </apiDesc></apiParam><apiTipTexts><apiTipText>用指定的文本字符串替换剪贴板的内容。
+	 
+	 </apiTipText></apiTipTexts></apiOperationDef><apiDesc>
+	 用指定的文本字符串替换剪贴板的内容。当因用户事件（例如，键盘或鼠标事件处理函数）而调用此方法时，此方法可以在任何安全上下文中使用。
+	 
+	 <p>此方法是为 Flash Player 9 中运行的 SWF 内容提供的。它只允许向剪贴板添加 String 内容。在 AIR 应用程序中，Flash Player 10 内容和应用程序安全沙箱中的内容可以调用 <codeph>Clipboard.setData()</codeph> 方法。</p>
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.desktop.xml#Clipboard"><linktext>flash.desktop.Clipboard</linktext></link></related-links></apiOperation><apiValue id="flash.system:System:ime:get"><apiName>ime</apiName><shortdesc>
+	 当前安装的系统 IME。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>flash.system:IME</apiValueClassifier></apiValueDef><apiDesc>
+	 当前安装的系统 IME。要为 imeComposition 事件进行注册，请调用此实例上的 <codeph>addEventListener()</codeph>。
+	 </apiDesc></apiValueDetail><related-links><link href="flash.system.xml#IMEConversionMode"><linktext>IMEConversionMode</linktext></link></related-links></apiValue><apiValue id="flash.system:System:totalMemory:get"><apiName>totalMemory</apiName><shortdesc>
+     Adobe&amp;#xAE; Flash&amp;#xAE; Player 或 Adobe&amp;#xAE; AIR&amp;#xAE; 当前使用的内存量（以字节为单位）。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><internal>Add better description and example, unless private, in which case mark as "at"private.
+	 </internal></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>uint</apiValueClassifier></apiValueDef><apiDesc>
+     <ph platform="actionscript">Adobe<sup>®</sup> Flash<sup>®</sup> Player 或 </ph>Adobe<sup>®</sup> AIR<sup>®</sup> 当前使用的内存量（以字节为单位）。
+	 
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.system:System:useCodePage:get"><apiName>useCodePage</apiName><shortdesc>
+	 一个布尔值，它决定使用哪个代码页来解释外部文本文件。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>System.useCodepage, useCodepage, Unicode, code page
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	 一个布尔值，它决定使用哪个代码页来解释外部文本文件。当此属性设置为 <codeph>false</codeph> 时，会将外部文本文件解释为 Unicode。（保存这些文件时，必须使用 Unicode 对其进行编码。）当此属性设置为 <codeph>true</codeph> 时，将使用运行该应用程序的操作系统的传统代码页来解释外部文本文件。<codeph>useCodePage</codeph> 的默认值是 <codeph>false</codeph>。
+	 
+	 <p>作为外部文件加载（使用 <codeph>Loader.load()</codeph>、URLLoader 类或 URLStream）的文本必须已保存为 Unicode 格式，这样应用程序才能将它识别为 Unicode。要使用 Unicode 对外部文件进行编码，请在支持 Unicode 的应用程序（例如，Windows 上的“记事本”）中保存这些文件。</p>
+	 
+	 <p>如果加载的外部文本文件不是 Unicode 编码格式，则应将 <codeph>useCodePage</codeph> 设置为 <codeph>true</codeph>。在将加载数据的 文件的<ph product="flash">第一帧</ph>中添加以下代码，使之成为第一行代码：</p>
+	 
+	 <pre><codeph>System.useCodePage = true;</codeph></pre>
+	 
+	 <p>如果存在此代码，则应用程序将使用操作系统的传统代码页来解释外部文本。对于英文 Windows 操作系统，该代码页通常为 CP1252；对于日语操作系统，该代码页通常为 Shift-JIS。<ph platform="actionscript">如果将 <codeph>useCodePage</codeph> 设置为 <codeph>true</codeph>，则 Flash Player 6 及更高版本处理文本的方式与 Flash Player 5 相同。（Flash Player 5 将所有文本都视为使用运行播放器的操作系统的传统代码页显示文本。）</ph></p>
+	 
+	 <p>如果将 <codeph>useCodePage</codeph> 设置为 <codeph>true</codeph>，则请记住，运行应用程序的操作系统的传统代码页必须包括外部文本文件中使用的字符，这样才能显示文本。例如，如果您加载了一个包含中文字符的外部文本文件，则这些字符不能显示在使用 CP1252 代码页的系统上，因为该代码页不包括中文字符。</p>
+	 
+	 <p>为确保所有平台上的用户都能查看您的应用程序中使用的外部文本文件，应将所有外部文本文件按 Unicode 进行编码，并保留 <codeph>useCodePage</codeph> 的 <codeph>false</codeph> 设置。这样，应用程序<ph platform="actionscript">（Flash Player 6 及更高版本）</ph>会将文本解释为 Unicode。</p>
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.display.xml#Loader/load()"><linktext>flash.display.Loader.load()</linktext></link></related-links></apiValue></apiClassifier><apiClassifier id="flash.system:SecurityDomain"><apiName>SecurityDomain</apiName><shortdesc>
+	SecurityDomain 类代表当前安全性“沙箱”，也称为“安全域”。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	SecurityDomain 类代表当前安全性“沙箱”，也称为“安全域”。通过将此类的一个实例传递给 <codeph>Loader.load()</codeph>，可以请求将所加载的媒体放置到特殊的沙箱中。
+	</apiDesc></apiClassifierDetail><apiValue id="flash.system:SecurityDomain:currentDomain:get"><apiName>currentDomain</apiName><shortdesc>
+		获取当前安全域。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>flash.system:SecurityDomain</apiValueClassifier></apiValueDef><apiDesc>
+		获取当前安全域。 
+		
+		</apiDesc></apiValueDetail><related-links><link href="flash.display.xml#Loader/load()"><linktext>flash.display.Loader.load()</linktext></link><link href="flash.display.xml#Loader/loadBytes()"><linktext>flash.display.Loader.loadBytes()</linktext></link><link href="flash.system.xml#LoaderContext"><linktext>flash.system.LoaderContext</linktext></link></related-links></apiValue></apiClassifier></apiPackage>

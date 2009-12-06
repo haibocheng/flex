@@ -38,6 +38,7 @@ import flash.geom.Rectangle;
 import flash.geom.Transform;
 import flash.geom.Vector3D;
 import flash.system.ApplicationDomain;
+import flash.system.Capabilities;
 import flash.text.TextFormatAlign;
 import flash.text.TextLineMetrics;
 import flash.utils.getQualifiedClassName;
@@ -116,6 +117,9 @@ use namespace mx_internal;
  *  using the <code>rawChildren.addChild()</code> or
  *  <code>rawChildren.addChildAt()</code> method, the event is not dispatched.
  *
+ * <p>This event is only dispatched when there are one or more relevant listeners 
+ * attached to the dispatching object.</p>
+ * 
  *  @eventType mx.events.FlexEvent.ADD
  *  
  *  @langversion 3.0
@@ -130,7 +134,10 @@ use namespace mx_internal;
  *  property processing, measuring, layout, and drawing.
  *
  *  <p>At this point, depending on its <code>visible</code> property,
- *  the component may not be visible even though it has been drawn.</p>
+ *  the component is not visible even though it has been drawn.</p>
+ * 
+ *  <p>This event is only dispatched when there are one or more 
+ *  relevant listeners attached to the dispatching object.</p>
  *
  *  @eventType mx.events.FlexEvent.CREATION_COMPLETE
  *  
@@ -150,6 +157,9 @@ use namespace mx_internal;
  *  displayed. All properties have been committed and the component has
  *  been measured and layed out.</p>
  *
+ *  <p>This event is only dispatched when there are one or more 
+ *  relevant listeners attached to the dispatching object.</p>
+ * 
  *  @eventType mx.events.FlexEvent.UPDATE_COMPLETE
  *  
  *  @langversion 3.0
@@ -179,6 +189,9 @@ use namespace mx_internal;
  *  is measured, laid out, and drawn, after which the
  *  <code>creationComplete</code> event is dispatched.</p>
  *
+ *  <p>This event only dispatched when there are one or more 
+ *  relevant listeners attached to the dispatching object.</p>
+ * 
  *  @eventType mx.events.FlexEvent.INITIALIZE
  *  
  *  @langversion 3.0
@@ -211,6 +224,9 @@ use namespace mx_internal;
  *  event is dispatched before the method returns.
  *  In all other situations, the <code>move</code> event is not dispatched
  *  until after the property changes.</p>
+ * 
+ *  <p>This event only dispatched when there are one or more 
+ *  relevant listeners attached to the dispatching object.</p>
  *
  *  @eventType mx.events.MoveEvent.MOVE
  *  
@@ -231,6 +247,9 @@ use namespace mx_internal;
  *  the children, including the internal children, of a component
  *  have not yet been created.
  *
+ *  <p>This event only dispatched when there are one or more 
+ *  relevant listeners attached to the dispatching object.</p>
+ * 
  *  @eventType mx.events.FlexEvent.PREINITIALIZE
  *  
  *  @langversion 3.0
@@ -248,6 +267,9 @@ use namespace mx_internal;
  *  using the <code>rawChildren.removeChild()</code> or
  *  <code>rawChildren.removeChildAt()</code> method, the event is not dispatched.
  *
+ * <p>This event only dispatched when there are one or more relevant listeners 
+ * attached to the dispatching object.</p>
+ * 
  *  @eventType mx.events.FlexEvent.REMOVE
  *  
  *  @langversion 3.0
@@ -278,6 +300,9 @@ use namespace mx_internal;
  *
  *  <p>The <code>resize</code> event is not
  *  dispatched until after the property changes.</p>
+ * 
+ *  <p>This event only dispatched when there are one or more 
+ *  relevant listeners attached to the dispatching object.</p>
  *
  *  @eventType mx.events.ResizeEvent.RESIZE
  *  
@@ -400,7 +425,7 @@ use namespace mx_internal;
  *
  *  <p>If you want to accept the drag, you must call the
  *  <code>DragManager.acceptDragDrop()</code> method. If you don't
- *  call <code>acceptDragDrop()</code>, you will not get any of the
+ *  call <code>acceptDragDrop()</code>, you do not get any of the
  *  other drag events.</p>
  *
  *  <p>In Flash Player, the value of the <code>action</code> property is always
@@ -409,7 +434,7 @@ use namespace mx_internal;
  *  the control recognizes that the Control key is pressed to signal a copy.
  *  The <code>action</code> property of the event object for the
  *  <code>dragOver</code> event does contain a value that signifies the type of
- *  drag operation. You may change the type of drag action by calling the
+ *  drag operation. You can change the type of drag action by calling the
  *  <code>DragManager.showFeedback()</code> method.</p>
  *
  *  <p>In AIR, the default value of the <code>action</code> property is
@@ -453,14 +478,14 @@ use namespace mx_internal;
  *  For example, you could draw a border around the drop target,
  *  or give focus to the drop target.</p>
  *
- *  <p>You should handle this event to perform additional logic
+ *  <p>Handle this event to perform additional logic
  *  before allowing the drop, such as dropping data to various locations
  *  in the drop target, reading keyboard input to determine if the
  *  drag-and-drop action is a move or copy of the drag data, or providing
  *  different types of visual feedback based on the type of drag-and-drop
  *  action.</p>
  *
- *  <p>You may also change the type of drag action by changing the
+ *  <p>You can also change the type of drag action by changing the
  *  <code>DragManager.showFeedback()</code> method.
  *  The default value of the <code>action</code> property is
  *  <code>DragManager.MOVE</code>.</p>
@@ -577,7 +602,7 @@ use namespace mx_internal;
  *  Dispatched after an effect is stopped, which happens
  *  only by a call to <code>stop()</code> on the effect.
  *
- *  <p>The effect will then dispatch the EFFECT_END event
+ *  <p>The effect then dispatches the EFFECT_END event
  *  as the effect finishes. The purpose of the EFFECT_STOP
  *  event is to let listeners know that the effect came to
  *  a premature end, rather than ending naturally or as a 
@@ -595,9 +620,9 @@ use namespace mx_internal;
 /**
  *  Dispatched after an effect ends.
  *
- *  <p>The effect will have made the last set of visual changes
- *  before this event is fired, but those changes will not have
- *  been rendered on the screen.
+ *  <p>The effect makes the last set of visual changes
+ *  before this event is fired, but those changes are not 
+ *  rendered on the screen.
  *  Thus, you might have to use the <code>callLater()</code> method
  *  to delay any other changes that you want to make until after the
  *  changes have been rendered onscreen.</p>
@@ -619,6 +644,9 @@ use namespace mx_internal;
 /**
  *  Dispatched after the <code>currentState</code> property changes,
  *  but before the view state changes.
+ * 
+ *  <p>This event is only dispatched when there are one or more 
+ *  relevant listeners attached to the dispatching object.</p>
  *
  *  @eventType mx.events.StateChangeEvent.CURRENT_STATE_CHANGING
  *  
@@ -631,6 +659,9 @@ use namespace mx_internal;
 
 /**
  *  Dispatched after the view state has changed.
+ * 
+ *  <p>This event is only dispatched when there are one or more 
+ *  relevant listeners attached to the dispatching object.</p>
  *
  *  @eventType mx.events.StateChangeEvent.CURRENT_STATE_CHANGE
  *  
@@ -643,6 +674,9 @@ use namespace mx_internal;
 
 /**
  *  Dispatched after the component has entered a view state.
+ * 
+ *  <p>This event is only dispatched when there are one or more 
+ *  relevant listeners attached to the dispatching object.</p>
  *
  *  @eventType mx.events.FlexEvent.ENTER_STATE
  *  
@@ -655,6 +689,9 @@ use namespace mx_internal;
 
 /**
  *  Dispatched just before the component exits a view state.
+ * 
+ *  <p>This event is only dispatched when there are one or more 
+ *  relevant listeners attached to the dispatching object.</p>
  *
  *  @eventType mx.events.FlexEvent.EXIT_STATE
  *  
@@ -695,7 +732,7 @@ use namespace mx_internal;
 
 /**
  *  Dispatched by the component when its ToolTip has been hidden
- *  and will be discarded soon.
+ *  and is to be discarded soon.
  *
  *  <p>If you specify an effect using the
  *  <code>ToolTipManager.hideEffect</code> property,
@@ -1349,7 +1386,7 @@ public class UIComponent extends FlexSprite
      *  <p>Since the LayoutManager uses <code>callLater()</code>,
      *  this means that <code>commitProperties()</code>,
      *  <code>measure()</code>, and <code>updateDisplayList()</code>
-     *  will not get called in between calls to
+     *  is not called in between calls to
      *  <code>suspendBackgroundProcessing()</code> and
      *  <code>resumeBackgroundProcessing()</code>.</p>
      *
@@ -1580,7 +1617,8 @@ public class UIComponent extends FlexSprite
         {
             setVisible(_visible, true);
 
-            dispatchFlexEvent(FlexEvent.CREATION_COMPLETE);
+            if (hasEventListener(FlexEvent.CREATION_COMPLETE))
+                dispatchEvent(new FlexEvent(FlexEvent.CREATION_COMPLETE));
         }
     }
 
@@ -1632,7 +1670,7 @@ public class UIComponent extends FlexSprite
     {
         _processedDescriptors = value;
 
-        if (value)
+        if (value && hasEventListener(FlexEvent.INITIALIZE))
             dispatchFlexEvent(FlexEvent.INITIALIZE);
     }
 
@@ -1670,6 +1708,7 @@ public class UIComponent extends FlexSprite
         _updateCompletePendingFlag = value;
     }
 
+
     //------------------------------------------------------------------------
     //
     //  Properties: Accessibility
@@ -1697,15 +1736,19 @@ public class UIComponent extends FlexSprite
      */
     public function get accessibilityEnabled():Boolean
     {
-      return accessibilityProperties ? !accessibilityProperties.silent : true;
+        return accessibilityProperties ? !accessibilityProperties.silent : true;
     }
         
     public function set accessibilityEnabled(value:Boolean):void
     {
-      if (!accessibilityProperties) 
-        accessibilityProperties = new AccessibilityProperties();
-      accessibilityProperties.silent = !value;
-      Accessibility.updateProperties();
+        if (!Capabilities.hasAccessibility)
+            return;
+
+        if (!accessibilityProperties) 
+            accessibilityProperties = new AccessibilityProperties();
+                 
+        accessibilityProperties.silent = !value;
+        Accessibility.updateProperties();
     }
 
     /**
@@ -1726,15 +1769,19 @@ public class UIComponent extends FlexSprite
      */
     public function get accessibilityName():String
     {
-      return accessibilityProperties ? accessibilityProperties.name : "";
+        return accessibilityProperties ? accessibilityProperties.name : "";
     }
     
     public function set accessibilityName(value:String):void 
     {
-      if (!accessibilityProperties)
-        accessibilityProperties = new AccessibilityProperties();
-      accessibilityProperties.name = value;
-      Accessibility.updateProperties();
+        if (!Capabilities.hasAccessibility)
+            return;
+
+        if (!accessibilityProperties)
+            accessibilityProperties = new AccessibilityProperties();
+
+        accessibilityProperties.name = value;
+        Accessibility.updateProperties();
     }
 
     /**
@@ -1755,15 +1802,19 @@ public class UIComponent extends FlexSprite
      */
     public function get accessibilityDescription():String 
     {
-      return accessibilityProperties ? accessibilityProperties.description : "";
+        return accessibilityProperties ? accessibilityProperties.description : "";
     }
 
     public function set accessibilityDescription(value:String):void
     {
-      if (!accessibilityProperties)
-        accessibilityProperties = new AccessibilityProperties();
-      accessibilityProperties.description = value;
-      Accessibility.updateProperties();
+        if (!Capabilities.hasAccessibility)
+            return;
+
+        if (!accessibilityProperties)
+            accessibilityProperties = new AccessibilityProperties();
+
+        accessibilityProperties.description = value;
+        Accessibility.updateProperties();
     }
 
     /**
@@ -1784,18 +1835,22 @@ public class UIComponent extends FlexSprite
      */
     public function get accessibilityShortcut():String
     {
-      return accessibilityProperties ? accessibilityProperties.shortcut : "";
+        return accessibilityProperties ? accessibilityProperties.shortcut : "";
     }
     
     public function set accessibilityShortcut(value:String):void
     {
-      if (!accessibilityProperties)
-        accessibilityProperties = new AccessibilityProperties();
-      accessibilityProperties.shortcut = value;
-      Accessibility.updateProperties();
-    }
+        if (!Capabilities.hasAccessibility)
+            return;
+ 
+        if (!accessibilityProperties)
+                accessibilityProperties = new AccessibilityProperties();
 
-//--------------------------------------------------------------------------
+        accessibilityProperties.shortcut = value;
+        Accessibility.updateProperties();
+     }
+
+    //--------------------------------------------------------------------------
     //
     //  Variables: Invalidation
     //
@@ -2100,7 +2155,7 @@ public class UIComponent extends FlexSprite
      *  in pixels, within its parent container.
      *
      *  <p>Setting this property directly or calling <code>move()</code>
-     *  will have no effect -- or only a temporary effect -- if the
+     *  has no effect -- or only a temporary effect -- if the
      *  component is parented by a layout container such as HBox, Grid,
      *  or Form, because the layout calculations of those containers
      *  set the <code>x</code> position to the results of the calculation.
@@ -2139,8 +2194,12 @@ public class UIComponent extends FlexSprite
         }
 
         invalidateProperties();
+        
+        if (parent && parent is UIComponent)
+            UIComponent(parent).childXYChanged();
 
-        dispatchBindingEvent("xChanged");
+        if (hasEventListener("xChanged"))
+            dispatchEvent(new Event("xChanged"));
     }
 
     [Bindable("zChanged")]
@@ -2179,7 +2238,8 @@ public class UIComponent extends FlexSprite
 
         if (was3D != is3D)
             validateMatrix();
-        dispatchBindingEvent("zChanged");
+        if (hasEventListener("zChanged"))
+            dispatchEvent(new Event("zChanged"));
     }
 
     /**
@@ -2476,7 +2536,7 @@ public class UIComponent extends FlexSprite
      *  in pixels, within its parent container.
      *
      *  <p>Setting this property directly or calling <code>move()</code>
-     *  will have no effect -- or only a temporary effect -- if the
+     *  has no effect -- or only a temporary effect -- if the
      *  component is parented by a layout container such as HBox, Grid,
      *  or Form, because the layout calculations of those containers
      *  set the <code>x</code> position to the results of the calculation.
@@ -2515,7 +2575,11 @@ public class UIComponent extends FlexSprite
         }
         invalidateProperties();
 
-        dispatchBindingEvent("yChanged");
+        if (parent && parent is UIComponent)
+            UIComponent(parent).childXYChanged();
+
+        if (hasEventListener("yChanged"))
+            dispatchEvent(new Event("yChanged"));
     }
 
     //----------------------------------
@@ -2535,7 +2599,7 @@ public class UIComponent extends FlexSprite
     /**
      *  Number that specifies the width of the component, in pixels,
      *  in the parent's coordinates.
-     *  The default value is 0, but this property will contain the actual component
+     *  The default value is 0, but this property contains the actual component
      *  width after Flex completes sizing the components in your application.
      *
      *  <p>Note: You can specify a percentage value in the MXML
@@ -2550,10 +2614,10 @@ public class UIComponent extends FlexSprite
      *  this event is dispatched.
      *  If the component's <code>scaleX</code> property is not 1.0,
      *  the width of the component from its internal coordinates
-     *  will not match.
+     *  do not match.
      *  Thus a 100 pixel wide component with a <code>scaleX</code>
-     *  of 2 will take 100 pixels in the parent, but will
-     *  internally think it is 50 pixels wide.</p>
+     *  of 2 takes 100 pixels in the parent, but 
+     *  internally thinks it is 50 pixels wide.</p>
      *  
      *  @langversion 3.0
      *  @playerversion Flash 9
@@ -2587,7 +2651,8 @@ public class UIComponent extends FlexSprite
 
             _width = value;
 
-            dispatchBindingEvent("widthChanged");
+            if (hasEventListener("widthChanged"))
+                dispatchEvent(new Event("widthChanged"));
         }
     }
 
@@ -2608,7 +2673,7 @@ public class UIComponent extends FlexSprite
     /**
      *  Number that specifies the height of the component, in pixels,
      *  in the parent's coordinates.
-     *  The default value is 0, but this property will contain the actual component
+     *  The default value is 0, but this property contains the actual component
      *  height after Flex completes sizing the components in your application.
      *
      *  <p>Note: You can specify a percentage value in the MXML
@@ -2622,10 +2687,10 @@ public class UIComponent extends FlexSprite
      *  this event is dispatched.
      *  If the component's <code>scaleY</code> property is not 100,
      *  the height of the component from its internal coordinates
-     *  will not match.
+     *  do not match.
      *  Thus a 100 pixel high component with a <code>scaleY</code>
-     *  of 200 will take 100 pixels in the parent, but will
-     *  internally think it is 50 pixels high.</p>
+     *  of 200 takes 100 pixels in the parent, but 
+     *  internally thinks it is 50 pixels high.</p>
      *  
      *  @langversion 3.0
      *  @playerversion Flash 9
@@ -2659,7 +2724,8 @@ public class UIComponent extends FlexSprite
 
             _height = value;
 
-            dispatchBindingEvent("heightChanged");
+            if (hasEventListener("heightChanged"))
+                dispatchEvent(new Event("heightChanged"));
         }
     }
 
@@ -2834,9 +2900,9 @@ public class UIComponent extends FlexSprite
     /**
      *  Number that specifies the scaling factor along the z axis.
      *
-     *  <p>A scaling along the z axis will not affect a typical component, which lies flat
+     *  <p>A scaling along the z axis does not affect a typical component, which lies flat
      *  in the z=0 plane.  components with children that have 3D transforms applied, or 
-     *  components with a non-zero transformZ, will be affected.</p>
+     *  components with a non-zero transformZ, is affected.</p>
      *  
      *  <p>The default value is 1.0, which means that the object
      *  is not scaled.</p>
@@ -2940,11 +3006,11 @@ public class UIComponent extends FlexSprite
     /**
      *  @inheritDoc
      *
-     *  <p>When setting to <code>true</code>, the object will dispatch
+     *  <p>When setting to <code>true</code>, the object dispatches
      *  a <code>show</code> event.
-     *  When setting to <code>false</code>, the object will dispatch
+     *  When setting to <code>false</code>, the object dispatches
      *  a <code>hide</code> event.
-     *  In either case the children of the object will not emit a
+     *  In either case the children of the object does not emit a
      *  <code>show</code> or <code>hide</code> event unless the object
      *  has specifically written an implementation to do so.</p>
      *  
@@ -2968,7 +3034,7 @@ public class UIComponent extends FlexSprite
 
     /**
      *  Called when the <code>visible</code> property changes.
-     *  You should set the <code>visible</code> property to show or hide
+     *  Set the <code>visible</code> property to show or hide
      *  a component instead of calling this method directly.
      *
      *  @param value The new value of the <code>visible</code> property.
@@ -3828,7 +3894,7 @@ public class UIComponent extends FlexSprite
      *  If the current system manager is null,
      *  then search to find the correct system manager.
      *
-     *  @return A system manager, will not be null.
+     *  @return A system manager. This value is never null.
      */
     mx_internal function getNonNullSystemManager():ISystemManager
     {
@@ -4276,7 +4342,7 @@ public class UIComponent extends FlexSprite
     [Inspectable(environment="none")]
 
     /**
-     *  A module factory is used as context for using embeded fonts and for
+     *  A module factory is used as context for using embedded fonts and for
      *  finding the style manager that controls the styles for this 
      *  component. 
      *  
@@ -4610,7 +4676,7 @@ public class UIComponent extends FlexSprite
      *  You can set <code>focusEnabled</code> to <code>false</code>
      *  when a UIComponent is used as a subcomponent of another component
      *  so that the outer component becomes the focusable entity.
-     *  If this property is <code>false</code>, focus will be transferred to
+     *  If this property is <code>false</code>, focus is transferred to
      *  the first parent that has <code>focusEnable</code>
      *  set to <code>true</code>.
      *
@@ -4709,7 +4775,7 @@ public class UIComponent extends FlexSprite
 
     /**
      *  Whether you can receive focus when clicked on.
-     *  If <code>false</code>, focus will be transferred to
+     *  If <code>false</code>, focus is transferred to
      *  the first parent that is <code>mouseFocusEnable</code>
      *  set to <code>true</code>.
      *  For example, you can set this property to <code>false</code>
@@ -5182,7 +5248,7 @@ public class UIComponent extends FlexSprite
      *  the true <code>maxWidth</code> with respect to its parent
      *  is affected by the <code>scaleX</code> property.
      *  Some components have no theoretical limit to their width.
-     *  In those cases their <code>maxWidth</code> will be set to
+     *  In those cases their <code>maxWidth</code> is set to
      *  <code>UIComponent.DEFAULT_MAX_WIDTH</code>.</p>
      *
      *  @default 10000
@@ -5245,7 +5311,7 @@ public class UIComponent extends FlexSprite
      *  the true <code>maxHeight</code> with respect to its parent
      *  is affected by the <code>scaleY</code> property.
      *  Some components have no theoretical limit to their height.
-     *  In those cases their <code>maxHeight</code> will be set to
+     *  In those cases their <code>maxHeight</code> is set to
      *  <code>UIComponent.DEFAULT_MAX_HEIGHT</code>.</p>
      *
      *  @default 10000
@@ -5444,7 +5510,7 @@ public class UIComponent extends FlexSprite
      *  the true <code>maxWidth</code> with respect to its parent
      *  is affected by the <code>scaleX</code> property.
      *  Some components have no theoretical limit to their width.
-     *  In those cases their <code>maxWidth</code> will be set to
+     *  In those cases their <code>maxWidth</code> is set to
      *  <code>UIComponent.DEFAULT_MAX_WIDTH</code>.</p>
      *
      *  @default NaN
@@ -5514,7 +5580,7 @@ public class UIComponent extends FlexSprite
      *  the true <code>maxHeight</code> with respect to its parent
      *  is affected by the <code>scaleY</code> property.
      *  Some components have no theoretical limit to their height.
-     *  In those cases their <code>maxHeight</code> will be set to
+     *  In those cases their <code>maxHeight</code> is set to
      *  <code>UIComponent.DEFAULT_MAX_HEIGHT</code>.</p>
      *
      *  @default NaN
@@ -6286,7 +6352,7 @@ public class UIComponent extends FlexSprite
      *  <p>This string does not include the package name.
      *  If you need the package name as well, call the
      *  <code>getQualifiedClassName()</code> method in the flash.utils package.
-     *  It will return a string such as <code>"mx.controls::Button"</code>.</p>
+     *  It returns a string such as <code>"mx.controls::Button"</code>.</p>
      *  
      *  @langversion 3.0
      *  @playerversion Flash 9
@@ -6713,7 +6779,7 @@ public class UIComponent extends FlexSprite
     [Bindable("errorStringChanged")]
 
     /**
-     *  The text that will be displayed by a component's error tip when a
+     *  The text that displayed by a component's error tip when a
      *  component is monitored by a Validator and validation fails.
      *
      *  <p>You can use the <code>errorString</code> property to show a
@@ -7269,7 +7335,7 @@ public class UIComponent extends FlexSprite
      *  recursive process in which the tree of DisplayObjects grows by one leaf
      *  node at a time.</p>
      *
-     *  <p>If you are writing a component, you should not need
+     *  <p>If you are writing a component, you do not need
      *  to override this method.</p>
      *  
      *  @langversion 3.0
@@ -7289,7 +7355,9 @@ public class UIComponent extends FlexSprite
         // affect child creation.
         // Note that this implies that "preinitialize" handlers are called
         // top-down; i.e., parents before children.
-        dispatchFlexEvent(FlexEvent.PREINITIALIZE);
+
+        if (hasEventListener(FlexEvent.PREINITIALIZE))
+            dispatchEvent(new FlexEvent(FlexEvent.PREINITIALIZE));
 
         // Create child objects.
         createChildren();
@@ -7312,7 +7380,7 @@ public class UIComponent extends FlexSprite
      *  or <code>addChildAt()</code>.
      *  It handles some housekeeping related to dispatching
      *  the <code>initialize</code> event.
-     *  If you are writing a component, you should not need
+     *  If you are writing a component, you do not need
      *  to override this method.</p>
      *  
      *  @langversion 3.0
@@ -7360,7 +7428,7 @@ public class UIComponent extends FlexSprite
      *
      *  <p>This method is an internal method which is automatically called
      *  by the Flex framework.
-     *  You should not have to call it or override it.</p>
+     *  You do not have to call it or override it.</p>
      *
      *  @param parent The parent object containing the Repeater that created
      *  this component.
@@ -7598,7 +7666,7 @@ public class UIComponent extends FlexSprite
      *
      *  <p>This is an advanced method that you might override
      *  when creating a subclass of UIComponent. Flex guarantees that
-     *  your component's styles will be fully initialized before
+     *  your component's styles are fully initialized before
      *  the first time your component's <code>measure</code> and
      *  <code>updateDisplayList</code> methods are called.  For most
      *  components, that is sufficient. But if you need early access to
@@ -7643,9 +7711,15 @@ public class UIComponent extends FlexSprite
     {
         StyleProtoChain.styleChanged(this, styleProp);
         if (styleProp && (styleProp != "styleName"))
-            dispatchBindingEvent(styleProp + "Changed");
-        else
-            dispatchBindingEvent("allStylesChanged");
+        { 
+            if (hasEventListener(styleProp + "Changed"))
+                dispatchEvent(new Event(styleProp + "Changed"));
+        }
+        else 
+        {
+            if (hasEventListener("allStylesChanged"))
+                dispatchEvent(new Event("allStylesChanged"));
+        }
     }
 
     /**
@@ -7654,7 +7728,7 @@ public class UIComponent extends FlexSprite
      *
      *  Processing properties that require substantial computation are normally
      *  not processed until the script finishes executing.
-     *  For example setting the <code>width</code> property is delayed, because it may
+     *  For example setting the <code>width</code> property is delayed, because it can
      *  require recalculating the widths of the objects children or its parent.
      *  Delaying the processing prevents it from being repeated
      *  multiple times if the script sets the <code>width</code> property more than once.
@@ -8198,7 +8272,7 @@ public class UIComponent extends FlexSprite
      *  <p>In your override of this method, you must set the
      *  <code>measuredWidth</code> and <code>measuredHeight</code> properties
      *  to define the default size.
-     *  You may optionally set the <code>measuredMinWidth</code> and
+     *  You can optionally set the <code>measuredMinWidth</code> and
      *  <code>measuredMinHeight</code> properties to define the default
      *  minimum size.</p>
      *
@@ -8471,7 +8545,7 @@ public class UIComponent extends FlexSprite
     }
 
     /**
-     *  Measures the specified HTML text, which may contain HTML tags such
+     *  Measures the specified HTML text, which can contain HTML tags such
      *  as <code>&lt;font&gt;</code> and <code>&lt;b&gt;</code>,
      *  assuming that it is displayed
      *  in a single-line UITextField using a UITextFormat
@@ -8598,8 +8672,8 @@ public class UIComponent extends FlexSprite
      *  you would call the <code>move()</code> and <code>setActualSize()</code>
      *  methods on its children.</p>
      *
-     *  <p>Components may do programmatic drawing even if
-     *  they have children. In doing either, you should use the
+     *  <p>Components can do programmatic drawing even if
+     *  they have children. In doing either, use the
      *  component's <code>unscaledWidth</code> and <code>unscaledHeight</code>
      *  as its bounds.</p>
      *
@@ -8828,7 +8902,7 @@ public class UIComponent extends FlexSprite
      *  <p>For performance reasons, the Matrix is stored in a static variable
      *  which is reused by all calls to <code>horizontalGradientMatrix()</code>
      *  and <code>verticalGradientMatrix()</code>.
-     *  Therefore, you should pass the resulting Matrix
+     *  Therefore, pass the resulting Matrix
      *  to <code>drawRoundRect()</code> before calling
      *  <code>horizontalGradientMatrix()</code>
      *  or <code>verticalGradientMatrix()</code> again.</p>
@@ -8863,7 +8937,7 @@ public class UIComponent extends FlexSprite
      *  <p>For performance reasons, the Matrix is stored in a static variable
      *  which is reused by all calls to <code>horizontalGradientMatrix()</code>
      *  and <code>verticalGradientMatrix()</code>.
-     *  Therefore, you should pass the resulting Matrix
+     *  Therefore, pass the resulting Matrix
      *  to <code>drawRoundRect()</code> before calling
      *  <code>horizontalGradientMatrix()</code>
      *  or <code>verticalGradientMatrix()</code> again.</p>
@@ -8892,7 +8966,7 @@ public class UIComponent extends FlexSprite
     }
 
     /**
-     *  Programatically draws a rectangle into this skin's Graphics object.
+     *  Programmatically draws a rectangle into this skin's Graphics object.
      *
      *  <p>The rectangle can have rounded corners.
      *  Its edges are stroked with the current line style
@@ -9114,7 +9188,7 @@ public class UIComponent extends FlexSprite
       *  setting the component's <code>x</code> and <code>y</code> properties.
       *
       *  <p>If you are overriding the <code>updateDisplayList()</code> method
-      *  in a custom component, you should call the <code>move()</code> method
+      *  in a custom component, call the <code>move()</code> method
       *  rather than setting the <code>x</code> and <code>y</code> properties.
       *  The difference is that the <code>move()</code> method changes the location
       *  of the component and then dispatches a <code>move</code> event when you
@@ -9141,8 +9215,9 @@ public class UIComponent extends FlexSprite
                 super.x  = x;
             else
                 _layoutFeatures.layoutX = x;
-            
-            dispatchBindingEvent("xChanged");
+
+            if (hasEventListener("xChanged"))
+                dispatchEvent(new Event("xChanged"));
             changed = true;
         }
 
@@ -9153,7 +9228,8 @@ public class UIComponent extends FlexSprite
             else
                 _layoutFeatures.layoutY = y;
             
-            dispatchBindingEvent("yChanged");
+            if (hasEventListener("yChanged"))
+                dispatchEvent(new Event("yChanged"));
             changed = true;
         }
 
@@ -9170,7 +9246,7 @@ public class UIComponent extends FlexSprite
      *  properties, calling the <code>setActualSize()</code> method
      *  does not set the <code>explictWidth</code> and
      *  <code>explicitHeight</code> properties, so a future layout
-     *  calculation may result in the object returning to its previous size.
+     *  calculation can result in the object returning to its previous size.
      *  This method is used primarily by component developers implementing
      *  the <code>updateDisplayList()</code> method, by Effects,
      *  and by the LayoutManager.
@@ -9193,14 +9269,17 @@ public class UIComponent extends FlexSprite
         if (_width != w)
         {
             _width = w;
-            dispatchBindingEvent("widthChanged");
+
+            if (hasEventListener("widthChanged"))
+                dispatchEvent(new Event("widthChanged"));
             changed = true;
         }
 
         if (_height != h)
         {
             _height = h;
-            dispatchBindingEvent("heightChanged");
+            if (hasEventListener("heightChanged"))
+                dispatchEvent(new Event("heightChanged"));
             changed = true;
         }
 
@@ -9344,7 +9423,7 @@ public class UIComponent extends FlexSprite
      *  It might not be this object.
      *  Note that this method does not necessarily return the component
      *  that has focus.
-     *  It may return the internal subcomponent of the component
+     *  It can return the internal subcomponent of the component
      *  that has focus.
      *  To get the component that has focus, use the
      *  <code>focusManager.focus</code> property.
@@ -9373,7 +9452,7 @@ public class UIComponent extends FlexSprite
 
     /**
      *  Sets the focus to this component.
-     *  The component may in turn pass focus to a subcomponent.
+     *  The component can in turn pass focus to a subcomponent.
      *
      *  <p><b>Note:</b> Only the TextInput and TextArea controls show a highlight
      *  when this method sets the focus.
@@ -9642,8 +9721,9 @@ public class UIComponent extends FlexSprite
     protected function dispatchPropertyChangeEvent(prop:String, oldValue:*,
                                                    value:*):void
     {
-        dispatchEvent(PropertyChangeEvent.createUpdateEvent(
-                            this, prop, oldValue, value));
+        if (hasEventListener("propertyChange"))
+            dispatchEvent(PropertyChangeEvent.createUpdateEvent(
+                this, prop, oldValue, value));
     }
 
     /**
@@ -9651,10 +9731,14 @@ public class UIComponent extends FlexSprite
      */
     protected function dispatchMoveEvent():void
     {
-		if (shouldDispatchEvent(MoveEvent.MOVE))
-        	dispatchEvent(new MoveEvent(MoveEvent.MOVE, false, false,
-				oldX, oldY));
-        
+        if (hasEventListener(MoveEvent.MOVE))
+        {
+            var moveEvent:MoveEvent = new MoveEvent(MoveEvent.MOVE);
+            moveEvent.oldX = oldX;
+            moveEvent.oldY = oldY;
+            dispatchEvent(moveEvent);
+        }
+
         oldX = x;
         oldY = y;
     }
@@ -9664,9 +9748,13 @@ public class UIComponent extends FlexSprite
      */
     protected function dispatchResizeEvent():void
     {
-		if (shouldDispatchEvent(ResizeEvent.RESIZE))
-			dispatchEvent(new ResizeEvent(ResizeEvent.RESIZE, false, false,
-				oldWidth, oldHeight));
+        if (hasEventListener(ResizeEvent.RESIZE))
+        {
+            var resizeEvent:ResizeEvent = new ResizeEvent(ResizeEvent.RESIZE);
+            resizeEvent.oldWidth = oldWidth;
+            resizeEvent.oldHeight = oldHeight;
+            dispatchEvent(resizeEvent);
+        }
         
         oldWidth = width;
         oldHeight = height;
@@ -9861,11 +9949,17 @@ public class UIComponent extends FlexSprite
             nextTransition.effect.captureStartValues();
 
         // Dispatch currentStateChanging event
-		dispatchStateChangeEvent(StateChangeEvent.CURRENT_STATE_CHANGING,
-			oldState, requestedCurrentState ? requestedCurrentState : "");
-
+		var event:StateChangeEvent;
+        if (hasEventListener(StateChangeEvent.CURRENT_STATE_CHANGING)) 
+        {
+            event = new StateChangeEvent(StateChangeEvent.CURRENT_STATE_CHANGING);
+            event.oldState = oldState;
+            event.newState = requestedCurrentState ? requestedCurrentState : "";
+            dispatchEvent(event);
+        }
+        
         // If we're leaving the base state, send an exitState event
-        if (isBaseState(_currentState))
+        if (isBaseState(_currentState) && hasEventListener(FlexEvent.EXIT_STATE))
             dispatchFlexEvent(FlexEvent.EXIT_STATE);
 
         // Remove the existing state
@@ -9877,15 +9971,24 @@ public class UIComponent extends FlexSprite
 
         // If we're going back to the base state, dispatch an
         // enter state event, otherwise apply the state.
-        if (isBaseState(currentState))
-            dispatchFlexEvent(FlexEvent.ENTER_STATE);
+
+        if (isBaseState(currentState)) 
+        {
+            if (hasEventListener(FlexEvent.ENTER_STATE))
+                dispatchEvent(new FlexEvent(FlexEvent.ENTER_STATE)); 
+        }
         else
             applyState(_currentState, commonBaseState);
-
+		
         // Dispatch currentStateChange
-		dispatchStateChangeEvent(StateChangeEvent.CURRENT_STATE_CHANGE,
-			oldState, _currentState ? _currentState : "");
-
+        if (hasEventListener(StateChangeEvent.CURRENT_STATE_CHANGE))
+        {
+            event = new StateChangeEvent(StateChangeEvent.CURRENT_STATE_CHANGE);
+            event.oldState = oldState;
+            event.newState = _currentState ? _currentState : "";
+            dispatchEvent(event);
+        }
+        
         if (initialized && nextTransition)
         {
             // Force a validation before playing the transition effect
@@ -10148,7 +10251,7 @@ public class UIComponent extends FlexSprite
     }
 
     /**
-     *  A component's parent is used to evalate descendant selectors. A parent
+     *  A component's parent is used to evaluate descendant selectors. A parent
      *  must also be an IAdvancedStyleClient to participate in advanced style
      *  declarations.
      *  
@@ -10163,7 +10266,7 @@ public class UIComponent extends FlexSprite
     }
 
     /**
-     *  Determins whether the current state of this component matches a
+     *  Determines whether the current state of this component matches a
      *  CSS pseudo-selector.
      *  
      *  @langversion 3.0
@@ -10205,9 +10308,9 @@ public class UIComponent extends FlexSprite
      *  Finds the type selectors for this UIComponent instance.
      *  The algorithm walks up the superclass chain.
      *  For example, suppose that class MyButton extends Button.
-     *  A MyButton instance will first look for a MyButton type selector
-     *  then, it will look for a Button type selector.
-     *  then, it will look for a UIComponent type selector.
+     *  A MyButton instance first looks for a MyButton type selector
+     *  then, it looks for a Button type selector.
+     *  then, it looks for a UIComponent type selector.
      *  (The superclass chain is considered to stop at UIComponent, not Object.)
      *
      *  @return An Array of type selectors for this UIComponent instance.
@@ -10240,7 +10343,7 @@ public class UIComponent extends FlexSprite
      *  </ul>
      *
      *  <p>Building the style cache is a computation-intensive operation,
-     *  so you should avoid changing <code>styleName</code> or
+     *  so avoid changing <code>styleName</code> or
      *  setting selector styles unnecessarily.</p>
      *
      *  <p>This method is not called when you set an instance style
@@ -10248,7 +10351,7 @@ public class UIComponent extends FlexSprite
      *  Setting an instance style is a relatively fast operation
      *  compared with setting a selector style.</p>
      *
-     *  <p>You should not need to call or override this method.</p>
+     *  <p>You do not need to call or override this method.</p>
      *
      *  @param recursive Recursively regenerates the style cache for
      *  all children of this component.
@@ -10330,12 +10433,12 @@ public class UIComponent extends FlexSprite
      *  component's style lookup chain.
      *
      *  <p>This same method is used to get any kind of style property,
-     *  so the value returned may be a Boolean, String, Number, int,
+     *  so the value returned can be a Boolean, String, Number, int,
      *  uint (for an RGB color), Class (for a skin), or any kind of object.
      *  Therefore the return type is simply specified as ~~.</p>
      *
-     *  <p>If you are getting a particular style property, you will
-     *  know its type and will often want to store the result in a
+     *  <p>If you are getting a particular style property, you 
+     *  know its type and often want to store the result in a
      *  variable of that type.
      *  No casting from ~~ to that type is necessary.</p>
      *
@@ -10347,7 +10450,7 @@ public class UIComponent extends FlexSprite
      *
      *  <p>If the style property has not been set anywhere in the
      *  style lookup chain, the value returned by <code>getStyle()</code>
-     *  will be <code>undefined</code>.
+     *  is <code>undefined</code>.
      *  Note that <code>undefined</code> is a special value that is
      *  not the same as <code>false</code>, <code>""</code>,
      *  <code>NaN</code>, <code>0</code>, or <code>null</code>.
@@ -10387,7 +10490,7 @@ public class UIComponent extends FlexSprite
     /**
      *  Sets a style property on this component instance.
      *
-     *  <p>This may override a style that was set globally.</p>
+     *  <p>This can override a style that was set globally.</p>
      *
      *  <p>Calling the <code>setStyle()</code> method can result in decreased performance.
      *  Use it only when necessary.</p>
@@ -10783,7 +10886,7 @@ public class UIComponent extends FlexSprite
     /**
      *  This is an internal method used by the Flex framework
      *  to support the Dissolve effect.
-     *  You should not need to call it or override it.
+     *  You do not have to call it or override it.
      *  
      *  @langversion 3.0
      *  @playerversion Flash 9
@@ -11075,12 +11178,16 @@ public class UIComponent extends FlexSprite
                 }
 
                 r[indices[n - 1]] = this;
-                var event:PropertyChangeEvent =
-                    PropertyChangeEvent.createUpdateEvent(parentDocument,
-                                                          id,
-                                                          parentDocument[id],
-                                                          parentDocument[id]);
-                parentDocument.dispatchEvent(event);
+                
+                if (parentDocument.hasEventListener("propertyChange")) 
+                {
+                    var event:PropertyChangeEvent =
+                        PropertyChangeEvent.createUpdateEvent(parentDocument,
+                                                            id,
+                                                            parentDocument[id],
+                                                            parentDocument[id]);
+                    parentDocument.dispatchEvent(event);
+                }
             }
         }
     }
@@ -11139,12 +11246,15 @@ public class UIComponent extends FlexSprite
                 }
                 else
                 {
-                    var event:PropertyChangeEvent =
-                        PropertyChangeEvent.createUpdateEvent(parentDocument,
-                                                              id,
-                                                              parentDocument[id],
-                                                              parentDocument[id]);
-                    parentDocument.dispatchEvent(event);
+                    if (parentDocument.hasEventListener("propertyChange")) 
+                    {
+                        var event:PropertyChangeEvent =
+                            PropertyChangeEvent.createUpdateEvent(parentDocument,
+                                                                id,
+                                                                parentDocument[id],
+                                                                parentDocument[id]);
+                        parentDocument.dispatchEvent(event);
+                    }
                 }
             }
         }
@@ -11200,7 +11310,7 @@ public class UIComponent extends FlexSprite
      *  a <code>"change"</code> Event to indicate
      *  that the localized resources have changed in some way.
      *
-     *  <p>This event will be dispatched when you set the ResourceManager's
+     *  <p>This event is dispatched when you set the ResourceManager's
      *  <code>localeChain</code> property, when a resource module
      *  has finished loading, and when you call the ResourceManager's
      *  <code>update()</code> method.</p>
@@ -11233,7 +11343,7 @@ public class UIComponent extends FlexSprite
      *  <p>This method is normally not used by application developers. </p>
      *
      *  @param target The component to be printed.
-     *  It may be the current component or one of its children.
+     *  It can be the current component or one of its children.
      *
      *  @return Object containing the properties of the current component
      *  required by the <code>finishPrint()</code> method
@@ -11262,7 +11372,7 @@ public class UIComponent extends FlexSprite
      *  restore it to its state before printing.
      *
      *  @param target The component that just finished printing.
-     *  It may be the current component or one of its children.
+     *  It can be the current component or one of its children.
      *
      *  @see mx.printing.FlexPrintJob
      *  
@@ -11833,11 +11943,11 @@ public class UIComponent extends FlexSprite
      *  with access to fonts embedded  in an application SWF
      *  when the framework is loaded as an RSL
      *  (the RSL has its own SWF context).
-     *  Embedded fonts may only be accessed from the SWF file context
+     *  Embedded fonts can only be accessed from the SWF file context
      *  in which they were created.
      *  By using the context of the application SWF,
      *  the RSL can create objects in the application SWF context
-     *  that will have access to the application's  embedded fonts.</p>
+     *  that has access to the application's  embedded fonts.</p>
      *
      *  <p>Call this method only after the font styles
      *  for this object are set.</p>
@@ -11937,7 +12047,7 @@ public class UIComponent extends FlexSprite
      *  then fall back to creating the object using a systemManager.
      *
      *  @param moduleFactory The moduleFactory to create the class in;
-     *  may be null.
+     *  can be null.
      *
      *  @param className The name of the class to create.
      *
@@ -12469,9 +12579,9 @@ public class UIComponent extends FlexSprite
     private var _maintainProjectionCenter:Boolean = false;
     
     /**
-     *  When true, the component will keep its projection matrix centered on the
+     *  When true, the component keeps its projection matrix centered on the
      *  middle of its bounding box.  If no projection matrix is defined on the
-     *  component, one will be added automatically.
+     *  component, one is added automatically.
      *  
      *  @langversion 3.0
      *  @playerversion Flash 10
@@ -12596,8 +12706,18 @@ public class UIComponent extends FlexSprite
                                     translation:Vector3D = null,
                                     postLayoutScale:Vector3D = null,
                                     postLayoutRotation:Vector3D = null,
-                                    postLayoutTranslation:Vector3D = null):void
+                                    postLayoutTranslation:Vector3D = null,
+                                    invalidateLayout:Boolean = true):void
     {
+        // Make sure that no transform setters will trigger parent invalidation.
+        // Reset the flag at the end of the method.
+        var oldIncludeInLayout:Boolean;
+        if (!invalidateLayout)
+        {
+            oldIncludeInLayout = _includeInLayout;
+            _includeInLayout = false;
+        }
+
         // TODO (chaase): Would be nice to put this function in a central place
         // to be used by UIComponent, SpriteVisualElement, UIMovieClip, and
         // GraphicElement, since they all have similar or identical functions
@@ -12633,7 +12753,11 @@ public class UIComponent extends FlexSprite
                 translation, postLayoutScale, postLayoutRotation,
                 postLayoutTranslation);
             invalidateTransform();
-           	//invalidateParentSizeAndDisplayList();
+
+            // Will not invalidate parent if we have set _includeInLayout to false
+            // in the beginning of the method
+            invalidateParentSizeAndDisplayList();
+
             if (prevX != _layoutFeatures.layoutX)
                 dispatchBindingEvent("xChanged");
             if (prevY != _layoutFeatures.layoutY)
@@ -12687,20 +12811,23 @@ public class UIComponent extends FlexSprite
                 }
             }
         }
+        
+        if (!invalidateLayout)
+            _includeInLayout = oldIncludeInLayout;
     }
 
     /**
      * A utility method to transform a point specified in the local
      * coordinates of this object to its location in the object's parent's 
-     * coordinates. The pre-layout and post-layout result will be set on 
+     * coordinates. The pre-layout and post-layout result is set on 
      * the <code>position</code> and <code>postLayoutPosition</code>
      * parameters, if they are non-null.
      * 
      * @param localPosition The point to be transformed, specified in the
      * local coordinates of the object.
-     * @position A Vector3D point that will hold the pre-layout
+     * @position A Vector3D point that holds the pre-layout
      * result. If null, the parameter is ignored.
-     * @postLayoutPosition A Vector3D point that will hold the post-layout
+     * @postLayoutPosition A Vector3D point that holds the post-layout
      * result. If null, the parameter is ignored.
      * 
      *  @langversion 3.0

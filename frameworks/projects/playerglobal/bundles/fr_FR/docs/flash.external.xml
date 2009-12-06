@@ -1,0 +1,368 @@
+<?xml version="1.0"?>
+<apiPackage id="flash.external"><apiName>flash.external</apiName><apiDetail/><apiClassifier id="flash.external:ExternalInterface"><apiName>ExternalInterface</apiName><shortdesc>
+ La classe ExternalInterface est l’API External, une interface de programmation qui permet une communication directe entre ActionScript et le conteneur Flash Player&amp;#8211, par exemple une page HTML avec JavaScript.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><internal>Verify table is still correct and paragraph below the table still applies.
+ </internal></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiTipTexts><apiTipText>Active les communications entre ActionScript et le conteneur.
+ 
+ </apiTipText></apiTipTexts><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ La classe ExternalInterface est l’API External, une interface de programmation qui permet une communication directe entre ActionScript et le conteneur Flash Player, par exemple une page HTML avec JavaScript. Adobe recommande l’utilisation de l’API ExternalInterface pour toutes les communications JavaScript-ActionScript.
+ 
+ <p>Vous pouvez appeler une fonction ActionScript dans Flash Player, à l’aide de JavaScript dans la page HTML. La fonction ActionScript peut renvoyer une valeur que JavaScript reçoit immédiatement comme valeur de renvoi de l’appel.</p>
+ 
+ <p>Cette fonctionnalité remplace la méthode <codeph>fscommand()</codeph>.</p>
+ 
+ <p>Utilisez la classe ExternalInterface pour les combinaisons suivantes de navigateurs et de systèmes d’exploitation :</p>
+ <adobetable class="innertable">
+ 
+ 
+ 
+ 
+ 
+ 
+ <tgroup cols="3"><thead><row><entry>Navigateur</entry><entry>Système d’exploitation</entry><entry>Système d’exploitation</entry></row></thead><tbody><row>
+   <entry>Internet Explorer 5.0 et versions ultérieures</entry>
+   <entry>Windows</entry>
+   <entry> </entry>
+ </row><row>
+   <entry>Netscape 8.0 et versions ultérieures</entry>
+   <entry>Windows</entry>
+   <entry> MacOS </entry>
+ </row><row>
+   <entry>Mozilla 1.7.5 et versions ultérieures</entry>
+   <entry>Windows</entry>
+   <entry> MacOS </entry>
+ </row><row>
+   <entry>Firefox 1.0 et versions ultérieures</entry>
+   <entry>Windows</entry>
+   <entry> MacOS </entry>
+ </row><row>
+   <entry>Safari 1.3 et versions ultérieures</entry>
+   <entry> </entry>
+   <entry> MacOS </entry>
+ </row></tbody></tgroup></adobetable>
+ 
+ <p>Flash Player pour Linux version 9.0.31.0 et supérieure prend en charge la classe ExternalInterface dans les navigateurs suivants :</p>
+  <adobetable class="innertable">
+    
+    
+    
+    
+  <tgroup cols="1"><thead><row><entry>Navigateur</entry></row></thead><tbody><row>
+      <entry>Mozilla 1.7.x et supérieure</entry>
+    </row><row>
+      <entry>Firefox 1.5.0.7 et versions ultérieures</entry>
+    </row><row>
+      <entry>SeaMonkey 1.0.5 et supérieure </entry>
+    </row></tbody></tgroup></adobetable>
+ <p>La classe ExternalInterface nécessite la prise en charge, par le navigateur Web de l’utilisateur, d’ActiveX<sup>®</sup> ou de l’API NPRuntime qui est exposée par certains navigateurs pour les scripts de plug-ins. Même si une combinaison navigateur/système d’exploitation n’apparaît pas dans la liste ci-dessus, elle devrait prendre en charge la classe ExternalInterface si elle gère l’API NPRuntime. Visitez le site <xref href="http://www.mozilla.org/projects/plugins/npruntime.html" scope="external">http://www.mozilla.org/projects/plugins/npruntime.html</xref>.</p>
+ <p><b>Remarque :</b> lors de l’incorporation de fichiers SWF dans une page HTML, vérifiez que l’attribut <codeph>id</codeph> est défini et que les attributs <codeph>id</codeph> et <codeph>name</codeph> des balises <codeph>object</codeph> et <codeph>embed</codeph> ne comportent aucun des caractères suivants : </p>
+ <pre>
+ . - + ~~ / \
+ </pre>
+ <p><b>Remarque :</b> Flash Player 9.0.115.0 et versions ultérieures autorisent le caractère <codeph>.</codeph> (point) dans les attributs <codeph>id</codeph> et <codeph>name</codeph>.</p>
+ 
+ <p>Dans Flash Player 10 et les versions ultérieures s’exécutant dans un navigateur, il est possible que vous ne puissiez pas utiliser cette classe par programmation pour ouvrir une fenêtre contextuelle. Certains navigateurs (et configurations de navigateur) peuvent bloquer les fenêtres contextuelles ; il n’est donc pas possible de garantir l’ouverture de toutes les fenêtres contextuelles. Toutefois, pour un résultat optimal, utilisez cette classe pour ouvrir une fenêtre contextuelle uniquement dans le code qui s’exécute comme conséquence directe de l’action d’un utilisateur (par exemple, un événement de type clic de souris ou pression de touche).</p>
+ 
+ <p>A partir d’ActionScript, vous pouvez effectuer les opérations suivantes sur la page HTML :
+ <ul> 
+   <li>appeler toute fonction JavaScript ;</li>
+   <li>transmettre un nombre illimité d’arguments, quel que soit leur nom ;</li>
+   <li>transmettre divers types de données (Boolean, Number, String, etc.) ;</li>
+   <li>recevoir une valeur renvoyée par la fonction JavaScript.</li>
+ </ul>
+ </p>
+ 
+ <p>A partir de JavaScript, vous pouvez effectuer les opérations suivantes sur la page HTML :
+ <ul>
+   <li>appeler une fonction ActionScript ;</li>
+   <li>transmettre des arguments en utilisant la notation d’appel de fonction standard ;</li>
+   <li>renvoyer une valeur à la fonction JavaScript.</li>
+ </ul>
+ </p>
+ 
+ <p>Flash Player ne gère actuellement pas les fichiers SWF intégrés à des formulaires HTML.</p>
+ 
+ <p><i>Remarque :</i> dans Adobe AIR, la classe ExternalInterface peut être utilisée pour communiquer entre JavaScript dans une page HTML chargée dans un contrôle HTMLLoader et ActionScript dans un contenu SWF incorporé à cette page HTML.</p>
+ 
+ </apiDesc><example conref="examples\ExternalInterfaceExample.as"> L’exemple suivant illustre l’envoi des données entre Flash Player et un conteneur HTML.
+<codeblock>
+
+package {
+    import flash.display.Sprite;
+    import flash.events.*;
+    import flash.external.ExternalInterface;
+    import flash.text.TextField;
+    import flash.utils.Timer;
+    import flash.text.TextFieldType;
+    import flash.text.TextFieldAutoSize;
+
+    public class ExternalInterfaceExample extends Sprite {
+        private var input:TextField;
+        private var output:TextField;
+        private var sendBtn:Sprite;
+
+        public function ExternalInterfaceExample() {
+            input = new TextField();
+            input.type = TextFieldType.INPUT;
+            input.background = true;
+            input.border = true;
+            input.width = 350;
+            input.height = 18;
+            addChild(input);
+
+            sendBtn = new Sprite();
+            sendBtn.mouseEnabled = true;
+            sendBtn.x = input.width + 10;
+            sendBtn.graphics.beginFill(0xCCCCCC);
+            sendBtn.graphics.drawRoundRect(0, 0, 80, 18, 10, 10);
+            sendBtn.graphics.endFill();
+            sendBtn.addEventListener(MouseEvent.CLICK, clickHandler);
+            addChild(sendBtn);
+
+            output = new TextField();
+            output.y = 25;
+            output.width = 450;
+            output.height = 325;
+            output.multiline = true;
+            output.wordWrap = true;
+            output.border = true;
+            output.text = "Initializing...\n";
+            addChild(output);
+
+            if (ExternalInterface.available) {
+                try {
+                    output.appendText("Adding callback...\n");
+                    ExternalInterface.addCallback("sendToActionScript", receivedFromJavaScript);
+                    if (checkJavaScriptReady()) {
+                        output.appendText("JavaScript is ready.\n");
+                    } else {
+                        output.appendText("JavaScript is not ready, creating timer.\n");
+                        var readyTimer:Timer = new Timer(100, 0);
+                        readyTimer.addEventListener(TimerEvent.TIMER, timerHandler);
+                        readyTimer.start();
+                    }
+                } catch (error:SecurityError) {
+                    output.appendText("A SecurityError occurred: " + error.message + "\n");
+                } catch (error:Error) {
+                    output.appendText("An Error occurred: " + error.message + "\n");
+                }
+            } else {
+                output.appendText("External interface is not available for this container.");
+            }
+        }
+        private function receivedFromJavaScript(value:String):void {
+            output.appendText("JavaScript says: " + value + "\n");
+        }
+        private function checkJavaScriptReady():Boolean {
+            var isReady:Boolean = ExternalInterface.call("isReady");
+            return isReady;
+        }
+        private function timerHandler(event:TimerEvent):void {
+            output.appendText("Checking JavaScript status...\n");
+            var isReady:Boolean = checkJavaScriptReady();
+            if (isReady) {
+                output.appendText("JavaScript is ready.\n");
+                Timer(event.target).stop();
+            }
+        }
+        private function clickHandler(event:MouseEvent):void {
+            if (ExternalInterface.available) {
+                ExternalInterface.call("sendToJavaScript", input.text);
+            }
+        }
+    }
+}
+
+
+</codeblock> Afin de tester l’ancien code ActionScript, incorporez le fichier SWF généré à l’aide du modèle HTML suivant :
+ <codeblock rev="2.0">
+ &lt;!-- saved from url=(0014)about:internet -->
+ &lt;html lang="en">
+ &lt;head>
+ &lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ &lt;title>ExternalInterfaceExample&lt;/title>
+ &lt;script language="JavaScript">
+     var jsReady = false;
+     function isReady() {
+         return jsReady;
+     }
+     function pageInit() {
+         jsReady = true;
+         document.forms["form1"].output.value += "\n" + "JavaScript is ready.\n";
+     }
+     function thisMovie(movieName) {
+         if (navigator.appName.indexOf("Microsoft") != -1) {
+             return window[movieName];
+         } else {
+             return document[movieName];
+         }
+     }
+     function sendToActionScript(value) {
+         thisMovie("ExternalInterfaceExample").sendToActionScript(value);
+     }
+     function sendToJavaScript(value) {
+         document.forms["form1"].output.value += "ActionScript says: " + value + "\n";
+     }
+ &lt;/script>
+ &lt;/head>
+ &lt;body onload="pageInit();">
+ 
+     &lt;object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+             id="ExternalInterfaceExample" width="500" height="375"
+             codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab">
+         &lt;param name="movie" value="ExternalInterfaceExample.swf" />
+         &lt;param name="quality" value="high" />
+         &lt;param name="bgcolor" value="#869ca7" />
+         &lt;param name="allowScriptAccess" value="sameDomain" />
+         &lt;embed src="ExternalInterfaceExample.swf" quality="high" bgcolor="#869ca7"
+             width="500" height="375" name="ExternalInterfaceExample" align="middle"
+             play="true" loop="false" quality="high" allowScriptAccess="sameDomain"
+             type="application/x-shockwave-flash"
+             pluginspage="http://www.macromedia.com/go/getflashplayer">
+         &lt;/embed>
+     &lt;/object>
+ 
+     &lt;form name="form1" onsubmit="return false;">
+         &lt;input type="text" name="input" value="" />
+         &lt;input type="button" value="Send" onclick="sendToActionScript(this.form.input.value);" />&lt;br />
+         &lt;textarea cols="60" rows="20" name="output" readonly="true">Initializing...&lt;/textarea>
+     &lt;/form>
+ 
+ &lt;/body>
+ &lt;/html>
+ </codeblock>
+</example></apiClassifierDetail><related-links><link href="flash.system.xml#/fscommand()"><linktext>flash.system.fscommand()</linktext></link></related-links><apiOperation id="flash.external:ExternalInterface:addCallback"><apiName>addCallback</apiName><shortdesc>
+     Enregistre une méthode ActionScript comme pouvant être appelée à partir du conteneur.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiException><apiDesc>Le conteneur ne prend pas en charge les appels entrants. Les appels entrants ne sont gérés que dans Internet Explorer pour Windows et les navigateurs qui utilisent l’API NPRuntime, tels que Mozilla 1.7.5 et versions ultérieures, ou Firefox 1.0 et versions ultérieures.
+     
+     </apiDesc><apiItemName>Error</apiItemName><apiOperationClassifier>Error</apiOperationClassifier></apiException><apiException><apiDesc>Un rappel avec le nom spécifié a déjà été ajouté par ActionScript dans un sandbox auquel vous n’avez pas accès. Il vous est impossible de le remplacer. Pour contourner ce problème, réécrivez le code ActionScript qui appelait au départ la méthode <codeph>addCallback()</codeph> de sorte qu’il appelle également la méthode <codeph>Security.allowDomain()</codeph>.
+     
+     </apiDesc><apiItemName>SecurityError</apiItemName><apiOperationClassifier>SecurityError</apiOperationClassifier></apiException><apiException><apiDesc>L’environnement conteneur appartient à un sandbox de sécurité auquel le code effectuant l’appel n’a pas accès. Pour résoudre ce problème, exécutez la procédure suivante :
+     
+     <ol>
+     
+      <li>Dans la balise <codeph>object</codeph> associée au fichier SWF intégré à la page HTML, définissez le paramètre suivant :
+     
+      <p><codeph>&lt;param name="allowScriptAccess" value="always" /></codeph></p>
+     
+      </li>
+     
+      <li>Dans le fichier SWF, ajoutez le code ActionScript suivant :
+     
+      <p><codeph>flash.system.Security.allowDomain(<i>sourceDomain</i>)</codeph></p>
+     
+      </li>
+     
+     </ol>
+     
+      
+      </apiDesc><apiItemName>SecurityError</apiItemName><apiOperationClassifier>SecurityError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>functionName</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Nom utilisé par le conteneur pour appeler la fonction.
+     </apiDesc></apiParam><apiParam><apiItemName>closure</apiItemName><apiOperationClassifier>Function</apiOperationClassifier><apiDesc>La fermeture de fonction à appeler. Il peut s’agir d’une fonction autonome ou d’une méthode de fermeture qui référence une méthode d’occurrence d’objet. En transmettant une fermeture de méthode, vous pouvez dirigez le rappel vers une méthode d’une occurrence d’un objet particulier.
+                    <p><b>Remarque :</b> répéter <codeph>addCallback()</codeph> sur une fonction de rappel avec une valeur de fermeture <codeph>null</codeph> supprime le rappel.</p>
+     
+     
+     </apiDesc></apiParam></apiOperationDef><apiDesc>
+     Enregistre une méthode ActionScript comme pouvant être appelée à partir du conteneur. Lorsque l’invocation de <codeph>addCallBack()</codeph> a réussi, la fonction enregistrée dans Flash Player peut être appelée par le code JavaScript ou ActiveX dans le conteneur.
+     
+     <p><b>Remarque :</b> pour le contenu <i>local</i> s’exécutant dans un navigateur, les appels à la méthode <codeph>ExternalInterface.addCallback()</codeph> fonctionnent uniquement si le fichier SWF et la page Web le contenant se trouvent dans le sandbox de sécurité approuvé localement. Pour plus d’informations, voir la rubrique du Centre des développeurs de Flash Player : <xref href="http://www.adobe.com/go/devnet_security_fr" scope="external">Sécurité</xref>.</p>
+     
+     </apiDesc></apiOperationDetail><related-links><link href="flash.system.xml#Security/allowDomain()"><linktext>flash.system.Security.allowDomain()</linktext></link></related-links></apiOperation><apiOperation id="flash.external:ExternalInterface:call"><apiName>call</apiName><shortdesc> 
+     Appelle une fonction présentée par le conteneur Flash Player en transmettant la valeur zéro ou d’autres arguments.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><internal>Should probably provide a link for the 4th paragraph above for info on Netscape.
+     
+     </internal></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiException><apiDesc>Le conteneur ne prend pas en charge les appels sortants. Les appels sortants ne sont gérés que dans Internet Explorer pour Windows et les navigateurs qui utilisent l’API NPRuntime, tels que Mozilla 1.7.5 et versions ultérieures, ou Firefox 1.0 et versions ultérieures.
+     
+     </apiDesc><apiItemName>Error</apiItemName><apiOperationClassifier>Error</apiOperationClassifier></apiException><apiException><apiDesc>L’environnement conteneur appartient à un sandbox de sécurité auquel le code effectuant l’appel n’a pas accès. Pour résoudre ce problème, exécutez la procédure suivante :
+     
+     <ol>
+     
+      <li>Dans la balise <codeph>object</codeph> associée au fichier SWF intégré à la page HTML, définissez le paramètre suivant :
+     
+      <p><codeph>&lt;param name="allowScriptAccess" value="always" /></codeph></p>
+     
+      </li>
+     
+      <li>Dans le fichier SWF, ajoutez le code ActionScript suivant :
+     
+      <p><codeph>flash.system.Security.allowDomain(<i>sourceDomain</i>)</codeph></p>
+     
+      </li>
+     
+     </ol>
+      
+      </apiDesc><apiItemName>SecurityError</apiItemName><apiOperationClassifier>SecurityError</apiOperationClassifier></apiException><apiReturn><apiDesc>Réponse émanant du conteneur. Si l’appel a échoué (imaginons que cette fonction ne figure pas dans le conteneur, qu’un problème de sécurité soit survenu, que l’interface n’est pas disponible ou encore qu’une erreur de récursivité s’est produite avec un navigateur Netscape ou Opera), la valeur <codeph>null</codeph> est renvoyée et une erreur est signalée.
+     
+     </apiDesc><apiType value="any"/></apiReturn><apiParam><apiItemName>functionName</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Nom alphanumérique de la fonction à appeler dans le conteneur. L’utilisation d’un nom de fonction non alphanumérique entraîne une erreur d’exécution (erreur 2155). Vous pouvez utiliser un bloc <codeph>try..catch</codeph> pour gérer cette erreur.
+     </apiDesc></apiParam><apiParam><apiItemName>arguments</apiItemName><apiType value="restParam"/><apiDesc>Arguments à transmettre à la fonction dans le conteneur. Vous pouvez ne spécifier aucun paramètre ou en spécifier plusieurs en les séparant par des virgules. Ces paramètres peuvent être de tout type de donnée ActionScript. Si vous faites appel à une fonction JavaScript, les types ActionScript sont automatiquement convertis en types JavaScript. Si l’appel s’adresse à un autre conteneur ActiveX, les paramètres sont encodés dans le message de requête.
+      
+     </apiDesc></apiParam><apiTipTexts><apiTipText>Appelle une fonction dans le conteneur.
+     
+     </apiTipText></apiTipTexts></apiOperationDef><apiDesc> 
+     Appelle une fonction présentée par le conteneur Flash Player en transmettant la valeur zéro ou d’autres arguments. Si la fonction n’est pas disponible, l’appel renvoie <codeph>null</codeph> ; sinon, elle renvoie la valeur fournie par la fonction. La récursion n’est <i>pas</i> autorisée dans les navigateurs Opera et Netscape. Dans ces derniers, un appel récursif produit une réponse <codeph>null</codeph> (la récursion est prise en charge par les navigateurs Internet Explorer et Firefox).
+     
+     <p>Si le conteneur correspond à une page HTML, cette méthode appelle une fonction JavaScript dans un élément <codeph>script</codeph>.</p>
+     
+     <p>Si le conteneur est un autre conteneur de type ActiveX, cette méthode distribue l’événement FlashCall ActiveX au nom spécifié ; le conteneur traite alors l’événement.</p>
+     
+     <p>Si le conteneur renferme le plug-in Netscape, vous pouvez soit écrire le support personnalisé pour la nouvelle interface NPRuntime, soit intégrer un contrôle HTML et intégrer Flash Player au contrôle HTML. Si vous intégrez un contrôle HTML, vous pouvez communiquer avec Flash Player via une interface JavaScript qui dialogue avec l’application conteneur native.</p>
+     
+     <p><b>Remarque :</b> pour du contenu <i>local</i> s’exécutant dans un navigateur, les appels à la méthode <codeph>ExternalInterface.call()</codeph> ne sont autorisés que si le fichier SWF et la page Web qui le contient (le cas échéant) se trouvent dans le sandbox de sécurité local approuvé. Vous pouvez également empêcher un fichier SWF d’utiliser cette méthode en définissant le paramètre <codeph>allowNetworking</codeph> des balises <codeph>object</codeph> et <codeph>embed</codeph> dans la page HTML qui stocke le contenu SWF. Pour plus d’informations, voir la rubrique du Centre des développeurs de Flash Player : <xref href="http://www.adobe.com/go/devnet_security_fr" scope="external">Sécurité</xref>.</p>
+     
+     <p>Dans Flash Player 10 et Flash Player 9 Mise à jour 5, certains navigateurs Web ne prennent pas en charge cette méthode si un bloqueur de fenêtres publicitaires intempestives est activé. Dans ce cas, l’appel de cette méthode aboutit uniquement en réponse à un événement utilisateur (par exemple, un événement de type clic de souris ou pression de touche).</p>
+     
+     </apiDesc></apiOperationDetail></apiOperation><apiValue id="flash.external:ExternalInterface:marshallExceptions"><apiName>marshallExceptions</apiName><shortdesc>
+     Indique si l’interface externe doit tenter de transmettre des exceptions ActionScript au navigateur en cours et des exceptions JavaScript à Flash Player.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiData>false</apiData><apiValueClassifier>Boolean</apiValueClassifier><apiTipTexts><apiTipText>Transfert des exceptions entre AS et JS.     
+     </apiTipText></apiTipTexts></apiValueDef><apiDesc>
+     Indique si l’interface externe doit tenter de transmettre des exceptions ActionScript au navigateur en cours et des exceptions JavaScript à Flash Player. Vous devez définir explicitement cette propriété sur <codeph>true</codeph> pour récupérer les exceptions JavaScript dans ActionScript et les exceptions ActionScript dans JavaScript.
+     
+     </apiDesc><example conref="examples\ExternalInterface.marshallExceptions.1.as"> L’exemple suivant crée une fonction ActionScript et l’enregistre avec le navigateur récepteur à l’aide de la méthode <codeph>addCallback()</codeph>. La nouvelle fonction émet une exception afin que le code JavaScript qui s’exécute dans le navigateur puisse la récupérer. Cet exemple contient également une instruction <codeph>try..catch</codeph> pour récupérer toutes les exceptions émises par le navigateur lors de l’appel de la fonction <codeph>throwit()</codeph>.
+<codeblock>
+
+package
+{
+    import flash.external.*
+    import flash.net.*;
+    import flash.display.*;
+    import flash.system.System;
+    public class ext_test extends Sprite {
+    function ext_test():void {
+        ExternalInterface.marshallExceptions = true;
+        ExternalInterface.addCallback("g", g);
+
+        try {
+        ExternalInterface.call("throwit");
+        } catch(e:Error) {
+        trace(e)
+        }
+    }
+    function g() { throw new Error("exception from actionscript!!!!") }
+    }
+}
+</codeblock></example></apiValueDetail><related-links><link href="flash.external.xml#ExternalInterface/addCallBack()"><linktext>addCallback()</linktext></link><link href="../../statements.html#try..catch..finally"><linktext>try..catch..dernière instruction</linktext></link></related-links></apiValue><apiValue id="flash.external:ExternalInterface:available:get"><apiName>available</apiName><shortdesc>
+     Indique si ce lecteur se trouve dans un conteneur doté d’une interface externe.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier><apiTipTexts><apiTipText>Indique si Flash Player se trouve dans un conteneur doté d’une interface externe.
+     
+     </apiTipText></apiTipTexts></apiValueDef><apiDesc>
+     Indique si ce lecteur se trouve dans un conteneur doté d’une interface externe. Si l’interface externe est disponible, cette propriété est <codeph>true</codeph> ; sinon, elle est <codeph>false</codeph>.
+     
+     <p><b>Remarque :</b> si vous utilisez l’API External avec HTML, assurez-vous toujours que le chargement du code HTML est terminé avant de tenter d’appeler toute méthode JavaScript.</p>
+     
+     </apiDesc><example>L’exemple suivant utilise la propriété <codeph>available</codeph> pour déterminer si le lecteur se trouve dans un conteneur doté d’une interface externe.
+     <codeblock rev="3.0">
+     package {
+       import flash.text.TextField;
+       import flash.display.MovieClip;
+       import flash.external.ExternalInterface;
+     
+       public class extint_test extends MovieClip {
+         public function extint_test() {
+           var isAvailable:Boolean = ExternalInterface.available;
+           var availTxt:TextField = new TextField();
+           availTxt.text = isAvailable.toString();
+           addChild(availTxt);
+         }
+       }
+     }
+     </codeblock>
+     
+      
+      </example></apiValueDetail></apiValue><apiValue id="flash.external:ExternalInterface:objectID:get"><apiName>objectID</apiName><shortdesc>
+     Renvoie l’attribut id de la balise object dans Internet Explorer, ou l’attribut name de la balise embed dans Netscape.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+     Renvoie l’attribut <codeph>id</codeph> de la balise <codeph>object</codeph> dans Internet Explorer, ou l’attribut <codeph>name</codeph> de la balise <codeph>embed</codeph> dans Netscape.
+     </apiDesc></apiValueDetail></apiValue></apiClassifier></apiPackage>

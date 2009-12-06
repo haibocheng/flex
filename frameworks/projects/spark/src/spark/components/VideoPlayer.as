@@ -64,8 +64,6 @@ use namespace mx_internal;
 
 /**
  *  Dispatched when the <code>currentTime</code> property of the MediaPlayer has changed.
- *  This value is updated at the interval set by 
- *  the MediaPlayer's <code>currentTimeUpdateInterval</code> property.
  *
  *  @eventType org.osmf.events.TimeEvent.CURRENT_TIME_CHANGE
  *
@@ -105,6 +103,18 @@ use namespace mx_internal;
 //--------------------------------------
 
 include "../styles/metadata/BasicInheritingTextStyles.as";
+
+/**
+ *  Controls the visibility of the drop shadow for this component.
+ *
+ *  @default true
+ * 
+ *  @langversion 3.0
+ *  @playerversion Flash 10
+ *  @playerversion AIR 1.5
+ *  @productversion Flex 4
+ */
+[Style(name="dropShadowVisible", type="Boolean", inherit="no", theme="spark")]
 
 /**
  *  The time, in milli-seconds, to wait in fullscreen mode with no user-interaction 
@@ -323,6 +333,8 @@ include "../styles/metadata/BasicInheritingTextStyles.as";
 //  Other metadata
 //--------------------------------------
 
+[AccessibilityClass(implementation="spark.accessibility.VideoPlayerAccImpl")]
+
 [DefaultProperty("source")]
 
 [IconFile("VideoPlayer.png")]
@@ -421,41 +433,41 @@ public class VideoPlayer extends SkinnableComponent
     //  Class constants
     //
     //--------------------------------------------------------------------------
+        
+    /**
+     *  @private
+     */
+    private static const AUTO_DISPLAY_FIRST_FRAME_PROPERTY_FLAG:uint = 1 << 0;
+
+    /**
+     *  @private
+     */
+    private static const AUTO_PLAY_PROPERTY_FLAG:uint = 1 << 1;
     
     /**
      *  @private
      */
-    private static const AUTO_PLAY_PROPERTY_FLAG:uint = 1 << 0;
+    private static const AUTO_REWIND_PROPERTY_FLAG:uint = 1 << 2;
     
     /**
      *  @private
      */
-    private static const AUTO_REWIND_PROPERTY_FLAG:uint = 1 << 1;
+    private static const LOOP_PROPERTY_FLAG:uint = 1 << 3;
     
     /**
      *  @private
      */
-    private static const LOOP_PROPERTY_FLAG:uint = 1 << 2;
+    private static const SCALE_MODE_PROPERTY_FLAG:uint = 1 << 4;
     
     /**
      *  @private
      */
-    private static const SCALE_MODE_PROPERTY_FLAG:uint = 1 << 3;
+    private static const MUTED_PROPERTY_FLAG:uint = 1 << 5;
     
     /**
      *  @private
      */
-    private static const MUTED_PROPERTY_FLAG:uint = 1 << 4;
-    
-    /**
-     *  @private
-     */
-    private static const SOURCE_PROPERTY_FLAG:uint = 1 << 5;
-    
-    /**
-     *  @private
-     */
-    private static const SEEK_TO_FIRST_FRAME_PROPERTY_FLAG:uint = 1 << 6;
+    private static const SOURCE_PROPERTY_FLAG:uint = 1 << 6;
     
     /**
      *  @private
@@ -472,6 +484,18 @@ public class VideoPlayer extends SkinnableComponent
      */
     private static const THUMBNAIL_SOURCE_PROPERTY_FLAG:uint = 1 << 9;
     
+    //--------------------------------------------------------------------------
+    //
+    //  Class mixins
+    //
+    //--------------------------------------------------------------------------
+
+    /**
+     *  @private
+     *  Placeholder for mixin by VideoPlayerAccImpl.
+     */
+    mx_internal static var createAccessibilityImplementation:Function;
+
     //--------------------------------------------------------------------------
     //
     //  Constructor
@@ -674,11 +698,72 @@ public class VideoPlayer extends SkinnableComponent
      */
     private var videoDisplayProperties:Object = {};
     
+    /**
+     *  @private
+     *  The value of the pauseWhenHidden property before exiting 
+     *  fullScreen.  We need to store it away here so we can 
+     *  restore it at commitProperties() time because of an AIR 
+     *  Mac bug.
+     */
+    private var exitingFullScreenPauseWhenHidden:Boolean;
+    
+    /**
+     *  @private
+     *  Whether the pauseWhenHidden property needs to be updated.
+     */
+    private var needsToUpdatePauseWhenHidden:Boolean = false;
+    
     //--------------------------------------------------------------------------
     //
     //  Properties
     //
     //--------------------------------------------------------------------------
+    
+    //----------------------------------
+    //  autoDisplayFirstFrame
+    //----------------------------------
+        
+    [Inspectable(category="General", defaultValue="true")]
+    
+    /**
+     *  @copy spark.components.VideoDisplay#autoDisplayFirstFrame
+     * 
+     *  @default true
+     *  
+     *  @langversion 3.0
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
+     */
+    public function get autoDisplayFirstFrame():Boolean
+    {
+        if (videoDisplay)
+        {
+            return videoDisplay.autoDisplayFirstFrame;
+        }
+        else
+        {
+            var v:* = videoDisplayProperties.autoDisplayFirstFrame;
+            return (v === undefined) ? true : v;
+        }
+    }
+    
+    /**
+     * @private
+     */
+    public function set autoDisplayFirstFrame(value:Boolean):void
+    {
+        if (videoDisplay)
+        {
+            videoDisplay.autoDisplayFirstFrame = value;
+            videoDisplayProperties = BitFlagUtil.update(videoDisplayProperties as uint, 
+                AUTO_DISPLAY_FIRST_FRAME_PROPERTY_FLAG, true);
+        }
+        else
+        {
+            videoDisplayProperties.autoDisplayFirstFrame = value;
+        }
+    }
     
     //----------------------------------
     //  autoPlay
@@ -990,7 +1075,11 @@ public class VideoPlayer extends SkinnableComponent
      */
     public function get pauseWhenHidden():Boolean
     {
-        if (videoDisplay)
+        if (needsToUpdatePauseWhenHidden)
+        {
+            return exitingFullScreenPauseWhenHidden;
+        }
+        else if (videoDisplay)
         {
             return videoDisplay.pauseWhenHidden;
         }
@@ -1006,7 +1095,11 @@ public class VideoPlayer extends SkinnableComponent
      */
     public function set pauseWhenHidden(value:Boolean):void
     {
-        if (videoDisplay)
+        if (needsToUpdatePauseWhenHidden)
+        {
+            exitingFullScreenPauseWhenHidden = value;
+        }
+        else if (videoDisplay)
         {
             videoDisplay.pauseWhenHidden = value;
             videoDisplayProperties = BitFlagUtil.update(videoDisplayProperties as uint, 
@@ -1084,52 +1177,6 @@ public class VideoPlayer extends SkinnableComponent
         else
         {
             videoDisplayProperties.scaleMode = value;
-        }
-    }
-    
-    //----------------------------------
-    //  seekToFirstFrame
-    //----------------------------------
-        
-    [Inspectable(category="General", defaultValue="true")]
-    
-    /**
-     *  @copy spark.components.VideoDisplay#seekToFirstFrame
-     * 
-     *  @default true
-     *  
-     *  @langversion 3.0
-     *  @playerversion Flash 10
-     *  @playerversion AIR 1.5
-     *  @productversion Flex 4
-     */
-    public function get seekToFirstFrame():Boolean
-    {
-        if (videoDisplay)
-        {
-            return videoDisplay.seekToFirstFrame;
-        }
-        else
-        {
-            var v:* = videoDisplayProperties.seekToFirstFrame;
-            return (v === undefined) ? true : v;
-        }
-    }
-    
-    /**
-     * @private
-     */
-    public function set seekToFirstFrame(value:Boolean):void
-    {
-        if (videoDisplay)
-        {
-            videoDisplay.seekToFirstFrame = value;
-            videoDisplayProperties = BitFlagUtil.update(videoDisplayProperties as uint, 
-                SEEK_TO_FIRST_FRAME_PROPERTY_FLAG, true);
-        }
-        else
-        {
-            videoDisplayProperties.seekToFirstFrame = value;
         }
     }
     
@@ -1333,6 +1380,15 @@ public class VideoPlayer extends SkinnableComponent
     /**
      *  @private
      */
+    override protected function initializeAccessibility():void
+    {
+        if (VideoPlayer.createAccessibilityImplementation != null)
+            VideoPlayer.createAccessibilityImplementation(this);
+    }
+
+    /**
+     *  @private
+     */
     override protected function getCurrentSkinState():String
     {   
         var state:String = videoDisplay.videoPlayer.state;
@@ -1355,6 +1411,8 @@ public class VideoPlayer extends SkinnableComponent
      */
     override protected function partAdded(partName:String, instance:Object):void
     {
+        super.partAdded(partName, instance);
+
         if (instance == videoDisplay)
         {
             videoDisplay.addEventListener(TimeEvent.CURRENT_TIME_CHANGE, videoDisplay_currentTimeChangeHandler);
@@ -1426,11 +1484,11 @@ public class VideoPlayer extends SkinnableComponent
                     PAUSE_WHEN_HIDDEN_PROPERTY_FLAG, true);
             }
             
-            if (videoDisplayProperties.seekToFirstFrame !== undefined)
+            if (videoDisplayProperties.autoDisplayFirstFrame !== undefined)
             {
-                videoDisplay.seekToFirstFrame = videoDisplayProperties.seekToFirstFrame;
+                videoDisplay.autoDisplayFirstFrame = videoDisplayProperties.autoDisplayFirstFrame;
                 newVideoProperties = BitFlagUtil.update(newVideoProperties as uint, 
-                    SEEK_TO_FIRST_FRAME_PROPERTY_FLAG, true);
+                    AUTO_DISPLAY_FIRST_FRAME_PROPERTY_FLAG, true);
             }
             
             if (videoDisplayProperties.thumbnailSource !== undefined)
@@ -1524,8 +1582,15 @@ public class VideoPlayer extends SkinnableComponent
             if (videoDisplay)
                 updateScrubBar();
             
+            // add thumbPress and thumbRelease so we pause the video while dragging
             scrubBar.addEventListener(TrackBaseEvent.THUMB_PRESS, scrubBar_thumbPressHandler);
             scrubBar.addEventListener(TrackBaseEvent.THUMB_RELEASE, scrubBar_thumbReleaseHandler);
+            
+            // add change to actually seek() when the change is complete
+            scrubBar.addEventListener(Event.CHANGE, scrubBar_changeHandler);
+            
+            // add changeEnd and changeStart so we don't update the scrubbar's value 
+            // while the scrubbar is moving around due to an animation
             scrubBar.addEventListener(FlexEvent.CHANGE_END, scrubBar_changeEndHandler);
             scrubBar.addEventListener(FlexEvent.CHANGE_START, scrubBar_changeStartHandler);
         }
@@ -1580,6 +1645,8 @@ public class VideoPlayer extends SkinnableComponent
      */
     override protected function partRemoved(partName:String, instance:Object):void
     {
+		super.partRemoved(partName, instance);
+
         if (instance == videoDisplay)
         {
             // validate before doing anything with the videoDisplay.
@@ -1616,8 +1683,8 @@ public class VideoPlayer extends SkinnableComponent
             if (BitFlagUtil.isSet(videoDisplayProperties as uint, PAUSE_WHEN_HIDDEN_PROPERTY_FLAG))
                 newVideoProperties.pauseWhenHidden = videoDisplay.pauseWhenHidden;
             
-            if (BitFlagUtil.isSet(videoDisplayProperties as uint, SEEK_TO_FIRST_FRAME_PROPERTY_FLAG))
-                newVideoProperties.seekToFirstFrame = videoDisplay.seekToFirstFrame;
+            if (BitFlagUtil.isSet(videoDisplayProperties as uint, AUTO_DISPLAY_FIRST_FRAME_PROPERTY_FLAG))
+                newVideoProperties.autoDisplayFirstFrame = videoDisplay.autoDisplayFirstFrame;
             
             if (BitFlagUtil.isSet(videoDisplayProperties as uint, THUMBNAIL_SOURCE_PROPERTY_FLAG))
                 newVideoProperties.thumbnailSource = videoDisplay.thumbnailSource;
@@ -1669,12 +1736,30 @@ public class VideoPlayer extends SkinnableComponent
         {
             scrubBar.removeEventListener(TrackBaseEvent.THUMB_PRESS, scrubBar_thumbPressHandler);
             scrubBar.removeEventListener(TrackBaseEvent.THUMB_RELEASE, scrubBar_thumbReleaseHandler);
+            scrubBar.removeEventListener(Event.CHANGE, scrubBar_changeHandler);
             scrubBar.removeEventListener(FlexEvent.CHANGE_END, scrubBar_changeEndHandler);
             scrubBar.removeEventListener(FlexEvent.CHANGE_START, scrubBar_changeStartHandler);
         }
         else if (instance == fullScreenButton)
         {
             fullScreenButton.removeEventListener(MouseEvent.CLICK, fullScreenButton_clickHandler);
+        }
+    }
+    
+    /**
+     *  @private
+     */
+    override protected function commitProperties():void
+    {
+        super.commitProperties();
+        
+        // if coming from full screen mode, we reset the 
+        // pauseWhenHidden property here because of an AIR bug
+        // that requires us to defer it.
+        if (needsToUpdatePauseWhenHidden)
+        {
+            needsToUpdatePauseWhenHidden = false;
+            pauseWhenHidden = exitingFullScreenPauseWhenHidden;
         }
     }
     
@@ -1763,16 +1848,14 @@ public class VideoPlayer extends SkinnableComponent
             scrubBar.value = videoDisplay.currentTime;
         }
         
-        scrubBar.bufferedStart = 0;
-        
         // if streaming, then we pretend to have everything in view
         // if progressive, then look at the bytesLoaded and bytesTotal
         if (!videoDisplay.videoPlayer.downloadable)
-            scrubBar.bufferedEnd = videoDisplay.duration;
+            scrubBar.loadedRangeEnd = videoDisplay.duration;
         else if (videoDisplay.bytesTotal == 0)
-            scrubBar.bufferedEnd = 0;
+            scrubBar.loadedRangeEnd = 0;
         else
-            scrubBar.bufferedEnd = (videoDisplay.bytesLoaded/videoDisplay.bytesTotal)*videoDisplay.duration;
+            scrubBar.loadedRangeEnd = (videoDisplay.bytesLoaded/videoDisplay.bytesTotal)*videoDisplay.duration;
     }
     
     /**
@@ -1868,6 +1951,9 @@ public class VideoPlayer extends SkinnableComponent
         
         if (durationDisplay)
             updateDuration();
+        
+        if (currentTimeDisplay)
+            updateCurrentTime();
         
         if (playPauseButton)
             playPauseButton.selected = playing;
@@ -2085,7 +2171,7 @@ public class VideoPlayer extends SkinnableComponent
         // keep track of pauseWhenHidden b/c we will set it to false temporarily 
         // so that the video does not pause when we reparent it to the top
         // level application
-        var oldPauseWhenHidden:Boolean = pauseWhenHidden;
+        exitingFullScreenPauseWhenHidden = pauseWhenHidden;
         pauseWhenHidden = false;
         
         // set the fullScreen variable back to false and remove this event listener
@@ -2136,7 +2222,17 @@ public class VideoPlayer extends SkinnableComponent
             beforeFullScreenInfo.parent.addChildAt(this, beforeFullScreenInfo.childIndex);
         
         includeInLayout = beforeFullScreenInfo.includeInLayout;
-        pauseWhenHidden = oldPauseWhenHidden;
+        
+        // want to update pauseWhenHidden, but can't do it here
+        // b/c the AIR window thinks it's invisible at this point
+        // if we're on a Mac (a bug), so let's just defer this check
+        // to commitProperties().
+        if (exitingFullScreenPauseWhenHidden)
+        {
+            // if we need to set it back to true
+            needsToUpdatePauseWhenHidden = true;
+            invalidateProperties();
+        }
         
         beforeFullScreenInfo = null;
         
@@ -2199,7 +2295,8 @@ public class VideoPlayer extends SkinnableComponent
      */
     private function volumeBar_valueCommitHandler(event:Event):void
     {
-        volume = volumeBar.value;
+        if (volume != volumeBar.value)
+            volume = volumeBar.value;
     }
     
     /**
@@ -2207,7 +2304,8 @@ public class VideoPlayer extends SkinnableComponent
      */
     private function volumeBar_mutedChangeHandler(event:FlexEvent):void
     {
-        muted = volumeBar.muted;
+        if (muted != volumeBar.muted)
+            muted = volumeBar.muted;
     }
     
     /**
@@ -2268,10 +2366,16 @@ public class VideoPlayer extends SkinnableComponent
     /**
      *  @private
      */
-    private function scrubBar_changeEndHandler(event:Event):void
+    private function scrubBar_changeHandler(event:Event):void
     {
         seek(scrubBar.value);
-        
+    }
+    
+    /**
+     *  @private
+     */
+    private function scrubBar_changeEndHandler(event:Event):void
+    {      
         scrubBarChanging = false;
     }
 }

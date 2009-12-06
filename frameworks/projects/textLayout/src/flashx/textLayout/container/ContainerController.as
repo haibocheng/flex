@@ -1221,7 +1221,7 @@ package flashx.textLayout.container
 					if (justClear)
 					{
 						s.graphics.clear();
-						CONFIG::debug { Debugging.traceFTECall(null,null,"clearTransparentBackground"); }
+						CONFIG::debug { Debugging.traceFTECall(null,s,"clearTransparentBackground"); }
 						_transparentBGX = _transparentBGY = _transparentBGWidth = _transparentBGHeight = NaN;
 					}
 					else
@@ -1238,13 +1238,13 @@ package flashx.textLayout.container
 						if (bgx != _transparentBGX || bgy != _transparentBGY || bgwidth != _transparentBGWidth || bgheight != _transparentBGHeight)
 						{
 							s.graphics.clear();
-							CONFIG::debug { Debugging.traceFTECall(null,null,"clearTransparentBackground"); }
+							CONFIG::debug { Debugging.traceFTECall(null,s,"clearTransparentBackground"); }
 							if (bgwidth != 0 && bgheight != 0 )
 							{
 								s.graphics.beginFill(0, 0);
 								s.graphics.drawRect(bgx, bgy, bgwidth, bgheight);
 								s.graphics.endFill();
-								CONFIG::debug { Debugging.traceFTECall(null,null,"drawTransparentBackground",bgx, bgy, bgwidth, bgheight); }
+								CONFIG::debug { Debugging.traceFTECall(null,s,"drawTransparentBackground",bgx, bgy, bgwidth, bgheight); }
 							}
 							_transparentBGX = bgx;
 							_transparentBGY = bgy;
@@ -2667,7 +2667,7 @@ package flashx.textLayout.container
 			for each (var textLine:TextLine in _shapeChildren)
 			{
 				removeTextLine(textLine);
-				CONFIG::debug { Debugging.traceFTECall(null,null,"removeTextLine",textLine); }
+				CONFIG::debug { Debugging.traceFTECall(null,_container,"removeTextLine",textLine); }
 			}
 			_shapeChildren.length = 0;
 		}
@@ -2717,7 +2717,7 @@ package flashx.textLayout.container
 				{
 					// Shape is in the new list, but not in the old list, add it to the display list at the current location, and advance to next item
 					addTextLine(newChild, childIdx++);
-					CONFIG::debug { Debugging.traceFTECall(null,null,"addTextLine",newChild); }
+					CONFIG::debug { Debugging.traceFTECall(null,_container,"addTextLine",newChild); }
 					newIdx++;
 				}
 				else
@@ -2774,12 +2774,23 @@ package flashx.textLayout.container
 				child = _shapeChildren[beginIndex++];
 				
 				removeTextLine(child);
-				CONFIG::debug { Debugging.traceFTECall(null,null,"removeTextLine",child); }
+				CONFIG::debug { Debugging.traceFTECall(null,_container,"removeTextLine",child); }
 				
-				// If parent is not null, removeTextLine did not remove the line (this can happen if the line has been 'shuffled' to another container)
-				// Otherwise, it may be eligible for recycling
-				if (!child.parent && child.userData == null)
-  					TextLineRecycler.addLineForReuse(child);
+				// Recycle if its not displayed and not connected to the textblock
+				if (TextLineRecycler.textLineRecyclerEnabled && !child.parent)
+				{
+					if (child.userData == null)
+						TextLineRecycler.addLineForReuse(child);
+					else if (child.validity == TextLineValidity.INVALID)
+					{
+						if (child.nextLine == null && child.previousLine == null && (!child.textBlock || child.textBlock.firstLine != child))
+						{
+							child.userData.releaseTextLine();
+							child.userData = null;
+							TextLineRecycler.addLineForReuse(child);
+						}
+					}
+				}
 			}
 		} 
 		
@@ -2994,7 +3005,7 @@ package flashx.textLayout.container
 					if(_hasScrollRect)
 					{
 						_container.scrollRect = null;
-						CONFIG::debug { Debugging.traceFTECall(null,null,"clearContainerScrollRect"); }
+						CONFIG::debug { Debugging.traceFTECall(null,_container,"clearContainerScrollRect"); }
 						_hasScrollRect = false;
 					}
 				}
@@ -3005,7 +3016,7 @@ package flashx.textLayout.container
 					if (!rect || rect.x != xpos || rect.y != ypos || rect.width != width || rect.height != height)
 					{
 						_container.scrollRect = new Rectangle(xpos, ypos, width, height);
-						CONFIG::debug { Debugging.traceFTECall(null,null,"setContainerScrollRect",xpos, ypos, width, height); }
+						CONFIG::debug { Debugging.traceFTECall(null,_container,"setContainerScrollRect",xpos, ypos, width, height); }
 						_hasScrollRect = true;
 					}
 				}

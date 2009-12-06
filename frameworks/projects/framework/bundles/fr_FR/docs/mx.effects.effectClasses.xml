@@ -17,10 +17,10 @@
   <ul>
     <li><codeph>tweenEnd</codeph> : distribué lorsque l’effet tween prend fin. </li>
   
-    <li><codeph>tweenUpdate</codeph> : distribué chaque fois que la classe TweenEffect calcule une nouvelle valeur.</li> 
+    <li><codeph>tweenUpdate</codeph> : distribué chaque fois qu’une classe calcule une nouvelle valeur.</li> 
   </ul>
   
-  <p>L’objet événement transmis à l’écouteur d’événements pour ces événements est de type TweenEvent. La classe TweenEvent définit la <codeph>valeur</codeph> de propriété qui contient la valeur tween calculée par l’effet. Pour l’effet Mask, la propriété <codeph>TweenEvent.value</codeph> contient un tableau à 4 éléments dans lequel : </p>
+  <p>L’objet événement transmis à l’écouteur d’événements pour ces événements est de type TweenEvent. La classe TweenEvent définit la <codeph>valeur</codeph> de propriété qui contient la valeur tween calculée par l’effet. Pour l’effet Mask, la propriété <codeph>TweenEvent.value</codeph> contient un tableau à 4 éléments dans lequel : </p>
   <ul>
     <li>value[0]:Number correspond à la valeur de la propriété<codeph>x</codeph> de la cible.</li> 
   
@@ -153,7 +153,7 @@
 	  }
 	  </pre>
 	 
-	  <p>Vous définissez cette propriété sur le nom de la fonction, comme l’indique l’exemple suivant pour l’effet WipeLeft :</p>
+	  <p>Vous devez définir cette propriété sur le nom de la fonction, comme l’illustre l’exemple suivant pour l’effet WipeLeft :</p>
 	 
 	  <pre>
 	    &lt;mx:WipeLeft id="showWL" createMaskFunction="createLargeMask" showTarget="false"/></pre>
@@ -180,14 +180,14 @@
 	  Objet contenant les propriétés d’arrivée du composant cible modifié par le changement de l’état d’affichage.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>unknown</apiData><apiType value="Object"/></apiValueDef><apiDesc>
 	  Objet contenant les propriétés d’arrivée du composant <codeph>target</codeph> modifié par le changement de l’état d’affichage.
 	 
-	  <p>Par exemple, pour un composant <codeph>target</codeph> déplacée et dimensionnée par une modification de l’état d’affichage, la propriété <codeph>end</codeph> contient la position d’arrivée et la taille du composant, comme l’exemple suivant le montre :
+	  <p>Par exemple, pour un composant <codeph>target</codeph> déplacé et dimensionné par une modification de l’état d’affichage, la propriété <codeph>end</codeph> contient la position d’arrivée et la taille du composant, comme l’illustre l’exemple suivant :
 	  <pre>{ x: 100, y: 100, width: 200, height: 200 }</pre></p>
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.effects.effectClasses:PropertyChanges:start"><apiName>start</apiName><shortdesc>
 	  Objet contenant les propriétés de départ du composant cible modifié par le changement de l’état d’affichage.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>unknown</apiData><apiType value="Object"/></apiValueDef><apiDesc>
 	  Objet contenant les propriétés d’arrivée du composant <codeph>target</codeph> modifié par le changement de l’état d’affichage.
 	 
-	  <p>Par exemple, pour un composant <codeph>target</codeph> déplacée et dimensionnée par une modification de l’état d’affichage, la propriété <codeph>start</codeph> contient la position de départ et la taille du composant, comme l’exemple suivant le montre :
+	  <p>Par exemple, pour un composant <codeph>target</codeph> déplacé et dimensionné par une modification de l’état d’affichage, la propriété <codeph>start</codeph> contient la position de départ et la taille du composant, comme l’illustre l’exemple suivant :
 	  <pre>{ x: 0, y: 0, width: 100, height: 100}</pre></p>
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.effects.effectClasses:PropertyChanges:stripUnchangedValues"><apiName>stripUnchangedValues</apiName><shortdesc>
@@ -211,10 +211,10 @@
       Constructeur.
      
       </apiDesc></apiConstructorDetail></apiConstructor><apiValue id="mx.effects.effectClasses:PauseInstance:eventName"><apiName>eventName</apiName><shortdesc> 
-     Nom de l’événement que l’effet Pause attend avant de s’arrêter.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="String"/></apiValueDef><apiDesc> 
+     Nom de l’événement que l’effet Pause attend pour s’arrêter.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="String"/></apiValueDef><apiDesc> 
      Nom de l’événement que l’effet Pause attend avant de s’arrêter. Ce paramètre doit être utilisé en combinaison avec la propriété <codeph>target</codeph>, qui doit être de type IEventDispatcher. Tous les événements doivent provenir d’un répartiteur.
      
-     <p>L’écoute de l’événement <codeph>eventName</codeph> est également liée à la propriété <codeph>duration</codeph> qui agit comme délai pour l’événement. Si l’événement n’est pas reçu dans le délai spécifié par la <codeph>duration</codeph>, l’effet s’arrête malgré tout.</p>
+     <p>L’écoute de l’événement <codeph>eventName</codeph> est également liée à la propriété <codeph>duration</codeph> qui agit comme délai pour l’événement. Si l’événement n’est pas reçu dans le délai spécifié par la propriété <codeph>duration</codeph>, l’effet s’arrête malgré tout.</p>
      
      <p>Cette propriété est facultative. L’action par défaut est d’exécuter sans attendre un événement.</p>
       
@@ -255,10 +255,10 @@
   <ul>
     <li><codeph>tweenEnd</codeph> : distribué lorsque l’effet tween prend fin. </li>
   
-    <li><codeph>tweenUpdate</codeph> : distribué chaque fois que la classe TweenEffect calcule une nouvelle valeur.</li> 
+    <li><codeph>tweenUpdate</codeph> : distribué chaque fois qu’une classe calcule une nouvelle valeur.</li> 
   </ul>
   
-  <p>L’objet événement transmis à l’écouteur d’événements pour ces événements est de type TweenEvent. La classe TweenEvent définit la <codeph>valeur</codeph> de propriété qui contient la valeur tween calculée par l’effet. Pour l’effet Glow, la propriété <codeph>TweenEvent.value</codeph> contient un tableau à 4 éléments dans lequel : </p>
+  <p>L’objet événement transmis à l’écouteur d’événements pour ces événements est de type TweenEvent. La classe TweenEvent définit la <codeph>valeur</codeph> de propriété qui contient la valeur tween calculée par l’effet. Pour l’effet Glow, la propriété <codeph>TweenEvent.value</codeph> contient un tableau à 4 éléments dans lequel : </p>
   <ul>
     <li>value[0]:uint correspond à la valeur de la propriété <codeph>GlowFilter.color</codeph> de la cible.</li> 
   
@@ -285,18 +285,18 @@
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.effects.effectClasses:GlowInstance:blurXFrom"><apiName>blurXFrom</apiName><shortdesc> 
 	  Quantité de flou horizontal au départ.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc> 
-	  Quantité de flou horizontal au départ.
+	  Quantité de flou horizontal de départ.
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.effects.effectClasses:GlowInstance:blurXTo"><apiName>blurXTo</apiName><shortdesc> 
-	  Quantité de flou horizontal à l’arrivée.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc> 
-	  Quantité de flou horizontal à l’arrivée.
+	  Quantité de flou horizontal d’arrivée.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc> 
+	  Quantité de flou horizontal d’arrivée.
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.effects.effectClasses:GlowInstance:blurYFrom"><apiName>blurYFrom</apiName><shortdesc> 
-	  Quantité de flou vertical au départ.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc> 
-	  Quantité de flou vertical au départ.
+	  Quantité de flou vertical de départ.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc> 
+	  Quantité de flou vertical de départ.
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.effects.effectClasses:GlowInstance:blurYTo"><apiName>blurYTo</apiName><shortdesc> 
-	  Quantité de flou vertical à l’arrivée.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc> 
+	  Quantité de flou vertical d’arrivée.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc> 
 	  Quantité de flou vertical à l’arrivée.
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.effects.effectClasses:GlowInstance:color"><apiName>color</apiName><shortdesc> 
@@ -342,7 +342,7 @@
   <ul>
     <li><codeph>tweenEnd</codeph> : distribué lorsque l’effet tween prend fin. </li>
   
-    <li><codeph>tweenUpdate</codeph> : distribué chaque fois que la classe TweenEffect calcule une nouvelle valeur.</li> 
+    <li><codeph>tweenUpdate</codeph> : distribué chaque fois qu’une classe calcule une nouvelle valeur.</li> 
   </ul>
   
   <p>L’objet événement transmis à l’écouteur d’événements pour ces événements est de type TweenEvent. La classe TweenEvent définit la valeur <codeph>value</codeph> de la propriété qui contient la valeur tween calculée par l’effet. Pour l’effet Fade, la propriété <codeph>TweenEvent.value</codeph> contient un nombre entre les valeurs des propriétés <codeph>Fade.alphaFrom</codeph> et <codeph>Fade.alphaTo</codeph>.</p>
@@ -354,11 +354,11 @@
 	  Constructeur.
 	 
 	  </apiDesc></apiConstructorDetail></apiConstructor><apiValue id="mx.effects.effectClasses:FadeInstance:alphaFrom"><apiName>alphaFrom</apiName><shortdesc> 
-	  Niveau de transparence de départ compris entre 0,0 et 1,0, où 0,0 signifie transparent et 1,0 signifie complètement opaque.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc> 
-	  Niveau de transparence de départ compris entre 0,0 et 1,0, où 0,0 signifie transparent et 1,0 signifie complètement opaque. 
+	  Niveau de transparence de départ compris entre 0.0 et 1.0, où 0.0 signifie transparent et 1.0 signifie complètement opaque.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc> 
+	  Niveau de transparence de départ compris entre 0.0 et 1.0, où 0.0 signifie transparent et 1.0 signifie complètement opaque. 
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.effects.effectClasses:FadeInstance:alphaTo"><apiName>alphaTo</apiName><shortdesc> 
-	  Niveau de transparence d’arrivée compris entre 0,0 et 1,0, où 0,0 signifie transparent et 1,0 signifie complètement opaque.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc> 
+	  Niveau de transparence d’arrivée compris entre 0.0 et 1.0, où 0.0 signifie transparent et 1.0 signifie complètement opaque.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc> 
 	  Niveau de transparence d’arrivée compris entre 0,0 et 1,0, où 0,0 signifie transparent et 1,0 signifie complètement opaque.
 	  
 	  </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.effects.effectClasses:ParallelInstance"><apiName>ParallelInstance</apiName><shortdesc>
@@ -366,13 +366,13 @@
   La classe ParallelInstance implémente la classe d’occurrences de l’effet Parallel. Flex crée une occurrence de cette classe lorsqu’un effet Parallel est exécuté. Vous ne devez pas la créer manuellement.
  
   </apiDesc></apiClassifierDetail><related-links><link href="mx.effects.xml#Parallel"><linktext>mx.effects.Parallel</linktext></link></related-links><apiConstructor id="mx.effects.effectClasses:ParallelInstance:ParallelInstance"><apiName>ParallelInstance</apiName><shortdesc>
-	  Constructeur.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>target</apiItemName><apiType value="Object"/><apiDesc>Cet argument est ignoré pour les effets Parallel. Il est inclus uniquement pour la cohérence avec d’autres types d’effets.
+	  Constructeur.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>target</apiItemName><apiType value="Object"/><apiDesc>Cet argument est ignoré pour les effets Parallel. Il est inclus uniquement aux fins de cohérence avec d’autres types d’effets.
 	  
 	  </apiDesc></apiParam></apiConstructorDef><apiDesc>
 	  Constructeur.
 	 
 	  </apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="mx.effects.effectClasses:ParallelInstance:end"><apiName>end</apiName><shortdesc>
-	  Interrompt tous les effets en cours de lecture, ignore tous les effets dont la lecture n’a pas débuté et passe immédiatement à la fin de l’effet composite.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+	  Interrompt tous les effets en cours de lecture, ignore tous les effets qui ne sont pas encore exécutés et passe immédiatement à la fin de l’effet composite.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
 	  Interrompt tous les effets en cours de lecture, ignore tous les effets dont la lecture n’a pas débuté et passe immédiatement à la fin de l’effet composite.
 	  
 	  </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.effects.effectClasses:ParallelInstance:protected:onEffectEnd"><apiName>onEffectEnd</apiName><shortdesc>
@@ -444,10 +444,10 @@
 	  Constructeur.
 	 
 	  </apiDesc></apiConstructorDetail></apiConstructor></apiClassifier><apiClassifier id="mx.effects.effectClasses:UnconstrainItemActionInstance"><apiName>UnconstrainItemActionInstance</apiName><shortdesc>
-  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>mx.effects.effectClasses:ActionEffectInstance</apiBaseClassifier></apiClassifierDef><apiDesc>
-   
+  La classe UnconstrainItemActionInstance implémente la classe d’instance de l’effet SeriesInterpolate.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>mx.effects.effectClasses:ActionEffectInstance</apiBaseClassifier></apiClassifierDef><apiDesc>
+  La classe UnconstrainItemActionInstance implémente la classe d’instance de l’effet SeriesInterpolate. Flex crée une occurrence de cette classe lorsqu’un effet UnconstrainItemAction est exécuté. Vous ne pouvez pas la créer manuellement.
  
-  </apiDesc></apiClassifierDetail><related-links><link href="mx.effects.xml#UnconstrainItemAction"><linktext/></link></related-links><apiConstructor id="mx.effects.effectClasses:UnconstrainItemActionInstance:UnconstrainItemActionInstance"><apiName>UnconstrainItemActionInstance</apiName><shortdesc>
+  </apiDesc></apiClassifierDetail><related-links><link href="mx.effects.xml#UnconstrainItemAction"><linktext>mx.effects.UnconstrainItemAction</linktext></link></related-links><apiConstructor id="mx.effects.effectClasses:UnconstrainItemActionInstance:UnconstrainItemActionInstance"><apiName>UnconstrainItemActionInstance</apiName><shortdesc>
       Constructeur.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>target</apiItemName><apiType value="Object"/><apiDesc>Objet à animer à l’aide de cet effet.
       
       </apiDesc></apiParam></apiConstructorDef><apiDesc>
@@ -508,10 +508,10 @@
   <ul>
     <li><codeph>tweenEnd</codeph> : distribué lorsque l’effet tween prend fin. </li>
   
-    <li><codeph>tweenUpdate</codeph> : distribué chaque fois que la classe TweenEffect calcule une nouvelle valeur.</li> 
+    <li><codeph>tweenUpdate</codeph> : distribué chaque fois qu’une classe calcule une nouvelle valeur.</li> 
   </ul>
   
-  <p>L’objet événement transmis à l’écouteur d’événements pour ces événements est de type TweenEvent. La classe TweenEvent définit la <codeph>valeur</codeph> de propriété qui contient la valeur tween calculée par l’effet. Pour l’effet Blur, la propriété <codeph>TweenEvent.value</codeph> contient un tableau de 2 éléments dans lequel : </p>
+  <p>L’objet événement transmis à l’écouteur d’événements pour ces événements est de type TweenEvent. La classe TweenEvent définit la <codeph>valeur</codeph> de propriété qui contient la valeur tween calculée par l’effet. Pour l’effet Blur, la propriété <codeph>TweenEvent.value</codeph> contient un tableau de 2 éléments dans lequel : </p>
   <ul>
     <li>numéro value[0] correspond à la valeur entre les valeurs des propriétés <codeph>Blur.blurXTo</codeph> et <codeph>Blur.blurXFrom</codeph> appliquées à la propriété <codeph>BlurFilter.blurX</codeph> de la cible.</li> 
   
@@ -526,18 +526,18 @@
 	 
 	  </apiDesc></apiConstructorDetail></apiConstructor><apiValue id="mx.effects.effectClasses:BlurInstance:blurXFrom"><apiName>blurXFrom</apiName><shortdesc> 
 	  Quantité de flou horizontal de départ.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc> 
-	  Quantité de flou horizontal au départ.
+	  Quantité de flou horizontal de départ.
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.effects.effectClasses:BlurInstance:blurXTo"><apiName>blurXTo</apiName><shortdesc> 
-	  Quantité de flou horizontal à l’arrivée.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc> 
-	  Quantité de flou horizontal à l’arrivée.
+	  Quantité de flou horizontal d’arrivée.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc> 
+	  Quantité de flou horizontal d’arrivée.
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.effects.effectClasses:BlurInstance:blurYFrom"><apiName>blurYFrom</apiName><shortdesc> 
-	  Quantité de flou vertical au départ.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc> 
-	  Quantité de flou vertical au départ.
+	  Quantité de flou vertical de départ.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc> 
+	  Quantité de flou vertical de départ.
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.effects.effectClasses:BlurInstance:blurYTo"><apiName>blurYTo</apiName><shortdesc> 
-	  Quantité de flou vertical à l’arrivée.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc> 
+	  Quantité de flou vertical d’arrivée.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc> 
 	  Quantité de flou vertical d’arrivée.
 	  
 	  </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.effects.effectClasses:TweenEffectInstance"><apiName>TweenEffectInstance</apiName><shortdesc>
@@ -555,7 +555,7 @@
 	  </apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="mx.effects.effectClasses:TweenEffectInstance:protected:createTween"><apiName>createTween</apiName><shortdesc>
 	  Crée une occurrence Tween et lui affecte les valeurs de départ, d’arrivée et de durée.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiDesc>Occurrence Tween nouvellement créée.
 	  
-	  </apiDesc><apiOperationClassifier>mx.effects:Tween</apiOperationClassifier></apiReturn><apiParam><apiItemName>listener</apiItemName><apiType value="Object"/><apiDesc>Objet averti à chaque intervalle de l’animation. En règle générale, vous transmettez le mot-clé <codeph>this</codeph> comme valeur. L’<codeph>écouteur</codeph> doit définir la méthode <codeph>onTweenUpdate()</codeph> et par option, la méthode <codeph>onTweenEnd()</codeph>. La méthode <codeph>onTweenUpdate()</codeph> est appelée pour chaque intervalle de l’animation et la méthode <codeph>onTweenEnd()</codeph> est invoquée dès que l’animation se termine.
+	  </apiDesc><apiOperationClassifier>mx.effects:Tween</apiOperationClassifier></apiReturn><apiParam><apiItemName>listener</apiItemName><apiType value="Object"/><apiDesc>Objet averti à chaque intervalle de l’animation. En règle générale, vous transmettez le mot-clé <codeph>this</codeph> en tant que valeur. L’<codeph>écouteur</codeph> doit définir la méthode <codeph>onTweenUpdate()</codeph> et par option, la méthode <codeph>onTweenEnd()</codeph>. La méthode <codeph>onTweenUpdate()</codeph> est appelée pour chaque intervalle de l’animation et la méthode <codeph>onTweenEnd()</codeph> est invoquée dès que l’animation se termine.
 	 
 	  </apiDesc></apiParam><apiParam><apiItemName>startValue</apiItemName><apiType value="Object"/><apiDesc>Valeur initiale de l’animation. Correspond à un nombre ou à un tableau de nombres. Si un nombre est transmis, Tween interpole entre ce nombre et le nombre transmis dans le paramètre <codeph>endValue</codeph>. Si un tableau de nombres est transmis, chaque nombre du tableau est interpolé.
 	 
@@ -563,7 +563,7 @@
 	 
 	  </apiDesc></apiParam><apiParam><apiItemName>duration</apiItemName><apiType value="Number"/><apiData>-1</apiData><apiDesc>Durée de l’animation, en millisecondes.
 	 
-	  </apiDesc></apiParam><apiParam><apiItemName>minFps</apiItemName><apiType value="Number"/><apiData>-1</apiData><apiDesc>Minimum de fois que la méthode <codeph>onTweenUpdate() </codeph> doit être appelée par seconde. Le code tween tente d’appeler la méthode <codeph>onTweenUpdate()</codeph> autant de fois que possible (jusqu’à 100 fois par seconde). Toutefois, si la fréquence est inférieure à <codeph>minFps</codeph>, la durée de l’animation augmente automatiquement. Par conséquent, une animation qui se bloque temporairement (si elle n’obtient pas de cycles CPU) reprend de nouveau au même endroit, au lieu de sauter. 
+	  </apiDesc></apiParam><apiParam><apiItemName>minFps</apiItemName><apiType value="Number"/><apiData>-1</apiData><apiDesc>Minimum de fois que la méthode <codeph>onTweenUpdate() </codeph> doit être appelée par seconde. Le code d’interpolation tente d’appeler la méthode <codeph>onTweenUpdate()</codeph> autant de fois que possible (jusqu’à 100 fois par seconde). Toutefois, si la fréquence est inférieure à <codeph>minFps</codeph>, la durée de l’animation augmente automatiquement. Par conséquent, une animation qui se bloque temporairement (si elle n’obtient pas de cycles CPU) reprend de nouveau au même endroit, au lieu de sauter. 
 	 
 	  </apiDesc></apiParam></apiOperationDef><apiDesc>
 	  Crée une occurrence Tween et lui affecte les valeurs de départ, d’arrivée et de durée. Si une fonction d’accélération a été spécifiée, elle est attribuée à l’occurrence Tween. L’occurrence Tween reçoit des écouteurs d’événements de la classe TweenEvents, notamment <codeph>tweenStart</codeph>, <codeph>tweenUpdate</codeph> et <codeph>tweenEnd</codeph>. En règle générale, vous appelez cette méthode après avoir remplacé la méthode <codeph>EffectInstance.play()</codeph> qui démarre réellement la durée de l’animation. 
@@ -615,10 +615,10 @@
   <ul>
     <li><codeph>tweenEnd</codeph> : distribué lorsque l’effet tween prend fin. </li>
   
-    <li><codeph>tweenUpdate</codeph> : distribué chaque fois que la classe TweenEffect calcule une nouvelle valeur.</li> 
+    <li><codeph>tweenUpdate</codeph> : distribué chaque fois qu’une classe calcule une nouvelle valeur.</li> 
   </ul>
   
-  <p>L’objet événement transmis à l’écouteur d’événements pour ces événements est de type TweenEvent. La classe TweenEvent définit la valeur <codeph>value</codeph> de la propriété qui contient la valeur tween calculée par l’effet. Pour l’effet Resize, la propriété <codeph>TweenEvent.value</codeph> contient un tableau à deux éléments, où : </p>
+  <p>L’objet événement transmis à l’écouteur d’événements pour ces événements est de type TweenEvent. La classe TweenEvent définit la valeur <codeph>value</codeph> de la propriété qui contient la valeur tween calculée par l’effet. Pour l’effet Resize, la propriété <codeph>TweenEvent.value</codeph> contient un tableau à 2 éléments dans lequel : </p>
   <ul>
     <li>value[0]:Number correspond à la valeur comprise entre les valeurs des propriétés <codeph>Resize.widthFrom</codeph> et <codeph>Resize.widthTo</codeph>.</li>
   
@@ -678,10 +678,10 @@
   <ul>
     <li><codeph>tweenEnd</codeph> : distribué lorsque l’effet tween prend fin. </li>
   
-    <li><codeph>tweenUpdate</codeph> : distribué chaque fois que la classe TweenEffect calcule une nouvelle valeur.</li> 
+    <li><codeph>tweenUpdate</codeph> : distribué chaque fois qu’une classe calcule une nouvelle valeur.</li> 
   </ul>
   
-  <p>L’objet événement transmis à l’écouteur d’événements pour ces événements est de type TweenEvent. La classe TweenEvent définit la<codeph>valeur</codeph> de propriété qui contient la valeur tween calculée par l’effet. Pour l’effet Zoom, la propriété <codeph>TweenEvent.value</codeph> contient un tableau de deux éléments, où : </p>
+  <p>L’objet événement transmis à l’écouteur d’événements pour ces événements est de type TweenEvent. La classe TweenEvent définit la<codeph>valeur</codeph> de propriété qui contient la valeur tween calculée par l’effet. Pour l’effet Zoom, la propriété <codeph>TweenEvent.value</codeph> contient un tableau de 2 éléments dans lequel : </p>
   <ul>
     <li>value[0]:Number correspond à la valeur entre les valeurs des propriétés <codeph>Zoom.zoomWidthFrom</codeph> et <codeph>Zoom.zoomWidthTo</codeph>.</li>
   
@@ -709,19 +709,19 @@
 	  Nombre représentant la position y de l’origine du zoom, ou le point d’alignement. La valeur par défaut est <codeph>target.height / 2</codeph>, qui est le centre de la cible.
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.effects.effectClasses:ZoomInstance:zoomHeightFrom"><apiName>zoomHeightFrom</apiName><shortdesc>
-	  Nombre représentant l’échelle à laquelle commencer le dimensionnement de la hauteur. Exemple, un pour cent entre 0,01 et 1,0.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc>
-	  Nombre représentant l’échelle à laquelle commencer le dimensionnement de la hauteur. Exemple, un pour cent entre 0,01 et 1,0. La valeur par défaut est 0,01, ce qui en fait une valeur très réduite.
+	  Nombre représentant l’échelle à laquelle commencer le dimensionnement de la hauteur. Exemple, un pour cent entre 0.01 et 1.0.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc>
+	  Nombre qui représente l’échelle à utiliser pour démarrer le zoom de la hauteur, exprimé en pourcentage compris entre 0.01 et 1.0. La valeur par défaut, 0.01, est très faible.
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.effects.effectClasses:ZoomInstance:zoomHeightTo"><apiName>zoomHeightTo</apiName><shortdesc>
-	  Nombre représentant l’échelle à laquelle terminer le dimensionnement de la hauteur. Exemple, un pour cent entre 0,01 et 1,0.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc>
-	  Nombre représentant l’échelle à laquelle terminer le dimensionnement de la hauteur. Exemple, un pour cent entre 0,01 et 1,0. La valeur par défaut est 1,0, ce qui correspond à la taille normale de l’objet.
+	  Nombre qui représente l’échelle à utiliser pour terminer le zoom de la hauteur, exprimé en pourcentage compris entre 0.01 et 1.0.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc>
+	  Nombre qui représente l’échelle à utiliser pour terminer le zoom de la hauteur, exprimé en pourcentage compris entre 0.01 et 1.0. La valeur par défaut est 1.0, ce qui correspond à la taille normale de l’objet.
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.effects.effectClasses:ZoomInstance:zoomWidthFrom"><apiName>zoomWidthFrom</apiName><shortdesc>
-	  Nombre représentant l’échelle à laquelle commencer le dimensionnement de la largeur. Exemple, un pour cent entre 0,01 et 1,0.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc>
-	  Nombre représentant l’échelle à laquelle commencer le dimensionnement de la largeur. Exemple, un pour cent entre 0,01 et 1,0. La valeur par défaut est 0,01, ce qui en fait une valeur très réduite.
+	  Nombre qui représente l’échelle à utiliser pour démarrer le zoom de la largeur, exprimé en pourcentage compris entre 0.01 et 1.0.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc>
+	  Nombre qui représente l’échelle à utiliser pour démarrer le zoom de la largeur, exprimé en pourcentage compris entre 0.01 et 1.0. La valeur par défaut, 0.01, est très faible.
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.effects.effectClasses:ZoomInstance:zoomWidthTo"><apiName>zoomWidthTo</apiName><shortdesc>
-	  Nombre représentant l’échelle à laquelle terminer le dimensionnement de la largeur. Exemple, un pour cent entre 0,01 et 1,0.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc>
+	  Nombre qui représente l’échelle à utiliser pour terminer le zoom de la largeur, exprimé en pourcentage compris entre 0.01 et 1.0.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc>
 	  Nombre représentant l’échelle à laquelle terminer le dimensionnement de la largeur. Exemple, un pour cent entre 0,01 et 1,0. La valeur par défaut est 1,0, ce qui correspond à la taille normale de l’objet.
 	  
 	  </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.effects.effectClasses:SoundEffectInstance"><apiName>SoundEffectInstance</apiName><shortdesc>
@@ -756,13 +756,13 @@
       Panoramique initial de l’objet Sound.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/><apiDefaultValue>0
       
       </apiDefaultValue></apiValueDef><apiDesc>
-      Panoramique initial de l’objet Sound. Cette valeur peut être comprise entre -1,0 et 1,0, où -1,0 utilise uniquement le canal gauche, 1,0 utilise uniquement le canal droit et 0,0 équilibre le son entre les deux canaux.
+      Panoramique initial de l’objet Sound. Cette valeur peut être comprise entre -1.0 et 1.0, où -1.0 utilise uniquement le canal gauche, 1.0 utilise uniquement le canal droit et 0.0 équilibre le son entre les deux canaux.
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.effects.effectClasses:SoundEffectInstance:panTo"><apiName>panTo</apiName><shortdesc>
       Panoramique final de l’objet Sound.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/><apiDefaultValue>0
       
       </apiDefaultValue></apiValueDef><apiDesc>
-      Panoramique final de l’objet Sound. Cette valeur peut être comprise entre -1,0 et 1,0, où -1,0 utilise uniquement le canal gauche, 1,0 utilise uniquement le canal droit et 0,0 équilibre le son entre les deux canaux.
+      Panoramique final de l’objet Sound. Cette valeur peut être comprise entre -1.0 et 1.0, où -1.0 utilise uniquement le canal gauche, 1.0 utilise uniquement le canal droit et 0.0 équilibre le son entre les deux canaux.
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.effects.effectClasses:SoundEffectInstance:sound"><apiName>sound</apiName><shortdesc> 
       Référence à l’objet Sound interne.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="flash.media:Sound"/></apiValueDef><apiDesc> 
@@ -788,13 +788,13 @@
       Volume initial de l’objet Sound.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/><apiDefaultValue>1.0
       
       </apiDefaultValue></apiValueDef><apiDesc>
-      Volume initial de l’objet Sound. La valeur est comprise entre 0,0 et 1,0.
+      Volume initial de l’objet Sound. La valeur peut être comprise entre 0.0 et 1.0.
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.effects.effectClasses:SoundEffectInstance:volumeTo"><apiName>volumeTo</apiName><shortdesc>
       Volume définitif de l’objet Sound.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/><apiDefaultValue>1.0
       
       </apiDefaultValue></apiValueDef><apiDesc>
-      Volume définitif de l’objet Sound. La valeur est comprise entre 0,0 et 1,0.
+      Volume définitif de l’objet Sound. La valeur est comprise entre 0.0 et 1.0.
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.effects.effectClasses:SoundEffectInstance:isLoading:get"><apiName>isLoading</apiName><shortdesc>
       Cette propriété est true si le MP3 a été chargé.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Boolean"/></apiValueDef><apiDesc>
@@ -827,7 +827,7 @@
   <ul>
     <li><codeph>tweenEnd</codeph> : distribué lorsque l’effet tween prend fin. </li>
   
-    <li><codeph>tweenUpdate</codeph> : distribué chaque fois que la classe TweenEffect calcule une nouvelle valeur.</li> 
+    <li><codeph>tweenUpdate</codeph> : distribué chaque fois qu’une classe calcule une nouvelle valeur.</li> 
   </ul>
   
   <p>L’objet événement transmis à l’écouteur d’événements pour ces événements est de type TweenEvent. La classe TweenEvent définit la valeur <codeph>value</codeph> de la propriété qui contient la valeur tween calculée par l’effet. Pour l’effet AnimateProperty, la propriété <codeph>TweenEvent.value</codeph> contient un nombre compris entre les valeurs des propriétés <codeph>AnimateProperty.fromValue</codeph> et <codeph>AnimateProperty.toValue</codeph>, pour la propriété cible spécifiée par la propriété <codeph>AnimateProperty.property</codeph>.</p>
@@ -839,8 +839,8 @@
 	  Constructeur.
 	 
 	  </apiDesc></apiConstructorDetail></apiConstructor><apiValue id="mx.effects.effectClasses:AnimatePropertyInstance:fromValue"><apiName>fromValue</apiName><shortdesc>
-	  Valeur de départ de la propriété de l’effet.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc>
-	  Valeur de départ de la propriété de l’effet. La valeur par défaut est la valeur de pro^priété actuelle de la cible.
+	  Valeur de début de la propriété de l’effet.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc>
+	  Valeur de début de la propriété de l’effet. La valeur par défaut est la valeur de la propriété actuelle de la cible.
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.effects.effectClasses:AnimatePropertyInstance:isStyle"><apiName>isStyle</apiName><shortdesc>
 	  Si la valeur est true, l’attribut de la propriété est un style et vous la définissez à l’aide de la méthode setStyle().</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>false</apiData><apiType value="Boolean"/><apiDefaultValue>false
@@ -853,10 +853,10 @@
 	  Nom de la propriété sur la cible à animer. Cet attribut est requis.
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.effects.effectClasses:AnimatePropertyInstance:roundValue"><apiName>roundValue</apiName><shortdesc>
-	  Si la valeur est true, arrondissez au plus près la valeur d’interpolation interpolée au nombre entier le plus proche.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>false</apiData><apiType value="Boolean"/><apiDefaultValue>false
+	  Si la valeur est true, arrondissez la valeur tween interpolée au nombre entier le plus proche.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>false</apiData><apiType value="Boolean"/><apiDefaultValue>false
 	  
 	  </apiDefaultValue></apiValueDef><apiDesc>
-	  Si la valeur est<codeph>true</codeph>, arrondissez au plus près la valeur d’interpolation interpolée au nombre entier le plus proche. Cette propriété est utile si la propriété à animer est une propriété int ou uint.
+	  Si la valeur est <codeph>true</codeph>, arrondissez la valeur tween interpolée au nombre entier le plus proche. Cette propriété est utile si la propriété à animer est un int ou uint.
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.effects.effectClasses:AnimatePropertyInstance:toValue"><apiName>toValue</apiName><shortdesc>
 	  Valeur d’arrivée de l’effet.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc>
@@ -877,13 +877,13 @@
   La classe SequenceInstance implémente la classe d’occurrences de l’effet Sequence. Flex crée une occurrence de cette classe lorsqu’un effet Sequence est exécuté. Vous ne devez pas la créer manuellement.
  
   </apiDesc></apiClassifierDetail><related-links><link href="mx.effects.xml#Sequence"><linktext>mx.effects.Sequence</linktext></link></related-links><apiConstructor id="mx.effects.effectClasses:SequenceInstance:SequenceInstance"><apiName>SequenceInstance</apiName><shortdesc>
-      Constructeur.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>target</apiItemName><apiType value="Object"/><apiDesc>Cet argument est ignorée lorsqu’il s’agit d’effets Sequence. Il est inclus uniquement pour la cohérence avec d’autres types d’effets.
+      Constructeur.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>target</apiItemName><apiType value="Object"/><apiDesc>Cet argument est ignoré s’il s’agit d’effets Sequence. Il est inclus uniquement aux fins de cohérence avec d’autres types d’effets.
       
       </apiDesc></apiParam></apiConstructorDef><apiDesc>
       Constructeur.
      
       </apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="mx.effects.effectClasses:SequenceInstance:end"><apiName>end</apiName><shortdesc>
-      Interrompt tous les effets en cours de lecture, ignore tous les effets dont la lecture n’a pas débuté et passe immédiatement à la fin de l’effet composite.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+      Interrompt tous les effets en cours de lecture, ignore tous les effets qui ne sont pas encore exécutés et passe immédiatement à la fin de l’effet composite.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
       Interrompt tous les effets en cours de lecture, ignore tous les effets qui ne sont pas encore exécutés et passe immédiatement à la fin de l’effet composite.
       
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.effects.effectClasses:SequenceInstance:protected:onEffectEnd"><apiName>onEffectEnd</apiName><shortdesc>
@@ -913,10 +913,10 @@
   <ul>
     <li><codeph>tweenEnd</codeph> : distribué lorsque l’effet tween prend fin. </li>
   
-    <li><codeph>tweenUpdate</codeph> : distribué chaque fois que la classe TweenEffect calcule une nouvelle valeur.</li> 
+    <li><codeph>tweenUpdate</codeph> : distribué chaque fois qu’une classe calcule une nouvelle valeur.</li> 
   </ul>
   
-  <p>L’objet événement transmis à l’écouteur d’événements pour ces événements est de type TweenEvent. La classe TweenEvent définit la <codeph>valeur</codeph> de propriété qui contient la valeur tween calculée par l’effet. Pour l’effet Move, la propriété <codeph>TweenEvent.value</codeph> contient un tableau de deux éléments, où : </p>
+  <p>L’objet événement transmis à l’écouteur d’événements pour ces événements est de type TweenEvent. La classe TweenEvent définit la <codeph>valeur</codeph> de propriété qui contient la valeur tween calculée par l’effet. Pour l’effet Move, la propriété <codeph>TweenEvent.value</codeph> contient un tableau de 2 éléments dans lequel : </p>
   <ul>
     <li>value[0]:Number correspond à la valeur entre les valeurs des propriétés <codeph>Move.xFrom</codeph> et <codeph>Move.xTo</codeph>.</li>
   
@@ -930,8 +930,8 @@
 	  Constructeur.
 	 
 	  </apiDesc></apiConstructorDetail></apiConstructor><apiValue id="mx.effects.effectClasses:MoveInstance:xBy"><apiName>xBy</apiName><shortdesc> 
-	  Nombre de pixels permettant de déplacer les composants sur l’axe x.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc> 
-	  Nombre de pixels permettant de déplacer les composants sur l’axe x. Les valeurs peuvent être négatives. 
+	  Nombre de pixels nécessaires pour déplacer les composants sur l’axe des x.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc> 
+	  Nombre de pixels nécessaires pour déplacer les composants sur l’axe des x. Les valeurs peuvent être négatives. 
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.effects.effectClasses:MoveInstance:xFrom"><apiName>xFrom</apiName><shortdesc> 
 	  Coordonnée x de la position de départ.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc> 
@@ -942,15 +942,15 @@
 	  Coordonnée x de la position d’arrivée.
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.effects.effectClasses:MoveInstance:yBy"><apiName>yBy</apiName><shortdesc> 
-	  Nombre de pixels permettant de déplacer les composants sur l’axe y.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc> 
-	  Nombre de pixels permettant de déplacer les composants sur l’axe y. Les valeurs peuvent être négatives. 	
+	  Nombre de pixels nécessaires pour déplacer les composants sur l’axe des y.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc> 
+	  Nombre de pixels nécessaires pour déplacer les composants sur l’axe des y. Les valeurs peuvent être négatives. 	
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.effects.effectClasses:MoveInstance:yFrom"><apiName>yFrom</apiName><shortdesc>
 	  Coordonnée y de la position de départ.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc>
 	  Coordonnée y de la position de départ.
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.effects.effectClasses:MoveInstance:yTo"><apiName>yTo</apiName><shortdesc> 
-	  Coordonnée y de la position d’arrivée.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc> 
+	  Coordonnée x de la position d’arrivée.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc> 
 	  Coordonnée y de la position d’arrivée.
 	  
 	  </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.effects.effectClasses:RotateInstance"><apiName>RotateInstance</apiName><shortdesc>
@@ -962,7 +962,7 @@
   <ul>
     <li><codeph>tweenEnd</codeph> : distribué lorsque l’effet tween prend fin. </li>
   
-    <li><codeph>tweenUpdate</codeph> : distribué chaque fois que la classe TweenEffect calcule une nouvelle valeur.</li> 
+    <li><codeph>tweenUpdate</codeph> : distribué chaque fois qu’une classe calcule une nouvelle valeur.</li> 
   </ul>
   
   <p>L’objet événement transmis à l’écouteur d’événements pour ces événements est de type TweenEvent. La classe TweenEvent définit la <codeph>valeur</codeph> de propriété qui contient la valeur tween calculée par l’effet. Pour l’effet Rotation, la propriété <codeph>TweenEvent.value</codeph> contient un nombre entre les valeurs des propriétés <codeph>Rotate.angleFrom</codeph> et <codeph>Rotate.angleTo</codeph>.</p>
@@ -977,21 +977,21 @@
 	  Angle de départ de la rotation de l’objet cible, exprimé en degrés.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>0</apiData><apiType value="Number"/><apiDefaultValue>0
 	  
 	  </apiDefaultValue></apiValueDef><apiDesc> 
-	  Angle de départ de la rotation de l’objet cible, exprimé en degrés. Les valeurs valides vont de 0 à 360.
+	  Angle de départ de la rotation de l’objet cible, exprimé en degrés. Les valeurs possibles vont de 0 à 360.
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.effects.effectClasses:RotateInstance:angleTo"><apiName>angleTo</apiName><shortdesc> 
-	  Angle de fin de la rotation de l’objet cible, exprimé en degrés.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>360</apiData><apiType value="Number"/><apiDefaultValue>360
+	  Angle d’arrivée de la rotation de l’objet cible, exprimé en degrés.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>360</apiData><apiType value="Number"/><apiDefaultValue>360
 	  
 	  </apiDefaultValue></apiValueDef><apiDesc> 
-	  Angle de fin de la rotation de l’objet cible, exprimé en degrés. Les valeurs peuvent être positives ou négatives.
+	  Angle d’arrivée de la rotation de l’objet cible, exprimé en degrés. Les valeurs peuvent être positives ou négatives.
 	 
-	  <p>Si la valeur de la propriété <codeph>angle.To</codeph> est inférieure à la valeur de la propriété <codeph>angle.From</codeph>, la cible pivote dans le sens anti-horaire. Dans le cas contraire, elle tourne en sens horaire. Pour faire pivoter la cible plusieurs fois, définissez cette valeur sur un grand nombre positif ou sur un petit nombre négatif.</p>
+	  <p>Si la valeur de la propriété <codeph>angle.To</codeph> est inférieure à la valeur de la propriété <codeph>angle.From</codeph>, la cible pivote dans le sens anti-horaire. Dans le cas contraire, elle tourne en sens horaire. Pour faire tourner la cible plusieurs fois, définissez cette valeur sur un grand nombre positif ou sur un petit nombre négatif.</p>
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.effects.effectClasses:RotateInstance:originX"><apiName>originX</apiName><shortdesc>
 	  Position x du point central de la rotation.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/><apiDefaultValue>0
 	  
 	  </apiDefaultValue></apiValueDef><apiDesc>
-	  Position x du point central de la rotation. La cible pivote autour de ce point. Les valeurs valides sont comprises entre 0 et la largeur de la cible.
+	  Position x du point central de la rotation. La cible pivote autour de ce point. Les valeurs possibles sont comprises entre 0 et la largeur de la cible.
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.effects.effectClasses:RotateInstance:originY"><apiName>originY</apiName><shortdesc>
 	  Position y du point central de la rotation.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/><apiDefaultValue>0
@@ -1008,7 +1008,7 @@
   <ul>
     <li><codeph>tweenEnd</codeph> : distribué lorsque l’effet tween prend fin. </li>
   
-    <li><codeph>tweenUpdate</codeph> : distribué chaque fois que la classe TweenEffect calcule une nouvelle valeur.</li> 
+    <li><codeph>tweenUpdate</codeph> : distribué chaque fois qu’une classe calcule une nouvelle valeur.</li> 
   </ul>
   
   <p>L’objet événement transmis à l’écouteur d’événements pour ces événements est de type TweenEvent. La classe TweenEvent définit la valeur <codeph>value</codeph> de la propriété qui contient la valeur tween calculée par l’effet. Pour l’effet Dissolve, la propriété <codeph>TweenEvent.value</codeph> contient un nombre entre les valeurs des propriétés <codeph>Dissolve.alphaFrom</codeph> et <codeph>Dissolve.alphaTo</codeph>.</p>
@@ -1020,20 +1020,20 @@
 	  Constructeur.
 	 
 	  </apiDesc></apiConstructorDetail></apiConstructor><apiValue id="mx.effects.effectClasses:DissolveInstance:alphaFrom"><apiName>alphaFrom</apiName><shortdesc> 
-	  Niveau de transparence de départ compris entre 0,0 et 1,0, où 0,0 signifie transparent et 1,0 signifie complètement opaque.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc> 
-	  Niveau de transparence de départ compris entre 0,0 et 1,0, où 0,0 signifie transparent et 1,0 signifie complètement opaque. 
+	  Niveau de transparence de départ compris entre 0.0 et 1.0, où 0.0 signifie transparent et 1.0 signifie complètement opaque.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc> 
+	  Niveau de transparence de départ compris entre 0.0 et 1.0, où 0.0 signifie transparent et 1.0 signifie complètement opaque. 
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.effects.effectClasses:DissolveInstance:alphaTo"><apiName>alphaTo</apiName><shortdesc> 
-	  Niveau de transparence d’arrivée compris entre 0,0 et 1,0, où 0,0 signifie transparent et 1,0 signifie complètement opaque.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc> 
-	  Niveau de transparence d’arrivée compris entre 0,0 et 1,0, où 0,0 signifie transparent et 1,0 signifie complètement opaque.
+	  Niveau de transparence d’arrivée compris entre 0.0 et 1.0, où 0.0 signifie transparent et 1.0 signifie complètement opaque.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Number"/></apiValueDef><apiDesc> 
+	  Niveau de transparence d’arrivée compris entre 0.0 et 1.0, où 0.0 signifie transparent et 1.0 signifie complètement opaque.
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.effects.effectClasses:DissolveInstance:color"><apiName>color</apiName><shortdesc> 
 	  Valeur hexadécimale représentant la couleur du rectangle flottant que l’effet affiche sur l’objet cible.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>0xFFFFFFFF</apiData><apiType value="uint"/></apiValueDef><apiDesc> 
-	  Valeur hexadécimale représentant la couleur du rectangle flottant que l’effet affiche sur l’objet cible. La valeur par défaut est la couleur spécifiée par la propriété de style<codeph>backgroundColor</codeph> du composant cible, ou 0xFFFFFF, si <codeph>backgroundColor</codeph> n’est pas défini.
+	  Valeur hexadécimale représentant la couleur du rectangle flottant que l’effet affiche sur l’objet cible. La valeur par défaut est la couleur spécifiée par la propriété style <codeph>backgroundColor</codeph> de la propriété style, ou 0xFFFFFF, si <codeph>backgroundColor</codeph> n’est pas définie.
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.effects.effectClasses:DissolveInstance:targetArea"><apiName>targetArea</apiName><shortdesc>
 	  Zone de la cible dans laquelle il faut exécuter l’effet.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>mx.geom:RoundedRectangle</apiValueClassifier></apiValueDef><apiDesc>
-	  Zone de la cible dans laquelle il faut exécuter l’effet. La superposition dissolve est tracée à l’aide des dimensions de cette propriété. Le composant UIComponents créent une superposition sur le composant entier. Les conteneurs créent une superposition sur la zone contenu, mais pas leur chrome. 
+	  Zone de la cible dans laquelle il faut exécuter l’effet. L’incrustation dissolve est tracée à l’aide des dimensions de cette propriété. UIComponents créent une superposition sur le composant entier. Les conteneurs créent une superposition sur la zone contenu, mais pas leur chrome. 
 	  
 	  </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.effects.effectClasses:HideShowEffectTargetFilter"><apiName>HideShowEffectTargetFilter</apiName><shortdesc>
   HideShowEffectTargetFilter est une sous-classe de la classe EffectTargetFilter qui gère la logique de filtrage des cibles affichées ou masquées en modifiant leur propriété visible.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>mx.effects:EffectTargetFilter</apiBaseClassifier></apiClassifierDef><apiDesc>

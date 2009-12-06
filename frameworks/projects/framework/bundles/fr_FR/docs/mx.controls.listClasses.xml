@@ -32,7 +32,7 @@
  
   <p>La méthode setter <codeph>data</codeph> peut appeler la méthode <codeph>invalidateProperties()</codeph> si elle effectue une opération qui nécessite la mise à jour du contrôle. C’est alors au développeur du composant d’écrire une méthode <codeph>commitProperties()</codeph> pour déterminer que la propriété <codeph>listData</codeph> a été modifiée et pour la gérer comme il se doit. </p>
  
-  <p>La méthode getter retourne la valeur actuelle de la variable interne, comme le montre l’exemple suivant :</p>
+  <p>La méthode getter renvoie la valeur actuelle de la variable interne, comme l’illustre l’exemple suivant :</p>
   
   <pre>
     // Internal variable for the property value.
@@ -59,7 +59,7 @@
       Implémente la propriété <codeph>listData</codeph> à l’aide des méthodes setter et getter. 
       
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.controls.listClasses:BaseListData"><apiName>BaseListData</apiName><shortdesc>
-  La classe BaseListData définit le type de données de la propriété listData implémentée par les rendus ou les éditeurs d’élément supplémentaires.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+  La classe BaseListData définit le type de données de la propriété listData implémentée par les rendus ou les éditeurs d’élément supplémentaires.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.events:EventDispatcher</apiBaseClassifier></apiClassifierDef><apiDesc>
   La classe BaseListData définit le type de données de la propriété <codeph>listData</codeph> implémentée par les rendus ou les éditeurs d’élément supplémentaires. Tous les rendus d’élément et éditeurs d’élément supplémentaires doivent implémenter l’interface IDropInListItemRenderer, qui définit la propriété <codeph>listData</codeph>.
  
   <p>La propriété <codeph>listData</codeph> est de type BaseListData, dans lequel la classe BaseListData comporte trois sous-classes : DataGridListData, ListData et TreeListData. Le type de données réel de la valeur de la propriété <codeph>listData</codeph> dépend du contrôle qui utilise le rendu d’élément supplémentaire ou l’éditeur d’élément supplémentaire. Pour un contrôle DataGrid, la valeur est de type DataGridListData, pour un contrôle List, la valeur est de type ListData et pour un contrôle Tree, la valeur est de type TreeListData.</p>
@@ -67,6 +67,8 @@
   <p>Lorsqu’il est utilisé en tant que rendu d’élément supplémentaire ou éditeur d’élément supplémentaire, Flex définit la propriété <codeph>listData</codeph> sur une classe dérivée de BaseListData qui contient des informations calculées à propos de l’élément du fournisseur de données renfermant les données de l’élément.</p>
  
   <p>Bien que les propriétés de cette classe soient inscriptibles, vous devez les considérer comme étant en lecture seule. Elles sont initialisées par la classe List et lues par un rendu d’élément ou un éditeur d’élément. La modification de ces valeurs peut entraîner des résultats inattendus.</p>
+ 
+  <p> </p>
  
   </apiDesc></apiClassifierDetail><related-links><link href="mx.controls.listClasses.xml#IDropInListItemRenderer"><linktext>mx.controls.listClasses.IDropInListItemRenderer</linktext></link></related-links><apiConstructor id="mx.controls.listClasses:BaseListData:BaseListData"><apiName>BaseListData</apiName><shortdesc>
       Constructeur.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>label</apiItemName><apiType value="String"/><apiDesc>Représentation textuelle des données d’un élément.
@@ -83,7 +85,7 @@
       Constructeur.
      
       </apiDesc></apiConstructorDetail></apiConstructor><apiValue id="mx.controls.listClasses:BaseListData:columnIndex"><apiName>columnIndex</apiName><shortdesc>
-      Index de la colonne du contrôle basé sur List par rapport aux colonnes actuellement visibles du contrôle, où la première colonne se trouve à l’index 1.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="int"/></apiValueDef><apiDesc>
+      Index de la colonne du contrôle basé sur List par rapport aux colonnes actuellement visibles du contrôle, où la première colonne se trouve à l’index 1.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiType value="int"/></apiValueDef><apiDesc>
       Index de la colonne du contrôle basé sur List par rapport aux colonnes actuellement visibles du contrôle, où la première colonne se trouve à l’index 1. 
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.listClasses:BaseListData:label"><apiName>label</apiName><shortdesc>
@@ -91,15 +93,15 @@
       Représentation textuelle des données d’élément, selon la méthode <codeph>itemToLabel()</codeph> de la classe List.
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.listClasses:BaseListData:owner"><apiName>owner</apiName><shortdesc>
-      Référence à l’objet List à qui appartient cet élément.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>mx.core:IUIComponent</apiValueClassifier></apiValueDef><apiDesc>
+      Référence à l’objet List à qui appartient cet élément.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>mx.core:IUIComponent</apiValueClassifier></apiValueDef><apiDesc>
       Référence à l’objet List à qui appartient cet élément. Doit être une classe dérivée de la classe ListBase. Cette propriété est tapée en tant que composant IUIComponent de sorte que les suppléments comme Label et TextInput n’ont pas besoin de dépendre de l’objet List et de toutes ses dépendances.
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.listClasses:BaseListData:rowIndex"><apiName>rowIndex</apiName><shortdesc>
-      Index de la rangée du contrôle DataGrid, List ou Tree par rapport aux rangées actuellement visibles du contrôle, où la première rangée se trouve à l’index 1.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="int"/></apiValueDef><apiDesc>
+      Index de la rangée du contrôle DataGrid, List ou Tree par rapport aux rangées actuellement visibles du contrôle, où la première rangée se trouve à l’index 1.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiType value="int"/></apiValueDef><apiDesc>
       Index de la rangée du contrôle DataGrid, List ou Tree par rapport aux rangées actuellement visibles du contrôle, où la première rangée se trouve à l’index 1. Par exemple, si vous cliquez sur un élément du contrôle, <codeph>rowIndex</codeph> est défini sur 3. Faites ensuite défiler le contrôle pour changer la position de la rangée dans les rangées visibles du contrôle, puis cliquez sur la même rangée qu’auparavant. <codeph>rowIndex</codeph> contient maintenant une valeur différente, qui correspond au nouvel index de la rangée parmi les rangées actuellement visibles.
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.listClasses:BaseListData:uid:get"><apiName>uid</apiName><shortdesc>
-      Identifiant unique de cet élément.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="String"/></apiValueDef><apiDesc>
+      Identifiant unique de cet élément.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="String"/></apiValueDef><apiDesc>
       Identifiant unique de cet élément.
       
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.controls.listClasses:TileBase"><apiName>TileBase</apiName><shortdesc>
@@ -264,11 +266,11 @@
 	  </apiDesc></apiConstructorDetail></apiConstructor><apiValue id="mx.controls.listClasses:ListData:icon"><apiName>icon</apiName><shortdesc>
 	  Classe représentant l’icône de l’élément de la liste. Cette icône est calculée à l’aide de la méthode de la classe itemToIcon().
 	  
-	  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Class"/></apiValueDef><apiDesc>
+	  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiType value="Class"/></apiValueDef><apiDesc>
 	  Classe représentant l’icône de l’élément de la liste. Cette icône est calculée à l’aide de la méthode de la classe <codeph>itemToIcon()</codeph>.
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.listClasses:ListData:labelField"><apiName>labelField</apiName><shortdesc>
-	  Valeur de la propriété labelField dans la classe List.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="String"/></apiValueDef><apiDesc>
+	  Valeur de la propriété labelField dans la classe List.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiType value="String"/></apiValueDef><apiDesc>
 	  Valeur de la propriété <codeph>labelField</codeph> dans la classe List. Il s’agit de la valeur généralement utilisée pour calculer la propriété qui doit être extraite de l’élément dans le fournisseur de données pour le texte affiché dans le rendu d’élément. Mais elle est également utilisée par DateField et d’autres composants pour indiquer le champ à récupérer de l’élément du fournisseur de données qui contient une propriété Date et d’autres propriétés non textuelles.
 	 
 	  <p>Par exemple, si un élément du fournisseur de données contient une propriété « hiredDate », la propriété <codeph>labelField</codeph> peut être définie sur « hiredDate » et la propriété <codeph>itemRenderer</codeph> peut être définie sur DateField. Le contrôle DateField utilise alors la propriété hiredDate.</p>
@@ -288,7 +290,7 @@
 <description>
   Nombre de pixels entre la bordure droite du composant et le bord droit de sa zone de contenu.
   <p>La valeur par défaut est 0.</p>
-  <p>La valeur par défaut d’un contrôle Button est 10.</p>
+  <p/>
   <p>La valeur par défaut d’un contrôle ComboBox est 5.</p>
   <p>La valeur par défaut d’un conteneur Form est 16.</p>
   
@@ -302,7 +304,7 @@
 <description>
   Nombre de pixels entre la bordure gauche du composant et le bord gauche de sa zone de contenu.
   <p>La valeur par défaut est 0.</p>
-  <p>La valeur par défaut d’un contrôle Button est 10.</p>
+  <p/>
   <p>La valeur par défaut d’un contrôle ComboBox est 5.</p>
   <p>La valeur par défaut d’un conteneur Form est 16.</p>
   <p>La valeur par défaut d’un contrôle Tree est 2.</p>
@@ -355,7 +357,7 @@
       Tableau des objets ListRowInfo qui mettent en cache les hauteurs des rangées et d’autres informations de suivi concernant les rangées définies dans la propriété <codeph>listItems</codeph>.
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.listClasses:ListBaseContentHolder:selectionLayer"><apiName>selectionLayer</apiName><shortdesc>
-      Calque du contenu défini par la propriété :istbase.listContent, sur lequel tous les indicateurs de sélection et de surbrillance sont tracés.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="flash.display:Sprite"/></apiValueDef><apiDesc>
+      Calque du contenu défini par la propriété :istbase.listContent, sur lequel tous les indicateurs de sélection et de surbrillance sont tracés.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="flash.display:Sprite"/></apiValueDef><apiDesc>
       Calque du contenu défini par la propriété <codeph>:istbase.listContent</codeph>, sur lequel tous les indicateurs de sélection et de surbrillance sont tracés.
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.listClasses:ListBaseContentHolder:topOffset"><apiName>topOffset</apiName><shortdesc>
@@ -401,11 +403,9 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog></style><style format="Color" inherit="yes" name="color" owner="mx.controls.listClasses:TileListItemRenderer" playerVersion="Flash9" type="uint">
 <description>
-  Couleur de texte de l’étiquette d’un composant.
-  </description>
-<default>0x0B333C
+  Couleur de texte de l’étiquette d’un composant. <codeph/> <codeph/>
   
-  </default>
+  </description>
 
 <playerversion>AIR 1.1
   </playerversion>
@@ -492,11 +492,9 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog></style><style format="Color" inherit="yes" name="color" owner="mx.controls.listClasses:ListItemRenderer" playerVersion="Flash9" type="uint">
 <description>
-  Couleur de texte de l’étiquette d’un composant.
-  </description>
-<default>0x0B333C
+  Couleur de texte de l’étiquette d’un composant. <codeph/> <codeph/>
   
-  </default>
+  </description>
 
 <playerversion>AIR 1.1
   </playerversion>
@@ -558,8 +556,8 @@
 	  Dispose les enfants verticalement. Pour les contrôles comme TileList, qui disposent les enfants en deux dimensions, disposez les enfants en remplissant une colonne avant de passer à la suivante.
 	  
 	  </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.controls.listClasses:ListItemDragProxy"><apiName>ListItemDragProxy</apiName><shortdesc>
-  Proxy de glissement par défaut utilisé lors du glissement depuis un contrôle basé sur une liste (à l’exception de la classe DataGrid).</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>mx.core:UIComponent</apiBaseClassifier></apiClassifierDef><apiDesc>
-  Proxy de glissement par défaut utilisé lors du glissement depuis un contrôle basé sur une liste (à l’exception de la classe DataGrid). Un proxy de glissement est un composant qui est le parent des objets ou copies des objets en cours de glissement
+  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>mx.core:UIComponent</apiBaseClassifier></apiClassifierDef><apiDesc>
+   Un proxy de glissement est un composant qui est le parent des objets ou copies des objets en cours de glissement
  
   </apiDesc></apiClassifierDetail><related-links><link href="mx.controls.dataGridClasses.xml#DataGridDragProxy"><linktext>mx.controls.dataGridClasses.DataGridDragProxy</linktext></link></related-links><apiConstructor id="mx.controls.listClasses:ListItemDragProxy:ListItemDragProxy"><apiName>ListItemDragProxy</apiName><shortdesc>
       Constructeur.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/></apiConstructorDef><apiDesc>
@@ -594,12 +592,9 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog></style><style format="Color" inherit="yes" name="textSelectedColor" owner="mx.controls.listClasses:ListBase" playerVersion="Flash9" type="uint">
 <description>
-  Couleur de texte d’un rendu lorsque l’utilisateur le sélectionne.
- 
-  </description>
-<default>0x2B333C
+  Couleur de texte d’un rendu lorsque l’utilisateur le sélectionne. <codeph/> <codeph/>
   
-  </default>
+  </description>
 
 <playerversion>AIR 1.1
   </playerversion>
@@ -607,12 +602,9 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog></style><style format="Color" inherit="yes" name="textRollOverColor" owner="mx.controls.listClasses:ListBase" playerVersion="Flash9" type="uint">
 <description>
-  Couleur de texte d’un rendu lorsque l’utilisateur le survole avec sa souris.
- 
-  </description>
-<default>0x2B333C
+  Couleur de texte d’un rendu lorsque l’utilisateur le survole avec sa souris. <codeph/> <codeph/>
   
-  </default>
+  </description>
 
 <playerversion>AIR 1.1
   </playerversion>
@@ -660,12 +652,9 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog></style><style format="Color" inherit="yes" name="selectionColor" owner="mx.controls.listClasses:ListBase" playerVersion="Flash9" type="uint">
 <description>
-  Couleur d’arrière-plan d’un rendu lorsque l’utilisateur le sélectionne.
- 
-  </description>
-<default>0x7FCEFF
+  Couleur d’arrière-plan d’un rendu lorsque l’utilisateur le sélectionne. <codeph/> <codeph/>
   
-  </default>
+  </description>
 
 <playerversion>AIR 1.1
   </playerversion>
@@ -673,12 +662,9 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog></style><style format="Color" inherit="yes" name="rollOverColor" owner="mx.controls.listClasses:ListBase" playerVersion="Flash9" type="uint">
 <description>
-  Couleur d’arrière-plan d’un rendu lorsque l’utilisateur le survole avec sa souris.
- 
-  </description>
-<default>0xEEFEE6
+  Couleur d’arrière-plan d’un rendu lorsque l’utilisateur le survole avec sa souris. <codeph/> <codeph/>
   
-  </default>
+  </description>
 
 <playerversion>AIR 1.1
   </playerversion>
@@ -732,8 +718,6 @@
   <p>Pour le contrôle TileList, qui utilise une seule liste pour remplir un affichage à deux dimensions, le style peut donner un aspect de damier, des rayures et d’autres motifs en fonction du nombre de colonnes et de rangées et du nombre de couleurs spécifiées. TileList naviguent à travers les couleurs, plaçant les couleurs d’arrière-plan de chaque élément selon le sens de la mise en forme. Si vous avez un numéro d’événement des couleurs et un numéro d’événement des colonnes pour un TileList disposé horizontalement, vous obtiendrez des rayures. Si le nombre de colonne est un nom impair, vous obtiendrez un motif de damier.
   </p>
  
-  <p>Ne prend effet que si aucun objet <codeph>backgroundColor</codeph> n’est spécifié.</p>
- 
   </description>
 <default>undefined
   
@@ -747,7 +731,7 @@
 <description>
   Nombre de pixels entre la bordure droite du composant et le bord droit de sa zone de contenu.
   <p>La valeur par défaut est 0.</p>
-  <p>La valeur par défaut d’un contrôle Button est 10.</p>
+  <p/>
   <p>La valeur par défaut d’un contrôle ComboBox est 5.</p>
   <p>La valeur par défaut d’un conteneur Form est 16.</p>
   
@@ -761,35 +745,12 @@
 <description>
   Nombre de pixels entre la bordure gauche du composant et le bord gauche de sa zone de contenu.
   <p>La valeur par défaut est 0.</p>
-  <p>La valeur par défaut d’un contrôle Button est 10.</p>
+  <p/>
   <p>La valeur par défaut d’un contrôle ComboBox est 5.</p>
   <p>La valeur par défaut d’un conteneur Form est 16.</p>
   <p>La valeur par défaut d’un contrôle Tree est 2.</p>
   
   </description>
-
-<playerversion>AIR 1.1
-  </playerversion>
-	<prolog><asCustoms><langversion>3.0
-  </langversion><productversion>Flex 3
- </productversion></asCustoms></prolog></style><style inherit="no" name="focusRoundedCorners" owner="mx.controls.listClasses:ListBase" playerVersion="Flash9" type="String">
-<description>
-  Indique quels coins du rectangle de focus doivent être arrondis. Cette valeur est une chaîne séparée par des espaces pouvant contenir toute combinaison de <codeph>"tl"</codeph>, <codeph>"tr"</codeph>, <codeph>"bl"</codeph> et <codeph>"br"</codeph>. Par exemple, pour indiquer que les coins du côté droit doivent être arrondis, mais que les coins du côté gauche doivent être carrés, utilisez <codeph>"tr br"</codeph>. La propriété de style <codeph>cornerRadius</codeph> indique le rayon des coins arrondis. La valeur par défaut dépend de la classe du composant. Si elle n’est pas remplacée pour la classe, la valeur par défaut est <codeph>"tl tr bl br"</codeph>.
-  
-  </description>
-
-<playerversion>AIR 1.1
-  </playerversion>
-	<prolog><asCustoms><langversion>3.0
-  </langversion><productversion>Flex 3
- </productversion></asCustoms></prolog></style><style inherit="no" name="focusAlpha" owner="mx.controls.listClasses:ListBase" playerVersion="Flash9" type="Number">
-<description>
-  Indique la valeur de transparence Alpha de l’habillage du focus.
-  
-  </description>
-<default>0.4
-  
-  </default>
 
 <playerversion>AIR 1.1
   </playerversion>
@@ -913,7 +874,7 @@
       <p>Cette fonction sera appelée par un effet <codeph>AddItemAction</codeph> dans le cadre d’un effet de changement des données pour indiquer le point auquel un élément de données ajouté à une collection commence à être affiché par le contrôle, à l’aide d’un rendu d’élément.</p>
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:protected:addDragData"><apiName>addDragData</apiName><shortdesc>
-      Ajoute les éléments sélectionnés à l’objet DragSource dans le cadre d’une opération glisser-déposer.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>ds</apiItemName><apiType value="Object"/><apiDesc>Objet DragSource auquel ajouter les données.
+      Ajoute les éléments sélectionnés à l’objet DragSource dans le cadre d’une opération glisser-déposer.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>dragSource</apiItemName><apiType value="Object"/><apiDesc>Objet DragSource auquel ajouter les données.
       
       </apiDesc></apiParam></apiOperationDef><apiDesc>
       Ajoute les éléments sélectionnés à l’objet DragSource dans le cadre d’une opération glisser-déposer. Remplacez cette méthode pour ajouter d’autres données à la source du glissement.
@@ -1254,6 +1215,13 @@
       </apiDesc><apiType value="Boolean"/></apiReturn><apiParam><apiItemName>data</apiItemName><apiType value="Object"/><apiDesc>Elément du fournisseur de données.
       </apiDesc></apiParam></apiOperationDef><apiDesc>
       Détermine si le rendu d’élément d’un élément du fournisseur de données est sélectionné.
+     
+      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:isItemShowingCaret"><apiName>isItemShowingCaret</apiName><shortdesc>
+      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc><codeph/>
+      
+      </apiDesc><apiType value="Boolean"/></apiReturn><apiParam><apiItemName>data</apiItemName><apiType value="Object"/><apiDesc>Elément du fournisseur de données.
+      </apiDesc></apiParam></apiOperationDef><apiDesc>
+      
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:isItemVisible"><apiName>isItemVisible</apiName><shortdesc>
       Détermine si un élément est actuellement affiché par un rendu.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>La valeur est <codeph>true</codeph> si l’élément est actuellement affiché.
@@ -1728,7 +1696,7 @@
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.listClasses:ListBase:protected:dataEffectCompleted"><apiName>dataEffectCompleted</apiName><shortdesc>
       Indicateur précisant qu’un effet de changement des données vient de se termine.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="protected"/><apiDynamic/><apiData>false</apiData><apiType value="Boolean"/></apiValueDef><apiDesc>
-      Indicateur précisant qu’un effet de changement des données vient de se termine. Le composant réagit généralement en nettoyant les différentes structures de données internes lors du prochain appel de <codeph>updateDisplayList()</codeph>.
+      Indicateur précisant qu’un effet de changement des données vient de se termine. Le composant réagit généralement en nettoyant les structures de données internes lors du prochain appel de <codeph>updateDisplayList()</codeph>.
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.listClasses:ListBase:protected:dataItemWrappersByRenderer"><apiName>dataItemWrappersByRenderer</apiName><shortdesc>
       Rendus d’élément d’association de dictionnaire vers le ItemWrappers utilisé pour fournir les données.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="protected"/><apiDynamic/><apiType value="flash.utils:Dictionary"/></apiValueDef><apiDesc>
@@ -1963,7 +1931,7 @@
       </apiDefaultValue></apiValueDef><apiDesc>
       Fonction fournie par l’utilisateur et à exécuter sur chaque élément pour en déterminer l’astuce sur les données. Par défaut, le contrôle List recherche la propriété <codeph>label</codeph> sur chaque élément du fournisseur de données et l’affiche. Toutefois, certains éléments n’ont pas de propriété <codeph>label</codeph> ni une autre propriété que vous pouvez utiliser pour l’affichage dans les rangées. Un jeu de données présentant les champs lastName et firstName mais dont vous souhaitez afficher les noms complets en est un exemple. Vous pouvez fournir une propriété <codeph>dataTipFunction</codeph> qui recherche les champs appropriés et retourne une chaîne affichable. La propriété <codeph>dataTipFunction</codeph> permet également de gérer la mise en forme et la localisation.
      
-      <p>La propriété dataTipFunction prend un unique argument correspondant à l’élément du fournisseur de données et retourne une chaîne, comme le montre l’exemple suivant :</p>
+      <p>La propriété dataTipFunction prend un unique argument correspondant à l’élément du fournisseur de données et renvoie une chaîne, comme l’illustre l’exemple suivant :</p>
      
       <pre>myDataTipFunction(item:Object):String</pre>
      
@@ -2013,7 +1981,7 @@
       </apiDefaultValue></apiValueDef><apiDesc>
       Une fonction fournie par l’utilisateur et à exécuter sur chaque élément pour en déterminer leur icône. Par défaut, List n’essaie pas d’afficher les icônes avec le texte dans les rangées. En revanche, en spécifiant une fonction d’icône, vous pouvez définir une classe pour un graphique qui sera créé et affiché en tant qu’icône dans la rangée. Cette propriété est ignorée par DataGrid.
      
-      <p>La propriété iconFunction prend un unique argument correspondant à l’élément du fournisseur de données et retourne une classe, comme le montre l’exemple suivant:</p>
+      <p>La propriété iconFunction prend un unique argument correspondant à l’élément du fournisseur de données et renvoie une classe, comme l’illustre l’exemple suivant :</p>
      
       <pre>iconFunction(item:Object):Class</pre>
      
@@ -2021,7 +1989,7 @@
       Rendu de l’élément personnalisé du contrôle.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>mx.core:IFactory</apiValueClassifier></apiValueDef><apiDesc>
       Rendu de l’élément personnalisé du contrôle. Vous pouvez spécifier un rendu d’élément personnalisé supplémentaire, intégré ou personnalisé.
      
-      <p>Le rendu d’élément par défaut dépend de la classe du composant. Les classes TileList et HorizontalList utilisent TileListItemRenderer ; la classe List utilise ListItemRenderer. La classe DataGrid utilise DataGridItemRenderer de DataGridColumn.</p>
+      <p>Le rendu d’élément par défaut dépend de la classe du composant. Les classes TileList et HorizontalList utilisent TileListItemRenderer ; la classe List utilise ListItemRenderer. La classe DataGrid utilise DataGridItemRenderer de DataGridColumn.</p>
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.listClasses:ListBase:labelField:get"><apiName>labelField</apiName><shortdesc>
       Le nom du champ des éléments du fournisseur de données à afficher en tant qu’étiquette.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="String"/><apiDefaultValue>"label"
@@ -2066,7 +2034,7 @@
       Rendu de l’élément personnalisé du contrôle.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>mx.core:IFactory</apiValueClassifier></apiValueDef><apiDesc>
       Rendu de l’élément personnalisé du contrôle. Vous pouvez spécifier un rendu d’élément personnalisé supplémentaire, intégré ou personnalisé.
      
-      <p>Le rendu d’élément par défaut dépend de la classe du composant. Les classes TileList et HorizontalList utilisent TileListItemRenderer ; la classe List utilise ListItemRenderer. La classe DataGrid utilise DataGridItemRenderer de DataGridColumn.</p>
+      <p>Le rendu d’élément par défaut dépend de la classe du composant. Les classes TileList et HorizontalList utilisent TileListItemRenderer ; la classe List utilise ListItemRenderer. La classe DataGrid utilise DataGridItemRenderer de DataGridColumn.</p>
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.listClasses:ListBase:offscreenExtraRowsOrColumns:get"><apiName>offscreenExtraRowsOrColumns</apiName><shortdesc>
       Nombre cible de rangées ou colonnes supplémentaires des rendus d’élément à utiliser dans la mise en forme du contrôle.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="int"/><apiDefaultValue>0

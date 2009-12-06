@@ -11,27 +11,19 @@
 
 package spark.components
 {
-import mx.collections.IList;
-import spark.components.Group;
-import mx.core.mx_internal;
-import spark.components.supportClasses.SkinnableComponent;
-import spark.components.supportClasses.SkinnableContainerBase;
 import mx.core.ContainerCreationPolicy;
 import mx.core.IDeferredContentOwner;
 import mx.core.IDeferredInstance;
-import mx.core.IFactory;
-import mx.core.INavigatorContent;
+import mx.core.IFlexModuleFactory;
 import mx.core.IVisualElement;
 import mx.core.IVisualElementContainer;
-import mx.core.IUIComponent;
-import spark.core.IViewport;
+import mx.core.mx_internal;
 import mx.events.FlexEvent;
-import spark.events.ElementExistenceEvent;
-import mx.events.PropertyChangeEvent;
-import spark.layouts.BasicLayout;
-import spark.layouts.supportClasses.LayoutBase;
-import mx.managers.IFocusManagerContainer;
 import mx.utils.BitFlagUtil;
+
+import spark.components.supportClasses.SkinnableContainerBase;
+import spark.events.ElementExistenceEvent;
+import spark.layouts.supportClasses.LayoutBase;
 
 use namespace mx_internal;
 
@@ -196,6 +188,14 @@ include "../styles/metadata/SelectionFormatTextStyles.as"
  *
  *  <p>To improve performance and minimize application size, 
  *  you can use the Group container. The Group container cannot be skinned.</p>
+ *
+ *  <p>The SkinnableContainer container has the following default characteristics:</p>
+ *  <table class="innertable">
+ *     <tr><th>Characteristic</th><th>Description</th></tr>
+ *     <tr><td>Default size</td><td>Large enough to display its children</td></tr>
+ *     <tr><td>Minimum size</td><td>0 pixels</td></tr>
+ *     <tr><td>Maximum size</td><td>10000 pixels wide and 10000 pixels high</td></tr>
+ *  </table>
  * 
  *  @mxml
  *
@@ -206,11 +206,65 @@ include "../styles/metadata/SelectionFormatTextStyles.as"
  *  &lt;s:SkinnableContainer
  *    <strong>Properties</strong>
  *    autoLayout="true"
- *    clipAndEnableScrolling="false"
  *    creationPolicy="auto"
  *    horizontalScrollPosition="null"
  *    layout="BasicLayout"
- *    verticalScrollPosition="null"
+ *  
+ *    <strong>Styles</strong>
+ *    accentColor="0x0099FF"
+ *    alignmentBaseline="useDominantBaseline"
+ *    alternatingItemColors=""
+ *    backgroundAlpha="1.0"
+ *    backgroundColor="0xFFFFFF"
+ *    baselineShift="0.0"
+ *    blockProgression="TB"
+ *    breakOpportunity="auto"
+ *    cffHinting="horizontal_stem"
+ *    color="0"
+ *    contentBackgroundAlpha=""
+ *    contentBackgroundColor=""
+ *    digitCase="default"
+ *    digitWidth="default"
+ *    direction="LTR"
+ *    dominantBaseline="auto"
+ *    firstBaselineOffset="auto"
+ *    focusColor=""
+ *    focusedTextSelectionColor=""
+ *    fontFamily="Times New Roman"
+ *    fontLookup="device"
+ *    fontSize="12"
+ *    fontStyle="normal"
+ *    fontWeight="normal"
+ *    inactiveTextSelectionColor="0xE8E8E8"
+ *    justificationRule="auto"
+ *    justificationStyle="auto"
+ *    kerning="auto"
+ *    leadingModel="auto"
+ *    ligatureLevel="common"
+ *    lineHeight="120%"
+ *    lineThrough="false"
+ *    locale="en"
+ *    paragraphEndIndent="0"
+ *    paragraphSpaceAfter="0"
+ *    paragraphSpaceBefore="0"
+ *    paragraphStartIndent="0"
+ *    renderingMode="CFF"
+ *    rollOverColor=""
+ *    symbolColor=""
+ *    tabStops="null"
+ *    textAlign="start"
+ *    textAlignLast="start"
+ *    textAlpha="1"
+ *    textDecoration="none"
+ *    textIndent="0"
+ *    textJustify="inter_word"
+ *    textRotation="auto"
+ *    trackingLeft="0"
+ *    trackingRight="0"
+ *    typographicCase="default"
+ *    unfocusedTextSelectionColor=""
+ *    verticalScrollPolicy="auto"
+ *    whiteSpaceCollapse="collapse"
  *  
  *    <strong>Events</strong>
  *    elementAdd="<i>No default</i>"
@@ -221,6 +275,9 @@ include "../styles/metadata/SelectionFormatTextStyles.as"
  *  @see SkinnableDataContainer
  *  @see Group
  *  @see spark.skins.spark.SkinnableContainerSkin
+ *
+ *  @includeExample examples/SkinnableContainerExample.mxml
+ *  @includeExample examples/MyBorderSkin.mxml -noswf
  *  
  *  @langversion 3.0
  *  @playerversion Flash 10
@@ -307,6 +364,27 @@ public class SkinnableContainer extends SkinnableContainerBase
     
     //--------------------------------------------------------------------------
     //
+    //  Overridden Properties 
+    //
+    //--------------------------------------------------------------------------
+
+    //----------------------------------
+    //  moduleFactory
+    //----------------------------------
+    /**
+     *  @private
+     */
+    override public function set moduleFactory(moduleFactory:IFlexModuleFactory):void
+    {
+        super.moduleFactory = moduleFactory;
+        
+        // Register the _creationPolicy style as inheriting. See the creationPolicy
+        // getter for details on usage of this style.
+        styleManager.registerInheritingStyle("_creationPolicy");
+    }
+    
+    //--------------------------------------------------------------------------
+    //
     //  Properties 
     //
     //--------------------------------------------------------------------------
@@ -347,9 +425,12 @@ public class SkinnableContainer extends SkinnableContainerBase
     //  creationPolicy
     //----------------------------------
     
-    private var _creationPolicy:String = "auto";
-    
     [Inspectable(enumeration="auto,all,none", defaultValue="auto")]
+    
+    // Internal flag used when creationPolicy="none".
+    // When set, the value of the backing store _creationPolicy
+    // style is "auto" so descendants inherit the correct value.
+    private var creationPolicyNone:Boolean = false;
     
     /**
      *  @inheritDoc
@@ -363,7 +444,21 @@ public class SkinnableContainer extends SkinnableContainerBase
      */
     public function get creationPolicy():String
     {
-        return _creationPolicy;
+        // Use an inheriting style as the backing storage for this property.
+        // This allows the property to be inherited by either mx or spark
+        // containers, and also to correctly cascade through containers that
+        // don't have this property (ie Group).
+        // This style is an implementation detail and should be considered
+        // private. Do not set it from CSS.
+        var result:String = getStyle("_creationPolicy");
+        
+        if (result == null)
+            result = ContainerCreationPolicy.AUTO;
+        
+        if (creationPolicyNone)
+            result = ContainerCreationPolicy.NONE;
+        
+        return result;
     }
     
     /**
@@ -371,10 +466,20 @@ public class SkinnableContainer extends SkinnableContainerBase
      */
     public function set creationPolicy(value:String):void
     {
-        if (value == _creationPolicy)
-            return;
+        if (value == ContainerCreationPolicy.NONE)
+        {
+            // creationPolicy of none is not inherited by descendants.
+            // In this case, set the style to "auto" and set a local
+            // flag for subsequent access to the creationPolicy property.
+            creationPolicyNone = true;
+            value = ContainerCreationPolicy.AUTO;
+        }
+        else
+        {
+            creationPolicyNone = false;
+        }
         
-        _creationPolicy = value;
+        setStyle("_creationPolicy", value);
     }
 
     //--------------------------------------------------------------------------
@@ -527,7 +632,7 @@ public class SkinnableContainer extends SkinnableContainerBase
 
     /**
      *  A factory object that creates the initial value for the
-     *  content property.
+     *  <code>content</code> property.
      *  
      *  @langversion 3.0
      *  @playerversion Flash 10
@@ -732,6 +837,8 @@ public class SkinnableContainer extends SkinnableContainerBase
      */
     override protected function partAdded(partName:String, instance:Object):void
     {
+		super.partAdded(partName, instance);
+
         if (instance == contentGroup)
         {
             if (_contentModified)
@@ -810,6 +917,8 @@ public class SkinnableContainer extends SkinnableContainerBase
      */
     override protected function partRemoved(partName:String, instance:Object):void
     {
+		super.partRemoved(partName, instance);
+
         if (instance == contentGroup)
         {
             contentGroup.removeEventListener(
@@ -885,7 +994,7 @@ public class SkinnableContainer extends SkinnableContainerBase
     private var _deferredContentCreated:Boolean;
 
     /**
-     *  True if deferred content has been created
+     *  Contains <code>true</code> if deferred content has been created.
      *  
      *  @langversion 3.0
      *  @playerversion Flash 10

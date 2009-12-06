@@ -317,8 +317,8 @@ public class BindableSecondPassEvaluator extends GenerativeSecondPassEvaluator
                                                         String qualifiedPropertyName)
     {
         // Equivalent AS:
-        //
-        //   this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "$entry.qualifiedPropertyName", oldValue, value));
+        //   if (this.hasEventListener("propertyChange"))
+        //       this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "$entry.qualifiedPropertyName", oldValue, value));
         ThisExpressionNode innerThisExpression = nodeFactory.thisExpression(0);
         IdentifierNode dispatchEventIdentifier = nodeFactory.identifier(DISPATCH_EVENT, false);
 
@@ -356,7 +356,20 @@ public class BindableSecondPassEvaluator extends GenerativeSecondPassEvaluator
         ListNode list = nodeFactory.list(null, memberExpression);
         ExpressionStatementNode expressionStatement =
             nodeFactory.expressionStatement(list);
-        return nodeFactory.statementList(then, expressionStatement);
+        
+        // if (this.hasEventListener("propertyChange"))
+        ThisExpressionNode ifThisExpression = nodeFactory.thisExpression(0);
+        IdentifierNode hasEventListenerIdentifier = nodeFactory.identifier(HAS_EVENT_LISTENER, false);
+        LiteralStringNode propChangeLiteralString = nodeFactory.literalString(PROPERTY_CHANGE);
+        CallExpressionNode hasEventListenerCallExpression =
+            (CallExpressionNode) nodeFactory.callExpression(hasEventListenerIdentifier, nodeFactory.argumentList(null, propChangeLiteralString));
+        hasEventListenerCallExpression.setRValue(false);
+        MemberExpressionNode ifMemberExpression =
+            nodeFactory.memberExpression(ifThisExpression, hasEventListenerCallExpression);
+        ListNode iftest = nodeFactory.list(null, ifMemberExpression);
+        Node ifStatement = nodeFactory.ifStatement(iftest, expressionStatement, null);
+        
+        return nodeFactory.statementList(then, ifStatement);
     }
 
     private DocCommentNode generateInheritDocComment(Context context)

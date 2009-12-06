@@ -2615,38 +2615,31 @@ public class DateChooser extends UIComponent implements IFocusManagerComponent, 
                                     cornerRadius * 2, cornerRadius * 2);
         borderContext.endFill();
         
-        // Here we attempt to detect that we are using a spark skin on our
-        // DateChooser  There is no guaranteed way to check for spark skins.
-        // The closest we can do is to look for "skins.spark" in the qualified 
-        // class name one of our skinnable styles.
-        var isSpark:Boolean = false;
-        if (FlexVersion.compatibilityVersion >= FlexVersion.VERSION_4_0)
-        {
-            var todayIndicatorSkin:Class = getStyle("todayIndicatorSkin");
-            isSpark = todayIndicatorSkin && 
-                (getQualifiedClassName(todayIndicatorSkin).indexOf("skins.spark") >= 0);
-        }
-        
+        //Versions prior to Flex 4 use backgroundColor
+        //with Flex 4 we prefer contentBackgroundColor but will fall back to
+        //backgroundColor just in case
         var bgColor:uint = StyleManager.NOT_A_COLOR;
-        if (!isSpark || FlexVersion.compatibilityVersion < FlexVersion.VERSION_4_0)
+        if (FlexVersion.compatibilityVersion < FlexVersion.VERSION_4_0)
         {
             bgColor = getStyle("backgroundColor");
         }
-        else
-        {
-            // The contentBackgroundColor style trumps backgroundColor if specified.
-            bgColor = getStyle("contentBackgroundColor");
-            bgColor = (bgColor == StyleManager.NOT_A_COLOR) ? getStyle("backgroundColor") : bgColor;
-        }
+		else
+		{
+			var bgColorObj:* = getStyle("contentBackgroundColor");
+			bgColor = (bgColorObj === undefined) ? getStyle("backgroundColor") : bgColorObj;
+		}
         
-        if (bgColor == StyleManager.NOT_A_COLOR)
-            bgColor = 0xFFFFFF;
-            
+        //Versions prior to Flex 4 use backgroundAlpha
+        //with Flex 4 we prefer contentBackgroundAlpha but will fall back to
+        //backgroundAlpha just in case
         var bgAlpha:Number = 1;
-        if (!isSpark || FlexVersion.compatibilityVersion < FlexVersion.VERSION_4_0)
+        if (FlexVersion.compatibilityVersion < FlexVersion.VERSION_4_0)
             bgAlpha = getStyle("backgroundAlpha");
         else
-            bgAlpha = getStyle("contentBackgroundAlpha");
+		{
+			var bgAlphaObj:* = getStyle("contentBackgroundAlpha");
+            bgAlpha = (bgAlphaObj === undefined) ? getStyle("backgroundAlpha") : bgAlphaObj;
+		}
         
         borderContext.beginFill(bgColor, bgAlpha);
         borderContext.drawRoundRect(borderThickness, borderThickness, w, h, 
@@ -2672,7 +2665,7 @@ public class DateChooser extends UIComponent implements IFocusManagerComponent, 
         headerContext.endFill();
                
         // Apply Spark chromeColor tint if applicable.
-        if (isSpark && FlexVersion.compatibilityVersion >= FlexVersion.VERSION_4_0)
+        if (FlexVersion.compatibilityVersion >= FlexVersion.VERSION_4_0 && getStyle("chromeColor") !== undefined)
         {
             var chromeColor:uint = getStyle("chromeColor");
             
@@ -2680,7 +2673,7 @@ public class DateChooser extends UIComponent implements IFocusManagerComponent, 
             var defaultColorValue:Number = 0xCC; 
             var defaultColor:Number = 0xCCCCCC; 
             
-            if (chromeColor != StyleManager.NOT_A_COLOR && chromeColor != defaultColor)
+            if (chromeColor != defaultColor)
             {  
                 var colorTransform:ColorTransform = new ColorTransform();
                 colorTransform.redOffset = ((chromeColor & (0xFF << 16)) >> 16) - defaultColorValue;

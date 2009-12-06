@@ -1,8 +1,8 @@
 package components {
 
-import spark.components.supportClasses.ScrollBar;
+import spark.components.supportClasses.ScrollBarBase;
 
-public class CircularScrollBar extends ScrollBar
+public class CircularScrollBar extends ScrollBarBase
 {
     public function CircularScrollBar()
     {

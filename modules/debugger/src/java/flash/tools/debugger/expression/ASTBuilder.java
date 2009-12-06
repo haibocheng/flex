@@ -98,6 +98,12 @@ public class ASTBuilder implements IASTBuilder
 
 		String s = sb.toString();
 
+		// FB-16879: If expression begins with "#N" where N is a number,
+		// replace that with "$obj(N)".  For example, "#3" would become
+		// "$obj(3)".  Later, in PlayerSession.callFunction(), we will
+		// detect the $obj() function and handle it.
+		s = s.replaceFirst("^#([0-9]+)", "\\$obj($1)"); //$NON-NLS-1$ //$NON-NLS-2$
+
 		if (isIndirectionOperatorAllowed()) {
 			if (s.endsWith(".")) { //$NON-NLS-1$
 				retval.setLookupMembers(true);

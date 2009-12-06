@@ -33,7 +33,7 @@
 <description>
   实现此组件用来呈示文本的 IUITextField 的类。
  
-  <p>它可以设置为 mx.core.UITextField 类（以使用内置到 Flash Player 中的传统 TextField 类）或 mx.core.UITLFTextField 类（以使用 Text Layout Framework，从而获得改进的文本呈示，包括双向布局）。</p>
+  <p>它可以设置为 mx.core.UITextField 类（以使用 Flash Player 内置经典 TextField 类）或 mx.core.UIFTETextField 类（以使用 Text Layout Framework 改进文本呈示，包括双向布局）。</p>
  
   </description>
 <default>mx.core.UITextField
@@ -71,11 +71,11 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog></style><style inherit="yes" name="locale" owner="mx.controls.menuClasses:MenuBarItem" playerVersion="Flash10" type="String">
 <description>
-  
+  此组件显示的文本的区域设置。
  
-  <p/>
+  <p>FTE 和 TLF 使用此区域设置将 Unicode 字符映射到字体字型并查找后备字体。</p>
  
-  <p><codeph/></p>
+  <p>注意：仅当 MX 组件将 UIFTETextField 指定为其 <codeph>textFieldClass</codeph> 时此样式才适用。</p>
  
   </description>
 <default>"en"
@@ -157,7 +157,7 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog></style><style format="Length" inherit="yes" name="fontSize" owner="mx.controls.menuClasses:MenuBarItem" playerVersion="Flash9" type="Number">
 <description>
-  文本的高度，以像素为单位。除 ColorPicker 控件之外，所有控件的默认值都为 10。ColorPicker 控件的默认值为 11。 
+  文本的高度，以像素为单位。
   
   </description>
 
@@ -210,12 +210,9 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog><related-links><link href="" invalidHref="flash.text.TextField.xml"><linktext>flash.text.TextField</linktext></link><link href="" invalidHref="flash.text.GridFitType.xml"><linktext>flash.text.GridFitType</linktext></link></related-links></style><style inherit="yes" name="fontFamily" owner="mx.controls.menuClasses:MenuBarItem" playerVersion="Flash9" type="String">
 <description>
-  使用的字体的名称。与在完全 CSS 实现中不同，这里不支持逗号分隔的列表。您可以使用任何字体系列名称。如果您指定通用字体名称，它将转换为相应的设备字体。
- 
-  </description>
-<default>"Verdana"
+  使用的字体的名称。与在完全 CSS 实现中不同，这里不支持逗号分隔的列表。您可以使用任何字体系列名称。如果您指定通用字体名称，它将转换为相应的设备字体。<codeph/><codeph/>
   
-  </default>
+  </description>
 
 <playerversion>AIR 1.1
   </playerversion>
@@ -259,15 +256,15 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog></style><style enumeration="ltr,rtl,inherit" inherit="yes" name="direction" owner="mx.controls.menuClasses:MenuBarItem" playerVersion="Flash10" type="String">
 <description>
-  
+  此组件显示的文本的方向性。
  
-  <p><codeph/><codeph/></p>
+  <p>允许的值为<codeph>“ltr”</codeph>（适用于从左到右文本，就像在拉丁样式脚本中一样）和<codeph>“rtl”</codeph>（适用于从右到左文本，就像在阿拉伯语和希伯来语中一样）。</p>
  
-  <p/>
+  <p>FTE 和 TLF 在其双向文本布局算法中使用此值，该算法会将 Unicode 字符顺序映射到字型顺序。</p>
  
-  <p><codeph/></p>
+  <p>注意：仅当 MX 组件将 UIFTETextField 指定为其 <codeph>textFieldClass</codeph> 时此样式才适用。</p>
  
-  <p><codeph/></p>
+  <p><codeph>direction</codeph> 还影响在 TLFTextField 的范围内的文本的对齐。但是，它不会影响组件内 TLFTextField 的位置。</p>
  
   </description>
 <default>"ltr"
@@ -280,12 +277,9 @@
   </langversion><productversion>Flex 4
  </productversion></asCustoms></prolog></style><style format="Color" inherit="yes" name="color" owner="mx.controls.menuClasses:MenuBarItem" playerVersion="Flash9" type="uint">
 <description>
-  组件中文本（包括组件标签）的颜色。
- 
-  </description>
-<default>0x0B333C
+  组件中文本（包括组件标签）的颜色。<codeph/><codeph/>
   
-  </default>
+  </description>
 
 <playerversion>AIR 1.1
   </playerversion>
@@ -363,12 +357,9 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog></style><style format="Color" inherit="yes" name="color" owner="mx.controls.menuClasses:MenuItemRenderer" playerVersion="Flash9" type="uint">
 <description>
-  菜单项目标签的文本颜色。
+  菜单项目标签的文本颜色。<codeph/><codeph/>
   
   </description>
-<default>0x0B333C
-  
-  </default>
 
 <playerversion>AIR 1.1
   </playerversion>
@@ -478,12 +469,12 @@
   </pre>
   
   </apiDesc></apiClassifierDetail><apiValue id="mx.controls.menuClasses:IMenuItemRenderer:mx.controls.menuClasses:IMenuItemRenderer:measuredBranchIconWidth:get"><apiName>measuredBranchIconWidth</apiName><shortdesc>
-      分支图标的宽度.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
-      分支图标的宽度.
+      分支图标的宽度。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
+      分支图标的宽度。
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.menuClasses:IMenuItemRenderer:mx.controls.menuClasses:IMenuItemRenderer:measuredIconWidth:get"><apiName>measuredIconWidth</apiName><shortdesc>
-      图标的宽度.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
-      图标的宽度.
+      图标的宽度。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
+      图标的宽度。
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.menuClasses:IMenuItemRenderer:mx.controls.menuClasses:IMenuItemRenderer:measuredTypeIconWidth:get"><apiName>measuredTypeIconWidth</apiName><shortdesc>
       类型图标（单选/复选）的宽度。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
@@ -502,7 +493,7 @@
       
       </apiDesc></apiReturn><apiParam><apiItemName>parent</apiItemName><apiType value="Object"/><apiDesc>将成为子节点父级的节点对象。
       </apiDesc></apiParam><apiParam><apiItemName>newChild</apiItemName><apiType value="Object"/><apiDesc>节点将成为其父级的节点对象。
-      </apiDesc></apiParam><apiParam><apiItemName>index</apiItemName><apiType value="int"/><apiDesc>要从中放置子节点（相对于父项）的从零开始的索引.
+      </apiDesc></apiParam><apiParam><apiItemName>index</apiItemName><apiType value="int"/><apiDesc>要从中放置子节点（相对于父项）的从零开始的索引。
       </apiDesc></apiParam><apiParam><apiItemName>model</apiItemName><apiType value="Object"/><apiData>null</apiData><apiDesc>包含此节点的整个集合。
       
       </apiDesc></apiParam></apiOperationDef><apiDesc conref="mx.controls.treeClasses.DefaultDataDescriptor#addChildAt()">
@@ -558,8 +549,8 @@
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.menuClasses:IMenuDataDescriptor:mx.controls.menuClasses:IMenuDataDescriptor:removeChildAt"><apiName>removeChildAt</apiName><shortdesc conref="mx.controls.treeClasses.DefaultDataDescriptor#removeChildAt()">
       </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="Boolean"/><apiDesc><codeph>如果成功，则为 true.</codeph>
       
-      </apiDesc></apiReturn><apiParam><apiItemName>parent</apiItemName><apiType value="Object"/><apiDesc>当前作为子节点的父节点的节点对象.
-      </apiDesc></apiParam><apiParam><apiItemName>child</apiItemName><apiType value="Object"/><apiDesc>正在删除的节点.
+      </apiDesc></apiReturn><apiParam><apiItemName>parent</apiItemName><apiType value="Object"/><apiDesc>当前作为子节点的父节点的节点对象。
+      </apiDesc></apiParam><apiParam><apiItemName>child</apiItemName><apiType value="Object"/><apiDesc>正在删除的节点。
       </apiDesc></apiParam><apiParam><apiItemName>index</apiItemName><apiType value="int"/><apiDesc>要删除的相对于父项的子节点的从零开始的索引。
       </apiDesc></apiParam><apiParam><apiItemName>model</apiItemName><apiType value="Object"/><apiData>null</apiData><apiDesc>包含此节点的整个集合。
       

@@ -117,6 +117,31 @@ use namespace mx_internal;
  *  Flex defines a default, or Application, container that lets you start
  *  adding content to your application without explicitly defining
  *  another container.
+ *
+ *  <p>The Application container has the following default characteristics:</p>
+ *     <table class="innertable">
+ *        <tr>
+ *           <th>Characteristic</th>
+ *           <th>Description</th>
+ *        </tr>
+ *        <tr>
+ *           <td>Default size</td>
+ *           <td>375 pixels high and 500 pixels wide in the Standalone Flash Player, 
+ *               and all available space in a browser</td>
+ *        </tr>
+ *        <tr>
+ *           <td>Minimum size</td>
+ *           <td>0 pixels wide and 0 pixels high</td>
+ *        </tr>
+ *        <tr>
+ *           <td>Maximum size</td>
+ *           <td>No limit</td>
+ *        </tr>
+ *        <tr>
+ *           <td>Default skin class</td>
+ *           <td>spark.skins.spark.ApplicationSkin</td>
+ *        </tr>
+ *     </table>
  * 
  *  @mxml
  *
@@ -146,6 +171,9 @@ use namespace mx_internal;
  *    error="<i>No default</i>"
  *  /&gt;
  *  </pre>
+ *
+ *  @see spark.skins.spark.ApplicationSkin
+ *  @includeExample examples/ApplicationContainerExample.mxml
  *
  *  @langversion 3.0
  *  @playerversion Flash 10
@@ -271,7 +299,7 @@ public class Application extends SkinnableContainer
     *  
     *  <p>Only the main application is allowed to set the <code>colorCorrection</code>
     *  property. If a nested application's needs to set the color correction property, it 
-    *  must set it by referencing the the main application's instance.</p>
+    *  must set it by referencing the main application's instance.</p>
     *
     *  @default ColorCorrection.DEFAULT
     *
@@ -498,7 +526,7 @@ public class Application extends SkinnableContainer
     /**
      *    Specifies the frame rate of the application.
      * 
-     *    <p>Note: This property cannot be set by ActionScript code; it must be set in MXML code.</p>
+     *    <p><b>Note:</b> This property cannot be set by ActionScript code; it must be set in MXML code.</p>
      *
      *    @default 24
      *  
@@ -518,7 +546,7 @@ public class Application extends SkinnableContainer
      *    This property provides the same functionality as the
      *    HTML <code>&lt;title&gt;</code> tag.
      * 
-     *    <p>Note: This property cannot be set by ActionScript code; it must be set in MXML code. 
+     *    <p><b>Note:</b> This property cannot be set by ActionScript code; it must be set in MXML code. 
      *    The value set in MXML code is designed to be used by a tool to update the HTML templates 
      *    provided with the SDK.</p>
      *
@@ -544,7 +572,7 @@ public class Application extends SkinnableContainer
      *  or in the WEB-INF/flex/user_classes directory of your Flex
      *  web application.
      * 
-     *  <p>Note: This property cannot be set by ActionScript code; it must be set in MXML code.</p>
+     *  <p><b>Note:</b> This property cannot be set by ActionScript code; it must be set in MXML code.</p>
      *  
      *  @langversion 3.0
      *  @playerversion Flash 10
@@ -590,7 +618,7 @@ public class Application extends SkinnableContainer
      *    call stack before the player stops.
      *    This is essentially the stack overflow limit.
      * 
-     *    <p>Note: This property cannot be set by ActionScript code; it must be set in MXML code.</p>
+     *    <p><b>Note:</b> This property cannot be set by ActionScript code; it must be set in MXML code.</p>
      *
      *    @default 1000
      *  
@@ -631,7 +659,7 @@ public class Application extends SkinnableContainer
     /**
      *    If <code>true</code>, specifies to display the application preloader.
      * 
-     *    <p>Note: This property cannot be set by ActionScript code; it must be set in MXML code.</p>
+     *    <p><b>Note:</b> This property cannot be set by ActionScript code; it must be set in MXML code.</p>
      *
      *    @default true
      *  
@@ -977,7 +1005,7 @@ public class Application extends SkinnableContainer
     }
 
     /**
-     *  @inheritDoc
+     *  @private
      *  
      *  @langversion 3.0
      *  @playerversion Flash 10
@@ -1011,7 +1039,7 @@ public class Application extends SkinnableContainer
     }
 
     /**
-     *  @inheritDoc
+     *  @private
      *  
      *  @langversion 3.0
      *  @playerversion Flash 10

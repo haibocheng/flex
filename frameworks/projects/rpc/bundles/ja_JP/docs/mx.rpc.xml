@@ -130,7 +130,7 @@
       データとハンドラーを指定した応答側のインスタンスを作成します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>result</apiItemName><apiType value="Function"/><apiDesc>要求が正常に完了したときに呼び出される関数です。 次のシグネチャが必要です。
               <pre>public function (result:Object, token:Object = null):void;</pre>
       </apiDesc></apiParam><apiParam><apiItemName>fault</apiItemName><apiType value="Function"/><apiDesc>要求が完了したもののエラーが発生した場合に呼び出される関数です。 次のシグネチャが必要です。
-              <pre>public function (error:ErrorMessage, token:Object = null):void;</pre>
+              <pre>public function (error:FaultEvent, token:Object = null):void;</pre>
       </apiDesc></apiParam><apiParam><apiItemName>token</apiItemName><apiType value="Object"/><apiData>null</apiData><apiDesc>この要求に関連付ける追加情報です。
       
       </apiDesc></apiParam></apiConstructorDef><apiDesc>
@@ -356,7 +356,7 @@
       このプロパティには、成功の結果が配信されるたびに、トークンの result プロパティが格納されます。token.result プロパティの代わりにこのプロパティにバインドまたはアクセスすると、特定のサービスメソッドを 2 回目以降に呼び出すときに値がクリアされたかどうかを確認する必要がなくなります。さらに、フォルトが発生した場合でも、この値は、この CallResponder で監視されているトークンから最後に返された成功の結果に設定されます。
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.rpc:CallResponder:token:set"><apiName>token</apiName><shortdesc>
-     各 CallResponder モニターは、単一のトークンから受信した結果イベントとフォルトイベントを送出します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>mx.rpc:AsyncToken</apiValueClassifier></apiValueDef><apiDesc>
-     各 CallResponder モニターは、単一のトークンから受信した結果イベントとフォルトイベントを送出します。このプロパティ値ではそのトークンを指定します。★通常、これは▲に設定します。☆ 
+      各 CallResponder は、単一のトークンから受信した結果イベントとフォルトイベントを送出します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>mx.rpc:AsyncToken</apiValueClassifier></apiValueDef><apiDesc>
+      各 CallResponder は、単一のトークンから受信した結果イベントとフォルトイベントを送出します。このプロパティ値ではそのトークンを指定します。通常、このプロパティにはサービスから返される AsyncToken オブジェクトを設定します。
       
       </apiDesc></apiValueDetail></apiValue></apiClassifier></apiPackage>

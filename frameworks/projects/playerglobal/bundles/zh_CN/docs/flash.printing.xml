@@ -1,0 +1,496 @@
+<?xml version="1.0"?>
+<apiPackage id="flash.printing"><apiName>flash.printing</apiName><apiDetail/><apiClassifier id="flash.printing:PrintJobOptions"><apiName>PrintJobOptions</apiName><shortdesc>
+	 PrintJobOptions 类所包含的属性与 PrintJob.addPage() 方法的 options 参数配合使用。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 PrintJobOptions 类所包含的属性与 <codeph>PrintJob.addPage()</codeph> 方法的 <codeph>options</codeph> 参数配合使用。有关 <codeph>addPage()</codeph> 的详细信息，请参见 PrintJob 类。
+	 </apiDesc></apiClassifierDetail><related-links><link href="flash.printing.xml#PrintJob"><linktext>PrintJob</linktext></link><link href="flash.printing.xml#PrintJob/addPage()"><linktext>PrintJob.addPage()</linktext></link></related-links><apiConstructor id="flash.printing:PrintJobOptions:PrintJobOptions"><apiName>PrintJobOptions</apiName><shortdesc>
+		 创建一个新的 PrintJobOptions 对象。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>printAsBitmap</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>如果为 <codeph>true</codeph>，则此对象作为位图打印。如果为 <codeph>false</codeph>，则此对象作为矢量图打印。 
+		 
+		 <p>如果要打印的内容包括位图图像，则请将 <codeph>printAsBitmap</codeph> 属性设置为 <codeph>true</codeph>，以包括任何 Alpha 透明度和色彩效果。如果内容不包含位图图像，则请省略此参数，以便以较高品质的矢量格式（默认选项）打印内容。</p>
+		 
+		 <p><i>注意：</i>Adobe AIR 在 Mac OS 中不支持矢量打印。</p>
+		 
+		 </apiDesc></apiParam></apiConstructorDef><apiDesc>
+		 创建一个新的 PrintJobOptions 对象。请将此对象传递给 <codeph>PrintJob.addPage()</codeph> 方法的 <codeph>options</codeph> 参数。
+		 
+		 </apiDesc></apiConstructorDetail><related-links><link href="flash.printing.xml#PrintJob/addPage()"><linktext>PrintJob.addPage()</linktext></link></related-links></apiConstructor><apiValue id="flash.printing:PrintJobOptions:printAsBitmap"><apiName>printAsBitmap</apiName><shortdesc>
+		 指定打印作业中的内容是将作为位图打印还是将作为矢量打印。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>false</apiData><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+		 指定打印作业中的内容是将作为位图打印还是将作为矢量打印。默认值是 <codeph>false</codeph>，代表矢量打印。
+		 
+		 <p>如果要打印的内容包括位图图像，则请将 <codeph>printAsBitmap</codeph> 设置为 <codeph>true</codeph>，以包括任何 Alpha 透明度和色彩效果。如果内容不包括位图图像，则应以较高品质的矢量格式（默认选项）打印内容。</p>
+		 <p>例如，要将内容作为位图打印，请使用以下语法：</p> 
+		 <pre>
+		 var options:PrintJobOptions = new PrintJobOptions();
+		 options.printAsBitmap = true;
+		 myPrintJob.addPage(mySprite, null, options);
+		 </pre>
+		 
+		 <p><i>注意：</i>Adobe AIR 在 Mac OS 中不支持矢量打印。</p>
+		 
+		 </apiDesc><example conref="examples\printAsBitmapExample.as"> 下面的示例先加载一幅图片并放在矩形帧中，然后将该图片作为位图进行打印。  
+ 
+ <ol>
+ <li>构造函数使用 <codeph>Loader</codeph> 和 <codeph>URLRequest</codeph> 对象加载该图片 (<codeph>image.jpg</codeph>)。它还会检查在加载过程中是否发生了错误。此处，假定该文件位于与 SWF 文件相同的目录中。需要编译 SWF 文件，并将“本地回放安全性”设置为“只访问本地文件”。</li>
+ <li>在加载图片后（event 为 complete），将调用 <codeph>completeHandler()</codeph> 方法。</li>  
+ <li><codeph>completeHandler()</codeph> 方法创建一个 <codeph>BitmapData</codeph> 对象，并在其中加载该图片（位图）。将在 <codeph>Sprite</codeph> 对象中绘制一个矩形 (<codeph>frame</codeph>)，并使用 <codeph>beginBitmapFill()</codeph> 方法在矩形中填充该图片（<codeph>BitmapData</codeph> 对象）。还使用了 <codeph>Matrix</codeph> 对象缩放图像以适应该矩形。（请注意，这会使图像发生扭曲。本示例中使用此对象是为了确保图像与矩形相适应。） 在填充图像后，将调用 <codeph>printPage()</codeph> 方法。</li>
+ <li><codeph>printPage()</codeph> 方法创建一个新的打印作业实例，启动打印过程（将为用户调用打印对话框）并填充打印作业属性。<codeph>addPage()</codeph> 方法包含有关打印作业的详细信息。此处，将包含图片（Sprite 对象）的帧设置为作为位图打印，而不是作为矢量图形打印。<codeph>options</codeph> 是 <codeph>PrintJobOptions</codeph> 类的实例，并将其属性 <codeph>printAsBitmap</codeph> 设置为 <codeph>true</codeph>，以便作为位图打印（默认设置为 false）。</li>    
+ </ol>
+ <p>注意：仅为本示例定义了非常有限的错误处理代码。</p>
+ 
+<codeblock>
+package {
+    import flash.display.Sprite;
+    import flash.display.Loader;
+    import flash.display.Bitmap;
+    import flash.display.BitmapData;    
+    import flash.printing.PrintJob;
+    import flash.printing.PrintJobOptions;
+    import flash.events.Event;
+    import flash.events.IOErrorEvent;
+    import flash.net.URLRequest;
+    import flash.geom.Matrix;
+
+    public class printAsBitmapExample extends Sprite {
+
+        private var frame:Sprite = new Sprite();
+        private var url:String = "image.jpg";
+        private var loader:Loader = new Loader();
+
+        public function printAsBitmapExample() {
+
+           var request:URLRequest = new URLRequest(url);
+  
+           loader.load(request);
+           loader.contentLoaderInfo.addEventListener(Event.COMPLETE, completeHandler);
+           loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+        }
+
+        private function completeHandler(event:Event):void {
+        
+            var picture:Bitmap = Bitmap(loader.content);
+            var bitmap:BitmapData = picture.bitmapData;
+
+            var matrix:Matrix = new Matrix();
+
+            matrix.scale((200 / bitmap.width), (200 / bitmap.height));
+            
+            frame.graphics.lineStyle(10);
+            frame.graphics.beginBitmapFill(bitmap, matrix, true);
+            frame.graphics.drawRect(0, 0, 200, 200);
+            frame.graphics.endFill();
+
+            addChild(frame);
+             
+            printPage();    
+        }
+
+        private function ioErrorHandler(event:IOErrorEvent):void {
+            trace("Unable to load the image: " + url);
+        }
+
+        private function printPage ():void {
+            var myPrintJob:PrintJob = new PrintJob();
+            var options:PrintJobOptions = new PrintJobOptions();
+            options.printAsBitmap = true;
+            
+            myPrintJob.start();
+  
+            try {
+                myPrintJob.addPage(frame, null, options);
+            }
+            catch(e:Error) {
+                trace ("Had problem adding the page to print job: " + e);
+            }
+ 
+            try {
+            myPrintJob.send();
+            }
+            catch (e:Error) {
+                trace ("Had problem printing: " + e);    
+            }
+        }
+    }
+}
+
+</codeblock></example></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.printing:PrintJob"><apiName>PrintJob</apiName><shortdesc>
+ PrintJob 类用于创建内容并将其打印为一页或多页。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>printjob, print
+ </keyword></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.events:EventDispatcher</apiBaseClassifier></apiClassifierDef><apiDesc>
+ PrintJob 类用于创建内容并将其打印为一页或多页。此类允许您呈现对用户为可见、动态或在屏幕以外的内容，通过一个“打印”对话框提示用户，以及按照与内容的比例相称的比例打印未缩放的文档。此功能特别适用于呈现和打印动态内容，例如数据库内容和动态文本。
+ <p>使用 <codeph>PrintJob()</codeph> 构造函数创建打印作业。</p>
+ 
+ <p>另外，利用由 <codeph>PrintJob.start()</codeph> 填充的属性，文档可以读取用户的打印机设置（如页高度、宽度和图像方向），而且您可以配置文档以动态方式设置适用于打印机设置的 Flash 内容的格式。由 <codeph>PrintJob.start()</codeph> 填充的用户布局属性是只读的，Flash Player 不能对其进行更改。</p>
+ 
+ <p><b>注意：</b>与 ActionScript 的先前版本不同，ActionScript 3.0 未将 PrintJob 对象限定在单帧。然而，由于在用户单击“打印”对话框中的“确定”按钮之后，操作系统会向用户显示打印状态信息，所以应尽快调用 <codeph>PrintJob.addPage()</codeph> 和 <codeph>PrintJob.send()</codeph>，以将页面发送到后台处理程序。如果到达包含 <codeph>PrintJob.send()</codeph> 调用的帧时发生延迟，将会延迟打印过程。</p>
+ <p>另外，以下时间间隔存在 15 秒的脚本超时限制：</p>
+ <ul>
+ <li><codeph>PrintJob.start()</codeph> 和第一个 <codeph>PrintJob.addPage()</codeph></li>
+ <li><codeph>PrintJob.addPage()</codeph> 和下一个 <codeph>PrintJob.addPage()</codeph></li>
+ <li>最后的 <codeph>PrintJob.addPage()</codeph> 和 <codeph>PrintJob.send()</codeph></li>
+ </ul>
+ 
+ <p>如果以上任何一个间隔时间超过了 15 秒，则对 PrintJob 实例的下一次 <codeph>PrintJob.start()</codeph> 调用将返回 <codeph>false</codeph>，并且对 PrintJob 实例的下一个 <codeph>PrintJob.addPage()</codeph> 将使 Flash Player 或 Adobe AIR 引发运行时异常。</p>
+ 
+ </apiDesc><example conref="examples\PrintJobExample.as"> 以下示例使用类 <codeph>PrintJobExample</codeph> 来创建一个小文档，然后将该文档发送到打印机。这是使用以下步骤完成的：
+ <ol>
+  <li>声明两个 Sprite 类型的变量，名称为 <codeph>sheet1</codeph> 和 <codeph>sheet2</codeph>。</li>
+  <li>调用 <codeph>init()</codeph>，它将一个新的 Sprite 实例同时赋给 <codeph>sheet1</codeph> 和 <codeph>sheet2</codeph>，然后使用不同的参数调用 <codeph>createSheet()</codeph>。</li>
+  <li><codeph>createSheet()</codeph> 进行以下操作：
+  <ol outputclass="A">
+      <li>传入的 Sprite 对象用来在 x = 0、y = 0 处绘制一个矩形，矩形具有浅灰色背景和一个像素宽的黑色边框，宽度为 100 像素，高度为 200 像素。</li>
+      <li>创建一个新的 TextField 对象，名为 <codeph>txt</codeph>，尺寸和 Sprite 相同，wordWrap 属性设置为 <codeph>true</codeph>，并且 text 属性设置为作为参数传递给 <codeph>createSheet()</codeph> 的 String。</li>
+      <li>如果传递的 Object 参数不是 null，则创建一个新的 Sprite 实例，名为 <codeph>img</codeph>，该实例使用所传递的 Object 的坐标和尺寸属性绘制一个白色矩形。可将白色矩形添加到 Sprite 对象的显示列表中，方法是使用 <codeph>addChild()</codeph>。</li>
+      <li>可将 <codeph>txt</codeph> TextField 添加到 Sprite 对象的显示列表中，方法是使用 <codeph>addChild()</codeph>。</li>
+  </ol></li>
+  <li>回到构造函数中，调用已启用的（不是被注释掉的）打印方法 由于方法非常相似，因此下面将描述 <codeph>printOnePerPage()</codeph>。</li>
+  <li><codeph>printOnePerPage()</codeph> 进行以下操作：
+  <ol outputclass="A">
+      <li>声明一个新的 PrintJob 对象，名称为 <codeph>pj</codeph>，并将 <codeph>pagesToPrint</codeph> 声明为 unit 类型。</li>
+      <li>打开操作系统的本机打印对话框，并等待用户单击 <codeph>OK</codeph>。</li>
+      <li>检查方向，如果选择了横向，则将引发错误并退出。</li>
+      <li>设置 <codeph>sheet1</codeph> 和 <codeph>sheet2</codeph> 的页面高度和宽度。</li>
+      <li>使用 <codeph>addPage()</codeph> 将 <codeph>sheet1</codeph> 和 <codeph>sheet2</codeph> 发送到打印后台处理程序。</li>
+      <li>如果要打印的页数 > 0，则打印所有经过后台处理的页。</li>
+  </ol></li>
+  <li>调用 <codeph>draw()</codeph> 方法，它调整两个 Sprite 属性的大小以适合舞台大小，并重新定位 <codeph>sheet2</codeph>，以便它紧挨着 <codeph>sheet1</codeph> 的右侧。</li>
+ </ol>
+ 
+ <p><b>注意：</b>设置构造函数后，可以根据首选项选择三种打印方法中的一种（每页一张，每页两张，或是在页面的上半部分打印）。如果不使用代码注释禁用其中的两种打印方法，则此示例将不能正确运行 示例经过设置，以调用 <codeph>printOnePerPage()</codeph>。</p>
+<codeblock>
+package {
+    import flash.printing.PrintJob;
+    import flash.printing.PrintJobOrientation;
+    import flash.display.Stage;
+    import flash.display.Sprite;
+    import flash.text.TextField;
+    import flash.geom.Rectangle;
+       
+    public class PrintJobExample extends Sprite {
+        private var sheet1:Sprite;
+        private var sheet2:Sprite;
+           
+        public function PrintJobExample() {
+            init();
+            printOnePerPage();
+//            printTwoPerPage();
+//            printTopHalf();
+            draw();
+        }
+        
+        private function init():void {
+            sheet1 = new Sprite();
+            createSheet(sheet1, "Once upon a time...", {x:10, y:50, width:80, height:130});
+
+            sheet2 = new Sprite();
+            createSheet(sheet2, "There was a great story to tell, and it ended quickly.\n\nThe end.", null);
+        }
+        
+        private function createSheet(sheet:Sprite, str:String, imgValue:Object):void {
+            sheet.graphics.beginFill(0xEEEEEE);
+            sheet.graphics.lineStyle(1, 0x000000);
+            sheet.graphics.drawRect(0, 0, 100, 200);
+            sheet.graphics.endFill();
+            
+            var txt:TextField = new TextField();
+            txt.height = 200;
+            txt.width = 100;
+            txt.wordWrap = true;
+            txt.text = str;
+            
+            if(imgValue != null) {
+                var img:Sprite = new Sprite();
+                img.graphics.beginFill(0xFFFFFF);
+                img.graphics.drawRect(imgValue.x, imgValue.y, imgValue.width, imgValue.height);
+                img.graphics.endFill();
+                sheet.addChild(img);
+            }
+            sheet.addChild(txt);
+        }
+        
+        private function printOnePerPage():void {
+            var pj:PrintJob = new PrintJob();
+            var pagesToPrint:uint = 0;
+            if(pj.start()) {                
+                if(pj.orientation == PrintJobOrientation.LANDSCAPE) {    
+                    throw new Error("Without embedding fonts you must print one sheet per page with an orientation of portrait.");
+                }
+                
+                sheet1.height = pj.pageHeight;
+                sheet1.width = pj.pageWidth;
+                sheet2.height = pj.pageHeight;
+                sheet2.width = pj.pageWidth;
+
+                try {
+                    pj.addPage(sheet1);
+                    pagesToPrint++;
+                }
+                catch(e:Error) {
+                    // do nothing
+                }
+
+                try {
+                    pj.addPage(sheet2);
+                    pagesToPrint++;
+                }
+                catch(e:Error) {
+                    // do nothing
+                }
+
+                if(pagesToPrint > 0) {
+                    pj.send();
+                }
+            }
+        }
+        
+        private function printTwoPerPage():void {
+            var pj:PrintJob = new PrintJob();
+            var pagesToPrint:uint = 0;
+            if(pj.start()) {                
+                if(pj.orientation == PrintJobOrientation.PORTRAIT) {
+                    throw new Error("Without embedding fonts you must print two sheets per page with an orientation of landscape.");
+                }
+                
+                sheet1.height = pj.pageHeight;
+                sheet1.width = pj.pageWidth/2;
+                sheet2.height = pj.pageHeight;
+                sheet2.width = pj.pageWidth/2;
+
+                var sheets:Sprite = new Sprite();
+                sheets.addChild(sheet1);
+                sheets.addChild(sheet2);
+                sheets.getChildAt(1).x = sheets.getChildAt(0).width;
+                try {
+                    pj.addPage(sheets);
+                    pagesToPrint++;
+                }
+                catch(e:Error) {
+                    // do nothing
+                }
+
+                if(pagesToPrint > 0) {
+                    pj.send();
+                }
+            }
+        }
+
+        private function printTopHalf():void {
+            var pj:PrintJob = new PrintJob();
+            var pagesToPrint:uint = 0;
+            if(pj.start()) {                
+                if(pj.orientation == PrintJobOrientation.PORTRAIT) {
+                    throw new Error("Without embedding fonts you must print the top half with an orientation of landscape.");
+                }
+                
+                sheet1.height = pj.pageHeight;
+                sheet1.width = pj.pageWidth/2;
+                sheet2.height = pj.pageHeight;
+                sheet2.width = pj.pageWidth/2;
+
+                var sheets:Sprite = new Sprite();
+                sheets.addChild(sheet1);
+                sheets.addChild(sheet2);
+                sheets.getChildAt(1).x = sheets.getChildAt(0).width;
+                try {
+                    pj.addPage(sheets, new Rectangle(0, 0, sheets.width, sheets.height/2));
+                    pagesToPrint++;
+                }
+                catch(e:Error) {
+                    // do nothing
+                }
+
+                if(pagesToPrint > 0) {
+                    pj.send();
+                }
+            }
+        }
+
+
+        private function draw():void {
+            var sheetWidth:Number = this.stage.stageWidth/2;
+            var sheetHeight:Number = this.stage.stageHeight;
+            
+            addChild(sheet1);
+            sheet1.width = sheetWidth;
+            sheet1.height = sheetHeight;
+            
+            addChild(sheet2);
+            sheet2.width = sheetWidth;
+            sheet2.height = sheetHeight;
+            sheet2.x = sheet1.width;
+        }        
+    }
+}
+</codeblock></example></apiClassifierDetail><apiConstructor id="flash.printing:PrintJob:PrintJob"><apiName>PrintJob</apiName><shortdesc>
+ 创建一个可用于打印一页或多页的 PrintJob 对象。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><maelexample>See <code>PrintJob.addPage()</code>.
+ 
+ </maelexample></asCustoms></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiException><apiDesc>如果另一 PrintJob 对象仍然处于活动状态，则将引发异常。
+ 
+ </apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiConstructorDef><apiDesc>
+ 创建一个可用于打印一页或多页的 PrintJob 对象。在创建一个 PrintJob 对象之后，需要依次使用 <codeph>PrintJob.start()</codeph>、<codeph>PrintJob.addPage()</codeph> 和 <codeph>PrintJob.send()</codeph> 方法将打印作业发送到打印机。
+ <p>例如，可以用自定义参数来替换 <codeph>my_pj.addPage()</codeph> 方法调用的 <codeph>[params]</codeph> 占位符文本，如以下代码中所示：</p>
+ <codeblock>
+ // create PrintJob object
+ var my_pj:PrintJob = new PrintJob();
+  
+ // display Print dialog box, but only initiate the print job
+ // if start returns successfully.
+ if (my_pj.start()) {
+  
+    // add specified page to print job
+    // repeat once for each page to be printed
+    try {
+      my_pj.addPage([params]);
+    }
+    catch(e:Error) {
+      // handle error 
+    }
+    try {
+      my_pj.addPage([params]);
+    }
+    catch(e:Error) {
+      // handle error 
+    }
+ 
+    // send pages from the spooler to the printer, but only if one or more
+    // calls to addPage() was successful. You should always check for successful 
+    // calls to start() and addPage() before calling send().
+    my_pj.send();
+ }
+ </codeblock>
+ <p>在第一个 PrintJob 对象仍处于活动状态时，您不能创建另一个对象。如果在第一个 PrintJob 对象仍处于活动状态时创建第二个 PrintJob 对象（通过调用 <codeph>new PrintJob()</codeph>），则第二个 PrintJob 对象不会被创建。因此，可以在创建第二个 PrintJob 之前检查 <codeph>my_pj</codeph> 值。</p>
+ 
+ </apiDesc></apiConstructorDetail><related-links><link href="flash.printing.xml#PrintJob/addPage()"><linktext>PrintJob.addPage()</linktext></link><link href="flash.printing.xml#PrintJob/send()"><linktext>PrintJob.send()</linktext></link><link href="flash.printing.xml#PrintJob/start()"><linktext>PrintJob.start()</linktext></link></related-links></apiConstructor><apiOperation id="flash.printing:PrintJob:addPage"><apiName>addPage</apiName><shortdesc>
+     将指定的 Sprite 对象作为单个页发送到打印后台处理程序。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9."/></apiVersion></asMetadata><asCustoms><keyword>printjob, printjob.addpage, print
+	 </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>如果未调用 <codeph>PrintJob.start()</codeph> 或用户取消了打印作业，则将引发异常
+	 
+	 
+	 </apiDesc><apiItemName>Error</apiItemName><apiOperationClassifier>Error</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>sprite</apiItemName><apiOperationClassifier>flash.display:Sprite</apiOperationClassifier><apiDesc>要打印的 Sprite 的实例名称。 
+	 
+	 
+	 </apiDesc></apiParam><apiParam><apiItemName>printArea</apiItemName><apiOperationClassifier>flash.geom:Rectangle</apiOperationClassifier><apiData>null</apiData><apiDesc> 指定要打印的区域的 Rectangle 对象。	 
+	 
+	 <p>矩形的宽度和高度以像素为单位。打印机使用磅来作为打印的度量单位。磅的实际大小是固定的（1/72 英寸），但是在屏幕上，像素的大小取决于特定屏幕的分辨率。因此，像素和磅之间的转换比率取决于打印机设置以及 sprite 是否经过缩放。一个 72 个像素宽的 sprite 在未经缩放的情况下打印输出将为一英寸宽，这时，一磅等于一个像素，且与屏幕分辨率无关。</p>
+	 <p>您可以使用以下换算公式将英寸或厘米转换为缇或磅（1 缇为 1/chmetcnvTCSC0NumberType1NegativeFalseHasSpaceTrueSourceValue1UnitNamecm20 磅）： 
+	 
+	 <ul>
+	   <li>chmetcnvTCSC0NumberType1NegativeFalseHasSpaceTrueSourceValue1UnitNamecm一磅 = 1/72 英寸 = 20 缇</li>
+	   <li>1 英寸 = chmetcnvTCSC0NumberType1NegativeFalseHasSpaceTrueSourceValue1UnitNamecm72 磅 = 1440 缇</li>
+	   <li>1 厘米 = 567 缇</li>
+	 </ul>
+	 </p>
+	 
+	 
+	 <p>如果省略了 <codeph>printArea</codeph> 参数或错误地传递了该参数，则将打印 <codeph>sprite</codeph> 的整个区域。</p>
+	 
+	 
+	 <p>如果您不希望指定 <codeph>printArea</codeph> 的值，而是希望指定 <codeph>options</codeph> 或 <codeph>frameNum</codeph> 的值，请为 <codeph>printArea</codeph> 传递 <codeph>null</codeph>。</p>
+	 
+	 </apiDesc></apiParam><apiParam><apiItemName>options</apiItemName><apiOperationClassifier>flash.printing:PrintJobOptions</apiOperationClassifier><apiData>null</apiData><apiDesc>一个可选参数，指定是作为矢量打印还是作为位图打印。默认值为 <codeph>null</codeph>，表示请求矢量打印。要将 <codeph>sprite</codeph> 作为位图打印，请将 PrintJobOptions 对象的 <codeph>printAsBitmap</codeph> 属性设置为 <codeph>true</codeph>。当确定是否将 <codeph>printAsBitmap</codeph> 设置为 <codeph>true</codeph> 时，请记住以下建议：
+	 
+	 <ul>
+	   <li>如果要打印的内容包括位图图像，则请将 <codeph>printAsBitmap</codeph> 设置为 <codeph>true</codeph>，以包括任何 Alpha 透明度和色彩效果。</li>
+	   <li>如果内容不包含位图图像，则请省略此参数，以便以较高品质的矢量格式打印内容。</li>
+	 </ul>
+	 
+	 <p>如果省略或错误传递了 <codeph>options</codeph>，则使用矢量打印。如果您不希望指定 <codeph>options</codeph> 的值，而是希望指定 <codeph>frameNumber</codeph> 的值，请为 <codeph>options</codeph> 传递 <codeph>null</codeph>。</p>
+	 
+	 <p><i>注意：</i>Adobe AIR 在 Mac OS 中不支持矢量打印。</p>
+	 
+	 </apiDesc></apiParam><apiParam><apiItemName>frameNum</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiData>0</apiData><apiDesc><ph product="flash">一个可选数字，用于指定要打印的帧；传递 <codeph>frameNum</codeph> 不会导致调用该帧上的 ActionScript。如果省略此参数，则打印 <codeph>sprite</codeph> 中的当前帧。</ph> <ph product="flex">一个可选数字，用于 Flash 创作环境中。在编写 Flex 应用程序时，应省略此参数或传递值 0。</ph>	 
+	 
+	 <p product="flash"><b>注意：</b>如果以前曾使用 <codeph>print()</codeph>、<codeph>printAsBitmap()</codeph>、<codeph>printAsBitmapNum()</codeph> 或 <codeph>printNum()</codeph> 从 Flash 进行打印，则可能在多个帧上使用了 <codeph>#p</codeph> 帧标签来指定要打印哪些页。要使用 <codeph>PrintJob.addPage()</codeph> 打印多个帧，必须对每个帧使用 <codeph>PrintJob.addPage()</codeph> 方法；<codeph>#p</codeph> 帧标签将被忽略。有关以编程方式执行此操作的方法，请参阅 “示例”部分。 </p>
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+     将指定的 Sprite 对象作为单个页发送到打印后台处理程序。在使用此方法之前，必须创建一个 PrintJob 对象，然后使用 <codeph>PrintJob.start()</codeph>。然后，在对打印作业调用一次或多次 <codeph>PrintJob.addPage()</codeph> 之后，使用 <codeph> PrintJob.send()</codeph> 将经过后台处理的页发送到打印机。也就是说，在创建一个 PrintJob 对象之后，要依次使用 <codeph>PrintJob.start()</codeph>、<codeph> PrintJob.addPage()</codeph> 和 <codeph>PrintJob.send()</codeph> 将打印作业发送到打印机。可以在执行对 <codeph>PrintJob.start()</codeph> 的单次调用之后多次使用 <codeph>PrintJob.addPage()</codeph>，以便一次打印多页。
+     
+     <p>如果 <codeph>PrintJob.addPage()</codeph> 导致 Flash Player 引发异常（例如，如果您尚未调用 <codeph>PrintJob.start() </codeph> 或者用户取消了打印作业），则对 <codeph>PrintJob.addPage()</codeph> 的任何后续调用都将失败。但是，如果此前对 <codeph>PrintJob.addPage()</codeph> 的调用成功，则最后的 <codeph>PrintJob.send()</codeph> 命令会将经后台成功处理的页发送到打印机。</p>
+     <p>如果打印作业用 15 秒以上的时间完成一次 <codeph>PrintJob.addPage()</codeph> 操作，则 Flash Player 将在下一次 <codeph>Print.addPage()</codeph> 调用时引发异常。</p>
+     <p>如果为 <codeph>printArea</codeph> 参数传递了值，则 <codeph>printArea</codeph> 对象的<codeph><i>x</i></codeph>和<codeph><i>y</i></codeph>坐标将映射到页上可打印区域的左上角（0,0 坐标）。可通过由 <codeph>PrintJob.start()</codeph> 设置的只读 <codeph>pageHeight</codeph> 和 <codeph>pageWidth</codeph> 属性描述可打印区域。因为打印输出与页上可打印区域的左上角对齐，所以如果 <codeph>printArea</codeph> 中定义的区域大于页上的可打印区域，则打印输出会在由 <codeph>printArea</codeph> 定义的区域的右边和/或底部被截断。<ph product="flash">如果没有为 <codeph>printArea</codeph> 传递值并且舞台大于可打印区域，则会发生同样类型的截断操作。</ph> <ph product="flex">如果尚未为 <codeph>printArea</codeph> 传递值并且屏幕大于可打印区域，则会发生同样类型的截断操作。</ph></p>
+	 
+	 <p>如果要在打印前对 Sprite 对象进行缩放，则可在调用此方法之前设置缩放属性（参见 <codeph>flash.display.DisplayObject.scaleX</codeph> 和 <codeph>flash.display.DisplayObject.scaleY</codeph>），并在打印之后将它们重新设置为原始值。Sprite 对象的缩放与 <codeph>printArea</codeph> 无关。也就是说，如果指定一个 50 x 50 像素的打印区域，则会打印 2500 像素。如果对 Sprite 对象进行缩放，则同样会打印 2500 像素，但是将按缩放后的大小打印 Sprite 对象。</p>
+	 
+	 <p>Flash Player 打印功能支持 PostScript 和非 PostScript 打印机。非 PostScript 打印机将矢量转换成位图。</p>
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.printing.xml#PrintJob/send()"><linktext>PrintJob.send()</linktext></link><link href="flash.printing.xml#PrintJob/start()"><linktext>PrintJob.start()</linktext></link><link href="flash.display.xml#DisplayObject"><linktext>DisplayObject 类</linktext></link></related-links></apiOperation><apiOperation id="flash.printing:PrintJob:send"><apiName>send</apiName><shortdesc>
+      在 PrintJob.start() 和 PrintJob.addPage() 成功之后，将经过后台处理的页发送到打印机。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9."/></apiVersion></asMetadata><asCustoms><keyword>printjob, printjob.send, print
+     </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+      在 <codeph>PrintJob.start()</codeph> 和 <codeph>PrintJob.addPage()</codeph> 成功之后，将经过后台处理的页发送到打印机。如果对 <codeph>PrintJob.start()</codeph> 的调用失败，或是 <codeph>PrintJob.addpage()</codeph> 引发异常，则对 <codeph>PrintJob.send()</codeph> 的调用将不会成功。因此，应检查 <codeph>PrintJob.start()</codeph> 以返回 <codeph>true</codeph>，并捕获所有 <codeph>PrintJob.addpage()</codeph> 异常，然后再调用 <codeph>PrintJob.send()</codeph>。例如：
+     <pre>
+     var my_pj:PrintJob = new PrintJob();
+     if (my_pj.start()) {
+       try {
+         my_pj.addPage([params]);
+       }
+       catch(e:Error) {
+          // handle error 
+       }
+     
+       my_pj.send();
+     }
+     </pre>
+     
+     </apiDesc></apiOperationDetail><related-links><link href="flash.printing.xml#PrintJob/addPage()"><linktext>PrintJob.addPage()</linktext></link><link href="flash.printing.xml#PrintJob/start()"><linktext>PrintJob.start()</linktext></link></related-links></apiOperation><apiOperation id="flash.printing:PrintJob:start"><apiName>start</apiName><shortdesc>
+     显示操作系统的“打印”对话框，开始后台处理，并设置 PrintJob 只读属性值。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9."/><apiPlatform description="" name="Flash" version="9."/></apiVersion></asMetadata><asCustoms><keyword>printjob, printjob.start, print
+     </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>如果出现“打印”对话框时用户单击“确定”，则返回 <codeph>true</codeph>；如果用户单击“取消”或出现错误，则返回 <codeph>false</codeph>。
+     
+     </apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+     显示操作系统的“打印”对话框，开始后台处理，并设置 PrintJob 只读属性值。通过“打印”对话框，用户可更改打印设置。当 <codeph>PrintJob.start()</codeph> 方法成功返回时（用户在“打印”对话框中单击“确定”），会填充下列只读属性，它们代表用户的当前打印设置：
+     <p> 
+     <adobetable class="innertable"> 
+     
+     
+     
+     
+     
+     <tgroup cols="4"><thead><row><entry>属性</entry><entry>类型</entry><entry>单位</entry><entry>注释</entry></row></thead><tbody><row><entry><codeph>PrintJob.paperHeight</codeph></entry>  <entry>Number</entry> <entry>磅</entry> <entry>纸张整体高度。</entry></row><row><entry><codeph>PrintJob.paperWidth</codeph></entry>  <entry>Number</entry> <entry>磅</entry> <entry>纸张整体宽度。</entry></row><row><entry><codeph>PrintJob.pageHeight</codeph></entry>  <entry>Number</entry> <entry>磅</entry> <entry>页上实际可打印区域的高度；忽略用户设置的任何边距。</entry></row><row><entry><codeph>PrintJob.pageWidth</codeph></entry>  <entry>Number</entry> <entry>磅</entry> <entry>页上实际可打印区域的宽度；忽略用户设置的任何边距。</entry></row><row><entry><codeph>PrintJob.orientation</codeph></entry>  <entry>String</entry> <entry/> <entry><codeph>"portrait"</codeph> (<codeph>flash.printing.PrintJobOrientation.PORTRAIT</codeph>) 或 <codeph>"landscape"</codeph> (<codeph>flash.printing.PrintJobOrientation.LANDSCAPE</codeph>)。</entry></row></tbody></tgroup></adobetable></p>
+     <p><b>注意：</b>如果用户取消“打印”对话框，则不会填充属性。</p>
+     <p>当用户在“打印”对话框中单击“确定”之后，播放器开始在后台将打印作业处理到操作系统。因为操作系统随后开始向用户显示有关打印过程的信息，所以应尽快调用 <codeph>PrintJob.addPage()</codeph> 和 <codeph>PrintJob.send()</codeph> 调用，以将页发送到后台处理程序。您可以使用此方法的只读 height、width 和 orientation 属性进行填充以设置打印输出格式。</p>
+     <p>进行测试，以查看此方法是否返回 <codeph>true</codeph>（当用户在操作系统的“打印”对话框中单击“确定”时），这应在对 <codeph>PrintJob.addPage()</codeph> 和 <codeph>PrintJob.send()</codeph> 执行任何后续调用之前进行：</p>
+     <pre>
+     var my_pj:PrintJob = new PrintJob();
+        if(my_pj.start()) {
+          // addPage() and send() statements here
+        }
+     </pre>
+     <p>对给定的打印作业实例而言，如果以下任何一个间隔的持续时间超过 15 秒，则对 <codeph>PrintJob.start()</codeph> 的下一次调用将返回 <codeph>false</codeph>：</p>
+     <ul>
+     <li><codeph>PrintJob.start()</codeph> 和第一个 <codeph>PrintJob.addPage()</codeph></li>
+     <li>一个 <codeph>PrintJob.addPage()</codeph> 和下一个 <codeph>PrintJob.addPage()</codeph></li>
+     <li>最后的 <codeph>PrintJob.addPage()</codeph> 和 <codeph>PrintJob.send()</codeph></li>
+     </ul>
+     </apiDesc></apiOperationDetail><related-links><link href="flash.printing.xml#PrintJob/addPage()"><linktext>PrintJob.addPage()</linktext></link><link href="flash.printing.xml#PrintJob/send()"><linktext>PrintJob.send()</linktext></link></related-links></apiOperation><apiValue id="flash.printing:PrintJob:orientation:get"><apiName>orientation</apiName><shortdesc>
+    图像的打印方向。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9."/></apiVersion></asMetadata><asCustoms><keyword>printjob, printjob.orientation, orientation 
+    </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+    图像的打印方向。此属性是 PrintJobOrientation 类中的一个值。仅当调用 <codeph>PrintJob.start()</codeph> 方法后，此属性才是可用的。
+     
+     </apiDesc></apiValueDetail><related-links><link href="flash.printing.xml#PrintJobOrientation"><linktext>PrintJobOrientation 类</linktext></link></related-links></apiValue><apiValue id="flash.printing:PrintJob:pageHeight:get"><apiName>pageHeight</apiName><shortdesc>
+    页面上实际可打印区域的高度（以磅为单位）。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9."/></apiVersion></asMetadata><asCustoms><keyword>printjob, printjob.pageHeight, pageHeight 
+    </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+    页面上实际可打印区域的高度（以磅为单位）。忽略用户设置的任何边距。仅当调用 <codeph>PrintJob.start()</codeph> 方法后，此属性才是可用的。
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.printing:PrintJob:pageWidth:get"><apiName>pageWidth</apiName><shortdesc>
+    页面上实际可打印区域的宽度（以磅为单位）。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9."/></apiVersion></asMetadata><asCustoms><keyword>printjob, printjob.pageWidth, pageWidth 
+    </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+    页面上实际可打印区域的宽度（以磅为单位）。忽略用户设置的任何边距。仅当调用 <codeph>PrintJob.start()</codeph> 方法后，此属性才是可用的。
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.printing:PrintJob:paperHeight:get"><apiName>paperHeight</apiName><shortdesc>
+    纸张总高度（以磅为单位）。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9."/></apiVersion></asMetadata><asCustoms><keyword>printjob, printjob.paperHeight, paperHeight 
+    </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+    纸张总高度（以磅为单位）。仅当调用 <codeph>PrintJob.start()</codeph> 方法后，此属性才是可用的。
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.printing:PrintJob:paperWidth:get"><apiName>paperWidth</apiName><shortdesc>
+    纸张总宽度（以磅为单位）。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9."/></apiVersion></asMetadata><asCustoms><keyword>printjob, printjob.paperWidth, paperWidth 
+    </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+    纸张总宽度（以磅为单位）。仅当调用 <codeph>PrintJob.start()</codeph> 方法后，此属性才是可用的。
+     
+     </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.printing:PrintJobOrientation"><apiName>PrintJobOrientation</apiName><shortdesc>
+该类可为所打印页面的图像位置提供 PrintJob.orientation 属性所使用的值。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+该类可为所打印页面的图像位置提供 <codeph>PrintJob.orientation</codeph> 属性所使用的值。
+</apiDesc></apiClassifierDetail><related-links><link href="flash.printing.xml#PrintJob/orientation"><linktext>PrintJob.orientation</linktext></link></related-links><apiValue id="flash.printing:PrintJobOrientation:LANDSCAPE"><apiName>LANDSCAPE</apiName><shortdesc>
+	横向（水平）的图像打印方向。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>printjob.landscape, landscape
+	</keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>landscape</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	横向（水平）的图像打印方向。此常数用于 <codeph>PrintJob.orientation</codeph> 属性。使用语法 <codeph>PrintJobOrientation.LANDSCAPE</codeph>。
+	
+	</apiDesc></apiValueDetail><related-links><link href="flash.printing.xml#PrintJob/orientation"><linktext>PrintJob.orientation</linktext></link><link href="flash.printing.xml#PrintJobOrientation/PORTRAIT"><linktext>PORTRAIT</linktext></link></related-links></apiValue><apiValue id="flash.printing:PrintJobOrientation:PORTRAIT"><apiName>PORTRAIT</apiName><shortdesc>
+	纵向（垂直）的图像打印方向。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>printjob.portrait, portrait
+	</keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>portrait</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	纵向（垂直）的图像打印方向。此常数用于 <codeph>PrintJob.orientation</codeph> 属性。使用语法 <codeph>PrintJobOrientation.PORTRAIT</codeph>。
+	
+	</apiDesc></apiValueDetail><related-links><link href="flash.printing.xml#PrintJob/orientation"><linktext>PrintJob.orientation</linktext></link><link href="flash.printing.xml#PrintJobOrientation/LANDSCAPE"><linktext>LANDSCAPE</linktext></link></related-links></apiValue></apiClassifier></apiPackage>

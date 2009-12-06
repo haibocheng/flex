@@ -1,0 +1,676 @@
+<?xml version="1.0"?>
+<apiPackage id="flash.xml"><apiName>flash.xml</apiName><apiDetail/><apiClassifier id="flash.xml:XMLNode"><apiName>XMLNode</apiName><shortdesc>
+ La classe XMLNode représente l’objet XML hérité qui figurait dans ActionScript 2.0 et qui a été renommé dans ActionScript 3.0.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode, XMLNode object, built-in class
+ </keyword></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ La classe XMLNode représente l’objet XML hérité qui figurait dans ActionScript 2.0 et qui a été renommé dans ActionScript 3.0. Dans ActionScript 3.0, envisagez plutôt d’utiliser la nouvelle classe <xref href="../../XML.html">XML</xref> de niveau supérieur et les classes connexes qui prennent en charge E4X (ECMAScript pour XML). La classe XMLNode a été conservée à des fins de compatibilité ascendante.
+ 
+ </apiDesc><example conref="examples\XMLDocumentExample.as"> L’exemple suivant utilise les classes XMLDocument et XMLNode pour analyser et mettre en forme un document XML. Au lieu de charger un fichier XML externe, l’exemple utilise la classe XML de niveau supérieur pour créer puis analyser un document XML. 
+<codeblock>
+package {
+    import flash.display.Sprite;
+    import flash.xml.XMLDocument;
+    import flash.xml.XMLNode;
+    import flash.xml.XMLNodeType;
+
+    public class XMLDocumentExample extends Sprite {
+        public function XMLDocumentExample() {
+            var result:XMLDocument = new XMLDocument();
+            result.ignoreWhite = true;
+            result.parseXML(getXMLString());
+
+            var books:Array = parseBooks(result.firstChild);
+            trace("books: \n" + books);
+        }
+
+        private function parseBooks(node:XMLNode):Array {
+            var books:Array = new Array();
+
+            var kids:Array = node.childNodes;
+            for each(var item:XMLNode in kids) {
+                parseBook(item, books);
+            }
+
+            return books;
+        }
+
+        private function parseBook(node:XMLNode, books:Array):void {
+            var item:Book = new Book();
+            item.setPublisher(node.attributes.publisher);
+            item.setName(node.attributes.name);
+            books.push(item);
+        }
+
+        private function getXMLString():String {
+            var list:XML = &lt;books>
+                                &lt;book publisher="Addison-Wesley" name="Design Patterns" />
+                                &lt;book publisher="Addison-Wesley" name="The Pragmatic Programmer" />
+                                &lt;book publisher="Addison-Wesley" name="Test Driven Development" />
+                                &lt;book publisher="Addison-Wesley" name="Refactoring to Patterns" />
+                                &lt;book publisher="O'Reilly Media" name="The Cathedral &amp; the Bazaar" />
+                                &lt;book publisher="O'Reilly Media" name="Unit Test Frameworks" />
+                            &lt;/books>;
+            return list.toXMLString();
+        }
+    }
+
+}
+class Book {
+    private var publisher:String;
+    private var name:String;
+
+    public function setPublisher(publisher:String):void {
+        this.publisher = publisher;
+    }
+
+    public function setName(name:String):void {
+        this.name = name;
+    }
+
+    public function toString():String {
+        return "[Book name: " + name + " publisher: " + publisher + "]\n";
+    }
+}
+</codeblock></example></apiClassifierDetail><related-links><link href="#XML"><linktext>XML</linktext></link><link href="flash.xml.xml#XMLDocument"><linktext>flash.xml.XMLDocument</linktext></link></related-links><apiConstructor id="flash.xml:XMLNode:XMLNode"><apiName>XMLNode</apiName><shortdesc>
+ Crée un objet XMLNode.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>new XMLNode, new, constructor
+ </keyword></asCustoms></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>type</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiDesc>Type de nœud : 1 pour un élément XML ou 3 pour un nœud de texte.
+ </apiDesc></apiParam><apiParam><apiItemName>value</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Texte XML analysé pour créer l’objet XMLNode. 
+ 
+ 
+ 
+ 
+ 
+ </apiDesc></apiParam></apiConstructorDef><apiDesc>
+ Crée un objet XMLNode. Vous devez utiliser le constructeur pour créer un objet XMLNode avant d’appeler une des méthodes de la classe XMLNode.
+ <p><b>Remarque : </b>utilisez les méthodes <codeph>createElement()</codeph> et <codeph>createTextNode()</codeph> pour ajouter des éléments et des nœuds de texte à une arborescence de documents XML.</p>
+ 
+ </apiDesc></apiConstructorDetail><related-links><link href="flash.xml.xml#XMLDocument/createElement()"><linktext>XMLDocument.createElement()</linktext></link><link href="flash.xml.xml#XMLDocument/createTextNode()"><linktext>XMLDocument.createTextNode()</linktext></link></related-links></apiConstructor><apiOperation id="flash.xml:XMLNode:appendChild"><apiName>appendChild</apiName><shortdesc>
+	  
+	 Ajoute le nœud spécifié à la liste des enfants de l’objet XML.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.appendchild, appendchild
+	 </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>node</apiItemName><apiOperationClassifier>flash.xml:XMLNode</apiOperationClassifier><apiDesc>Objet XMLNode qui représente le nœud à déplacer de son emplacement actuel vers la liste d’enfants de l’objet <codeph>my_xml</codeph>.
+	 
+	 
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	  
+	 Ajoute le nœud spécifié à la liste des enfants de l’objet XML. Cette méthode agit directement sur le nœud référencé par le paramètre <codeph>childNode</codeph> ; elle n’ajoute pas une copie du nœud. Si le nœud à ajouter existe déjà dans une autre arborescence, il est supprimé de son emplacement actuel une fois ajouté au nouvel emplacement. Si le paramètre <codeph>childNode</codeph> fait référence à un nœud qui existe déjà dans une autre arborescence XML, le nœud enfant ajouté est placé dans la nouvelle structure après sa suppression de son nœud parent existant.
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.xml:XMLNode:cloneNode"><apiName>cloneNode</apiName><shortdesc>
+	  
+	 Construit et renvoie un nouveau nœud XML des mêmes type, nom, valeur et attributs que l’objet XML spécifié.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.clonenode, clodenode
+	 </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Objet XMLNode.
+	 
+	 
+	 
+	 </apiDesc><apiOperationClassifier>flash.xml:XMLNode</apiOperationClassifier></apiReturn><apiParam><apiItemName>deep</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiDesc>Valeur booléenne ; si elle est définie sur <codeph>true</codeph>, les enfants de l’objet XML spécifié sont clonés de façon récursive.
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	  
+	 Construit et renvoie un nouveau nœud XML des mêmes type, nom, valeur et attributs que l’objet XML spécifié. Si <codeph>deep</codeph> est défini sur <codeph>true</codeph>, tous les nœuds enfant sont clonés de manière récursive, ce qui crée une copie exacte de l’arborescence du document de l’objet original. 
+	 <p>Le clone du nœud qui est renvoyé n’est plus associé à l’arborescence de l’élément cloné. Par conséquent, <codeph>nextSibling</codeph>, <codeph>parentNode</codeph> et <codeph>previousSibling</codeph> ont tous une valeur <codeph>null</codeph>. Si le paramètre <codeph>deep</codeph> prend la valeur <codeph>false</codeph>, ou si le nœud <codeph>my_xml</codeph> n’a pas de nœuds enfant, <codeph>firstChild</codeph> et <codeph>lastChild</codeph> sont également null.</p>
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.xml:XMLNode:getNamespaceForPrefix"><apiName>getNamespaceForPrefix</apiName><shortdesc>
+	 Renvoie l’URI d’espace de nom qui est associé au préfixe spécifié pour le nœud.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><refpath>
+	 </refpath></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Espace de nom associé au préfixe spécifié. 
+	 
+	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn><apiParam><apiItemName>prefix</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Préfixe pour lequel la méthode renvoie l’espace de nom associé.
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Renvoie l’URI d’espace de nom qui est associé au préfixe spécifié pour le nœud. Pour fixer l’URI, <codeph>getPrefixForNamespace()</codeph> remonte la hiérarchie XML depuis le nœud si nécessaire, et renvoie l’URI de l’espace de nom de la première déclaration <codeph>xmlns</codeph> du <codeph>prefix</codeph> donné.
+	 
+	 <p>Si aucun espace de nom n’est défini pour ledit préfixe, la méthode renvoie <codeph>null</codeph>.</p>
+	 
+	 <p>Si vous spécifiez une chaîne vide (<codeph>""</codeph>) en tant que <codeph>prefix</codeph> et que ce nœud a un espace de nom par défaut (par exemple <codeph>xmlns="http://www.example.com/"</codeph>), la méthode renvoie cet URI d’espace de nom.
+	 </p>
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.xml.xml#XMLNode/getPrefixForNamespace()"><linktext>XMLNode.getPrefixForNamespace()</linktext></link><link href="flash.xml.xml#XMLNode/namespaceURI"><linktext>XMLNode.namespaceURI</linktext></link></related-links></apiOperation><apiOperation id="flash.xml:XMLNode:getPrefixForNamespace"><apiName>getPrefixForNamespace</apiName><shortdesc>
+	 Renvoie le préfixe qui est associé à l’URI d’espace de nom spécifié pour le nœud.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>
+	 </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Préfixe associé à l’espace de nom spécifié. 
+	 
+	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn><apiParam><apiItemName>ns</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>URI d’espace de nom pour lequel la méthode renvoie le préfixe associé.
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Renvoie le préfixe qui est associé à l’URI d’espace de nom spécifié pour le nœud. Pour déterminer le préfixe, <codeph>getPrefixForNamespace()</codeph> remonte la hiérarchie XML depuis le nœud si nécessaire, et renvoie le préfixe de la première déclaration <codeph>xmlns</codeph> avec un URI d’espace de nom correspondant à <codeph>ns</codeph>.
+	 
+	 <p>Si aucune affectation <codeph>xmlns</codeph> de l’URI considéré n’existe, la méthode renvoie <codeph>null</codeph>. S’il existe une affectation <codeph>xmlns</codeph> de l’URI considéré mais qu’aucun préfixe ne lui est associé, la méthode renvoie une chaîne vide (<codeph>""</codeph>).
+	 </p>
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.xml.xml#XMLNode/getNamespaceForPrefix()"><linktext>XMLNode.getNamespaceForPrefix()</linktext></link><link href="flash.xml.xml#XMLNode/namespaceURI"><linktext>XMLNode.namespaceURI</linktext></link></related-links></apiOperation><apiOperation id="flash.xml:XMLNode:hasChildNodes"><apiName>hasChildNodes</apiName><shortdesc>
+	 Indique si l’objet XMLNode spécifié possède des nœuds enfant.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.haschildnodes, haschildnodes, has child nodes
+	 </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Renvoie <codeph>true</codeph> si l’objet XMLNode spécifié possède des nœuds enfant, <codeph>false</codeph> dans le cas contraire.
+	 
+	 </apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 Indique si l’objet XMLNode spécifié possède des nœuds enfant. Cette propriété correspond à <codeph>true</codeph> si l’objet XMLNode spécifié possède des nœuds enfant, à <codeph>false</codeph> dans le cas contraire.
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.xml:XMLNode:insertBefore"><apiName>insertBefore</apiName><shortdesc>
+	 Insère un nouveau nœud enfant dans la liste d’enfants de l’objet XML, avant le nœud beforeNode.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.insertbefore, insertbefore, insert before
+	 </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>node</apiItemName><apiOperationClassifier>flash.xml:XMLNode</apiOperationClassifier><apiDesc>Objet XMLNode à insérer.
+	 </apiDesc></apiParam><apiParam><apiItemName>before</apiItemName><apiOperationClassifier>flash.xml:XMLNode</apiOperationClassifier><apiDesc>Objet XMLNode avant le point d’insertion de <codeph>childNode</codeph>.
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Insère un nouveau nœud enfant dans la liste d’enfants de l’objet XML, avant le nœud <codeph>beforeNode</codeph> Si le paramètre <codeph>beforeNode</codeph> n’est pas défini ou est réglé sur null, le nœud est ajouté à l’aide de la méthode <codeph>appendChild()</codeph>. Si <codeph>beforeNode</codeph> n’est pas un enfant de <codeph>my_xml</codeph>, l’insertion échoue.
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.xml.xml#XMLNode/cloneNode()"><linktext>XMLNode.cloneNode()</linktext></link></related-links></apiOperation><apiOperation id="flash.xml:XMLNode:removeNode"><apiName>removeNode</apiName><shortdesc>
+	 Supprime l’objet XML spécifié de son parent.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.removenode, removenode, remove node
+	 </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+	 Supprime l’objet XML spécifié de son parent. Supprime également tous les descendants du nœud.
+	 
+	 
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.xml:XMLNode:toString"><apiName>toString</apiName><shortdesc>
+	 Evalue l’objet XMLNode spécifié, crée une représentation sous forme de texte de la structure XML comprenant le nœud, les enfants et les attributs, et renvoie le résultat sous forme de chaîne.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.tostring, tostring
+	 </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Chaîne représentant l’objet XMLNode.
+	 
+	 
+	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 Evalue l’objet XMLNode spécifié, crée une représentation sous forme de texte de la structure XML comprenant le nœud, les enfants et les attributs, et renvoie le résultat sous forme de chaîne. 
+	 
+	 <p>Pour les objets XMLDocument de niveau supérieur (ceux créés avec le constructeur), la méthode <codeph>XMLDocument.toString()</codeph> produit la déclaration XML du document (enregistrée dans la propriété <codeph>XMLDocument.xmlDecl</codeph>), suivie de la déclaration <codeph>DOCTYPE</codeph> du document (enregistrée dans la propriété <codeph>XMLDocument.docTypeDecl</codeph>), suivie de la représentation sous forme de texte de tous les nœuds XML de l’objet. La déclaration XML n’est pas produite si la propriété <codeph>XMLDocument.xmlDecl</codeph> est <codeph>null</codeph>. La déclaration <codeph>DOCTYPE</codeph> n’est pas produite si la propriété <codeph>XMLDocument.docTypeDecl</codeph> est <codeph>null</codeph>.</p>
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.xml.xml#XMLDocument/docTypeDecl"><linktext>XMLDocument.docTypeDecl</linktext></link><link href="flash.xml.xml#XMLDocument/xmlDecl"><linktext>XMLDocument.xmlDecl</linktext></link></related-links></apiOperation><apiValue id="flash.xml:XMLNode:firstChild"><apiName>firstChild</apiName><shortdesc>
+	 Evalue l’objet XMLDocument spécifié et fait référence au premier enfant dans la liste des enfants du nœud parent.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.firstchild, first child
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>flash.xml:XMLNode</apiValueClassifier></apiValueDef><apiDesc>
+	 Evalue l’objet XMLDocument spécifié et fait référence au premier enfant dans la liste des enfants du nœud parent. Cette propriété est <codeph>null</codeph> si le nœud n’a pas d’enfants. Cette propriété est <codeph>undefined</codeph> si le nœud est un nœud de texte. Il s’agit d’une propriété en lecture seule qui ne peut pas être utilisée pour manipuler les nœuds enfant ; utilisez les méthodes <codeph>appendChild()</codeph>, <codeph>insertBefore()</codeph> et <codeph>removeNode()</codeph> pour manipuler les nœuds enfant.
+	 
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.xml.xml#XMLNode/appendChild()"><linktext>XMLNode.appendChild()</linktext></link><link href="flash.xml.xml#XMLNode/insertBefore()"><linktext>XMLNode.insertBefore()</linktext></link><link href="flash.xml.xml#XMLNode/removeNode()"><linktext>XMLNode.removeNode()</linktext></link></related-links></apiValue><apiValue id="flash.xml:XMLNode:lastChild"><apiName>lastChild</apiName><shortdesc>
+	 Valeur XMLNode qui fait référence au dernier enfant de la liste des enfants du nœud.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.lastchild, lastchild, last child
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>flash.xml:XMLNode</apiValueClassifier></apiValueDef><apiDesc>
+	 Valeur XMLNode qui fait référence au dernier enfant de la liste des enfants du nœud. La propriété <codeph>XMLNode.lastChild</codeph> est <codeph>null</codeph> si le nœud n’a pas d’enfants. Cette propriété ne peut pas être utilisée pour manipuler les nœuds enfant ; utilisez les méthodes <codeph>appendChild()</codeph>, <codeph>insertBefore()</codeph> et <codeph>removeNode()</codeph> pour manipuler les nœuds enfant.
+	 
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.xml.xml#XMLNode/appendChild()"><linktext>XMLNode.appendChild()</linktext></link><link href="flash.xml.xml#XMLNode/insertBefore()"><linktext>XMLNode.insertBefore()</linktext></link><link href="flash.xml.xml#XMLNode/removeNode()"><linktext>XMLNode.removeNode()</linktext></link></related-links></apiValue><apiValue id="flash.xml:XMLNode:nextSibling"><apiName>nextSibling</apiName><shortdesc>
+	 Valeur XMLNode qui fait référence au frère suivant de la liste des enfants du nœud parent.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.nextsibling, next sibling
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>flash.xml:XMLNode</apiValueClassifier></apiValueDef><apiDesc>
+	 Valeur XMLNode qui fait référence au frère suivant de la liste des enfants du nœud parent. La valeur de la propriété est <codeph>null</codeph> si le nœud n’est pas suivi par un nœud frère. Cette propriété ne peut pas être utilisée pour manipuler les nœuds enfant ; utilisez les méthodes <codeph>appendChild()</codeph>, <codeph>insertBefore()</codeph> et <codeph>removeNode()</codeph> pour manipuler les nœuds enfant.
+	 
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.xml.xml#XMLNode/firstChild"><linktext>XMLNode.firstChild</linktext></link><link href="flash.xml.xml#XMLNode/appendChild()"><linktext>XMLNode.appendChild()</linktext></link><link href="flash.xml.xml#XMLNode/insertBefore()"><linktext>XMLNode.insertBefore()</linktext></link><link href="flash.xml.xml#XMLNode/removeNode()"><linktext>XMLNode.removeNode()</linktext></link></related-links></apiValue><apiValue id="flash.xml:XMLNode:nodeName"><apiName>nodeName</apiName><shortdesc>
+	 Chaîne représentant le nom de nœud de l’objet XMLNode.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.nodename, node name
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 Chaîne représentant le nom de nœud de l’objet XMLNode. Si l’objet XMLNode est un élément XML (<codeph>nodeType == 1</codeph>), <codeph>nodeName</codeph> est le nom de la balise qui représente le nœud dans le fichier XML. Par exemple, <codeph>TITLE</codeph> est le <codeph>nodeName</codeph> d’une balise <codeph>TITLE</codeph> HTML. Si l’objet XMLNode est un nœud de texte (<codeph>nodeType == 3</codeph>), nodeName est <codeph>null</codeph>.
+	 
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.xml.xml#XMLNode/nodeType"><linktext>XMLNode.nodeType</linktext></link></related-links></apiValue><apiValue id="flash.xml:XMLNode:nodeType"><apiName>nodeType</apiName><shortdesc>
+	 Valeur de constante nodeType, à savoir XMLNodeType.ELEMENT_NODE pour un élément XML ou XMLNodeType.TEXT_NODE pour un nœud de texte.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XML.nodetype, node type
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>uint</apiValueClassifier></apiValueDef><apiDesc>
+	 Valeur de constante <codeph>nodeType</codeph>, à savoir <codeph>XMLNodeType.ELEMENT_NODE</codeph> pour un élément XML ou <codeph>XMLNodeType.TEXT_NODE</codeph> pour un nœud de texte. 
+	 <p><codeph>nodeType</codeph> est une valeur numérique définie d’après l’énumération NodeType spécifiée dans la recommandation DOM Level  1 du W3C : <xref href="http://www.w3.org/tr/1998/REC-DOM-Level-1-19981001/level-one-core.html" scope="external">http://www.w3.org/tr/1998/REC-DOM-Level-1-19981001/level-one-core.html</xref>. Le tableau suivant répertorie les valeurs :</p>
+	 <p><adobetable><row><entry>4</entry><entry>CDATA_SECTION_NODE</entry></row>
+	 
+	 
+	 
+	 
+	 <tgroup cols="2"><thead><row><entry align="left">Valeur de l’entier</entry><entry align="left">Constante définie</entry></row></thead><tbody><row><entry>1</entry><entry>ELEMENT_NODE</entry></row><row><entry>3</entry><entry>TEXT_NODE</entry></row><row><entry>5</entry><entry>ENTITY_REFERENCE_NODE</entry></row><row><entry>7</entry><entry>PROCESSING_INSTRUCTION_NODE</entry></row><row><entry>9</entry><entry>DOCUMENT_NODE</entry></row><row><entry>11</entry><entry>DOCUMENT_FRAGMENT_NODE</entry></row></tbody></tgroup></adobetable></p>
+	 <p>Dans Flash Player, la classe XMLNode intégrée prend uniquement en charge <codeph>XMLNodeType.ELEMENT_NODE</codeph> et <codeph>XMLNodeType.TEXT_NODE</codeph>.</p>
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.xml.xml#XMLNodeType/TEXT_NODE"><linktext>XMLNodeType.TEXT_NODE</linktext></link><link href="flash.xml.xml#XMLNodeType/ELEMENT_NODE"><linktext>XMLNodeType.ELEMENT_NODE</linktext></link></related-links></apiValue><apiValue id="flash.xml:XMLNode:nodeValue"><apiName>nodeValue</apiName><shortdesc>
+	 Valeur du nœud de l’objet XMLDocument.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.nodevalue, nodevalue, node value
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 Valeur du nœud de l’objet XMLDocument. Si l’objet XMLDocument est un nœud de texte, <codeph>nodeType</codeph> est 3 et <codeph>nodeValue</codeph> est le texte du nœud. Si l’objet XMLDocument est un élément XML (<codeph>nodeType</codeph> est 1), <codeph>nodeValue</codeph> est <codeph>null</codeph> et en lecture seule.
+	 
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.xml.xml#XMLNode/nodeType"><linktext>XMLNode.nodeType</linktext></link></related-links></apiValue><apiValue id="flash.xml:XMLNode:parentNode"><apiName>parentNode</apiName><shortdesc>
+	 Valeur XMLNode qui fait référence au nœud parent de l’objet XML spécifié ou renvoie null si le nœud n’a pas de parent.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.parentnode, parentnode, parent node
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>flash.xml:XMLNode</apiValueClassifier></apiValueDef><apiDesc>
+	 Valeur XMLNode qui fait référence au nœud parent de l’objet XML spécifié ou renvoie <codeph>null</codeph> si le nœud n’a pas de parent. Il s’agit d’une propriété en lecture seule qui ne peut pas être utilisée pour manipuler les nœuds enfant ; utilisez les méthodes <codeph>appendChild()</codeph>, <codeph>insertBefore()</codeph> et <codeph>removeNode()</codeph> pour manipuler les nœuds enfant.
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.xml.xml#XMLNode/appendChild()"><linktext>XMLNode.appendChild()</linktext></link><link href="flash.xml.xml#XMLNode/insertBefore()"><linktext>XMLNode.insertBefore()</linktext></link><link href="flash.xml.xml#XMLNode/removeNode()"><linktext>XMLNode.removeNode()</linktext></link></related-links></apiValue><apiValue id="flash.xml:XMLNode:previousSibling"><apiName>previousSibling</apiName><shortdesc>
+	 Valeur XMLNode qui fait référence au frère précédent de la liste des enfants du nœud parent.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.previousSibling, previousSibling
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>flash.xml:XMLNode</apiValueClassifier></apiValueDef><apiDesc>
+	 Valeur XMLNode qui fait référence au frère précédent de la liste des enfants du nœud parent. La valeur de la propriété est null si le nœud n’a pas de nœud frère précédent. Cette propriété ne peut pas être utilisée pour manipuler les nœuds enfant ; utilisez les méthodes <codeph>appendChild()</codeph>, <codeph>insertBefore()</codeph> et <codeph>removeNode()</codeph> pour manipuler les nœuds enfant.
+	 
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.xml.xml#XMLNode/lastChild"><linktext>XMLNode.lastChild</linktext></link><link href="flash.xml.xml#XMLNode/appendChild()"><linktext>XMLNode.appendChild()</linktext></link><link href="flash.xml.xml#XMLNode/insertBefore()"><linktext>XMLNode.insertBefore()</linktext></link><link href="flash.xml.xml#XMLNode/removeNode()"><linktext>XMLNode.removeNode()</linktext></link></related-links></apiValue><apiValue id="flash.xml:XMLNode:attributes:get"><apiName>attributes</apiName><shortdesc>
+	 Objet contenant tous les attributs de l’occurrence de XMLNode spécifiée.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.attributes, attributes
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Object</apiValueClassifier></apiValueDef><apiDesc>
+	 Objet contenant tous les attributs de l’occurrence de XMLNode spécifiée. L’objet XMLNode.attributes contient une variable pour chaque attribut de l’occurrence de XMLNode. Ces variables étant définies comme faisant partie de l’objet, elles sont généralement appelées propriétés de l’objet. La valeur de chaque attribut est enregistrée dans la propriété correspondante comme une chaîne. Par exemple, si un attribut est appelé <codeph>color</codeph>, vous récupérerez la valeur de l’attribut en spécifiant <codeph>color</codeph> comme nom de la propriété, tel qu’indiqué par le code suivant : 
+	 <pre>
+	 var myColor:String = doc.firstChild.attributes.color
+	 </pre>
+	 
+	 
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.xml:XMLNode:childNodes:get"><apiName>childNodes</apiName><shortdesc>
+	 Tableau des enfants de l’objet XMLNode spécifié.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.childnodes, childnodes
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Array</apiValueClassifier></apiValueDef><apiDesc>
+	 Tableau des enfants de l’objet XMLNode spécifié. Chaque élément du tableau est une référence à un objet XMLNode qui représente un nœud enfant. Cette propriété est en lecture seule et ne permet pas de manipuler les nœuds enfant. Utilisez les méthodes <codeph>appendChild()</codeph>, <codeph>insertBefore()</codeph> et <codeph>removeNode()</codeph> pour manipuler les nœuds enfant. 
+	 
+	 <p>Cette propriété n’est pas définie pour les nœuds de texte (<codeph>nodeType == 3</codeph>).</p>
+	 
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.xml.xml#XMLNode/nodeType"><linktext>XMLNode.nodeType</linktext></link><link href="flash.xml.xml#XMLNode/appendChild()"><linktext>XMLNode.appendChild()</linktext></link><link href="flash.xml.xml#XMLNode/insertBefore()"><linktext>XMLNode.insertBefore()</linktext></link><link href="flash.xml.xml#XMLNode/removeNode()"><linktext>XMLNode.removeNode()</linktext></link></related-links></apiValue><apiValue id="flash.xml:XMLNode:localName:get"><apiName>localName</apiName><shortdesc>
+	 Partie locale du nom du nœud XML.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 Partie locale du nom du nœud XML. Il s’agit du nom d’élément sans le préfixe d’espace de nom. Par exemple, le nœud <codeph>&lt;contact:mailbox/>bob@example.com&lt;/contact:mailbox></codeph> utilise le nom local « mailbox » et le préfixe « contact », ce qui forme « contact.mailbox ».
+	 
+	 <p>Vous pouvez accéder au préfixe d’espace de nom par l’intermédiaire de la propriété <codeph>prefix</codeph> de l’objet nœud XML. La propriété <codeph>nodeName</codeph> renvoie le nom complet (ce qui inclut le préfixe et le nom local).</p>
+	 
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.xml:XMLNode:namespaceURI:get"><apiName>namespaceURI</apiName><shortdesc>
+	 Si le nœud XML a un préfixe, namespaceURI est la valeur de la déclaration xmlns de ce préfixe (URI) appelé en général l’URI d’espace de nom.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier><apiTipTexts><apiTipText>URI de l’espace de nom correspondant au préfixe du nœud XLM. 
+	 
+	 </apiTipText></apiTipTexts></apiValueDef><apiDesc>
+	 Si le nœud XML a un préfixe, <codeph>namespaceURI</codeph> est la valeur de la déclaration <codeph>xmlns</codeph> de ce préfixe (URI) appelé en général l’URI d’espace de nom. La déclaration <codeph>xmlns</codeph> se trouve dans le nœud actuel ou dans un nœud plus élevé dans la hiérarchie XML. 
+	 
+	 <p>Si le nœud XML n’a pas de préfixe, la valeur de la propriété <codeph>namespaceURI</codeph> dépend de l’existence d’un espace de nom défini par défaut (par exemple <codeph>xmlns="http://www.example.com/"</codeph>). Si un espace de nom par défaut existe, la valeur de la propriété <codeph>namespaceURI</codeph> est celle de l’espace de nom par défaut. Si aucun espace de nom par défaut n’existe, la propriété <codeph>namespaceURI</codeph> de ce nœud est une chaîne vide (<codeph>""</codeph>).</p>
+	 
+	 <p>Vous pouvez utiliser la méthode <codeph>getNamespaceForPrefix()</codeph> pour identifier l’espace de nom associé à un préfixe spécifique. La propriété <codeph>namespaceURI</codeph> renvoie le préfixe associé au nom du nœud.</p>
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.xml.xml#XMLNode/getNamespaceForPrefix()"><linktext>getNamespaceForPrefix()</linktext></link><link href="flash.xml.xml#XMLNode/getPrefixForNamespace()"><linktext>getPrefixForNamespace()</linktext></link></related-links></apiValue><apiValue id="flash.xml:XMLNode:prefix:get"><apiName>prefix</apiName><shortdesc>
+	 Préfixe du nom du nœud XML.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 Préfixe du nom du nœud XML. Par exemple, le préfixe « contact » du nœud <codeph>&lt;contact:mailbox/>bob@example.com&lt;/contact:mailbox></codeph> et le nom local « mailbox », ce qui forme « contact.mailbox ».
+	 
+	 <p>La propriété <codeph>nodeName</codeph> d’un objet nœud XML renvoie le nom complet (ce qui inclut le préfixe et le nom local). Vous pouvez accéder à la partie locale du nom de l’élément par l’intermédiaire de la propriété <codeph>localName</codeph>. </p>
+	 
+	 
+	 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.xml:XMLNodeType"><apiName>XMLNodeType</apiName><shortdesc>
+ La classe XMLNodeType contient des constantes utilisées conjointement avec XMLNode.nodeType.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ La classe XMLNodeType contient des constantes utilisées conjointement avec <codeph>XMLNode.nodeType</codeph>. Les valeurs sont définies par l’énumération NodeType dans la recommandation DOM Level  1 du W3C DOM : <xref href="http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html" scope="external">http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html</xref>
+ 
+ </apiDesc></apiClassifierDetail><related-links><link href="flash.xml.xml#XMLNode/nodeType"><linktext>XMLNode.nodeType</linktext></link></related-links><apiValue id="flash.xml:XMLNodeType:ELEMENT_NODE"><apiName>ELEMENT_NODE</apiName><shortdesc>
+ 	 Indique que le nœud est un élément.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>1</apiData><apiValueClassifier>uint</apiValueClassifier></apiValueDef><apiDesc>
+ 	 Indique que le nœud est un élément. Cette constante est utilisée avec <codeph>XMLNode.nodeType</codeph>. La valeur est définie d’après l’énumération NodeType spécifiée dans la recommandation DOM Level  1 du W3C : <xref href="http://www.w3.org/tr/1998/REC-DOM-Level-1-19981001/level-one-core.html" scope="external"> http://www.w3.org/tr/1998/REC-DOM-Level-1-19981001/level-one-core.html</xref>.
+ 	 
+ 	 </apiDesc></apiValueDetail><related-links><link href="flash.xml.xml#XMLNode/nodeType"><linktext>XMLNode.nodeType</linktext></link></related-links></apiValue><apiValue id="flash.xml:XMLNodeType:TEXT_NODE"><apiName>TEXT_NODE</apiName><shortdesc>
+	 Indique que le nœud est un nœud de texte.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>3</apiData><apiValueClassifier>uint</apiValueClassifier></apiValueDef><apiDesc>
+	 Indique que le nœud est un nœud de texte. Cette constante est utilisée avec <codeph>XMLNode.nodeType</codeph>. La valeur est définie d’après l’énumération NodeType spécifiée dans la recommandation DOM Level  1 du W3C : <xref href="http://www.w3.org/tr/1998/REC-DOM-Level-1-19981001/level-one-core.html" scope="external"> http://www.w3.org/tr/1998/REC-DOM-Level-1-19981001/level-one-core.html</xref>.
+ 	 
+ 	 </apiDesc></apiValueDetail><related-links><link href="flash.xml.xml#XMLNode/nodeType"><linktext>XMLNode.nodeType</linktext></link></related-links></apiValue></apiClassifier><apiClassifier id="flash.xml:XMLDocument"><apiName>XMLDocument</apiName><shortdesc>
+ La classe XMLDocument représente l’objet XML hérité qui figurait dans ActionScript 2.0.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.xml:XMLNode</apiBaseClassifier></apiClassifierDef><apiDesc>
+ La classe XMLDocument représente l’objet XML hérité qui figurait dans ActionScript 2.0. Celui-ci a été renommé en XMLDocument dans ActionScript 3.0 pour éviter des conflits de noms avec la nouvelle classe XML. Il est recommandé, dans ActionScript 3.0, d’utiliser la nouvelle classe <xref href="../../XML.html">XML</xref> et les classes connexes qui prennent en charge E4X (ECMAScript pour XML).
+ 
+ <p>La classe XMLDocument, de même que XMLNode et XMLNodeType, a été conservée à des fins de compatibilité ascendante. La fonctionnalité permettant de charger des documents XML fait maintenant partie de la classe URLLoader.</p>
+ 
+ </apiDesc><example conref="examples\XMLDocumentExample.as"> L’exemple suivant utilise les classes XMLDocument et XMLNode pour analyser et mettre en forme un document XML. Au lieu de charger un fichier XML externe, l’exemple utilise la classe XML de niveau supérieur pour créer puis analyser un document XML. 
+<codeblock>
+package {
+    import flash.display.Sprite;
+    import flash.xml.XMLDocument;
+    import flash.xml.XMLNode;
+    import flash.xml.XMLNodeType;
+
+    public class XMLDocumentExample extends Sprite {
+        public function XMLDocumentExample() {
+            var result:XMLDocument = new XMLDocument();
+            result.ignoreWhite = true;
+            result.parseXML(getXMLString());
+
+            var books:Array = parseBooks(result.firstChild);
+            trace("books: \n" + books);
+        }
+
+        private function parseBooks(node:XMLNode):Array {
+            var books:Array = new Array();
+
+            var kids:Array = node.childNodes;
+            for each(var item:XMLNode in kids) {
+                parseBook(item, books);
+            }
+
+            return books;
+        }
+
+        private function parseBook(node:XMLNode, books:Array):void {
+            var item:Book = new Book();
+            item.setPublisher(node.attributes.publisher);
+            item.setName(node.attributes.name);
+            books.push(item);
+        }
+
+        private function getXMLString():String {
+            var list:XML = &lt;books>
+                                &lt;book publisher="Addison-Wesley" name="Design Patterns" />
+                                &lt;book publisher="Addison-Wesley" name="The Pragmatic Programmer" />
+                                &lt;book publisher="Addison-Wesley" name="Test Driven Development" />
+                                &lt;book publisher="Addison-Wesley" name="Refactoring to Patterns" />
+                                &lt;book publisher="O'Reilly Media" name="The Cathedral &amp; the Bazaar" />
+                                &lt;book publisher="O'Reilly Media" name="Unit Test Frameworks" />
+                            &lt;/books>;
+            return list.toXMLString();
+        }
+    }
+
+}
+class Book {
+    private var publisher:String;
+    private var name:String;
+
+    public function setPublisher(publisher:String):void {
+        this.publisher = publisher;
+    }
+
+    public function setName(name:String):void {
+        this.name = name;
+    }
+
+    public function toString():String {
+        return "[Book name: " + name + " publisher: " + publisher + "]\n";
+    }
+}
+</codeblock></example></apiClassifierDetail><related-links><link href="flash.net.xml#URLLoader"><linktext>flash.net.URLLoader</linktext></link><link href="#XML"><linktext>Classe XML</linktext></link></related-links><apiConstructor id="flash.xml:XMLDocument:XMLDocument"><apiName>XMLDocument</apiName><shortdesc>
+	 Crée un objet XMLDocument.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><maelexample>The following example creates a new, empty XMLDocument object:
+	 <listing>
+	 var my_xml:XML = new XML();
+	 </listing>
+	 <p>The following example creates an XML object by parsing the XML text specified in the <code>source</code> parameter, and populates the newly created XML object with the resulting XML document tree:</p>
+	 <listing>
+	 var other_xml:XML = new XML("&lt;state name=\"California\">&lt;city>San Francisco&lt;/city>&lt;/state>");
+	 </listing>
+	 
+	 </maelexample></asCustoms></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>source</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData>null</apiData><apiDesc>Texte XML analysé pour créer l’objet XMLDocument. 
+	 
+	 </apiDesc></apiParam></apiConstructorDef><apiDesc>
+	 Crée un objet XMLDocument. Vous devez utiliser le constructeur pour créer un objet XMLDocument avant d’appeler les méthodes de la classe XMLDocument.
+	 <p><b>Remarque : </b>utilisez les méthodes <codeph>createElement()</codeph> et <codeph>createTextNode()</codeph> pour ajouter des éléments et des nœuds de texte à une arborescence de documents XML.</p>
+	 
+	 </apiDesc></apiConstructorDetail><related-links><link href="flash.xml.xml#XMLDocument/createElement()"><linktext>XMLDocument.createElement()</linktext></link><link href="flash.xml.xml#XMLDocument/createTextNode()"><linktext>XMLDocument.createTextNode()</linktext></link></related-links></apiConstructor><apiOperation id="flash.xml:XMLDocument:createElement"><apiName>createElement</apiName><shortdesc>
+	 Crée un objet XMLNode doté du nom spécifié dans le paramètre.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><maelexample>The following example creates three XML nodes using the <code>createElement()</code> method:
+	 <listing>
+	 // create an XML document
+	 var doc:XML = new XML();
+	 
+	 // create three XML nodes using createElement()
+	 var element1:XMLNode = doc.createElement("element1");
+	 var element2:XMLNode = doc.createElement("element2");
+	 var element3:XMLNode = doc.createElement("element3");
+	 
+	 // place the new nodes into the XML tree
+	 doc.appendChild(element1);
+	 element1.appendChild(element2);
+	 element1.appendChild(element3);
+	 
+	 trace(doc);
+	 // output: &lt;element1>&lt;element2 />&lt;element3 />&lt;/element1>
+	 </listing>
+	 
+	 </maelexample></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Objet XMLNode.
+	 
+	 </apiDesc><apiOperationClassifier>flash.xml:XMLNode</apiOperationClassifier></apiReturn><apiParam><apiItemName>name</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Nom de balise de l’élément XMLDocument en cours de création.
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Crée un objet XMLNode doté du nom spécifié dans le paramètre. Le nouveau nœud n’a initialement pas de parent, pas d’enfants et pas de frères. La méthode renvoie une référence au nouvel objet XMLNode créé qui représente l’élément. Cette méthode et la méthode <codeph>XMLDocument.createTextNode()</codeph> représentent les méthodes constructeur utilisées lors de la création de nœuds d’un objet XMLDocument.
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.xml.xml#XMLDocument/createTextNode()"><linktext>XMLDocument.createTextNode()</linktext></link></related-links></apiOperation><apiOperation id="flash.xml:XMLDocument:createTextNode"><apiName>createTextNode</apiName><shortdesc>
+	 Crée un nœud de texte XML en utilisant le texte spécifié.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><maelexample>The following example creates two XML text nodes using the <code>createTextNode()</code> method, and places them into existing XML nodes:
+	 <listing>
+	 // create an XML document
+	 var doc:XML = new XML();
+	 
+	 // create three XML nodes using createElement()
+	 var element1:XMLNode = doc.createElement("element1");
+	 var element2:XMLNode = doc.createElement("element2");
+	 var element3:XMLNode = doc.createElement("element3");
+	 
+	 // place the new nodes into the XML tree
+	 doc.appendChild(element1);
+	 element1.appendChild(element2);
+	 element1.appendChild(element3);
+	 
+	 // create two XML text nodes using createTextNode()
+	 var textNode1:XMLNode = doc.createTextNode("textNode1 String value");
+	 var textNode2:XMLNode = doc.createTextNode("textNode2 String value");
+	 
+	 // place the new nodes into the XML tree
+	 element2.appendChild(textNode1);
+	 element3.appendChild(textNode2);
+	 
+	 trace(doc);
+	 // output (with line breaks added between tags):
+	 // &lt;element1>
+	 //    &lt;element2>textNode1 String value&lt;/element2>
+	 //    &lt;element3>textNode2 String value&lt;/element3>
+	 // &lt;/element1>
+	 </listing>
+	 
+	 
+	 </maelexample></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Objet XMLNode.
+	 
+	 </apiDesc><apiOperationClassifier>flash.xml:XMLNode</apiOperationClassifier></apiReturn><apiParam><apiItemName>text</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Texte utilisé pour créer le nœud de texte.
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Crée un nœud de texte XML en utilisant le texte spécifié. Le nouveau nœud n’a initialement pas de parent et les nœuds de texte ne peuvent pas avoir d’enfants ni de frères. Cette méthode renvoie une référence à l’objet XMLDocument qui représente le nouveau nœud de texte. Cette méthode et la méthode <codeph>XMLDocument.createElement()</codeph> représentent les méthodes constructeur utilisées lors de la création de nœuds d’un objet XMLDocument.
+	 
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.xml.xml#XMLDocument/createElement()"><linktext>XMLDocument.createElement()</linktext></link></related-links></apiOperation><apiOperation id="flash.xml:XMLDocument:parseXML"><apiName>parseXML</apiName><shortdesc>
+	 Analyse le texte XML spécifié dans le paramètre value et renseigne l’objet XMLDocument spécifié avec l’arborescence XML obtenue.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><maelexample>The following example creates and parses an XML packet:
+	 <listing>
+	 var xml_str:String = "&lt;state name=\"California\">
+	 &lt;city>San Francisco&lt;/city>&lt;/state>"
+	 
+	 // defining the XML source within the XML constructor:
+	 var my1_xml:XML = new XML(xml_str);
+	 trace(my1_xml.firstChild.attributes.name); // output: California
+	 
+	 // defining the XML source using the XML.parseXML method:
+	 var my2_xml:XML = new XML();
+	 my2_xml.parseXML(xml_str);
+	 trace(my2_xml.firstChild.attributes.name); // output: California
+	 </listing>
+	 
+	 </maelexample></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>source</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Texte XML à analyser et transmettre à l’objet XMLDocument spécifié.
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Analyse le texte XML spécifié dans le paramètre <codeph>value</codeph> et renseigne l’objet XMLDocument spécifié avec l’arborescence XML obtenue. Toutes les arborescences existantes dans l’objet XMLDocument sont supprimées.
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.xml:XMLDocument:toString"><apiName>toString</apiName><shortdesc>
+	 Renvoie l’objet XML sous forme de chaîne.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiDesc>Représentation de l’objet XML sous forme de chaîne.
+ 	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 Renvoie l’objet XML sous forme de chaîne.
+	 
+ 	 </apiDesc></apiOperationDetail></apiOperation><apiValue id="flash.xml:XMLDocument:docTypeDecl"><apiName>docTypeDecl</apiName><shortdesc>
+	 Spécifie des informations sur la déclaration DOCTYPE du document XML.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><maelexample>The following example uses the <code>XML.docTypeDecl</code> property to set the <code>DOCTYPE</code> declaration for an XML object:
+	 <listing>
+	 <code><em>my_xml</em></code>.<code>docTypeDecl = "&lt;!DOCTYPE greeting SYSTEM \"hello.dtd\">";</code>
+	 </listing>
+	 </maelexample></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>null</apiData><apiValueClassifier>Object</apiValueClassifier></apiValueDef><apiDesc>
+	 Spécifie des informations sur la déclaration <codeph>DOCTYPE</codeph> du document XML. Après analyse du texte XML dans un objet XMLDocument, la propriété <codeph>XMLDocument.docTypeDecl</codeph> de l’objet XMLDocument est définie sur le texte de la déclaration <codeph>DOCTYPE</codeph> du document XML (par exemple <codeph>&lt;!DOCTYPE</codeph> <codeph>greeting SYSTEM "hello.dtd"></codeph>). Cette définition s’effectue à l’aide d’une représentation sous forme de chaîne de la déclaration <codeph>DOCTYPE</codeph>, pas d’un objet XMLNode.
+	 <p>L’ancien programme d’analyse XML ActionScript n’est pas un programme d’analyse de validation. La déclaration <codeph>DOCTYPE</codeph> est lue par le programme d’analyse et enregistrée dans la propriété <codeph>XMLDocument.docTypeDecl</codeph>, mais aucune validation DTD n’est effectuée.</p>
+	 <p>En cas d’absence de déclaration <codeph>DOCTYPE</codeph> au cours d’une opération d’analyse, la propriété <codeph>XMLDocument.docTypeDecl</codeph> est définie sur <codeph>null</codeph>. La méthode <codeph>XML.toString()</codeph> produit le contenu de <codeph>XML.docTypeDecl</codeph> immédiatement après la déclaration XML enregistrée dans <codeph>XML.xmlDecl</codeph>, et avant tout autre texte dans l’objet XML. Si <codeph>XMLDocument.docTypeDecl</codeph> est null, aucune déclaration <codeph>DOCTYPE</codeph> n’est produite.</p>
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.xml:XMLDocument:idMap"><apiName>idMap</apiName><shortdesc>
+	 Objet contenant les nœuds du code XML auxquels un attribut d’ID a été attribué.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><maelexample>Create a text file named "idMapTest.xml" containing the following text:
+	 
+	 <listing>&lt;?xml version="1.0"?> 
+	 &lt;doc xml:base="http://example.org/today/" xmlns:xlink="http://www.w3.org/1999/xlink"> 
+	   &lt;head> 
+	     &lt;title>Virtual Library&lt;/title> 
+	   &lt;/head> 
+	   &lt;body> 
+	     &lt;paragraph id="linkP1">See &lt;link xlink:type="simple" xlink:href="new.xml">what's 
+	       new&lt;/link>!&lt;/paragraph> 
+	     &lt;paragraph>Check out the hot picks of the day!&lt;/paragraph> 
+	     &lt;olist xml:base="/hotpicks/"> 
+	       &lt;item> 
+	         &lt;link id="foo" xlink:type="simple" xlink:href="pick1.xml">Hot Pick #1&lt;/link> 
+	       &lt;/item> 
+	       &lt;item> 
+	         &lt;link id="bar" xlink:type="simple" xlink:href="pick2.xml">Hot Pick #2&lt;/link> 
+	       &lt;/item> 
+	       &lt;item> 
+	         &lt;link xlink:type="simple" xlink:href="pick3.xml">Hot Pick #3&lt;/link> 
+	       &lt;/item> 
+	     &lt;/olist>
+	   &lt;/body> 
+	  &lt;/doc>
+	 </listing>
+	 
+	 <p>Then create a SWF file in the same directory as the XML file. Include the following
+	 script in the SWF:</p>
+	 
+	 <listing>
+	 var readXML = new XMLDocument();
+	 readXML.load("idMapTest.xml");
+	 readXML.onLoad = function(success) {
+	 	myXML = new XMLDocument();
+	 	myXML.parseXML(readXML);	
+	 	for (var x in myXML.idMap){
+	 		 trace('idMap.' + x + " = " + newline + myXML.idMap[x]);
+	 		 trace('____________' + newline);
+	 	}
+	 }
+	 </listing>
+	 
+	 <p>When you test the SWF file, the following output is generated:</p>
+	 
+	 <listing>
+	 idMap.bar = 
+	 &lt;link id="bar" xlink:type="simple" xlink:href="pick2.xml">Hot Pick #2&lt;/link>
+	 ____________
+	 
+	 idMap.foo = 
+	 &lt;link id="foo" xlink:type="simple" xlink:href="pick1.xml">Hot Pick #1&lt;/link>
+	 ____________
+	 
+	 idMap.linkP1 = 
+	 &lt;paragraph id="linkP1">See &lt;link xlink:type="simple" xlink:href="new.xml">what's 
+	 
+	       new&lt;/link>!&lt;/paragraph>
+	 ____________
+	 </listing>
+	 
+	 </maelexample></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>unknown</apiData><apiValueClassifier>Object</apiValueClassifier></apiValueDef><apiDesc>
+	 Objet contenant les nœuds du fichier XML auxquels un attribut <codeph>id</codeph> a été attribué. Les noms des propriétés de l’objet (contenant un nœud chacune) correspondent aux valeurs des attributs <codeph>id</codeph>.
+	 
+	 <p>Considérez l’objet XMLDocument suivant :</p>
+	 
+	 <codeblock>
+	 &lt;employee id='41'>
+	 	&lt;name>
+	 		John Doe
+	 	&lt;/name>
+	 	&lt;address>
+	 		601 Townsend St.
+	 	&lt;/address>
+	 &lt;/employee>
+	 
+	 &lt;employee id='42'>
+	 	&lt;name>
+	 		Jane Q. Public
+	 	&lt;/name>
+	 &lt;/employee>
+	 &lt;department id="IT">
+	 	Information Technology
+	 &lt;/department>
+	 </codeblock>
+	 
+	 <p>Dans cet exemple, la propriété <codeph>idMap</codeph> de cet objet XMLDocument est un objet avec trois propriétés : <codeph>41</codeph>, <codeph>42</codeph> et <codeph>IT</codeph>. Chacune de ces propriétés est un objet XMLNode avec la valeur <codeph>id</codeph> correspondante. Par exemple, la propriété <codeph>IT</codeph> de l’objet <codeph>idMap</codeph> est ce nœud :</p> 
+	 
+	 <codeblock>
+	 &lt;department id="IT">
+	 	Information Technology
+	 &lt;/department>
+	 </codeblock>
+	 
+	 <p>Vous devez utiliser la méthode <codeph>parseXML()</codeph> sur l’objet XMLDocument pour la propriété <codeph>idMap</codeph> à instancier.</p>
+	 
+	 <p>Si plusieurs objets XMLNode ont la même valeur <codeph>id</codeph>, la propriété correspondante de l’objet <codeph>idNode</codeph> est celle du dernier nœud analysé. Exemple :</p>
+	 
+	 <codeblock>
+	 var x1:XML = new XMLDocument("&lt;a id='1'>&lt;b id='2' />&lt;c id='1' />&lt;/a>");
+	 x2 = new XMLDocument();
+	 x2.parseXML(x1);
+	 trace(x2.idMap['1']);
+	 </codeblock>
+	 
+	 Le nœud <codeph>&lt;c></codeph> sera produit : 
+	 
+	 <codeblock>
+	 <codeph>&lt;c id='1' /></codeph>
+	 </codeblock>
+	 
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.xml:XMLDocument:ignoreWhite"><apiName>ignoreWhite</apiName><shortdesc>
+	 Lorsque la propriété est réglée sur true, les nœuds de texte qui ne contiennent que des espaces blancs sont supprimés au cours de l’analyse.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><maelexample>The following example loads an XML file with a text node that contains only white space; the <code>foyer</code> tag comprises fourteen space characters. To run this example, create a text file named <em>flooring.xml</em>, and copy the following tags into it:
+	 <listing>
+	 &lt;house>
+	    &lt;kitchen>   ceramic tile   &lt;/kitchen>
+	    &lt;bathroom>linoleum&lt;/bathroom>
+	    &lt;foyer>              &lt;/foyer>
+	 &lt;/house>
+	 </listing>
+	 <p>Create a new Flash document named <em>flooring.fla</em> and save it to the same directory as the XML file. Place the following code into the main Timeline:</p>
+	 <listing>
+	 // create a new XML object
+	 var flooring:XML = new XML();
+	 
+	 // set the ignoreWhite property to true (default value is false)
+	 flooring.ignoreWhite = true;
+	 
+	 // After loading is complete, trace the XML object
+	 flooring.onLoad = function(success:Boolean) {
+	   trace(flooring);
+	 }
+	 
+	 // load the XML into the flooring object
+	 flooring.load("flooring.xml");
+	 
+	 // output (line breaks added for clarity):
+	 &lt;house>
+	    &lt;kitchen>   ceramic tile   &lt;/kitchen>
+	    &lt;bathroom>linoleum&lt;/bathroom>
+	    &lt;foyer />
+	 &lt;/house>
+	 
+	 </listing>
+	 <p>If you then change the setting of <code>flooring.ignoreWhite</code> to <code>false</code>, or simply remove that line of code entirely, the fourteen space characters in the <code>foyer</code> tag will be preserved:</p>
+	 <listing>
+	 ...
+	 // set the ignoreWhite property to false (default value)
+	 flooring.ignoreWhite = false;
+	 ...
+	 // output (line breaks added for clarity):
+	 &lt;house>
+	    &lt;kitchen>   ceramic tile   &lt;/kitchen>
+	    &lt;bathroom>linoleum&lt;/bathroom>
+	    &lt;foyer>              &lt;/foyer>
+	 &lt;/house>
+	 
+	 </listing>
+	 <span class="flashonly"><p>The XML_blogTracker.fla and XML_languagePicker.fla files in the ActionScript samples folder also contain a code example. The following are typical paths to this folder:</p>
+	 <ul>
+	   <li>Windows: <i>boot drive</i>\Program Files\Macromedia\Flash 8\Samples and Tutorials\Samples\ActionScript </li>
+	   <li>Macintosh: <i>Macintosh HD</i>/Applications/Macromedia Flash 8/Samples and Tutorials/Samples/ActionScript </li>
+	   <li/>
+	 </ul>
+	 </span>
+	 </maelexample></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>false</apiData><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	 Lorsque la propriété est réglée sur <codeph>true</codeph>, les nœuds de texte qui ne contiennent que des espaces blancs sont supprimés au cours de l’analyse. Les nœuds de texte qui contiennent un espace blanc à gauche ou à droite ne sont pas affectés. Le paramètre par défaut est <codeph>false</codeph>. 
+	 <p>Vous pouvez définir la propriété <codeph>ignoreWhite</codeph> des objets XMLDocument individuels, comme indiqué par le code suivant :</p>
+	 <codeblock>
+	 my_xml.ignoreWhite = true;
+	 </codeblock>
+	 
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.xml:XMLDocument:xmlDecl"><apiName>xmlDecl</apiName><shortdesc>
+	 Chaîne qui spécifie des informations sur la déclaration XML d’un document.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><maelexample>The following example creates a text field called <code>my_txt</code> 
+	 that has the same dimensions as the Stage. The text field displays properties of the XML packet that loads into the SWF file. The doc type declaration displays in <code>my_txt</code>. Add the following ActionScript to your FLA or AS file:
+	 <listing>
+	 <code>var my_fmt:TextFormat = new TextFormat();</code>
+	 <code>my_fmt.font = "_typewriter";</code>
+	 <code>my_fmt.size = 12;</code>
+	 <code>my_fmt.leftMargin = 10;</code>
+	 
+	 <code>this.createTextField("my_txt", this.getNextHighestDepth(), 0, 0, Stage.width, Stage.height);</code>
+	 <code>my_txt.border = true;</code>
+	 <code>my_txt.multiline = true;</code>
+	 <code>my_txt.wordWrap = true;</code>
+	 <code>my_txt.setNewTextFormat(my_fmt);</code>
+	 
+	 <code>var my_xml:XML = new XML();</code>
+	 <code>my_xml.ignoreWhite = true;</code>
+	 <code>my_xml.onLoad = function(success:Boolean) {</code>
+	 <code>  var endTime:Number = getTimer();</code>
+	 <code>  var elapsedTime:Number = endTime-startTime;</code>
+	 <code>  if (success) {</code>
+	 <code>    my_txt.text = "xmlDecl:"+newline+my_xml.xmlDecl+newline+newline;</code>
+	 <code>    my_txt.text += "contentType:"+newline+my_xml.contentType+newline+newline;</code>
+	 <code>    my_txt.text += "docTypeDecl:"+newline+my_xml.docTypeDecl+newline+newline;</code>
+	 <code>    my_txt.text += "packet:"+newline+my_xml.toString()+newline+newline;</code>
+	 <code>  } else {</code>
+	 <code>    my_txt.text = "Unable to load remote XML."+newline+newline;</code>
+	 <code>  }</code>
+	 <code>  my_txt.text += "loaded in: "+elapsedTime+" ms.";</code>
+	 <code>};</code>
+	 <code>my_xml.load("http://www.helpexamples.com/crossdomain.xml");</code>
+	 <code>var startTime:Number = getTimer();</code>
+	 </listing>
+	 </maelexample></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>null</apiData><apiValueClassifier>Object</apiValueClassifier></apiValueDef><apiDesc>
+	 Chaîne qui spécifie des informations sur la déclaration XML d’un document. Après l’analyse du document XML dans un objet XMLDocument, cette propriété est définie sur le texte de la déclaration XML du document. Cette définition s’effectue à l’aide d’une représentation sous forme de chaîne de la déclaration XML, pas d’un objet XMLNode. En cas d’absence de déclaration XML au cours d’une opération d’analyse, la propriété est définie sur <codeph>null</codeph>. La méthode <codeph>XMLDocument.toString()</codeph> fournit le contenu de la propriété <codeph>XML.xmlDecl</codeph> avant tout autre texte de l’objet XML. Si la propriété <codeph>XML.xmlDecl</codeph> contient <codeph>null</codeph>, aucune déclaration XML n’est produite.
+	 </apiDesc></apiValueDetail></apiValue></apiClassifier></apiPackage>

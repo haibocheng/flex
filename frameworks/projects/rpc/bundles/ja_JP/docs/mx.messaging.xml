@@ -273,6 +273,52 @@
       この ChannelSet を使用する MessageAgents のセットへのアクセスを提供します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Array"/></apiValueDef><apiDesc>
       この ChannelSet を使用する MessageAgents のセットへのアクセスを提供します。
       
+      </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.messaging:MultiTopicProducer"><apiName>MultiTopicProducer</apiName><shortdesc>
+  MultiTopicProducer は、0 個以上のサブトピックを持つ宛先にメッセージを送信します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>mx.messaging:AbstractProducer</apiBaseClassifier></apiClassifierDef><apiDesc>
+  MultiTopicProducer は、0 個以上のサブトピックを持つ宛先にメッセージを送信します。通常のプロデューサと似ていますが、多数のサブトピックのいずれかにサブスクライブしているコンシューマにメッセージをダイレクトできます。コンシューマが MultiTopicConsumer であり、プロデューサが使用するサブトピックの一覧内の複数のサブトピックに、このコンシューマがサブスクライブした場合、コンシューマはメッセージを 1 度だけ受信します。
+  <p>
+  MultiTopicProducer は、出力メッセージが送信されてその処理が成功したかどうかに従って、送信するメッセージごとに MessageAckEvent または MessageFaultEvent イベントを送出します。
+  </p>
+  
+  </apiDesc></apiClassifierDetail><apiConstructor id="mx.messaging:MultiTopicProducer:MultiTopicProducer"><apiName>MultiTopicProducer</apiName><shortdesc>
+      コンストラクターです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/></apiConstructorDef><apiDesc>
+      コンストラクターです。
+     
+      </apiDesc><example>
+      <codeblock rev="3.0">
+       function sendMessage():void
+       {
+           var producer:MultiTopicProducer = new MultiTopicProducer();
+           producer.destination = "NASDAQ";
+           var msg:AsyncMessage = new AsyncMessage();
+           msg.headers.operation = "UPDATE";
+           msg.body = {"SYMBOL":50.00};
+           // only send to subscribers to subtopic "SYMBOL" and "ALLSTOCKS"
+           msg.addSubtopic("SYMBOL");
+           msg.addSubtopic("ALLSTOCKS");
+           producer.send(msg);
+       }
+       </codeblock>
+      
+      </example></apiConstructorDetail></apiConstructor><apiOperation id="mx.messaging:MultiTopicProducer:addSubtopic"><apiName>addSubtopic</apiName><shortdesc>
+     このプロデューサが送信するメッセージのサブトピックの現在の一覧にサブトピックを追加します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>subtopic</apiItemName><apiType value="String"/><apiDesc>このプロデューサが送信するサブトピックの現在の一覧に追加されるサブトピックです。
+     
+      
+      </apiDesc></apiParam></apiOperationDef><apiDesc>
+     このプロデューサが送信するメッセージのサブトピックの現在の一覧にサブトピックを追加します。これは、このサブトピックをサブトピックプロパティに追加するための簡単な方法です。
+     
+     </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.messaging:MultiTopicProducer:removeSubtopic"><apiName>removeSubtopic</apiName><shortdesc>
+     サブトピックプロパティからサブトピックを削除します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>subtopic</apiItemName><apiType value="String"/><apiDesc>サブトピックプロパティから削除されるサブトピックです。
+      
+      </apiDesc></apiParam></apiOperationDef><apiDesc>
+     サブトピックプロパティからサブトピックを削除します。サブトピックが一覧にない場合、エラーをスローします。
+     
+     </apiDesc></apiOperationDetail></apiOperation><apiValue id="mx.messaging:MultiTopicProducer:subtopics:get"><apiName>subtopics</apiName><shortdesc>
+      メッセージのパブリッシュに使用されるサブトピックの一覧へのアクセスを提供します。
+      
+      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="mx.collections:ArrayCollection"/></apiValueDef><apiDesc>
+      メッセージのパブリッシュに使用されるサブトピックの一覧へのアクセスを提供します。
+      
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.messaging:MultiTopicConsumer"><apiName>MultiTopicConsumer</apiName><shortdesc>
   コンシューマと同様に、MultiTopicConsumer は、単一の clientId を持つ宛先にサブスクライブし、単一のイベントハンドラーにメッセージを配信します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata><asCustoms><mxml><![CDATA[
   <p>
@@ -360,52 +406,6 @@
       <p><codeph>subscribe()</codeph> メソッドを呼び出す前に、このプロパティを副次的な影響を与えずに設定することができます。 MultiTopicConsumer がその宛先にサブスクライブした後でこの値を変更すると、MultiTopicConsumer のサブスクリプションが更新されることで新しいサブスクリプションが含まれ、ArrayCollection から削除したサブスクリプションすべてを削除するという副次的な影響が発生します。</p>
      
       <p>リモート宛先がセレクターの式の値を理解できる必要があります。</p>
-      
-      </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.messaging:MultiTopicProducer"><apiName>MultiTopicProducer</apiName><shortdesc>
-  MultiTopicProducer は、0 個以上のサブトピックを持つ宛先にメッセージを送信します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>mx.messaging:AbstractProducer</apiBaseClassifier></apiClassifierDef><apiDesc>
-  MultiTopicProducer は、0 個以上のサブトピックを持つ宛先にメッセージを送信します。通常のプロデューサと似ていますが、多数のサブトピックのいずれかにサブスクライブしているコンシューマにメッセージをダイレクトできます。コンシューマが MultiTopicConsumer であり、プロデューサが使用するサブトピックの一覧内の複数のサブトピックに、このコンシューマがサブスクライブした場合、コンシューマはメッセージを 1 度だけ受信します。
-  <p>
-  MultiTopicProducer は、出力メッセージが送信されてその処理が成功したかどうかに従って、送信するメッセージごとに MessageAckEvent または MessageFaultEvent イベントを送出します。
-  </p>
-  
-  </apiDesc></apiClassifierDetail><apiConstructor id="mx.messaging:MultiTopicProducer:MultiTopicProducer"><apiName>MultiTopicProducer</apiName><shortdesc>
-      コンストラクターです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/></apiConstructorDef><apiDesc>
-      コンストラクターです。
-     
-      </apiDesc><example>
-      <codeblock rev="3.0">
-       function sendMessage():void
-       {
-           var producer:MultiTopicProducer = new MultiTopicProducer();
-           producer.destination = "NASDAQ";
-           var msg:AsyncMessage = new AsyncMessage();
-           msg.headers.operation = "UPDATE";
-           msg.body = {"SYMBOL":50.00};
-           // only send to subscribers to subtopic "SYMBOL" and "ALLSTOCKS"
-           msg.addSubtopic("SYMBOL");
-           msg.addSubtopic("ALLSTOCKS");
-           producer.send(msg);
-       }
-       </codeblock>
-      
-      </example></apiConstructorDetail></apiConstructor><apiOperation id="mx.messaging:MultiTopicProducer:addSubtopic"><apiName>addSubtopic</apiName><shortdesc>
-     このプロデューサが送信するメッセージのサブトピックの現在の一覧にサブトピックを追加します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>subtopic</apiItemName><apiType value="String"/><apiDesc>このプロデューサが送信するサブトピックの現在の一覧に追加されるサブトピックです。
-     
-      
-      </apiDesc></apiParam></apiOperationDef><apiDesc>
-     このプロデューサが送信するメッセージのサブトピックの現在の一覧にサブトピックを追加します。これは、このサブトピックをサブトピックプロパティに追加するための簡単な方法です。
-     
-     </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.messaging:MultiTopicProducer:removeSubtopic"><apiName>removeSubtopic</apiName><shortdesc>
-     サブトピックプロパティからサブトピックを削除します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>subtopic</apiItemName><apiType value="String"/><apiDesc>サブトピックプロパティから削除されるサブトピックです。
-      
-      </apiDesc></apiParam></apiOperationDef><apiDesc>
-     サブトピックプロパティからサブトピックを削除します。サブトピックが一覧にない場合、エラーをスローします。
-     
-     </apiDesc></apiOperationDetail></apiOperation><apiValue id="mx.messaging:MultiTopicProducer:subtopics:get"><apiName>subtopics</apiName><shortdesc>
-      メッセージのパブリッシュに使用されるサブトピックの一覧へのアクセスを提供します。
-      
-      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="mx.collections:ArrayCollection"/></apiValueDef><apiDesc>
-      メッセージのパブリッシュに使用されるサブトピックの一覧へのアクセスを提供します。
       
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.messaging:Consumer"><apiName>Consumer</apiName><shortdesc>
   コンシューマはメッセージを受信するために宛先にサブスクライブします。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata><asCustoms><mxml><![CDATA[
@@ -821,7 +821,7 @@
   </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="mx.messaging:Channel_mx.messaging.events.ChannelEvent.CONNECT_channelConnect"><apiName>channelConnect</apiName><shortdesc>
   チャンネルがエンドポイントから切断された後で送出されます。</shortdesc><prolog/><adobeApiEventDetail><adobeApiEventDef><apiEventType>mx.messaging.events.ChannelEvent.CONNECT</apiEventType><adobeApiEventClassifier>mx.messaging.events.ChannelEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
   チャンネルがエンドポイントから切断された後で送出されます。
- <p/>
+ <p>チャネルがリモート宛先に接続を試みて問題が発生すると常に、Channel およびそのサブクラスは Channel.Connect.Failed コードを発行します。AMFChannel オブジェクトは、既に接続されているチャネルが基になる NetConnection から Call.Failed コードを受け取ると、Channel.Call.Failed コードを発行します。</p>
  
   </apiDesc></adobeApiEventDetail></adobeApiEvent><apiConstructor id="mx.messaging:Channel:Channel"><apiName>Channel</apiName><shortdesc>
       指定されたエンドポイント URI に接続する汎用チャンネルのインスタンスを作成します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>id</apiItemName><apiType value="String"/><apiData>null</apiData><apiDesc>このチャンネルの ID です。
@@ -839,7 +839,7 @@
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.messaging:Channel:applySettings"><apiName>applySettings</apiName><shortdesc>
       個々のチャンネルに必要な設定を適用するには常に、サブクラスでこのメソッドをオーバーライドする必要があります。</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>settings</apiItemName><apiType value="XML"/><apiDesc>このチャンネルの services-config.xml ファイルの XML フラグメントです。
        </apiDesc></apiParam></apiOperationDef><apiDesc>
-      個々のチャンネルに必要な設定を適用するには常に、サブクラスでこのメソッドをオーバーライドする必要があります。必ず <codeph>super.applySettings()</codeph> を呼び出して、チャンネルに一般的な設定を適用してください。
+      個々のチャンネルに必要な設定を適用するには常に、サブクラスでこのメソッドをオーバーライドする必要があります。必ず <codeph>super.applySettings()</codeph> を呼び出して、チャンネルに一般的な設定を適用してください。このメソッドは、主に Channel サブクラスで使用されます。
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.messaging:Channel:connect"><apiName>connect</apiName><shortdesc>
       ChannelSet をチャンネルに接続します。</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiFinal/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>channelSet</apiItemName><apiOperationClassifier>mx.messaging:ChannelSet</apiOperationClassifier><apiDesc>チャンネルに接続する ChannelSet です。

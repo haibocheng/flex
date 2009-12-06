@@ -88,9 +88,9 @@
       宛先固有の失敗の理由へのアクセスを提供します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="String"/></apiValueDef><apiDesc>
       宛先固有の失敗の理由へのアクセスを提供します。 詳細については、<codeph>faultString</codeph> および <codeph>faultDetails</codeph> プロパティを参照してください。
      
-      <p><codeph/><codeph/><codeph/><codeph/></p>
+      <p>フォルトコードの形式はリモート宛先から提供されますが、通常は <codeph>host.operation.error</codeph> または <codeph>Channel.operation.error</codeph> の形式になります。例えば、<codeph>Server.Connect.Failed</codeph> や <codeph>Channel.Connect.Failed</codeph> などです。</p>
       <p>
-     </p>     
+     Channel.Connect.Failed は、Channel がリモート宛先に接続を試みて問題が発生したときには常に、Channel クラスおよびそのサブクラス（RTMPChannel、AMFChannel、HTTPChannel など）によって発行されます。Channel.Call.Failed は、既に接続されているチャネルが基になる NetConnection から Call.Failed コードを受け取ると、AMFChannel によって発行されます。AMFChannel クラスのみが NetConnection.Call.Failed を監視し、これを Channel.Call.Failed に変換します。</p>     
      
       </apiDesc></apiValueDetail><related-links><link href="mx.messaging.events.xml#ChannelFaultEvent/faultString"><linktext>faultString</linktext></link><link href="mx.messaging.events.xml#ChannelFaultEvent/faultDetail"><linktext>faultDetail</linktext></link></related-links></apiValue><apiValue id="mx.messaging.events:ChannelFaultEvent:faultDetail"><apiName>faultDetail</apiName><shortdesc>
       失敗に関する宛先固有の詳細を提供します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="String"/></apiValueDef><apiDesc>

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <apiPackage id="mx.controls.listClasses"><apiName>mx.controls.listClasses</apiName><apiDetail/><apiClassifier id="mx.controls.listClasses:IDropInListItemRenderer"><apiName>IDropInListItemRenderer</apiName><shortdesc>
   Die Schnittstelle für Renderer, in denen Elemente abgelegt werden können.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiInterface/><apiAccess value="public"/><apiStatic/><apiBaseClassifier/></apiClassifierDef><apiDesc>
-  Die Schnittstelle für Renderer, in denen Elemente abgelegt werden können. In den meisten IListItemRenderer-Objekten können keine Elemente abgelegt werden. Diese Objekte erwarten, dass ein bestimmtes Feld des Datenprovider-Elements verwendet wird. Sie können beispielsweise die „lastName“-Eigenschaft des Elements einer <codeph>text</codeph>-Eigenschaft eines Labels zuweisen. Dies lässt sich mit Datenbindungsfunktionen leicht programmieren, hat aber die negative Folge, dass der Renderer nicht in einer anderen Spalte einer DataGrid- oder List-Klasse mit anderen Feldern verwendet werden kann. Mit der IDropInListItemRenderer-Schnittstelle kann ein anderer Renderer wiederverwendet werden. Die Listenklassen übergeben mehr Informationen an den Renderer, damit er ermitteln kann, welches Feld zur Laufzeit verwendet werden soll.
+  Die Schnittstelle für Renderer, in denen Elemente abgelegt werden können. In den meisten IListItemRenderer-Objekten können keine Elemente abgelegt werden. Diese Objekte erwarten, dass ein bestimmtes Feld des Datenproviderelements verwendet wird. Sie können beispielsweise die „lastName“-Eigenschaft des Elements einer <codeph>text</codeph>-Eigenschaft einer Beschriftung zuweisen. Dies lässt sich mit Datenbindungsfunktionen leicht programmieren, hat aber die negative Folge, dass der Renderer nicht in einer anderen Spalte einer DataGrid- oder List-Klasse mit anderen Feldern verwendet werden kann. Mit der IDropInListItemRenderer-Schnittstelle kann ein anderer Renderer wiederverwendet werden. Die Listenklassen übergeben mehr Informationen an den Renderer, damit er bestimmen kann, welches Feld zur Laufzeit verwendet werden soll.
  
   <p>Komponenten, die als Renderer oder Editoren verwendet werden sollen, in denen Elemente abgelegt werden können, müssen die IDropInListItemRenderer-Schnittstelle implementieren. Viele Flex-Komponenten implementieren diese Schnittstelle und können daher in einer Spalte oder Liste als Renderer oder Editoren verwendet werden, in denen Elemente abgelegt werden können.</p>
  
@@ -26,7 +26,7 @@
  
   <p>Im obigen Beispiel ignoriert das NumericStepper-Steuerelement die <codeph>data</codeph>-Eigenschaft beim Einstellen der <codeph>value</codeph>-Eigenschaft des NumericStepper-Steuerelements und verwendet stattdessen die <codeph>listData</codeph>-Eigenschaft.</p>
  
-  <p>Um die IDropInListItemRenderer-Schnittstelle zu implementieren, definieren Sie eine Set- und Get-Methode zur Implementierung der <codeph>listData</codeph>-Eigenschaft. Die Set-Methode schreibt normalerweise den Wert der <codeph>listData</codeph>-Eigenschaft in eine interne Variable. Die Listenklasse weist diese Eigenschaft immer zu und legt dann das Datenprovider-Element in der <codeph>data</codeph>-Eigenschaft fest.</p>
+  <p>Um die IDropInListItemRenderer-Schnittstelle zu implementieren, definieren Sie eine Set- und Get-Methode zur Implementierung der <codeph>listData</codeph>-Eigenschaft. Die Set-Methode schreibt normalerweise den Wert der <codeph>listData</codeph>-Eigenschaft in eine interne Variable. Die Listenklasse weist diese Eigenschaft immer zu und legt dann das Datenproviderelement in der <codeph>data</codeph>-Eigenschaft fest.</p>
  
   <p>Beachten Sie, dass die Set-Methode für die <codeph>listData</codeph>-Eigenschaft kein Ereignis auslöst. Dies ist deshalb der Fall, weil die Listenklassen immer erst <codeph>listData</codeph> und dann die <codeph>data</codeph>-Eigenschaft festlegen. Das Festlegen der <codeph>data</codeph>-Eigenschaft löst auch das <codeph>dataChange</codeph>-Ereignis aus. Sie legen <codeph>listData</codeph> nie für sich selbst fest, weshalb diese Eigenschaft auch kein eigenes Ereignis auslösen muss. </p>
  
@@ -59,7 +59,7 @@
       Implementiert die <codeph>listData</codeph>-Eigenschaft unter Verwendung von Get- und Set-Methoden. 
       
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.controls.listClasses:BaseListData"><apiName>BaseListData</apiName><shortdesc>
-  Die BaseListData-Klasse definiert den Datentyp der listData-Eigenschaft, die von Renderern oder Editoren, in denen Elemente abgelegt werden können, implementiert wird.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+  Die BaseListData-Klasse definiert den Datentyp der listData-Eigenschaft, die von Renderern oder Editoren, in denen Elemente abgelegt werden können, implementiert wird.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.events:EventDispatcher</apiBaseClassifier></apiClassifierDef><apiDesc>
   Die BaseListData-Klasse definiert den Datentyp der <codeph>listData</codeph>-Eigenschaft, die von Renderern oder Editoren, in denen Elemente abgelegt werden können, implementiert wird. Alle Renderer oder Editoren, in denen Elemente abgelegt werden können, müssen die IDropInListItemRenderer-Schnittstelle, mit der die <codeph>listData</codeph>-Eigenschaft definiert wird, implementieren.
  
   <p>Die <codeph>listData</codeph>-Eigenschaft ist vom Typ BaseListData, wobei die BaseListData-Klasse drei Unterklassen hat: DataGridListData, ListData und TreeListData. Welchen Datentyp der Wert der <codeph>listData</codeph>-Eigenschaft letztlich hat, hängt von dem Steuerelement ab, das den Renderer oder Editor, in dem Elemente abgelegt werden können, verwendet. Bei einem DataGrid-Steuerelement hat der Wert den Typ DataGridListData, bei einem List-Steuerelement den Typ ListData und bei einem Tree-Steuerelement den Typ TreeListData.</p>
@@ -67,6 +67,8 @@
   <p>Wenn die Klasse als Renderer oder Editor verwendet wird, in dem Elemente abgelegt werden können, legt Flex die <codeph>listData</codeph>-Eigenschaft auf eine von BaseListData abgeleitete Klasse fest, die die berechneten Informationen über das Element in dem Datenprovider mit den Daten für das Element enthält.</p>
  
   <p>Obwohl die Eigenschaften dieser Klasse änderbar sind, sollten Sie sie unverändert beibehalten. Sie werden durch die List-Klasse initialisiert und von einem Renderer oder Editor für Elemente gelesen. Eine Veränderung dieser Werte kann zu unerwarteten Ergebnissen führen.</p>
+ 
+  <p> </p>
  
   </apiDesc></apiClassifierDetail><related-links><link href="mx.controls.listClasses.xml#IDropInListItemRenderer"><linktext>mx.controls.listClasses.IDropInListItemRenderer</linktext></link></related-links><apiConstructor id="mx.controls.listClasses:BaseListData:BaseListData"><apiName>BaseListData</apiName><shortdesc>
       Konstruktor.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>label</apiItemName><apiType value="String"/><apiDesc>Die Textdarstellung der Elementdaten.
@@ -83,7 +85,7 @@
       Konstruktor.
      
       </apiDesc></apiConstructorDetail></apiConstructor><apiValue id="mx.controls.listClasses:BaseListData:columnIndex"><apiName>columnIndex</apiName><shortdesc>
-      Die Indexposition der Spalte im List-basierten Steuerelement relativ zu den aktuell sichtbaren Spalten des Steuerelements, wobei die erste Spalte die Indexposition 1 hat.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="int"/></apiValueDef><apiDesc>
+      Die Indexposition der Spalte im List-basierten Steuerelement relativ zu den aktuell sichtbaren Spalten des Steuerelements, wobei die erste Spalte die Indexposition 1 hat.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiType value="int"/></apiValueDef><apiDesc>
       Die Indexposition der Spalte im List-basierten Steuerelement relativ zu den aktuell sichtbaren Spalten des Steuerelements, wobei die erste Spalte die Indexposition 1 hat. 
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.listClasses:BaseListData:label"><apiName>label</apiName><shortdesc>
@@ -91,15 +93,15 @@
       Die Textdarstellung der Elementdaten, basierend auf der <codeph>itemToLabel()</codeph>-Methode der List-Klasse.
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.listClasses:BaseListData:owner"><apiName>owner</apiName><shortdesc>
-      Ein Verweis auf das Listenobjekt, das Eigentümer dieses Elements ist.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>mx.core:IUIComponent</apiValueClassifier></apiValueDef><apiDesc>
+      Ein Verweis auf das Listenobjekt, das Eigentümer dieses Elements ist.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>mx.core:IUIComponent</apiValueClassifier></apiValueDef><apiDesc>
       Ein Verweis auf das Listenobjekt, das Eigentümer dieses Elements ist. Dies muss eine aus ListBase abgeleitete Klasse sein. Diese Eigenschaft ist als IUIComponent-Typ festgelegt, damit ablegbare Elemente wie Label und TextInput keine Abhängigkeiten zu List und allen ihren Abhängigkeiten haben müssen.
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.listClasses:BaseListData:rowIndex"><apiName>rowIndex</apiName><shortdesc>
-      Die Indexposition der Zeile des DataGrid-, List- oder Tree-Steuerelements in Bezug auf die aktuell sichtbaren Zeilen des Steuerelements, wobei die erste Zeile die Indexposition 1 hat.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="int"/></apiValueDef><apiDesc>
-      Die Indexposition der Zeile des DataGrid-, List- oder Tree-Steuerelements in Bezug auf die aktuell sichtbaren Zeilen des Steuerelements, wobei die erste Zeile die Indexposition 1 hat. Beispiel: Sie können auf ein Element im Steuerelement klicken und <codeph>rowIndex</codeph> wird auf 3 eingestellt. Danach rollen Sie das Steuerelement ab, um die Position der Zeile in den sichtbaren Zeilen des Steuerelements zu ändern, und klicken auf dieselbe Zeile wie vorher. Der <codeph>rowIndex</codeph> enthält jetzt einen anderen Wert, der der neuen Indexposition der Zeile in den aktuelle sichtbaren Zeilen entspricht.
+      Die Indexposition der Zeile des DataGrid-, List- oder Tree-Steuerelements in Bezug auf die aktuell sichtbaren Zeilen des Steuerelements, wobei die erste Zeile die Indexposition 1 hat.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiType value="int"/></apiValueDef><apiDesc>
+      Die Indexposition der Zeile des DataGrid-, List- oder Tree-Steuerelements in Bezug auf die aktuell sichtbaren Zeilen des Steuerelements, wobei die erste Zeile die Indexposition 1 hat. Beispiel: Sie können auf ein Element im Steuerelement klicken und <codeph>rowIndex</codeph> wird auf 3 eingestellt. Danach führen Sie einen Bildlauf durch das Steuerelement durch, um die Position der Zeile in den sichtbaren Zeilen des Steuerelements zu ändern, und klicken auf dieselbe Zeile wie vorher. Der <codeph>rowIndex</codeph> enthält jetzt einen anderen Wert, der der neuen Indexposition der Zeile in den aktuelle sichtbaren Zeilen entspricht.
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.listClasses:BaseListData:uid:get"><apiName>uid</apiName><shortdesc>
-      Der eindeutige Bezeichner für dieses Element.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="String"/></apiValueDef><apiDesc>
+      Der eindeutige Bezeichner für dieses Element.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="String"/></apiValueDef><apiDesc>
       Der eindeutige Bezeichner für dieses Element.
       
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.controls.listClasses:TileBase"><apiName>TileBase</apiName><shortdesc>
@@ -141,16 +143,16 @@
       </apiDesc></apiParam><apiParam><apiItemName>item</apiItemName><apiOperationClassifier>mx.controls.listClasses:IListItemRenderer</apiOperationClassifier><apiDesc>Der Elementrenderer für das Musterelement.
      
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Zeichnet den Hintergrund für ein einzelnes Musterelement. Übernimmt ein Sprite-Objekt, wendet die Dimensionen und die Farbe des Hintergrunds an und gibt das Sprite mit den angewendeten Werten zurück.
+      Zeichnet den Hintergrund für ein einzelnes Musterelement. Übernimmt ein Sprite-Objekt, wendet die Abmessungen und die Farbe des Hintergrunds an und gibt das Sprite mit den angewendeten Werten zurück.
       
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:TileBase:protected:drawTileBackgrounds"><apiName>drawTileBackgrounds</apiName><shortdesc>
       Zeichnet eventuell vorhandene Hintergründe hinter allen Musterelementen.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
       Zeichnet eventuell vorhandene Hintergründe hinter allen Musterelementen. Diese Implementierung erstellt ein Sprite namens „tileBGs“, wenn es noch nicht existiert, fügt es hinten an z-order in <codeph>listContent</codeph> an und ruft <codeph>drawTileBackground()</codeph> für jedes sichtbare Musterelement auf.
       
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:TileBase:protected:makeListData"><apiName>makeListData</apiName><shortdesc>
-      Erstellt eine neue ListData-Instanz und füllt die Felder auf Basis des Eingabedatenproviderelements.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiDesc>Ein neu konstruiertes ListData-Objekt.
+      Erstellt eine neue ListData-Instanz und füllt die Felder auf Basis des Eingabedatenproviderelements.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiDesc>Ein neu erstelltes ListData-Objekt.
       
-      </apiDesc><apiOperationClassifier>mx.controls.listClasses:BaseListData</apiOperationClassifier></apiReturn><apiParam><apiItemName>data</apiItemName><apiType value="Object"/><apiDesc>Das für das Füllen von ListData verwendete Datenproviderelement.
+      </apiDesc><apiOperationClassifier>mx.controls.listClasses:BaseListData</apiOperationClassifier></apiReturn><apiParam><apiItemName>data</apiItemName><apiType value="Object"/><apiDesc>Das Datenproviderelement, das für den Abruf der Daten in ListData verwendet wird.
       </apiDesc></apiParam><apiParam><apiItemName>uid</apiItemName><apiType value="String"/><apiDesc>Die UID des Elements.
       </apiDesc></apiParam><apiParam><apiItemName>rowNum</apiItemName><apiType value="int"/><apiDesc>Die Indexposition des Elements im Datenprovider.
       </apiDesc></apiParam><apiParam><apiItemName>columnNum</apiItemName><apiType value="int"/><apiDesc>Der columnIndex, der mit diesem Element verknüpft ist. 
@@ -245,7 +247,7 @@
   </apiDesc></apiClassifierDetail><related-links><link href="mx.controls.listClasses.xml#IDropInListItemRenderer"><linktext>mx.controls.listClasses.IDropInListItemRenderer</linktext></link></related-links><apiConstructor id="mx.controls.listClasses:ListData:ListData"><apiName>ListData</apiName><shortdesc>
 	  Konstruktor.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>text</apiItemName><apiType value="String"/><apiDesc>Textdarstellung der Daten des Elements.
 	 
-	  </apiDesc></apiParam><apiParam><apiItemName>icon</apiItemName><apiType value="Class"/><apiDesc>Ein Klassen- oder String-Objekt, das das Symbol für das Element im List-Steuerelement darstellt.
+	  </apiDesc></apiParam><apiParam><apiItemName>icon</apiItemName><apiType value="Class"/><apiDesc>Eine Klasse oder ein Stringobjekt, das das Symbol für das Element im List-Steuerelement darstellt.
 	 
 	  </apiDesc></apiParam><apiParam><apiItemName>labelField</apiItemName><apiType value="String"/><apiDesc>Der Name des Felds des Datenproviders, der die Label-Daten der List-Komponente enthält.
 	 
@@ -264,14 +266,14 @@
 	  </apiDesc></apiConstructorDetail></apiConstructor><apiValue id="mx.controls.listClasses:ListData:icon"><apiName>icon</apiName><shortdesc>
 	  Eine Klasse, die das Symbol für das Element im List-Steuerelement anzeigt, das aus der itemToIcon()-Methode der List-Klasse berechnet wird
 	  
-	  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Class"/></apiValueDef><apiDesc>
+	  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiType value="Class"/></apiValueDef><apiDesc>
 	  Eine Klasse, die das Symbol für das Element im List-Steuerelement anzeigt, das aus der <codeph>itemToIcon()</codeph>-Methode der List-Klasse berechnet wird
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.listClasses:ListData:labelField"><apiName>labelField</apiName><shortdesc>
-	  Der Wert der labelField-Eigenschaft in der List-Klasse.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="String"/></apiValueDef><apiDesc>
-	  Der Wert der <codeph>labelField</codeph>-Eigenschaft in der List-Klasse. Dies ist der Wert, der normalerweise verwendet wird, um zu berechnen, welche Eigenschaft aus dem Element im Datenprovider für den Text im Elementrenderer herangezogen werden soll. Der Wert wird aber auch von DateField und anderen Komponenten verwendet, um anzuzeigen, welches Feld aus dem Datenprovider-Element genommen werden soll, das eine Date- oder eine andere Nicht-Text-Eigenschaft enthält.
+	  Der Wert der labelField-Eigenschaft in der List-Klasse.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiType value="String"/></apiValueDef><apiDesc>
+	  Der Wert der <codeph>labelField</codeph>-Eigenschaft in der List-Klasse. Dies ist der Wert, der normalerweise verwendet wird, um zu berechnen, welche Eigenschaft aus dem Element im Datenprovider für den Text im Elementrenderer herangezogen werden soll. Der Wert wird aber auch von DateField und anderen Komponenten verwendet, um anzuzeigen, welches Feld aus dem Datenproviderelement genommen werden soll, das eine Date- oder eine andere Nicht-Text-Eigenschaft enthält.
 	 
-	  <p>Beispiel: Wenn ein Datenprovider-Element eine „hiredDate“-Eigenschaft enthält, kann die <codeph>labelField</codeph>-Eigenschaft auf „hiredDate“ und die <codeph>itemRenderer</codeph>-Eigenschaft auf DateField festgelegt werden. Das DateField-Steuerelement verwendet dann die hiredDate-Eigenschaft.</p>
+	  <p>Beispiel: Wenn ein Datenproviderelement eine „hiredDate“-Eigenschaft enthält, kann die <codeph>labelField</codeph>-Eigenschaft auf „hiredDate“ und die <codeph>itemRenderer</codeph>-Eigenschaft auf DateField festgelegt werden. Das DateField-Steuerelement verwendet dann die hiredDate-Eigenschaft.</p>
 	  
 	  </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.controls.listClasses:ListBaseContentHolder"><apiName>ListBaseContentHolder</apiName><shortdesc>
   Die ListBaseContentHolder-Klasse definiert einen Container in einem listenbasierten Steuerelement aller Elementrenderer und Elementeditoren des Steuerelements.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion><styles><style format="Color" inherit="no" name="backgroundColor" owner="mx.controls.listClasses:ListBaseContentHolder" playerVersion="Flash9" type="uint">
@@ -288,7 +290,7 @@
 <description>
   Anzahl der Pixel zwischen der rechten Rahmenlinie der Komponente und dem rechten Rand ihres Inhaltsbereichs.
   <p>Der Standardwert ist 0.</p>
-  <p>Der Standardwert für ein Button-Steuerelement ist 10.</p>
+  <p/>
   <p>Der Standardwert für das ComboBox-Steuerelement ist 5.</p>
   <p>Der Standardwert für den Form-Container ist 16.</p>
   
@@ -302,7 +304,7 @@
 <description>
   Anzahl der Pixel zwischen der linken Rahmenlinie der Komponente und dem linken Rand ihres Inhaltsbereichs.
   <p>Der Standardwert ist 0.</p>
-  <p>Der Standardwert für ein Button-Steuerelement ist 10.</p>
+  <p/>
   <p>Der Standardwert für das ComboBox-Steuerelement ist 5.</p>
   <p>Der Standardwert für den Form-Container ist 16.</p>
   <p>Der Standardwert für das Tree-Steuerelement ist 2.</p>
@@ -323,9 +325,9 @@
       Konstruktor.
      
       </apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="mx.controls.listClasses:ListBaseContentHolder:protected:updateDisplayList"><apiName>updateDisplayList</apiName><shortdesc>
-      Legt die Position und die Größe der Bildlaufleisten und des Inhalts fest und passt die Maske an.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiIsOverride/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>unscaledWidth</apiItemName><apiType value="Number"/><apiDesc>Legt die Breite der Komponente in Pixeln in den Koordinaten der Komponente fest, ungeachtet des Werts der <codeph>scaleX</codeph>-Eigenschaft der Komponente.
+      Legt die Position und die Größe der Bildlaufleisten und des Inhalts fest und passt die Maske an.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiIsOverride/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>unscaledWidth</apiItemName><apiType value="Number"/><apiDesc>Legt die Breite der Komponente in Pixeln und deren Koordinaten fest, unabhängig vom Wert der <codeph>scaleX</codeph>-Eigenschaft der Komponente.
      
-      </apiDesc></apiParam><apiParam><apiItemName>unscaledHeight</apiItemName><apiType value="Number"/><apiDesc>Legt die Höhe der Komponente in Pixeln in den Koordinaten der Komponente fest, ungeachtet des Werts der <codeph>scaleY</codeph>-Eigenschaft der Komponente.
+      </apiDesc></apiParam><apiParam><apiItemName>unscaledHeight</apiItemName><apiType value="Number"/><apiDesc>Legt die Höhe der Komponente in Pixeln und deren Koordinaten fest, unabhängig vom Wert der <codeph>scaleY</codeph>-Eigenschaft der Komponente.
       
       </apiDesc></apiParam></apiOperationDef><apiDesc>
       Legt die Position und die Größe der Bildlaufleisten und des Inhalts fest und passt die Maske an.
@@ -343,8 +345,8 @@
       Offset, in Pixeln, für die obere linke Ecke im List-Steuerelement des Inhalts, der durch die <codeph>ListBase.listContent</codeph>-Eigenschaft definiert ist.
      
       </apiDesc></apiValueDetail><related-links><link href="mx.controls.listClasses.xml#ListBase/listContent"><linktext>mx.controls.listClasses.ListBase.listContent</linktext></link></related-links></apiValue><apiValue id="mx.controls.listClasses:ListBaseContentHolder:listItems"><apiName>listItems</apiName><shortdesc>
-      Ein Array von Arrays, das die Elementrendererinstanzen enthält, die für die Darstellung jedes einzelnen Datenprovider-Elements verwendet werden.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>unknown</apiData><apiType value="Array"/></apiValueDef><apiDesc>
-      Ein Array von Arrays, das die Elementrendererinstanzen enthält, die für die Darstellung jedes einzelnen Datenprovider-Elements verwendet werden. Dies ist ein zweidimensionales, zeilenübergeordnetes Array, also ein Array von Zeilen, die Arrays von Spalten sind.
+      Ein Array von Arrays, das die Elementrendererinstanzen enthält, die für die Darstellung jedes einzelnen Datenproviderelements verwendet werden.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>unknown</apiData><apiType value="Array"/></apiValueDef><apiDesc>
+      Ein Array von Arrays, das die Elementrendererinstanzen enthält, die für die Darstellung jedes einzelnen Datenproviderelements verwendet werden. Dies ist ein zweidimensionales, zeilenübergeordnetes Array, also ein Array von Zeilen, die Arrays von Spalten sind.
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.listClasses:ListBaseContentHolder:rightOffset"><apiName>rightOffset</apiName><shortdesc>
       Offset, in Pixeln, für die untere rechte Ecke im Listensteuerelement des Inhalts, der durch die ListBase.listContent-Eigenschaft definiert ist.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>0</apiData><apiType value="Number"/></apiValueDef><apiDesc>
@@ -363,8 +365,8 @@
       Offset, in Pixeln, für die obere linke Ecke im List-Steuerelement des Inhalts, der durch die <codeph>ListBase.listContent</codeph>-Eigenschaft definiert ist.
      
       </apiDesc></apiValueDetail><related-links><link href="mx.controls.listClasses.xml#ListBase/listContent"><linktext>mx.controls.listClasses.ListBase.listContent</linktext></link></related-links></apiValue><apiValue id="mx.controls.listClasses:ListBaseContentHolder:visibleData"><apiName>visibleData</apiName><shortdesc>
-      Eine Hash-Tabelle von Datenprovider-Elementrenderern, die derzeit im Sichtfeld sind.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>unknown</apiData><apiType value="Object"/></apiValueDef><apiDesc>
-      Eine Hash-Tabelle von Datenprovider-Elementrenderern, die derzeit im Sichtfeld sind. Die Tabelle wird durch die UID des Datenprovider-Elements indiziert und wird verwendet, damit der für die Anzeige eines bestimmten Elements verwendete Renderer rasch abgerufen wird.
+      Eine Hash-Tabelle von Datenproviderelementrenderern, die sich derzeit in der Ansicht befinden.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>unknown</apiData><apiType value="Object"/></apiValueDef><apiDesc>
+      Eine Hash-Tabelle von Datenproviderelementrenderern, die sich derzeit in der Ansicht befinden. Die Tabelle wird durch die UID des Datenproviderelements indiziert und wird verwendet, damit der für die Anzeige eines bestimmten Elements verwendete Renderer rasch abgerufen wird.
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.listClasses:ListBaseContentHolder:heightExcludingOffsets:get"><apiName>heightExcludingOffsets</apiName><shortdesc>
       Höhe, in Pixeln, unter Ausschluss der oberen und unteren Offsets, des zentralen Abschnitts des Inhalts, der durch die ListBase.listContent-Eigenschaft definiert wird.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
@@ -389,7 +391,7 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog></style><style format="Color" inherit="yes" name="disabledColor" owner="mx.controls.listClasses:TileListItemRenderer" playerVersion="Flash9" type="uint">
 <description>
-  Textfarbe der Komponente bei Deaktivierung.
+  Textfarbe der Komponente, wenn deaktiviert. 
   </description>
 <default>0xAAB3B3
   
@@ -401,11 +403,9 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog></style><style format="Color" inherit="yes" name="color" owner="mx.controls.listClasses:TileListItemRenderer" playerVersion="Flash9" type="uint">
 <description>
-  Textfarbe eines Komponenten-Labels.
-  </description>
-<default>0x0B333C
+  Textfarbe eines Komponenten-Labels. <codeph/> <codeph/>
   
-  </default>
+  </description>
 
 <playerversion>AIR 1.1
   </playerversion>
@@ -479,7 +479,7 @@
 	  </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.controls.listClasses:ListItemRenderer"><apiName>ListItemRenderer</apiName><shortdesc>
   Die ListItemRenderer-Klasse definiert den Standardelementrenderer für ein List-Steuerelement.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion><styles><style format="Color" inherit="yes" name="disabledColor" owner="mx.controls.listClasses:ListItemRenderer" playerVersion="Flash9" type="uint">
 <description>
-  Textfarbe der Komponente bei Deaktivierung.
+  Textfarbe der Komponente, wenn deaktiviert. 
   
   </description>
 <default>0xAAB3B3
@@ -492,11 +492,9 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog></style><style format="Color" inherit="yes" name="color" owner="mx.controls.listClasses:ListItemRenderer" playerVersion="Flash9" type="uint">
 <description>
-  Textfarbe eines Komponenten-Labels.
-  </description>
-<default>0x0B333C
+  Textfarbe eines Komponenten-Labels. <codeph/> <codeph/>
   
-  </default>
+  </description>
 
 <playerversion>AIR 1.1
   </playerversion>
@@ -533,13 +531,13 @@
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.listClasses:ListItemRenderer:data:get"><apiName>data</apiName><shortdesc>
       Die Implementierung der data-Eigenschaft gemäß der IDataRenderer-Schnittstelle.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Object"/></apiValueDef><apiDesc>
-      Die Implementierung der <codeph>data</codeph>-Eigenschaft gemäß der IDataRenderer-Schnittstelle. Wenn festgelegt, wird der Wert gespeichert und die Komponente ungültig gemacht, damit das Layout der Komponente neu aufgebaut werden kann.
+      Die Implementierung der <codeph>data</codeph>-Eigenschaft gemäß der IDataRenderer-Schnittstelle. Wenn festgelegt, wird der Wert gespeichert und die Komponente entwertet, damit das Layout der Komponente neu aufgebaut werden kann.
      
       </apiDesc></apiValueDetail><related-links><link href="mx.core.xml#IDataRenderer"><linktext>mx.core.IDataRenderer</linktext></link></related-links></apiValue><apiValue id="mx.controls.listClasses:ListItemRenderer:fontContext:get"><apiName>fontContext</apiName><shortdesc>
       
-      Die Modul-Factory, welche den Schriftartkontext für diese Komponente bereitstellt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>mx.core:IFlexModuleFactory</apiValueClassifier></apiValueDef><apiDesc>
+      Die Modul-Factory, die den Schriftartkontext für diese Komponente bereitstellt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>mx.core:IFlexModuleFactory</apiValueClassifier></apiValueDef><apiDesc>
       
-      Die module-Factory, die den Schriftartkontext für diese Komponente bereitstellt.
+      Die Modul-Factory, die den Schriftartkontext für diese Komponente bereitstellt.
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.listClasses:ListItemRenderer:listData:get"><apiName>listData</apiName><shortdesc>
       Die Implementierung der listData-Eigenschaft gemäß der IDropInListItemRenderer-Schnittstelle.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>mx.controls.listClasses:BaseListData</apiValueClassifier></apiValueDef><apiDesc>
@@ -558,8 +556,8 @@
 	  Untergeordnete Objekte vertikal anordnen. Für Steuerelemente wie TileList, die untergeordnete Objekte in zwei Dimensionen anordnen, werden die untergeordneten Objekte angeordnet, indem eine Spalte angefüllt wird, bevor mit der nächsten Spalte begonnen wird.
 	  
 	  </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.controls.listClasses:ListItemDragProxy"><apiName>ListItemDragProxy</apiName><shortdesc>
-  Der Standard-Zieh-Proxy, wenn aus einem listenbasierten Steuerelement herausgezogen wird (ausgenommen DataGrid-Klasse).</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>mx.core:UIComponent</apiBaseClassifier></apiClassifierDef><apiDesc>
-  Der Standard-Zieh-Proxy, wenn aus einem listenbasierten Steuerelement herausgezogen wird (ausgenommen DataGrid-Klasse). Ein Zieh-Proxy ist eine Komponente, die den Objekten oder Kopien der gezogenen Objekte übergeordnet ist.
+  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>mx.core:UIComponent</apiBaseClassifier></apiClassifierDef><apiDesc>
+   Ein Zieh-Proxy ist eine Komponente, die den Objekten oder Kopien der gezogenen Objekte übergeordnet ist.
  
   </apiDesc></apiClassifierDetail><related-links><link href="mx.controls.dataGridClasses.xml#DataGridDragProxy"><linktext>mx.controls.dataGridClasses.DataGridDragProxy</linktext></link></related-links><apiConstructor id="mx.controls.listClasses:ListItemDragProxy:ListItemDragProxy"><apiName>ListItemDragProxy</apiName><shortdesc>
       Konstruktor.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/></apiConstructorDef><apiDesc>
@@ -581,7 +579,7 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog></style><style inherit="no" name="useRollOver" owner="mx.controls.listClasses:ListBase" playerVersion="Flash9" type="Boolean">
 <description>
-  Ein Flag, das steuert, ob Elemente markiert werden, wenn der Mauszeiger darüber geführt wird. Wenn <codeph>true</codeph>, werden Zeilen markiert, sobald der Mauszeiger darüber geführt wird. Wenn <codeph>false</codeph>, werden Zeilen nur markiert, wenn sie ausgewählt werden.
+  Ein Flag, das steuert, ob Elemente bei Rollover markiert werden. Wenn <codeph>true</codeph>, werden Zeilen bei Rollover markiert. Wenn <codeph>false</codeph>, werden Zeilen nur markiert, wenn sie ausgewählt werden.
  
   </description>
 <default>true
@@ -594,12 +592,9 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog></style><style format="Color" inherit="yes" name="textSelectedColor" owner="mx.controls.listClasses:ListBase" playerVersion="Flash9" type="uint">
 <description>
-  Die Farbe des Texts eines Renderers, wenn der Benutzer ihn auswählt.
- 
-  </description>
-<default>0x2B333C
+  Die Farbe des Texts eines Renderers, wenn der Benutzer ihn auswählt. <codeph/> <codeph/>
   
-  </default>
+  </description>
 
 <playerversion>AIR 1.1
   </playerversion>
@@ -607,12 +602,9 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog></style><style format="Color" inherit="yes" name="textRollOverColor" owner="mx.controls.listClasses:ListBase" playerVersion="Flash9" type="uint">
 <description>
-  Die Farbe des Texts eines Renderers, wenn der Benutzer den Mauszeiger darüber führt.
- 
-  </description>
-<default>0x2B333C
+  Die Farbe des Texts eines Renderers bei Rollover durch den Benutzer. <codeph/> <codeph/>
   
-  </default>
+  </description>
 
 <playerversion>AIR 1.1
   </playerversion>
@@ -660,12 +652,9 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog></style><style format="Color" inherit="yes" name="selectionColor" owner="mx.controls.listClasses:ListBase" playerVersion="Flash9" type="uint">
 <description>
-  Die Farbe des Hintergrunds eines Renderers, wenn der Benutzer ihn auswählt.
- 
-  </description>
-<default>0x7FCEFF
+  Die Farbe des Hintergrunds eines Renderers, wenn der Benutzer ihn auswählt. <codeph/> <codeph/>
   
-  </default>
+  </description>
 
 <playerversion>AIR 1.1
   </playerversion>
@@ -673,12 +662,9 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog></style><style format="Color" inherit="yes" name="rollOverColor" owner="mx.controls.listClasses:ListBase" playerVersion="Flash9" type="uint">
 <description>
-  Die Farbe des Hintergrunds eines Renderers, wenn der Benutzer den Mauszeiger darüber führt.
- 
-  </description>
-<default>0xEEFEE6
+  Die Farbe des Hintergrunds eines Renderers bei Rollover durch den Benutzer. <codeph/> <codeph/>
   
-  </default>
+  </description>
 
 <playerversion>AIR 1.1
   </playerversion>
@@ -712,7 +698,7 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog></style><style inherit="no" name="dropIndicatorSkin" owner="mx.controls.listClasses:ListBase" playerVersion="Flash9" type="Class">
 <description>
-  Die Skin, die verwendet werden soll, um anzuzeigen, ob ein gezogenes Element abgelegt werden kann. Wenn eine von ListBase abgeleitete Komponente in einem Ziehen-und-Ablegen-Vorgang ein mögliches Ablageziel ist, erstellt ein Aufruf der <codeph>showDropFeedback()</codeph>-Methode eine Instanz dieser Klasse und platziert sie ein Pixel über dem Elementrenderer für das Element, wo sich nach dem Abschluss des Ziehen-und-Ablegen-Vorgangs das Element befindet, das nach dem abgelegten Element kommt.
+  Die Skin, die verwendet werden soll, um anzuzeigen, ob ein gezogenes Element abgelegt werden kann. Wenn eine von ListBase abgeleitete Komponente in einem Drag &amp; Drop-Vorgang ein mögliches Ablageziel ist, erstellt ein Aufruf der <codeph>showDropFeedback()</codeph>-Methode eine Instanz dieser Klasse und platziert sie ein Pixel über dem Elementrenderer für das Element, wo sich nach dem Abschluss des Drag &amp; Drop-Vorgangs das Element befindet, das nach dem abgelegten Element kommt.
  
   </description>
 <default>mx.controls.listClasses.ListDropIndicator
@@ -732,8 +718,6 @@
   <p>Für das TileList-Steuerelement, das eine einzige Farbe verwendet, um eine zweidimensionale Anzeige zu erstellen, kann der Stil eine Darstellung als Schachbrettmuster, mit Streifen oder mit einem anderen Muster bewirken, die auf der Anzahl der Spalten und Zeilen sowie der Anzahl der festgelegten Farben basiert. TileList wechselt die Farben ab und setzt die einzelnen Element-Hintergrundfarben entsprechend der Richtung des Layouts. Wenn eine gerade Anzahl von Farben und eine gerade Anzahl von Spalten für ein TileList-Objekt mit horizontalem Layout festgelegt sind, werden Streifen angezeigt. Wenn die Anzahl von Spalten ungerade ist, ergibt sich ein Schachbrettmuster.
   </p>
  
-  <p>Ist nur wirksam, wenn <codeph>backgroundColor</codeph> nicht festgelegt ist.</p>
- 
   </description>
 <default>undefined
   
@@ -747,7 +731,7 @@
 <description>
   Anzahl der Pixel zwischen der rechten Rahmenlinie der Komponente und dem rechten Rand ihres Inhaltsbereichs.
   <p>Der Standardwert ist 0.</p>
-  <p>Der Standardwert für ein Button-Steuerelement ist 10.</p>
+  <p/>
   <p>Der Standardwert für das ComboBox-Steuerelement ist 5.</p>
   <p>Der Standardwert für den Form-Container ist 16.</p>
   
@@ -761,35 +745,12 @@
 <description>
   Anzahl der Pixel zwischen der linken Rahmenlinie der Komponente und dem linken Rand ihres Inhaltsbereichs.
   <p>Der Standardwert ist 0.</p>
-  <p>Der Standardwert für ein Button-Steuerelement ist 10.</p>
+  <p/>
   <p>Der Standardwert für das ComboBox-Steuerelement ist 5.</p>
   <p>Der Standardwert für den Form-Container ist 16.</p>
   <p>Der Standardwert für das Tree-Steuerelement ist 2.</p>
   
   </description>
-
-<playerversion>AIR 1.1
-  </playerversion>
-	<prolog><asCustoms><langversion>3.0
-  </langversion><productversion>Flex 3
- </productversion></asCustoms></prolog></style><style inherit="no" name="focusRoundedCorners" owner="mx.controls.listClasses:ListBase" playerVersion="Flash9" type="String">
-<description>
-  Gibt an, welche Ecken des Fokus-Rechtecks gerundet werden sollen. Dieser Wert ist ein durch Leerzeichen gegliederter String, welcher alle Kombinationen aus <codeph>"tl"</codeph>, <codeph>"tr"</codeph>, <codeph>"bl"</codeph> und <codeph>"br"</codeph> enthalten kann. Beispiel: Um festzulegen, dass die Ecken der rechten Seite abgerundet und die der linken Seite kantig sein sollen, verwenden Sie <codeph>"tr br"</codeph>. Die <codeph>cornerRadius</codeph>-Stileigenschaft legt den Radius der abzurundenden Ecken fest. Der Standardwert hängt von der Komponentenklasse ab. Sofern er für diese Klasse nicht außer Kraft gesetzt wird, lautet er <codeph>"tl tr bl br"</codeph>.
-  
-  </description>
-
-<playerversion>AIR 1.1
-  </playerversion>
-	<prolog><asCustoms><langversion>3.0
-  </langversion><productversion>Flex 3
- </productversion></asCustoms></prolog></style><style inherit="no" name="focusAlpha" owner="mx.controls.listClasses:ListBase" playerVersion="Flash9" type="Number">
-<description>
-  Legt den Alphatransparenzwert der Fokus-Skin fest.
-  
-  </description>
-<default>0.4
-  
-  </default>
 
 <playerversion>AIR 1.1
   </playerversion>
@@ -875,12 +836,12 @@
   Wird ausgelöst, wenn der Benutzer auf ein Element im Steuerelement klickt.
  
   </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="mx.controls.listClasses:ListBase_mx.events.ListEvent.ITEM_ROLL_OUT_itemRollOut"><apiName>itemRollOut</apiName><shortdesc>
-  Wird ausgelöst, wenn der Benutzer den Mauszeiger von einem Element im Steuerelement wegführt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>mx.events.ListEvent.ITEM_ROLL_OUT</apiEventType><adobeApiEventClassifier>mx.events.ListEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
-  Wird ausgelöst, wenn der Benutzer den Mauszeiger von einem Element im Steuerelement wegführt.
+  Wird bei Rollout aus einem Element des Steuerelements ausgelöst.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>mx.events.ListEvent.ITEM_ROLL_OUT</apiEventType><adobeApiEventClassifier>mx.events.ListEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+  Wird bei Rollout aus einem Element des Steuerelements ausgelöst.
  
   </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="mx.controls.listClasses:ListBase_mx.events.ListEvent.ITEM_ROLL_OVER_itemRollOver"><apiName>itemRollOver</apiName><shortdesc>
-  Wird ausgelöst, wenn der Benutzer den Mauszeiger über ein Element im Steuerelement führt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>mx.events.ListEvent.ITEM_ROLL_OVER</apiEventType><adobeApiEventClassifier>mx.events.ListEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
-  Wird ausgelöst, wenn der Benutzer den Mauszeiger über ein Element im Steuerelement führt.
+  Wird bei Rollover über ein Element des Steuerelements ausgelöst.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>mx.events.ListEvent.ITEM_ROLL_OVER</apiEventType><adobeApiEventClassifier>mx.events.ListEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+  Wird bei Rollover über ein Element des Steuerelements ausgelöst.
  
   </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="mx.controls.listClasses:ListBase_mx.events.FlexEvent.DATA_CHANGE_dataChange"><apiName>dataChange</apiName><shortdesc>
   Wird ausgelöst, wenn sich die Dateneigenschaft ändert.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>mx.events.FlexEvent.DATA_CHANGE</apiEventType><adobeApiEventClassifier>mx.events.FlexEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
@@ -913,10 +874,10 @@
       <p>Diese Funktion wird von einem <codeph>AddItemAction</codeph>-Effekt als Teil eines Datenänderungseffekts aufgerufen, um den Punkt festzulegen, an dem ein zu einer Sammlung hinzugefügtes Datenelement vom Steuerelement über einen Elementrenderer angezeigt wird.</p>
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:protected:addDragData"><apiName>addDragData</apiName><shortdesc>
-      Fügt die ausgewählten Elemente dem DragSource-Objekt als Teil eines Drag&amp;Drop-Vorgangs hinzu.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>ds</apiItemName><apiType value="Object"/><apiDesc>Das DragSource-Objekt, dem die Daten hinzugefügt werden sollen.
+      Fügt die ausgewählten Elemente dem DragSource-Objekt als Teil eines Drag &amp; Drop-Vorgangs hinzu.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>dragSource</apiItemName><apiType value="Object"/><apiDesc>Das DragSource-Objekt, dem die Daten hinzugefügt werden sollen.
       
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Fügt die ausgewählten Elemente dem DragSource-Objekt als Teil eines Drag&amp;Drop-Vorgangs hinzu. Überschreiben Sie diese Methode, um dem DragSource-Objekt andere Daten hinzuzufügen.
+      Fügt die ausgewählten Elemente dem DragSource-Objekt als Teil eines Drag &amp; Drop-Vorgangs hinzu. Überschreiben Sie diese Methode, um dem DragSource-Objekt andere Daten hinzuzufügen.
      
      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:protected:addToFreeItemRenderers"><apiName>addToFreeItemRenderers</apiName><shortdesc>
       Fügt der Liste der wiederverwendeten Renderer einen Renderer hinzu, macht ihn unsichtbar und bereinigt Verweise darauf.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>item</apiItemName><apiOperationClassifier>mx.controls.listClasses:IListItemRenderer</apiOperationClassifier><apiDesc>Der hinzuzufügende Renderer.
@@ -951,21 +912,21 @@
       Gibt einen Index zurück, dem die abgelegten Elemente zum Ablageziel hinzugefügt werden sollen.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:protected:calculateDropIndicatorY"><apiName>calculateDropIndicatorY</apiName><shortdesc>
-      Berechnet die Y-Position des Drop-Indikators bei einem Drag&amp;Drop-Vorgang.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiDesc>Die Y-Achsenkoordinate des Drop-Indikators.
+      Berechnet die Y-Position des Drop-Indikators bei einem Drag &amp; Drop-Vorgang.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiDesc>Die Y-Achsenkoordinate des Drop-Indikators.
       
       </apiDesc><apiType value="Number"/></apiReturn><apiParam><apiItemName>rowCount</apiItemName><apiType value="Number"/><apiDesc>Die Anzahl sichtbarer Zeilen im Steuerelement.
      
-      </apiDesc></apiParam><apiParam><apiItemName>rowNum</apiItemName><apiType value="int"/><apiDesc>Die Nummer der Zeile im Steuerelement, wo der Drop-Indikator erscheinen soll.
+      </apiDesc></apiParam><apiParam><apiItemName>rowNum</apiItemName><apiType value="int"/><apiDesc>Die Nummer der Zeile im Steuerelement, wo der Dropindikator erscheinen soll.
      
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Berechnet die Y-Position des Drop-Indikators bei einem Drag&amp;Drop-Vorgang.
+      Berechnet die Y-Position des Drop-Indikators bei einem Drag &amp; Drop-Vorgang.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:protected:clearCaretIndicator"><apiName>clearCaretIndicator</apiName><shortdesc>
-      Löscht den Einfügezeichen-Indikator im angegebenen Sprite.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>indicator</apiItemName><apiType value="flash.display:Sprite"/><apiDesc>Ein Sprite-Objekt, das die Grafiken enthalten sollte, die die Anzeige durch einen Renderer als hervorgehoben präsentiert.
+      Löscht den Einfügezeichenindikator im angegebenen Sprite.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>indicator</apiItemName><apiType value="flash.display:Sprite"/><apiDesc>Ein Sprite-Objekt, das die Grafiken enthalten sollte, die die Anzeige durch einen Renderer als hervorgehoben präsentiert.
       </apiDesc></apiParam><apiParam><apiItemName>itemRenderer</apiItemName><apiOperationClassifier>mx.controls.listClasses:IListItemRenderer</apiOperationClassifier><apiDesc>Der Elementrenderer, der hervorgehoben wird.
       
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Löscht den Einfügezeichen-Indikator im angegebenen Sprite.
+      Löscht den Einfügezeichenindikator im angegebenen Sprite.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:protected:clearHighlightIndicator"><apiName>clearHighlightIndicator</apiName><shortdesc>
       Löscht den Hervorhebungs-Indikator im angegebenen Sprite.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>indicator</apiItemName><apiType value="flash.display:Sprite"/><apiDesc>Ein Sprite-Objekt, das die Grafiken enthalten sollte, die die Anzeige durch einen Renderer als hervorgehoben präsentiert.
@@ -975,8 +936,8 @@
       Löscht den Hervorhebungs-Indikator im angegebenen Sprite.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:protected:clearIndicators"><apiName>clearIndicators</apiName><shortdesc>
-      Entfernt alle Auswahl-, Hervorhebungs- und Einfügezeichen-Indikatoren.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
-      Entfernt alle Auswahl-, Hervorhebungs- und Einfügezeichen-Indikatoren.
+      Entfernt alle Auswahl-, Hervorhebungs- und Einfügezeichenindikatoren.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+      Entfernt alle Auswahl-, Hervorhebungs- und Einfügezeichenindikatoren.
       
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:protected:clearSelected"><apiName>clearSelected</apiName><shortdesc>
       Löscht die Menge ausgewählter Elemente und entfernt alle Grafiken, die den Auswahlstatus dieser Elemente anzeigen.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>transition</apiItemName><apiType value="Boolean"/><apiData>false</apiData><apiDesc><codeph>true</codeph>, wenn die Grafiken einen Ausblendeffekt haben sollen.
@@ -1010,7 +971,7 @@
       </apiDesc></apiParam></apiOperationDef><apiDesc>
       Erstellt eine tiefe Kopie des Objekts, indem die <codeph>ObjectUtil.copy()</codeph>-Methode aufgerufen wird, und ersetzt die <codeph>uid</codeph>-Eigenschaft der Kopie (wenn vorhanden) durch einen neuen Wert, indem die <codeph>UIDUtil.createUID()</codeph>-Methode aufgerufen wird.
      
-      <p>Diese Methode wird für eine Drag&amp;Drop-Kopie verwendet.</p>
+      <p>Diese Methode wird für eine Drag &amp; Drop-Kopie verwendet.</p>
      
       </apiDesc></apiOperationDetail><related-links><link href="mx.utils.xml#ObjectUtil"><linktext>mx.utils.ObjectUtil</linktext></link><link href="mx.utils.xml#UIDUtil"><linktext>mx.utils.UIDUtil</linktext></link></related-links></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:protected:copySelectedItems"><apiName>copySelectedItems</apiName><shortdesc>
       Kopiert die ausgewählten Elemente in der Reihenfolge, in der sie ausgewählt wurden.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiDesc>Ein Array der ausgewählten Elemente.
@@ -1041,21 +1002,21 @@
       Verarbeitet DragEvent.DRAG_COMPLETE-Ereignisse.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>event</apiItemName><apiOperationClassifier>mx.events:DragEvent</apiOperationClassifier><apiDesc>Das DragEvent-Objekt.
       
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Verarbeitet <codeph>DragEvent.DRAG_COMPLETE</codeph>-Ereignisse Diese Methode verarbeitet das Element aus dem Datenprovider
+      Verarbeitet <codeph>DragEvent.DRAG_COMPLETE</codeph>-Ereignisse. Diese Methode entfernt das Element aus dem Datenprovider.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:protected:dragDropHandler"><apiName>dragDropHandler</apiName><shortdesc>
       Verarbeitet DragEvent.DRAG_DROP-Ereignisse.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>event</apiItemName><apiOperationClassifier>mx.events:DragEvent</apiOperationClassifier><apiDesc>Das DragEvent-Objekt.
      
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Verarbeitet <codeph>DragEvent.DRAG_DROP</codeph>-Ereignisse. Diese Methode blendet das Ablegen-Feedback aus, indem es die <codeph>hideDropFeedback()</codeph>-Methode aufruft.
+      Verarbeitet <codeph>DragEvent.DRAG_DROP</codeph>-Ereignisse. Diese Methode verbirgt das Drop-Feeback durch den Aufruf der <codeph>hideDropFeedback()</codeph>-Methode.
      
-      <p>Wenn die Aktion <codeph>COPY</codeph> lautet, erstellt diese Methode eine Tiefenkopie des Objekts, indem sie die <codeph>ObjectUtil.copy()</codeph>-Methode aufruft und, falls vorhanden, die <codeph>uid</codeph>-Eigenschaft der Kopie durch einen neuen Wert ersetzt, indem sie die <codeph>UIDUtil.createUID()</codeph>-Methode aufruft.</p>
+      <p>Bei einer <codeph>COPY</codeph>-Aktion erstellt diese Methode eine tiefe Kopie des Objekts, indem sie die <codeph>ObjectUtil.copy()</codeph>-Methode aufruft und die <codeph>uid</codeph>-Eigenschaft der Kopie (wenn vorhanden) durch einen neuen Wert ersetzt, indem die <codeph>UIDUtil.createUID()</codeph>-Methode aufgerufen wird.</p>
      
       </apiDesc></apiOperationDetail><related-links><link href="mx.utils.xml#ObjectUtil"><linktext>mx.utils.ObjectUtil</linktext></link><link href="mx.utils.xml#UIDUtil"><linktext>mx.utils.UIDUtil</linktext></link></related-links></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:protected:dragEnterHandler"><apiName>dragEnterHandler</apiName><shortdesc>
       Verarbeitet DragEvent.DRAG_ENTER-Ereignisse.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>event</apiItemName><apiOperationClassifier>mx.events:DragEvent</apiOperationClassifier><apiDesc>Das DragEvent-Objekt.
       
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Verarbeitet <codeph>DragEvent.DRAG_ENTER</codeph>-Ereignisse. Diese Methode ermittelt, ob das DragSource-Objekt gültige Elemente enthält, und verwendet die <codeph>showDropFeedback()</codeph>-Methode, um das UI-Feedback einzurichten.
+      Verarbeitet <codeph>DragEvent.DRAG_ENTER</codeph>-Ereignisse. Diese Methode bestimmt, ob das DragSource-Objekt gültige Elemente enthält, und verwendet die <codeph>showDropFeedback()</codeph>-Methode, um das UI-Feedback einzurichten.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:protected:dragExitHandler"><apiName>dragExitHandler</apiName><shortdesc>
       Verarbeitet DragEvent.DRAG_EXIT-Ereignisse.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>event</apiItemName><apiOperationClassifier>mx.events:DragEvent</apiOperationClassifier><apiDesc>Das DragEvent-Objekt.
@@ -1067,11 +1028,11 @@
       Verarbeitet DragEvent.DRAG_OVER-Ereignisse.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>event</apiItemName><apiOperationClassifier>mx.events:DragEvent</apiOperationClassifier><apiDesc>Das DragEvent-Objekt.
       
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Verarbeitet <codeph>DragEvent.DRAG_OVER</codeph>-Ereignisse. Diese Methode ermittelt, ob das DragSource-Objekt gültige Elemete enthält, und verwendet die <codeph>showDropFeedback()</codeph>-Methode, um das UI-Feedback einzurichten.
+      Verarbeitet <codeph>DragEvent.DRAG_OVER</codeph>-Ereignisse. Diese Methode bestimmt, ob das DragSource-Objekt gültige Elemente enthält, und verwendet die <codeph>showDropFeedback()</codeph>-Methode, um das UI-Feedback einzurichten.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:protected:dragScroll"><apiName>dragScroll</apiName><shortdesc>
-      Intervallfunktion, die die Liste nach oben oder unten abrollt, wenn die Maus über oder unter die Liste geführt wird.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
-      Intervallfunktion, die die Liste nach oben oder unten abrollt, wenn die Maus über oder unter die Liste geführt wird.
+      Intervallfunktion, die einen Bildlauf der Liste nach oben oder unten durchführt, wenn die Maus über oder unter die Liste geführt wird.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+      Intervallfunktion, die einen Bildlauf der Liste nach oben oder unten durchführt, wenn die Maus über oder unter die Liste geführt wird.
       
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:protected:dragStartHandler"><apiName>dragStartHandler</apiName><shortdesc>
       Die Standardprozedur für das dragStart-Ereignis.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>event</apiItemName><apiOperationClassifier>mx.events:DragEvent</apiOperationClassifier><apiDesc>Das DragEvent-Objekt.
@@ -1080,7 +1041,7 @@
       Die Standardprozedur für das <codeph>dragStart</codeph>-Ereignis.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:protected:drawCaretIndicator"><apiName>drawCaretIndicator</apiName><shortdesc>
-      Zeichnet den Einfügezeichen-Indikator in das gegebene Sprite-Objekt an der festgelegten Position und in der festgelegten Breite, Höhe und Farbe.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>indicator</apiItemName><apiType value="flash.display:Sprite"/><apiDesc>Ein Sprite-Objekt, das die Grafiken enthalten sollte, die die Anzeige durch einen Renderer als hervorgehoben präsentiert.
+      Zeichnet den Einfügezeichenindikator in das gegebene Sprite-Objekt an der festgelegten Position und in der festgelegten Breite, Höhe und Farbe.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>indicator</apiItemName><apiType value="flash.display:Sprite"/><apiDesc>Ein Sprite-Objekt, das die Grafiken enthalten sollte, die die Anzeige durch einen Renderer als hervorgehoben präsentiert.
       </apiDesc></apiParam><apiParam><apiItemName>x</apiItemName><apiType value="Number"/><apiDesc>Die gewünschte X-Position für den Indikator.
       </apiDesc></apiParam><apiParam><apiItemName>y</apiItemName><apiType value="Number"/><apiDesc>Die gewünschte Y-Position für den Indikator.
       </apiDesc></apiParam><apiParam><apiItemName>width</apiItemName><apiType value="Number"/><apiDesc>Die gewünschte Breite für den Indikator.
@@ -1089,7 +1050,7 @@
       </apiDesc></apiParam><apiParam><apiItemName>itemRenderer</apiItemName><apiOperationClassifier>mx.controls.listClasses:IListItemRenderer</apiOperationClassifier><apiDesc>Der Elementrenderer, der hervorgehoben wird.
       
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Zeichnet den Einfügezeichen-Indikator in das gegebene Sprite-Objekt an der festgelegten Position und in der festgelegten Breite, Höhe und Farbe.
+      Zeichnet den Einfügezeichenindikator in das gegebene Sprite-Objekt an der festgelegten Position und in der festgelegten Breite, Höhe und Farbe.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:protected:drawHighlightIndicator"><apiName>drawHighlightIndicator</apiName><shortdesc>
       Zeichnet den Hervorhebungsindikator in das gegebene Sprite-Objekt an der festgelegten Position und in der festgelegten Breite, Höhe und Farbe.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>indicator</apiItemName><apiType value="flash.display:Sprite"/><apiDesc>Ein Sprite-Objekt, das die Grafiken enthalten sollte, die die Anzeige durch einen Renderer als hervorgehoben präsentiert.
@@ -1114,8 +1075,8 @@
       Zeichnet den Renderer mit Hervorhebungs-, Auswahl- oder Einfügezeichen-Indikatoren.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:protected:drawRowBackgrounds"><apiName>drawRowBackgrounds</apiName><shortdesc>
-      Zeichnet abwechselnde Zeilenfarben, Ränder und Hintergründe für die Zeilen.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
-      Zeichnet abwechselnde Zeilenfarben, Ränder und Hintergründe für die Zeilen.
+      Zeichnet abwechselnde Zeilenfarben, Rahmenlinien und Hintergründe für die Zeilen.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+      Zeichnet abwechselnde Zeilenfarben, Rahmenlinien und Hintergründe für die Zeilen.
       
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:protected:drawSelectionIndicator"><apiName>drawSelectionIndicator</apiName><shortdesc>
       Zeichnet den Auswahlindikator in das gegebene Sprite-Objekt an der Position, in der Breite, in der Höhe und mit der Farbe, die festgelegt wurden.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>indicator</apiItemName><apiType value="flash.display:Sprite"/><apiDesc>Ein Sprite-Objekt, das die Grafiken enthalten sollte, die die Anzeige durch einen Renderer als hervorgehoben präsentiert.
@@ -1183,18 +1144,18 @@
       Ruft einen bereits erstellten, derzeit nicht verwendeten Elementrenderer ab. Wenn ein Dateneffekt läuft, wird zunächst ein Abruf aus der reservedItemRenderers-Matrix versucht. Sonst (oder wenn kein reservierter Renderer gefunden wird) erfolgt der Abruf aus dem freeItemRenderers-Stapel.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:hideDropFeedback"><apiName>hideDropFeedback</apiName><shortdesc>
-      Verbirgt den Drop-Indikator unter dem Mauszeiger, der anzeigt, dass ein Drop&amp;Droßp-Vorgang zulässig ist.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>event</apiItemName><apiOperationClassifier>mx.events:DragEvent</apiOperationClassifier><apiDesc>Ein DragEvent-Objekt, das Informationen über die Position des Mauszeigers enthält.
+      Verbirgt den Dropindikator unter dem Mauszeiger, der darauf hinweist, dass ein Drag &amp; Drop-Vorgang zulässig ist.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>event</apiItemName><apiOperationClassifier>mx.events:DragEvent</apiOperationClassifier><apiDesc>Ein DragEvent-Objekt, das Informationen über die Position des Mauszeigers enthält.
       
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Verbirgt den Drop-Indikator unter dem Mauszeiger, der anzeigt, dass ein Drop&amp;Droßp-Vorgang zulässig ist.
+      Verbirgt den Dropindikator unter dem Mauszeiger, der darauf hinweist, dass ein Drag &amp; Drop-Vorgang zulässig ist.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:protected:indexToColumn"><apiName>indexToColumn</apiName><shortdesc>
-      Die Spalte für das Datenprovider-Element an einer gegebenen Indexposition.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiDesc>Die Spalte, in der das Element in der Komponente angezeigt würde. -1, wenn es im listContent-Container nicht anzeigbar ist.
+      Die Spalte für das Datenproviderelement an einer gegebenen Indexposition.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiDesc>Die Spalte, in der das Element in der Komponente angezeigt würde. -1, wenn es im listContent-Container nicht anzeigbar ist.
       
       </apiDesc><apiType value="int"/></apiReturn><apiParam><apiItemName>index</apiItemName><apiType value="int"/><apiDesc>Der Offset in den Datenprovider.
      
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Die Spalte für das Datenprovider-Element an einer gegebenen Indexposition.
+      Die Spalte für das Datenproviderelement an einer gegebenen Indexposition.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:indexToItemRenderer"><apiName>indexToItemRenderer</apiName><shortdesc>
       Rufen Sie einen Elementrenderer für die Indexposition eines Elements im Datenprovider ab, wenn einer existiert.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Der Elementrenderer, der das Element anzeigt, oder <codeph>null</codeph>, wenn das Element derzeit nicht angezeigt wird.
@@ -1205,17 +1166,17 @@
       Rufen Sie einen Elementrenderer für die Indexposition eines Elements im Datenprovider ab, wenn einer existiert. Da Elementrenderer nur für Elemente in einer Gruppe von anzeigbaren Zeilen existieren, können Sie diese Methode nicht für Elemente verwenden, die nicht sichtbar sind.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:protected:indexToRow"><apiName>indexToRow</apiName><shortdesc>
-      Die Zeile für das Datenprovider-Element an einer gegebenen Indexposition.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiDesc>Die Zeile, in der das Element in der Komponente angezeigt würde. -1, wenn es im listContent-Container nicht anzeigbar ist.
+      Die Zeile für das Datenproviderelement an einer gegebenen Indexposition.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiDesc>Die Zeile, in der das Element in der Komponente angezeigt würde. -1, wenn es im listContent-Container nicht anzeigbar ist.
       
       </apiDesc><apiType value="int"/></apiReturn><apiParam><apiItemName>index</apiItemName><apiType value="int"/><apiDesc>Der Offset in den Datenprovider.
      
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Die Zeile für das Datenprovider-Element an einer gegebenen Indexposition.
+      Die Zeile für das Datenproviderelement an einer gegebenen Indexposition.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:indicesToIndex"><apiName>indicesToIndex</apiName><shortdesc>
       Berechnet den Offset in den Datenprovider des Elements an colIndex, rowIndex.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Der Offset in den Datenprovider.
       
-      </apiDesc><apiType value="int"/></apiReturn><apiParam><apiItemName>rowIndex</apiItemName><apiType value="int"/><apiDesc>Der auf null basierende Index der Zeile, einschließlich Zeilen, die von oben abgerollt wurden. Daher gilt: Wenn <codeph>verticalScrollPosition</codeph> gleich 2 ist, hat die erste sichtbare Zeile den rowIndex 2.
+      </apiDesc><apiType value="int"/></apiReturn><apiParam><apiItemName>rowIndex</apiItemName><apiType value="int"/><apiDesc>Der auf null basierende Index der Zeile, einschließlich der Zeilen, durch die ein Bildlauf von oben her erfolgte. Daher gilt: Wenn <codeph>verticalScrollPosition</codeph> gleich 2 ist, hat die erste sichtbare Zeile den rowIndex 2.
      
       </apiDesc></apiParam><apiParam><apiItemName>colIndex</apiItemName><apiType value="int"/><apiDesc>Der auf null basierende Index der Spalte, einschließlich Spalten, die von links abgerollt wurden. Wenn <codeph>horizontalScrollPosition</codeph> gleich 2 ist, dann hat die erste Spalte links den columnIndex 2.
      
@@ -1235,32 +1196,39 @@
       Ruft bei der nächsten Aktualisierung alle Zeilen neu ab.
       
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:isItemHighlighted"><apiName>isItemHighlighted</apiName><shortdesc>
-      Ermittelt, ob der Elementrenderer für ein Datenprovider-Element hervorgehoben ist (indem ein Mauszeiger darüber bewegt wird oder unter dem Einfügezeichen bei Tastaturnavigation).</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc><codeph>true</codeph>, wenn das Element hervorgehoben ist.
+      Bestimmt, ob der Elementrenderer für ein Datenproviderelement hervorgehoben ist (indem ein Mauszeiger darüber bewegt wird oder unter dem Einfügezeichen bei Tastaturnavigation).</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc><codeph>true</codeph>, wenn das Element hervorgehoben ist.
       
-      </apiDesc><apiType value="Boolean"/></apiReturn><apiParam><apiItemName>data</apiItemName><apiType value="Object"/><apiDesc>Das Datenprovider-Element.
+      </apiDesc><apiType value="Boolean"/></apiReturn><apiParam><apiItemName>data</apiItemName><apiType value="Object"/><apiDesc>Das Datenproviderelement.
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Ermittelt, ob der Elementrenderer für ein Datenprovider-Element hervorgehoben ist (indem ein Mauszeiger darüber bewegt wird oder unter dem Einfügezeichen bei Tastaturnavigation).
+      Bestimmt, ob der Elementrenderer für ein Datenproviderelement hervorgehoben ist (indem ein Mauszeiger darüber bewegt wird oder unter dem Einfügezeichen bei Tastaturnavigation).
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:isItemSelectable"><apiName>isItemSelectable</apiName><shortdesc>
-      Ermittelt, ob der Elementrenderer für ein Datenprovider-Element auswählbar ist.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc><codeph>true</codeph>, wenn das Element auswählbar ist.
+      Bestimmt, ob der Elementrenderer für ein Datenproviderelement auswählbar ist.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc><codeph>true</codeph>, wenn das Element auswählbar ist.
       
-      </apiDesc><apiType value="Boolean"/></apiReturn><apiParam><apiItemName>data</apiItemName><apiType value="Object"/><apiDesc>Das Datenprovider-Element.
+      </apiDesc><apiType value="Boolean"/></apiReturn><apiParam><apiItemName>data</apiItemName><apiType value="Object"/><apiDesc>Das Datenproviderelement.
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Ermittelt, ob der Elementrenderer für ein Datenprovider-Element auswählbar ist.
+      Bestimmt, ob der Elementrenderer für ein Datenproviderelement auswählbar ist.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:isItemSelected"><apiName>isItemSelected</apiName><shortdesc>
-      Ermittelt, ob der Elementrenderer für ein Datenprovider-Element ausgewählt ist.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc><codeph>true</codeph>, wenn das Element ausgewählt ist.
+      Bestimmt, ob der Elementrenderer für ein Datenproviderelement ausgewählt ist.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc><codeph>true</codeph>, wenn das Element ausgewählt ist.
       
-      </apiDesc><apiType value="Boolean"/></apiReturn><apiParam><apiItemName>data</apiItemName><apiType value="Object"/><apiDesc>Das Datenprovider-Element.
+      </apiDesc><apiType value="Boolean"/></apiReturn><apiParam><apiItemName>data</apiItemName><apiType value="Object"/><apiDesc>Das Datenproviderelement.
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Ermittelt, ob der Elementrenderer für ein Datenprovider-Element ausgewählt ist.
+      Bestimmt, ob der Elementrenderer für ein Datenproviderelement ausgewählt ist.
+     
+      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:isItemShowingCaret"><apiName>isItemShowingCaret</apiName><shortdesc>
+      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc><codeph/>
+      
+      </apiDesc><apiType value="Boolean"/></apiReturn><apiParam><apiItemName>data</apiItemName><apiType value="Object"/><apiDesc>Das Datenproviderelement.
+      </apiDesc></apiParam></apiOperationDef><apiDesc>
+      
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:isItemVisible"><apiName>isItemVisible</apiName><shortdesc>
-      Ermittelt, ob ein Element von einem Renderer angezeigt wird.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc><codeph>true</codeph>, wenn das Element angezeigt wird.
+      Bestimmt, ob ein Element von einem Renderer angezeigt wird.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc><codeph>true</codeph>, wenn das Element angezeigt wird.
       
-      </apiDesc><apiType value="Boolean"/></apiReturn><apiParam><apiItemName>item</apiItemName><apiType value="Object"/><apiDesc>Ein Datenprovider-Element.
+      </apiDesc><apiType value="Boolean"/></apiReturn><apiParam><apiItemName>item</apiItemName><apiType value="Object"/><apiDesc>Ein Datenproviderelement.
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Ermittelt, ob ein Element von einem Renderer angezeigt wird.
+      Bestimmt, ob ein Element von einem Renderer angezeigt wird.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:protected:isRendererUnconstrained"><apiName>isRendererUnconstrained</apiName><shortdesc>
       Gibt „true“ zurück, wenn ein Elementrenderer nicht mehr vom Layout-Algorithmus der Liste platziert wird, während ein Datenänderungseffekt aufgrund eines Aufrufs der unconstrainRenderer()-Methode läuft.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiDesc><codeph>true</codeph>, wenn ein Elementrenderer nicht mehr vom Layout-Algorithmus der Liste platziert wird.
@@ -1271,14 +1239,14 @@
       Gibt <codeph>true</codeph> zurück, wenn ein Elementrenderer nicht mehr vom Layout-Algorithmus der Liste platziert wird, während ein Datenänderungseffekt aufgrund eines Aufrufs der <codeph>unconstrainRenderer()</codeph>-Methode läuft.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:itemRendererContains"><apiName>itemRendererContains</apiName><shortdesc>
-      Legt fest, ob ein Renderer ein Anzeigeobjekt enthält (oder besitzt).</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc><codeph>true</codeph>, wenn der Renderer das Anzeigeobjekt enthält oder besitzt.
+      Bestimmt, ob ein Renderer ein Anzeigeobjekt enthält (oder besitzt).</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc><codeph>true</codeph>, wenn der Renderer das Anzeigeobjekt enthält oder besitzt.
       
       </apiDesc><apiType value="Boolean"/></apiReturn><apiParam><apiItemName>renderer</apiItemName><apiOperationClassifier>mx.controls.listClasses:IListItemRenderer</apiOperationClassifier><apiDesc>Der Renderer, der das Anzeigeobjekt enthält oder besitzt.
      
       </apiDesc></apiParam><apiParam><apiItemName>object</apiItemName><apiType value="flash.display:DisplayObject"/><apiDesc>Das Anzeigeobjekt, das mit dem Renderer verbunden ist.
      
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Legt fest, ob ein Renderer ein Anzeigeobjekt enthält (oder besitzt). Eigentum bedeutet, dass das Anzeigeobjekt dem Renderer nicht untergeordnet, sondern mit ihm in anderer Weise verbunden ist. Popups sollten Eigentum des Renderers sein, damit Aktivitäten im Popup mit dem Renderer verbunden sind und nicht als Aktivität in einer anderen Komponente gesehen werden.
+      Bestimmt, ob ein Renderer ein Anzeigeobjekt enthält (oder besitzt). Eigentum bedeutet, dass das Anzeigeobjekt dem Renderer nicht untergeordnet, sondern mit ihm in anderer Weise verbunden ist. Popups sollten Eigentum des Renderers sein, damit Aktivitäten im Popup mit dem Renderer verbunden sind und nicht als Aktivität in einer anderen Komponente gesehen werden.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:itemRendererToIndex"><apiName>itemRendererToIndex</apiName><shortdesc>
       Gibt die Indexposition des Elements im Datenprovider des Elements zurück, das von diesem Elementrenderer dargestellt wird.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Die Indexposition des Elements im Datenprovider.
@@ -1297,7 +1265,7 @@
       Gibt einen Point zurück, der columnIndex und rowIndex eines Elementrenderers enthält. Da Elementrenderer nur für Elemente innerhalb der Menge anzeigbarer Zeilen erstellt werden, können Sie diese Methode nicht verwenden, um die Indizes für Elemente zu abzurufen, die nicht sichtbar sind. Außerdem werden Elementrenderer wiederverwendet, sodass die Indexpositionen, die Sie für ein Element erhalten, geändert werden können, wenn dieser Elementrenderer wiederverwendet wird, um ein anderes Element anzuzeigen. In der Regel wird diese Methode während Maus- und Tastaturvorgängen aufgerufen, wenn die von einem Elementrenderer angezeigte Datenmenge noch nicht geändert wurde.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:itemToDataTip"><apiName>itemToDataTip</apiName><shortdesc>
-      Gibt den dataTip-String zurück, den der Renderer für das angegebene Datenobjekt auf der Grundlage der dataTipField- und dataTipFunction-Eigenschaften anzeigen würde.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Anzeigbares String-Objekt, das auf den Daten basiert.
+      Gibt den dataTip-String zurück, den der Renderer für das angegebene Datenobjekt auf der Grundlage der dataTipField- und dataTipFunction-Eigenschaften anzeigen würde.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Anzeigbares Stringobjekt, das auf den Daten basiert.
       
       </apiDesc><apiType value="String"/></apiReturn><apiParam><apiItemName>data</apiItemName><apiType value="Object"/><apiDesc>Das darzustellende Objekt.
      
@@ -1315,7 +1283,7 @@
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:itemToItemRenderer"><apiName>itemToItemRenderer</apiName><shortdesc>
       Gibt einen Elementrenderer für ein gegebenes Element im Datenprovider zurück, wenn vorhanden.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Der Elementrenderer oder <codeph>null</codeph>, wenn das Element derzeit nicht angezeigt wird.
       
-      </apiDesc><apiOperationClassifier>mx.controls.listClasses:IListItemRenderer</apiOperationClassifier></apiReturn><apiParam><apiItemName>item</apiItemName><apiType value="Object"/><apiDesc>Das Datenprovider-Element.
+      </apiDesc><apiOperationClassifier>mx.controls.listClasses:IListItemRenderer</apiOperationClassifier></apiReturn><apiParam><apiItemName>item</apiItemName><apiType value="Object"/><apiDesc>Das Datenproviderelement.
      
       </apiDesc></apiParam></apiOperationDef><apiDesc>
       Gibt einen Elementrenderer für ein gegebenes Element im Datenprovider zurück, wenn vorhanden. Da Elementrenderer nur für Elemente existieren, die sich in der Gruppe anzeigbarer Zeilen befinden, gibt diese Methode <codeph>null</codeph> zurück, wenn das Element nicht sichtbar ist. Für DataGrid gibt dies den Renderer der ersten Spalte zurück.
@@ -1329,12 +1297,12 @@
       Gibt den String zurück, den der Renderer für das angegebene Datenobjekt auf der Grundlage der labelField- und labelFunction-Eigenschaften anzeigen würde. Falls die Methode den Parameter nicht in einen String konvertieren kann, wird ein einzelnes Leerzeichen zurückgegeben.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:protected:itemToUID"><apiName>itemToUID</apiName><shortdesc>
-      Legt die UID für ein Datenprovider-Element fest.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiDesc>Die UID als String.
+      Bestimmt die UID für ein Datenproviderelement.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiDesc>Die UID als String.
       
-      </apiDesc><apiType value="String"/></apiReturn><apiParam><apiItemName>data</apiItemName><apiType value="Object"/><apiDesc>Das Datenprovider-Element.
+      </apiDesc><apiType value="String"/></apiReturn><apiParam><apiItemName>data</apiItemName><apiType value="Object"/><apiDesc>Das Datenproviderelement.
      
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Legt die UID für ein Datenprovider-Element fest. Alle Elemente in einem Datenprovider müssen entweder eine eindeutige ID (Unique ID oder UID) haben oder es wird jeweils eine generiert und mit ihnen verknüpft. Dies bedeutet, dass kein Objekt und kein Skalarwert in einem Datenprovider zweimal vorkommen darf. 
+      Bestimmt die UID für ein Datenproviderelement. Alle Elemente in einem Datenprovider müssen entweder eine eindeutige ID (Unique ID oder UID) haben oder es wird jeweils eine generiert und mit ihnen verknüpft. Dies bedeutet, dass kein Objekt und kein Skalarwert in einem Datenprovider zweimal vorkommen darf. 
      
       <p>Beispiel: Der folgende Datenprovider wird nicht unterstützt, weil der Wert „foo“ zweimal vorkommt und die UID für einen String der String selbst ist:</p>
      
@@ -1381,7 +1349,7 @@
       </apiDesc></apiOperationDetail><related-links><link href="mx.core.xml#ScrollControlBase"><linktext>mx.core.ScrollControlBase</linktext></link></related-links></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:measureHeightOfItems"><apiName>measureHeightOfItems</apiName><shortdesc>
       Misst eine Gruppe von Elementen vom Datenprovider unter Verwendung des aktuellen Elementrenderers und gibt die Summe der Höhen dieser Elemente zurück.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Die Summe der Höhen der gemessenen Elemente.
       
-      </apiDesc><apiType value="Number"/></apiReturn><apiParam><apiItemName>index</apiItemName><apiType value="int"/><apiData>-1</apiData><apiDesc>Das Datenprovider-Element, bei dem die Berechnung der Höhen beginnen soll.
+      </apiDesc><apiType value="Number"/></apiReturn><apiParam><apiItemName>index</apiItemName><apiType value="int"/><apiData>-1</apiData><apiDesc>Das Datenproviderelement, bei dem die Berechnung der Höhen beginnen soll.
      
       </apiDesc></apiParam><apiParam><apiItemName>count</apiItemName><apiType value="int"/><apiData>0</apiData><apiDesc>Die Anzahl der Elemente, die für die Berechnung der Höhen einbezogen werden sollen.
      
@@ -1395,12 +1363,12 @@
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:measureWidthOfItems"><apiName>measureWidthOfItems</apiName><shortdesc>
       Misst eine Gruppe von Elementen aus dem Datenprovider unter Verwendung des aktuellen Elementrenderers und gibt die höchste gefundene Breite zurück.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Das breiteste der gefundenen Elemente.
       
-      </apiDesc><apiType value="Number"/></apiReturn><apiParam><apiItemName>index</apiItemName><apiType value="int"/><apiData>-1</apiData><apiDesc>Das Datenprovider-Element, bei dem die Messung der Breite beginnen soll.
+      </apiDesc><apiType value="Number"/></apiReturn><apiParam><apiItemName>index</apiItemName><apiType value="int"/><apiData>-1</apiData><apiDesc>Das Datenproviderelement, bei dem die Messung der Breite beginnen soll.
      
       </apiDesc></apiParam><apiParam><apiItemName>count</apiItemName><apiType value="int"/><apiData>0</apiData><apiDesc>Die Anzahl der Elemente, die für die Messung der Breite einbezogen werden sollen.
      
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Misst eine Gruppe von Elementen aus dem Datenprovider unter Verwendung des aktuellen Elementrenderers und gibt die höchste gefundene Breite zurück. Diese Methode wird verwendet, um die Breite der Komponente zu berechnen. Die diversen von ListBase-abgeleiteten Klassen haben leicht unterschiedliche Implementierungen. DataGrid misst seine Spalten anstelle von Datenprovider-Elementen und TileList misst nur das erste Element und nimmt an, dass alle Elemente gleich groß sind.
+      Misst eine Gruppe von Elementen aus dem Datenprovider unter Verwendung des aktuellen Elementrenderers und gibt die höchste gefundene Breite zurück. Diese Methode wird verwendet, um die Breite der Komponente zu berechnen. Die diversen von ListBase-abgeleiteten Klassen haben leicht unterschiedliche Implementierungen. DataGrid misst seine Spalten anstelle von Datenproviderelementen und TileList misst nur das erste Element und nimmt an, dass alle Elemente gleich groß sind.
      
       <p>Diese Methode ist in der ListBase-Klasse nicht implementiert und muss in der untergeordneten Klasse implementiert werden.</p>
      
@@ -1410,13 +1378,13 @@
       Verarbeitet MouseEvent.MOUSE_CLICK-Ereignisse von Mauszielen, die in der Liste enthalten sind, einschließlich der Renderer.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>event</apiItemName><apiType value="flash.events:MouseEvent"/><apiDesc>Das MouseEvent-Objekt.
       
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Verarbeitet <codeph>MouseEvent.MOUSE_CLICK</codeph>-Ereignisse von Mauszielen, die in der Liste enthalten sind, einschließlich der Renderer. Diese Methode ermittelt, welcher Renderer angeklickt wurde, und löst ein <codeph>ListEvent.ITEM_CLICK</codeph>-Ereignis aus.
+      Verarbeitet <codeph>MouseEvent.MOUSE_CLICK</codeph>-Ereignisse von Mauszielen, die in der Liste enthalten sind, einschließlich der Renderer. Diese Methode bestimmt, welcher Renderer angeklickt wurde, und löst ein <codeph>ListEvent.ITEM_CLICK</codeph>-Ereignis aus.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:protected:mouseDoubleClickHandler"><apiName>mouseDoubleClickHandler</apiName><shortdesc>
       Verarbeitet MouseEvent.MOUSE_DOUBLE_CLICK-Ereignisse von Mauszielen, die in der Liste enthalten sind, einschließlich der Renderer.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>event</apiItemName><apiType value="flash.events:MouseEvent"/><apiDesc>Das MouseEvent-Objekt.
       
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Verarbeitet <codeph>MouseEvent.MOUSE_DOUBLE_CLICK</codeph>-Ereignisse von Mauszielen, die in der Liste enthalten sind, einschließlich der Renderer. Diese Methode ermittelt, welcher Renderer angeklickt wurde, und löst ein <codeph>ListEvent.ITEM_DOUBLE_CLICK</codeph>-Ereignis aus.
+      Verarbeitet <codeph>MouseEvent.MOUSE_DOUBLE_CLICK</codeph>-Ereignisse von Mauszielen, die in der Liste enthalten sind, einschließlich der Renderer. Diese Methode bestimmt, welcher Renderer angeklickt wurde, und löst ein <codeph>ListEvent.ITEM_DOUBLE_CLICK</codeph>-Ereignis aus.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:protected:mouseDownHandler"><apiName>mouseDownHandler</apiName><shortdesc>
       Verarbeitet MouseEvent.MOUSE_DOWN-Ereignisse von Mauszielen, die in der Liste enthalten sind, einschließlich der Renderer.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>event</apiItemName><apiType value="flash.events:MouseEvent"/><apiDesc>Das MouseEvent-Objekt.
@@ -1425,12 +1393,12 @@
       Verarbeitet <codeph>MouseEvent.MOUSE_DOWN</codeph>-Ereignisse von Mauszielen, die in der Liste enthalten sind, einschließlich der Renderer. Diese Methode findet den Renderer, auf den geklickt wurde, und bereitet den Empfang eines <codeph>MouseEvent.MOUSE_UP</codeph>-Ereignisses vor.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:protected:mouseEventToItemRenderer"><apiName>mouseEventToItemRenderer</apiName><shortdesc>
-      Ermittelt, welcher Elementrenderer sich unter dem Mauszeiger befindet.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiDesc>Der Elementrenderer, über dem der Mauszeiger steht, oder <codeph>null</codeph>, wenn keiner vorhanden ist.
+      Bestimmt, welcher Elementrenderer sich unter dem Mauszeiger befindet.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiDesc>Der Elementrenderer, über dem der Mauszeiger steht, oder <codeph>null</codeph>, wenn keiner vorhanden ist.
       
       </apiDesc><apiOperationClassifier>mx.controls.listClasses:IListItemRenderer</apiOperationClassifier></apiReturn><apiParam><apiItemName>event</apiItemName><apiType value="flash.events:MouseEvent"/><apiDesc>Ein MouseEvent, das die Position des Mauszeigers und des Objekts enthält, über dem er steht.
      
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Ermittelt, welcher Elementrenderer sich unter dem Mauszeiger befindet. Elementrenderer können aus mehreren Mauszielen bestehen oder sichtbare Bereiche haben, die keine Mausziele sind. Diese Methode prüft sowohl die Ziele als auch die Position, um zu ermitteln, über welchem Elementrenderer der Mauszeiger aus der Perspektive des Benutzers steht, weil diese von den Informationen abweichen kann, die vom Mausereignis übergeben wurden.
+      Bestimmt, welcher Elementrenderer sich unter dem Mauszeiger befindet. Elementrenderer können aus mehreren Mauszielen bestehen oder sichtbare Bereiche haben, die keine Mausziele sind. Diese Methode prüft sowohl die Ziele als auch die Position, um zu ermitteln, über welchem Elementrenderer der Mauszeiger aus der Perspektive des Benutzers steht, weil diese von den Informationen abweichen kann, die vom Mausereignis übergeben wurden.
       
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:protected:mouseMoveHandler"><apiName>mouseMoveHandler</apiName><shortdesc>
       Verarbeitet MouseEvent.MOUSE_MOVE-Ereignisse von Mauszielen, die in der Liste enthalten sind, einschließlich der Renderer.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>event</apiItemName><apiType value="flash.events:MouseEvent"/><apiDesc>Das MouseEvent-Objekt.
@@ -1531,7 +1499,7 @@
       Entfernt eine Zeile aus den Arrays, die Verweise auf die Zeile speichern.
       
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:protected:removeIndicators"><apiName>removeIndicators</apiName><shortdesc>
-      Entfernt Auswahlhervorhebungen und andere damit verbundene Grafikeffekte für ein gegebenes Element im Datenprovider.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>uid</apiItemName><apiType value="String"/><apiDesc>Die UID des Datenprovider-Elements.
+      Entfernt Auswahlhervorhebungen und andere damit verbundene Grafikeffekte für ein gegebenes Element im Datenprovider.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>uid</apiItemName><apiType value="String"/><apiDesc>Die UID des Datenproviderelements.
       
       </apiDesc></apiParam></apiOperationDef><apiDesc>
       Entfernt Auswahlhervorhebungen und andere damit verbundene Grafikeffekte für ein gegebenes Element im Datenprovider.
@@ -1564,12 +1532,12 @@
       Gibt die Datenprovider-Indexposition für das Element in der ersten sichtbaren Zeile und Spalte für die gegebenen Bildlaufpositionen zurück.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:scrollToIndex"><apiName>scrollToIndex</apiName><shortdesc>
-      Sorgt dafür, dass das Datenprovider-Element an der gegebenen Indexposition sichtbar ist.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc><codeph>true</codeph>, wenn sich <codeph>verticalScrollPosition</codeph> geändert hat.
+      Sorgt dafür, dass das Datenproviderelement an der gegebenen Indexposition sichtbar ist.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc><codeph>true</codeph>, wenn sich <codeph>verticalScrollPosition</codeph> geändert hat.
       
       </apiDesc><apiType value="Boolean"/></apiReturn><apiParam><apiItemName>index</apiItemName><apiType value="int"/><apiDesc>Die Indexposition des Elements im Datenprovider.
      
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Sorgt dafür, dass das Datenprovider-Element an der gegebenen Indexposition sichtbar ist. Wenn das Element sichtbar ist, bleibt die <codeph>verticalScrollPosition</codeph>-Eigenschaft unverändert, auch wenn das Element nicht das erste sichtbare Element ist. Wenn das Element derzeit nicht sichtbar ist, wird die <codeph>verticalScrollPosition</codeph>-Eigenschaft geändert, um das Element zum ersten sichtbaren Element zu machen, außer wenn nicht genügend Zeilen vorhanden sind, um dies zu tun, weil der <codeph>verticalScrollPosition</codeph>-Wert durch die <codeph>maxVerticalScrollPosition</codeph>-Eigenschaft begrenzt ist.
+      Sorgt dafür, dass das Datenproviderelement an der gegebenen Indexposition sichtbar ist. Wenn das Element sichtbar ist, bleibt die <codeph>verticalScrollPosition</codeph>-Eigenschaft unverändert, auch wenn das Element nicht das erste sichtbare Element ist. Wenn das Element derzeit nicht sichtbar ist, wird die <codeph>verticalScrollPosition</codeph>-Eigenschaft geändert, um das Element zum ersten sichtbaren Element zu machen, außer wenn nicht genügend Zeilen vorhanden sind, um dies zu tun, weil der <codeph>verticalScrollPosition</codeph>-Wert durch die <codeph>maxVerticalScrollPosition</codeph>-Eigenschaft begrenzt ist.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:protected:scrollVertically"><apiName>scrollVertically</apiName><shortdesc>
       Passt die Renderer an die Änderungen in der Bildlaufposition an.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>pos</apiItemName><apiType value="int"/><apiDesc>Die neue Bildlaufposition.
@@ -1636,18 +1604,18 @@
       Versetzt eine Zeile in den Arrays, die auf Zeilen verweisen.
       
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:showDropFeedback"><apiName>showDropFeedback</apiName><shortdesc>
-      Zeigt einen Drop-Indikator unter dem Mauszeiger, um anzuzeigen, dass ein Drag&amp;-Drop-Vorgang zulässig ist und wo die Elemente abgelegt werden.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>event</apiItemName><apiOperationClassifier>mx.events:DragEvent</apiOperationClassifier><apiDesc>Ein DragEvent-Objekt, das Informationen darüber enthält, wo sich der Mauszeiger befindet.
+      Zeigt einen Dropindikator unter dem Mauszeiger an, um darauf hinzuweisen, dass ein Drag &amp; Drop-Vorgang zulässig ist und wo die Elemente abgelegt werden.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>event</apiItemName><apiOperationClassifier>mx.events:DragEvent</apiOperationClassifier><apiDesc>Ein DragEvent-Objekt, das Informationen darüber enthält, wo sich der Mauszeiger befindet.
       
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Zeigt einen Drop-Indikator unter dem Mauszeiger, um anzuzeigen, dass ein Drag&amp;-Drop-Vorgang zulässig ist und wo die Elemente abgelegt werden.
+      Zeigt einen Dropindikator unter dem Mauszeiger an, um darauf hinzuweisen, dass ein Drag &amp; Drop-Vorgang zulässig ist und wo die Elemente abgelegt werden.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:protected:sumRowHeights"><apiName>sumRowHeights</apiName><shortdesc>
-      Ermittelt die Höhe der angeforderten Gruppe von Zeilen.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiDesc>Die Gesamthöhe der Zeilen.
+      Bestimmt die Höhe der angeforderten Gruppe von Zeilen.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiDesc>Die Gesamthöhe der Zeilen.
       
       </apiDesc><apiType value="Number"/></apiReturn><apiParam><apiItemName>startRowIdx</apiItemName><apiType value="int"/><apiDesc>Die Indexposistion der ersten Zeile.
       </apiDesc></apiParam><apiParam><apiItemName>endRowIdx</apiItemName><apiType value="int"/><apiDesc>Die Indexposistion der letzten Zeile.
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Ermittelt die Höhe der angeforderten Gruppe von Zeilen.
+      Bestimmt die Höhe der angeforderten Gruppe von Zeilen.
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:protected:truncateRowArrays"><apiName>truncateRowArrays</apiName><shortdesc>
       Entfernt alle verbleibenden Zeilen am Ende der Arrays, die Verweise auf die Zeilen speichern.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>numRows</apiItemName><apiType value="int"/><apiDesc>Die Zeilenindexposition, ab der verkürzt wird.
       
@@ -1663,9 +1631,9 @@
       Diese Funktion wird von einem <codeph>UnconstrainItemAction</codeph>-Effekt im Zuge eines Datenänderungseffekts aufgerufen, wenn die zu bestimmten Datenelementen gehörenden Elementrenderer außerhalb der normalen Positionen von Elementrenderern im Steuerelement bewegt werden müssen. Das Steuerelement versucht während der Dauer des Effekts nicht, den Elementrenderer zu platzieren.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.listClasses:ListBase:protected:updateDisplayList"><apiName>updateDisplayList</apiName><shortdesc>
-      Fügt Elementrenderer hinzu oder entfernt sie, wenn sich die Anzahl anzeigbarer Elemente ändert.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiIsOverride/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>unscaledWidth</apiItemName><apiType value="Number"/><apiDesc>Legt die Breite der Komponente in Pixeln in den Koordinaten der Komponente fest, ungeachtet des Werts der <codeph>scaleX</codeph>-Eigenschaft der Komponente.
+      Fügt Elementrenderer hinzu oder entfernt sie, wenn sich die Anzahl anzeigbarer Elemente ändert.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiIsOverride/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>unscaledWidth</apiItemName><apiType value="Number"/><apiDesc>Legt die Breite der Komponente in Pixeln und deren Koordinaten fest, unabhängig vom Wert der <codeph>scaleX</codeph>-Eigenschaft der Komponente.
      
-      </apiDesc></apiParam><apiParam><apiItemName>unscaledHeight</apiItemName><apiType value="Number"/><apiDesc>Legt die Höhe der Komponente in Pixeln in den Koordinaten der Komponente fest, ungeachtet des Werts der <codeph>scaleY</codeph>-Eigenschaft der Komponente.
+      </apiDesc></apiParam><apiParam><apiItemName>unscaledHeight</apiItemName><apiType value="Number"/><apiDesc>Legt die Höhe der Komponente in Pixeln und deren Koordinaten fest, unabhängig vom Wert der <codeph>scaleY</codeph>-Eigenschaft der Komponente.
      
       </apiDesc></apiParam></apiOperationDef><apiDesc>
       Fügt Elementrenderer hinzu oder entfernt sie, wenn sich die Anzahl anzeigbarer Elemente ändert. Aktualisiert die Elementrenderer, wenn sie sich verändert haben könnten. Wendet die Auswahl an, wenn sie programmgesteuert geändert wurde.
@@ -1714,9 +1682,9 @@
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.listClasses:ListBase:protected:caretItemRenderer"><apiName>caretItemRenderer</apiName><shortdesc>
       Der Renderer für das Element unter dem Einfügezeichen.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="protected"/><apiDynamic/><apiValueClassifier>mx.controls.listClasses:IListItemRenderer</apiValueClassifier></apiValueDef><apiDesc>
-      Der Renderer für das Element unter dem Einfügezeichen. Im Auswahlmodell befinden sich ein Anker, ein Einfügezeichen und ein hervorgehobenes Element. Bei einer Auswahl per Mausklick wird das Element unter dem Mauszeiger hervorgehoben, wenn er darüber geführt wird. Bei einem Mausklick ohne Modifizierungstaste (Umschalttaste oder Strg-Taste) wird die Gruppe der ausgewählten Elemente gelöscht, das Element unter der Hervorhebung wird ausgewählt und zum Anker. Das Einfügezeichen wird bei der Auswahl per Mausklick nicht verwendet. Wenn ein Anker vorhanden ist und die Auswahl eines anderen Elements mit gedrückter Umschalttaste erfolgt, wird die bisherige Gruppe ausgewählter Elemente gelöscht und alle Elemente zwischen dem Element und dem Anker werden ausgewählt. Bei der Auswahl mehrerer Elemente per Mausklick bei gedrückter Strg-Taste werden die einzelnen Elemente nacheinander ausgewählt, der Anker hingegen wird nicht verschoben.
+      Der Renderer für das Element unter dem Einfügezeichen. Im Auswahlmodell befinden sich ein Anker, ein Einfügezeichen und ein hervorgehobenes Element. Bei Auswahl mit der Maus wird das Element unter dem Mauszeiger bei Rollover hervorgehoben. Bei einem Mausklick ohne Modifizierungstaste (Umschalttaste oder Strg-Taste) wird die Gruppe der ausgewählten Elemente gelöscht, das Element unter der Hervorhebung wird ausgewählt und zum Anker. Das Einfügezeichen wird bei der Auswahl per Mausklick nicht verwendet. Wenn ein Anker vorhanden ist und die Auswahl eines anderen Elements mit gedrückter Umschalttaste erfolgt, wird die bisherige Gruppe ausgewählter Elemente gelöscht und alle Elemente zwischen dem Element und dem Anker werden ausgewählt. Bei der Auswahl mehrerer Elemente per Mausklick bei gedrückter Strg-Taste werden die einzelnen Elemente nacheinander ausgewählt, der Anker hingegen wird nicht verschoben.
      
-      <p>Wenn bei der Auswahl von Elementen über die Tastatur die Pfeiltasten ohne Zusatztasten verwendet werden, wird die bisherige Auswahl gelöscht. Das neue Element wird ausgewählt und zum Anker und ein Einfügezeichen-Indikator wird rund um die hervorgehobene Auswahl angezeigt. Wenn der Benutzer die Pfeiltasten mit gedrückter Umschalttaste verwendet, wird die bisherige Auswahl gelöscht und die Elemente zwischen dem Anker und dem neuen Element werden ausgewählt. Das Einfügezeichen wandert zum neuen Objekt. Wenn Pfeiltasten mit gedrückter Strg-Taste verwendet werden, bewegt sich nur das Einfügezeichen. Der Benutzer kann die Leertaste betätigen, um ein Element unter dem Einfügezeichen an- oder abzuwählen.</p>
+      <p>Wenn bei der Auswahl von Elementen über die Tastatur die Pfeiltasten ohne Zusatztasten verwendet werden, wird die bisherige Auswahl gelöscht. Das neue Element wird ausgewählt und zum Anker und ein Einfügezeichenindikator wird rund um die hervorgehobene Auswahl angezeigt. Wenn der Benutzer die Pfeiltasten mit gedrückter Umschalttaste verwendet, wird die bisherige Auswahl gelöscht und die Elemente zwischen dem Anker und dem neuen Element werden ausgewählt. Das Einfügezeichen wandert zum neuen Objekt. Wenn Pfeiltasten mit gedrückter Strg-Taste verwendet werden, bewegt sich nur das Einfügezeichen. Der Benutzer kann die Leertaste betätigen, um ein Element unter dem Einfügezeichen an- oder abzuwählen.</p>
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.listClasses:ListBase:protected:caretUID"><apiName>caretUID</apiName><shortdesc>
       Die UID für das Element unter dem Einfügezeichen.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="protected"/><apiDynamic/><apiType value="String"/></apiValueDef><apiDesc>
@@ -1874,7 +1842,7 @@
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.listClasses:ListBase:protected:reservedItemRenderers"><apiName>reservedItemRenderers</apiName><shortdesc>
       Eine Hash-Matrix von derzeit nicht verwendeten Elementrenderern, die in naher Zukunft wieder verwendet werden können.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="protected"/><apiDynamic/><apiData>unknown</apiData><apiType value="Object"/></apiValueDef><apiDesc>
-      Eine Hash-Matrix von derzeit nicht verwendeten Elementrenderern, die in naher Zukunft wieder verwendet werden können. Wird beim Ausführen von Dateneffekten verwendet. Die Matrix wird durch die UID des Datenprovider-Elements indiziert.
+      Eine Hash-Matrix von derzeit nicht verwendeten Elementrenderern, die in naher Zukunft wieder verwendet werden können. Wird beim Ausführen von Dateneffekten verwendet. Die Matrix wird durch die UID des Datenproviderelements indiziert.
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.listClasses:ListBase:protected:rowMap"><apiName>rowMap</apiName><shortdesc>
       Eine Hash-Matrix von Elementrenderern für ihr jeweiliges ListRowInfo-Objekt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="protected"/><apiDynamic/><apiData>unknown</apiData><apiType value="Object"/></apiValueDef><apiDesc>
@@ -1938,7 +1906,7 @@
       Das Element in dem Datenprovider, den diese Komponente rendern soll, wenn diese Komponente als Elementrenderer oder Elementeditor verwendet wird.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Object"/></apiValueDef><apiDesc>
       Das Element in dem Datenprovider, den diese Komponente rendern soll, wenn diese Komponente als Elementrenderer oder Elementeditor verwendet wird. Die Listenklasse legt diese Eigenschaft für jeden Renderer oder Editor fest und die Komponente zeigt die Daten an. Von ListBase abgeleitete Klassen unterstützen diese Eigenschaften für komplexe Situationen, etwa wenn eine Liste mit DataGrids oder ein DataGrid vorhanden ist, in dem eine Spalte eine Liste ist.
      
-      <p>Die Listenklassen verwenden die <codeph>listData</codeph>-Eigenschaft zusätzlich zur <codeph>data</codeph>-Eigenschaft, um zu ermitteln, was angezeigt werden soll. Wenn sich die Listenklasse in einem DataGrid befindet, erwartet sie, dass die <codeph>dataField</codeph>-Eigenschaft der Spalte einer Eigenschaft in den Daten zugeordnet wird, und legt den <codeph>selectedItem</codeph>-Wert mit dieser Eigenschaft fest. Wenn sie sich in einem List- oder TileList-Steuerelement befindet, erwartet sie, dass die <codeph>labelField</codeph>-Eigenschaft der Liste einer Eigenschaft in den Daten zugeordnet wird, und legt den <codeph>selectedItem</codeph>-Wert mit dieser Eigenschaft fest. Sonst legt sie <codeph>selectedItem</codeph> mit den Daten selbst fest.</p>
+      <p>Die Listenklassen verwenden die <codeph>listData</codeph>-Eigenschaft zusätzlich zur <codeph>data</codeph>-Eigenschaft, um zu bestimmen, was angezeigt werden soll. Wenn sich die Listenklasse in einem DataGrid befindet, erwartet sie, dass die <codeph>dataField</codeph>-Eigenschaft der Spalte einer Eigenschaft in den Daten zugeordnet wird, und legt den <codeph>selectedItem</codeph>-Wert mit dieser Eigenschaft fest. Wenn sie sich in einem List- oder TileList-Steuerelement befindet, erwartet sie, dass die <codeph>labelField</codeph>-Eigenschaft der Liste einer Eigenschaft in den Daten zugeordnet wird, und legt den <codeph>selectedItem</codeph>-Wert mit dieser Eigenschaft fest. Sonst legt sie <codeph>selectedItem</codeph> mit den Daten selbst fest.</p>
      
       <p>Diese Eigenschaft nutzt den Datenprovider, legt ihn aber nicht fest. In allen Fällen müssen Sie den Datenprovider auf andere Weise festlegen.</p>
      
@@ -1952,16 +1920,16 @@
       <p>Aus den Umwandlungen ergibt sich: Wenn Sie die <codeph>dataProvider</codeph>-Eigenschaft abrufen, ist sie immer eine ICollectionView-Schnittstelle und stellt daher nicht notwendigerweise den Objekttyp dar, den Sie verwendet haben, um die Eigenschaft festzulegen. Dieses Verhalten ist zu berücksichtigen, wenn Sie die Daten im Datenprovider ändern möchten: Änderungen an den Originaldaten werden möglicherweise nicht erkannt, Änderungen im ICollectionView-Objekt, das Sie von der <codeph>dataProvider</codeph>-Eigenschaft zurück erhalten, werden erkannt.</p>
      
       </apiDesc></apiValueDetail><related-links><link href="mx.collections.xml#ICollectionView"><linktext>mx.collections.ICollectionView</linktext></link></related-links></apiValue><apiValue id="mx.controls.listClasses:ListBase:dataTipField:get"><apiName>dataTipField</apiName><shortdesc>
-      Name des Felds in den Datenprovider-Elementen, das als Datentipp angezeigt werden soll.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="String"/><apiDefaultValue>null
+      Name des Felds in den Datenproviderelementen, das als Datentipp angezeigt werden soll.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="String"/><apiDefaultValue>null
       
       </apiDefaultValue></apiValueDef><apiDesc>
-      Name des Felds in den Datenprovider-Elementen, das als Datentipp angezeigt werden soll. Standardmäßig sucht das List-Steuerelement in jedem Element nach einer Eigenschaft namens <codeph>label</codeph> und zeigt sie an. Wenn allerdings die Datenobjekte keine <codeph>label</codeph>-Eigenschaft enthalten, können Sie die <codeph>dataTipField</codeph>-Eigenschaft so festlegen, dass sie eine andere Eigenschaft im Datenobjekt verwendet. Ein Beispiel wäre etwa „FullName“ bei der Anzeige von Personennamen, die aus einer Datenbank abgerufen werden.
+      Name des Felds in den Datenproviderelementen, das als Datentipp angezeigt werden soll. Standardmäßig sucht das List-Steuerelement in jedem Element nach einer Eigenschaft namens <codeph>label</codeph> und zeigt sie an. Wenn allerdings die Datenobjekte keine <codeph>label</codeph>-Eigenschaft enthalten, können Sie die <codeph>dataTipField</codeph>-Eigenschaft so festlegen, dass sie eine andere Eigenschaft im Datenobjekt verwendet. Ein Beispiel wäre etwa „FullName“ bei der Anzeige von Personennamen, die aus einer Datenbank abgerufen werden.
      
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.listClasses:ListBase:dataTipFunction:get"><apiName>dataTipFunction</apiName><shortdesc>
       Vom Benutzer bereitgestellte Funktion, die für jedes Element zum Bestimmen seines Datentipps ausgeführt werden soll.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Function"/><apiDefaultValue>null
       
       </apiDefaultValue></apiValueDef><apiDesc>
-      Vom Benutzer bereitgestellte Funktion, die für jedes Element zum Bestimmen seines Datentipps ausgeführt werden soll. Standardmäßig sucht das List-Steuerelement nach einer Eigenschaft namens <codeph>label</codeph> in jedem Datenprovider-Element und zeigt sie an. Allerdings haben einige Elemente keine <codeph>label</codeph>-Eigenschaft bzw. keine andere Eigenschaft, die Sie für die Anzeige in den Zeilen verwenden können. Als Beispiel kann ein Datensatz angeführt werden, der die Felder lastName und firstName besitzt. Sie möchten aber die vollständigen Namen anzeigen. Sie können eine <codeph>dataTipFunction</codeph> verwenden, die die entsprechenden Felder findet und einen anzeigbaren String zurückgibt. Die <codeph>dataTipFunction</codeph> ist für die Verarbeitung von Formatierungen und lokalisierten Texten sinnvoll.
+      Vom Benutzer bereitgestellte Funktion, die für jedes Element zum Bestimmen seines Datentipps ausgeführt werden soll. Standardmäßig sucht das List-Steuerelement nach einer Eigenschaft namens <codeph>label</codeph> in jedem Datenproviderelement und zeigt sie an. Allerdings haben einige Elemente keine <codeph>label</codeph>-Eigenschaft bzw. keine andere Eigenschaft, die Sie für die Anzeige in den Zeilen verwenden können. Als Beispiel kann ein Datensatz angeführt werden, der die Felder lastName und firstName besitzt. Sie möchten aber die vollständigen Namen anzeigen. Sie können eine <codeph>dataTipFunction</codeph> verwenden, die die entsprechenden Felder findet und einen anzeigbaren String zurückgibt. Die <codeph>dataTipFunction</codeph> ist für die Verarbeitung von Formatierungen und lokalisierten Texten sinnvoll.
      
       <p>Die dataTipFunction übernimmt ein einzelnes Argument, nämlich das Element im Datenprovider, und gibt einen String zurück, wie im folgenden Beispiel gezeigt wird:</p>
      
@@ -1971,23 +1939,23 @@
       Ein Flag, das angibt, ob Sie Elemente aus diesem Steuerelement herausziehen und auf anderen Steuerelementen ablegen können.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Boolean"/><apiDefaultValue>false
       
       </apiDefaultValue></apiValueDef><apiDesc>
-      Ein Flag, das angibt, ob Sie Elemente aus diesem Steuerelement herausziehen und auf anderen Steuerelementen ablegen können. Wenn <codeph>true</codeph>, wird das Ziehen für das Steuerelement zugelassen. Wenn die <codeph>dropEnabled</codeph>-Eigenschaft ebenfalls <codeph>true</codeph> ist, können Sie Elemente in diesem Steuerelement ziehen und ablegen, um die Elemente neu anzuordnen.
+      Ein Flag, das angibt, ob Sie Elemente aus diesem Steuerelement herausziehen und auf anderen Steuerelementen ablegen können. Wenn <codeph>true</codeph>, wird das Ziehen für das Steuerelement zugelassen. Wenn die <codeph>dropEnabled</codeph>-Eigenschaft ebenfalls <codeph>true</codeph> ist, können Sie in diesem Steuerelement Elemente ziehen und ablegen, um diese Elemente neu anzuordnen.
      
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.listClasses:ListBase:protected:dragImage:get"><apiName>dragImage</apiName><shortdesc>
-      Bezieht eine Instanz einer Klasse, die die Grafiken während des Drag&amp;Drop-Vorgangs anzeigt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="protected"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>mx.core:IUIComponent</apiValueClassifier><apiDefaultValue>mx.controls.listClasses.ListItemDragProxy
+      Bezieht eine Instanz einer Klasse, die die Grafiken während des Drag &amp; Drop-Vorgangs anzeigt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="protected"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>mx.core:IUIComponent</apiValueClassifier><apiDefaultValue>mx.controls.listClasses.ListItemDragProxy
       
       </apiDefaultValue></apiValueDef><apiDesc>
-      Bezieht eine Instanz einer Klasse, die die Grafiken während des Drag&amp;Drop-Vorgangs anzeigt.
+      Bezieht eine Instanz einer Klasse, die die Grafiken während des Drag &amp; Drop-Vorgangs anzeigt.
      
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.listClasses:ListBase:protected:dragImageOffsets:get"><apiName>dragImageOffsets</apiName><shortdesc>
-      Bezieht den Offset des Ziehbilds bei Drag&amp;Drop.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="protected"/><apiDynamic/><apiValueAccess value="read"/><apiType value="flash.geom:Point"/></apiValueDef><apiDesc>
-      Bezieht den Offset des Ziehbilds bei Drag&amp;Drop.
+      Bezieht den Offset des Ziehbilds bei Drag &amp; Drop.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="protected"/><apiDynamic/><apiValueAccess value="read"/><apiType value="flash.geom:Point"/></apiValueDef><apiDesc>
+      Bezieht den Offset des Ziehbilds bei Drag &amp; Drop.
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.listClasses:ListBase:dragMoveEnabled:get"><apiName>dragMoveEnabled</apiName><shortdesc>
-      Ein Flag, das anzeigt, ob Elemente aus dem Steuerelement bei einem Drag&amp;Drop-Vorgang verschoben werden können, anstatt sie nur zu kopieren. </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Boolean"/><apiDefaultValue>false
+      Ein Flag, das anzeigt, ob Elemente aus dem Steuerelement bei einem Drag &amp; Drop-Vorgang verschoben werden können, anstatt sie nur zu kopieren. </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Boolean"/><apiDefaultValue>false
       
       </apiDefaultValue></apiValueDef><apiDesc>
-      Ein Flag, das anzeigt, ob Elemente aus dem Steuerelement bei einem Drag&amp;Drop-Vorgang verschoben werden können, anstatt sie nur zu kopieren. Wenn <codeph>true</codeph> und die <codeph>dragEnabled</codeph>-Eigenschaft ebenfalls <codeph>true</codeph> ist, können Elemente bewegt werden. Oft sollen oder können Elemente aus dem Datenprovider nicht heraus bewegt werden. In diesem Fall sollte ein MOVE-Vorgang bei Drag&amp;Drop nicht zulässig sein.
+      Ein Flag, das anzeigt, ob Elemente aus dem Steuerelement bei einem Drag &amp; Drop-Vorgang verschoben werden können, anstatt sie nur zu kopieren. Wenn <codeph>true</codeph> und die <codeph>dragEnabled</codeph>-Eigenschaft ebenfalls <codeph>true</codeph> ist, können Elemente bewegt werden. Oft sollen oder können Elemente aus dem Datenprovider nicht heraus bewegt werden. In diesem Fall sollte ein MOVE-Vorgang bei Drag &amp; Drop nicht zulässig sein.
      
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.listClasses:ListBase:dropEnabled:get"><apiName>dropEnabled</apiName><shortdesc>
       Ein Flag, das anzeigt, ob gezogene Elemente auf dem Steuerelement abgelegt werden können.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Boolean"/><apiDefaultValue>false
@@ -1997,15 +1965,15 @@
      
       <p>Wenn Sie diese Eigenschaft auf <codeph>true</codeph> einstellen, akzeptiert das Steuerelement alle Datenformate und geht davon aus, dass die gezogenen Daten zum Format der Daten im Datenprovider passen. Wenn Sie das Datenformat der gezogenen Daten explizit prüfen möchten, müssen Sie mindestens ein Drag-Ereignis verarbeiten, wie beispielsweise <codeph>dragOver</codeph>, und die <codeph>preventDefault()</codeph>-Methode des DragEvents aufrufen, um die Art anzupassen, wie die Listenklasse abgelegte Daten akzeptiert.</p>
      
-      <p>Wenn Sie <codeph>dropEnabled</codeph> auf <codeph>true</codeph> einstellen, ruft Flex automatisch die <codeph>showDropFeedback()</codeph>- und <codeph>hideDropFeedback()</codeph>-Methode auf, um den Drop-Indikator anzuzeigen.</p>
+      <p>Wenn Sie <codeph>dropEnabled</codeph> auf <codeph>true</codeph> einstellen, ruft Flex automatisch die <codeph>showDropFeedback()</codeph>- und <codeph>hideDropFeedback()</codeph>-Methode auf, um den Dropindikator anzuzeigen.</p>
      
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.listClasses:ListBase:iconField:get"><apiName>iconField</apiName><shortdesc>
-      Der Name des Felds im Datenprovider-Objekt, der angibt, was als Symbol angezeigt werden soll.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="String"/><apiDefaultValue>null
+      Der Name des Felds im Datenprovider-Objekt, der bestimmt, was als Symbol angezeigt werden soll.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="String"/><apiDefaultValue>null
       
       </apiDefaultValue></apiValueDef><apiDesc>
-      Der Name des Felds im Datenprovider-Objekt, der angibt, was als Symbol angezeigt werden soll. Standardmäßig versucht die Listenklasse nicht, Symbole mit Texten in den Zeilen anzuzeigen. Wenn Sie aber ein Symbolfeld angeben, können Sie die Grafik festlegen, die als Symbol in der Zeile erstellt und angezeigt wird. Diese Eigenschaft wird von DataGrid ignoriert.
+      Der Name des Felds im Datenprovider-Objekt, der bestimmt, was als Symbol angezeigt werden soll. Standardmäßig versucht die Listenklasse nicht, Symbole mit Texten in den Zeilen anzuzeigen. Wenn Sie aber ein Symbolfeld angeben, können Sie die Grafik festlegen, die als Symbol in der Zeile erstellt und angezeigt wird. Diese Eigenschaft wird von DataGrid ignoriert.
      
-      <p>Die Renderer suchen im Datenprovider-Objekt nach einer Eigenschaft mit dem Namen, der als iconField übergeben wurde. Wenn der Wert der Eigenschaft eine Klasse ist, wird diese Klasse instanziert und es wird erwartet, dass diese Klasse eine Instanz von IFlexDisplayObject ist. Wenn der Wert der Eigenschaft ein String ist, wird geprüft, ob eine Klasse mit diesem Namen in der Anwendung vorhanden ist. Sollte keine gefunden werden, wird nach dem Dokument mit diesem Namen gesucht und erwartet, dass diese Eigenschaft einer Klasse zugeordnet ist.</p>
+      <p>Die Renderer suchen im Datenprovider-Objekt nach einer Eigenschaft mit dem Namen, der als iconField übergeben wurde. Wenn der Wert der Eigenschaft eine Klasse ist, wird diese Klasse instanziiert und es wird erwartet, dass diese Klasse eine Instanz von IFlexDisplayObject ist. Wenn der Wert der Eigenschaft ein String ist, wird geprüft, ob eine Klasse mit diesem Namen in der Anwendung vorhanden ist. Sollte keine gefunden werden, wird nach dem Dokument mit diesem Namen gesucht und erwartet, dass diese Eigenschaft einer Klasse zugeordnet ist.</p>
      
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.listClasses:ListBase:iconFunction:get"><apiName>iconFunction</apiName><shortdesc>
       Eine vom Benutzer bereitgestellte Funktion, die für jedes Element zum Bestimmen seines Symbols ausgeführt werden soll.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Function"/><apiDefaultValue>null
@@ -2024,16 +1992,16 @@
       <p>Welcher Elementrenderer Standardwert ist, hängt von der Komponentenklasse ab. Die Klassen TileList und HorizontalList verwenden TileListItemRenderer, die List-Klasse verwendet ListItemRenderer. Die DataGrid-Klasse verwendet DataGridItemRenderer aus DataGridColumn.</p>
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.listClasses:ListBase:labelField:get"><apiName>labelField</apiName><shortdesc>
-      Der Name des Felds im Datenprovider-Element, das als Beschriftung angezeigt werden soll.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="String"/><apiDefaultValue>"label"
+      Der Name des Felds im Datenproviderelement, das als Beschriftung angezeigt werden soll.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="String"/><apiDefaultValue>"label"
       
       </apiDefaultValue></apiValueDef><apiDesc>
-      Der Name des Felds im Datenprovider-Element, das als Beschriftung angezeigt werden soll. Standardmäßig sucht das List-Steuerelement in jedem Element nach einer Eigenschaft namens <codeph>label</codeph> und zeigt sie an. Wenn allerdings die Datenobjekte keine <codeph>label</codeph>-Eigenschaft enthalten, können Sie die <codeph>labelField</codeph>-Eigenschaft so festlegen, dass sie eine andere Eigenschaft im Datenobjekt verwendet. Ein Beispiel wäre etwa „FullName“ bei der Anzeige von Personennamen, die aus einer Datenbank abgerufen werden.
+      Der Name des Felds im Datenproviderelement, das als Beschriftung angezeigt werden soll. Standardmäßig sucht das List-Steuerelement in jedem Element nach einer Eigenschaft namens <codeph>label</codeph> und zeigt sie an. Wenn allerdings die Datenobjekte keine <codeph>label</codeph>-Eigenschaft enthalten, können Sie die <codeph>labelField</codeph>-Eigenschaft so festlegen, dass sie eine andere Eigenschaft im Datenobjekt verwendet. Ein Beispiel wäre etwa „FullName“ bei der Anzeige von Personennamen, die aus einer Datenbank abgerufen werden.
      
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.listClasses:ListBase:labelFunction:get"><apiName>labelFunction</apiName><shortdesc>
-      Eine vom Anwender definierte Funktion zur Bestimmung der Bezeichnungen einzelner Elemente.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Function"/><apiDefaultValue>null
+      Eine vom Benutzer bereitgestellte Funktion, die für jedes Element zum Bestimmen seiner Bezeichnung ausgeführt werden soll.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Function"/><apiDefaultValue>null
       
       </apiDefaultValue></apiValueDef><apiDesc>
-      Eine vom Benutzer bereitgestellte Funktion, die für jedes Element zum Bestimmen seiner Bezeichnung ausgeführt werden soll. Standardmäßig sucht das List-Steuerelement nach einer Eigenschaft namens <codeph>label</codeph> in jedem Datenprovider-Element und zeigt sie an. Allerdings haben einige Datensätze keine <codeph>label</codeph>-Eigenschaft bzw. keine andere Eigenschaft, die Sie für die Anzeige verwenden können. Als Beispiel kann ein Datensatz angeführt werden, der die Felder lastName und firstName besitzt. Sie möchten aber die vollständigen Namen anzeigen.
+      Eine vom Benutzer bereitgestellte Funktion, die für jedes Element zum Bestimmen seiner Bezeichnung ausgeführt werden soll. Standardmäßig sucht das List-Steuerelement nach einer Eigenschaft namens <codeph>label</codeph> in jedem Datenproviderelement und zeigt sie an. Allerdings haben einige Datensätze keine <codeph>label</codeph>-Eigenschaft bzw. keine andere Eigenschaft, die Sie für die Anzeige verwenden können. Als Beispiel kann ein Datensatz angeführt werden, der die Felder lastName und firstName besitzt. Sie möchten aber die vollständigen Namen anzeigen.
      
       <p>Sie können eine <codeph>labelFunction</codeph> verwenden, die die entsprechenden Felder findet und einen anzeigbaren String zurückgibt. Die <codeph>labelFunction</codeph> ist für die Verarbeitung von Formatierungen und lokalisierten Texten sinnvoll. </p>
      
@@ -2056,11 +2024,11 @@
       
       Wenn eine Komponente als Renderer oder Editor verwendet wird, in dem Elemente abgelegt werden können, initialisiert Flex die <codeph>listData</codeph>-Eigenschaft der Komponente mit den zusätzlichen Daten aus dem List-Steuerelement. Die Komponente kann dann die <codeph>listData</codeph>-Eigenschaft und <codeph>data</codeph>-Eigenschaft verwenden, um die entsprechenden Informationen als Renderer oder Editor, in dem Elemente abgelegt werden können, anzuzeigen.
      
-      <p>Diese Eigenschaft wird in MXML oder ActionScript nicht festgelegt. Flex legt sie fest, wenn die Komponente als Renderer oder Editor verwendet wird, in dem Elemente abgelegt werden können.</p>
+      <p>Sie stellen diese Eigenschaften in MXML oder ActionScript nicht ein. Flex erledigt dies, wenn die Komponente als Elementrenderer oder Elementeditor, in dem Elemente abgelegt werden können, verwendet wird.</p>
      
       </apiDesc></apiValueDetail><related-links><link href="mx.controls.listClasses.xml#IDropInListItemRenderer"><linktext>mx.controls.listClasses.IDropInListItemRenderer</linktext></link></related-links></apiValue><apiValue id="mx.controls.listClasses:ListBase:protected:listItems:get"><apiName>listItems</apiName><shortdesc>
-      Ein Array von Arrays, das die itemRenderer-Instanzen enthält, die für die Darstellung jedes einzelnen Datenprovider-Elements verwendet werden.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="protected"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Array"/></apiValueDef><apiDesc>
-      Ein Array von Arrays, das die itemRenderer-Instanzen enthält, die für die Darstellung jedes einzelnen Datenprovider-Elements verwendet werden. Dies ist ein zweidimensionales Zeilen-Haupt-Array (Array von Zeilen, die Arrays von Spalten sind).
+      Ein Array von Arrays, das die itemRenderer-Instanzen enthält, die für die Darstellung jedes einzelnen Datenproviderelements verwendet werden.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="protected"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Array"/></apiValueDef><apiDesc>
+      Ein Array von Arrays, das die itemRenderer-Instanzen enthält, die für die Darstellung jedes einzelnen Datenproviderelements verwendet werden. Dies ist ein zweidimensionales Zeilen-Haupt-Array (Array von Zeilen, die Arrays von Spalten sind).
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.listClasses:ListBase:nullItemRenderer:get"><apiName>nullItemRenderer</apiName><shortdesc>
       Der benutzerdefinierte Elementrenderer für das Steuerelement.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>mx.core:IFactory</apiValueClassifier></apiValueDef><apiDesc>
@@ -2076,7 +2044,7 @@
      
       <p>Ob Zeilen oder Spalten erstellt werden, hängt vom Steuerelement und seinen Eigenschaften ab. Im Allgemeinen werden Zeilen verwendet, mit Ausnahme von TileBase-Komponenten, bei denen <codeph>direction</codeph> auf <codeph>TileBaseDirection.VERTICAL</codeph> festgelegt ist. In diesem Fall werden Spalten erstellt.</p>
      
-      <p>Sie legen diese Eigenschaft mit einem von null verschiedenen Wert fest, hauptsächlich wenn Dateneffekte auf List- oder TileList-Steuerelemente angewendet werden. Änderungen, die das den aktuell sichtbaren Elementen entsprechende Datenprovider-Element betreffen, oder Änderungen, die das Datenprovider-Element für die angegebene Anzahl von Elementen vor oder nach den sichtbaren Elementen betreffen, lösen den Dateneffekt aus. Datenprovider-Elemente außerhalb dieses Bereichs werden von dem Dateneffekt möglicherweise nicht korrekt animiert.</p>
+      <p>Sie legen diese Eigenschaft mit einem von null verschiedenen Wert fest, hauptsächlich wenn Dateneffekte auf List- oder TileList-Steuerelemente angewendet werden. Änderungen, die das den aktuell sichtbaren Elementen entsprechende Datenproviderelement betreffen, oder Änderungen, die das Datenproviderelement für die angegebene Anzahl von Elementen vor oder nach den sichtbaren Elementen betreffen, lösen den Dateneffekt aus. Datenproviderelemente außerhalb dieses Bereichs werden von dem Dateneffekt möglicherweise nicht korrekt animiert.</p>
      
       <p>Diese Eigenschaft ist nützlich, weil Dateneffekte so funktionieren: Sie ermitteln erst ein Layout des listenbasierten Steuerelements „vorher“ und dann ein Layout „nachher“. Schließlich richten Sie die Eigenschaften des Effekts so ein, dass eine Animation vom vorherigen in den nachfolgenden Layoutstatus erfolgt. Da viele Effekte bewirken, dass derzeit nicht sichtbare Elemente sichtbar werden oder derzeit sichbare Elemente unsichtbar werden, konfiguriert diese Eigenschaft das Steuerelement so, dass die außerhalb des Bildschirmbereichs befindlichen Renderer erstellt werden, damit sie bereits existieren, wenn der Effekt abläuft. </p>
      
@@ -2131,7 +2099,7 @@
       Eine Funktion zum Vergleichen von Elementen in der selectedItems-Eigenschaft mit Elementen im Datenprovider.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Function"/></apiValueDef><apiDesc>
       Eine Funktion zum Vergleichen von Elementen in der <codeph>selectedItems</codeph>-Eigenschaft mit Elementen im Datenprovider. Bei einer Übereinstimmung geht das Element im Datenprovider zur Auswahl über. Standardmäßig, oder wenn <codeph>selectedItemsCompareFunction</codeph> auf <codeph>null</codeph> gesetzt ist, wird die standardmäßige Vergleichsfunktion verwendet, die eine strikte Gleichheit (===) verwendet. Beachten Sie, dass in früheren Flex-Versionen eine einfache Gleichheit (==) verwendet wurde, sodass in einigen Fällen ein unterschiedliches Verhalten auftreten kann. Eine allgemeine Vergleichsfunktion kann einfach UIDs von Objekten vergleichen oder bestimmte Eigenschaftenübereinstimmungen testen.
      
-      <p>Die Vergleichsfunktion enthält zwei Argumente. Das erste Argument ist das Objekt im Datenprovider. Das zweite Argument ist ein Objekt in der <codeph>selectedItems</codeph>-Eigenschaft. Die Funktion gibt <codeph>true</codeph> zurück, wenn das Datenprovider-Element ausgewählt werden soll.</p>
+      <p>Die Vergleichsfunktion enthält zwei Argumente. Das erste Argument ist das Objekt im Datenprovider. Das zweite Argument ist ein Objekt in der <codeph>selectedItems</codeph>-Eigenschaft. Die Funktion gibt <codeph>true</codeph> zurück, wenn das Datenproviderelement ausgewählt werden soll.</p>
      
       <pre>
       myCompareFunction(itemInDataProvider:Object, itemInSelectedItems):Boolean</pre>
@@ -2145,8 +2113,8 @@
       Ein Flag, das anzeigt, ob Datentipps für den Text in den Zeilen angezeigt werden. Wenn <codeph>true</codeph>, werden Datentipps angezeigt. Datentipps sind QuickInfo-Informationen, die den Text anzeigen, der zu lang für die Zeile ist. Wenn Sie eine dataTipFunction festlegen, werden Datentipps angezeigt, auch wenn der Text zu lang für die Zeile ist.
      
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.listClasses:ListBase:value:get"><apiName>value</apiName><shortdesc>
-      Das ausgewählte Element oder das Daten- oder Labelfeld des ausgewählten Elements.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Object"/></apiValueDef><apiDesc>
-      Das ausgewählte Element oder das Daten- oder Labelfeld des ausgewählten Elements. Wenn das ausgewählte Feld eine Zahl oder ein String ist, ist der Wert das Element. Wenn das Element ein Objekt ist, ist der Wert die data-Eigenschaft, wenn eine solche existiert, oder die label-Eigenschaft, wenn eine solche existiert.
+      Das ausgewählte Element oder das Daten- oder Beschriftungsfeld des ausgewählten Elements.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Object"/></apiValueDef><apiDesc>
+      Das ausgewählte Element oder das Daten- oder Beschriftungsfeld des ausgewählten Elements. Wenn das ausgewählte Feld eine Zahl oder ein String ist, ist der Wert das Element. Wenn das Element ein Objekt ist, ist der Wert die data-Eigenschaft, wenn eine solche existiert, oder die label-Eigenschaft, wenn eine solche existiert.
      
       <p>Hinweis: <codeph>selectedItem</codeph> ist in den meisten Fällen zu bevorzugen. Diese Eigenschaft wird für die Rückwärtskompatibilität mit älteren Anwendungen bereitgestellt.</p>
       
@@ -2157,8 +2125,8 @@
       Ein Flag, das angibt, ob die einzelnen Zeilen unterschiedliche Höhen aufweisen können. Diese Eigenschaft wird von TileList und HorizontalList ignoriert. Wenn <codeph>true</codeph>, können einzelne Zeilen unterschiedliche Höhenwerte aufweisen.
      
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.listClasses:ListBase:protected:visibleData:get"><apiName>visibleData</apiName><shortdesc>
-      Eine Hash-Tabelle von Datenprovider-Elementrenderern, die derzeit im Sichtfeld sind.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="protected"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Object"/></apiValueDef><apiDesc>
-      Eine Hash-Tabelle von Datenprovider-Elementrenderern, die derzeit im Sichtfeld sind. Die Tabelle wird durch die UID des Datenprovider-Elements indiziert und wird verwendet, damit der für die Anzeige eines bestimmten Elements verwendete Renderer rasch abgerufen wird.
+      Eine Hash-Tabelle von Datenproviderelementrenderern, die sich derzeit in der Ansicht befinden.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="protected"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Object"/></apiValueDef><apiDesc>
+      Eine Hash-Tabelle von Datenproviderelementrenderern, die sich derzeit in der Ansicht befinden. Die Tabelle wird durch die UID des Datenproviderelements indiziert und wird verwendet, damit der für die Anzeige eines bestimmten Elements verwendete Renderer rasch abgerufen wird.
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.controls.listClasses:ListBase:wordWrap:get"><apiName>wordWrap</apiName><shortdesc>
       Ein Flag, das angibt, ob Text in einer Zeile umbrochen werden soll.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Boolean"/><apiDefaultValue>false
@@ -2195,7 +2163,7 @@
  
   <p>Die Schnittstellengruppe umfasst: IDataRenderer, IFlexDisplayObject, ILayoutManagerClient, ISimpleStyleClient, IUIComponent. Die UIComponent-Klasse implementiert alle diese Schnittstellen,. mit Ausnahme der IDataRenderer-Schnittstelle. Daher gilt: Wenn Sie einen benutzerdefinierten Elementrenderer oder Elementeditor als Unterklasse derUIComponent-Klasse erstellen, brauchen Sie nur die IDataRenderer-Schnittstelle zu implementieren und können dann der Klassendefinition hinzufügen, dass die Klasse IDataRenderer und IListItemRenderer implementiert.</p>
  
- <p>IListItemRenderers sind im Allgemeinen für die Anzeige eines bestimmten Felds aus dem Datenprovider-Element vorgesehen und können nicht in anderen DataGrid-Spalten oder in anderen Listen mit anderen Feldern wiederverwendet werden. Wenn Sie einen Renderer erstellen möchten, der wiederverwendet werden kann, können sie auch IDropInListItemRenderer implementieren. Dann übergibt die Liste mehr Daten an den Renderer, sodass der Renderer mit verschiedenen Datenfeldern wiederverwendet werden kann.</p>
+ <p>IListItemRenderer sind im Allgemeinen für die Anzeige eines bestimmten Felds aus dem Datenproviderelement vorgesehen und können nicht in anderen DataGrid-Spalten oder in anderen Listen mit anderen Feldern wiederverwendet werden. Wenn Sie einen Renderer erstellen möchten, der wiederverwendet werden kann, können sie auch IDropInListItemRenderer implementieren. Dann übergibt die Liste mehr Daten an den Renderer, sodass der Renderer mit verschiedenen Datenfeldern wiederverwendet werden kann.</p>
  
   <p>Elementrenderer und Elementeditoren erhalten Daten aus dem Datenprovider einer Listenklasse über die IDataRenderer-Schnittstelle. Renderer und Editoren, die die IDropInListItemRenderer-Schnittstelle implementieren, erhalten andere Iinformationen aus der Listenklasse. Der Elementrenderer oder Elementeditor verwendet eine Information oder beide Informationen, um die Daten anzuzeigen.</p>
  

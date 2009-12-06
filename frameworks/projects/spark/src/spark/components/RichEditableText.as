@@ -232,31 +232,28 @@ include "../styles/metadata/SelectionFormatTextStyles.as"
  *  By default, RichEditableText has a transparent background,
  *  and it does not support drawing a border.</p>
  *
- *  <p>RichEditableText, which is new with Flex 4,
- *  makes use of the new Text Layout Framework (TLF) library,
+ *  <p>RichEditableText uses the Text Layout Framework (TLF) library,
  *  which in turn builds on the new Flash Text Engine (FTE)
- *  in Flash Player 10.
- *  In combination, these layers provide text editing with
+ *  in Flash Player 10. In combination, these layers provide text editing with
  *  high-quality international typography and layout.</p>
  *
  *  <p>The Spark architecture provides three text "primitives" -- 
- *  Label, RichText, and RichEditableText --
- *  as part of its pay-only-for-what-you-need philosophy.
+ *  Label, RichText, and RichEditableText.
  *  Label is the fastest and most lightweight
  *  because it uses only FTE, not TLF,
  *  but it is limited in its capabilities: no rich text,
  *  no scrolling, no selection, and no editing.
  *  RichText adds the ability to display rich text
  *  with complex layout, but is still completely non-interactive.
- *  RichEditableText is the slowest and heaviest,
+ *  RichEditableText is the heaviest-weight,
  *  but offers most of what TLF can do.
- *  You should use the fastest text primitive that meets your needs.</p>
+ *  In general, use the fastest text primitive that meets your needs.</p>
  *
  *  <p>RichEditableText is similar to the UITextField class
  *  used in MX components. This class did not use FTE or TLF
- *  but rather extended the older TextField class in the Player.</p>
+ *  but rather extended the older TextField class.</p>
  *
- *  <p>The most important differences to understand are:
+ *  <p>The most important differences between UITextField and RichEditableText are:
  *  <ul>
  *    <li>RichEditableText offers better typography, better support
  *        for international languages, and better text layout.</li>
@@ -275,19 +272,19 @@ include "../styles/metadata/SelectionFormatTextStyles.as"
  *  hyperlinks, and images are represented at runtime by ActionScript
  *  objects which can be programmatically accessed and manipulated.
  *  The central object in TLF for representing rich text is a
- *  TextFlow, so you specify rich text for RichEditableText to display
+ *  TextFlow, so you specify rich text for a RichEditableText control to display
  *  by setting its <code>textFlow</code> property to a TextFlow instance.
- *  Please see the description of the <code>textFlow</code>
+ *  See the description of the <code>textFlow</code>
  *  property for information about how to create one,
  *  such as by importing TLF markup.
  *  If you don't need to display text that has multiple formats,
- *  simply set the <code>text</code> property to a "plain text" String.
+ *  you can use the <code>text</code> property to set a "plain text" String.
  *  See the description of the <code>text</code> and <code>textFlow</code>
  *  properties for information about how they interact;
  *  for example, you can set one and get the other.</p>
  *
- *  <p>At compile time, you can simply put TLF markup tags inside
- *  the RichEditableText tag, as in
+ *  <p>At compile time, you can put TLF markup tags inside
+ *  the RichEditableText tag, as the following example shows:
  *  <pre>
  *  &lt;s:RichEditableText&gt;Hello &lt;s:span fontWeight="bold"&gt;World!&lt;/s:span&gt;&lt;/s:RichEditableText&gt;
  *  </pre>
@@ -311,14 +308,14 @@ include "../styles/metadata/SelectionFormatTextStyles.as"
  *  <code>paddingRight</code>, and <code>paddingBottom</code> styles.</p>
  *
  *  <p>By default, a RichEditableText "autosizes": it starts out very
- *  small if it has no text, grows in width up to
- *  <code>maxWidth</code> as you type,
- *  and grows in height when you press Enter to start a new line.</p>
+ *  small if it has no text, and grows in width up to
+ *  <code>maxWidth</code> as you type. It grows in height when you 
+ *  press the Enter key to start a new line.</p>
  *
  *  <p>The <code>widthInChars</code> and <code>heightInChars</code>
  *  properties provide a convenient way to specify the width and height
  *  in a way that scales with the font size.
- *  Of course, you can also specify an explicit width or height in pixels,
+ *  You can also specify an explicit width or height in pixels,
  *  or use a percent width and height, or use constraints such as
  *  <code>left</code> and <code>right</code>
  *  or <code>top</code> and <code>bottom</code>.</p>
@@ -328,10 +325,10 @@ include "../styles/metadata/SelectionFormatTextStyles.as"
  *  and <code>right</code> constraints -- the text wraps at the right
  *  edge of the component and the text becomes vertically scrollable
  *  when there is more text than fits.
- *  If you set the <code>lineBreak</code> style to <code>"explicit"</code>,
+ *  If you set the <code>lineBreak</code> style to <code>explicit</code>,
  *  new lines will start only at explicit lines breaks, such as
- *  if you use CR (<code>"\r"</code>), LF (<code>"\n"</code>),
- *  or CR+LF (<code>"\r\n"</code>) in <code>text</code>
+ *  if you use CR (<code>\r</code>), LF (<code>\n</code>),
+ *  or CR+LF (<code>\r\n</code>) in <code>text</code>
  *  or if you use <code>&lt;p&gt;</code> and <code>&lt;br/&gt;</code>
  *  in TLF markup.
  *  In that case, the text becomes horizontally scrollable
@@ -349,7 +346,7 @@ include "../styles/metadata/SelectionFormatTextStyles.as"
  *
  *  <p>If you don't want the text to be editable,
  *  set the <code>editable</code> property to <code>false</code>.
- *  If you don't even want it to be selectable,
+ *  If you don't even want the text to be selectable,
  *  set the <code>selectable</code> property to <code>false</code>.</p>
  *
  *  <p>Because RichEditableText uses TLF,
@@ -357,15 +354,14 @@ include "../styles/metadata/SelectionFormatTextStyles.as"
  *  right-to-left (RTL) text such as Arabic, and bidirectional text
  *  such as a French phrase inside of an Arabic one.
  *  If the predominant text direction is right-to-left,
- *  set the <code>direction</code> style to <code>"rtl"</code>.
+ *  set the <code>direction</code> style to <code>rtl</code>.
  *  The <code>textAlign</code> style defaults to <code>"start"</code>,
  *  which makes the text left-aligned when <code>direction</code>
- *  is <code>"ltr"</code> and right-aligned when <code>direction</code>
- *  is <code>"rtl"</code>.
- *  To get the opposite alignment,
- *  set <code>textAlign</code> to <code>"end"</code>.</p>
+ *  is <code>ltr</code> and right-aligned when <code>direction</code>
+ *  is <code>rtl</code>.
+ *  To get the opposite alignment, set <code>textAlign</code> to <code>end</code>.</p>
  *
- *  <p>Also as a result of using TLF, the RichEditableText supports
+ *  <p>As a result of using TLF, the RichEditableText supports
  *  unlimited undo/redo within one editing session.
  *  An editing session starts when the component gets keyboard focus
  *  and ends when it loses focus.</p>
@@ -375,7 +371,45 @@ include "../styles/metadata/SelectionFormatTextStyles.as"
  *
  *  @see spark.components.Label
  *  @see spark.components.RichText
+ *  @see spark.utils.TextFlowUtil
+ *  @see flashx.textLayout.container.TextContainerManager
  *
+ *  @mxml
+ *
+ *  <p>The <code>&lt;s:RichEditableText&gt;</code> tag inherits all of the tag 
+ *  attributes of its superclass and adds the following tag attributes:</p>
+ *
+ *  <pre>
+ *  &lt;s:RichEditableText
+ *    <strong>Properties</strong>
+ *    clipAndEnableScrolling="false|true"
+ *    contentHeight="<i>Calculated default</i>"
+ *    contentWidth="<i>Calculated default</i>"
+ *    displayAsPassword="false"
+ *    editable="true"
+ *    heightInLines="NaN"
+ *    horizontalScrollPosition="0"
+ *    imeMode="null"
+ *    maxChars="0"
+ *    multiline="true"
+ *    restrict="null"
+ *    selectable="true"
+ *    selectionActivePosition="-1"
+ *    selectionAnchorPosition="-1"
+ *    selectionHighlighting="TextSelectionHighlighting.WHEN_FOCUSED"
+ *    text=""
+ *    textFlow="<i>TextFlow</i>"
+ *    verticalScrollPosition="0"
+ *    widthInChars="NaN"
+ *  
+ *    <strong>Events</strong>
+ *    change="<i>No default</i>"
+ *    changing="<i>No default</i>"
+ *    enter="<i>No default</i>"
+ *    selectionChange="<i>No default</i>"
+ *  /&gt;
+ *  </pre>
+ *  
  *  @includeExample examples/RichEditableTextExample.mxml
  *  @includeExample examples/externalTextFlow.xml -noswf
  *  
@@ -428,7 +462,7 @@ public class RichEditableText extends UIComponent
 		 *  TLF itself has English-only messages,
 		 *  but higher layers like Flex can provide localized versions.
 		 */
-		GlobalSettings.getResourceStringFunction = TextUtil.getResourceString;
+		GlobalSettings.resourceStringFunction = TextUtil.getResourceString;
 		
         staticConfiguration = 
             Configuration(TextContainerManager.defaultConfiguration).clone();
@@ -492,6 +526,13 @@ public class RichEditableText extends UIComponent
      */
     private static var staticTextFormat:TextFormat;
         
+    /**
+     *  @private
+     *  Regular expression which matches all newlines in the text.  Used
+     *  to strip newlines when pasting text when multiline is false.
+     */
+    private static const ALL_NEWLINES_REGEXP:RegExp = /\n/g;
+    
     //--------------------------------------------------------------------------
     //
     //  Class properties
@@ -603,6 +644,10 @@ public class RichEditableText extends UIComponent
         _textContainerManager.addEventListener(
             FlowOperationEvent.FLOW_OPERATION_END,
             textContainerManager_flowOperationEndHandler);
+
+        _textContainerManager.addEventListener(
+            FlowOperationEvent.FLOW_OPERATION_COMPLETE,
+            textContainerManager_flowOperationCompleteHandler);
 
         _textContainerManager.addEventListener(
             StatusChangeEvent.INLINE_GRAPHIC_STATUS_CHANGE, 
@@ -1560,7 +1605,8 @@ public class RichEditableText extends UIComponent
      *  <p>If <code>true</code>, the Enter key starts a new paragraph.
      *  If <code>false</code>, the Enter key doesn't affect the text
      *  but causes the RichEditableText to dispatch an <code>"enter"</code> 
-     *  event.</p>
+     *  event.  If you paste text into the RichEditableText with a multiline 
+     *  value of <code>true</code>, newlines are stripped out of the text. </p>  
      * 
      *  @default true
      *  
@@ -1773,20 +1819,20 @@ public class RichEditableText extends UIComponent
      *  <code>TextSelectionHighlighting.WHEN_ACTIVE</code>,
      *  and <code>TextSelectionHighlighting.ALWAYS</code>.</p>
      *
-     *  <p><code>WHEN_FOCUSED</code> means show the text selection
+     *  <p><code>WHEN_FOCUSED</code> shows the text selection
      *  only when the component has keyboard focus.</p>
      *  
-     *  <p><code>WHEN_ACTIVE</code> means show the text selection whenever
+     *  <p><code>WHEN_ACTIVE</code> shows the text selection whenever
      *  the component's window is active, even if the component
      *  doesn't have the keyboard focus.</p>
      *
-     *  <p><code>ALWAYS</code> means show the text selection,
+     *  <p><code>ALWAYS</code> shows the text selection,
      *  even if the component doesn't have the keyboard focus
      *  or if the component's window isn't the active window.</p>
      *  
      *  @default TextSelectionHighlighting.WHEN_FOCUSED
      *  
-     *  @see mx.components.TextSelectionHighlighting
+     *  @see spark.components.TextSelectionHighlighting
      * 
      *  @langversion 3.0
      *  @playerversion Flash 10
@@ -2024,10 +2070,6 @@ public class RichEditableText extends UIComponent
      *  @see spark.utils.TextFlowUtil#importFromString()
      *  @see spark.utils.TextFlowUtil#importFromXML()
      *  @see spark.components.RichEditableText#text
-     *  @see spark.components.RichEditableText#horizontalScrollPosition
-     *  @see spark.components.RichEditableText#verticalScrollPosition
-     *  @see spark.components.RichEditableText#selectionAnchorPosition
-     *  @see spark.components.RichEditableText#selectionActivePosition
      */
     public function get textFlow():TextFlow
     {
@@ -2954,7 +2996,7 @@ public class RichEditableText extends UIComponent
      *  
      *  <p>If you don't specify a range, the selected range is used.</p>
      *
-     *  @param requestedFormats A Vector of Strings specifying the the names
+     *  @param requestedFormats A Vector of Strings specifying the names
      *  of the requested formats, or <code>null</code> to request all formats.
      *
      *  @param anchorPosition A character position specifying
@@ -3079,15 +3121,25 @@ public class RichEditableText extends UIComponent
      *  A value of <code>undefined</code> does not get applied.
      *  If you don't specify a range, the selected range is used.</p>
      *
-     *  <p>For example, calling
+     *  <p>The following example sets the <code>fontSize</code> and <code>color</code> of the selection:
      *  <pre>
      *  var textLayoutFormat:TextLayoutFormat = new TextLayoutFormat();
      *  textLayoutFormat.fontSize = 12;
      *  textLayoutFormat.color = 0xFF0000;
-     *  setFormatOfRange(textLayoutFormat);
+     *  myRET.setFormatOfRange(textLayoutFormat);
      *  </pre>
-     *  will set the fontSize and color of the selection.</p>
+     *  </p>
      *  
+     *  @param format The TextLayoutFormat to apply to the selection.
+     * 
+     *  @param anchorPosition A character position, relative to the beginning of the 
+     *  text String, specifying the end of the selection that stays fixed when the 
+     *  selection is extended with the arrow keys.
+     * 
+     *  @param activePosition A character position, relative to the beginning of the 
+     *  text String, specifying the end of the selection that moves when the 
+     *  selection is extended with the arrow keys. 
+     * 
      *  @langversion 3.0
      *  @playerversion Flash 10
      *  @playerversion AIR 1.5
@@ -3224,8 +3276,8 @@ public class RichEditableText extends UIComponent
             var italic:Boolean = getStyle("fontStyle") == "italic";
             
             var localLookup:ISystemManager = 
-                fontContext && fontContext is ISystemManager ? 
-                ISystemManager(fontContext) : systemManager;
+                moduleFactory && moduleFactory is ISystemManager ? 
+                ISystemManager(moduleFactory) : systemManager;
                 
             fontContext = embeddedFontRegistry.getAssociatedModuleFactory(
                 font, bold, italic, this, fontContext, localLookup, true);
@@ -3247,6 +3299,11 @@ public class RichEditableText extends UIComponent
      */
     mx_internal function isMeasureFixed():Boolean
     {
+        // This can be called from RET EditManager when hostFormat is null 
+        // because a style changed and commitProperties hasn't run yet.
+        if (!_textContainerManager.hostFormat)
+            updateStylesIfChanged();            
+        
         if (_textContainerManager.hostFormat.blockProgression != 
             BlockProgression.TB)
         {
@@ -3593,12 +3650,25 @@ public class RichEditableText extends UIComponent
      */
     private function handlePasteOperation(op:PasteOperation):void
     {
-        if (!restrict && !maxChars && !displayAsPassword)
-            return;
-
         // If copied/cut from displayAsPassword field the pastedText
         // is '*' characters but this is correct.
         var pastedText:String = TextUtil.extractText(op.textScrap.textFlow);
+        // See if there is anything we need to do.
+        if (!restrict && !maxChars && !displayAsPassword)
+        {
+            if (multiline || pastedText.indexOf("\n") == -1)
+                return;
+        }
+
+        // Save this in case we modify the pasted text.  We need to know
+        // how much text to delete.
+        var textLength:int = pastedText.length;
+        
+        // If multiline is false, strip newlines out of pasted text
+        // This will not strip newlines out of displayAsPassword fields
+        // since the text is the passwordChar and newline won't be found.
+        if (!multiline)
+            pastedText = pastedText.replace(ALL_NEWLINES_REGEXP, "");
 
         // We know it's an EditManager or we wouldn't have gotten here.
         var editManager:IEditManager = 
@@ -3611,7 +3681,7 @@ public class RichEditableText extends UIComponent
 
         var selectionState:SelectionState = new SelectionState(
             op.textFlow, op.absoluteStart, 
-            op.absoluteStart + pastedText.length);             
+            op.absoluteStart + textLength);             
         editManager.deleteText(selectionState);
 
         // Insert the same text, the same place where the paste was done.
@@ -4095,7 +4165,7 @@ public class RichEditableText extends UIComponent
     private function textContainerManager_flowOperationBeginHandler(
                         event:FlowOperationEvent):void
     {
-        //trace("flowOperationBegin", "generation", textFlow.generation);
+        //trace("flowOperationBegin", "level", event.level);
         
         var op:FlowOperation = event.operation;
    
@@ -4191,7 +4261,9 @@ public class RichEditableText extends UIComponent
  
         // Dispatch a 'changing' event from the RichEditableText
         // as notification that an editing operation is about to occur.
-        if (dispatchChangeAndChangingEvents)
+        // The level will be 0 for single operations, and at the start
+        // of a composite operation.
+        if (dispatchChangeAndChangingEvents && event.level == 0)
         {
             var newEvent:TextOperationEvent =
                 new TextOperationEvent(TextOperationEvent.CHANGING);
@@ -4214,16 +4286,30 @@ public class RichEditableText extends UIComponent
     private function textContainerManager_flowOperationEndHandler(
                         event:FlowOperationEvent):void
     {
-        //trace("flowOperationEnd", "generation", textFlow.generation);
+        //trace("flowOperationEnd", "level", event.level);
         
         // Paste is a special case.  Any mods have to be made to the text
         // which includes what was pasted.
         if (event.operation is PasteOperation)
             handlePasteOperation(PasteOperation(event.operation));
+    }
 
+    /**
+     *  @private
+     *  Called when the TextContainerManager dispatches an 'operationComplete' 
+     *  event after an editing operation.
+     */
+    private function textContainerManager_flowOperationCompleteHandler(
+        event:FlowOperationEvent):void
+    {
+        //trace("flowOperationComplete", "level", event.level);
+        
         // Dispatch a 'change' event from the RichEditableText
         // as notification that an editing operation has occurred.
-        if (dispatchChangeAndChangingEvents)
+        // The flow is now in a state that it can be manipulated.
+        // The level will be 0 for single operations, and at the end
+        // of a composite operation.
+        if (dispatchChangeAndChangingEvents && event.level == 0)
         {
             var newEvent:TextOperationEvent =
                 new TextOperationEvent(TextOperationEvent.CHANGE);

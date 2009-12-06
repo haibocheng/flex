@@ -273,6 +273,52 @@
       Stellt Zugriff auf den Satz von MessageAgents zur Verfügung, die diesen ChannelSet verwenden.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Array"/></apiValueDef><apiDesc>
       Stellt Zugriff auf den Satz von MessageAgents zur Verfügung, die diesen ChannelSet verwenden.
       
+      </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.messaging:MultiTopicProducer"><apiName>MultiTopicProducer</apiName><shortdesc>
+  Ein MultiTopicProducer sendet Meldungen mit keinem oder mehreren untergeordneten Themen an ein Ziel.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>mx.messaging:AbstractProducer</apiBaseClassifier></apiClassifierDef><apiDesc>
+  Ein MultiTopicProducer sendet Meldungen mit keinem oder mehreren untergeordneten Themen an ein Ziel. Dies entspricht einem normalen Produzenten, die Meldung kann jedoch an einen beliebigen Verbraucher gerichtet werden, der eine beliebige Anzahl von untergeordneten Themen abonniert. Wenn der Verbraucher ein MultiTopicConsumer ist und dieser Verbraucher und mehrere untergeordnete Themen in der Liste der vom Produzenten verwendeten untergeordneten Themen abonniert hat, erhält der Verbraucher die Meldung nur einmal.
+  <p>
+  Der MultiTopicProducer löst ein MessageAckEvent oder MessageFaultEvent für jede gesendete Meldung aus, je nachdem, ob die ausgehende Meldung gesendet und erfolgreich verarbeitet wurde oder nicht.
+  </p>
+  
+  </apiDesc></apiClassifierDetail><apiConstructor id="mx.messaging:MultiTopicProducer:MultiTopicProducer"><apiName>MultiTopicProducer</apiName><shortdesc>
+      Konstruktor.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/></apiConstructorDef><apiDesc>
+      Konstruktor.
+     
+      </apiDesc><example>
+      <codeblock rev="3.0">
+       function sendMessage():void
+       {
+           var producer:MultiTopicProducer = new MultiTopicProducer();
+           producer.destination = "NASDAQ";
+           var msg:AsyncMessage = new AsyncMessage();
+           msg.headers.operation = "UPDATE";
+           msg.body = {"SYMBOL":50.00};
+           // only send to subscribers to subtopic "SYMBOL" and "ALLSTOCKS"
+           msg.addSubtopic("SYMBOL");
+           msg.addSubtopic("ALLSTOCKS");
+           producer.send(msg);
+       }
+       </codeblock>
+      
+      </example></apiConstructorDetail></apiConstructor><apiOperation id="mx.messaging:MultiTopicProducer:addSubtopic"><apiName>addSubtopic</apiName><shortdesc>
+     Fügt ein untergeordnetes Thema zur aktuellen Liste von untergeordneten Themen für die von diesem Produzenten gesendeten Meldungen hinzu.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>subtopic</apiItemName><apiType value="String"/><apiDesc>Das untergeordnete Thema, das zur aktuellen Liste der von diesem Produzenten gesendeten untergeordneten Themen hinzugefügt werden soll.
+     
+      
+      </apiDesc></apiParam></apiOperationDef><apiDesc>
+     Fügt ein untergeordnetes Thema zur aktuellen Liste von untergeordneten Themen für die von diesem Produzenten gesendeten Meldungen hinzu. Eine Verknüpfung zum Hinzufügen dieses untergeordneten Themas zur Eigenschaft der untergeordneten Themen.
+     
+     </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.messaging:MultiTopicProducer:removeSubtopic"><apiName>removeSubtopic</apiName><shortdesc>
+     Entfernt das untergeordnete Thema von der Eigenschaft der untergeordneten Themen.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>subtopic</apiItemName><apiType value="String"/><apiDesc>Das untergeordnete Thema, das von der Eigenschaft der untergeordneten Themen entfernt werden soll.
+      
+      </apiDesc></apiParam></apiOperationDef><apiDesc>
+     Entfernt das untergeordnete Thema von der Eigenschaft der untergeordneten Themen. Gibt einen Fehler aus, wenn das untergeordnete Thema nicht in der Liste enthalten ist.
+     
+     </apiDesc></apiOperationDetail></apiOperation><apiValue id="mx.messaging:MultiTopicProducer:subtopics:get"><apiName>subtopics</apiName><shortdesc>
+      Stellt Zugriff auf die Liste der untergeordneten Themen zur Verfügung, die beim Veröffentlichen von Meldungen verwendet werden.
+      
+      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="mx.collections:ArrayCollection"/></apiValueDef><apiDesc>
+      Stellt Zugriff auf die Liste der untergeordneten Themen zur Verfügung, die beim Veröffentlichen von Meldungen verwendet werden.
+      
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.messaging:MultiTopicConsumer"><apiName>MultiTopicConsumer</apiName><shortdesc>
   Genauso wie ein Verbraucher (Consumer) kann MultiTopicConsumer ein Ziel durch eine einzige ClientId abonnieren und Meldungen einer einzigen Ereignisprozedur zustellen.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata><asCustoms><mxml><![CDATA[
   <p>
@@ -360,52 +406,6 @@
       <p>Vor einem Aufruf der <codeph>subscribe()</codeph>-Methode kann diese Eigenschaft ohne Nebeneffekte gesetzt werden. Nachdem MultiTopicConsumer an dem Ziel abonniert wurde, wird durch Ändern dieses Werts außerdem das Abonnement von MultiTopicConsumer aktualisiert, um neue Abonnements einzuschließen und alle aus ArrayCollection gelöschten Abonnements zu entfernen.</p>
      
       <p>Das Remote-Ziel muss den Wert des Selektor-Ausdrucks verstehen.</p>
-      
-      </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.messaging:MultiTopicProducer"><apiName>MultiTopicProducer</apiName><shortdesc>
-  Ein MultiTopicProducer sendet Meldungen mit keinem oder mehreren untergeordneten Themen an ein Ziel.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>mx.messaging:AbstractProducer</apiBaseClassifier></apiClassifierDef><apiDesc>
-  Ein MultiTopicProducer sendet Meldungen mit keinem oder mehreren untergeordneten Themen an ein Ziel. Dies entspricht einem normalen Produzenten, die Meldung kann jedoch an einen beliebigen Verbraucher gerichtet werden, der eine beliebige Anzahl von untergeordneten Themen abonniert. Wenn der Verbraucher ein MultiTopicConsumer ist und dieser Verbraucher und mehrere untergeordnete Themen in der Liste der vom Produzenten verwendeten untergeordneten Themen abonniert hat, erhält der Verbraucher die Meldung nur einmal.
-  <p>
-  Der MultiTopicProducer löst ein MessageAckEvent oder MessageFaultEvent für jede gesendete Meldung aus, je nachdem, ob die ausgehende Meldung gesendet und erfolgreich verarbeitet wurde oder nicht.
-  </p>
-  
-  </apiDesc></apiClassifierDetail><apiConstructor id="mx.messaging:MultiTopicProducer:MultiTopicProducer"><apiName>MultiTopicProducer</apiName><shortdesc>
-      Konstruktor.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/></apiConstructorDef><apiDesc>
-      Konstruktor.
-     
-      </apiDesc><example>
-      <codeblock rev="3.0">
-       function sendMessage():void
-       {
-           var producer:MultiTopicProducer = new MultiTopicProducer();
-           producer.destination = "NASDAQ";
-           var msg:AsyncMessage = new AsyncMessage();
-           msg.headers.operation = "UPDATE";
-           msg.body = {"SYMBOL":50.00};
-           // only send to subscribers to subtopic "SYMBOL" and "ALLSTOCKS"
-           msg.addSubtopic("SYMBOL");
-           msg.addSubtopic("ALLSTOCKS");
-           producer.send(msg);
-       }
-       </codeblock>
-      
-      </example></apiConstructorDetail></apiConstructor><apiOperation id="mx.messaging:MultiTopicProducer:addSubtopic"><apiName>addSubtopic</apiName><shortdesc>
-     Fügt ein untergeordnetes Thema zur aktuellen Liste von untergeordneten Themen für die von diesem Produzenten gesendeten Meldungen hinzu.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>subtopic</apiItemName><apiType value="String"/><apiDesc>Das untergeordnete Thema, das zur aktuellen Liste der von diesem Produzenten gesendeten untergeordneten Themen hinzugefügt werden soll.
-     
-      
-      </apiDesc></apiParam></apiOperationDef><apiDesc>
-     Fügt ein untergeordnetes Thema zur aktuellen Liste von untergeordneten Themen für die von diesem Produzenten gesendeten Meldungen hinzu. Eine Verknüpfung zum Hinzufügen dieses untergeordneten Themas zur Eigenschaft der untergeordneten Themen.
-     
-     </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.messaging:MultiTopicProducer:removeSubtopic"><apiName>removeSubtopic</apiName><shortdesc>
-     Entfernt das untergeordnete Thema von der Eigenschaft der untergeordneten Themen.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>subtopic</apiItemName><apiType value="String"/><apiDesc>Das untergeordnete Thema, das von der Eigenschaft der untergeordneten Themen entfernt werden soll.
-      
-      </apiDesc></apiParam></apiOperationDef><apiDesc>
-     Entfernt das untergeordnete Thema von der Eigenschaft der untergeordneten Themen. Gibt einen Fehler aus, wenn das untergeordnete Thema nicht in der Liste enthalten ist.
-     
-     </apiDesc></apiOperationDetail></apiOperation><apiValue id="mx.messaging:MultiTopicProducer:subtopics:get"><apiName>subtopics</apiName><shortdesc>
-      Stellt Zugriff auf die Liste der untergeordneten Themen zur Verfügung, die beim Veröffentlichen von Meldungen verwendet werden.
-      
-      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="mx.collections:ArrayCollection"/></apiValueDef><apiDesc>
-      Stellt Zugriff auf die Liste der untergeordneten Themen zur Verfügung, die beim Veröffentlichen von Meldungen verwendet werden.
       
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.messaging:Consumer"><apiName>Consumer</apiName><shortdesc>
   Ein Verbraucher abonniert ein Ziel, um Meldungen zu erhalten.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata><asCustoms><mxml><![CDATA[
@@ -598,9 +598,9 @@
       Meldet MessageAgent vom Remote-Ziel ab.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
       Meldet MessageAgent vom Remote-Ziel ab. Das Abmelden von einem Ziel gilt für alle verbundenen Objekte, die den gleichen ChannelSet wie in der Serverkonfiguration angegeben verwenden. Wenn beispielsweise verschiedene DataService-Komponenten über einen RTMP-Kanal verbunden sind und <codeph>logout()</codeph> auf einem dieser Kanäle aufgerufen wird, werden alle mit dem gleichen ChannelSet verbundenen Client-Komponenten ebenfalls abgemeldet.
      
-      <p><b/> </p>
+      <p><b>Hinweis:</b> Adobe empfiehlt, statt dieser Methode die mx.messaging.ChannelSet.logout()-Methode zu verwenden. </p>
      
-      </apiDesc></apiOperationDetail><related-links><link href="mx.messaging.xml#ChannelSet/logout()"><linktext/></link></related-links></apiOperation><apiOperation id="mx.messaging:MessageAgent:protected:reAuthorize"><apiName>reAuthorize</apiName><shortdesc>
+      </apiDesc></apiOperationDetail><related-links><link href="mx.messaging.xml#ChannelSet/logout()"><linktext>mx.messaging.ChannelSet.logout()</linktext></link></related-links></apiOperation><apiOperation id="mx.messaging:MessageAgent:protected:reAuthorize"><apiName>reAuthorize</apiName><shortdesc>
      Diese Funktion sollte von Unterklassen überschrieben werden, um eine erneute Autorisierung aufgrund der Zeitüberschreitung der Serversitzung zu implementieren.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>msg</apiItemName><apiOperationClassifier>mx.messaging.messages:IMessage</apiOperationClassifier><apiDesc>Die den Fehler verursachende Meldung sollte erneut gesendet werden, nachdem durch eine Verbindungsaufhebung/Verbindung eine erneute Autorisierung durchgeführt wurde.
      
       </apiDesc></apiParam></apiOperationDef><apiDesc>
@@ -821,7 +821,7 @@
   </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="mx.messaging:Channel_mx.messaging.events.ChannelEvent.CONNECT_channelConnect"><apiName>channelConnect</apiName><shortdesc>
   Ausgelöst, nachdem ein Kanal eine Verbindung zum zugehörigen Endpunkt hergestellt hat.</shortdesc><prolog/><adobeApiEventDetail><adobeApiEventDef><apiEventType>mx.messaging.events.ChannelEvent.CONNECT</apiEventType><adobeApiEventClassifier>mx.messaging.events.ChannelEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
   Ausgelöst, nachdem ein Kanal eine Verbindung zum zugehörigen Endpunkt hergestellt hat.
- <p> </p>
+ <p>Die Channel-Klasse und deren Unterklassen geben einen Channel.Connect.Failed-Code aus, sobald in einem Kanal ein Problem beim Herstellen einer Verbindung zu einem Remote-Ziel auftritt. Ein AMFChannel-Objekt gibt einen Channel.Call.Failed-Code aus, wenn der Kanal bereits verbunden ist, jedoch einen Call.Failed-Code von der zugrunde liegenden NetConnection erhält.</p>
  
   </apiDesc></adobeApiEventDetail></adobeApiEvent><apiConstructor id="mx.messaging:Channel:Channel"><apiName>Channel</apiName><shortdesc>
       Erstellt eine Instanz eines generischen Kanals, die mit der angegebenen Endpunkt-URI verbunden wird.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>id</apiItemName><apiType value="String"/><apiData>null</apiData><apiDesc>Die ID dieses Kanals.
@@ -839,7 +839,7 @@
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.messaging:Channel:applySettings"><apiName>applySettings</apiName><shortdesc>
       Unterklassen sollte diese Methode überschreiben, um Einstellungen anzuwenden, die gegebenenfalls für einen bestimmten Kanal notwendig sind.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>settings</apiItemName><apiType value="XML"/><apiDesc>XML-Fragment der Datei services-config.xml für diesen Kanal. 
        </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Unterklassen sollte diese Methode überschreiben, um Einstellungen anzuwenden, die gegebenenfalls für einen bestimmten Kanal notwendig sind. Vergewissern Sie sich, <codeph>super.applySettings()</codeph> aufzurufen, um allgemeine Einstellungen für den Kanal anzuwenden. 
+      Unterklassen sollte diese Methode überschreiben, um Einstellungen anzuwenden, die gegebenenfalls für einen bestimmten Kanal notwendig sind. Vergewissern Sie sich, <codeph>super.applySettings()</codeph> aufzurufen, um allgemeine Einstellungen für den Kanal anzuwenden. Diese Methode wird primär in den Channel-Unterklassen verwendet.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.messaging:Channel:connect"><apiName>connect</apiName><shortdesc>
       Verbindet den ChannelSet mit dem Kanal.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiFinal/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>channelSet</apiItemName><apiOperationClassifier>mx.messaging:ChannelSet</apiOperationClassifier><apiDesc>Der ChannelSet, der mit dem Kanal verbunden werden soll.

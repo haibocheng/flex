@@ -16,15 +16,13 @@ package flashx.textLayout.utils
 	import flash.text.engine.TextRotation;
 	
 	import flashx.textLayout.compose.IFlowComposer;
+	import flashx.textLayout.compose.TextFlowLine;
 	import flashx.textLayout.container.ContainerController;
 	import flashx.textLayout.container.ScrollPolicy;
-	import flashx.textLayout.debug.assert;
-	import flashx.textLayout.elements.TextRange;
-	import flashx.textLayout.elements.FlowElement;
 	import flashx.textLayout.elements.FlowLeafElement;
 	import flashx.textLayout.elements.ParagraphElement;
 	import flashx.textLayout.elements.TextFlow;
-	import flashx.textLayout.compose.TextFlowLine;
+	import flashx.textLayout.elements.TextRange;
 	import flashx.textLayout.formats.BlockProgression;
 	import flashx.textLayout.formats.Direction;
 	import flashx.textLayout.tlf_internal;
@@ -670,10 +668,22 @@ package flashx.textLayout.utils
 		 */		 		 		 		 		 		 		 
 		static public function nextPage(range:TextRange, extendSelection:Boolean = false):Boolean
 		{
+			var controller:ContainerController;
+			
 			if (!validateTextRange(range))
 				return false;
 				
 			var textFlow:TextFlow = range.textFlow;
+			
+			// if not the last container go to the beginning of the next container
+			var controllerIndex:int = textFlow.flowComposer.findControllerIndexAtPosition(range.activePosition);
+			if (controllerIndex != textFlow.flowComposer.numControllers-1)
+			{
+				range.activePosition = textFlow.flowComposer.getControllerAt(controllerIndex+1).absoluteStart;
+				if (!extendSelection)
+					range.anchorPosition = range.activePosition;
+				return true;
+			}
 			
 			if (!isScrollable(textFlow, range.activePosition))		// paging applies only to containers that scroll
 				return false;
@@ -695,7 +705,7 @@ package flashx.textLayout.utils
 			var amount:Number;
 			
 			// get the last container
-			var controller:ContainerController = textFlow.flowComposer.getControllerAt(textFlow.flowComposer.numControllers-1);
+			controller = textFlow.flowComposer.getControllerAt(textFlow.flowComposer.numControllers-1);
 
 			if (isTTB)
 			{
@@ -793,6 +803,32 @@ package flashx.textLayout.utils
 				return false;
 				
 			var textFlow:TextFlow = range.textFlow;
+			
+			var controllerIndex:int = textFlow.flowComposer.findControllerIndexAtPosition(range.activePosition);
+			var controller:ContainerController = textFlow.flowComposer.getControllerAt(controllerIndex);
+			
+			// first line in container
+			var controllerFirstLine:TextFlowLine = textFlow.flowComposer.findLineAtPosition(controller.absoluteStart);
+
+			// if on the first line of a controller go to the beginning of the previous controller
+			if (range.activePosition <= controller.absoluteStart+controllerFirstLine.textLength)
+			{
+				if (controllerIndex == 0)
+					return false;
+				range.activePosition = textFlow.flowComposer.getControllerAt(controllerIndex-1).absoluteStart;
+				if (!extendSelection)
+					range.anchorPosition = range.activePosition;
+				return true;
+			}
+			
+			// if not the last container go to the beginning of the current container
+			if (controllerIndex != textFlow.flowComposer.numControllers-1)
+			{
+				range.activePosition = controller.absoluteStart;
+				if (!extendSelection)
+					range.anchorPosition = range.activePosition;
+				return true;
+			}
 				
 			if (!isScrollable(textFlow, range.activePosition))		// paging applies only to containers that scroll
 				return false;
@@ -815,7 +851,7 @@ package flashx.textLayout.utils
 			var amount:Number;
 			
 			// get the last container
-			var controller:ContainerController = textFlow.flowComposer.getControllerAt(textFlow.flowComposer.numControllers-1);
+			controller = textFlow.flowComposer.getControllerAt(textFlow.flowComposer.numControllers-1);
 			
 			if (isTTB)
 			{
@@ -829,7 +865,7 @@ package flashx.textLayout.utils
  				if ((controller.horizontalScrollPosition + amount + controller.compositionWidth) > 0)
  				{
  					controller.horizontalScrollPosition = 0;
-					nextLine = 0;
+					nextLine = textFlow.flowComposer.findLineIndexAtPosition(controller.absoluteStart);
 					nextTextFlowLine = textFlow.flowComposer.getLineAt(nextLine);								
  				} else
  				{
@@ -837,7 +873,7 @@ package flashx.textLayout.utils
  					controller.horizontalScrollPosition += amount;
  					var newHorzPos:Number = controller.horizontalScrollPosition;
  					if (oldHorzPos == newHorzPos) {
-						nextLine = 0;
+						nextLine = textFlow.flowComposer.findLineIndexAtPosition(controller.absoluteStart);
 						nextTextFlowLine = textFlow.flowComposer.getLineAt(nextLine);													
  					} else {
  						nextLine = curLine;
@@ -845,7 +881,7 @@ package flashx.textLayout.utils
  						{
  							nextLine--;
 							nextTextFlowLine = textFlow.flowComposer.getLineAt(nextLine);
-							if ((nextTextFlowLine.x - curTextFlowLine.x) >= (newHorzPos - oldHorzPos))
+							if ((nextTextFlowLine.x - curTextFlowLine.x) >= (newHorzPos - oldHorzPos) || nextTextFlowLine.absoluteStart < controller.absoluteStart)
 								break;
  						}
  					}
@@ -856,7 +892,7 @@ package flashx.textLayout.utils
  				if ((controller.verticalScrollPosition - amount + controller.compositionHeight) < 0)
  				{
  					controller.verticalScrollPosition = 0;
-					nextLine = 0;
+					nextLine = textFlow.flowComposer.findLineIndexAtPosition(controller.absoluteStart);
 					nextTextFlowLine = textFlow.flowComposer.getLineAt(nextLine);								 						
  				} else
  				{
@@ -864,7 +900,7 @@ package flashx.textLayout.utils
  					controller.verticalScrollPosition -= amount;
  					var newVertPos:Number = controller.verticalScrollPosition;
  					if (oldVertPos == newVertPos) {
-						nextLine = 0;
+						nextLine = textFlow.flowComposer.findLineIndexAtPosition(controller.absoluteStart);
 						nextTextFlowLine = textFlow.flowComposer.getLineAt(nextLine);								 											
  					} else {
  						nextLine = curLine;
@@ -872,7 +908,7 @@ package flashx.textLayout.utils
  						{
  							nextLine--;
 							nextTextFlowLine = textFlow.flowComposer.getLineAt(nextLine);
-							if ((curTextFlowLine.y - nextTextFlowLine.y) >= (oldVertPos - newVertPos))
+							if ((curTextFlowLine.y - nextTextFlowLine.y) >= (oldVertPos - newVertPos) || nextTextFlowLine.absoluteStart < controller.absoluteStart)
 								break;
  						}
  					} 						

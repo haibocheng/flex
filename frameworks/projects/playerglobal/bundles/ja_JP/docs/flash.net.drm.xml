@@ -1,0 +1,212 @@
+<?xml version="1.0"?>
+<apiPackage id="flash.net.drm"><apiName>flash.net.drm</apiName><apiDetail/><apiClassifier id="flash.net.drm:DRMContentData"><apiName>DRMContentData</apiName><shortdesc>
+	 DRMContentData クラスは、DRM で保護されたコンテンツの表示に必要なバウチャーを取得するために必要な情報を提供します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 DRMContentData クラスは、DRM で保護されたコンテンツの表示に必要なバウチャーを取得するために必要な情報を提供します。
+	 
+	 <p>DRMContentData オブジェクトを NetStream インスタンスから取得するには、NetStream <codeph>preloadEmbeddedContent()</codeph> メソッドを呼び出し、NetStream クライアントオブジェクトに <codeph>onDRMContentData</codeph> コールバック関数を提供します。DRMManager の <codeph>loadVoucher()</codeph> メソッドのパラメーターとして、コールバック関数に渡された DRMContentData オブジェクトを使用します。</p>
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="flash.net.xml#NetStream"><linktext>flash.net.NetStream</linktext></link><link href="flash.net.drm.xml#DRMManager"><linktext>flash.net.drm.DRMManager</linktext></link><link href="flash.net.drm.xml#DRMVoucher"><linktext>flash.net.drm.DRMVoucher</linktext></link></related-links><apiValue id="flash.net.drm:DRMContentData:authenticationMethod:get"><apiName>authenticationMethod</apiName><shortdesc>
+		 関連付けられたコンテンツのバウチャーを取得するために必要な認証タイプです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 関連付けられたコンテンツのバウチャーを取得するために必要な認証タイプです。
+		 
+		 <p>サポートされる認証タイプは次のとおりです。</p>
+		 <ul>
+		 <li>AuthenticationMethod.ANONYMOUS：すべてのユーザーがバウチャーを取得できます。</li>
+		 <li>AuthenticationMethod.USERNAME_AND_PASSWORD：バウチャーを取得するには、関連付けられたコンテンツの表示を許可されたアカウントのユーザー名とパスワードを指定する必要があります。</li>
+		 </ul>
+		 
+		 <p>AuthenticationMethod クラスは、<codeph>authenticationMethod</codeph> プロパティと共に使用するストリング定数を提供します。</p>
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:DRMContentData:domain:get"><apiName>domain</apiName><shortdesc>
+		 関連付けられたコンテンツのバウチャーを取得するために、ユーザーが認証される必要がある Media Rights Server のコンテンツドメインです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 関連するコンテンツのバウチャーを取得するためにユーザーの認証が必要な Media Rights Server のコンテンツドメインです。
+		 
+		 <p>認証が<i/>デフォルトドメインに対するものであるか、または認証が不要な場合は、<codeph>domainName</codeph> は <codeph>null</codeph> になります。</p>
+		 
+		 <p><b>メモ：</b>このプロパティによって返されるドメインは、ネットワークまたはインターネットのドメイン名とは無関係です。この場合、ドメインはコンテンツまたはユーザーアカウントのグループです。例えば、1 つのサーバーが複数のドメインをサポートでき、各ドメインが独自のコンテンツチャンネルとサブスクライバのセットを持つことができます。</p>
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:DRMContentData:licenseID:get"><apiName>licenseID</apiName><shortdesc>
+		 Media Rights Server 上のこのメタデータに関連付けられたコンテンツを識別する一意の ID です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 Media Rights Server 上のこのメタデータに関連付けられたコンテンツを識別する一意の ID です。
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:DRMContentData:serverURL:get"><apiName>serverURL</apiName><shortdesc>
+		 関連付けられたコンテンツを表示するために必要なバウチャーを提供できる Media Rights Server の URL です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 関連付けられたコンテンツを表示するために必要なバウチャーを提供できる Media Rights Server の URL です。
+		 
+		 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.net.drm:DRMVoucher"><apiName>DRMVoucher</apiName><shortdesc>
+	 DRMVoucher クラスは、DRM で保護されたコンテンツの表示をユーザーに許可するライセンストークンを表します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 DRMVoucher クラスは、ユーザーに DRM で保護されたコンテンツの表示を許可するライセンストークンを表します。
+	 
+	 <p>DRMVoucher プロパティは、バウチャーによって与えられる表示権利を記述します。バウチャーは、DRMManager オブジェクトの <codeph>loadVoucher()</codeph> メソッドを使用して取得できます。続いて、このメソッドは、NetStream クラスの <codeph>preloadEmbeddedMetadata()</codeph> メソッドで取得される DRMContentData オブジェクトを必要とします。</p>
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="flash.net.drm.xml#DRMContentData"><linktext>flash.net.drm.DRMContentData</linktext></link><link href="flash.net.drm.xml#DRMManager/loadVoucher()"><linktext>flash.net.drm.DRMManager.loadVoucher()</linktext></link><link href="flash.net.xml#NetStream/preloadEmbeddedMetaData()"><linktext>flash.net.NetStream.preloadEmbeddedMetaData()</linktext></link></related-links><apiValue id="flash.net.drm:DRMVoucher:offlineLeaseEndDate:get"><apiName>offlineLeaseEndDate</apiName><shortdesc>
+		 このバウチャーがオフライン再生に対して失効する日時です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Date</apiValueClassifier></apiValueDef><apiDesc>
+		 オフライン再生に対するこのバウチャーの期限が切れる日時です。
+		 
+		 <p>バウチャーが現在のオンラインセッションに対してのみ有効な場合、<codeph>offlineLeaseStartDate</codeph> は <codeph>null</codeph> です。</p>
+		 
+ 		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:DRMVoucher:offlineLeaseStartDate:get"><apiName>offlineLeaseStartDate</apiName><shortdesc>
+		 このバウチャーがオフライン再生に対して有効になる日時です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Date</apiValueClassifier></apiValueDef><apiDesc>
+		 オフライン再生に対してこのバウチャーが有効になる日時です。
+		 
+		 <p>バウチャーが現在のオンラインセッションに対してのみ有効な場合、<codeph>offlineLeaseStartDate</codeph> は <codeph>null</codeph> です。</p>
+		 
+	 	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:DRMVoucher:playbackTimeWindow:get"><apiName>playbackTimeWindow</apiName><shortdesc>
+		 初めて表示した後、関連するコンテンツを表示または確認できる期間です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>flash.net.drm:DRMPlaybackTimeWindow</apiValueClassifier></apiValueDef><apiDesc>
+		 初めて表示した後、関連するコンテンツを表示または確認できる期間です。
+		 
+		 <p>再生ウィンドウはユーザーが最初にコンテンツを表示するときに開き、許可された時間の経過後に閉じます。再生ウィンドウが許可されていない場合、<codeph>playbackTimeWindow</codeph> は <codeph>null</codeph> になります。 </p>
+		 
+	 	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:DRMVoucher:policies:get"><apiName>policies</apiName><shortdesc>
+		 アプリケーションで定義されたポリシーを報告するダイナミックオブジェクトです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Object</apiValueClassifier></apiValueDef><apiDesc>
+		 アプリケーションで定義されたポリシーを報告するダイナミックオブジェクトです。
+		 
+		 <p>ポリシーオブジェクトには、有効な各ポリシーの名前と値のペアが含まれます。</p>
+		  
+	 	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:DRMVoucher:voucherEndDate:get"><apiName>voucherEndDate</apiName><shortdesc>
+		 このバウチャーの失効日です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Date</apiValueClassifier></apiValueDef><apiDesc>
+		 このバウチャーの失効日です。
+		 
+	 	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:DRMVoucher:voucherStartDate:get"><apiName>voucherStartDate</apiName><shortdesc>
+		 このバウチャーの有効期間の開始日です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Date</apiValueClassifier></apiValueDef><apiDesc>
+		 このバウチャーの有効期間の開始日です。
+		    
+	 	 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.net.drm:DRMPlaybackTimeWindow"><apiName>DRMPlaybackTimeWindow</apiName><shortdesc>
+	 DRMPlaybackWindow クラスは、DRM バウチャーが有効な期間を表します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 DRMPlaybackWindow クラスは、DRM バウチャーが有効な期間を表します。
+	 
+	 <p><codeph>startDate</codeph> プロパティと <codeph>endDate</codeph> プロパティは、ユーザーがコンテンツを初めて表示するまで <codeph>null</codeph> です。</p>
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="flash.net.drm.xml#DRMVoucher"><linktext>flash.net.drm.DRMVoucher</linktext></link></related-links><apiValue id="flash.net.drm:DRMPlaybackTimeWindow:endDate:get"><apiName>endDate</apiName><shortdesc>
+		 再生ウィンドウが終了する日付です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Date</apiValueClassifier></apiValueDef><apiDesc>
+		 再生ウィンドウが終了する日付です。
+		 
+		 <p>再生ウィンドウが開始されていない場合、<codeph>endDate</codeph> は <codeph>null</codeph> になります。</p> 
+		 
+	 	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:DRMPlaybackTimeWindow:period:get"><apiName>period</apiName><shortdesc>
+		 時間ウィンドウの長さ（ミリ秒）です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>uint</apiValueClassifier></apiValueDef><apiDesc>
+		 時間ウィンドウの長さ（ミリ秒）です。 
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:DRMPlaybackTimeWindow:startDate:get"><apiName>startDate</apiName><shortdesc>
+		 再生ウィンドウが開始される日付です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Date</apiValueClassifier></apiValueDef><apiDesc>
+		 再生ウィンドウが開始される日付です。
+		 
+		 <p>再生ウィンドウが開始されていない場合、<codeph>startDate</codeph> は <codeph>null</codeph> になります。</p> 
+		 
+	 	 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.net.drm:LoadVoucherSetting"><apiName>LoadVoucherSetting</apiName><shortdesc>
+	 LoadVoucherSetting クラスは、DRMManager の settings  パラメーター（loadVoucher() メソッド）と共に使用するオプションを列挙するストリング定数を指定します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 LoadVoucherSetting クラスは、DRMManager の <codeph>settings</codeph> パラメーター（<codeph>loadVoucher()</codeph> メソッド）と共に使用するオプションを列挙するストリング定数を指定します。
+	 
+	 </apiDesc></apiClassifierDetail><apiValue id="flash.net.drm:LoadVoucherSetting:ALLOW_SERVER"><apiName>ALLOW_SERVER</apiName><shortdesc>
+	  可能であれば、ローカルキャッシュからバウチャーをロードします。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>allowServer</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	  可能であれば、ローカルキャッシュからバウチャーをロードします。ローカルにキャッシュされたコピーが存在しない場合のみ、Media Rights Server からバウチャーをダウンロードします。
+	  
+	  </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:LoadVoucherSetting:FORCE_REFRESH"><apiName>FORCE_REFRESH</apiName><shortdesc>
+	  Media Rights Server からのみバウチャーをダウンロードします。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>forceRefresh</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	  Media Rights Server からのみバウチャーをダウンロードします。ローカルキャッシュからバウチャーをロードしないでください。
+	  
+	  </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:LoadVoucherSetting:LOCAL_ONLY"><apiName>LOCAL_ONLY</apiName><shortdesc>
+	  ローカルキャッシュからのみバウチャーをロードします。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>localOnly</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	  ローカルキャッシュからのみバウチャーをロードします。Media Rights Server からバウチャーをダウンロードしないでください。
+	  
+	  </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.net.drm:AuthenticationMethod"><apiName>AuthenticationMethod</apiName><shortdesc>
+	 AuthenticationMethod クラスは、DRMContentData クラスの authenticationMethod プロパティで使用される様々な認証タイプを列挙するストリング定数を提供します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 AuthenticationMethod クラスは、DRMContentData クラスの <codeph>authenticationMethod</codeph> プロパティで使用される様々な認証タイプを列挙するストリング定数を提供します。
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="flash.net.drm.xml#DRMContentData"><linktext>flash.net.drm.DRMContentData</linktext></link></related-links><apiValue id="flash.net.drm:AuthenticationMethod:ANONYMOUS"><apiName>ANONYMOUS</apiName><shortdesc>
+		 認証は不要です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>anonymous</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 認証は不要です。
+		 
+	 	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:AuthenticationMethod:USERNAME_AND_PASSWORD"><apiName>USERNAME_AND_PASSWORD</apiName><shortdesc>
+		 有効なユーザーアカウントとパスワードが要求されます。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>usernameAndPassword</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 有効なユーザーアカウントとパスワードが要求されます。 
+		 
+	 	 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.net.drm:DRMManager"><apiName>DRMManager</apiName><shortdesc>
+	 DRMManager は、DRM で保護されたコンテンツを表示するために必要なバウチャーの取得と保存を管理します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.events:EventDispatcher</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 DRMManager は、DRM で保護されたコンテンツを表示するために必要なバウチャーの取得と保存を管理します。
+	 
+	 <p>DRM で保護されたメディアファイルのメタデータから取得した DRMContentData オブジェクトを使用して、Media Rights Server からバウチャーをプリロードできます。DRMContentData オブジェクトを使用して、個別のバウチャーのローカルキャッシュを照会できます。また、すべてのバウチャーをリセットできます。ローカルキャッシュ内のすべてのバウチャーを列挙するためのメソッドは用意されていません。</p>
+	 
+	 <p>アプリケーションは DRMManager クラスの新しいインスタンスを作成しません。既存の DRMManager オブジェクトにアクセスするには、静的な <codeph>DRMManager.getDRMManager()</codeph> を使用します。</p>
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="flash.net.xml#NetStream"><linktext>flash.net.NetStream</linktext></link><link href="flash.net.drm.xml#DRMVoucher"><linktext>flash.net.drm.DRMVoucher</linktext></link><link href="flash.net.drm.xml#DRMContentData"><linktext>flash.net.drm.DRMContentData</linktext></link></related-links><adobeApiEvent id="flash.net.drm:DRMManager_flash.events.DRMErrorEvent.LOAD_VOUCHER_ERROR_loadVoucherError"><apiName>loadVoucherError</apiName><shortdesc> 
+	 DRMManager は、要求されたバウチャーを Media Rights Server から取得できないと、DRMErrorEvent オブジェクトを送出します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.DRMErrorEvent.LOAD_VOUCHER_ERROR</apiEventType><adobeApiEventClassifier>flash.events.DRMErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	 DRMManager は、要求されたバウチャーを Media Rights Server から取得できないと、DRMErrorEvent オブジェクトを送出します。 
+	 
+	 <p><b>注意：</b>バウチャーキャッシュからバウチャーを読み込もうとして失敗した場合（<codeph>localOnly</codeph> パラメーターを <codeph>source</codeph> パラメーターとして使用）、DRMErrorEvent オブジェクトは送出されません。代わりに、<codeph>voucher</codeph> プロパティが <codeph>null</codeph> に設定された DRMStatusEvent オブジェクトが送出されます。</p>
+	 
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.net.drm:DRMManager_flash.events.DRMStatusEvent.LOAD_VOUCHER_COMPLETE_loadVoucherComplete"><apiName>loadVoucherComplete</apiName><shortdesc> 
+	 DRMManager は、要求されたバウチャーを Media Rights Server から取得すると、DRMStatusEvent オブジェクトを送出します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.DRMStatusEvent.LOAD_VOUCHER_COMPLETE</apiEventType><adobeApiEventClassifier>flash.events.DRMStatusEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	 DRMManager は、要求されたバウチャーを Media Rights Server から取得すると、DRMStatusEvent オブジェクトを送出します。
+	 
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.net.drm:DRMManager_flash.events.DRMAuthenticationErrorEvent.AUTHENTICATION_ERROR_authenticationError"><apiName>authenticationError</apiName><shortdesc> 
+	 DRMManager は、ユーザーが authenticate() メソッドの呼び出しの後で Media Rights Server に認証されないと、DRMAuthenticationErrorEvent オブジェクトを送出します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.DRMAuthenticationErrorEvent.AUTHENTICATION_ERROR</apiEventType><adobeApiEventClassifier>flash.events.DRMAuthenticationErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	 DRMManager は、ユーザーが <codeph>authenticate()</codeph> メソッドの呼び出しの後で Media Rights Server に認証されないと、DRMAuthenticationErrorEvent オブジェクトを送出します。
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.net.drm:DRMManager_flash.events.DRMAuthenticationCompleteEvent.AUTHENTICATION_COMPLETE_authenticationComplete"><apiName>authenticationComplete</apiName><shortdesc> 
+	 DRMManager は、ユーザーが authenticate() メソッドの呼び出しの後で Media Rights Server に認証されないと、DRMAuthenticationCompleteEvent オブジェクトを送出します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.DRMAuthenticationCompleteEvent.AUTHENTICATION_COMPLETE</apiEventType><adobeApiEventClassifier>flash.events.DRMAuthenticationCompleteEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	 DRMManager は、ユーザーが <codeph>authenticate()</codeph> メソッドの呼び出しの後で Media Rights Server に認証されないと、DRMAuthenticationCompleteEvent オブジェクトを送出します。
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><apiOperation id="flash.net.drm:DRMManager:authenticate"><apiName>authenticate</apiName><shortdesc>
+		 ユーザーを認証します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>serverURL</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>保護されたコンテンツを表示するためのバウチャーを提供できる Media Rights Server の URL
+		 </apiDesc></apiParam><apiParam><apiItemName>domain</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>サーバー上のドメイン（ネットワークまたはインターネットのドメイン名ではありません）
+		 </apiDesc></apiParam><apiParam><apiItemName>username</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>ユーザーアカウント名
+		 </apiDesc></apiParam><apiParam><apiItemName>password</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>ユーザーアカウントのパスワード
+		 
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+		 ユーザーを認証します。
+		 
+		 <p><codeph>authenticationComplete</codeph> イベントと <codeph>authenticationError</codeph> イベントをリッスンして、認証の試行の結果を判別します。複数の <codeph>authenticate()</codeph> 呼び出しがキューに置かれます。<codeph>authenticationComplete</codeph> イベントに対して送出された AuthenticationCompleteEvent オブジェクトには、アプリケーションが保存できる認証トークンが含まれます。</p> 
+		 
+		 <p>保存された認証トークン、または別の方法でダウンロードしたトークンを使用すると、今後 Media Rights Server を使用して認証されたセッションを確立できます。トークンを使用してセッションを確立するには、<codeph>setAuthenticationToken()</codeph> メソッドを呼び出します。トークンのプロパティ（有効期限など）は、トークンを生成するサーバーの設定によって決まります。</p>
+		 
+		 <p><b>重要：</b>ユーザーのインターネット接続が認証を必要とするプロキシサーバーを経由する場合、<codeph>authenticate()</codeph> メソッドは成功しません。そのようなユーザーは認証を必要とする DRM バウチャーをプリロードできませんが、アプリケーションは再生を開始し、<codeph>setAuthenticationCredentials()</codeph> メソッドを使用して、プロキシサーバーと Media Rights Server の両方にユーザーをログインさせることで、バウチャーを取得できます。バウチャーを取得すると、ユーザーはコンテンツをオフラインで表示できます（バウチャーが提示するライセンスでオフライン再生が許可されている場合）。</p>
+		  
+		 </apiDesc></apiOperationDetail><related-links><link href="flash.net.xml#NetStream/setAuthenticationCredentials()"><linktext>flash.net.NetStream.setAuthenticationCredentials()</linktext></link><link href="flash.net.drm.xml#DRMManager/setAuthenticationToken()"><linktext>setAuthenticationToken()</linktext></link></related-links></apiOperation><apiOperation id="flash.net.drm:DRMManager:getDRMManager"><apiName>getDRMManager</apiName><shortdesc>
+		 シングルトン DRMManager オブジェクトのインスタンスを返します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiOperationClassifier>flash.net.drm:DRMManager</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+		 シングルトン DRMManager オブジェクトのインスタンスを返します。
+		 
+		 <p>セキュリティドメインごとに 1 つの DRMManager インスタンスが存在します。</p>
+		 
+		 </apiDesc></apiOperationDetail><related-links><link href="flash.system.xml#SecurityDomain"><linktext>flash.system.SecurityDomain</linktext></link></related-links></apiOperation><apiOperation id="flash.net.drm:DRMManager:loadVoucher"><apiName>loadVoucher</apiName><shortdesc>
+		 Media Rights Server またはローカルのバウチャーキャッシュからバウチャーをロードします。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>contentData</apiItemName><apiOperationClassifier>flash.net.drm:DRMContentData</apiOperationClassifier><apiDesc>DRM で保護されたメディアファイルからの DRMContentData オブジェクト
+		 </apiDesc></apiParam><apiParam><apiItemName>setting</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>バウチャーがローカルキャッシュと Media Rights Server のどちらから取得されたかを判別します
+		 
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+		 Media Rights Server またはローカルのバウチャーキャッシュからバウチャーをロードします。
+		 
+		 <p>バウチャーは <codeph>setting</codeph> パラメーターに基づいてロードされます。</p>
+		 <ul>
+		 <li>LoadVoucherSetting.FORCE_REFRESH：バウチャーは常に Media Rights Server からダウンロードされます。</li>
+		 <li>LoadVoucherSetting.LOCAL_ONLY：バウチャーはローカルキャッシュからのみロードされます。</li>
+		 <li>LoadVoucherSetting.ALLOW_SERVER：バウチャーは、可能であればローカルキャッシュからロードされますが、それ以外の場合はサーバーからダウンロードされます。</li>
+		 </ul>
+		 <p>LoadVoucherSetting クラスは、<codeph>setting</codeph> パラメーターの値として使用するストリング定数を定義します。</p>
+		 
+		 <p>バウチャーが正常にロードされると、DRMManager は DRM ステータスイベントを送出します。バウチャーがロードされるとすぐに、アプリケーションは再生を開始できます。ロードされたバウチャーは、送出された DRMStatusEvent オブジェクトの <codeph>voucher</codeph> プロパティで使用できます。このバウチャーオブジェクトを使用すると、関連付けられた Media Rights 情報をユーザーに表示できます。 </p>
+		 
+		 <p>Media Rights Server からバウチャーをロードできない場合は、DRM エラーイベントが送出されます。送出された DRMErrorEvent オブジェクトの <codeph>errorID</codeph> プロパティは、失敗の理由を示します。失敗の一般的な原因には、ユーザーがオフラインのときに FMRMS サーバーに接続しようとした場合、ユーザーがログインしていないときにバウチャーをロードしようとした場合などがあります。アプリケーションはこれらのエラーに応答し、修正措置を講じることができます。例えば、バウチャーのダウンロードに認証資格情報が必要な場合、ユーザーにアカウントユーザー名とパスワードを要求し、DRMManager の <codeph>authenticate()</codeph> メソッドを呼び出した後、バウチャーのロードを再び試行できます。</p>
+		 
+		 <p>ローカルキャッシュからバウチャーを取得できず、<codeph>localOnly</codeph> 設定が使用される場合、DRMErrorEvent は送出されません。代わりに、DRM status イベントが送出されます。この DRMStatusEvent オブジェクトの <codeph>detail</codeph> プロパティは <codeph>DRM.voucherObtained</codeph> のままですが、<codeph>voucher</codeph> プロパティは <codeph>null</codeph> です。</p>
+		 
+		 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.net.drm:DRMManager:resetDRMVouchers"><apiName>resetDRMVouchers</apiName><shortdesc>
+	    ローカルにキャッシュされたすべての DRM（デジタル著作権管理）バウチャーデータを削除します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata><asCustoms><keyword>DRMManager, resetDRMVouchers
+	    
+	    </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>バウチャーデータを削除できません。
+	    
+	    </apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+	    ローカルにキャッシュされたすべての DRM（デジタル著作権管理）バウチャーデータを削除します。
+	    <p>
+	    ユーザーが暗号化されたコンテンツにアクセスできるようにするには、必要なバウチャーをアプリケーションで再度ダウンロードする必要があります。この関数の呼び出しは、<codeph>Netstream.resetDRMVouchers()</codeph> の呼び出しに相当します。</p>
+	    
+	    </apiDesc></apiOperationDetail><related-links><link href="flash.net.xml#NetStream/resetDRMVouchers()"><linktext>flash.net.NetStream.resetDRMVouchers()</linktext></link></related-links></apiOperation><apiOperation id="flash.net.drm:DRMManager:setAuthenticationToken"><apiName>setAuthenticationToken</apiName><shortdesc>
+		 指定されたサーバーおよびドメインとの通信に使用する認証トークンを設定します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>serverUrl</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Media Rights Server の URL
+		 </apiDesc></apiParam><apiParam><apiItemName>domain</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Media Rights Server 上のドメイン
+		 </apiDesc></apiParam><apiParam><apiItemName>token</apiItemName><apiOperationClassifier>flash.utils:ByteArray</apiOperationClassifier><apiDesc>認証トークン 
+		  
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+		 指定されたサーバーおよびドメインとの通信に使用する認証トークンを設定します。
+		 
+		 <p>認証トークンは、DRMAuthenticationCompleteEvent オブジェクトの <codeph>token</codeph> プロパティから使用できますが、このオブジェクトは <codeph>authenticate()</codeph> メソッドの呼び出しが成功した後に送出されます。トークンはセッションに対して自動的にキャッシュされますが、<codeph>setAuthenticationToken()</codeph> メソッドを使用するとトークンを直接管理できます。</p>
+		 
+		 <p>トークンを設定すると、サーバーおよびドメインのキャッシュされた既存のトークンが上書きされます。キャッシュされたトークンを消去するには、<codeph>token</codeph> パラメーターを <codeph>null</codeph> に設定します。</p>
+		 
+		 </apiDesc></apiOperationDetail></apiOperation></apiClassifier></apiPackage>

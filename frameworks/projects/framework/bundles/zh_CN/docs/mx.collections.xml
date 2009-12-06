@@ -37,24 +37,25 @@
       
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.collections:AsyncListView"><apiName>AsyncListView</apiName><shortdesc>
   </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseInterface>mx.collections:IList</apiBaseInterface><apiBaseClassifier>mx.utils:OnDemandEventDispatcher</apiBaseClassifier></apiClassifierDef><apiDesc>
-  <codeph/>
+  <codeph/><codeph/><codeph/>
  
-  <p><codeph/><codeph/></p>
+  <p>getItemAt() 方法通过返回临时“暂挂”项目处理 ItemPendingErrors，直到基础请求成功或失败为止。临时项目是通过调用 <codeph>createPendingItemFunction</codeph> 产生的。如果请求成功，则实际的项目会替换临时项目，而如果请求失败，则会使用通过调用 <codeph>createFailedItemFunction</codeph> 返回的项目替换临时项目。</p>
  
-  <p><codeph/></p>
+  <p>此类将 IList 方法和属性委托给其 <codeph>list</codeph>。如果未指定列表，则转变集合的方法不操作，且查询集合的方法会根据需要返回诸如 null 或零之类的“空”值。</p>
+ 
+  <p>此类用于与基于 DataGroup 的 Spark 组件（如 List 和 ComboBox）一起使用，这些组件不为 ItemPendingError 处理提供固有支持。</p>
  
   <p/>
  
- 
   </apiDesc></apiClassifierDetail><adobeApiEvent id="mx.collections:AsyncListView_mx.events.CollectionEvent.COLLECTION_CHANGE_collectionChange"><apiName>collectionChange</apiName><shortdesc>
-  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>mx.events.CollectionEvent.COLLECTION_CHANGE</apiEventType><adobeApiEventClassifier>mx.events.CollectionEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
-  
+  当列表的长度已改变或替换列表元素时被分派。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>mx.events.CollectionEvent.COLLECTION_CHANGE</apiEventType><adobeApiEventClassifier>mx.events.CollectionEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+  当列表的长度已改变或替换列表元素时被分派。
  
   </apiDesc></adobeApiEventDetail></adobeApiEvent><apiConstructor id="mx.collections:AsyncListView:AsyncListView"><apiName>AsyncListView</apiName><shortdesc>
-      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>list</apiItemName><apiOperationClassifier>mx.collections:IList</apiOperationClassifier><apiData>null</apiData><apiDesc>
+      AsyncListView 构造函数。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>list</apiItemName><apiOperationClassifier>mx.collections:IList</apiOperationClassifier><apiData>null</apiData><apiDesc>list 属性的初始值，我们正在委托给的 IList。
       
       </apiDesc></apiParam></apiConstructorDef><apiDesc>
-      
+      AsyncListView 构造函数。
      
       </apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="mx.collections:AsyncListView:addItem"><apiName>addItem</apiName><shortdesc>
       
@@ -75,16 +76,16 @@
       在指定的索引处添加项目。任何大于已添加项目的索引的项目索引都会增加 1。如果指定索引小于零或者大于列表长度，则会引发 RangeError。
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.collections:AsyncListView:getItemAt"><apiName>getItemAt</apiName><shortdesc>
-      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>如果 <codeph>index &lt; 0</codeph> 或 <codeph>index >= length</codeph>。
-      </apiDesc><apiItemName>RangeError</apiItemName><apiOperationClassifier>RangeError</apiOperationClassifier></apiException><apiReturn><apiDesc>
-      </apiDesc><apiType value="Object"/></apiReturn><apiParam><apiItemName>index</apiItemName><apiType value="int"/><apiDesc>
+      返回 list.getItemAt(index) 的值。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>如果 <codeph>index &lt; 0</codeph> 或 <codeph>index >= length</codeph>。
+      </apiDesc><apiItemName>RangeError</apiItemName><apiOperationClassifier>RangeError</apiOperationClassifier></apiException><apiReturn><apiDesc>指定索引处的列表项目。
+      </apiDesc><apiType value="Object"/></apiReturn><apiParam><apiItemName>index</apiItemName><apiType value="int"/><apiDesc>要从中检索项目的列表索引。
       </apiDesc></apiParam><apiParam><apiItemName>prefetch</apiItemName><apiType value="int"/><apiData>0</apiData><apiDesc>一个 <codeph>int</codeph>，指示当项目不是本地项目时，在请求期间要获取的项目的方向和编号。
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      <codeph/>
+      返回 <codeph>list.getItemAt(index)</codeph> 的值。
      
-      <p><codeph/><codeph/><codeph/></p>
+      <p>此方法捕获作为调用 getItemAt() 的结果生成的 ItemPendingErrors (IPE)。如果引发 IPE，则会将 <codeph>IResponder</codeph> 添加到 IPE，并会返回一个使用 <codeph>createPendingItemFunction</codeph> 创建的临时“暂挂”项目。如果基础请求最终成功，则会使用实际项目替换暂挂项目。如果请求失败，则会使用通过调用 <codeph>createFailedItemFunction</codeph> 生成的值替换暂挂项目。</p>
      
-      </apiDesc></apiOperationDetail><related-links><link href="" invalidHref="mx.collections.createPendingItemFunction.xml"><linktext/></link><link href="" invalidHref="mx.collections.createFailedItemFunction.xml"><linktext/></link><link href="mx.collections.errors.xml#ItemPendingError"><linktext>mx.collections.errors.ItemPendingError</linktext></link><link href="mx.rpc.xml#IResponder"><linktext>mx.rpc.IResponder</linktext></link></related-links></apiOperation><apiOperation id="mx.collections:AsyncListView:getItemIndex"><apiName>getItemIndex</apiName><shortdesc>
+      </apiDesc></apiOperationDetail><related-links><link href="" invalidHref="mx.collections.createPendingItemFunction.xml"><linktext>createPendingItemFunction</linktext></link><link href="" invalidHref="mx.collections.createFailedItemFunction.xml"><linktext>createFailedItemFunction</linktext></link><link href="mx.collections.errors.xml#ItemPendingError"><linktext>mx.collections.errors.ItemPendingError</linktext></link><link href="mx.rpc.xml#IResponder"><linktext>mx.rpc.IResponder</linktext></link></related-links></apiOperation><apiOperation id="mx.collections:AsyncListView:getItemIndex"><apiName>getItemIndex</apiName><shortdesc>
       
       如果项目位于列表中（这样的话 getItemAt(index) == item），则返回该项目的索引。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>该项目的索引；如果该项目不在列表中，则为 -1。
       
@@ -121,14 +122,14 @@
       <p>有关如何使用 <codeph>ItemPendingError</codeph> 的详细信息，请参阅 ItemPendingError 文档和集合文档。</p>
       
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.collections:AsyncListView:removeItemAt"><apiName>removeItemAt</apiName><shortdesc>
+      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>如果 <codeph>index &lt; 0</codeph> 或 <codeph>index >= length</codeph>。
+      </apiDesc><apiItemName>RangeError</apiItemName><apiOperationClassifier>RangeError</apiOperationClassifier></apiException><apiReturn><apiDesc>
       
-      删除指定索引处的项目并返回该项目。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>被删除的项目。
-     
-      </apiDesc><apiType value="Object"/></apiReturn><apiParam><apiItemName>index</apiItemName><apiType value="int"/><apiDesc>要从中删除项目的索引。
-     
+      </apiDesc><apiType value="Object"/></apiReturn><apiParam><apiItemName>index</apiItemName><apiType value="int"/><apiDesc>要从中检索项目的列表索引。
       </apiDesc></apiParam></apiOperationDef><apiDesc>
       
-      删除指定索引处的项目并返回该项目。原先位于此索引之后的所有项目的索引现在都向前移动一个位置。
+     
+      <p><codeph/></p>
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.collections:AsyncListView:setItemAt"><apiName>setItemAt</apiName><shortdesc>
       
@@ -143,25 +144,22 @@
       在指定的索引处放置项目。如果此索引处已存在项目，新项目将替代该项目，并返回该项目。
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.collections:AsyncListView:toArray"><apiName>toArray</apiName><shortdesc>
-      
-      返回与 IList 实现的填充顺序相同的 Array。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>数组。
-      
+      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>
       </apiDesc><apiType value="Array"/></apiReturn></apiOperationDef><apiDesc>
       
-      返回与 IList 实现的填充顺序相同的 Array。此方法可能会引发 ItemPendingError。
-     
+      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.collections:AsyncListView:toString"><apiName>toString</apiName><shortdesc>
-      将此视图的内容输出到字符串并返回该字符串。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>此视图的内容（字符串形式）。
+      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>
       
       </apiDesc><apiType value="String"/></apiReturn></apiOperationDef><apiDesc>
-      将此视图的内容输出到字符串并返回该字符串。
+      
      
       </apiDesc></apiOperationDetail></apiOperation><apiValue id="mx.collections:AsyncListView:createFailedItemFunction:get"><apiName>createFailedItemFunction</apiName><shortdesc>
-      </shortdesc><prolog/><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Function"/><apiDefaultValue>A function that unconditionally returns null. 
+      一种函数，用于在导致引发 ItemPendingError 的请求随后失败时创建替代项目。</shortdesc><prolog/><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Function"/><apiDefaultValue>A function that unconditionally returns null. 
       </apiDefaultValue></apiValueDef><apiDesc>
-      <codeph/><codeph/>
+      一种函数，用于在导致引发 <codeph>ItemPendingError</codeph> 的请求随后失败时创建替代项目。现有项目（通常是使用 <codeph>createPendingItemFunction()</codeph> 的值创建的暂挂项目）会被失败的项目替换。
       
-      <p/> 
+      <p>此属性的值必须是具有以下两个参数的函数：请求的项目的索引和失败“info”对象（该对象是从 IResponder fault() 方法传递的）。大多数情况下可以忽略第二个参数，例如：</p> 
       <pre>
      function createFailedItem(index:int, info:Object):Object
      {
@@ -170,15 +168,15 @@
        </pre>
       
      
-      <p>
+      <p>设置此属性不会影响已经创建的失败的项目。将此属性设置为 null 将禁止创建失败的项目。
       </p>
      
-      </apiDesc></apiValueDetail><related-links><link href="mx.collections.xml#AsyncListView/getItemAt"><linktext>getItemAt</linktext></link><link href="" invalidHref="mx.collections.createPendingItemFunction.xml"><linktext/></link><link href="mx.rpc.xml#IResponder/fault"><linktext/></link></related-links></apiValue><apiValue id="mx.collections:AsyncListView:createPendingItemFunction:get"><apiName>createPendingItemFunction</apiName><shortdesc>
-       </shortdesc><prolog/><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Function"/><apiDefaultValue>A function that unconditionally returns null. 
+      </apiDesc></apiValueDetail><related-links><link href="mx.collections.xml#AsyncListView/getItemAt"><linktext>getItemAt</linktext></link><link href="" invalidHref="mx.collections.createPendingItemFunction.xml"><linktext>createPendingItemFunction</linktext></link><link href="mx.rpc.xml#IResponder/fault"><linktext>mx.rpc.IResponder.fault</linktext></link></related-links></apiValue><apiValue id="mx.collections:AsyncListView:createPendingItemFunction:get"><apiName>createPendingItemFunction</apiName><shortdesc>
+       一种函数，用于在初始请求导致引发 ItemPendingError 时创建临时项目。</shortdesc><prolog/><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Function"/><apiDefaultValue>A function that unconditionally returns null. 
       </apiDefaultValue></apiValueDef><apiDesc>
-       <codeph/><codeph/>
+       一种函数，用于在初始请求导致引发 <codeph>ItemPendingError</codeph> 时创建临时项目。如果请求最终成功，会自动使用实际的项目替换临时项目。如果请求失败，则会使用 <codeph>createFailedItemFunction</codeph> 所创建的项目替换该项目。
       
-       <p> 
+       <p>此属性的值必须是具有以下两个参数的函数：请求的 dataProvider 项目的索引和 ItemPendingError 本身。大多数情况下可以忽略第二个参数，例如： 
        <pre>
      function createPendingItem(index:int, ipe:ItemPendingError):Object
      {
@@ -187,21 +185,21 @@
        </pre>
        </p>
      
-      <p/>
+      <p>设置此属性不会影响已创建的临时挂起项。将此属性设置为 null 将禁止创建临时挂起项。</p>
      
-      </apiDesc></apiValueDetail><related-links><link href="mx.collections.xml#AsyncListView/getItemAt"><linktext>getItemAt</linktext></link><link href="" invalidHref="mx.collections.createFailedItemFunction.xml"><linktext/></link><link href="mx.collections.errors.xml#ItemPendingError"><linktext>mx.collections.errors.ItemPendingError</linktext></link></related-links></apiValue><apiValue id="mx.collections:AsyncListView:length:get"><apiName>length</apiName><shortdesc>
+      </apiDesc></apiValueDetail><related-links><link href="mx.collections.xml#AsyncListView/getItemAt"><linktext>getItemAt</linktext></link><link href="" invalidHref="mx.collections.createFailedItemFunction.xml"><linktext>createFailedItemFunction</linktext></link><link href="mx.collections.errors.xml#ItemPendingError"><linktext>mx.collections.errors.ItemPendingError</linktext></link></related-links></apiValue><apiValue id="mx.collections:AsyncListView:length:get"><apiName>length</apiName><shortdesc>
       
       此集合中的项目数。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="int"/></apiValueDef><apiDesc>
       
       此集合中的项目数。0 表示不包含项目，而 -1 表示长度未知。 
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.collections:AsyncListView:list:get"><apiName>list</apiName><shortdesc>
-      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>mx.collections:IList</apiValueClassifier><apiDefaultValue>null  
+      此集合视图所封装的 IList。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>mx.collections:IList</apiValueClassifier><apiDefaultValue>null  
       
       </apiDefaultValue></apiValueDef><apiDesc>
-      
+      此集合视图所封装的 IList，即所有 IList 方法被委托给的对象。
      
-      <p><codeph/><codeph/><codeph/></p>
+      <p>如果此属性为 null，则 IList 转变方法（比如 <codeph>setItemAt()</codeph>）不操作，且 IList 查询方法（比如 <codeph>getItemAt()</codeph>）根据需要返回 null 或零（对于 <codeph>getItemIndex()</codeph>，返回 -1）。</p>
      
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.collections:ItemResponder"><apiName>ItemResponder</apiName><shortdesc>
   ItemResponder 类提供 mx.rpc.IResponder 接口的默认实现。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseInterface>mx.rpc:IResponder</apiBaseInterface><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
@@ -1189,7 +1187,7 @@
       <p>如果已删除项目后面的项目不是本地项目，并且必须执行异步操作，则会引发 ItemPendingError。有关使用 ItemPendingError 的详细信息，请参阅 ItemPendingError 文档和集合文档。</p>
      
       </apiDesc></apiOperationDetail><related-links><link href="mx.collections.errors.xml#ItemPendingError"><linktext>mx.collections.errors.ItemPendingError</linktext></link></related-links></apiOperation><apiOperation id="mx.collections:IViewCursor:mx.collections:IViewCursor:seek"><apiName>seek</apiName><shortdesc>
-      将光标移动到与指定书签位置存在一定偏移量的某个位置。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>bookmark</apiItemName><apiOperationClassifier>mx.collections:CursorBookmark</apiOperationClassifier><apiDesc><codeph>CursorBookmark</codeph> 引用允许重新定位到特定位置的标记信息。可将此参数设置为从 <codeph>bookmark</codeph> 属性返回的值，或设置为以下常数书签值之一：
+      将光标移动到与指定书签位置存在一定偏移量的某个位置。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>bookmark</apiItemName><apiOperationClassifier>mx.collections:CursorBookmark</apiOperationClassifier><apiDesc><codeph>CursorBookmark</codeph> 引用允许重新定位到特定位置的标记信息。可将此参数设置为从 <codeph>bookmark</codeph> 属性返回的值，或设置为以下常量书签值之一：
       <ul>
         <li><codeph>CursorBookmark.FIRST</codeph> — 从集合的开始位置（第一个元素）搜索</li>
         <li><codeph>CursorBookmark.CURRENT</codeph> — 从集合的当前位置搜索</li>

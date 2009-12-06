@@ -1,26 +1,26 @@
 <?xml version="1.0"?>
 <apiPackage id="mx.netmon"><apiName>mx.netmon</apiName><apiDetail/><apiClassifier id="mx.netmon:NetworkMonitor"><apiName>NetworkMonitor</apiName><shortdesc>
-  NetworkMonitor ist ein Stub, der vom Framework und von Enterprise Service-Klassen benutzt wird, um Informationen an die Flex Builder Network Monitor-Funktion zu senden.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
-  NetworkMonitor ist ein Stub, der vom Framework und von Enterprise Serviceklassen benutzt wird, um Informationen an die Flex Builder Network Monitor-Funktion zu senden. Der NetworkMonitor deklariert eine Anzahl von Impl-Funktionen, welche von einer Mix-In-Klasse auszufüllen sind, die von Flex Builder bereitgestellt wird. Wenn diese Funktionen nicht zugewiesen sind, hat der Stub keine Auswirkung oder gibt „false“ oder „null“ (wie zutreffend) zurück. Im Moment wird weder ein Singleton noch ein Instanzobjekt benutzt, um den Code für das Aufrufen des Monitors zu vereinfachen.
+  NetworkMonitor ist ein Stub, der vom Framework und von Enterprise Service-Klassen benutzt wird, um Informationen an die Flash Builder-Netzwerküberwachungsfunktion zu senden.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+  NetworkMonitor ist ein Stub, der vom Framework und von Enterprise Service-Klassen benutzt wird, um Informationen an die Flash Builder-Netzwerküberwachungsfunktion zu senden.  Wenn diese Funktionen nicht zugewiesen sind, hat der Stub keine Auswirkung oder gibt „false“ oder „null“ (wie zutreffend) zurück. Im Moment wird weder ein Singleton noch ein Instanzobjekt benutzt, um den Code für das Aufrufen des Monitors zu vereinfachen.
   
   </apiDesc></apiClassifierDetail><apiOperation id="mx.netmon:NetworkMonitor:adjustNetConnectionURL"><apiName>adjustNetConnectionURL</apiName><shortdesc>
-      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiType value="String"/></apiReturn><apiParam><apiItemName>rootUrl</apiItemName><apiType value="String"/><apiDesc>
+      Passt die URL für NetConnectionChannel und HTTPChannel Requests so an, dass sie den Monitor passiert.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiType value="String"/></apiReturn><apiParam><apiItemName>rootUrl</apiItemName><apiType value="String"/><apiDesc>muss angepasst werden.
      
       </apiDesc></apiParam><apiParam><apiItemName>url</apiItemName><apiType value="String"/></apiParam></apiOperationDef><apiDesc>
-       
+      Passt die URL für NetConnectionChannel und HTTPChannel Requests so an, dass sie den Monitor passiert. Gibt die angepasste URL zurück.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.netmon:NetworkMonitor:adjustURLRequest"><apiName>adjustURLRequest</apiName><shortdesc>
       Passt den URLRequest so an, dass er den Monitor passiert.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>urlRequest</apiItemName><apiType value="flash.net:URLRequest"/><apiDesc>Das anzupassende URLRequest. (Relative URLs werden unterstützt.)
      
-      </apiDesc></apiParam><apiParam><apiItemName>rootURL</apiItemName><apiType value="String"/><apiDesc> 
+      </apiDesc></apiParam><apiParam><apiItemName>rootURL</apiItemName><apiType value="String"/><apiDesc>Berechnet eine absolute URL aus der relativen URL. Übergeben Sie dazu bei Bedarf die URL der SWF-Datei als Wert.
      
       </apiDesc></apiParam><apiParam><apiItemName>correlationID</apiItemName><apiType value="String"/><apiDesc>Die correlationID, welche für verknüpfte Ereignisse benutzt werden kann.
       
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Passt den URLRequest so an, dass er den Monitor passiert. 
+      Passt den URLRequest so an, dass er den Monitor passiert. Die an den Monitor gesendete URLRequest besitzt zwei Header:
       <ul>
-        <li><codeph/><codeph/></li>
-        <li><codeph/></li>
+        <li><codeph>actualHostPort</codeph>: Der tatsächliche <codeph>host:port</codeph> für die URL.</li>
+        <li><codeph>correlationID</codeph>: Die correlationID der Anforderung für den Fall, dass sie aus Messaging stammt (Image/Loader-Anforderungen müssen ihre eigenen correlationIDs erstellen)</li>
       </ul>
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.netmon:NetworkMonitor:isMonitoring"><apiName>isMonitoring</apiName><shortdesc>
@@ -33,7 +33,7 @@
       </apiDesc></apiParam><apiParam><apiItemName>correlationID</apiItemName><apiType value="String"/><apiDesc>Die correlationID, die mit anderen Ereignissen oder der Anfrage verknüpft werden soll.
       
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Teilt dem Monitor mit, dass ein Ereignis aufgetreten ist.  <codeph/>
+      Teilt dem Monitor mit, dass ein Ereignis aufgetreten ist. Diese Methode kann vom Loader zur Überwachung von Sicherheits- und IO-Fehlern verwendet werden. Sie sollte nicht als <codeph>complete</codeph>-Ereignis des Loaders verwendet werden.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.netmon:NetworkMonitor:monitorFault"><apiName>monitorFault</apiName><shortdesc>
       Teilt dem Monitor mit, dass ein Fehler aufgetreten ist.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>faultMessage</apiItemName><apiType value="Object"/><apiDesc>Die eingegangene Meldung, welche das Ergebnis anzeigt. Dieses sei „null“, wenn es aufgrund eines Aufruffehlers entstand. (Es ist hier nicht typisiert, um eine Verknüpfung der Abhängigkeit zu vermeiden.)

@@ -17,6 +17,8 @@
 
 package macromedia.asc.semantics;
 
+import static java.lang.System.out;
+
 import macromedia.asc.parser.Node;
 import macromedia.asc.parser.Tokens;
 import macromedia.asc.util.BitSet;
@@ -30,6 +32,8 @@ import static macromedia.asc.embedding.avmplus.RuntimeConstants.TYPE_object;
 import static macromedia.asc.parser.Tokens.*;
 import static macromedia.asc.util.BitSet.*;
 import static macromedia.asc.semantics.Slot.CALL_Method;
+
+import static java.lang.System.out;
 
 /**
  * ReferenceValue
@@ -248,7 +252,12 @@ public final class ReferenceValue extends Value implements ErrorConstants
                 // This base must be an object since
                 // we already have found a slot.
             }
-            else if (getScopeIndex() >= 0)
+            else if (getScopeIndex() >= 0 &&
+                     getScopeIndex() < cx.getScopes().size())  
+                     // FIXME the second condition is a targeted fix for ASC-3734
+                     // the evaluator for FunctionCommonNode isn't managing scopes
+                     // properly with nested scopes, and it shows when there is an
+                     // reference to a named function expression
             {
                 base = cx.getScopes().get(getScopeIndex());
             }
@@ -400,15 +409,15 @@ public final class ReferenceValue extends Value implements ErrorConstants
                     Namespaces hasNamespaces2 = obj.hasNames(cx,opposite_kind,name,namespaces);
                     if (hasNamespaces2 != null)
                     {
+                        boolean isOnlyProtected = hasNamespaces.size() == 1 ? hasNamespaces.at(0).isProtected() : false;
                         for( int i = 0; i < hasNamespaces2.size(); i++ )
                         {
                             localQualifier = hasNamespaces2.at(i);
-                            if( !error_reported && !hasNamespaces.contains(localQualifier) )
+                            // NOTE ignore protected namespaces if hasNamespaces has a protected namespace only
+                            if( !error_reported && !(isOnlyProtected && localQualifier.isProtected()) && !hasNamespaces.contains(localQualifier) )
                             {
-                                // We resolved a get/set in a different namespace than the original
-                                // get/set was in.  This will cause a runtime error, so report it here
-                                cx.error(this.src_position, kError_AmbiguousReference, name);
-                                error_reported = true;
+                                // this will trigger an error below
+                                hasNamespaces.add(localQualifier);
                                 break;
                             }
                         }

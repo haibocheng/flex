@@ -119,6 +119,11 @@ use namespace mx_internal;
  *  enters characters into the prompt area. As the user enters characters, 
  *  the drop-down area of the control opens. 
  *  It then and scrolls to and highlights the closest match in the item list.</p>
+ *
+ *  <p><b>Note: </b>The Spark list-based controls (the Spark ListBase class and its subclasses
+ *  such as ButtonBar, ComboBox, DropDownList, List, and TabBar) do not support the BasicLayout class
+ *  as the value of the <code>layout</code> property. 
+ *  Do not use BasicLayout with the Spark list-based controls.</p>
  * 
  *  <p>The ComboBox control has the following default characteristics:</p>
  *     <table class="innertable">
@@ -128,11 +133,11 @@ use namespace mx_internal;
  *        </tr>
  *        <tr>
  *           <td>Default size</td>
- *           <td></td>
+ *           <td>146 pixels wide by 23 pixels high</td>
  *        </tr>
  *        <tr>
  *           <td>Minimum size</td>
- *           <td></td>
+ *           <td>20 pixels wide by 23 pixels high</td>
  *        </tr>
  *        <tr>
  *           <td>Maximum size</td>
@@ -141,7 +146,7 @@ use namespace mx_internal;
  *        <tr>
  *           <td>Default skin class</td>
  *           <td>spark.skins.spark.ComboBoxSkin
-                <p>spark.skins.spark.ComboBoxTextInputSkin</p></td>
+ *               <p>spark.skins.spark.ComboBoxTextInputSkin</p></td>
  *        </tr>
  *     </table>
  *
@@ -228,6 +233,11 @@ public class ComboBox extends DropDownListBase
     /**
      *  Static constant representing the value of the <code>selectedIndex</code> property
      *  when the user enters a value into the prompt area, and the value is committed. 
+     *  
+     *  @langversion 3.0
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
      */
     public static const CUSTOM_SELECTED_ITEM:int = ListBase.CUSTOM_SELECTED_ITEM;
     
@@ -442,8 +452,8 @@ public class ComboBox extends DropDownListBase
      */
     override public function set typicalItem(value:Object):void
     {   
-		if (value != typicalItem)
-			return;
+        if (value != typicalItem)
+            return;
      
         super.typicalItem = value;
         
@@ -719,7 +729,10 @@ public class ComboBox extends DropDownListBase
         }
     }
     
-    override protected function findKey(eventCode:int):Boolean
+    /**
+     *  @private 
+     */ 
+    override mx_internal function findKey(eventCode:int):Boolean
     {
         return false;
     }

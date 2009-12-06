@@ -273,6 +273,52 @@
       Fournit un accès au jeu de classes MessageAgent qui utilisent cette classe ChannelSet.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Array"/></apiValueDef><apiDesc>
       Fournit un accès au jeu de classes MessageAgent qui utilisent cette classe ChannelSet.
       
+      </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.messaging:MultiTopicProducer"><apiName>MultiTopicProducer</apiName><shortdesc>
+  Une classe MultiTopicProducer envoie des messages à une destination avec zéro ou plusieurs sous-rubriques.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>mx.messaging:AbstractProducer</apiBaseClassifier></apiClassifierDef><apiDesc>
+  Une classe MultiTopicProducer envoie des messages à une destination avec zéro ou plusieurs sous-rubriques. Elle est similaire à la classe Producer normale mais peut orienter le message vers une classe Consumer s’abonnant à une sous-rubrique parmi plusieurs sous-rubriques. Si la classe Consumer est une classe MultiTopicConsumer et qu’elle s’est abonnée à plusieurs sous-rubriques de la liste de sous-rubriques utilisée par la classe Producer, la classe Consumer ne reçoit le message qu’une seule fois.
+  <p>
+  La classe MultiTopicProducer distribue une classe MessageAckEvent ou MessageFaultEvent pour chaque message qu’elle envoie, selon que le message sortant ait été envoyé et traité avec succès ou non.
+  </p>
+  
+  </apiDesc></apiClassifierDetail><apiConstructor id="mx.messaging:MultiTopicProducer:MultiTopicProducer"><apiName>MultiTopicProducer</apiName><shortdesc>
+      Constructeur.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/></apiConstructorDef><apiDesc>
+      Constructeur.
+     
+      </apiDesc><example>
+      <codeblock rev="3.0">
+       function sendMessage():void
+       {
+           var producer:MultiTopicProducer = new MultiTopicProducer();
+           producer.destination = "NASDAQ";
+           var msg:AsyncMessage = new AsyncMessage();
+           msg.headers.operation = "UPDATE";
+           msg.body = {"SYMBOL":50.00};
+           // only send to subscribers to subtopic "SYMBOL" and "ALLSTOCKS"
+           msg.addSubtopic("SYMBOL");
+           msg.addSubtopic("ALLSTOCKS");
+           producer.send(msg);
+       }
+       </codeblock>
+      
+      </example></apiConstructorDetail></apiConstructor><apiOperation id="mx.messaging:MultiTopicProducer:addSubtopic"><apiName>addSubtopic</apiName><shortdesc>
+     Ajoute une sous-rubrique à la liste actuelle de sous-rubriques pour messages envoyées par cette classe Producer.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>subtopic</apiItemName><apiType value="String"/><apiDesc>Sous-rubrique à ajouter à la liste actuelle de sous-rubriques envoyées par cette classe Producer.
+     
+      
+      </apiDesc></apiParam></apiOperationDef><apiDesc>
+     Ajoute une sous-rubrique à la liste actuelle de sous-rubriques pour messages envoyées par cette classe Producer. Cela est un raccourci pour ajouter cette sous-rubrique à la propriété subtopics.
+     
+     </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.messaging:MultiTopicProducer:removeSubtopic"><apiName>removeSubtopic</apiName><shortdesc>
+     Supprime la sous-rubrique de la propriété subtopics.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>subtopic</apiItemName><apiType value="String"/><apiDesc>Sous-rubrique à supprimer de la propriété subtopics.
+      
+      </apiDesc></apiParam></apiOperationDef><apiDesc>
+     Supprime la sous-rubrique de la propriété subtopics. Renvoie une erreur si la sous-rubrique ne figure pas dans la liste.
+     
+     </apiDesc></apiOperationDetail></apiOperation><apiValue id="mx.messaging:MultiTopicProducer:subtopics:get"><apiName>subtopics</apiName><shortdesc>
+      Fournit un accès à la liste de sous-rubriques utilisée pour publier des messages.
+      
+      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="mx.collections:ArrayCollection"/></apiValueDef><apiDesc>
+      Fournit un accès à la liste de sous-rubriques utilisée pour publier des messages.
+      
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.messaging:MultiTopicConsumer"><apiName>MultiTopicConsumer</apiName><shortdesc>
   Comme une classe Consumer, une classe MultiTopicConsumer s’abonne à une destination avec un ID client unique et livre les messages à un gestionnaire d’événements unique.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata><asCustoms><mxml><![CDATA[
   <p>
@@ -360,52 +406,6 @@
       <p>Avant un appel à la méthode <codeph>subscribe()</codeph>, cette propriété peut être définie sans effets secondaires. Une fois que la classe MultiTopicConsumer s’est abonnée à sa destination, changer cette valeur présente pour effet secondaire de mettre à jour l’abonnement de la classe MultiTopicConsumer pour inclure les nouveaux abonnements et supprimer les abonnements que vous avez supprimés de la classe ArrayCollection.</p>
      
       <p>La destination distante doit comprendre la valeur de l’expression de sélecteur.</p>
-      
-      </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.messaging:MultiTopicProducer"><apiName>MultiTopicProducer</apiName><shortdesc>
-  Une classe MultiTopicProducer envoie des messages à une destination avec zéro ou plusieurs sous-rubriques.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>mx.messaging:AbstractProducer</apiBaseClassifier></apiClassifierDef><apiDesc>
-  Une classe MultiTopicProducer envoie des messages à une destination avec zéro ou plusieurs sous-rubriques. Elle est similaire à la classe Producer normale mais peut orienter le message vers une classe Consumer s’abonnant à une sous-rubrique parmi plusieurs sous-rubriques. Si la classe Consumer est une classe MultiTopicConsumer et qu’elle s’est abonnée à plusieurs sous-rubriques de la liste de sous-rubriques utilisée par la classe Producer, la classe Consumer ne reçoit le message qu’une seule fois.
-  <p>
-  La classe MultiTopicProducer distribue une classe MessageAckEvent ou MessageFaultEvent pour chaque message qu’elle envoie, selon que le message sortant ait été envoyé et traité avec succès ou non.
-  </p>
-  
-  </apiDesc></apiClassifierDetail><apiConstructor id="mx.messaging:MultiTopicProducer:MultiTopicProducer"><apiName>MultiTopicProducer</apiName><shortdesc>
-      Constructeur.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/></apiConstructorDef><apiDesc>
-      Constructeur.
-     
-      </apiDesc><example>
-      <codeblock rev="3.0">
-       function sendMessage():void
-       {
-           var producer:MultiTopicProducer = new MultiTopicProducer();
-           producer.destination = "NASDAQ";
-           var msg:AsyncMessage = new AsyncMessage();
-           msg.headers.operation = "UPDATE";
-           msg.body = {"SYMBOL":50.00};
-           // only send to subscribers to subtopic "SYMBOL" and "ALLSTOCKS"
-           msg.addSubtopic("SYMBOL");
-           msg.addSubtopic("ALLSTOCKS");
-           producer.send(msg);
-       }
-       </codeblock>
-      
-      </example></apiConstructorDetail></apiConstructor><apiOperation id="mx.messaging:MultiTopicProducer:addSubtopic"><apiName>addSubtopic</apiName><shortdesc>
-     Ajoute une sous-rubrique à la liste actuelle de sous-rubriques pour messages envoyées par cette classe Producer.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>subtopic</apiItemName><apiType value="String"/><apiDesc>Sous-rubrique à ajouter à la liste actuelle de sous-rubriques envoyées par cette classe Producer.
-     
-      
-      </apiDesc></apiParam></apiOperationDef><apiDesc>
-     Ajoute une sous-rubrique à la liste actuelle de sous-rubriques pour messages envoyées par cette classe Producer. Cela est un raccourci pour ajouter cette sous-rubrique à la propriété subtopics.
-     
-     </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.messaging:MultiTopicProducer:removeSubtopic"><apiName>removeSubtopic</apiName><shortdesc>
-     Supprime la sous-rubrique de la propriété subtopics.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>subtopic</apiItemName><apiType value="String"/><apiDesc>Sous-rubrique à supprimer de la propriété subtopics.
-      
-      </apiDesc></apiParam></apiOperationDef><apiDesc>
-     Supprime la sous-rubrique de la propriété subtopics. Renvoie une erreur si la sous-rubrique ne figure pas dans la liste.
-     
-     </apiDesc></apiOperationDetail></apiOperation><apiValue id="mx.messaging:MultiTopicProducer:subtopics:get"><apiName>subtopics</apiName><shortdesc>
-      Fournit un accès à la liste de sous-rubriques utilisée pour publier des messages.
-      
-      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="mx.collections:ArrayCollection"/></apiValueDef><apiDesc>
-      Fournit un accès à la liste de sous-rubriques utilisée pour publier des messages.
       
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.messaging:Consumer"><apiName>Consumer</apiName><shortdesc>
   Une classe Consumer s’abonne à une destination pour recevoir des messages.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata><asCustoms><mxml><![CDATA[
@@ -598,9 +598,9 @@
       Déconnecte la classe MessageAgent de sa destination distante.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
       Déconnecte la classe MessageAgent de sa destination distante. La déconnexion d’une destination s’applique à tous les éléments connectés à l’aide de la même classe ChannelSet tel que spécifié dans la configuration de serveur. Par exemple, si plusieurs composants DataService sont connectés sur un canal RTMP et que la méthode <codeph>logout()</codeph> est invoquée sur l’un d’entre eux, tous les autres composants client connectés à l’aide de la même classe ChannelSet sont également déconnectés.
      
-      <p><b/> </p>
+      <p><b>Remarque :</b> Adobe vous recommande d’utiliser la méthode mx.messaging.ChannelSet.logout() au lieu de cette méthode.  </p>
      
-      </apiDesc></apiOperationDetail><related-links><link href="mx.messaging.xml#ChannelSet/logout()"><linktext/></link></related-links></apiOperation><apiOperation id="mx.messaging:MessageAgent:protected:reAuthorize"><apiName>reAuthorize</apiName><shortdesc>
+      </apiDesc></apiOperationDetail><related-links><link href="mx.messaging.xml#ChannelSet/logout()"><linktext>mx.messaging.ChannelSet.logout()</linktext></link></related-links></apiOperation><apiOperation id="mx.messaging:MessageAgent:protected:reAuthorize"><apiName>reAuthorize</apiName><shortdesc>
      Cette fonction doit être remplacée par les sous-classes pour implémenter la réautorisation en raison d’un comportement de délai d’attente de session de serveur qui leur est spécifique.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>msg</apiItemName><apiOperationClassifier>mx.messaging.messages:IMessage</apiOperationClassifier><apiDesc>Message à l’origine de l’erreur et qui doit être renvoyé après déconnexion/connexion, provoquant une réauthentification.
      
       </apiDesc></apiParam></apiOperationDef><apiDesc>
@@ -821,7 +821,7 @@
   </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="mx.messaging:Channel_mx.messaging.events.ChannelEvent.CONNECT_channelConnect"><apiName>channelConnect</apiName><shortdesc>
   Distribué après que le canal se connecte à son extrémité.</shortdesc><prolog/><adobeApiEventDetail><adobeApiEventDef><apiEventType>mx.messaging.events.ChannelEvent.CONNECT</apiEventType><adobeApiEventClassifier>mx.messaging.events.ChannelEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
   Distribué après que le canal se connecte à son extrémité.
- <p> </p>
+ <p>Channel et ses sous-classes émettent un code Channel.Connect.Failed chaque fois qu’un problème se présente lors des tentatives de connexion d’un canal à une destination distante. Un objet AMFChannel émet un code Channel.Call.Failed code lorsque le canal est déjà connecté mais obtient un code Call.Failed de sa classe NetConnection sous-jacente. </p>
  
   </apiDesc></adobeApiEventDetail></adobeApiEvent><apiConstructor id="mx.messaging:Channel:Channel"><apiName>Channel</apiName><shortdesc>
       Construit une occurrence d’un canal générique qui se connecte à l’URI d’extrémité spécifiée.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>id</apiItemName><apiType value="String"/><apiData>null</apiData><apiDesc>ID de ce canal.
@@ -839,7 +839,7 @@
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.messaging:Channel:applySettings"><apiName>applySettings</apiName><shortdesc>
       Les sous-classes doivent remplacer cette méthode pour appliquer les paramètres susceptibles d’être nécessaires à un canal individuel.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>settings</apiItemName><apiType value="XML"/><apiDesc>Fragment XML du fichier services-config.xml de ce canal. 
        </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Les sous-classes doivent remplacer cette méthode pour appliquer les paramètres susceptibles d’être nécessaires à un canal individuel. Assurez-vous d’appeler <codeph>super.applySettings()</codeph> afin d’appliquer les paramètres communs pour le canal. 
+      Les sous-classes doivent remplacer cette méthode pour appliquer les paramètres susceptibles d’être nécessaires à un canal individuel. Assurez-vous d’appeler <codeph>super.applySettings()</codeph> afin d’appliquer les paramètres communs pour le canal. Cette méthode est principalement utilisée dans les sous-classes Channel. 
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.messaging:Channel:connect"><apiName>connect</apiName><shortdesc>
       Connecte la classe ChannelSet au canal.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiFinal/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>channelSet</apiItemName><apiOperationClassifier>mx.messaging:ChannelSet</apiOperationClassifier><apiDesc>Classe ChannelSet à connecter au canal.

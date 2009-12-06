@@ -49,7 +49,7 @@
   </langversion><productversion>Flex 4
  </productversion></asCustoms></prolog></effect></effects><styles><style format="length" inherit="no" name="resizeAffordanceWidth" owner="spark.components:Window" playerVersion="Flash10" type="Number">
 <description>
-   
+   Un clic sur une fenêtre est considéré comme un clic sur la bordure de la fenêtre si le clic est réalisé à une distance inférieure ou égale au nombre de pixels défini par resizeAffordance par rapport au bord extérieur de la fenêtre.
   
   </description>
 <default>6
@@ -60,21 +60,27 @@
   </playerversion>
 	<prolog><asCustoms><langversion>3.0
   </langversion><productversion>Flex 4
- </productversion></asCustoms></prolog></style><style inherit="no" name="backgroundAlpha" owner="spark.components:Window" playerVersion="Flash10" type="Number">
+ </productversion></asCustoms></prolog></style><style format="Color" inherit="no" name="backgroundColor" owner="spark.components:Window" playerVersion="Flash10" type="uint">
 <description>
-   
+  Couleur d’arrière-plan de l’application. Cette couleur est utilisée comme couleur de scène de l’application et couleur d’arrière-plan pour la balise HTML embed. 
    
   </description>
+<default>0xFFFFFF
+ 
+  </default>
 
 <playerversion>AIR 1.5
   </playerversion>
 	<prolog><asCustoms><langversion>3.0
   </langversion><productversion>Flex 4
- </productversion></asCustoms></prolog></style><style format="Color" inherit="no" name="backgroundColor" owner="spark.components:Window" playerVersion="Flash10" type="uint">
+ </productversion></asCustoms></prolog></style><style inherit="no" name="backgroundAlpha" owner="spark.components:Window" playerVersion="Flash10" type="Number">
 <description>
-   
+  Niveau Alpha de la couleur définie par la propriété <codeph>backgroundColor</codeph>. 
    
   </description>
+<default>1.0
+ 
+  </default>
 
 <playerversion>AIR 1.5
   </playerversion>
@@ -276,7 +282,7 @@
       Crée puis ouvre le composant NativeWindow sous-jacent.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>openWindowActive</apiItemName><apiType value="Boolean"/><apiData>true</apiData><apiDesc>Spécifie si la fenêtre s’ouvre activée (indique si elle a le focus). La valeur par défaut est <codeph>true</codeph>.
       
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Crée puis ouvre le composant NativeWindow sous-jacent.
+      Crée puis ouvre le composant NativeWindow sous-jacent. Après sa fermeture, l’objet Window demeure une référence valide, mais l’accès à la plupart des propriétés et des méthodes sera impossible. Les fenêtres fermées ne peuvent pas être rouvertes.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="spark.components:Window:orderInBackOf"><apiName>orderInBackOf</apiName><shortdesc>
       Place la fenêtre juste derrière une autre fenêtre.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc><codeph>true</codeph> si cette fenêtre a été déplacée vers l’arrière ; <codeph>false</codeph> si cette fenêtre est invisible ou réduite.
@@ -346,7 +352,7 @@
       </apiDefaultValue></apiValueDef><apiDesc>
       Si la valeur est <codeph>true</codeph>, la barre d’état est visible.
      
-      <p/>
+      <p>La barre d’état apparaît uniquement lorsque vous utilisez la classe WindowedApplicationSkin ou SparkChromeWindowedApplicationSkin comme habillage pour votre application ou les fenêtres de votre application. </p>
      
       </apiDesc></apiValueDetail></apiValue><apiValue id="spark.components:Window:status:get"><apiName>status</apiName><shortdesc>
       Chaîne qui s’affiche dans la barre d’état, si elle est visible.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="String"/><apiDefaultValue>""
@@ -393,7 +399,7 @@
       Menu fenêtre pour cette fenêtre. Certains systèmes d’exploitation ne prennent pas en charge les menus de fenêtre, auquel cas cette propriété est ignorée.
       
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="spark.components:WindowedApplication"><apiName>WindowedApplication</apiName><shortdesc>
-  Un objet WindowedApplication définit le conteneur Application à utiliser pour créer des applications Flex pour des applications AIR.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion><Exclude kind="effect" name="moveEffect"/><skinStates><SkinState name="disabledAndInactive" owner="spark.components:WindowedApplication" playerVersion="Flash10">
+  Un objet WindowedApplication définit le conteneur Application à utiliser pour créer des applications Flex pour des applications AIR.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion><Exclude kind="effect" name="moveEffect"/><Exclude kind="property" name="controlBarVisible"/><Exclude kind="property" name="controlBarLayout"/><Exclude kind="property" name="controlBarGroup"/><Exclude kind="property" name="controlBarContent"/><skinStates><SkinState name="disabledAndInactive" owner="spark.components:WindowedApplication" playerVersion="Flash10">
 <description>
   L’application est désactivée et inactive.
   
@@ -442,7 +448,7 @@
   </langversion><productversion>Flex 4
  </productversion></asCustoms></prolog></effect></effects><styles><style format="length" inherit="no" name="resizeAffordanceWidth" owner="spark.components:WindowedApplication" playerVersion="Flash10" type="Number">
 <description>
-   
+   Un clic sur une fenêtre est considéré comme un clic sur la bordure de la fenêtre si le clic est réalisé à une distance inférieure ou égale au nombre de pixels défini par resizeAffordance par rapport au bord extérieur de la fenêtre.
  
   </description>
 <default>6
@@ -453,9 +459,9 @@
   </playerversion>
 	<prolog><asCustoms><langversion>3.0
   </langversion><productversion>Flex 4
- </productversion></asCustoms></prolog></style><style inherit="no" name="backgroundAlpha" owner="spark.components:WindowedApplication" playerVersion="Flash10" type="Number">
+ </productversion></asCustoms></prolog></style><style format="Color" inherit="no" name="backgroundColor" owner="spark.components:WindowedApplication" playerVersion="Flash10" type="uint">
 <description>
-   
+  Couleur d’arrière-plan de l’application. Cette couleur est utilisée comme couleur de scène de l’application et couleur d’arrière-plan pour la balise HTML embed. 
    
   </description>
 
@@ -463,11 +469,14 @@
   </playerversion>
 	<prolog><asCustoms><langversion>3.0
   </langversion><productversion>Flex 4
- </productversion></asCustoms></prolog></style><style format="Color" inherit="no" name="backgroundColor" owner="spark.components:WindowedApplication" playerVersion="Flash10" type="uint">
+ </productversion></asCustoms></prolog></style><style inherit="no" name="backgroundAlpha" owner="spark.components:WindowedApplication" playerVersion="Flash10" type="Number">
 <description>
-   
+  Niveau Alpha de la couleur définie par la propriété <codeph>backgroundColor</codeph>. 
    
   </description>
+<default>1.0
+   
+  </default>
 
 <playerversion>AIR 1.5
   </playerversion>
@@ -557,7 +566,7 @@
   ]]></mxml></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseInterface>mx.core:IWindow</apiBaseInterface><apiBaseClassifier>spark.components:Application</apiBaseClassifier></apiClassifierDef><apiDesc>
   WindowedApplication définit le conteneur Application à utiliser pour créer des applications Flex pour des applications AIR.
  
-  <p>L’objet WindowedApplication remplit deux rôles.  En outre, en tant que conteneur, WindowedApplication définit la présentation de la fenêtre initiale d’une application AIR de Flex. Toute commande visuelle définie dans l’objet WindowedApplication devient le contenu de la fenêtre initiale chargée par l’application AIR. </p>
+  <p>L’objet WindowedApplication remplit deux rôles. Il remplace la balise &lt;mx:WindowedApplication> et fonctionne comme point d’entrée pour une application AIR basée sur Flex. En outre, en tant que conteneur, WindowedApplication définit la présentation de la fenêtre initiale d’une application AIR de Flex. Toute commande visuelle définie dans l’objet WindowedApplication devient le contenu de la fenêtre initiale chargée par l’application AIR. </p>
  
   <p>Un objet WindowedApplication correspond à l’application de plus haut niveau d’une application AIR basée sur Flex. Elle n’est pas conçue pour être chargé par d’autres applications Flex. Si un objet WindowedApplication doit charger d’autres applications, utilisez la classe Application en tant que conteneur pour ces applications. Si d’autres fenêtres sont nécessaires, utilisez la classe Window en tant que conteneur pour ces fenêtres.</p>
   
@@ -743,7 +752,7 @@
       </apiDefaultValue></apiValueDef><apiDesc>
       Si la valeur est <codeph>true</codeph>, la barre d’état est visible.
      
-      <p/>
+      <p>La barre d’état apparaît uniquement lorsque vous utilisez la classe WindowedApplicationSkin ou SparkChromeWindowedApplicationSkin comme habillage pour votre application ou les fenêtres de votre application. </p>
      
       </apiDesc></apiValueDetail></apiValue><apiValue id="spark.components:WindowedApplication:status:get"><apiName>status</apiName><shortdesc>
       Chaîne qui s’affiche dans la barre d’état, si elle est visible.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="String"/><apiDefaultValue>""

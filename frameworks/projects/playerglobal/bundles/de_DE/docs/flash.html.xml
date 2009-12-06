@@ -1,0 +1,709 @@
+<?xml version="1.0"?>
+<apiPackage id="flash.html"><apiName>flash.html</apiName><apiDetail/><apiClassifier id="flash.html:HTMLHistoryItem"><apiName>HTMLHistoryItem</apiName><shortdesc>
+ Ein HTMLHistoryItem-Objekt beschreibt eine Position im Navigationsverlauf eines HTMLLoader-Objekts.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ Ein HTMLHistoryItem-Objekt beschreibt eine Position im Navigationsverlauf eines HTMLLoader-Objekts.
+ 
+ </apiDesc></apiClassifierDetail><related-links><link href="HTMLLoader.html"><linktext>HTMLLoader</linktext></link><link href="HTMLWindowCreateOptions.html"><linktext>HTMLWindowCreateOptions</linktext></link></related-links><apiValue id="flash.html:HTMLHistoryItem:isPost:get"><apiName>isPost</apiName><shortdesc>
+	Gibt an, ob die HTML-Seite POST-Daten enthält.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	Gibt an, ob die HTML-Seite POST-Daten enthält.
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLHistoryItem:originalUrl:get"><apiName>originalUrl</apiName><shortdesc>
+	Die ursprüngliche URL der HTML-Seite vor allen Umleitungen.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	Die ursprüngliche URL der HTML-Seite vor allen Umleitungen.
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLHistoryItem:title:get"><apiName>title</apiName><shortdesc>
+	Der Titel der HTML-Seite.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	Der Titel der HTML-Seite.
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLHistoryItem:url:get"><apiName>url</apiName><shortdesc>
+	Die URL der HTML-Seite.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	Die URL der HTML-Seite.
+	
+	</apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.html:HTMLHost"><apiName>HTMLHost</apiName><shortdesc>
+ Ein HTMLHost-Objekt definiert das Verhalten eines HTMLLoader-Objekts für Benutzeroberflächenelemente, die durch die Einstellung verschiedener Eigenschaften oder durch das Aufrufen verschiedener Methoden des window-Objekts der HTML-Seite gesteuert werden.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ Ein HTMLHost-Objekt definiert das Verhalten eines HTMLLoader-Objekts für Benutzeroberflächenelemente, die durch die Einstellung verschiedener Eigenschaften oder durch das Aufrufen verschiedener Methoden des <codeph>window</codeph>-Objekts der HTML-Seite gesteuert werden. Diese Methoden und Eigenschaften sind:
+ 
+ <ul>
+ 
+ 		<li><codeph>window.blur()</codeph></li>
+ 		<li><codeph>window.focus()</codeph></li>
+ 		<li><codeph>window.moveBy()</codeph></li>
+ 		<li><codeph>window.moveTo()</codeph></li>
+ 		<li><codeph>window.location</codeph></li>
+ 		<li><codeph>window.close()</codeph></li>
+ 		<li><codeph>window.open()</codeph></li>
+ 		<li><codeph>window.resizeBy()</codeph></li>
+ 		<li><codeph>window.resizeTo()</codeph></li>
+ 		<li><codeph>window.status</codeph></li>
+ 		<li><codeph>window.document.title</codeph></li>
+ </ul>
+ 
+ <p>Die Methoden in der HTMLHost-Klasse bieten Möglichkeiten, mit Änderungen in diesen <codeph>window</codeph>-Einstellungen umzugehen. Um diese Klasse zu verwenden, erstellen Sie eine neue Klasse, die die HTMLHost-Klasse erweitert (eine Unterklasse), und überschreiben Sie damit die Methoden, für die Sie Verhalten definieren möchten. Die Methoden der HTMLHost-Klasse gehen wie folgt mit JavaScript-Eigenschaften und -Methoden vor:</p>
+ 
+ <adobetable class="innertable">
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ <tgroup cols="2"><thead><row><entry>JavaScript-Eigenschaft oder Methode</entry><entry>HTMLHost-Methode</entry></row></thead><tbody><row>
+ 		<entry><codeph>window.blur()</codeph></entry>
+ 		<entry><codeph>windowBlur()</codeph></entry>
+ </row><row>
+ 		<entry><codeph>window.focus()</codeph></entry>
+ 		<entry><codeph>windowFocus</codeph></entry>
+ </row><row>
+ 		<entry><codeph>window.location</codeph></entry>
+ 		<entry><codeph>updateLocation</codeph></entry>
+ </row><row>
+ 		<entry><codeph>window.close()</codeph></entry>
+ 		<entry><codeph>windowClose</codeph></entry>
+ </row><row>
+ 		<entry><codeph>window.open()</codeph></entry>
+ 		<entry><codeph>createWindow</codeph></entry>
+ </row><row>
+ 		<entry><codeph>window.status</codeph></entry>
+ 		<entry><codeph>updateStatus</codeph></entry>
+ </row><row>
+ 		<entry><codeph>window.document.title</codeph></entry>
+ 		<entry><codeph>updateTitle</codeph></entry>
+ </row></tbody></tgroup></adobetable>
+ 
+ <p>Um auf Änderungen in den Methoden <codeph>window.moveBy()</codeph>, <codeph>window.moveTo()</codeph>, <codeph>window.resizeBy()</codeph> und <codeph>window.resizeTo()</codeph> zu reagieren, überschreiben Sie die <codeph>set windowRect()</codeph>-Methode in der Unterklasse von HTMLHost.</p>
+ 
+ <p>Jedes HTMLHost-Objekt kann höchstens mit einem HTMLLoader-Objekt verknüpft sein. Mit diesem Zuweisen einer HTMLHost-Instanz zur <codeph>htmlHost</codeph>-Eigenschaft des HTMLLoader-Objekts wird die Beziehung aufgebaut. Das Zuweisen von <codeph>null</codeph> zur <codeph>htmlHost</codeph>-Eigenschaft des HTMLLoader-Objekts oder das Festlegen des HTMLHost-Objekts als <codeph>htmlHost</codeph>-Eigenschaft eines anderen HTMLLoader-Objekts entfernt den HTMLHost vom ersten HTMLLoader-Objekts.</p>
+ 
+ </apiDesc><example conref="examples\HTMLHost.1.as"> Der folgende Code definiert CustomHost, eine Unterklasse von HTMLHost. Methoden der CustomHost-Klasse überschreiben die vererbten Methoden in der HTMLHost-Klasse, um Aktionen zu definieren, die ausgeführt werden, wenn JavaScript-Code in der HTMLLoader-Seite verschiedene Eigenschaften festlegt oder verschiedene Methoden des <codeph>window</codeph>-Objekts aufruft:
+<codeblock>
+package
+{
+    import flash.html.HTMLHost;
+    import flash.html.HTMLLoader;
+    import flash.display.NativeWindow;
+    import flash.display.NativeWindowInitOptions;
+    import flash.display.StageScaleMode;
+    import flash.geom.Rectangle;
+    import flash.text.TextField;
+
+    public class CustomHost extends HTMLHost
+    {
+        import flash.html.*;
+        public var statusField:TextField;
+        public function CustomHost(defaultBehaviors:Boolean=true)
+        {
+            super(defaultBehaviors);
+        }
+        override public function windowClose():void
+        {
+            htmlLoader.stage.window.close();
+        }
+        override public function createWindow(windowCreateOptions:HTMLWindowCreateOptions):HTMLLoader
+        {
+            var initOptions:NativeWindowInitOptions = new NativeWindowInitOptions();
+            var window:NativeWindow = new NativeWindow(initOptions);
+            window.visible = true;
+            var htmlLoader2:HTMLLoader = new HTMLLoader();
+            htmlLoader2.width = window.width;
+            htmlLoader2.height = window.height;
+            window.stage.scaleMode = StageScaleMode.NO_SCALE;
+            window.stage.addChild(htmlLoader2);
+            return htmlLoader2;
+        }
+        override public function updateLocation(locationURL:String):void
+        {
+            trace(locationURL);
+        }        
+        override public function set windowRect(value:Rectangle):void
+        {
+            htmlLoader.stage.nativeWindow.bounds = value;
+        }
+        override public function updateStatus(status:String):void
+        {
+            statusField.text = status;
+        }        
+        override public function updateTitle(title:String):void
+        {
+            htmlLoader.stage.nativeWindow.title = title + "- Example Application";
+        }
+        override public function windowBlur():void
+        {
+            htmlLoader.alpha = 0.5;
+        }
+        override public function windowFocus():void
+        {
+            htmlLoader.alpha = 1;
+        }
+    }
+}
+</codeblock> Erstellen Sie die folgende Klasse, die der Bühne ein HTMLLoader-Objekt hinzufügt, sowie ein TextField-Objekt mit dem Namen <codeph>statusBar</codeph>. Das HTMLLoader-Objekt definiert ein CustomHost-Objekt als seine <codeph>htmlHost</codeph>-Eigenschaft:
+ 
+ <codeblock>package
+ {
+     import flash.display.Sprite;
+ 
+     public class SimpleHTMLBox extends Sprite
+     {
+         import mx.controls.HTML;
+         import flash.html.HTMLLoader;
+         import flash.text.TextField;
+         import flash.net.URLRequest;
+         import CustomHost;
+         private var host:CustomHost;
+         private var statusField:TextField;
+         private var html:HTMLLoader;
+         
+         public function SimpleHTMLBox()
+         {
+             html = new HTMLLoader();
+             var url:String = "Test.html";
+             var urlReq:URLRequest = new URLRequest(url); 
+             html.load(urlReq);
+             
+             host = new CustomHost();
+             html.htmlHost = host;
+             statusField = new TextField();
+             host.statusField = statusField;
+             
+             configureUI();
+         }
+         private function configureUI():void
+         {
+             html.width = 400;
+             html.height = 200;
+             statusField.width = 400;
+             statusField.height = 24;
+             statusField.border = true;
+             statusField.y = 200;
+             
+             addChild(html);
+             addChild(statusField);                
+         }
+         
+     }
+ }</codeblock>
+ 
+ <p>Erstellen Sie eine AIR-Anwendung, die der Bühne des Hauptfensters ein von dieser Klasse definiertes Objekt hinzufügt.</p>
+ 
+ <p>Erstellen Sie eine HTML-Seite mit dem Namen Test.html im Ressourcenverzeichnis der Anwendung (das Verzeichnis, das die Anwendungsdeskriptordatei enthält) und fügen Sie den folgenden Inhalt hinzu:</p>
+ 
+ <codeblock>&lt;html>
+     &lt;head>
+         &lt;title>Test&lt;/title>
+     &lt;/head>
+     &lt;body>
+         &lt;a href="#" onclick="window.open('Test.html')">window.open('Test.html')&lt;/a>
+         &lt;br/>&lt;a href="#" onclick="window.document.location = 'www.adobe.com'">window.document.location = 'www.adobe.com'&lt;/a>
+         &lt;br/>&lt;a href="#" onclick="window.moveBy(6, 12)">moveBy(6, 12)&lt;/a>
+         &lt;br/>&lt;a href="#" onclick="window.close()">window.close()&lt;/a>
+         &lt;br/>&lt;a href="#" onclick="window.blur()">window.blur()&lt;/a>
+         &lt;br/>&lt;a href="#" onclick="window.focus()">window.focus()&lt;/a>
+         &lt;br/>&lt;a href="#" onclick="window.status = new Date().toString()">window.status = new Date().toString()&lt;/a>
+     &lt;/body>
+ &lt;/html></codeblock>
+ 
+ <p>Wenn Sie die Anwendung testen, verarbeitet die CustomHost-Klasse die JavaScript-Einstellungen für die Benutzeroberfläche auf der HTML-Seite.</p>
+</example></apiClassifierDetail><related-links><link href="HTMLLoader.html"><linktext>HTMLLoader</linktext></link><link href="HTMLWindowCreateOptions.html"><linktext>HTMLWindowCreateOptions</linktext></link></related-links><apiConstructor id="flash.html:HTMLHost:HTMLHost"><apiName>HTMLHost</apiName><shortdesc>
+	 Erstellt ein neues HTMLHost-Objekt.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>defaultBehaviors</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>true</apiData><apiDesc>Gibt an, ob die Verhaltensweisen des Stamminhalts standardmäßig bereitgestellt werden sollen.
+	 
+	 </apiDesc></apiParam></apiConstructorDef><apiDesc>
+	 Erstellt ein neues HTMLHost-Objekt.
+	 
+	 </apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="flash.html:HTMLHost:createWindow"><apiName>createWindow</apiName><shortdesc>
+	Die Funktion, die aufgerufen wird, wenn der JavaScript-Code im HTMLLoader-Objekt die window.open()-Methode aufruft.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Ein HTMLLoader-Objekt, das die neue HTML-Seite enthält. Normalerweise erstellen Sie ein neues HTMLLoader-Objekt in dieser Methode, fügen es der Bühne eines neuen NativeWindow-Objekts hinzu und geben es dann zurück.
+	
+	</apiDesc><apiOperationClassifier>flash.html:HTMLLoader</apiOperationClassifier></apiReturn><apiParam><apiItemName>windowCreateOptions</apiItemName><apiOperationClassifier>flash.html:HTMLWindowCreateOptions</apiOperationClassifier><apiDesc>Ein Objekt mit Eigenschaften im String, die als <codeph>features</codeph>-Parameter des Aufrufs von <codeph>window.open()</codeph> übergeben werden.
+	
+	</apiDesc></apiParam></apiOperationDef><apiDesc>
+	Die Funktion, die aufgerufen wird, wenn der JavaScript-Code im HTMLLoader-Objekt die <codeph>window.open()</codeph>-Methode aufruft. 
+	
+	<p>Standardmäßig öffnet ein JavaScript-Aufruf von <codeph>window.open()</codeph> auf der HTML-Seite eines HTMLLoader <i>kein</i> neues NativeWindow-Objekt zur Laufzeit. Sie können ein neues NativeWindow-Objekt zur Laufzeit öffnen, indem Sie ein neues NativeWindow-Objekt in der <codeph>createWindow</codeph>-Methode erstellen und damit die Unterklasse der HTMLHost-Klasse überschreiben.</p>
+	
+	</apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.html:HTMLHost:updateLocation"><apiName>updateLocation</apiName><shortdesc>
+	Die Funktion, die aufgerufen wird, wenn JavaScript-Code im HTMLLoader-Objekt die window.location-Eigenschaft einstellt.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>locationURL</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Der Wert, auf den die <codeph>location</codeph>-Eigenschaft der <codeph>window</codeph>-Eigenschaft des HTMLLoader-Objekts eingestellt ist.
+	
+	</apiDesc></apiParam></apiOperationDef><apiDesc>
+	Die Funktion, die aufgerufen wird, wenn JavaScript-Code im HTMLLoader-Objekt die <codeph>window.location</codeph>-Eigenschaft einstellt. 
+	
+	</apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.html:HTMLHost:updateStatus"><apiName>updateStatus</apiName><shortdesc>
+	Die Funktion, die aufgerufen wird, wenn das HTMLLoader-Objekt die window.status-Eigenschaft festlegt.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>status</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Der Wert, auf den die <codeph>status</codeph>-Eigenschaft der <codeph>window</codeph>-Eigenschaft des HTMLLoader-Objekts eingestellt ist.
+	
+	</apiDesc></apiParam></apiOperationDef><apiDesc>
+	Die Funktion, die aufgerufen wird, wenn der JavaScript-Code im HTMLLoader-Objekt die <codeph>window.status</codeph>-Eigenschaft festlegt. 
+	
+	</apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.html:HTMLHost:updateTitle"><apiName>updateTitle</apiName><shortdesc>
+	Die Funktion, die aufgerufen wird, wenn JavaScript-Code im HTMLLoader-Objekt die window.document.title-Eigenschaft festlegt oder wenn das Titelelement über das DOM oder wegen einer neu geladenen Seite geändert wird.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>title</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Der Wert, auf den die <codeph>window.document.title</codeph>-Eigenschaft des HTMLLoader-Objekts eingestellt ist.
+	
+	</apiDesc></apiParam></apiOperationDef><apiDesc>
+	Die Funktion, die aufgerufen wird, wenn JavaScript-Code im HTMLLoader-Objekt die <codeph>window.document.title</codeph>-Eigenschaft festlegt oder wenn das <codeph>title</codeph>-Element über das DOM oder wegen einer neu geladenen Seite geändert wird.
+	
+	</apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.html:HTMLHost:windowBlur"><apiName>windowBlur</apiName><shortdesc>
+	Die Funktion, die aufgerufen wird, wenn der JavaScript-Code im HTMLLoader-Objekt die window.blur()-Methode aufruft.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+	Die Funktion, die aufgerufen wird, wenn der JavaScript-Code im HTMLLoader-Objekt die <codeph>window.blur()</codeph>-Methode aufruft.
+	
+	</apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.html:HTMLHost:windowClose"><apiName>windowClose</apiName><shortdesc>
+	Die Funktion, die aufgerufen wird, wenn der JavaScript-Code im HTMLLoader-Objekt die window.close()-Methode aufruft.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+	Die Funktion, die aufgerufen wird, wenn der JavaScript-Code im HTMLLoader-Objekt die <codeph>window.close()</codeph>-Methode aufruft. 
+	
+	<p>Standardmäßig schließt ein JavaScript-Aufruf von <codeph>window.close()</codeph> auf der HTML-Seite eines HTMLLoader-Objekts die Fenster mit dem HTMLLoader-Objekt.</p>
+	
+	</apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.html:HTMLHost:windowFocus"><apiName>windowFocus</apiName><shortdesc>
+	Die Funktion, die aufgerufen wird, wenn der JavaScript-Code im HTMLLoader-Objekt die window.focus()-Methode aufruft.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+	Die Funktion, die aufgerufen wird, wenn der JavaScript-Code im HTMLLoader-Objekt die <codeph>window.focus()</codeph>-Methode aufruft.
+	
+	</apiDesc></apiOperationDetail></apiOperation><apiValue id="flash.html:HTMLHost:htmlLoader:get"><apiName>htmlLoader</apiName><shortdesc>
+	Das HTMLLoader-Objekt, auf das dieses HostControl-Objekt angewendet wird.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>flash.html:HTMLLoader</apiValueClassifier></apiValueDef><apiDesc>
+	Das HTMLLoader-Objekt, auf das dieses HostControl-Objekt angewendet wird. Die <codeph>htmlHost</codeph>-Eigenschaft des HTMLLoader-Objekts ist auf dieses HostControl-Objekt eingestellt.
+	
+	</apiDesc></apiValueDetail><related-links><link href="HTMLLoader.html#htmlHost"><linktext>HTMLLoader.htmlHost</linktext></link></related-links></apiValue><apiValue id="flash.html:HTMLHost:windowRect:get"><apiName>windowRect</apiName><shortdesc>
+	Die Eigenschaft, die geändert wird, wenn JavaScript-Code im HTMLLoader-Objekt die window.moveBy(), window.moveTo(), window.resizeBy() oder window.resizeTo()-Methode aufruft.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>flash.geom:Rectangle</apiValueClassifier></apiValueDef><apiDesc>
+	Die Eigenschaft, die geändert wird, wenn JavaScript-Code im HTMLLoader-Objekt die <codeph>window.moveBy()</codeph>, <codeph>window.moveTo()</codeph>, <codeph>window.resizeBy()</codeph> oder <codeph>window.resizeTo()</codeph>-Methode aufruft. 
+	
+	<p>Überschreiben Sie in der Unterklasse von HTMLHost die <codeph>set windowRect()</codeph>-Methode, um die neuen Fenstergrenzen wie gewünscht zu verarbeiten.</p>
+	
+	</apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.html:HTMLPDFCapability"><apiName>HTMLPDFCapability</apiName><shortdesc>
+	Die HTMLPDFCapability-Klasse enthält mögliche Werte der pdfCapability-Eigenschaft eines HTMLLoader-Objekts.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	Die HTMLPDFCapability-Klasse enthält mögliche Werte der <codeph>pdfCapability</codeph>-Eigenschaft eines HTMLLoader-Objekts. Sie definiert ebenfalls die Werte der <codeph>errorID</codeph>-Eigenschaft eines ErrorEvent-Objekts, das ausgelöst wird, wenn ein Versuch PDF-Inhalte zu laden fehlschlägt.
+	
+	</apiDesc></apiClassifierDetail><related-links><link href="HTMLLoader.html#pdfCapability"><linktext>HTMLLoader.pdfCapability</linktext></link></related-links><apiValue id="flash.html:HTMLPDFCapability:ERROR_CANNOT_LOAD_READER"><apiName>ERROR_CANNOT_LOAD_READER</apiName><shortdesc>
+				Beim Laden der Reader- oder Adobe Acrobat-Anwendung oder einer der erforderlichen Bibliotheken hat das Betriebssystem einen Fehler zurückgegeben.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>3204</apiData><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+				Beim Laden der Reader- oder Adobe Acrobat-Anwendung oder einer der erforderlichen Bibliotheken hat das Betriebssystem einen Fehler zurückgegeben.
+		
+              <p><i>Hinweis:</i> Dies wird nicht von <codeph>HTMLLoader.pdfCapability</codeph> zurückgegeben, sondern als <codeph>errorID</codeph>-Eigenschaft eines ErrorEvent-Objekts gesendet, das ausgelöst wird, wenn ein HTMLLoader-Objekt versucht, PDF-Inhalte zu laden und das Betriebssystem einen Fehler zurückgibt. <codeph>HTMLLoader.pdfCapability</codeph> kann <codeph>PDFCapability.STATUS_OK</codeph> zurückgeben, da nur die Konfiguration überprüft und nicht versucht wird, Bibliotheken zu laden.</p>
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLPDFCapability:ERROR_INSTALLED_READER_NOT_FOUND"><apiName>ERROR_INSTALLED_READER_NOT_FOUND</apiName><shortdesc>
+				Es wurde keine Version von Adobe Reader erkannt.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>3201</apiData><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+				Es wurde keine Version von Adobe Reader erkannt. Ein HTMLLoader-Objekt kann PDF-Inhalt nicht anzeigen.
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLPDFCapability:ERROR_INSTALLED_READER_TOO_OLD"><apiName>ERROR_INSTALLED_READER_TOO_OLD</apiName><shortdesc>
+				Adobe Reader wurde erkannt, die Version ist jedoch zu alt.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>3202</apiData><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+				Adobe Reader wurde erkannt, die Version ist jedoch zu alt. Ein HTMLLoader-Objekt kann PDF-Inhalt nicht anzeigen.
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLPDFCapability:ERROR_PREFERRED_READER_TOO_OLD"><apiName>ERROR_PREFERRED_READER_TOO_OLD</apiName><shortdesc>
+				Es wurde eine ausreichende Version (8.1 oder höher) von Adobe Reader oder Acrobat erkannt; jedoch ist die zum Verarbeiten von PDF-Inhalten eingerichtete Version von Adobe Reader oder Acrobat älter als 8.1.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>3203</apiData><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+				Es wurde eine ausreichende Version (8.1 oder höher) von Adobe Reader oder Acrobat erkannt; jedoch ist die zum Verarbeiten von PDF-Inhalten eingerichtete Version von Adobe Reader oder Acrobat älter als 8.1. Ein HTMLLoader-Objekt kann PDF-Inhalte nicht anzeigen.
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLPDFCapability:STATUS_OK"><apiName>STATUS_OK</apiName><shortdesc>
+				Eine ausreichende Version (8.1 oder höher) von Adobe Reader wurde erkannt. PDF-Inhalt kann in ein HTMLLoader-Objekt geladen werden.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>0</apiData><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+				Eine ausreichende Version (8.1 oder höher) von Adobe Reader wurde erkannt. PDF-Inhalt kann in ein HTMLLoader-Objekt geladen werden.
+		
+				<p><i>Hinweis:</i> Wenn unter Windows eine frühere Version von Acrobat installiert ist und auf dem System des Benutzers ausgeführt wird, wird eine funktionsfähige Version von Acrobat oder Adobe Reader der Version 7.x oder höher verwendet, auch wenn eine höhere Version installiert ist. In diesem Fall, wenn der Wert der <codeph>pdfCapability</codeph>-Eigenschaft den Wert <codeph>PDFCapability.STATUS_OK</codeph> besitzt, zeigt die ältere Version von Acrobat oder Reader eine Warnung an, wenn eine AIR-Anwendung versucht, PDF-Inhalt in ein HTMLLoader-Objekt zu laden, ohne dass eine Fehlermeldung in der AIR-Laufzeitumgebung angezeigt wird. Falls diese Situation für Ihre Benutzer entstehen kann, weisen Sie sie an, Acrobat oder Adobe Reader zu schließen, während Ihre Anwendung ausgeführt wird. Oder zeigen Sie diese Anweisungen ggf. an, wenn der PDF-Inhalt nicht innerhalb eines vertretbaren Zeitraums angezeigt wird.</p>
+		
+		</apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.html:HTMLLoader"><apiName>HTMLLoader</apiName><shortdesc>
+    Die HTMLLoader-Klasse definiert einen Anzeigeobjekttyp, der ein Container für HTML-Inhalte ist.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.display:Sprite</apiBaseClassifier></apiClassifierDef><apiDesc>
+    Die HTMLLoader-Klasse definiert einen Anzeigeobjekttyp, der ein Container für HTML-Inhalte ist. 
+	
+    <p platform="actionscript">Die Standardabmessungen eines HTMLLoader sind 0 x 0 Pixel. Stellen Sie die <codeph>width</codeph>- und <codeph>height</codeph>-Eigenschaften ein, um das HTMLLoader-Objekt sichtbar zu machen.</p>
+	
+    	<p platform="actionscript">
+	Die maximale Größe eines HTMLLoader-Objekts ist 2.880 Pixel mal 2.880 Pixel. Das Einstellen von <codeph>width</codeph> oder <codeph>height</codeph> eines HTMLLoader-Objekts auf einen Wert, der diese Grenzen überschreitet, verursacht die Ausgabe einer ArgumentError-Ausnahme durch das HTMLLoader-Objekt.
+	</p>
+	
+	<p platform="javascript">In JavaScript können Sie auf das HTMLLoader-Objekt für eine HTML-Seite durch Abrufen der <codeph>runtime.htmlLoader</codeph>-Eigenschaft zugreifen. Diese Eigenschaft ist nur für Inhalte verfügbar, die in der Sicherheitssandbox der Anwendung ausgeführt werden.</p>
+	
+	<p platform="javascript">Viele HTMLLoader-Eigenschaften und Methoden, die von anderen Klassen geerbt wurden, betreffen auch HTMLLoader-Objekte, die in SWF-Dateien ausgeführt werden (und die ActionScript 3.0-Anzeigeliste benutzen) Diese Eigenschaften und Methoden eignen sich nicht besonders für JavaScript-Code, der in HTML-basierten AIR-Anwendungen ausgeführt wird. Weitere Informationen zu diesen Eigenschaften und Methoden finden Sie unter <xref href="http://www.adobe.com/go/learn_flex3_aslr" scope="external">ActionScript 3.0 Language Reference</xref>.</p>
+	
+    </apiDesc><example conref="examples\HTMLLoader.1.as"> Der folgende Code initialisiert ein HTMLLoader-Objekt, konfiguriert Breite und Höhe, lädt die URL http://www.adobe.com und fügt das Objekt zur Anzeigeliste hinzu:
+<codeblock>
+package {
+    import flash.display.Sprite;
+    import flash.html.HTMLLoader;
+    import flash.net.URLRequest;
+
+    public class HTMLLoaderExample extends Sprite
+    {
+        public function HTMLLoaderExample()
+        {
+            var html:HTMLLoader = new HTMLLoader();
+            var urlReq:URLRequest = new URLRequest("http://www.adobe.com/");
+            html.width = stage.stageWidth;
+            html.height = stage.stageHeight;
+            html.load(urlReq); 
+            addChild(html);
+        }
+    }
+}
+</codeblock></example></apiClassifierDetail><adobeApiEvent id="flash.html:HTMLLoader_flash.events.Event.HTML_DOM_INITIALIZE_htmlDOMInitialize"><apiName>htmlDOMInitialize</apiName><shortdesc>
+ Gibt an, dass das HTML-DOM als Antwort auf einen Ladevorgang erstellt wurde.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.HTML_DOM_INITIALIZE</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ Gibt an, dass das HTML-DOM als Antwort auf einen Ladevorgang erstellt wurde. Die <codeph>load()</codeph>- und <codeph>loadString()</codeph>-Methoden des HTMLLoader-Objekts lösen eine Ausnahme aus, während dieses Ereignis ausgelöst wird. Jede Eigenschaft oder Methode eines beliebigen JavaScript-Objekts, auf das von der <codeph>window</codeph>-Eigenschaft des HTMLLoader-Objekts zugegriffen werden kann, das die URL steuert, die in das HTMLLoader-Objekt geladen wird, löst eine Ausnahme aus, wenn sie festgelegt oder aufgerufen wird, während dieses Ereignis ausgelöst wird. Zum Beispiel verursacht das Einstellen der <codeph>window.location</codeph> durch Einstellen der <codeph>window</codeph>-Eigenschaft des HTMLLoader-Objekts eine JavaScript-Ausnahme.
+ 
+ </apiDesc></adobeApiEventDetail><related-links><link href="HTMLLoader.html#loadString()"><linktext>loadString()</linktext></link><link href="HTMLLoader.html#load()"><linktext>load()</linktext></link></related-links></adobeApiEvent><adobeApiEvent id="flash.html:HTMLLoader_flash.events.HTMLUncaughtScriptExceptionEvent.UNCAUGHT_SCRIPT_EXCEPTION_uncaughtScriptException"><apiName>uncaughtScriptException</apiName><shortdesc>
+ Gibt an, dass im HTMLLoader-Objekt eine nicht erfasste JavaScript-Ausnahme aufgetreten ist.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.HTMLUncaughtScriptExceptionEvent.UNCAUGHT_SCRIPT_EXCEPTION</apiEventType><adobeApiEventClassifier>flash.events.HTMLUncaughtScriptExceptionEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ Gibt an, dass im HTMLLoader-Objekt eine nicht erfasste JavaScript-Ausnahme aufgetreten ist. Ereignisprozeduren können beliebige Methoden aufrufen und auf jede Eigenschaft des HTMLLoader-Objekts zugreifen. Das Ereignis kann abgebrochen werden. Das Standardverhalten beim Ausführen im AIR Debug Launcher ist das Senden des JavaScript-Stacks an die Trace-Ausgabe.
+ 
+ </apiDesc></adobeApiEventDetail><related-links><link href="HTMLLoader.html#loadString()"><linktext>loadString()</linktext></link><link href="HTMLLoader.html#load()"><linktext>load()</linktext></link></related-links></adobeApiEvent><adobeApiEvent id="flash.html:HTMLLoader_flash.events.Event.SCROLL_scroll"><apiName>scroll</apiName><shortdesc>
+ Gibt an, dass die scrollH- oder scrollV-Eigenschaft vom HTMLLoader-Objekt geändert wurde.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.SCROLL</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ Gibt an, dass die <codeph>scrollH</codeph>- oder <codeph>scrollV</codeph>-Eigenschaft vom HTMLLoader-Objekt geändert wurde. Das HTMLLoader-Objekt löst dieses Ereignis aus, wenn im HTMLLoader-Objekt ausgeführtes JavaScript die <codeph>scrollte()</codeph>-Methode des <codeph>window</codeph>-Objekts aufruft und die gewünschte Position noch nicht sichtbar ist. Das Ereignis wird nicht ausgelöst, wenn ActionScript-Code die <codeph>scrollH</codeph>- oder <codeph>scrollV</codeph>-Eigenschaft ändert. Ereignisprozeduren können beliebige Methoden aufrufen und auf jede Eigenschaft des HTMLLoader-Objekts zugreifen.
+ 
+ <p>Ereignisprozeduren für dieses Ereignis sollten die <codeph>scrollH</codeph>- und <codeph>scrollV</codeph>-Eigenschaften überprüfen, um ggf. mit dem HTMLLoader-Objekt verknüpfte Bildlaufleisten zu aktualisieren.</p>
+ 
+ <p>Das HTMLLoader-Objekt kann dieses Ereignis jederzeit nach dem Beginn eines Ladevorgangs auslösen, auch nachdem das <codeph>complete</codeph>-Ereignis bereits vom Objekt ausgelöst wurde.</p>
+ 
+ </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.html:HTMLLoader_flash.events.Event.HTML_BOUNDS_CHANGE_htmlBoundsChange"><apiName>htmlBoundsChange</apiName><shortdesc>
+ Gibt an, dass mindestens eine der Eigenschaften contentWidth und contentHeight eines HTMLLoader-Objekts geändert wurde.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.HTML_BOUNDS_CHANGE</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ Gibt an, dass mindestens eine der Eigenschaften <codeph>contentWidth</codeph> und <codeph>contentHeight</codeph> des HTMLLoader-Objekts geändert wurde. Dies kann zum Beispiel aus einem neuen Bild oder anderen geladenen Inhalten resultieren. Ereignisprozeduren können beliebige Methoden aufrufen und auf jede Eigenschaft des HTMLLoader-Objekts zugreifen.
+ 
+ <p>Das HTMLLoader-Objekt kann dieses Ereignis jederzeit nach dem Beginn eines Ladevorgangs auslösen, auch nachdem das <codeph>complete</codeph>-Ereignis bereits vom Objekt ausgelöst wurde.</p>
+ 
+ </apiDesc></adobeApiEventDetail><related-links><link href="HTMLLoader.html#contentWidth"><linktext>contentWidth</linktext></link><link href="HTMLLoader.html#contentHeight"><linktext>contentHeight</linktext></link></related-links></adobeApiEvent><adobeApiEvent id="flash.html:HTMLLoader_flash.events.Event.LOCATION_CHANGE_locationChange"><apiName>locationChange</apiName><shortdesc>
+ Gibt an, dass die location-Eigenschaft des HTMLLoader-Objekts geändert wurde.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.LOCATION_CHANGE</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/><apiTipTexts><apiTipText>Gibt an, dass die location-Eigenschaft des HTMLLoader-Objekts geändert wurde.
+ 
+ </apiTipText></apiTipTexts></adobeApiEventDef><apiDesc>
+ Gibt an, dass die <codeph>location</codeph>-Eigenschaft des HTMLLoader-Objekts geändert wurde. Die Ereignisprozedur für dieses Ereignis kann jede Methode aufrufen oder auf jede Eigenschaft des HTMLLoader-Objekts zugreifen.
+ 
+ </apiDesc></adobeApiEventDetail><related-links><link href="HTMLLoader.html#loadString()"><linktext>loadString()</linktext></link><link href="HTMLLoader.html#load()"><linktext>load()</linktext></link></related-links></adobeApiEvent><adobeApiEvent id="flash.html:HTMLLoader_flash.events.Event.HTML_RENDER_htmlRender"><apiName>htmlRender</apiName><shortdesc>
+ Gibt an, dass die Darstellung des Inhalts im HTMLLoader-Objekt auf dem neuesten Stand ist.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.HTML_RENDER</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ Gibt an, dass die Darstellung des Inhalts im HTMLLoader-Objekt auf dem neuesten Stand ist. Dieses Ereignis kann ziemlich häufig ausgelöst werden, wenn Wiedergabeänderungen am HTML-Inhalt vorgenommen werden. Dieses Ereignis wird zum Beispiel ausgelöst, wenn neuer Inhalt angezeigt wird, nachdem der Benutzer auf einen Hyperlink geklickt hat oder wenn JavaScript auf der Seite HTML wiedergibt. Ereignisprozeduren können beliebige Methoden aufrufen und auf jede Eigenschaft des HTMLLoader-Objekts zugreifen.
+ 
+ <p>Prozeduren für dieses Ereignis sollten die <codeph>contentWidth</codeph>- und <codeph>contentHeight</codeph>-Eigenschaften des HTMLLoader-Objekts überprüfen, um Bildlaufleisten, die mit dem HTMLLoader-Objekt verknüpft sind, zu aktualisieren.</p>
+ 
+ <p>Das HTMLLoader-Objekt kann dieses Ereignis jederzeit nach dem Beginn eines Ladevorgangs auslösen, auch nachdem das <codeph>complete</codeph>-Ereignis bereits vom Objekt ausgelöst wurde.</p>
+ 
+ </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.html:HTMLLoader_flash.events.Event.COMPLETE_complete"><apiName>complete</apiName><shortdesc>
+ Gibt an, dass der letzte Ladevorgang, der von der loadString- oder der load-Methode angefordert wurde, abgeschlossen ist.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.COMPLETE</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ Gibt an, dass der letzte Ladevorgang, der von der <codeph>loadString</codeph>- oder <codeph>load</codeph>-Methode angefordert wurde, abgeschlossen ist. Das Ereignis wird ausgelöst, <i>nachdem</i> das JavaScript-<codeph>load</codeph>-Ereignis für das HTML-DOM im HTMLLoader-Objekt ausgelöst wurde. Das Ereignis wird immer asynchron ausgelöst. Die Ereignisprozedur für dieses Ereignis kann jede Methode aufrufen oder auf jede Eigenschaft des HTMLLoader-Objekts zugreifen.
+ 
+ </apiDesc></adobeApiEventDetail><related-links><link href="HTMLLoader.html#loadString()"><linktext>loadString()</linktext></link><link href="HTMLLoader.html#load()"><linktext>load()</linktext></link></related-links></adobeApiEvent><apiConstructor id="flash.html:HTMLLoader:HTMLLoader"><apiName>HTMLLoader</apiName><shortdesc>
+        Erstellt ein HTMLLoader-Objekt.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/></apiConstructorDef><apiDesc>
+        Erstellt ein HTMLLoader-Objekt. 
+		
+		</apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="flash.html:HTMLLoader:cancelLoad"><apiName>cancelLoad</apiName><shortdesc>
+		 Bricht alle zurzeit stattfindenden Ladevorgänge ab.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+		 Bricht alle zurzeit stattfindenden Ladevorgänge ab.
+		 
+		 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.html:HTMLLoader:createRootWindow"><apiName>createRootWindow</apiName><shortdesc>
+         Erstellt ein neues NativeWindow-Objekt, das ein HTMLLoader-Objekt enthält.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiDesc>Ein neues HTMLLoader-Objekt, das sich auf der Bühne eines neuen NativeWindow-Objekts befindet.
+		 
+		 </apiDesc><apiOperationClassifier>flash.html:HTMLLoader</apiOperationClassifier></apiReturn><apiParam><apiItemName>visible</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>true</apiData><apiDesc>Gibt an, ob das Fenster sichtbar ist.
+		 
+		 </apiDesc></apiParam><apiParam><apiItemName>windowInitOptions</apiItemName><apiOperationClassifier>flash.display:NativeWindowInitOptions</apiOperationClassifier><apiData>null</apiData><apiDesc>Gibt Fensterinitialisierungsoptionen an; mit dem Wert <codeph>null</codeph> werden <codeph>NativeWindowInitOptions</codeph>-Standardwerte verwendet.
+		 
+		 </apiDesc></apiParam><apiParam><apiItemName>scrollBarsVisible</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>true</apiData><apiDesc>Gibt an, ob das Fenster Bildlaufleisten enthält.
+		 
+		 </apiDesc></apiParam><apiParam><apiItemName>bounds</apiItemName><apiOperationClassifier>flash.geom:Rectangle</apiOperationClassifier><apiData>null</apiData><apiDesc>Wenn der Wert nicht <codeph>null</codeph> ist, werden die Fenstergrenzen angegeben. Wenn eine der Eigenschaften <codeph>x</codeph>, <codeph>y</codeph>, <codeph>width</codeph> oder <codeph>height</codeph> den Wert <codeph>NaN</codeph> hat, behält die entsprechende Abmessung des Fensters den Standardwert.
+		 
+         </apiDesc></apiParam></apiOperationDef><apiDesc>
+         Erstellt ein neues NativeWindow-Objekt, das ein HTMLLoader-Objekt enthält. Laden Sie den HTML-Inhalt mit dem HTMLLoader-Objekt, dass von dieser Methode zurückgegeben wird.
+		 
+		 <p>Standardmäßig (wenn Sie beim Aufrufen dieser Methode keine Parameter festlegen), verwendet das neue Fenster das Standard-Systemchrom und enthält Bildlaufleisten zur Steuerung des Inhalts. Sie können die Parameter mit Werten belegen, um die Eigenschaften des neuen Fensters zu ändern.</p>
+		 
+		 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.html:HTMLLoader:getHistoryAt"><apiName>getHistoryAt</apiName><shortdesc>
+		 Gibt den Verlaufseintrag an der angegebenen Position zurück.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Ein URLRequest-Objekt für den Verlaufseintrag an der angegebenen Position.
+		 
+		 </apiDesc><apiOperationClassifier>flash.html:HTMLHistoryItem</apiOperationClassifier></apiReturn><apiParam><apiItemName>position</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiDesc>Die Position in der Verlaufsliste.
+		 
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+		 Gibt den Verlaufseintrag an der angegebenen Position zurück.
+		 
+		 </apiDesc></apiOperationDetail><related-links><link href="HTMLLoader.html#historyPosition"><linktext>historyPosition</linktext></link></related-links></apiOperation><apiOperation id="flash.html:HTMLLoader:historyBack"><apiName>historyBack</apiName><shortdesc>
+		 Navigiert im Browserverlauf zurück, sofern möglich.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+		 Navigiert im Browserverlauf zurück, sofern möglich.
+		 
+         <p>Der Aufruf dieser Methode des HTMLLoader-Objekts hat denselben Effekt wie der Aufruf der <codeph>back()</codeph>-Methode der <codeph>window.history</codeph>-Eigenschaft in JavaScript auf der HTML-Seite.</p>
+		 
+		 <p>Diese Funktion löst keine Fehler aus.</p>
+		 
+		 </apiDesc></apiOperationDetail><related-links><link href="HTMLLoader.html#historyPosition"><linktext>historyPosition</linktext></link></related-links></apiOperation><apiOperation id="flash.html:HTMLLoader:historyForward"><apiName>historyForward</apiName><shortdesc>
+		 Navigiert im Browserverlauf vorwärts, sofern möglich.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+		 Navigiert im Browserverlauf vorwärts, sofern möglich.
+		 
+         <p>Der Aufruf dieser Methode des HTMLLoader-Objekts hat denselben Effekt wie der Aufruf der <codeph>forward()</codeph>-Methode der <codeph>window.history</codeph>-Eigenschaft in JavaScript auf der HTML-Seite.</p>
+		 
+		 <p>Diese Funktion löst keine Fehler aus.</p>
+		 
+		 </apiDesc></apiOperationDetail><related-links><link href="HTMLLoader.html#historyPosition"><linktext>historyPosition</linktext></link></related-links></apiOperation><apiOperation id="flash.html:HTMLLoader:historyGo"><apiName>historyGo</apiName><shortdesc>
+		 Navigiert die angegebene Anzahl von Schritten im Browserverlauf.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>steps</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiDesc>Die Anzahl an Schritten, die in der Verlaufsliste weiter (positiv) oder rückwärts (negativ) navigiert werden soll.
+		 
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+		 Navigiert die angegebene Anzahl von Schritten im Browserverlauf. Navigiert vorwärts bei positiven Werten, zurück bei negativen. Navigation mit Null löst einen Neuladevorgang aus.
+		 
+		 <p>Diese Methode entspricht dem Aufruf der <codeph>go()</codeph>-Methode der <codeph>window.history</codeph>-Eigenschaft in JavaScript auf der HTML-Seite.</p>
+		 
+		 <p>Diese Funktion löst keine Fehler aus.</p>
+		 
+		 </apiDesc></apiOperationDetail><related-links><link href="HTMLLoader.html#historyPosition"><linktext>historyPosition</linktext></link></related-links></apiOperation><apiOperation id="flash.html:HTMLLoader:load"><apiName>load</apiName><shortdesc>
+         Lädt das HTMLLoader-Objekt mit Daten von der Seite, die durch den urlRequestToLoad-Parameter angegeben wird.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>urlRequestToLoad</apiItemName><apiOperationClassifier>flash.net:URLRequest</apiOperationClassifier><apiDesc>Das URLRequest-Objekt, das Informationen über die zu ladende URL enthält. Neben der zu ladenden URL enthält ein URLRequest-Objekt Eigenschaften, die die HTTP-Übertragungsmethode (GET oder POST) definieren, mit der Anforderung zu übertragende Daten und Anforderungsheader.
+		 
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+         Lädt das HTMLLoader-Objekt mit Daten von der Seite, die durch den <codeph>urlRequestToLoad</codeph>-Parameter angegeben wird. Der Aufruf dieser Methode stellt die <codeph>loaded</codeph>-Eigenschaft anfänglich auf <codeph>false</codeph> ein. Diese Methode initiiert einen Vorgang, der immer asynchron abgeschlossen wird.
+		 
+		 <p>Ein Aufruf dieser Methode führt direkt zum Abbruch aller ausstehenden früheren Ladevorgänge, die mit dieser Methode oder der <codeph>loadString()</codeph>-Methode eingeleitet wurden. Das <codeph>complete</codeph>-Ereignis für die früheren Ladevorgänge wird nie ausgelöst.</p>
+		 
+		 <p>Es ist möglich, dass das <codeph>complete</codeph>-Ereignis nie ausgelöst wird. Dies ist der Fall, wenn HTML-Inhalt, der in das HTMLLoader-Objekt geladen wird, nie vollständig heruntergeladen wird. Dazu kann es kommen, wenn der HTML-Inhalt auf eine URL zu einem CGI-Skript verweist, das Inhalte unendlich oft wiederholt generiert.</p>
+		 
+		 </apiDesc></apiOperationDetail><related-links><link href="flash.net.xml#URLRequest"><linktext>flash.net.URLRequest</linktext></link></related-links></apiOperation><apiOperation id="flash.html:HTMLLoader:loadString"><apiName>loadString</apiName><shortdesc>
+         Lädt das HTMLLoader-Objekt mit dem HTML-Inhalt, der im HTML-String enthalten ist.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>htmlContent</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Der String mit dem HTML-Inhalt, der in das HTMLLoader-Objekt geladen werden soll.
+		 
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+         Lädt das HTMLLoader-Objekt mit dem HTML-Inhalt, der im HTML-String enthalten ist. Wenn die Wiedergabe des HTML im String abgeschlossen ist, wird das <codeph>complete</codeph>-Ereignis ausgelöst. Das <codeph>complete</codeph>-Ereignis wird immer asynchron ausgelöst.
+		 
+		 <p>Ein Aufruf dieser Methode führt direkt zum Abbruch aller ausstehenden früheren Ladevorgänge, die mit dieser Methode oder der <codeph>load()</codeph>-Methode eingeleitet wurden. Das <codeph>complete</codeph>-Ereignis für die früheren Ladevorgänge wird nie ausgelöst.</p>
+		 
+		 <p>Wenn der im String angegebene HTML-Code keine Verweise auf externe Ressourcen enthält, wird der HTML-Code mit dieser Methode synchron dargestellt. Das <codeph>complete</codeph>-Ereignis wird jedoch trotzdem asynchron ausgelöst. Wenn die <codeph>loaded</codeph>-Eigenschaft dieser Klasse den Wert <codeph>true</codeph> hat, wird direkt nach einem Aufruf dieser Funktion der im <codeph>htmlContent</codeph>-Argument angegebene HTML-Inhalt synchron wiedergegeben.</p>
+		 
+		 <p>Es ist möglich, dass das <codeph>complete</codeph>-Ereignis nie ausgelöst wird. Dies ist der Fall, wenn HTML-Inhalt, der in das HTMLLoader-Objekt geladen wird, nie vollständig heruntergeladen wird. Dazu kann es kommen, wenn der HTML-Inhalt auf eine URL zu einem CGI-Skript verweist, das Inhalte unendlich oft wiederholt generiert.</p>
+		 
+		 <p>Inhalt, der über die <codeph>loadString()</codeph>-Methode geladen wurde, wird in der Sicherheitssandbox der Anwendung abgelegt, wenn die <codeph>placeLoadStringContentInApplicationSandbox</codeph>-Eigenschaft auf <codeph>true</codeph> eingestellt ist.</p>
+		 
+         </apiDesc></apiOperationDetail><related-links><link href="HTMLLoader.html#placeLoadStringContentInApplicationSandbox"><linktext>placeLoadStringContentInApplicationSandbox</linktext></link></related-links></apiOperation><apiOperation id="flash.html:HTMLLoader:reload"><apiName>reload</apiName><shortdesc>
+		 Lädt die Seite vom aktuellen Speicherort neu.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+		 Lädt die Seite vom aktuellen Speicherort neu.
+		 
+		 </apiDesc></apiOperationDetail></apiOperation><apiValue id="flash.html:HTMLLoader:authenticate:get"><apiName>authenticate</apiName><shortdesc>
+		Gibt an, ob Authentifizierungsanforderungen für die von diesem Objekt ausgegebenen HTTP-Anforderungen verarbeitet werden (true) oder nicht (false).</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier><apiDefaultValue>initialized from URLRequestDefaults.authenticate
+		
+        </apiDefaultValue></apiValueDef><apiDesc>
+		Gibt an, ob Authentifizierungsanforderungen für die von diesem Objekt ausgegebenen HTTP-Anforderungen verarbeitet werden (<codeph>true</codeph>) oder nicht (<codeph>false</codeph>). Bei der Einstellung <codeph>false</codeph> geben Authentifizierungsfehlversuche einen HTTP-Fehler zurück.  
+		
+        </apiDesc></apiValueDetail><related-links><link href="flash.net.xml#URLRequest/authenticate"><linktext>flash.net.URLRequest.authenticate</linktext></link><link href="flash.net.xml#URLRequestDefaults/authenticate"><linktext>flash.net.URLRequestDefaults.authenticate</linktext></link></related-links></apiValue><apiValue id="flash.html:HTMLLoader:cacheResponse:get"><apiName>cacheResponse</apiName><shortdesc>
+		Gibt an, ob für HTTP-Anforderungen, die von diesem Objekt ausgegeben werden, erfolgreiche Antwortdaten im Cache zwischengespeichert werden sollen.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier><apiDefaultValue>initialized from URLRequestDefaults.cacheResponse
+		
+        </apiDefaultValue></apiValueDef><apiDesc>
+		Gibt an, ob für HTTP-Anforderungen, die von diesem Objekt ausgegeben werden, erfolgreiche Antwortdaten im Cache zwischengespeichert werden sollen. Bei der Einstellung <codeph>true</codeph> verwendet das HTMLLoader-Objekt den HTTP-Cache des Betriebssystems.
+		
+        </apiDesc></apiValueDetail><related-links><link href="flash.net.xml#URLRequestDefaults/cacheResponse"><linktext>flash.net.URLRequestDefaults.cacheResponse</linktext></link></related-links></apiValue><apiValue id="flash.html:HTMLLoader:contentHeight:get"><apiName>contentHeight</apiName><shortdesc>
+		 Die Höhe des HTML-Inhalts in Pixeln.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Number</apiValueClassifier></apiValueDef><apiDesc>
+		 Die Höhe des HTML-Inhalts in Pixeln. Diese Eigenschaft kann sich ändern, wenn sich die Abmessungen des HTMLLoader-Objekts ändern. Eine HTML-Seite verwendet zum Beispiel oft die gesamte Höhe des HTMLLoader-Objekts und die <codeph>contentHeight</codeph>-Eigenschaft kann sich ändern, wenn Sie die Höhe des HTMLLoader-Objekts ändern.
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLLoader:contentWidth:get"><apiName>contentWidth</apiName><shortdesc>
+		 Die Breite des HTML-Inhalts in Pixeln.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Number</apiValueClassifier></apiValueDef><apiDesc>
+		 Die Breite des HTML-Inhalts in Pixeln. Diese Eigenschaft kann sich ändern, wenn sich die Abmessungen des HTMLLoader-Objekts ändern. Eine HTML-Seite verwendet zum Beispiel oft die gesamte Breite des HTMLLoader-Objekts und die <codeph>contentWidth</codeph>-Eigenschaft kann sich ändern, wenn Sie die Breite des HTMLLoader-Objekts ändern.
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLLoader:hasFocusableContent:get"><apiName>hasFocusableContent</apiName><shortdesc>
+		Gibt an, ob Inhalt im HTMLLoader-Objekt den Fokus erhalten kann.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+		Gibt an, ob Inhalt im HTMLLoader-Objekt den Fokus erhalten kann. 
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLLoader:height:set"><apiName>height</apiName><shortdesc>
+		 Legt die Höhe des Rechtecks der dargestellten HTML-Leinwand fest.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Number</apiValueClassifier></apiValueDef><apiDesc>
+		 Legt die Höhe des Rechtecks der dargestellten HTML-Leinwand fest. Dies ist die Höhe des HTMLLoader-Anzeigeobjekts in Pixeln. Wenn diese Eigenschaft geändert wird, wird das HTML-Dokument vom HTMLLoader-Objekt erneut dargestellt. <codeph>htmlBoundsChanged</codeph>-Ereignisse werden ggf. als Reaktion auf eine Änderung dieser Eigenschaft ausgelöst. Wenn Sie die <codeph>width</codeph>- oder <codeph>height</codeph>-Eigenschaft eines HTMLLoader-Objekts einstellen, werden die Grenzen des Objekts geändert, der Inhalt wird jedoch nicht skaliert (wie es bei anderen Anzeigeobjekttypen passieren würde).
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLLoader:historyLength:get"><apiName>historyLength</apiName><shortdesc>
+		 Die Gesamtlänge der Verlaufsliste, einschließlich der Zurück- und Weiter-Einträge.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>uint</apiValueClassifier></apiValueDef><apiDesc>
+		 Die Gesamtlänge der Verlaufsliste, einschließlich der Zurück- und Weiter-Einträge. Diese Eigenschaft hat denselben Wert wie die JavaScript-<codeph>window.history.length</codeph>-Eigenschaft der HTML-Seite.
+		 
+		 </apiDesc></apiValueDetail><related-links><link href="HTMLLoader.html#historyPosition"><linktext>historyPosition</linktext></link></related-links></apiValue><apiValue id="flash.html:HTMLLoader:historyPosition:get"><apiName>historyPosition</apiName><shortdesc>
+		 Die aktuelle Position in der Verlaufsliste.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>uint</apiValueClassifier></apiValueDef><apiDesc>
+		 Die aktuelle Position in der Verlaufsliste. Die Verlaufsliste entspricht dem <codeph>window.history</codeph>-Objekt der HTML-Seite. Einträge, die geringer sind als die aktuelle Position, sind die „Zurück“-Liste, größere Einträge sind die „Weiter“-Liste. Durch den Versuch, eine Position einzustellen, die jenseits vom Ende liegt, wird der Wert auf das Ende festgelegt.
+		 
+		 </apiDesc></apiValueDetail><related-links><link href="HTMLLoader.html#getHistoryAt()"><linktext>getHistoryAt()</linktext></link><link href="HTMLLoader.html#historyBack()"><linktext>historyBack()</linktext></link><link href="HTMLLoader.html#historyGo()"><linktext>historyGo()</linktext></link><link href="HTMLLoader.html#historyForward()"><linktext>historyForward()</linktext></link><link href="HTMLLoader.html#historyLength"><linktext>historyLength</linktext></link></related-links></apiValue><apiValue id="flash.html:HTMLLoader:htmlHost:get"><apiName>htmlHost</apiName><shortdesc>
+		Das HTMLHost-Objekt, das verwendet wird, um Änderungen an bestimmten Elementen der Benutzeroberfläche zu verarbeiten, zum Beispiel die window.document.title-Eigenschaft des HTMLLoader-Objekts.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>flash.html:HTMLHost</apiValueClassifier><apiTipTexts><apiTipText>Das HTMLHost-Objekt, das verwendet wird, um Änderungen an bestimmten Elementen der Benutzeroberfläche zu verarbeiten, zum Beispiel die window.document.title-Eigenschaft des HTMLLoader-Objekts.
+		
+		</apiTipText></apiTipTexts></apiValueDef><apiDesc>
+		Das HTMLHost-Objekt, das verwendet wird, um Änderungen an bestimmten Elementen der Benutzeroberfläche zu verarbeiten, zum Beispiel die <codeph>window.document.title</codeph>-Eigenschaft des HTMLLoader-Objekts. <ph platform="javascript"> Diese Eigenschaft gilt nur für SWF-Inhalt, der die HTMLLoader-Klasse enthält; sie ist nicht sinnvoll in JavaScript-Code.</ph> <ph platform="actionscript">Um Standardverhalten für das HTMLLoader-Objekt zu überschreiben, erstellen Sie eine Unterklasse der HTMLHost-Klasse und überschreiben Sie damit ihre Mitgliederfunktionen, um verschiedene Benutzeroberflächenänderungen im HTML-Inhalt zu verarbeiten.</ph>
+		
+		</apiDesc></apiValueDetail><related-links><link href="HTMLHost.html"><linktext>HTMLHost-Klasse</linktext></link></related-links></apiValue><apiValue id="flash.html:HTMLLoader:loaded:get"><apiName>loaded</apiName><shortdesc>
+		 Zeigt an, ob das JavaScript-load-Ereignis, das dem vorherigen Aufruf der load()- oder loadString()-Methode entspricht, dem HTML-DOM im HTMLLoader-Objekt übergeben wurde.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+		 Zeigt an, ob das JavaScript-load-Ereignis, das dem vorherigen Aufruf der <codeph>load()</codeph>- oder <codeph>loadString()</codeph>-Methode entspricht, dem HTML-DOM im HTMLLoader-Objekt übergeben wurde. Diese Eigenschaft hat den Wert <codeph>true</codeph>, bevor das <codeph>complete</codeph>-Ereignis ausgelöst wird. Es ist möglich, dass diese Eigenschaft nie mit dem Wert <codeph>true</codeph> belegt wird. Dies passiert in den gleichen Fällen, in denen auch das <codeph>complete</codeph>-Ereignis nicht ausgelöst wird.
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLLoader:location:get"><apiName>location</apiName><shortdesc>
+        Die URL für den in das HTMLLoader-Objekt geladenen Inhalt.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+        Die URL für den in das HTMLLoader-Objekt geladenen Inhalt. 
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLLoader:manageCookies:get"><apiName>manageCookies</apiName><shortdesc>
+		Gibt an, ob der HTTP-Protokoll-Stack Cookies für dieses Objekt verwalten soll.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier><apiDefaultValue>initialized from URLRequestDefaults.manageCookies
+		
+		</apiDefaultValue></apiValueDef><apiDesc>
+		Gibt an, ob der HTTP-Protokoll-Stack Cookies für dieses Objekt verwalten soll. Bei der Einstellung <codeph>true</codeph> werden der Anforderung Cookies hinzugefügt und Antwortcookies werden gespeichert. Bei der Einstellung <codeph>false</codeph> werden Cookies <i>nicht</i> zur Anforderung hinzugefügt und Antwortcookies werden <i>nicht</i> gespeichert. 
+		
+		</apiDesc></apiValueDetail><related-links><link href="flash.net.xml#URLRequest/manageCookies"><linktext>flash.net.URLRequest.manageCookies</linktext></link><link href="flash.net.xml#URLRequestDefaults/manageCookies"><linktext>flash.net.URLRequestDefaults.manageCookies</linktext></link></related-links></apiValue><apiValue id="flash.html:HTMLLoader:navigateInSystemBrowser:get"><apiName>navigateInSystemBrowser</apiName><shortdesc>
+		Gibt an, ob das Navigieren im Stammbild des HTML-Inhalts (zum Beispiel, wenn der Benutzer auf einen Link klickt, wenn die window.location-Eigenschaft festgelegt wurde, oder wenn window.open() aufgerufen wird) zur Navigation im HTMLLoader-Objekt (false) oder im Standardwebbrowser des Systems (true) führt.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier><apiDefaultValue>false
+		
+		</apiDefaultValue><apiTipTexts><apiTipText>Ob Navigation im Stammbild des HTML-Inhalts zur Navigation im HTMLLoader-Objekt (false) oder im Standardwebbrowser des Systems (true) führt.
+		
+		</apiTipText></apiTipTexts></apiValueDef><apiDesc>
+		Gibt an, ob das Navigieren im Stammbild des HTML-Inhalts (zum Beispiel, wenn der Benutzer auf einen Link klickt, wenn die <codeph>window.location</codeph>-Eigenschaft festgelegt wurde, oder wenn <codeph>window.open()</codeph> aufgerufen wird) zur Navigation im HTMLLoader-Objekt (<codeph>false</codeph>) oder im Standardwebbrowser des Systems (<codeph>true</codeph>) führt. Stellen Sie diese Eigenschaft auf <codeph>true</codeph> ein, wenn die gesamte Navigation im Webbrowser des Systems (nicht im HTMLLoader-Objekt) stattfinden soll.
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLLoader:paintsDefaultBackground:set"><apiName>paintsDefaultBackground</apiName><shortdesc>
+        Gibt an, ob der Hintergrund des HTMLLoader-Dokuments undurchsichtig weiß ist (true) oder nicht (false).</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier><apiTipTexts><apiTipText>Gibt an, ob der Hintergrund des HTMLLoader-Dokuments undurchsichtig weiß ist (true) oder nicht (false). 
+		
+		</apiTipText></apiTipTexts></apiValueDef><apiDesc>
+        Gibt an, ob der Hintergrund des HTMLLoader-Dokuments undurchsichtig weiß ist <codeph>true</codeph> oder nicht <codeph>false</codeph>. Wenn diese Eigenschaft den Wert <codeph>false</codeph> besitzt, verwendet das HTMLLoader-Objekt seinen Anzeigeobjektcontainer als Hintergrund für den HTML-Code und die Opazität (<codeph>Alpha</codeph>-Wert) des Anzeigeobjektcontainers als HTML-Hintergrund. Wenn jedoch das <codeph>body</codeph>-Element oder ein anderes Element des HTML-Dokuments eine undurchsichtige Hintergrundfarbe aufweist (festgelegt z. B. durch <codeph>style="background-color:gray"</codeph>), wird für diesen Teil des wiedergegebenen HTML-Codes die angegebene undurchsichtige Hintergrundfarbe verwendet.
+		
+        </apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLLoader:pdfCapability:get"><apiName>pdfCapability</apiName><shortdesc>
+		 Die Art der PDF-Unterstützung auf dem System des Benutzers, definiert als Ganzzahlencodewert.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+		 Die Art der PDF-Unterstützung auf dem System des Benutzers, definiert als Ganzzahlencodewert. Ein HTMLLoader-Objekt kann PDF-Inhalte nur dann anzeigen, wenn diese Eigenschaft <codeph>PDFCapability.STATUS_OK</codeph> entspricht. Die PDFCapability-Klasse definiert Konstanten für mögliche Werte der <codeph>pdfCapability</codeph>-Eigenschaft wie folgt:
+		 
+		 <adobetable class="innertable">
+		 
+		 	
+		 
+		 	
+		 
+		 	
+		 
+		 	
+		 
+		 	
+		 
+		 <tgroup cols="2"><thead><row><entry>PDFCapability-Konstante</entry><entry>Bedeutung</entry></row></thead><tbody><row>
+		 		<entry><codeph>STATUS_OK</codeph></entry>
+		 		<entry>Eine ausreichende Version (8.1 oder höher) von Acrobat oder Adobe Reader wurde erkannt. PDF-Inhalte können in ein HTMLLoader-Objekt geladen werden.
+		 
+		 		<p><i>Hinweis:</i> Wenn unter Windows Acrobat oder Adobe Reader Version 7.x oder höher auf dem System des Benutzers ausgeführt wird, wird diese Version verwendet, auch wenn eine höhere Version installiert ist, die das Laden von im HTMLLoader-Objekt geladenen PDF-Inhalten unterstützt. In diesem Fall gilt: Wenn der Wert der <codeph>pdfCapability</codeph>-Eigenschaft <codeph>PDFCapability.STATUS_OK</codeph> ist, wenn die AIR-Anwendung versucht PDF-Inhalte zu laden, zeigt die ältere Version von Acrobat oder Adobe Reader eine Warnung an (und die AIR-Laufzeitumgebung zeigt keine Fehlermeldung an). Falls diese Situation für Ihre Benutzer entstehen kann, weisen Sie sie an, Acrobat oder Adobe Reader zu schließen, während Ihre Anwendung ausgeführt wird. Zeigen Sie diese Anweisungen ggf. an, wenn der PDF-Inhalt nicht innerhalb eines vertretbaren Zeitraums angezeigt wird.</p></entry>
+		 	</row><row>
+		 		<entry><codeph>ERROR_INSTALLED_READER_NOT_FOUND</codeph></entry>
+		 		<entry>Es wurde keine Version von Acrobat oder Adobe Reader erkannt. Ein HTMLLoader-Objekt kann PDF-Inhalt nicht anzeigen.</entry>
+		 	</row><row>
+		 		<entry><codeph>ERROR_INSTALLED_READER_TOO_OLD</codeph></entry>
+		 		<entry>Acrobat oder Adobe Reader wurde erkannt, die Version ist jedoch zu alt. Ein HTMLLoader-Objekt kann PDF-Inhalt nicht anzeigen.</entry>
+		 	</row><row>
+		 		<entry><codeph>ERROR_PREFERED_READER_TOO_OLD</codeph></entry>
+		 		<entry>Es wurde eine ausreichende Version (8.1 oder höher) von Acrobat oder Adobe Reader erkannt; jedoch ist die zum Verarbeiten von PDF-Inhalten eingerichtete Version älter als 8.1. Ein HTMLLoader-Objekt kann PDF-Inhalte nicht anzeigen.</entry>
+		 	</row></tbody></tgroup></adobetable>
+		 
+ 		 </apiDesc></apiValueDetail><related-links><link href="HTMLPDFCapability.html"><linktext>HTMLPDFCapability-Klasse</linktext></link></related-links></apiValue><apiValue id="flash.html:HTMLLoader:placeLoadStringContentInApplicationSandbox:get"><apiName>placeLoadStringContentInApplicationSandbox</apiName><shortdesc>
+		Gibt an, ob Inhalte, die mittels der loadString()-Methode geladen wurden, in der Anwendungssandbox („true“) oder in einer anwendungsfremden Sandbox („false“) abgelegt werden.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier><apiDefaultValue>false
+		
+		</apiDefaultValue></apiValueDef><apiDesc>
+		Gibt an, ob Inhalte, die mittels der <codeph>loadString()</codeph>Methode geladen wurden, in der Anwendungssandbox (<codeph>true</codeph>) oder in einer anwendungsfremden Sandbox (<codeph>false</codeph>) abgelegt werden.
+		
+		<p>Wenn diese Eigenschaft auf <codeph>false</codeph> gesetzt ist, werden Inhalte, die mittels der <codeph>loadString()</codeph>-Methode geladen wurden, in einer anwendungsfremden Sandbox mit den folgenden Charakteristiken abgelegt.</p>
+		
+		<ul>
+			<li>Sie hat Zugriff auf das Laden von Inhalten aus dem Netzwerk (jedoch nicht aus dem Dateisystem).</li>
+			<li>Sie kann keine Daten mithilfe von XMLHttpRequest laden.</li>
+		<li>Die <codeph>window.location</codeph>-Eigenschaft ist auf <codeph>"about:blank"</codeph> gesetzt.</li>
+		<li>Die Inhalte können nicht auf die <codeph>window.runtime</codeph>-Eigenschaft zugreifen (wie die Inhalte in anwendungsfremden Sandboxen).</li>
+		</ul>
+		
+		<p>Wenn diese Eigenschaft auf <codeph>true</codeph> gesetzt ist, werden die Inhalte, die mittels der <codeph>loadString()</codeph>-Methode geladen wurden, in der Anwendungssandbox abgelegt, mit gleichzeitigem Zugriff auf die <codeph>window.runtime</codeph>-Eigenschaft und auf alle AIR-APIs. Sie sollten sicherstellen, dass der Datenquelle für einen String, der in einem Aufruf der <codeph>loadString()</codeph>-Methode verwendet wird, vertraut wird. Code-Anweisungen im HTML-String werden mit vollen Anwendungsprivilegien ausgeführt, wenn diese Eigenschaft auf <codeph>true</codeph> gesetzt ist. Setzen Sie diese Eigenschaft nur dann auf <codeph>true</codeph>, wenn Sie sicher sind, dass der String keinen schädlichen Code enthalten kann. </p>
+		
+		<p>In Anwendungen, die mit dem AIR 1.0- oder AIR 1.1-SDK kompiliert werden, werden die Inhalte, die mittels der <codeph>loadString()</codeph>-Methode geladen wurden, in der Anwendungssandbox abgelegt.</p>
+		
+		</apiDesc></apiValueDetail><related-links><link href="HTMLLoader.html#loadString()"><linktext>loadString()</linktext></link></related-links></apiValue><apiValue id="flash.html:HTMLLoader:runtimeApplicationDomain:get"><apiName>runtimeApplicationDomain</apiName><shortdesc>
+		 Die Anwendungsdomäne, die für das window.runtime-Objekt im JavaScript-Code der HTML-Seite verwendet wird.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>flash.system:ApplicationDomain</apiValueClassifier><apiException><apiDesc>wenn das ApplicationDomain-Objekt nicht aus der Sicherheitsdomäne des Aufrufers stammt.
+		 
+         </apiDesc><apiItemName>SecurityError</apiItemName><apiOperationClassifier>SecurityError</apiOperationClassifier></apiException><apiTipTexts><apiTipText>Die Anwendungsdomäne, die für das window.runtime-Objekt im JavaScript-Code der HTML-Seite verwendet wird.
+		 
+		 </apiTipText></apiTipTexts></apiValueDef><apiDesc>
+		 Die Anwendungsdomäne, die für das <codeph>window.runtime</codeph>-Objekt im JavaScript-Code der HTML-Seite verwendet wird. <ph platform="javascript"> Diese Eigenschaft gilt nur für SWF-Inhalt, der die HTMLLoader-Klasse enthält; sie ist nicht sinnvoll in JavaScript-Code.</ph>
+		 
+		 <p platform="actionscript">Wenn sie <codeph>null</codeph> ist oder wenn der HTML-Inhalt aus einer anderen Sicherheitsdomäne als der SWF-Inhalt stammt, der das HTMLLoader-Objekt enthält, verwendet die Seite eine Standardanwendungsdomäne für ihre Domäne.</p>
+		 
+		 </apiDesc></apiValueDetail><related-links><link href="flash.system.xml#ApplicationDomain"><linktext>flash.system.ApplicationDomain</linktext></link><link href="flash.system.xml#SecurityDomain"><linktext>flash.system.SecurityDomain</linktext></link></related-links></apiValue><apiValue id="flash.html:HTMLLoader:scrollH:get"><apiName>scrollH</apiName><shortdesc>
+         Die horizontale Bildlaufposition des HTML-Inhalts innerhalb des HTMLLoader-Objekts.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Number</apiValueClassifier></apiValueDef><apiDesc>
+         Die horizontale Bildlaufposition des HTML-Inhalts innerhalb des HTMLLoader-Objekts.
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLLoader:scrollV:get"><apiName>scrollV</apiName><shortdesc>
+         Die vertikale Bildlaufposition des HTML-Inhalts innerhalb des HTMLLoader-Objekts.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Number</apiValueClassifier></apiValueDef><apiDesc>
+         Die vertikale Bildlaufposition des HTML-Inhalts innerhalb des HTMLLoader-Objekts.
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLLoader:textEncodingFallback:set"><apiName>textEncodingFallback</apiName><shortdesc>
+        Die Zeichenkodierung, die vom HTMLLoader-Inhalt verwendet wird, wenn eine HTML-Seite keine Zeichenkodierung festlegt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+        Die Zeichenkodierung, die vom HTMLLoader-Inhalt verwendet wird, wenn eine HTML-Seite keine Zeichenkodierung festlegt. In einer HTML-Seite wird die Zeichenkodierung in einem <codeph>meta</codeph>-Tag angegeben wie im folgenden Beispiel:
+		
+		<codeblock>&lt;meta http-equiv="content-type" content="text/html" charset="ISO-8859-1"></codeblock>
+		
+		<p>Werte sind in der IANA-Liste der <xref href="http://www.iana.org/assignments/character-sets" scope="external">gültigen Zeichensätze</xref> definiert.
+		</p>
+		
+		<p>Wenn von der HTML-Seite, von der <codeph>textEncodingFallback</codeph>-Eigenschaft oder der <codeph>textEncodingOverride</codeph>-Eigenschaft keine Kodierung festgelegt wird, verwendet der HTML-Inhalt die ISO-8859-1-Kodierung.</p>
+		
+		</apiDesc></apiValueDetail><related-links><link href="HTMLLoader.html#textEncodingOverride"><linktext>textEncodingOverride</linktext></link></related-links></apiValue><apiValue id="flash.html:HTMLLoader:textEncodingOverride:set"><apiName>textEncodingOverride</apiName><shortdesc>
+        Die Zeichenkodierung, die vom HTMLLoader-Inhalt verwendet wird, wobei alle Einstellungen auf der HTML-Seite überschrieben werden.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+        Die Zeichenkodierung, die vom HTMLLoader-Inhalt verwendet wird, wobei alle Einstellungen auf der HTML-Seite überschrieben werden. Auf HTML-Seiten wird die Zeichenkodierung in einem <codeph>meta</codeph>-Tag angegeben wie im folgenden Beispiel:
+		
+		<codeblock>&lt;meta http-equiv="content-type" content="text/html" charset="ISO-8859-1"></codeblock>
+		
+		<p>Diese Einstellung überschreibt auch jede Einstellung in der <codeph>textEncodingFallback</codeph>-Eigenschaft. </p>
+		
+		<p>Werte sind in der IANA-Liste der <xref href="http://www.iana.org/assignments/character-sets" scope="external">gültigen Zeichensätze</xref> definiert.
+		</p>
+		
+		<p>Setzen Sie die <codeph>textEncodingOverride</codeph>-Eigenschaft, nachdem der HTML-Inhalt geladen wurde, damit AIR den HTML-Inhalt mit der angegebenen Kodierung aktualisiert. Wenn der HTMLLoader zu einer neuen Seite navigiert, müssen Sie die Eigenschaft erneut setzen, falls die neue Seite eine bestimmte Kodierung verwenden soll.</p>
+		
+		<p>Wenn von der HTML-Seite, von der <codeph>textEncodingFallback</codeph>-Eigenschaft oder der <codeph>textEncodingOverride</codeph>-Eigenschaft keine Kodierung festgelegt wird, verwendet der HTML-Inhalt die ISO-8859-1-Kodierung.</p>
+		
+		<p>Durch das Festlegen der <codeph>textEncodingOverride</codeph>-Eigenschaft auf <codeph>null</codeph> wird das Standardverhalten wiederhergestellt.</p>
+		
+		</apiDesc></apiValueDetail><related-links><link href="HTMLLoader.html#textEncodingFallback"><linktext>textEncodingFallback</linktext></link></related-links></apiValue><apiValue id="flash.html:HTMLLoader:useCache:get"><apiName>useCache</apiName><shortdesc>
+		Gibt an, ob der lokale Cache geprüft werden soll, bevor HTTP-Anforderungen, die von diesem Objekt ausgegeben wurden, Daten abrufen.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier><apiDefaultValue>initialized from URLRequestDefaults.useCache
+		
+		</apiDefaultValue></apiValueDef><apiDesc>
+		Gibt an, ob der lokale Cache geprüft werden soll, bevor HTTP-Anforderungen, die von diesem Objekt ausgegeben wurden, Daten abrufen. 
+		
+		</apiDesc></apiValueDetail><related-links><link href="flash.net.xml#URLRequest/useCache"><linktext>flash.net.URLRequest.useCache</linktext></link><link href="flash.net.xml#URLRequestDefaults/useCache"><linktext>flash.net.URLRequestDefaults.useCache</linktext></link></related-links></apiValue><apiValue id="flash.html:HTMLLoader:userAgent:get"><apiName>userAgent</apiName><shortdesc>
+		 Der Benutzer-Agent-String, der in zukünftigen Inhaltsanforderungen von diesem HTMLLoader-Objekt verwendet wird.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 Der Benutzer-Agent-String, der in zukünftigen Inhaltsanforderungen von diesem HTMLLoader-Objekt verwendet wird. 
+		 
+		 <p>Um den Benutzer-Agent String festzulegen, stellen Sie die <codeph>userAgent</codeph>-Eigenschaft des HTMLLoader-Objekts ein, bevor Sie die <codeph>load()</codeph>-Methode aufrufen. Die <codeph>userAgent</codeph>-Eigenschaft des URLRequest-Objekts, das an die <codeph>load()</codeph>-Methode übergeben wird, wird <i>nicht</i> verwendet.</p>
+		 
+		 <p>Sie können den Benutzer-Agent-Standardstring festlegen, der von allen HTMLLoader-Objekten in einer Anwendungsdomäne verwendet wird, indem Sie die <codeph>URLRequestDefaults.userAgent</codeph>-Eigenschaft einstellen. Wenn für die <codeph>userAgent</codeph>-Eigenschaft des HTMLLoader-Objekts kein Wert festgelegt wird (bzw. wenn der Wert auf <codeph>null</codeph> gesetzt ist), wird der Benutzer-Agent-String auf den Wert der statischen <codeph>URLRequestDefaults.userAgent</codeph>-Eigenschaft gesetzt. </p>
+		 
+		 <p>Wenn weder für die <codeph>userAgent</codeph>-Eigenschaft des HTMLLoader noch für <codeph>URLRequestDefaults.userAgent</codeph> ein Wert festgelegt wurde, wird ein Standardwert als Benutzer-Agent-String verwendet. Dieser Standardwert variiert je nach dem Laufzeitbetriebssystem (z. B. Mac OS, Linux oder Windows), der Laufzeitsprache und der Laufzeitversion (siehe folgende Beispiele):</p>
+		 
+		 <ul>
+		 
+		 	<li><codeph>"Mozilla/5.0 (Macintosh; U; PPC Mac OS X; en) AppleWebKit/526.9+ (KHTML, wie Gecko) AdobeAIR/1.5"</codeph></li>
+		 	<li><codeph>"Mozilla/5.0 (Windows; U; en) AppleWebKit/526.9+ (KHTML, wie Gecko) AdobeAIR/1.5"</codeph></li>
+		  <li><codeph>"Mozilla/5.0 (X11; U; Linux i686; en-US) AppleWebKit/526.9+ (KHTML, wie Gecko) AdobeAIR/1.5"</codeph></li>
+		 </ul>
+		 
+		 </apiDesc></apiValueDetail><related-links><link href="flash.net.xml#URLRequest/userAgent"><linktext>flash.net.URLRequest.userAgent</linktext></link><link href="flash.net.xml#URLRequestDefaults/userAgent"><linktext>flash.net.URLRequestDefaults.userAgent</linktext></link></related-links></apiValue><apiValue id="flash.html:HTMLLoader:width:set"><apiName>width</apiName><shortdesc>
+		 Legt die Breite des Rechtecks der dargestellten HTML-Leinwand fest.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Number</apiValueClassifier></apiValueDef><apiDesc>
+		 Legt die Breite des Rechtecks der dargestellten HTML-Leinwand fest. Dies ist die Breite des HTMLLoader-Anzeigeobjekts in Pixel. Wenn diese Eigenschaft geändert wird, wird das HTML-Dokument vom HTMLLoader-Objekt erneut dargestellt. Eine Änderung dieser Eigenschaft kann <codeph>htmlBoundsChange</codeph>-Ereignisse auslösen. Wenn Sie die <codeph>width</codeph>- und <codeph>height</codeph>-Eigenschaft eines HTMLLoader-Objekts festlegen, ändern sich die Grenzen des Objekts, aber der Inhalt wird nicht skaliert (so wie es auch bei anderen Typen von Anzeigeobjekten der Fall wäre).
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLLoader:window:get"><apiName>window</apiName><shortdesc>
+		 Das globale JavaScript-Objekt für den Inhalt, der in das HTML-Steuerelement geladen wird.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Object</apiValueClassifier></apiValueDef><apiDesc>
+		 Das globale JavaScript-Objekt für den Inhalt, der in das HTML-Steuerelement geladen wird.
+		 
+		 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.html:HTMLWindowCreateOptions"><apiName>HTMLWindowCreateOptions</apiName><shortdesc>
+	 Diese Klasse definiert die Optionen, die festgelegt werden können, wenn JavaScript, das in einem HTMLLoader-Objekt ausgeführt wird, versucht, durch Aufrufen der window.open()-Methode ein neues HTML-Fenster zu erstellen.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 Diese Klasse definiert die Optionen, die festgelegt werden können, wenn JavaScript, das in einem HTMLLoader-Objekt ausgeführt wird, versucht, durch Aufrufen der <codeph>window.open()</codeph>-Methode ein neues HTML-Fenster zu erstellen. 
+	 
+	 <p>Diese Klasse definiert die Eigenschaften und Methoden für Optionen im <codeph>features</codeph>-Parameter, der an die <codeph>window.open()</codeph>-Methode in JavaScript übergeben wird.</p>
+	 
+	 <p>JavaScript in einem HTML-Dokument (in einem HTMLLoader-Objekt) kann beispielsweise den folgenden Aufruf an <codeph>window.open()</codeph> enthalten, in dem der <codeph>features</codeph>-Parameter (der dritte Parameter) eine Reihe von Optionen auflistet:</p>
+	 
+	 <codeblock>window.open("http://www.adobe.com", "AdobeWindow", "scrollbars=1,menubar=1,location=0,status=0")</codeblock>
+	 
+	 <p>Die HTMLWindowCreateOptions-Klasse wird beim Überschreiben der <codeph>createWindow()</codeph>-Methode einer Unterklasse der HTMLHost-Klasse verwendet. Das HTMLLoader-Objekt übergibt ein HTMLWindowCreateOptions-Objekt als <codeph>windowCreateOptions</codeph>-Parameter der <codeph>createWindow()</codeph>-Methode des HTMLHost-Objekts.</p>
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="HTMLHost.html#createWindow()"><linktext>HTMLHost#createWindow()</linktext></link></related-links><apiValue id="flash.html:HTMLWindowCreateOptions:fullscreen"><apiName>fullscreen</apiName><shortdesc>
+    	 Gibt an, ob das Fenster den ganzen Bildschirm ausfüllen soll.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>false</apiData><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+    	 Gibt an, ob das Fenster den ganzen Bildschirm ausfüllen soll. Diese Eigenschaft ist auf <codeph>true</codeph> gesetzt, wenn der <codeph>features</codeph>-String des JavaScript-Aufrufs an die <codeph>window.open()</codeph>-Methode <codeph>"fullscreen"</codeph>, <codeph>"fullscreen=1"</codeph> oder <codeph>"fullscreen=y"</codeph> enthält.
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLWindowCreateOptions:height"><apiName>height</apiName><shortdesc>
+		 Legt die gewünschte anfängliche Höhe des neuen Fensters fest.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>NaN</apiData><apiValueClassifier>Number</apiValueClassifier></apiValueDef><apiDesc>
+		 Legt die gewünschte anfängliche Höhe des neuen Fensters fest. Dies ist auf den <codeph>height</codeph>-Wert im <codeph>features</codeph>-String des JavaScript-Aufrufs der <codeph>window.open()</codeph>-Methode eingestellt. Wenn der Wert <codeph>NaN</codeph> ist (Standardeinstellung, wenn kein <codeph>height</codeph>-Wert im <codeph>features</codeph>-String angegeben ist), wird eine Standardhöhe für das Fenster verwendet.
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLWindowCreateOptions:locationBarVisible"><apiName>locationBarVisible</apiName><shortdesc>
+    	 Ob eine Speicherortleiste angezeigt wird.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>false</apiData><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+    	 Ob eine Speicherortleiste angezeigt wird. Diese Eigenschaft wird auf <codeph>true</codeph> gesetzt, wenn der <codeph>features</codeph>-String des JavaScript-Aufrufs an die <codeph>window.open()</codeph>-Methode <codeph>"location"</codeph>, <codeph>"location=1"</codeph> oder <codeph>"location=y"</codeph> enthält.
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLWindowCreateOptions:menuBarVisible"><apiName>menuBarVisible</apiName><shortdesc>
+    	 Gibt an, ob eine Menüleiste angezeigt werden soll.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>false</apiData><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+    	 Gibt an, ob eine Menüleiste angezeigt werden soll. Diese Eigenschaft wird auf <codeph>true</codeph> gesetzt, wenn der <codeph>features</codeph>-String des JavaScript-Aufrufs an die <codeph>window.open()</codeph>-Methode <codeph>"menubar"</codeph>, <codeph>"menubar=1"</codeph> oder <codeph>"menubar=y"</codeph> enthält.
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLWindowCreateOptions:resizable"><apiName>resizable</apiName><shortdesc>
+    	 Gibt an, ob die Größe des Fensters geändert werden kann.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>false</apiData><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+    	 Gibt an, ob die Größe des Fensters geändert werden kann. Diese Eigenschaft wird auf <codeph>true</codeph> gesetzt, wenn der <codeph>features</codeph>-String des JavaScript-Aufrufs an die <codeph>window.open()</codeph>-Methode <codeph>"resizable"</codeph>, <codeph>"resizable=1"</codeph> oder <codeph>"resizable=y"</codeph> enthält.
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLWindowCreateOptions:scrollBarsVisible"><apiName>scrollBarsVisible</apiName><shortdesc>
+    	 Gibt an, ob Bildlaufleisten angezeigt werden sollen.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>true</apiData><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+    	 Gibt an, ob Bildlaufleisten angezeigt werden sollen. Diese Eigenschaft wird auf <codeph>true</codeph> gesetzt, wenn der <codeph>features</codeph>-String des JavaScript-Aufrufs an die <codeph>window.open()</codeph>-Methode <codeph>"scrollbars"</codeph>, <codeph>"scrollbars=1"</codeph> oder <codeph>"scrollbars=y"</codeph> enthält.
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLWindowCreateOptions:statusBarVisible"><apiName>statusBarVisible</apiName><shortdesc>
+    	 Gibt an, ob eine Statusleiste angezeigt werden soll.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>false</apiData><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+    	 Gibt an, ob eine Statusleiste angezeigt werden soll. Diese Eigenschaft wird auf <codeph>true</codeph> gesetzt, wenn der <codeph>features</codeph>-String des JavaScript-Aufrufs an die <codeph>window.open()</codeph>-Methode <codeph>"status"</codeph>, <codeph>"status=1"</codeph> oder <codeph>"status=y"</codeph> enthält.
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLWindowCreateOptions:toolBarVisible"><apiName>toolBarVisible</apiName><shortdesc>
+    	 Gibt an, ob eine Symbolleiste angezeigt werden soll.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>false</apiData><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+    	 Gibt an, ob eine Symbolleiste angezeigt werden soll. Diese Eigenschaft wird auf <codeph>true</codeph> gesetzt, wenn der <codeph>features</codeph>-String des JavaScript-Aufrufs an die <codeph>window.open()</codeph>-Methode <codeph>"toolbar"</codeph>, <codeph>"toolbar=1"</codeph> oder <codeph>"toolbar=y"</codeph> enthält.
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLWindowCreateOptions:width"><apiName>width</apiName><shortdesc>
+		 Legt die gewünschte anfängliche Breite des neuen Fensters fest.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>NaN</apiData><apiValueClassifier>Number</apiValueClassifier></apiValueDef><apiDesc>
+		 Legt die gewünschte anfängliche Breite des neuen Fensters fest. Diese ist auf den <codeph>width</codeph>-Wert im <codeph>features</codeph>-String des JavaScript-Aufrufs der <codeph>window.open()</codeph>-Methode eingestellt. Wenn der Wert <codeph>NaN</codeph> ist (Standardeinstellung, wenn kein <codeph>width</codeph>-Wert im <codeph>features</codeph>-String angegeben ist), wird eine Standardbreite für das Fenster verwendet.
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLWindowCreateOptions:x"><apiName>x</apiName><shortdesc>
+		 Legt die gewünschte x-Anfangsposition des neuen Fensters auf dem Bildschirm fest.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>NaN</apiData><apiValueClassifier>Number</apiValueClassifier></apiValueDef><apiDesc>
+		 Legt die gewünschte <i>x</i>-Anfangsposition des neuen Fensters auf dem Bildschirm fest. Diese ist auf den Wert eingestellt, der für <codeph>left</codeph> oder <codeph>screenX</codeph> im <codeph>features</codeph>-String des JavaScript-Aufrufs der <codeph>window.open()</codeph>-Methode angegeben wurde. Wenn der Wert <codeph>NaN</codeph> ist (Standardeinstellung, wenn kein <codeph>left</codeph>- oder <codeph>screenX</codeph>-Wert im <codeph>features</codeph>-String angegeben ist), wird eine <i>x</i>-Standardposition für das Fenster verwendet.
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLWindowCreateOptions:y"><apiName>y</apiName><shortdesc>
+		 Legt die gewünschte y-Anfangsposition des neuen Fensters auf dem Bildschirm fest.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>NaN</apiData><apiValueClassifier>Number</apiValueClassifier></apiValueDef><apiDesc>
+		 Legt die gewünschte <i>y</i>-Anfangsposition des neuen Fensters auf dem Bildschirm fest. Diese ist auf den Wert eingestellt, der für <codeph>top</codeph> oder <codeph>screenY</codeph> im <codeph>features</codeph>-String des JavaScript-Aufrufs der <codeph>window.open()</codeph>-Methode angegeben wurde. Wenn der Wert <codeph>NaN</codeph> ist (Standardeinstellung, wenn kein <codeph>left</codeph>- oder <codeph>screenX</codeph>-Wert im <codeph>features</codeph>-String angegeben ist), wird eine <i>x</i>-Standardposition für das Fenster verwendet.
+		 
+		 </apiDesc></apiValueDetail></apiValue></apiClassifier></apiPackage>

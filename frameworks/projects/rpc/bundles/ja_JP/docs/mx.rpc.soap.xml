@@ -99,8 +99,8 @@
      最後に実行されたこの操作の一環として返されたヘッダーです。 このヘッダーは <codeph>lastResult</codeph> プロパティに対応し、HeaderEvents として個別に送出されるヘッダーの集合と同じです。
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.rpc.soap:Operation:xmlSpecialCharsFilter:get"><apiName>xmlSpecialCharsFilter</apiName><shortdesc>
-      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Function"/></apiValueDef><apiDesc>
-      操作レベルで明確に上書きされない限り、Web サービスのすべての操作に対して有効です。 
+      単純なコンテンツをエンコードする前に XML 特殊文字のエスケープに使用されるカスタム関数を指定します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Function"/></apiValueDef><apiDesc>
+      単純なコンテンツをエンコードする前に XML 特殊文字のエスケープに使用されるカスタム関数を指定します。操作レベルで明確に上書きされない限り、Web サービスのすべての操作に対して有効です。 関数を指定しない場合は、IXMLEncoder の特定の実装によって設定されたものがデフォルトで使用されます。
       
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.rpc.soap:AbstractWebService"><apiName>AbstractWebService</apiName><shortdesc>
   AbstractWebService は、SOAP ベースの Web サービスに RPC アクセスを提供する実装の抽象基本クラスです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>mx.rpc:AbstractService</apiBaseClassifier></apiClassifierDef><apiDesc>
@@ -170,8 +170,8 @@
      <p>デフォルトの宛先を使用する場合は、クライアント上の WSDL と endpointURI を指定する必要があります。デフォルト以外のプロキシ宛先を使用する場合は、宛先構成の中に指定された WSDL と endpointURI を使用できます。</p>
      
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.rpc.soap:AbstractWebService:convertParametersHandler"><apiName>convertParametersHandler</apiName><shortdesc>
-     </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Function"/></apiValueDef><apiDesc>
-     関数はパラメーターの配列を取り、変更されている可能性のある配列を返します。関数の定義は <codeph>function myParametersFunction(parameters:Array):Array</codeph> のようになります。
+     フレームワーク開発者には、各 WebService 操作起動で渡すパラメーターを指定して呼び出す関数をインストールする必要がある場合があります。そのような開発者を主な対象としたオプション関数です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Function"/></apiValueDef><apiDesc>
+     フレームワーク開発者には、各 WebService 操作起動で渡すパラメーターを指定して呼び出す関数をインストールする必要がある場合があります。そのような開発者を主な対象としたオプション関数です。関数はパラメーターの配列を取り、変更されている可能性のある配列を返します。関数の定義は <codeph>function myParametersFunction(parameters:Array):Array</codeph> のようになります。
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.rpc.soap:AbstractWebService:convertResultHandler"><apiName>convertResultHandler</apiName><shortdesc>
      フレームワーク開発者には、操作の結果を処理するフックをインストールしてから結果ハンドラーを通知する必要がある場合があります。そのような開発者を主な対象としたオプション関数です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="Function"/></apiValueDef><apiDesc>
@@ -227,7 +227,7 @@
      
      </apiDesc></apiValueDetail></apiValue><apiValue id="mx.rpc.soap:AbstractWebService:xmlSpecialCharsFilter:get"><apiName>xmlSpecialCharsFilter</apiName><shortdesc>
       単純なコンテンツをエンコードする前に XML 特殊文字のエスケープに使用されるカスタム関数です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Function"/></apiValueDef><apiDesc>
-      単純なコンテンツをエンコードする前に XML 特殊文字のエスケープに使用されるカスタム関数です。 操作レベルで明確に上書きされない限り、Web サービスのすべての操作に対して有効です。 
+      単純なコンテンツをエンコードする前に XML 特殊文字のエスケープに使用されるカスタム関数です。 操作レベルで明確に上書きされない限り、Web サービスのすべての操作に対して有効です。 何も指定しない場合、デフォルトの関数は IXMLEncoder の特定の実装によって設定されたものです。
      
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.rpc.soap:SOAPFault"><apiName>SOAPFault</apiName><shortdesc>
  SOAP エンベロープの Fault エレメントから SOAP 固有の情報を提供する mx.rpc.Fault のサブクラスです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>mx.rpc:Fault</apiBaseClassifier></apiClassifierDef><apiDesc>

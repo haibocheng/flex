@@ -8,6 +8,31 @@
 	 property of the flow. (To allow editing, assign an instance of the EditManager class,
 	 which extends SelectionManager.)</p>
 	 
+	 <p>The following table describes how the SelectionManager class handles keyboard shortcuts:</p>
+	 
+	 <adobetable class="innertable">
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 <tgroup cols="13"><thead><row><row><entry/><entry/><entry align="center">TB,LTR</entry><entry align="right"/><entry/><entry align="center">TB,RTL</entry><entry/><entry/><entry align="center">TL,LTR</entry><entry/><entry/><entry align="center">RL,RTL</entry><entry/></row><row><entry/><entry>none</entry><entry>ctrl</entry><entry>alt|ctrl+alt</entry><entry>none</entry><entry>ctrl</entry><entry>alt|ctrl+alt</entry><entry>none</entry><entry>ctrl</entry><entry>alt|ctrl+alt</entry><entry>none</entry><entry>ctrl</entry><entry>alt|ctrl+alt</entry></row></row></thead><tbody><row><entry>leftarrow</entry><entry>previousCharacter</entry><entry>previousWord</entry><entry>previousWord</entry><entry>nextCharacter</entry><entry>nextWord</entry><entry>nextWord</entry><entry>nextLine</entry><entry>endOfDocument</entry><entry>endOfParagraph</entry><entry>nextLine</entry><entry>endOfDocument</entry><entry>endOfParagraph</entry></row><row><entry>uparrow</entry><entry>previousLine</entry><entry>startOfDocument</entry><entry>startOfParagraph</entry><entry>previousLine</entry><entry>startOfDocument</entry><entry>startOfParagraph</entry><entry>previousCharacter</entry><entry>previousWord</entry><entry>previousWord</entry><entry>nextCharacter</entry><entry>nextWord</entry><entry>nextWord</entry></row><row><entry>rightarrow</entry><entry>nextCharacter</entry><entry>nextWord</entry><entry>nextWord</entry><entry>previousCharacter</entry><entry>previousWord</entry><entry>previousWord</entry><entry>previousLine</entry><entry>startOfDocument</entry><entry>startOfParagraph</entry><entry>previousLine</entry><entry>startOfDocument</entry><entry>startOfParagraph</entry></row><row><entry>downarrow</entry><entry>nextLine</entry><entry>endOfDocument</entry><entry>endOfParagraph</entry><entry>nextLine</entry><entry>endOfDocument</entry><entry>endOfParagraph</entry><entry>nextCharacter</entry><entry>nextWord</entry><entry>nextWord</entry><entry>previousCharacter</entry><entry>previousWord</entry><entry>previousWord</entry></row><row><entry>home</entry><entry>startOfLine</entry><entry>startOfDocument</entry><entry>startOfLine</entry><entry>startOfLine</entry><entry>startOfDocument</entry><entry>startOfLine</entry><entry>startOfLine</entry><entry>startOfDocument</entry><entry>startOfLine</entry><entry>startOfLine</entry><entry>startOfDocument</entry><entry>startOfLine</entry></row><row><entry>end</entry><entry>endOfLine</entry><entry>endOfDocument</entry><entry>endOfLine</entry><entry>endOfLine</entry><entry>endOfDocument</entry><entry>endOfLine</entry><entry>endOfLine</entry><entry>endOfDocument</entry><entry>endOfLine</entry><entry>endOfLine</entry><entry>endOfDocument</entry><entry>endOfLine</entry></row><row><entry>pagedown</entry><entry>nextPage</entry><entry>nextPage</entry><entry>nextPage</entry><entry>nextPage</entry><entry>nextPage</entry><entry>nextPage</entry><entry>nextPage</entry><entry>nextPage</entry><entry>nextPage</entry><entry>nextPage</entry><entry>nextPage</entry><entry>nextPage</entry></row><row><entry>pageup</entry><entry>previousPage</entry><entry>previousPage</entry><entry>previousPage</entry><entry>previousPage</entry><entry>previousPage</entry><entry>previousPage</entry><entry>previousPage</entry><entry>previousPage</entry><entry>previousPage</entry><entry>previousPage</entry><entry>previousPage</entry><entry>previousPage</entry></row></tbody></tgroup></adobetable>
+	 
+	 <p><b>Key:</b>
+	 <ul>
+	 <li>none = no modifier</li>
+	 <li>ctrl, shift, alt = modifiers</li>
+	 <li>alt-key and ctrl+alt-key are the same on all platforms (on some platforms alt-key does not get to TLF)</li>
+	 <li>shift key modifes to extend the active end of the selection in the specified manner</li>			
+	 <li>TB (top-to-bottom),RL (right-to-left) are textFlow level <codeph>blockProgression</codeph> settings</li>						
+	 	<li>LTR (left-to-right),RTL (right-to-left) are textFlow level <codeph>direction</codeph> settings</li>					
+	 <li>next and prev in logical order in the textFlow - the effect in RTL text is that the selection moves in the physical direction</li>
+	 </ul></p>
+	 
 	 </apiDesc><example conref="examples\SelectionManager_example.as"/></apiClassifierDetail><related-links><link href="flashx.textLayout.edit.xml#EditManager"><linktext>EditManager</linktext></link><link href="" invalidHref="flashx.elements.TextFlow.xml"><linktext>flashx.elements.TextFlow</linktext></link></related-links><apiConstructor id="flashx.textLayout.edit:SelectionManager:SelectionManager"><apiName>SelectionManager</apiName><shortdesc> 
 		 
 		 Creates a SelectionManager object.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/></apiConstructorDef><apiDesc> 
@@ -91,14 +116,11 @@
 		  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>anchorPosition</apiItemName><apiType value="int"/></apiParam><apiParam><apiItemName>activePosition</apiItemName><apiType value="int"/></apiParam></apiOperationDef><apiDesc conref="ISelectionManager#selectRange"> 
 		  </apiDesc><example conref="examples\SelectionManager_selectRange.as"/></apiOperationDetail><related-links><link href="flashx.textLayout.compose.xml#IFlowComposer"><linktext>flashx.textLayout.compose.IFlowComposer</linktext></link></related-links></apiOperation><apiOperation id="flashx.textLayout.edit:SelectionManager:setFocus"><apiName>setFocus</apiName><shortdesc conref="ISelectionManager#setFocus()"> 
 		  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc conref="ISelectionManager#setFocus()"> 
-		  </apiDesc><example conref="examples\SelectionManager_setFocus.as"/></apiOperationDetail></apiOperation><apiOperation id="flashx.textLayout.edit:SelectionManager:textInputHandler"><apiName>textInputHandler</apiName><shortdesc conref="IInteractionEventHandler#textInputHandler()"> 
+		  </apiDesc><example conref="examples\SelectionManager_setFocus.as"/></apiOperationDetail></apiOperation><apiOperation id="flashx.textLayout.edit:SelectionManager:setSelectionState"><apiName>setSelectionState</apiName><shortdesc conref="ISelectionManager#setSelectionState()">
+		 </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>sel</apiItemName><apiOperationClassifier>flashx.textLayout.edit:SelectionState</apiOperationClassifier></apiParam></apiOperationDef><apiDesc conref="ISelectionManager#setSelectionState()">
+		 </apiDesc></apiOperationDetail><related-links><link href="flashx.textLayout.edit.xml#SelectionState"><linktext>flashx.textLayout.edit.SelectionState</linktext></link></related-links></apiOperation><apiOperation id="flashx.textLayout.edit:SelectionManager:textInputHandler"><apiName>textInputHandler</apiName><shortdesc conref="IInteractionEventHandler#textInputHandler()"> 
 		 </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>event</apiItemName><apiType value="flash.events:TextEvent"/></apiParam></apiOperationDef><apiDesc conref="IInteractionEventHandler#textInputHandler()"> 
-		 </apiDesc></apiOperationDetail></apiOperation><apiValue id="flashx.textLayout.edit:SelectionManager:protected:pointFormat"><apiName>pointFormat</apiName><shortdesc> 
-		 The format that will be applied to inserted text.</shortdesc><prolog/><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="protected"/><apiDynamic/><apiValueClassifier>flashx.textLayout.formats:ITextLayoutFormat</apiValueClassifier></apiValueDef><apiDesc> 
-		 The format that will be applied to inserted text. 
-		 
-		 TBD: pointFormat needs to be extended to remember user styles and "undefine" of formats from calls to IEditManager.undefineFormat with leafFormat values on a point selection.
-		 </apiDesc></apiValueDetail></apiValue><apiValue id="flashx.textLayout.edit:SelectionManager:absoluteEnd:get"><apiName>absoluteEnd</apiName><shortdesc conref="ISelectionManager#absoluteEnd">
+		 </apiDesc></apiOperationDetail></apiOperation><apiValue id="flashx.textLayout.edit:SelectionManager:absoluteEnd:get"><apiName>absoluteEnd</apiName><shortdesc conref="ISelectionManager#absoluteEnd">
 		  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="int"/></apiValueDef><apiDesc conref="ISelectionManager#absoluteEnd">
 		  </apiDesc></apiValueDetail></apiValue><apiValue id="flashx.textLayout.edit:SelectionManager:absoluteStart:get"><apiName>absoluteStart</apiName><shortdesc conref="ISelectionManager#absoluteStart">
 		  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="int"/></apiValueDef><apiDesc conref="ISelectionManager#absoluteStart">
@@ -112,7 +134,12 @@
 		  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="String"/></apiValueDef><apiDesc conref="ISelectionManager#editingMode">
 		  </apiDesc></apiValueDetail><related-links><link href="flashx.textLayout.edit.xml#EditingMode"><linktext>flashx.textLayout.edit.EditingMode</linktext></link></related-links></apiValue><apiValue id="flashx.textLayout.edit:SelectionManager:focused:get"><apiName>focused</apiName><shortdesc conref="ISelectionManager#focused"> 
 		  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Boolean"/></apiValueDef><apiDesc conref="ISelectionManager#focused"> 
-		  </apiDesc></apiValueDetail></apiValue><apiValue id="flashx.textLayout.edit:SelectionManager:textFlow:get"><apiName>textFlow</apiName><shortdesc>
+		  </apiDesc></apiValueDetail></apiValue><apiValue id="flashx.textLayout.edit:SelectionManager:protected:pointFormat:get"><apiName>pointFormat</apiName><shortdesc> 
+		 The format that will be applied to inserted text.</shortdesc><prolog/><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="protected"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>flashx.textLayout.formats:ITextLayoutFormat</apiValueClassifier></apiValueDef><apiDesc> 
+		 The format that will be applied to inserted text. 
+		 
+		 TBD: pointFormat needs to be extended to remember user styles and "undefine" of formats from calls to IEditManager.undefineFormat with leafFormat values on a point selection.
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flashx.textLayout.edit:SelectionManager:textFlow:get"><apiName>textFlow</apiName><shortdesc>
 		 The TextFlow object managed by this selection manager.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>flashx.textLayout.elements:TextFlow</apiValueClassifier></apiValueDef><apiDesc>
 		 The TextFlow object managed by this selection manager. 
 		 
@@ -261,7 +288,7 @@
 		 get all the applicable style definitions, use the <codeph>getCommonCharacterFormats()</codeph>
 		 method of the ISelectionManager class.</p>
 		 
-		 </apiDesc></apiValueDetail><related-links><link href="flashx.textLayout.edit.xml#ISelectionManager/getCommonCharacterFormats()"><linktext>ISelectionManager.getCommonCharacterFormats()</linktext></link></related-links></apiValue></apiClassifier><apiClassifier id="flashx.textLayout.edit:IEditManager"><apiName>IEditManager</apiName><shortdesc> 
+		 </apiDesc></apiValueDetail><related-links><link href="flashx.textLayout.edit.xml#ISelectionManager/getCommonCharacterFormats()"><linktext>ISelectionManager.getCommonCharacterFormats()</linktext></link></related-links></apiValue><apiValue id="flashx.textLayout.edit:SelectionState:tlf_internal:selectionManagerOperationState:set"><apiName>selectionManagerOperationState</apiName><shortdesc/><prolog/><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="tlf_internal"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Boolean"/></apiValueDef></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flashx.textLayout.edit:IEditManager"><apiName>IEditManager</apiName><shortdesc> 
 	 IEditManager defines the interface for handling edit operations of a text flow.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiInterface/><apiAccess value="public"/><apiStatic/><apiBaseInterface>flashx.textLayout.edit:ISelectionManager</apiBaseInterface><apiBaseClassifier></apiBaseClassifier></apiClassifierDef><apiDesc> 
 	 IEditManager defines the interface for handling edit operations of a text flow.
 	 
@@ -744,7 +771,11 @@
 		 Gives the focus to the first container in the selection.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc> 
 		 Gives the focus to the first container in the selection.
 		  
-		 </apiDesc><example conref="examples\SelectionManager_setFocus.as"/></apiOperationDetail></apiOperation><apiValue id="flashx.textLayout.edit:ISelectionManager:flashx.textLayout.edit:ISelectionManager:absoluteEnd:get"><apiName>absoluteEnd</apiName><shortdesc> 
+		 </apiDesc><example conref="examples\SelectionManager_setFocus.as"/></apiOperationDetail></apiOperation><apiOperation id="flashx.textLayout.edit:ISelectionManager:flashx.textLayout.edit:ISelectionManager:setSelectionState"><apiName>setSelectionState</apiName><shortdesc>
+		 Sets the SelectionState object of the current selection.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>state</apiItemName><apiOperationClassifier>flashx.textLayout.edit:SelectionState</apiOperationClassifier></apiParam></apiOperationDef><apiDesc>
+		 Sets the SelectionState object of the current selection.
+		 
+		 </apiDesc></apiOperationDetail><related-links><link href="flashx.textLayout.edit.xml#SelectionState"><linktext>flashx.textLayout.edit.SelectionState</linktext></link></related-links></apiOperation><apiValue id="flashx.textLayout.edit:ISelectionManager:flashx.textLayout.edit:ISelectionManager:absoluteEnd:get"><apiName>absoluteEnd</apiName><shortdesc> 
 		 The text position of the end of the selection, as an offset from the start of the text flow.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="int"/></apiValueDef><apiDesc> 
 		 The text position of the end of the selection, as an offset from the start of the text flow.
 		  
@@ -834,6 +865,29 @@
 	 property of the TextFlow object. The edit manager handles changes to the text (such as insertions, 
 	 deletions, and format changes). Changes are reversible if the edit manager has an undo manager. The edit
 	 manager triggers the recomposition and display of the text flow, as necessary.</p>
+	 
+	 <p>The EditManager class supports the following keyboard shortcuts:</p>
+	 
+	 <adobetable class="innertable">
+	      
+	      					
+	 						
+	 						
+	 						
+	 						
+	 						
+	 						
+	 						
+	 						
+	 						
+	 						
+	 						
+	 						
+	 	    
+	 <tgroup cols="2"><thead><row><entry>Keys</entry><entry>Result</entry></row></thead><tbody><row><entry>ctrl-z</entry><entry>undo</entry></row><row><entry>ctrl-y</entry><entry>redo</entry></row><row><entry>ctrl-backspace</entry><entry>deletePreviousWord</entry></row><row><entry>ctrl-delete</entry><entry>deleteNextWord</entry></row><row><entry>alt+delete</entry><entry>deleteNextWord</entry></row><row><entry>ctrl+alt-delete</entry><entry>deleteNextWord</entry></row><row><entry>ctrl-shift-hyphen</entry><entry>insert discretionary hyphen</entry></row><row><entry>ctrl+backspace</entry><entry>deletePreviousWord</entry></row><row><entry>alt+backspace</entry><entry>deletePreviousWord</entry></row><row><entry>ctrl+alt-backspace</entry><entry>deletePreviousWord</entry></row><row><entry>INSERT</entry><entry>toggles overWriteMode</entry></row><row><entry>backspace</entry><entry>deletePreviousCharacter</entry></row><row><entry>ENTER</entry><entry>if textFlow.configuration.manageEnterKey splitParagraph</entry></row><row><entry>TAB</entry><entry>if textFlow.configuration.manageTabKey insert a TAB or overwrite next character with a TAB</entry></row></tbody></tgroup></adobetable>
+	 
+	 <p><b>Note:</b> The following keys do not work on Windows: alt-backspace, alt-delete, ctrl+alt-backspace,
+	 and ctrl+alt-delete. These keys do not generate an event for the runtime.</p>						
  	 
  	 </apiDesc><example conref="examples\EditManager_example.as"/></apiClassifierDetail><related-links><link href="flashx.textLayout.elements.xml#TextFlow"><linktext>flashx.textLayout.elements.TextFlow</linktext></link><link href="flashx.undo.xml#UndoManager"><linktext>flashx.undo.UndoManager</linktext></link></related-links><apiConstructor id="flashx.textLayout.edit:EditManager:EditManager"><apiName>EditManager</apiName><shortdesc> 
 		 Creates an EditManager object.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>undoManager</apiItemName><apiOperationClassifier>flashx.undo:IUndoManager</apiOperationClassifier><apiData>null</apiData><apiDesc>The UndoManager for the application
@@ -1154,7 +1208,9 @@
 		 the highlight colors, 1.0 for the alphas, and BlendMode.DIFFERENCE for the blending modes.
 		 The cursor blink rate is 500 milliseconds.</p>
 		 
-		 </apiDesc></apiConstructorDetail><related-links><link href="" invalidHref="flash.display.BlendMode.xml"><linktext>flash.display.BlendMode</linktext></link></related-links></apiConstructor><apiOperation id="flashx.textLayout.edit:SelectionFormat:equals"><apiName>equals</apiName><shortdesc>
+		 <p>Setting the <codeph>pointAlpha</codeph> and <codeph>rangeAlpha</codeph> properties to zero disables selection highlighting.</p>
+		 
+		 </apiDesc></apiConstructorDetail><related-links><link href="" invalidHref="flash.display.BlendMode.xml"><linktext>flash.display.BlendMode</linktext></link><link href="flashx.textLayout.edit.xml#SelectionFormat/pointAlpha"><linktext>pointAlpha</linktext></link><link href="flashx.textLayout.edit.xml#SelectionFormat/rangeAlpha"><linktext>rangeAlpha</linktext></link></related-links></apiConstructor><apiOperation id="flashx.textLayout.edit:SelectionFormat:equals"><apiName>equals</apiName><shortdesc>
 		 Determines whether this SelectionFormat object has the same property values
 		 as another SelectionFormat object.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc><codeph>true</codeph>, if the property values are identical; <codeph>false</codeph>, otherwise.
 		 
@@ -1165,9 +1221,12 @@
 		  
 		 </apiDesc></apiOperationDetail></apiOperation><apiValue id="flashx.textLayout.edit:SelectionFormat:pointAlpha:get"><apiName>pointAlpha</apiName><shortdesc>
 		 The alpha for drawing the cursor.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
-		 The alpha for drawing the cursor.
+		 The alpha for drawing the cursor. Valid values are between 0
+		 (completely transparent) and 1 (completely opaque, which is the default).
 		 
-		 </apiDesc></apiValueDetail></apiValue><apiValue id="flashx.textLayout.edit:SelectionFormat:pointBlendMode:get"><apiName>pointBlendMode</apiName><shortdesc>
+		 <p>Setting the <codeph>pointAlpha</codeph> and <codeph>rangeAlpha</codeph> properties to zero disables selection highlighting.</p>
+		 
+		 </apiDesc></apiValueDetail><related-links><link href="flashx.textLayout.edit.xml#SelectionFormat/rangeAlpha"><linktext>rangeAlpha</linktext></link></related-links></apiValue><apiValue id="flashx.textLayout.edit:SelectionFormat:pointBlendMode:get"><apiName>pointBlendMode</apiName><shortdesc>
 		 The blend mode for drawing the cursor.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="String"/></apiValueDef><apiDesc>
 		 The blend mode for drawing the cursor.
 		 
@@ -1181,9 +1240,12 @@
 		 
 		 </apiDesc></apiValueDetail></apiValue><apiValue id="flashx.textLayout.edit:SelectionFormat:rangeAlpha:get"><apiName>rangeAlpha</apiName><shortdesc>
 		 The alpha for drawing the highlight of a range selection.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
-		 The alpha for drawing the highlight of a range selection.
+		 The alpha for drawing the highlight of a range selection. Valid values are between 0
+		 (completely transparent) and 1 (completely opaque, which is the default).
 		 
-		 </apiDesc></apiValueDetail></apiValue><apiValue id="flashx.textLayout.edit:SelectionFormat:rangeBlendMode:get"><apiName>rangeBlendMode</apiName><shortdesc>
+		 <p>Setting the <codeph>pointAlpha</codeph> and <codeph>rangeAlpha</codeph> properties to zero disables selection highlighting.</p>
+		 
+		 </apiDesc></apiValueDetail><related-links><link href="flashx.textLayout.edit.xml#SelectionFormat/pointAlpha"><linktext>pointAlpha</linktext></link></related-links></apiValue><apiValue id="flashx.textLayout.edit:SelectionFormat:rangeBlendMode:get"><apiName>rangeBlendMode</apiName><shortdesc>
 		 The blending mode for drawing the highlight of a range selection.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="String"/></apiValueDef><apiDesc>
 		 The blending mode for drawing the highlight of a range selection. 
 		 

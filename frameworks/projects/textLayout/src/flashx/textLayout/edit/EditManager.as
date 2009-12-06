@@ -539,7 +539,7 @@ package flashx.textLayout.edit
 				// user may replace the operation - TODO: WHAT IF SWITCH TO UNDO/REDO????
 				op = opEvent.operation;
 				if ((op is UndoOperation) || (op is RedoOperation))
-					throw new IllegalOperationError(GlobalSettings.getResourceStringFunction("illegalOperation",[ getQualifiedClassName(op) ]));
+					throw new IllegalOperationError(GlobalSettings.resourceStringFunction("illegalOperation",[ getQualifiedClassName(op) ]));
 			}
 				
 			var opError:Error = null;
@@ -665,7 +665,7 @@ package flashx.textLayout.edit
 				}
 				undoPsuedoOp = opEvent.operation as UndoOperation;
 				if (!undoPsuedoOp)
-					throw new IllegalOperationError(GlobalSettings.getResourceStringFunction("illegalOperation",[ getQualifiedClassName(opEvent.operation) ]));
+					throw new IllegalOperationError(GlobalSettings.resourceStringFunction("illegalOperation",[ getQualifiedClassName(opEvent.operation) ]));
 				operation = undoPsuedoOp.operation;
 			}
 					
@@ -757,7 +757,7 @@ package flashx.textLayout.edit
 				}
 				redoPsuedoOp = opEvent.operation as RedoOperation;
 				if (!redoPsuedoOp)
-					throw new IllegalOperationError(GlobalSettings.getResourceStringFunction("illegalOperation",[ getQualifiedClassName(opEvent.operation) ]));
+					throw new IllegalOperationError(GlobalSettings.resourceStringFunction("illegalOperation",[ getQualifiedClassName(opEvent.operation) ]));
 				op = redoPsuedoOp.operation;
 			}
 					

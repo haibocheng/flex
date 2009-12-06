@@ -422,6 +422,18 @@ package flashx.textLayout.edit
 			 }
 		 }
 		 
+		 /** @private */
+		 tlf_internal function cloneSelectionFormatState(oldISelectionManager:ISelectionManager):void
+		 {
+			var oldSelectionManager:SelectionManager = oldISelectionManager as SelectionManager;
+			if (oldSelectionManager)
+			{
+				_isActive = oldSelectionManager._isActive;
+				_mouseOverSelectionArea = oldSelectionManager._mouseOverSelectionArea;
+				setSelectionFormatState(oldSelectionManager.selectionFormatState);
+			}
+		 }
+		 
 		/**
 		 * Gets the SelectionState at the specified mouse position.
 		 * @playerversion Flash 10
@@ -1467,7 +1479,7 @@ package flashx.textLayout.edit
 				
 				// only copy operation is allowed
 				if (!(op is CopyOperation))
-					throw new IllegalOperationError(GlobalSettings.getResourceStringFunction("illegalOperation",[ getQualifiedClassName(op) ]));
+					throw new IllegalOperationError(GlobalSettings.resourceStringFunction("illegalOperation",[ getQualifiedClassName(op) ]));
 				var opError:Error = null;
 				try
 				{

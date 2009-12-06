@@ -1,0 +1,212 @@
+<?xml version="1.0"?>
+<apiPackage id="flash.net.drm"><apiName>flash.net.drm</apiName><apiDetail/><apiClassifier id="flash.net.drm:DRMContentData"><apiName>DRMContentData</apiName><shortdesc>
+	 Die DRMContentData-Klasse stellt die Informationen bereit, die nötig sind, um den notwendigen Gutschein für die Anzeige von DRM-geschützten Inhalten zu erhalten.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 Die DRMContentData-Klasse stellt die Informationen bereit, die nötig sind, um den notwendigen Gutschein für die Anzeige von DRM-geschützten Inhalten zu erhalten.
+	 
+	 <p>Ein DRMContentData-Objekt kann von einer NetStream-Instanz durch Aufrufen der NetStream <codeph>preloadEmbeddedContent()</codeph>-Methode und Bereitstellung einer <codeph>onDRMContentData</codeph>-Callback-Funktion auf dem NetStream-Clientobjekt erhalten werden. Verwenden Sie das DRMContentData-Objekt, das an die Callback-Funktion übergeben wurde, als Parameter für die DRMManager <codeph>loadVoucher()</codeph>-Methode.</p>
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="flash.net.xml#NetStream"><linktext>flash.net.NetStream</linktext></link><link href="flash.net.drm.xml#DRMManager"><linktext>flash.net.drm.DRMManager</linktext></link><link href="flash.net.drm.xml#DRMVoucher"><linktext>flash.net.drm.DRMVoucher</linktext></link></related-links><apiValue id="flash.net.drm:DRMContentData:authenticationMethod:get"><apiName>authenticationMethod</apiName><shortdesc>
+		 Der erforderliche Authentifizierungstyp, um einen Gutschein für den verknüpften Inhalt zu erhalten.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 Der erforderliche Authentifizierungstyp, um einen Gutschein für den verknüpften Inhalt zu erhalten.
+		 
+		 <p>Folgende Authentifizierungstypen werden unterstützt:</p>
+		 <ul>
+		 <li>AuthenticationMethod.ANONYMOUS: Jeder kann einen Gutschein erhalten.</li>
+		 <li>AuthenticationMethod.USERNAME_AND_PASSWORD: Um einen Gutschein zu erhalten, müssen der Benutzername und das Kennwort eines Kontos angegeben werden, das den verknüpften Inhalt anzeigen darf.</li>
+		 </ul>
+		 
+		 <p>Die AuthenticationMethod-Klasse liefert Stringkonstanten, die mit der <codeph>authenticationMethod</codeph>-Eigenschaft zu verwenden sind.</p>
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:DRMContentData:domain:get"><apiName>domain</apiName><shortdesc>
+		 Die Inhaltsdomäne des Medienrechteservers, für den der Benutzer authentifiziert sein muss, um den Gutschein für den verknüpften Inhalt zu erhalten.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 Die Inhaltsdomäne des Medienrechteservers, für den der Benutzer authentifiziert sein muss, um den Gutschein für den verknüpften Inhalt zu erhalten.
+		 
+		 <p>Wenn die Authentifizierung bei der <i>default</i>-Domäne erfolgt oder keine Authentifizierung erforderlich ist, ist der <codeph>domainName</codeph> gleich <codeph>null</codeph>.</p>
+		 
+		 <p><b>Hinweis:</b> Die von dieser Eigenschaft zurückgegebene Domäne hat nichts mit Netzwerk- oder Internetdomänennamen zu tun. In diesem Fall ist eine Domäne eine Gruppe von Inhalts- oder Benutzerkonten. Beispielsweise könnte ein einzelner Server mehrere Domänen unterstützen, die jeweils eine eigene Gruppe von Kanälen und Teilnehmern haben.</p>
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:DRMContentData:licenseID:get"><apiName>licenseID</apiName><shortdesc>
+		 Eine eindeutige ID, die den Inhalt identifiziert, der mit diesen auf dem Medienrechteserver liegenden Metadaten verknüpft ist.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 Eine eindeutige ID, die den Inhalt identifiziert, der mit diesen auf dem Medienrechteserver liegenden Metadaten verknüpft ist.
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:DRMContentData:serverURL:get"><apiName>serverURL</apiName><shortdesc>
+		 Die URL eines Medienrechteservers, der einen Gutschein zum Anzeigen von verknüpften Inhalten bereitstellt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 Die URL eines Medienrechteservers, der einen Gutschein zum Anzeigen von verknüpften Inhalten bereitstellt.
+		 
+		 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.net.drm:DRMVoucher"><apiName>DRMVoucher</apiName><shortdesc>
+	 Die DRMVoucher-Klasse stellt ein Lizenztoken dar, welches einem Benutzer erlaubt, DRM-geschützte Inhalte anzuzeigen.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 Die DRMVoucher-Klasse stellt ein Lizenztoken dar, das einem Benutzer erlaubt, DRM-geschützte Inhalte anzuzeigen.
+	 
+	 <p>Die DRMVoucher-Eigenschaften beschreiben die Anzeigerechte, die durch den Gutschein gewährt werden. Ein Gutschein kann über die <codeph>loadVoucher()</codeph>-Methode des DRMManager-Objekts erhalten werden. Für diese Methode ist ein DRMContentData-Objekt erforderlich, das über die <codeph>preloadEmbeddedMetadata()</codeph>-Methode der NetStream-Klasse erhalten werden kann.</p>
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="flash.net.drm.xml#DRMContentData"><linktext>flash.net.drm.DRMContentData</linktext></link><link href="flash.net.drm.xml#DRMManager/loadVoucher()"><linktext>flash.net.drm.DRMManager.loadVoucher()</linktext></link><link href="flash.net.xml#NetStream/preloadEmbeddedMetaData()"><linktext>flash.net.NetStream.preloadEmbeddedMetaData()</linktext></link></related-links><apiValue id="flash.net.drm:DRMVoucher:offlineLeaseEndDate:get"><apiName>offlineLeaseEndDate</apiName><shortdesc>
+		 Datum und Uhrzeit, zu der die Gültigkeit des Gutscheins für die Offline-Wiedergabe abläuft.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Date</apiValueClassifier></apiValueDef><apiDesc>
+		 Datum und Uhrzeit, zu der die Gültigkeit des Gutscheins für die Offline-Wiedergabe abläuft.
+		 
+		 <p>Ist ein Gutschein nur für die aktuelle Online-Sitzung gültig, ist <codeph>offlineLeaseStartDate</codeph> <codeph>null</codeph>.</p>
+		 
+ 		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:DRMVoucher:offlineLeaseStartDate:get"><apiName>offlineLeaseStartDate</apiName><shortdesc>
+		 Datum und Uhrzeit, zu der die Gültigkeit des Gutscheins für die Offline-Wiedergabe beginnt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Date</apiValueClassifier></apiValueDef><apiDesc>
+		 Datum und Uhrzeit, zu der die Gültigkeit des Gutscheins für die Offline-Wiedergabe beginnt.
+		 
+		 <p>Ist ein Gutschein nur für die aktuelle Online-Sitzung gültig, ist <codeph>offlineLeaseStartDate</codeph> <codeph>null</codeph>.</p>
+		 
+	 	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:DRMVoucher:playbackTimeWindow:get"><apiName>playbackTimeWindow</apiName><shortdesc>
+		 Der Zeitabschnitt nach dem ersten Anzeigen, während dessen der verwandte Inhalt angezeigt oder überarbeitet werden kann.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>flash.net.drm:DRMPlaybackTimeWindow</apiValueClassifier></apiValueDef><apiDesc>
+		 Der Zeitabschnitt nach dem ersten Anzeigen, während dessen der verwandte Inhalt angezeigt oder überarbeitet werden kann.
+		 
+		 <p>Das Wiedergabefenster wird geöffnet, wenn der Benutzer den Inhalt zum ersten Mal anzeigt, und wieder geschlossen, nachdem die erlaubte Zeitspanne verstrichen ist. Wenn kein Wiedergabefenster erlaubt ist, ist <codeph>playbackTimeWindow</codeph> gleich <codeph>null</codeph>. </p>
+		 
+	 	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:DRMVoucher:policies:get"><apiName>policies</apiName><shortdesc>
+		 Ein dynamisches Objekt, das anwendungsdefinierte Richtlinien meldet.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Object</apiValueClassifier></apiValueDef><apiDesc>
+		 Ein dynamisches Objekt, das anwendungsdefinierte Richtlinien meldet.
+		 
+		 <p>Das Richtlinienobjekt enthält ein Name-Wert-Paar für jede Richtlinie, die in Kraft ist.</p>
+		  
+	 	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:DRMVoucher:voucherEndDate:get"><apiName>voucherEndDate</apiName><shortdesc>
+		 Das Datum, an dem die Gültigkeit des Gutscheins abläuft.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Date</apiValueClassifier></apiValueDef><apiDesc>
+		 Das Datum, an dem die Gültigkeit des Gutscheins abläuft.
+		 
+	 	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:DRMVoucher:voucherStartDate:get"><apiName>voucherStartDate</apiName><shortdesc>
+		 Der Anfang des Gültigkeitszeitraums des Gutscheins.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Date</apiValueClassifier></apiValueDef><apiDesc>
+		 Der Anfang des Gültigkeitszeitraums des Gutscheins.
+		    
+	 	 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.net.drm:DRMPlaybackTimeWindow"><apiName>DRMPlaybackTimeWindow</apiName><shortdesc>
+	 Die DRMPlaybackWindow-Klasse stellt den Zeitraum dar, in dem der DRM-Gutschein gültig ist.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 Die DRMPlaybackWindow-Klasse stellt den Zeitraum dar, in dem der DRM-Gutschein gültig ist.
+	 
+	 <p>Die <codeph>startDate</codeph>- und <codeph>endDate</codeph>-Eigenschaft ist <codeph>null</codeph>, bis der Benutzer zum ersten Mal den Inhalt anzeigt.</p>
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="flash.net.drm.xml#DRMVoucher"><linktext>flash.net.drm.DRMVoucher</linktext></link></related-links><apiValue id="flash.net.drm:DRMPlaybackTimeWindow:endDate:get"><apiName>endDate</apiName><shortdesc>
+		 Das Datum, an dem das Wiedergabefenster endet.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Date</apiValueClassifier></apiValueDef><apiDesc>
+		 Das Datum, an dem das Wiedergabefenster endet.
+		 
+		 <p>Das <codeph>endDate</codeph> ist <codeph>null</codeph>, wenn das Wiedergabefenster noch nicht begonnen hat.</p> 
+		 
+	 	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:DRMPlaybackTimeWindow:period:get"><apiName>period</apiName><shortdesc>
+		 Die Dauer des Zeitfensters in Millisekunden.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>uint</apiValueClassifier></apiValueDef><apiDesc>
+		 Die Dauer des Zeitfensters in Millisekunden. 
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:DRMPlaybackTimeWindow:startDate:get"><apiName>startDate</apiName><shortdesc>
+		 Das Datum, an dem das Wiedergabefenster begann.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Date</apiValueClassifier></apiValueDef><apiDesc>
+		 Das Datum, an dem das Wiedergabefenster begann.
+		 
+		 <p>Das <codeph>startDate</codeph> ist <codeph>null</codeph>, wenn das Wiedergabefenster noch nicht begonnen hat.</p> 
+		 
+	 	 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.net.drm:LoadVoucherSetting"><apiName>LoadVoucherSetting</apiName><shortdesc>
+	 Die LoadVoucherSetting-Klasse liefert Stringkonstanten, die die mit dem DRMManager settings-Parameter der loadVoucher()-Methode zu verwendenden Optionen auflisten.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 Die LoadVoucherSetting-Klasse liefert Stringkonstanten, die die mit dem DRMManager <codeph>settings</codeph>-Parameter der <codeph>loadVoucher()</codeph>-Methode zu verwendenden Optionen auflisten.
+	 
+	 </apiDesc></apiClassifierDetail><apiValue id="flash.net.drm:LoadVoucherSetting:ALLOW_SERVER"><apiName>ALLOW_SERVER</apiName><shortdesc>
+	  Wenn möglich, laden Sie den Gutschein aus dem lokalen Cache.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>allowServer</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	  Wenn möglich, laden Sie den Gutschein aus dem lokalen Cache. Laden Sie den Gutschein nur von einem Medienrechteserver herunter, wenn keine lokal zwischengespeicherte Kopie vorhanden ist.
+	  
+	  </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:LoadVoucherSetting:FORCE_REFRESH"><apiName>FORCE_REFRESH</apiName><shortdesc>
+	  Laden Sie den Gutschein nur vom Medienrechteserver herunter.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>forceRefresh</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	  Laden Sie den Gutschein nur vom Medienrechteserver herunter. Laden Sie den Gutschein nicht aus dem lokalen Cache.
+	  
+	  </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:LoadVoucherSetting:LOCAL_ONLY"><apiName>LOCAL_ONLY</apiName><shortdesc>
+	  Laden Sie den Gutschein nur aus dem lokalen Cache.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>localOnly</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	  Laden Sie den Gutschein nur aus dem lokalen Cache. Laden Sie den Gutschein nicht von einem Medienrechteserver herunter.
+	  
+	  </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.net.drm:AuthenticationMethod"><apiName>AuthenticationMethod</apiName><shortdesc>
+	 Die AuthenticationMethod-Klasse liefert Stringkonstanten, die die verschiedenen von der authenticationMethod-Eigenschaft der DRMContentData-Klasse verwendeten Authentifizierungsmethoden auflistet.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 Die AuthenticationMethod-Klasse liefert Stringkonstanten, die die verschiedenen von der <codeph>authenticationMethod</codeph>-Eigenschaft der DRMContentData-Klasse verwendeten Authentifizierungsmethoden auflistet.
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="flash.net.drm.xml#DRMContentData"><linktext>flash.net.drm.DRMContentData</linktext></link></related-links><apiValue id="flash.net.drm:AuthenticationMethod:ANONYMOUS"><apiName>ANONYMOUS</apiName><shortdesc>
+		 Es ist keine Authentifizierung erforderlich.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>anonymous</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 Es ist keine Authentifizierung erforderlich.
+		 
+	 	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:AuthenticationMethod:USERNAME_AND_PASSWORD"><apiName>USERNAME_AND_PASSWORD</apiName><shortdesc>
+		 Ein gültiges Benutzerkonto und Kennwort werden benötigt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>usernameAndPassword</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 Ein gültiges Benutzerkonto und Kennwort werden benötigt. 
+		 
+	 	 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.net.drm:DRMManager"><apiName>DRMManager</apiName><shortdesc>
+	 DRMManager verwaltet Abruf und Speicherung der zum Anzeigen von DRM-geschützten Inhalten benötigten Gutscheine.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.events:EventDispatcher</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 DRMManager verwaltet Abruf und Speicherung der zum Anzeigen von DRM-geschützten Inhalten benötigten Gutscheine.
+	 
+	 <p>Sie können Gutscheine von einem Medienrechteserver über ein DRMContentData-Objekt, das von den Metadaten einer DRM-geschützten Mediendatei erhalten wurde, vorab laden. Sie können den lokalen Cache nach einem einzelnen Gutschein über ein DRMContentData-Objekt abfragen. Und Sie können alle Gutscheine zurücksetzen. Für die Auflistung aller Gutscheine im lokalen Cache ist keine Methode zur Verfügung gestellt.</p>
+	 
+	 <p>Ihre Anwendung sollte keine neuen Instanzen der DRMManager-Klasse erzeugen. Verwenden Sie die statische <codeph>DRMManager.getDRMManager()</codeph>-Methode, um auf das vorhandene DRMManager-Objekt zuzugreifen.</p>
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="flash.net.xml#NetStream"><linktext>flash.net.NetStream</linktext></link><link href="flash.net.drm.xml#DRMVoucher"><linktext>flash.net.drm.DRMVoucher</linktext></link><link href="flash.net.drm.xml#DRMContentData"><linktext>flash.net.drm.DRMContentData</linktext></link></related-links><adobeApiEvent id="flash.net.drm:DRMManager_flash.events.DRMErrorEvent.LOAD_VOUCHER_ERROR_loadVoucherError"><apiName>loadVoucherError</apiName><shortdesc> 
+	 DRMManager löst ein DRMErrorEvent-Objekt aus, wenn ein angeforderter Gutschein nicht vom Medienrechteserver bezogen werden kann.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.DRMErrorEvent.LOAD_VOUCHER_ERROR</apiEventType><adobeApiEventClassifier>flash.events.DRMErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	 DRMManager löst ein DRMErrorEvent-Objekt aus, wenn ein angeforderter Gutschein nicht vom Medienrechteserver bezogen werden kann. 
+	 
+	 <p><b>Hinweis:</b> Wenn ein Versuch, einen Gutschein aus dem lokalen Gutschein-Cache (mit <codeph>localOnly</codeph> als <codeph>source</codeph>-Parameter) zu laden, fehlschlägt, wird KEIN DRMErrorEvent-Objekt ausgelöst. Stattdessen wird ein DRMStatusEvent-Objekt mit der <codeph>voucher</codeph>-Eigenschaft <codeph>null</codeph> ausgelöst.</p>
+	 
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.net.drm:DRMManager_flash.events.DRMStatusEvent.LOAD_VOUCHER_COMPLETE_loadVoucherComplete"><apiName>loadVoucherComplete</apiName><shortdesc> 
+	 DRMManager löst ein DRMStatusEvent-Objekt aus, wenn ein angeforderter Gutschein vom Medienrechteserver bezogen wird.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.DRMStatusEvent.LOAD_VOUCHER_COMPLETE</apiEventType><adobeApiEventClassifier>flash.events.DRMStatusEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	 DRMManager löst ein DRMStatusEvent-Objekt aus, wenn ein angeforderter Gutschein vom Medienrechteserver bezogen wird.
+	 
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.net.drm:DRMManager_flash.events.DRMAuthenticationErrorEvent.AUTHENTICATION_ERROR_authenticationError"><apiName>authenticationError</apiName><shortdesc> 
+	 DRMManager löst ein DRMAuthenticationErrorEvent-Objekt aus, wenn der Benutzer nach einem Aufruf der authenticate()-Methode nicht beim Medienrechteserver authentifiziert wurde.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.DRMAuthenticationErrorEvent.AUTHENTICATION_ERROR</apiEventType><adobeApiEventClassifier>flash.events.DRMAuthenticationErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	 DRMManager löst ein DRMAuthenticationErrorEvent-Objekt aus, wenn der Benutzer nach einem Aufruf der <codeph>authenticate()</codeph>-Methode nicht beim Medienrechteserver authentifiziert wurde.
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.net.drm:DRMManager_flash.events.DRMAuthenticationCompleteEvent.AUTHENTICATION_COMPLETE_authenticationComplete"><apiName>authenticationComplete</apiName><shortdesc> 
+	 DRMManager löst ein DRMAuthenticationCompleteEvent-Objekt aus, wenn der Benutzer nach einem Aufruf der authenticate()-Methode nicht beim Medienrechteserver authentifiziert wurde.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.DRMAuthenticationCompleteEvent.AUTHENTICATION_COMPLETE</apiEventType><adobeApiEventClassifier>flash.events.DRMAuthenticationCompleteEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	 DRMManager löst ein DRMAuthenticationCompleteEvent-Objekt aus, wenn der Benutzer nach einem Aufruf der <codeph>authenticate()</codeph>-Methode nicht beim Medienrechteserver authentifiziert wurde.
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><apiOperation id="flash.net.drm:DRMManager:authenticate"><apiName>authenticate</apiName><shortdesc>
+		 Authentifiziert einen Benutzer.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>serverURL</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Die URL eines Medienrechteservers, die einen Gutschein zum Anzeigen von geschütztem Inhalt liefern kann
+		 </apiDesc></apiParam><apiParam><apiItemName>domain</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Eine Domäne auf dem Server (kein Netzwerk-/Internetdomänenname)
+		 </apiDesc></apiParam><apiParam><apiItemName>username</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Der Name des Benutzerkontos
+		 </apiDesc></apiParam><apiParam><apiItemName>password</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Das Kennwort des Benutzerkontos
+		 
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+		 Authentifiziert einen Benutzer.
+		 
+		 <p>Hört das <codeph>authenticationComplete</codeph>- und <codeph>authenticationError</codeph>-Ereignis ab, um das Ergebnis des Authentifizierungsversuchs zu ermitteln. Mehrere <codeph>authenticate()</codeph>-Aufrufe werden in eine Warteschlange gestellt. Das AuthenticationCompleteEvent-Objekt, das für das <codeph>authenticationComplete</codeph>-Ereignis ausgelöst wird, enthält einen Anwendungstoken, den Ihre Anwendung speichern kann.</p> 
+		 
+		 <p>Sie können einen gespeicherten Authentifizierungstoken oder einen auf eine andere Weise heruntergeladenen Token verwenden, um in Zukunft eine authentifizierte Sitzung mit dem Medienrechteserver herzustellen. Um eine Sitzung mit einem Token herzustellen, rufen Sie die DRMManager <codeph>setAuthenticationToken()</codeph>-Methode auf. Die Eigenschaften des Tokens wie z. B. das Ablaufdatum werden über die Einstellungen des Servers bestimmt, der das Token generiert.</p>
+		 
+		 <p><b>Wichtig:</b> Die <codeph>authenticate()</codeph>-Methode schlägt fehl, wenn der Internetanschluss eines Benutzers über einen Proxyserver erfolgt, der eine Authentifizierung erfordert. Diese Benutzer können zwar keinen DRM-Gutschein, der eine Authentifizierung erfordert, vorab laden, aber Ihre Anwendung kann den Gutschein beziehen, indem mit der Wiedergabe begonnen und die NetStream <codeph>setAuthenticationCredentials()</codeph>-Methode verwendet wird, um den Benutzer sowohl beim Proxy- als auch beim Medienrechteserver anzumelden. Sobald der Gutschein bezogen wurde, kann der Benutzer den Inhalt offline anzeigen (solange die durch den Gutschein repräsentierte Lizenz eine Offline-Wiedergabe erlaubt).</p>
+		  
+		 </apiDesc></apiOperationDetail><related-links><link href="flash.net.xml#NetStream/setAuthenticationCredentials()"><linktext>flash.net.NetStream.setAuthenticationCredentials()</linktext></link><link href="flash.net.drm.xml#DRMManager/setAuthenticationToken()"><linktext>setAuthenticationToken()</linktext></link></related-links></apiOperation><apiOperation id="flash.net.drm:DRMManager:getDRMManager"><apiName>getDRMManager</apiName><shortdesc>
+		 Gibt eine Instanz des Singleton-DRMManager-Objekts zurück.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiOperationClassifier>flash.net.drm:DRMManager</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+		 Gibt eine Instanz des Singleton-DRMManager-Objekts zurück.
+		 
+		 <p>Für jede Sicherheitsdomäne gibt es eine DRMManager-Instanz.</p>
+		 
+		 </apiDesc></apiOperationDetail><related-links><link href="flash.system.xml#SecurityDomain"><linktext>flash.system.SecurityDomain</linktext></link></related-links></apiOperation><apiOperation id="flash.net.drm:DRMManager:loadVoucher"><apiName>loadVoucher</apiName><shortdesc>
+		 Lädt einen Gutschein von einem Medienrechteserver oder aus dem lokalen Gutschein-Cache.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>contentData</apiItemName><apiOperationClassifier>flash.net.drm:DRMContentData</apiOperationClassifier><apiDesc>Das DRMContentData-Objekt aus einer DRM-geschützten Mediendatei
+		 </apiDesc></apiParam><apiParam><apiItemName>setting</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Bestimmt, ob der Gutschein aus dem lokalen Cache oder vom Medienrechteserver abgerufen werden soll
+		 
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+		 Lädt einen Gutschein von einem Medienrechteserver oder aus dem lokalen Gutschein-Cache.
+		 
+		 <p>Der Gutschein wird entsprechend dem <codeph>setting</codeph>-Parameter geladen:</p>
+		 <ul>
+		 <li>LoadVoucherSetting.FORCE_REFRESH: Der Gutschein wird immer vom Medienrechteserver heruntergeladen.</li>
+		 <li>LoadVoucherSetting.LOCAL_ONLY: Der Gutschein wird nur aus dem lokalen Cache geladen.</li>
+		 <li>LoadVoucherSetting.ALLOW_SERVER: Der Gutschein wird nach Möglichkeit aus dem lokalen Cache geladen bzw. andernfalls vom Server heruntergeladen.</li>
+		 </ul>
+		 <p>Die LoadVoucherSetting-Klasse definiert Stringkonstanten für die Verwendung als Werte für den <codeph>setting</codeph>-Parameter.</p>
+		 
+		 <p>Wenn der Gutschein erfolgreich geladen ist, löst DRMManager ein DRM-Statusereignis aus. Ihre Anwendung kann mit der Wiedergabe beginnen, sobald der Gutschein geladen ist. Der geladene Gutschein ist in der <codeph>voucher</codeph>-Eigenschaft des ausgelösten DRMStatusEvent-Objekts verfügbar. Sie können dieses Voucher-Objekt verwenden, um Informationen zu den Medienrechten für den Benutzer anzuzeigen. </p>
+		 
+		 <p>Wenn ein Gutschein nicht vom Medienrechteserver geladen werden kann, wird ein DRM-Fehlerereignis ausgelöst. Die <codeph>errorID</codeph>-Eigenschaft des ausgelösten DRMErrorEvent-Objekts zeigt den Grund für den Fehler an. Häufige Ursachen für Fehler sind der Versuch, eine Verbindung zum FMRMS-Server herzustellen, wenn der Benutzer offline ist, und der Versuch, einen Gutschein zu laden, wenn der Benutzer nicht angemeldet ist. Ihre Anwendung kann auf diese Fehler reagieren und entsprechende Korrekturmaßnahmen ergreifen. Wenn beispielsweise Authentifizierungsdaten zum Herunterladen des Gutscheins erforderlich sind, können Sie den Benutzer zur Eingabe seines Benutzernamens und Kennworts auffordern, die DRMManager <codeph>authenticate()</codeph>-Methode aufrufen und dann versuchen, den Gutschein erneut zu laden.</p>
+		 
+		 <p>Wenn ein Gutschein nicht aus dem lokalen Cache bezogen werden kann und die <codeph>localOnly</codeph>-Einstellung verwendet wird, wird kein DRMErrorEvent ausgelöst. Stattdessen wird ein DRM-Statusereignis ausgelöst. Die <codeph>detail</codeph>-Eigenschaft dieses DRMStatusEvent-Objekts ist weiterhin <codeph>DRM.voucherObtained</codeph>, aber die <codeph>voucher</codeph>-Eigenschaft ist <codeph>null</codeph>.</p>
+		 
+		 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.net.drm:DRMManager:resetDRMVouchers"><apiName>resetDRMVouchers</apiName><shortdesc>
+	    Löscht alle im lokalen Cache abgelegten DRM-Gutscheindaten (Digital Rights Management).</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata><asCustoms><keyword>DRMManager, resetDRMVouchers
+	    
+	    </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Die Gutscheindaten können nicht gelöscht werden.
+	    
+	    </apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+	    Löscht alle im lokalen Cache abgelegten DRM-Gutscheindaten (Digital Rights Management).
+	    <p>
+	    Die Anwendung muss die erforderlichen Gutscheine erneut herunterladen, damit der Benutzer auf verschlüsselten Inhalt zugreifen kann. Das Aufrufen dieser Funktion entspricht dem Aufrufen von <codeph>Netstream.resetDRMVouchers()</codeph>.</p>
+	    
+	    </apiDesc></apiOperationDetail><related-links><link href="flash.net.xml#NetStream/resetDRMVouchers()"><linktext>flash.net.NetStream.resetDRMVouchers()</linktext></link></related-links></apiOperation><apiOperation id="flash.net.drm:DRMManager:setAuthenticationToken"><apiName>setAuthenticationToken</apiName><shortdesc>
+		 Legt das Authentifizierungstoken für die Kommunikation mit dem angegebenen Server und der angegebenen Domäne fest.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>serverUrl</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Die URL des Medienrechteservers
+		 </apiDesc></apiParam><apiParam><apiItemName>domain</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Die Domäne auf dem Medienrechteserver
+		 </apiDesc></apiParam><apiParam><apiItemName>token</apiItemName><apiOperationClassifier>flash.utils:ByteArray</apiOperationClassifier><apiDesc>Das Authentifizierungstoken 
+		  
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+		 Legt das Authentifizierungstoken für die Kommunikation mit dem angegebenen Server und der angegebenen Domäne fest.
+		 
+		 <p>Authentifizierungstoken sind von der <codeph>token</codeph>-Eigenschaft des DRMAuthenticationCompleteEvent-Objekts verfügbar, das nach einem erfolgreichen Aufruf der <codeph>authenticate()</codeph>-Methode ausgelöst wird. Das Token wird automatisch für die Sitzung im Cache abgelegt, aber Sie können die <codeph>setAuthenticationToken()</codeph>-Methode verwenden, um Token direkt zu verwalten.</p>
+		 
+		 <p>Wenn Sie ein Token setzen, werden hierdurch alle im Cache abgelegten Token für den Server und die Domäne überschrieben. Setzen Sie den <codeph>token</codeph>-Parameter auf <codeph>null</codeph>, um das im Cache abgelegte Token zu löschen.</p>
+		 
+		 </apiDesc></apiOperationDetail></apiOperation></apiClassifier></apiPackage>

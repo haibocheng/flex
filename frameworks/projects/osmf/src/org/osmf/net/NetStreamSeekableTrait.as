@@ -74,8 +74,16 @@ package org.osmf.net
 			{
 				previousTime = netStream.time;
 				expectedTime = time;
-				
+
 				netStream.seek(time);
+
+				if (netStream.time == time)
+				{
+					// Manually start the seekBugTimer, because NetStream seemingly
+					// doesn't trigger an event when seeking to its current position (FM-227), 
+					// causing the seek to never get closed:
+					seekBugTimer.start();
+				}
 			}
 		}
 				

@@ -1,0 +1,891 @@
+<?xml version="1.0"?>
+<apiPackage id="air.update"><apiName>air.update</apiName><apiDetail/><apiClassifier id="air.update:ApplicationUpdater"><apiName>ApplicationUpdater</apiName><shortdesc>
+	Die ApplicationUpdater-Klasse definiert die grundlegende Funktionalität des Updateframeworks für Adobe&amp;#xAE; AIR&amp;#xAE;-Anwendungen, ohne eine Standardbenutzeroberfläche bereitzustellen.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.events:EventDispatcher</apiBaseClassifier></apiClassifierDef><apiDesc>
+	Die ApplicationUpdater-Klasse definiert die grundlegende Funktionalität des Updateframeworks für Adobe<sup>®</sup> AIR<sup>®</sup>-Anwendungen, ohne eine Standardbenutzeroberfläche bereitzustellen. (Die ApplicationUpdaterUI-Klasse enthält eine Aktualisierungsfunktionalität <i>und</i> eine Standardbenutzeroberfläche.) 
+		
+	<p product="flex">Diese Klasse ist in der applicationupdater.swc-Datei enthalten. Adobe<sup>®</sup> Flex™ Builder™ lädt diese Klasse automatisch, wenn Sie ein Projekt für Adobe AIR erstellen. Außerdem ist im Adobe<sup>®</sup> Flex™ SDK diese applicationupdater.swc-Datei enthalten, die Sie beim Kompilieren der Anwendung einbinden sollten, wenn Sie Flex SDK verwenden.</p>
+	
+	<p product="flash">Diese Klasse ist in der applicationupdater_ui.swc-Datei enthalten, die Teil des Adobe<sup>®</sup> Flex™ SDK ist. </p>
+	
+	<p platform="javascript">Um diese Klasse im JavaScript-Code zu verwenden, laden Sie die applicationupdater.swf-Datei (im AIR SDK bereitgestellt) wie folgt:</p>
+	
+	<codeblock platform="javascript">&lt;script src="applicationupdater.swf" type="application/x-shockwave-flash"></codeblock>
+		
+	<p>Die Verwaltung der Aktualisierungen von Anwendungen kann kompliziert sein. Das AIR-Updateframework stellt APIs bereit, mit denen Entwickler gute Aktualisierungsmöglichkeiten in AIR-Anwendungen einbinden können. Die Funktionalität im AIR-Updateframework unterstützt Entwickler bei Folgendem:</p>
+	
+	<ul><li>
+	<p>Regelmäßige Suche nach Updates in bestimmten Intervallen oder auf Anforderung des Benutzers</p>
+	</li>
+	<li>
+	<p>Herunterladen von AIR-Dateien (Updates) von einer Webquelle</p>
+	</li>
+	<li>
+	<p>Informieren des Benutzers beim ersten Ausführen der neu installierten Version</p>
+	</li>
+	<li>
+	<p>Bestätigen, dass der Benutzer nach Updates suchen möchte </p>
+	</li>
+	<li>
+	<p>Anzeigen von Informationen zur neuen Updateversion für den Benutzer</p>
+	</li>
+	<li>
+	<p>Anzeigen des Downloadfortschritts und von Fehlermeldungen für den Benutzer </p>
+	</li></ul>
+	
+	<p>Das AIR-Updateframework ermöglicht das Speichern von Informationen zur Updateversion einer AIR-Anwendung in einfachen XML-Konfigurationsdateien. Bei den meisten Anwendungen erzielen Sie mit dem Einrichten dieser Konfigurationsdateien und dem Einfügen einiger Basiscodezeilen eine gute Aktualisierungsfunktionalität für den Endbenutzer. </p>
+	
+	<p>Verwenden Sie die AIRUpdater-Klasse, wenn Sie eine eigene Benutzeroberfläche für die Verwendung mit dem AIR-Updateframework verwenden möchten.</p>
+	
+	<p>Der Aktualisierungsvorgang enthält eine Statussequenz. Die <codeph>currentState</codeph>-Eigenschaft des Updaterobjekts entspricht dem aktuellen Status des Updaters:</p>
+	
+	<p><adobetable class="innertable">
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<tgroup cols="2"><thead><row><entry>
+	currentState-Wert
+	</entry><entry>
+	Beschreibung
+	</entry></row></thead><tbody><row><entry>„UNINITIALIZED“</entry>
+	<entry>Der Updater wurde nicht initialisiert.</entry>
+	</row><row><entry>„INITIALIZING“</entry>
+	<entry>Der Updater wird initialisiert.</entry>
+	</row><row><entry>„READY“</entry>
+	<entry>Der Updater wurde initialisiert.</entry>
+	</row><row><entry>„BEFORE_CHECKING“</entry>
+	<entry>Der Updater hat noch nicht nach der Updatedeskriptordatei gesucht.</entry>
+	</row><row><entry>„CHECKING“</entry>
+	<entry>Der Updater sucht nach einer Updatedeskriptordatei.</entry>
+	</row><row><entry>„AVAILABLE“</entry>
+	<entry>Die Updatedeskriptordatei ist verfügbar.</entry>
+	</row><row><entry>„DOWNLOADING“</entry>
+	<entry>Der Updater lädt die AIR-Datei herunter.</entry>
+	</row><row><entry>„DOWNLOADED“</entry>
+	<entry>Der Updater hat die AIR-Datei heruntergeladen.</entry>
+	</row><row><entry>„INSTALLING“</entry>
+	<entry>Der Updater installiert die AIR-Datei.</entry>
+	</row><row><entry>„PENDING_INSTALLING“</entry>
+	<entry>Der Updater wurde initialisiert und Aktualisierungen stehen aus.</entry>
+	</row></tbody></tgroup></adobetable></p>
+	
+	<p>Wenn Sie eine Anwendung mit dem AIR Debug Launcher (ADL) testen, führt ein Versuch der Aktualisierung der Anwendung zu einer IllegalOperationError-Ausnahme.</p>
+	
+	<p product="flex">Weitere Details zur Verwendung des AIR-Updateframeworks finden Sie im Kapitel „Aktualisieren von AIR-Anwendungen“ in <xref href="http://www.adobe.com/go/learn_air_flex3">Developing Adobe AIR Applications with Adobe Flex</xref>.</p> 
+	
+	<p product="flash">Weitere Details zur Verwendung des AIR-Updateframeworks finden Sie im Kapitel „Aktualisieren von AIR-Anwendungen“ in <xref href="http://www.adobe.com/go/learn_air_flash">Developing Adobe AIR Applications with Adobe Flash</xref>.</p> 
+	
+	<p platform="javascript">Weitere Details zur Verwendung des AIR-Updateframeworks finden Sie im Kapitel „Aktualisieren von AIR-Anwendungen“ in <xref href="http://www.adobe.com/go/learn_air_html">Developing Adobe AIR Applications with HTML and Ajax</xref>.</p> 
+	
+	</apiDesc></apiClassifierDetail><related-links><link href="air.update.xml#ApplicationUpdaterUI"><linktext>ApplicationUpdaterUI</linktext></link><link href="flash.desktop.xml#Updater"><linktext>flash.desktop.Updater</linktext></link></related-links><adobeApiEvent id="air.update:ApplicationUpdater_flash.events.ErrorEvent.ERROR_error"><apiName>error</apiName><shortdesc> 
+	Wird ausgelöst, wenn ein Fehler bei der Initialisierung oder während des Aktualisierungsvorgangs (bei einem unerwarteten Ereignis) auftritt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.ErrorEvent.ERROR</apiEventType><adobeApiEventClassifier>flash.events.ErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	Wird ausgelöst, wenn ein Fehler bei der Initialisierung oder während des Aktualisierungsvorgangs (bei einem unerwarteten Ereignis) auftritt.
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdater_flash.events.ProgressEvent.PROGRESS_progress"><apiName>progress</apiName><shortdesc> 
+	Wird ausgelöst, nachdem die Initialisierung abgeschlossen ist.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.ProgressEvent.PROGRESS</apiEventType><adobeApiEventClassifier>flash.events.ProgressEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	Wird ausgelöst, nachdem die Initialisierung abgeschlossen ist. 
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdater_air.update.events.StatusFileUpdateErrorEvent.FILE_UPDATE_ERROR_fileUpdateError"><apiName>fileUpdateError</apiName><shortdesc> 
+	 Wird ausgelöst, wenn ein Fehler bei der Überprüfung der als airFile-Parameter übergebenen Datei in einem Aufruf der installFromAIRFile()-Methode auftritt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.StatusFileUpdateErrorEvent.FILE_UPDATE_ERROR</apiEventType><adobeApiEventClassifier>air.update.events.StatusFileUpdateErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	 Wird ausgelöst, wenn ein Fehler bei der Überprüfung der als <codeph>airFile</codeph>-Parameter übergebenen Datei in einem Aufruf der <codeph>installFromAIRFile()</codeph>-Methode auftritt.
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdater_air.update.events.StatusFileUpdateEvent.FILE_UPDATE_STATUS_fileUpdateStatus"><apiName>fileUpdateStatus</apiName><shortdesc> 
+	Wird ausgelöst, nachdem der Updater erfolgreich die Datei im Aufruf der installFromAIRFile()-Methode überprüft hat.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.StatusFileUpdateEvent.FILE_UPDATE_STATUS</apiEventType><adobeApiEventClassifier>air.update.events.StatusFileUpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	Wird ausgelöst, nachdem der Updater erfolgreich die Datei im Aufruf der <codeph>installFromAIRFile()</codeph>-Methode überprüft hat.
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdater_air.update.events.DownloadErrorEvent.DOWNLOAD_ERROR_downloadError"><apiName>downloadError</apiName><shortdesc> 
+	Wird ausgelöst, wenn ein Fehler bei der Verbindung oder dem Herunterladen der Updatedatei auftritt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.DownloadErrorEvent.DOWNLOAD_ERROR</apiEventType><adobeApiEventClassifier>air.update.events.DownloadErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	Wird ausgelöst, wenn ein Fehler bei der Verbindung oder dem Herunterladen der Updatedatei auftritt. Das Ereignis wird auch ausgelöst, wenn ein ungültiger HTTP-Status vorliegt (z. B. „404 – Datei nicht gefunden“).
+	
+	<p>Beim Auslösen dieses Ereignisses wird der Timer für die regelmäßige Suche automatisch neu gestartet (wenn die Verzögerung größer als 0 ist). </p>
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdater_air.update.events.StatusUpdateErrorEvent.UPDATE_ERROR_updateError"><apiName>updateError</apiName><shortdesc> 
+	Wird ausgelöst, wenn ein Fehler beim Versuch des Herunterladens oder Parsings der Updatedeskriptordatei auftritt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.StatusUpdateErrorEvent.UPDATE_ERROR</apiEventType><adobeApiEventClassifier>air.update.events.StatusUpdateErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	Wird ausgelöst, wenn ein Fehler beim Versuch des Herunterladens oder Parsings der Updatedeskriptordatei auftritt.
+	
+	<p>Löst der Updater dieses Ereignis aus, wird der Timer für die regelmäßige Suche automatisch neu gestartet (wenn die Verzögerung größer als 0 ist). Die Anwendung sollte das Ausblenden von Fehlermeldungen berücksichtigen, wenn der Updater ein neues <codeph>checkForUpdate</codeph>-Ereignis auslöst. </p>
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdater_air.update.events.StatusUpdateEvent.UPDATE_STATUS_updateStatus"><apiName>updateStatus</apiName><shortdesc> 
+	Wird ausgelöst, nachdem der Updater die Updatedeskriptordatei erfolgreich heruntergeladen und interpretiert hat.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.StatusUpdateEvent.UPDATE_STATUS</apiEventType><adobeApiEventClassifier>air.update.events.StatusUpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	Wird ausgelöst, nachdem der Updater die Updatedeskriptordatei erfolgreich heruntergeladen und interpretiert hat. 
+	
+	<p>Das Standardverhalten besteht darin, das Update herunterzuladen, wenn die Verfügbarkeit der available-Eigenschaft des StatusUpdateEvent-Objekts als <codeph>true</codeph> festgelegt ist. Das Standardverhalten kann nur bei Verwendung der ApplicationUpdater-Klasse verhindert werden und nicht bei Verwendung der ApplicationUpdatorUI-Klasse.</p>
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdater_air.update.events.UpdateEvent.BEFORE_INSTALL_beforeInstall"><apiName>beforeInstall</apiName><shortdesc> 
+	 Wird unmittelbar vor der Installation des Updates ausgelöst, nachdem die installUpdate()-Methode aufgerufen wurde.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.UpdateEvent.BEFORE_INSTALL</apiEventType><adobeApiEventClassifier>air.update.events.UpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	 Wird kurz vor der Installation des Updates ausgelöst, nachdem die<codeph>installUpdate()</codeph>-Methode aufgerufen wurde. Es kann sinnvoll sein, die Installation des Updates zu diesem Zeitpunkt zu verhindern, da der Benutzer die gesamte aktuelle Arbeit verlieren kann, wenn die Laufzeit die Anwendung beendet, um das Update zu installieren. 
+	 
+	 <p>Das Aufrufen der <codeph>preventDefault()</codeph>-Methode dieses Ereignisses verschiebt die Installation bis zum nächsten Neustart. Wenn Sie die <codeph>preventDefault()</codeph>-Methode aufrufen, kann in dieser Anwendungssitzung kein zusätzlicher Aktualisierungsvorgang gestartet werden (über einen Aufruf der <codeph>installUpdate()</codeph>-Methode oder aufgrund der regelmäßigen Suche). </p>
+	 
+	 <p>Das Standardverhalten der ApplicationUpdater-Bibliothek besteht darin, die Updatedeskriptordatei herunterzuladen. Sie können die <codeph>preventDefault()</codeph>-Methode aufrufen, um das Standardverhalten abzubrechen.</p>
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdater_air.update.events.UpdateEvent.DOWNLOAD_COMPLETE_downloadComplete"><apiName>downloadComplete</apiName><shortdesc> 
+	Wird ausgelöst, wenn das Herunterladen der Updatedatei abgeschlossen ist. </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.UpdateEvent.DOWNLOAD_COMPLETE</apiEventType><adobeApiEventClassifier>air.update.events.UpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	Wird ausgelöst, wenn das Herunterladen der Updatedatei abgeschlossen ist. 
+	
+	<p>Normalerweise wird dieses Ereignis zur Anzeige einer Meldung verwendet, in der der Benutzer gefragt wird, ob er mit der Installation des Updates fortfahren möchte. </p>
+	
+	<p>Das Standardverhalten für die ApplicationUpdater-Bibliothek besteht darin, automatisch die <codeph>installUpdate()</codeph>-Methode aufzurufen.</p>
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdater_air.update.events.UpdateEvent.DOWNLOAD_START_downloadStart"><apiName>downloadStart</apiName><shortdesc> 
+	 Wird ausgelöst, nachdem ein Aufruf der downloadUpdate()-Methode ausgeführt und die Verbindung zum Server hergestellt wurde.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.UpdateEvent.DOWNLOAD_START</apiEventType><adobeApiEventClassifier>air.update.events.UpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	 Wird ausgelöst, nachdem ein Aufruf der <codeph>downloadUpdate()</codeph>-Methode ausgeführt und die Verbindung zum Server hergestellt wurde. Wenn Sie die ApplicationUpdater-Bibliothek verwenden, möchten Sie möglicherweise, dass die Ereignisprozedur für den Benutzer eine Downloadfortschrittsleiste anzeigt. 
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdater_air.update.events.UpdateEvent.CHECK_FOR_UPDATE_checkForUpdate"><apiName>checkForUpdate</apiName><shortdesc> 
+	Wird vor dem Beginn des Aktualisierungsvorgangs ausgelöst, unmittelbar bevor der Updater versucht, die Updatedeskriptordatei herunterzuladen.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.UpdateEvent.CHECK_FOR_UPDATE</apiEventType><adobeApiEventClassifier>air.update.events.UpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	Wird vor dem Beginn des Aktualisierungsvorgangs ausgelöst, unmittelbar bevor der Updater versucht, die Updatedeskriptordatei herunterzuladen. Der Updater kann dieses Ereignis als ein Ergebnis des direkten Aufrufs der <codeph>checkNow()</codeph>-Methode auslösen oder weil der Timer für die regelmäßige Suche abgelaufen ist. 
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdater_air.update.events.UpdateEvent.INITIALIZED_initialized"><apiName>initialized</apiName><shortdesc> 
+	Wird ausgelöst, nachdem die Initialisierung abgeschlossen ist.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.UpdateEvent.INITIALIZED</apiEventType><adobeApiEventClassifier>air.update.events.UpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	Wird ausgelöst, nachdem die Initialisierung abgeschlossen ist. 
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><apiConstructor id="air.update:ApplicationUpdater:ApplicationUpdater"><apiName>ApplicationUpdater</apiName><shortdesc>
+		Die Konstruktorfunktion.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/></apiConstructorDef><apiDesc>
+		Die Konstruktorfunktion. 
+		
+		</apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="air.update:ApplicationUpdater:cancelUpdate"><apiName>cancelUpdate</apiName><shortdesc>
+		Bricht den Aktualisierungsvorgang ab.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+		Bricht den Aktualisierungsvorgang ab. Das Aufrufen dieser Methode bricht alle ausstehenden Downloads ab, löscht unvollständig heruntergeladene Dateien und startet den Timer für die regelmäßige Suche neu.
+		
+		<p>Der Aktualisierungsvorgang kann jederzeit abgebrochen werden, außer wenn sich der Zustandsautomat im Status „UNINITIALIZED“ oder „INITIALIZING“ befindet. Dies hat keine Auswirkung, wenn die Methode in einem der Status „UNINITIALIZED“ oder „INITIALIZING“ aufgerufen wird.</p>
+		
+		</apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.update:ApplicationUpdater:checkForUpdate"><apiName>checkForUpdate</apiName><shortdesc>
+		Lädt die Updatedeskriptordatei asynchron herunter und interpretiert sie.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+		Lädt die Updatedeskriptordatei asynchron herunter und interpretiert sie. Durch Aufrufen dieser Methode springt der Updaterstatus auf „CHECKING“. Rufen Sie diese Methode nur auf, wenn das <codeph>checkForUpdate</codeph>-Ereignis abgebrochen wurde.
+		
+		<p>Diese Methode wird nur ausgeführt, wenn der Updater sich im Status „BEFORE_CHECKING“ befindet. </p>
+		
+		</apiDesc></apiOperationDetail><adobeApiEvent id="air.update:ApplicationUpdater:checkForUpdate_updateStatus"><apiName>updateStatus</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>air.update.events:StatusUpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>Der Updater hat die Updatedeskriptordatei erfolgreich heruntergeladen und interpretiert.
+		
+		</apiDesc></adobeApiEventDetail><shortdesc>Der Updater hat die Updatedeskriptordatei erfolgreich heruntergeladen und interpretiert.</shortdesc></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdater:checkForUpdate_updateError"><apiName>updateError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>air.update.events:StatusUpdateErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>Ein Fehler ist beim Versuch des Herunterladens oder Parsings der Updatedeskriptordatei aufgetreten.
+		
+		</apiDesc></adobeApiEventDetail><shortdesc>Ein Fehler ist beim Versuch des Herunterladens oder Parsings der Updatedeskriptordatei aufgetreten.</shortdesc></adobeApiEvent></apiOperation><apiOperation id="air.update:ApplicationUpdater:checkNow"><apiName>checkNow</apiName><shortdesc>
+		Startet den Aktualisierungsvorgang.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+		Startet den Aktualisierungsvorgang. Das Aufrufen dieser Methode stoppt nicht den Timer für die regelmäßige Suche; die Methode erkennt jedoch, dass ein Aktualisierungsvorgang ausgeführt wird und überspringt die aktuelle Iteration.
+		
+		<p>Diese Methode wird nur ausgeführt, wenn der aktuelle Status „READY“ ist. </p>
+		
+		<p>Diese Methode kann dazu führen, dass das Updaterobjekt das folgende Ereignis auslöst:</p>
+		
+		</apiDesc></apiOperationDetail><adobeApiEvent id="air.update:ApplicationUpdater:checkNow_checkForUpdate"><apiName>checkForUpdate</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>air.update.events:UpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>Wird unmittelbar vor Beginn des Aktualisierungsvorgangs ausgelöst.
+		
+		</apiDesc></adobeApiEventDetail><shortdesc>Wird unmittelbar vor Beginn des Aktualisierungsvorgangs ausgelöst.</shortdesc></adobeApiEvent></apiOperation><apiOperation id="air.update:ApplicationUpdater:downloadUpdate"><apiName>downloadUpdate</apiName><shortdesc>
+		Lädt die Updatedatei asynchron herunter.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+		Lädt die Updatedatei asynchron herunter. Durch Aufrufen dieser Methode springt der Zustandsautomat auf „DOWNLOADING“. Diese Methode muss nur aufgerufen werden, wenn das StatusUpdateEvent.UPDATE_STATUS-Ereignis abgebrochen wurde, während die available-Eigenschaft des Ereignisses als „true“ festgelegt war.
+		
+		<p>Diese Methode wird nur ausgeführt, wenn der aktuelle Status „AVAILABLE“ ist.</p>
+		
+		</apiDesc></apiOperationDetail><adobeApiEvent id="air.update:ApplicationUpdater:downloadUpdate_downloadStart"><apiName>downloadStart</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>air.update.events:UpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>Wird ausgelöst, nachdem die Verbindung zum Server hergestellt wurde. 
+		
+		</apiDesc></adobeApiEventDetail><shortdesc>Wird ausgelöst, nachdem die Verbindung zum Server hergestellt wurde.</shortdesc></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdater:downloadUpdate_progress"><apiName>progress</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:ProgressEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>Wird ausgelöst, nachdem die Initialisierung abgeschlossen ist.
+		
+		</apiDesc></adobeApiEventDetail><shortdesc>Wird ausgelöst, nachdem die Initialisierung abgeschlossen ist.</shortdesc></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdater:downloadUpdate_downloadError"><apiName>downloadError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>air.update.events:DownloadErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>Wird ausgelöst, wenn ein Fehler bei der Verbindung oder dem Herunterladen der Updatedatei auftritt. Das Ereignis wird auch ausgelöst, wenn ein ungültiger HTTP-Status vorliegt (z. B. „404 – Datei nicht gefunden“).
+		
+		</apiDesc></adobeApiEventDetail><shortdesc>Wird ausgelöst, wenn ein Fehler bei der Verbindung oder dem Herunterladen der Updatedatei auftritt.</shortdesc></adobeApiEvent></apiOperation><apiOperation id="air.update:ApplicationUpdater:initialize"><apiName>initialize</apiName><shortdesc>
+		 Initialisiert den Updater.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+		 Initialisiert den Updater. Das Aufrufen dieser Methode bewirkt Folgendes: 
+		
+		<p><ol><li>
+		<p>Sie initialisiert das Updateframework, wobei ohne weitere Meldung (und synchron) die ggf. ausstehenden Aktualisierungen installiert werden. Sie sollten diese Methode beim Anwendungsstart aufrufen, da dadurch die Anwendung möglicherweise neu gestartet wird.</p>
+		</li><li>
+		
+		<p>Sie sucht nach einer verschobenen Aktualisierung und installiert sie ggf.</p>
+		</li><li>
+		<p>Wenn eine vorherige Aktualisierung fehlgeschlagen ist, werden die Updatedatei und die Versionsinformationen aus dem Speicherbereich gelöscht.</p>
+		</li><li>
+		<p>Wenn die Timer-Verzögerung abgelaufen ist, wird der Aktualisierungsvorgang gestartet; andernfalls wird der Timer gestartet. Wenn Sie jedoch eine Anwendung mit dem AIR Debug Launcher (ADL) testen, führt ein Versuch der Aktualisierung der Anwendung zu einer IllegalOperationError-Ausnahme.</p>
+		</li>
+		</ol></p>
+		
+		</apiDesc></apiOperationDetail><adobeApiEvent id="air.update:ApplicationUpdater:initialize_initialized"><apiName>initialized</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>air.update.events:UpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>Die Initialisierung ist abgeschlossen. 
+		
+		</apiDesc></adobeApiEventDetail><shortdesc>Die Initialisierung ist abgeschlossen.</shortdesc></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdater:initialize_error"><apiName>error</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:ErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>Bei der Initialisierung tritt ein Fehler auf.
+		
+		</apiDesc></adobeApiEventDetail><shortdesc>Bei der Initialisierung tritt ein Fehler auf.</shortdesc></adobeApiEvent></apiOperation><apiOperation id="air.update:ApplicationUpdater:installFromAIRFile"><apiName>installFromAIRFile</apiName><shortdesc>
+		Startet den Aktualisierungsvorgang mithilfe einer lokalen AIR-Datei.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>file</apiItemName><apiOperationClassifier>flash.filesystem:File</apiOperationClassifier><apiDesc>Die zu installierende AIR-Datei.
+		
+		</apiDesc></apiParam></apiOperationDef><apiDesc>
+		Startet den Aktualisierungsvorgang mithilfe einer lokalen AIR-Datei. 
+		
+		<p>Das Aufrufen dieser Methode hat keine Auswirkung, wenn ein Aktualisierungsvorgang ausgeführt wird (wenn der Status nicht <codeph>"DOWNLOADED"</codeph> ist).</p>
+		
+		<p>Diese Funktion ist für eine Anwendung nützlich, die das <codeph>customUpdateUI</codeph>-Element in der Anwendungsdeskriptordatei als <codeph>true</codeph> festgelegt hat.</p>
+		
+		<p>Wenn Sie eine Anwendung mit dem AIR Debug Launcher (ADL) testen, führt der Aufruf dieser Methode zu einer IllegalOperationError-Ausnahme.</p>
+		
+		</apiDesc></apiOperationDetail><adobeApiEvent id="air.update:ApplicationUpdater:installFromAIRFile_fileUpdateStatus"><apiName>fileUpdateStatus</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>air.update.events:StatusFileUpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>Wird ausgelöst, nachdem der Updater die AIR-Datei erfolgreich überprüft hat.
+		
+		</apiDesc></adobeApiEventDetail><shortdesc>Wird ausgelöst, nachdem der Updater die AIR-Datei erfolgreich überprüft hat.</shortdesc></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdater:installFromAIRFile_updateError"><apiName>updateError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>air.update.events:StatusFileUpdateErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>Wird ausgelöst, wenn ein Fehler beim Versuch des Parsings der Updatedeskriptordatei auftritt.
+		
+		</apiDesc></adobeApiEventDetail><shortdesc>Wird ausgelöst, wenn ein Fehler beim Versuch des Parsings der Updatedeskriptordatei auftritt.</shortdesc></adobeApiEvent></apiOperation><apiOperation id="air.update:ApplicationUpdater:installUpdate"><apiName>installUpdate</apiName><shortdesc>
+		Installiert die Updatedatei.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+		Installiert die Updatedatei. Durch Aufrufen der Methode springt der Zustandsautomat auf „INSTALLING“ und muss nur aufgerufen werden, wenn das <codeph>downLoadComplete</codeph>-Ereignis abgebrochen wurde.
+		
+		<p>Rufen Sie diese Methode auf, wenn der Updater sich im Status „DOWNLOADED“ befindet. Das Aufrufen in einem anderen Status hat keine Auswirkung.</p>
+		
+		<p>Wenn Sie eine Anwendung mit dem AIR Debug Launcher (ADL) testen, führt der Aufruf dieser Methode zu einer IllegalOperationError-Ausnahme.</p>
+		
+		</apiDesc></apiOperationDetail><adobeApiEvent id="air.update:ApplicationUpdater:installUpdate_beforeInstall"><apiName>beforeInstall</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>air.update.events:UpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>Wird unmittelbar vor der Installation der Aktualisierung ausgelöst. Es kann sinnvoll sein, die Installation des Updates zu diesem Zeitpunkt zu verhindern, da der Benutzer die gesamte aktuelle Arbeit verlieren kann, wenn die Laufzeit die Anwendung beendet, um das Update zu installieren.
+		 
+		</apiDesc></adobeApiEventDetail><shortdesc>Wird unmittelbar vor der Installation der Aktualisierung ausgelöst.</shortdesc></adobeApiEvent></apiOperation><apiValue id="air.update:ApplicationUpdater:configurationFile:get"><apiName>configurationFile</apiName><shortdesc>
+		Der Speicherort der Konfigurationsdatei, die die Werte für die delay- und updateURL-Eigenschaften festlegt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>flash.filesystem:File</apiValueClassifier></apiValueDef><apiDesc>
+		Der Speicherort der Konfigurationsdatei, die die Werte für die <codeph>delay</codeph>- und <codeph>updateURL</codeph>-Eigenschaften festlegt. Wenn diese Eigenschaft auf eine nicht vorhandene Datei verweist, führt der Aufruf der <codeph>initialize()</codeph>-Methode dazu, dass ein Fehler ausgegeben wird.
+		
+		<p>Ein Beispiel einer Konfigurationsdatei:</p>
+		
+		<codeblock> &lt;?xml version="1.0" encoding="utf-8"?> 
+ 		&lt;configuration xmlns="http://ns.adobe.com/air/framework/update/configuration/1.0" >
+ 		  &lt;url>app:/server/update.xml&lt;/url>
+ 		  &lt;delay>1&lt;/delay>
+		&lt;/configuration></codeblock>
+		
+		<p>Anstatt eine Konfigurationsdatei zu laden, können Sie den <ph platform="actionscript">ActionScript</ph> <ph platform="javascript">JavaScript</ph>-Code verwenden, um die <codeph>delay</codeph>- und <codeph>updateURL</codeph>-Eigenschaften festzulegen.</p> 
+		
+		</apiDesc></apiValueDetail><related-links><link href="air.update.xml#ApplicationUpdater/delay"><linktext>delay</linktext></link><link href="air.update.xml#ApplicationUpdater/updateURL"><linktext>updateURL</linktext></link></related-links></apiValue><apiValue id="air.update:ApplicationUpdater:currentState:get"><apiName>currentState</apiName><shortdesc>
+		Der interne Status des Updaters.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		Der interne Status des Updaters. Diese Eigenschaft kann auf einen der folgenden Werte eingestellt sein:
+		
+		<p><ul><li>
+		<p><codeph>"UNINITIALIZED"</codeph>: Der Updater wurde nicht initialisiert.</p>
+		</li><li>
+		<p><codeph>"INITIALIZING"</codeph>: Der Updater wird initialisiert.</p>
+		</li><li>
+		<p><codeph>"READY"</codeph>: Der Updater wurde initialisiert.</p>
+		</li><li>
+		<p><codeph>"BEFORE_CHECKING"</codeph>: Der Updater hat noch nicht nach der Updatedeskriptordatei gesucht.</p>
+		</li><li>
+		<p><codeph>"CHECKING"</codeph>: Der Updater sucht nach einer Updatedeskriptordatei.</p>
+		</li><li>
+		<p><codeph>"AVAILABLE"</codeph>: Die Updatedeskriptordatei ist verfügbar.</p>
+		</li><li>
+		<p><codeph>"DOWNLOADING"</codeph>: Der Updater lädt die AIR-Datei herunter.</p>
+		</li><li>
+		<p><codeph>"DOWNLOADED"</codeph>: Der Updater hat die AIR-Datei heruntergeladen.</p>
+		</li><li>
+		<p><codeph>"INSTALLING"</codeph>: Der Updater installiert die AIR-Datei.</p>
+		</li><li>
+		<p><codeph>"PENDING_INSTALLING"</codeph>: Der Updater wurde initialisiert und Aktualisierungen stehen aus.</p>
+		</li></ul></p>
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdater:currentVersion:get"><apiName>currentVersion</apiName><shortdesc>
+		Die aktuelle Version der Anwendung.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		Die aktuelle Version der Anwendung. Diese Eigenschaft wird bei einem Aufruf der <codeph>initialize()</codeph>-Methode festgelegt. Sie wird als die Version der Anwendungsdeskriptordatei festgelegt.
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdater:delay:get"><apiName>delay</apiName><shortdesc>
+		Das Intervall in Tagen zwischen regelmäßigen Suchen nach neuen Updates.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Number</apiValueClassifier><apiDefaultValue>0
+		
+		</apiDefaultValue></apiValueDef><apiDesc>
+		Das Intervall in Tagen zwischen regelmäßigen Suchen nach neuen Updates.
+		
+		<p>Ein Wert 0 (der Standardwert) zeigt an, dass der Timer nicht aktiv ist, sodass keine regelmäßige Suche ausgeführt wird. Sie können den Wert über diese Eigenschaft oder über die Konfigurationsdatei festlegen. Wenn der Wert mithilfe beider Methoden festgelegt ist, wird der durch diese Eigenschaft festgelegte Wert verwendet.</p>
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdater:isFirstRun:get"><apiName>isFirstRun</apiName><shortdesc>
+		Gibt an, ob dies die erste Ausführung nach einer erfolgreichen Aktualisierung („true“) ist oder nicht („false“).</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+		Gibt an, ob dies die erste Ausführung nach einer erfolgreichen Aktualisierung (<codeph>true</codeph>) ist oder nicht (<codeph>false</codeph>). Der Updater legt diesen Wert während des Aufrufs der <codeph>initialize()</codeph>-Methode fest. Der Entwickler sollte überprüfen, ob <codeph>isFirstRun</codeph> als <codeph>true</codeph> festgelegt ist, wenn Daten von einer Version auf die andere migriert werden sollen.
+		
+		</apiDesc></apiValueDetail><related-links><link href="air.update.xml#ApplicationUpdater/wasPendingUpdate"><linktext>wasPendingUpdate</linktext></link></related-links></apiValue><apiValue id="air.update:ApplicationUpdater:isNewerVersionFunction:get"><apiName>isNewerVersionFunction</apiName><shortdesc>
+		Eine Funktion, die der Updater verwenden sollte, um Versionsvergleiche auszuführen.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Function</apiValueClassifier></apiValueDef><apiDesc>
+		Eine Funktion, die der Updater verwenden sollte, um Versionsvergleiche auszuführen. Standardmäßig führt das Updateframework einen Versionsvergleich durch, um zu erkennen, ob die Version der Remote Site neuer als die Version der installierten Anwendung ist. Manchmal stimmt der Standardvergleich jedoch nicht mit dem Versionsschema des Entwicklers überein. Legen Sie diese Eigenschaft fest, um eine neue Funktion bereitzustellen, die den Vergleich ausführt. 
+		
+		<p>Die Standardvergleichsfunktion akzeptiert Versionen wie <i>x.y.z</i>, wobei x, y, z Buchstaben und Ziffern enthalten können. Es gibt einige spezielle Bedingungen, die die Standardvergleichsfunktion erkennt. Wenn die Testfunktion in den Versionsstrings <codeph>"alpha"</codeph>, <codeph>"beta"</codeph> oder <codeph>"rc"</codeph> findet, ist die Reihenfolge <codeph>alpha</codeph> &lt; <codeph>beta</codeph> &lt; <codeph>rc</codeph>.</p>
+		
+		</apiDesc><example conref="examples\ApplicationUpdater.configurationFunction.1.as"> Der folgende Code definiert die benutzerdefinierte Funktion <codeph>customFn</codeph> für das <codeph>appUpdate</codeph>-Updaterobjekt. Die Beispielsfunktion ist absichtlich einfach gehalten. Ihre benutzerdefinierte Funktion sollte einen booleschen Wert zurückgeben, der auf den Regeln Ihres Versionsschemas basiert.
+<codeblock>
+appUpdate.isNewerVersionFunction = customFn; 
+
+function customFn (currentVersion:String, updateVersion:String):Boolean 
+{
+    return updateVersion > currentVersion;
+}
+</codeblock></example></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdater:previousApplicationStorageDirectory:get"><apiName>previousApplicationStorageDirectory</apiName><shortdesc>
+		Der vorherige Speicherort des Anwendungsspeicherordners, falls er nach einer Aktualisierung geändert wurde.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>flash.filesystem:File</apiValueClassifier></apiValueDef><apiDesc>
+		Der vorherige Speicherort des Anwendungsspeicherordners, falls er nach einer Aktualisierung geändert wurde. Der Speicherort des Anwendungsspeicherordners wird nach einer Aktualisierung mit einer Zertifikatmigration geändert. Findet keine Zertifikatmigration statt, wird der Anwendungsspeicherordner nicht geändert, wenn der Benutzer die Anwendung aktualisiert und diese Eigenschaft ist als <codeph>null</codeph> festgelegt. Diese Eigenschaft wird bei einem Aufruf der <codeph>initialize()</codeph>-Methode festgelegt. 
+		
+		<p>Ein Entwickler kann die neue Version der AIR-Anwendung mit einem neuen Zertifikat unterzeichnen, wenn er beim Komprimieren der AIR-Datei mit ADT die <codeph>-migrate</codeph>-Option verwendet. Wenn eine neue Version einer AIR-Anwendung ein neues Signaturzertifikat verwendet, wird der lokale Speicherordner der Anwendung geändert, sobald der Benutzer die neue Version installiert. Verwenden Sie diese Eigenschaft, um Daten vom alten Anwendungsspeicherordner in den neuen Anwendungsspeicherordner zu übertragen (<codeph>File.applicationStorageDirectory</codeph>). Weitere Informationen finden Sie unter „Unterzeichnen von AIR-Dateien, um das Anwendungszertifikat zu wechseln“ im Kapitel „Erstellen von AIR-Anwendungen mit Befehlszeilenwerkzeugen“ des Adobe AIR-Entwicklerhandbuchs. </p>
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdater:previousVersion:get"><apiName>previousVersion</apiName><shortdesc>
+		Die vorherige Version der Anwendung.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		Die vorherige Version der Anwendung. Diese Eigenschaft wird bei einem Aufruf der <codeph>initialize()</codeph>-Methode festgelegt. Gibt die <i>vorherige Version</i> der Anwendung vor dem Upgrade zurück (nur festgelegt, wenn <codeph>isfirstRun</codeph> <codeph>true</codeph> ist); andernfalls als <codeph>null</codeph> festgelegt.
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdater:updateDescriptor:get"><apiName>updateDescriptor</apiName><shortdesc>
+		Der Inhalt der Updatedeskriptordatei, der von der Aktualisierungs-URL heruntergeladen wurde.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>XML</apiValueClassifier></apiValueDef><apiDesc>
+		Der Inhalt der Updatedeskriptordatei, der von der Aktualisierungs-URL heruntergeladen wurde. Diese Eigenschaft ist nicht „null“, nur das Updaterobjekt löst ein <codeph>updateStatus</codeph>-Ereignis aus.
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdater:updateURL:get"><apiName>updateURL</apiName><shortdesc>
+		Der Speicherort der Updatedeskriptordatei.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		Der Speicherort der Updatedeskriptordatei. Jeder für einen URLRequest-Pfad gültige Speicherort wird akzeptiert. Dies ist die einzige obligatorische Einstellung, die vom Updater erfordert wird. Sie können die Aktualisierungs-URL über diese Eigenschaft oder über die Konfigurationsdatei festlegen. Wenn der Wert mithilfe beider Methoden festgelegt ist, verwendet der Updater den durch diese Eigenschaft festgelegten Wert.
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdater:wasPendingUpdate:get"><apiName>wasPendingUpdate</apiName><shortdesc>
+		Gibt an, ob es sich um eine verschobene Aktualisierung handelt, auch wenn sie nicht installiert werden konnte („true“); andernfalls „false“.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+		Gibt an, ob es sich um eine verschobene Aktualisierung handelt, auch wenn sie nicht installiert werden konnte (<codeph>true</codeph>); andernfalls <codeph>false</codeph>. Der Updater legt diese Eigenschaft während eines Aufrufs der <codeph>initialize()</codeph>-Methode fest. Verwenden Sie die <codeph>wasPendingUpdate</codeph>- und <codeph>isFirstRun</codeph>-Eigenschaften, um zu überprüfen, ob die Installation eines Updates fehlgeschlagen ist, (in diesem Fall wird <codeph>wasPendingUpdate</codeph> als <codeph>true</codeph> und <codeph>isFirstRun</codeph> als <codeph>false</codeph> festgelegt).
+		
+		</apiDesc></apiValueDetail><related-links><link href="air.update.xml#ApplicationUpdater/isFirstRun"><linktext>isFirstRun</linktext></link></related-links></apiValue></apiClassifier><apiClassifier id="air.update:ApplicationUpdaterUI"><apiName>ApplicationUpdaterUI</apiName><shortdesc>
+	Die ApplicationUpdater-Klasse definiert die grundlegende Funktionalität des Updateframeworks für Adobe&amp;#xAE; AIR&amp;#xAE;-Anwendungen und stellt eine Standardbenutzeroberfläche bereit.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.events:EventDispatcher</apiBaseClassifier></apiClassifierDef><apiDesc>
+	Die ApplicationUpdaterUI-Klasse definiert die grundlegende Funktionalität des Updateframeworks für Adobe<sup>®</sup> AIR<sup>®</sup>-Anwendungen und stellt eine Standardbenutzeroberfläche bereit. (Die ApplicationUpdater-Klasse enthält eine Aktualisierungsfunktionalität, <i>ohne</i> eine Standardbenutzeroberfläche zu implementieren.) 
+	
+	<p product="flex">Diese Klasse ist in der applicationupdater_ui.swc-Datei enthalten. Adobe<sup>®</sup> Flex™ Builder™ lädt diese Klasse automatisch, wenn Sie ein Projekt für Adobe AIR erstellen. Außerdem ist im Adobe<sup>®</sup> Flex™ SDK diese applicationupdater_ui.swc-Datei enthalten, die Sie beim Kompilieren der Anwendung einbinden sollten, wenn Sie Flex SDK verwenden.</p>
+	
+	<p product="flash">Diese Klasse ist in der applicationupdater_ui.swc-Datei enthalten, die Teil des Adobe<sup>®</sup> Flex™ SDK ist. </p>
+	
+	<p platform="javascript">Um diese Klasse im JavaScript-Code zu verwenden, laden Sie die applicationupdater_ui.swf-Datei (im AIR SDK bereitgestellt) wie folgt:</p>
+	
+	<codeblock platform="javascript">&lt;script src="applicationupdater_ui.swf" type="application/x-shockwave-flash"></codeblock>
+		
+	<p>Die Verwaltung der Aktualisierungen von Anwendungen kann kompliziert sein. Das AIR-Updateframework stellt APIs bereit, mit denen Entwickler gute Aktualisierungsmöglichkeiten in AIR-Anwendungen einbinden können. Die Funktionalität im AIR-Updateframework unterstützt Entwickler bei Folgendem:</p>
+	
+	<ul><li>
+	<p>Regelmäßige Suche nach Updates in bestimmten Intervallen oder auf Anforderung des Benutzers</p>
+	</li>
+	<li>
+	<p>Herunterladen von AIR-Dateien (Updates) von einer Webquelle</p>
+	</li>
+	<li>
+	<p>Informieren des Benutzers beim ersten Ausführen der neu installierten Version</p>
+	</li>
+	<li>
+	<p>Bestätigen, dass der Benutzer nach Updates suchen möchte </p>
+	</li>
+	<li>
+	<p>Anzeigen von Informationen zur neuen Updateversion für den Benutzer</p>
+	</li>
+	<li>
+	<p>Anzeigen des Downloadfortschritts und von Fehlermeldungen für den Benutzer </p>
+	</li></ul>
+	
+	<p>Das AIR-Updateframework ermöglicht das Speichern von Informationen zur Updateversion einer AIR-Anwendung in einfachen XML-Konfigurationsdateien. Bei den meisten Anwendungen erzielen Sie mit dem Einrichten dieser Konfigurationsdateien und dem Einfügen einiger Basiscodezeilen eine gute Aktualisierungsfunktionalität für den Endbenutzer. </p>
+	
+	<p>Die AIRUpdateUI-Klasse implementiert eine Standardbenutzeroberfläche, die Ihre Anwendung verwenden kann. Sie bietet dem Benutzer grundlegende Informationen und Optionen für Anwendungsaktualisierungen.</p>
+	
+	<p>Der Aktualisierungsvorgang durchläuft eine Statussequenz:</p>
+	
+	<p><adobetable class="innertable">
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<tgroup cols="2"><thead><row><entry>
+	Status
+	</entry><entry>
+	Beschreibung
+	</entry></row></thead><tbody><row><entry>Uninitialized</entry>
+	<entry>Der Updater wurde nicht initialisiert.</entry>
+	</row><row><entry>Initializing</entry>
+	<entry>Der Updater wird initialisiert.</entry>
+	</row><row><entry>Ready</entry>
+	<entry>Der Updater wurde initialisiert.</entry>
+	</row><row><entry>Before checking</entry>
+	<entry>Der Updater hat noch nicht nach der Updatedeskriptordatei gesucht.</entry>
+	</row><row><entry>Checking</entry>
+	<entry>Der Updater sucht nach einer Updatedeskriptordatei.</entry>
+	</row><row><entry>Available</entry>
+	<entry>Die Updatedeskriptordatei ist verfügbar.</entry>
+	</row><row><entry>Downloading</entry>
+	<entry>Der Updater lädt die AIR-Datei herunter.</entry>
+	</row><row><entry>Downloaded</entry>
+	<entry>Der Updater hat die AIR-Datei heruntergeladen.</entry>
+	</row><row><entry>Installing</entry>
+	<entry>Der Updater installiert die AIR-Datei.</entry>
+	</row><row><entry>Pending install</entry>
+	<entry>Der Updater wurde initialisiert und Aktualisierungen stehen aus.</entry>
+	</row></tbody></tgroup></adobetable></p>
+	
+	<p>Wenn Sie eine Anwendung mit dem AIR Debug Launcher (ADL) testen, führt ein Versuch der Aktualisierung der Anwendung zu einer IllegalOperationError-Ausnahme.</p>
+	
+	<p product="flex">Weitere Details zur Verwendung des AIR-Updateframeworks finden Sie im Kapitel „Aktualisieren von AIR-Anwendungen“ in <xref href="http://www.adobe.com/go/learn_air_flex3">Developing Adobe AIR Applications with Adobe Flex</xref>.</p> 
+	
+	<p product="flash">Weitere Details zur Verwendung des AIR-Updateframeworks finden Sie im Kapitel „Aktualisieren von AIR-Anwendungen“ in <xref href="http://www.adobe.com/go/learn_air_flash">Developing Adobe AIR Applications with Adobe Flash</xref>.</p> 
+	
+	<p platform="javascript">Weitere Details zur Verwendung des AIR-Updateframeworks finden Sie im Kapitel „Aktualisieren von AIR-Anwendungen“ in <xref href="http://www.adobe.com/go/learn_air_html">Developing Adobe AIR Applications with HTML and Ajax</xref>.</p> 
+	
+	</apiDesc></apiClassifierDetail><related-links><link href="air.update.xml#ApplicationUpdater"><linktext>ApplicationUpdater</linktext></link><link href="flash.desktop.xml#Updater"><linktext>flash.desktop.Updater</linktext></link></related-links><adobeApiEvent id="air.update:ApplicationUpdaterUI_flash.events.ErrorEvent.ERROR_error"><apiName>error</apiName><shortdesc> 
+	Wird ausgelöst, wenn ein Fehler bei der Initialisierung oder während des Aktualisierungsvorgangs (bei einem unerwarteten Ereignis) auftritt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.ErrorEvent.ERROR</apiEventType><adobeApiEventClassifier>flash.events.ErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	Wird ausgelöst, wenn ein Fehler bei der Initialisierung oder während des Aktualisierungsvorgangs (bei einem unerwarteten Ereignis) auftritt.
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdaterUI_flash.events.ProgressEvent.PROGRESS_progress"><apiName>progress</apiName><shortdesc> 
+	Wird ausgelöst, nachdem die Initialisierung abgeschlossen ist.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.ProgressEvent.PROGRESS</apiEventType><adobeApiEventClassifier>flash.events.ProgressEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	Wird ausgelöst, nachdem die Initialisierung abgeschlossen ist. 
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdaterUI_air.update.events.StatusFileUpdateErrorEvent.FILE_UPDATE_ERROR_fileUpdateError"><apiName>fileUpdateError</apiName><shortdesc> 
+	 Wird ausgelöst, wenn ein Fehler bei der Überprüfung der als airFile-Parameter übergebenen Datei in einem Aufruf der installFromAIRFile()-Methode auftritt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.StatusFileUpdateErrorEvent.FILE_UPDATE_ERROR</apiEventType><adobeApiEventClassifier>air.update.events.StatusFileUpdateErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	 Wird ausgelöst, wenn ein Fehler bei der Überprüfung der als <codeph>airFile</codeph>-Parameter übergebenen Datei in einem Aufruf der <codeph>installFromAIRFile()</codeph>-Methode auftritt.
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdaterUI_air.update.events.StatusFileUpdateEvent.FILE_UPDATE_STATUS_fileUpdateStatus"><apiName>fileUpdateStatus</apiName><shortdesc> 
+	
+	Wird ausgelöst, nachdem der Updater erfolgreich die Datei im Aufruf der installFromAIRFile()-Methode überprüft hat.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.StatusFileUpdateEvent.FILE_UPDATE_STATUS</apiEventType><adobeApiEventClassifier>air.update.events.StatusFileUpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	
+	Wird ausgelöst, nachdem der Updater erfolgreich die Datei im Aufruf der <codeph>installFromAIRFile()</codeph>-Methode überprüft hat.
+	
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdaterUI_air.update.events.DownloadErrorEvent.DOWNLOAD_ERROR_downloadError"><apiName>downloadError</apiName><shortdesc> 
+	Wird ausgelöst, wenn ein Fehler bei der Verbindung oder dem Herunterladen der Updatedatei auftritt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.DownloadErrorEvent.DOWNLOAD_ERROR</apiEventType><adobeApiEventClassifier>air.update.events.DownloadErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	Wird ausgelöst, wenn ein Fehler bei der Verbindung oder dem Herunterladen der Updatedatei auftritt. Das Ereignis wird auch ausgelöst, wenn ein ungültiger HTTP-Status vorliegt (z. B. „404 – Datei nicht gefunden“).
+	
+	<p>Beim Auslösen dieses Ereignisses wird der Timer für die regelmäßige Suche automatisch neu gestartet (wenn die Verzögerung größer als 0 ist). </p>
+	
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdaterUI_air.update.events.StatusUpdateErrorEvent.UPDATE_ERROR_updateError"><apiName>updateError</apiName><shortdesc> 
+	
+	Wird ausgelöst, wenn ein Fehler beim Versuch des Herunterladens oder Parsings der Updatedeskriptordatei auftritt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.StatusUpdateErrorEvent.UPDATE_ERROR</apiEventType><adobeApiEventClassifier>air.update.events.StatusUpdateErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	
+	Wird ausgelöst, wenn ein Fehler beim Versuch des Herunterladens oder Parsings der Updatedeskriptordatei auftritt.
+	
+	<p>Löst der Updater dieses Ereignis aus, wird der Timer für die regelmäßige Suche automatisch neu gestartet (wenn die Verzögerung größer als 0 ist). Die Anwendung sollte das Ausblenden von Fehlermeldungen berücksichtigen, wenn der Updater ein neues <codeph>checkForUpdate</codeph>-Ereignis auslöst. </p>
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdaterUI_air.update.events.StatusUpdateEvent.UPDATE_STATUS_updateStatus"><apiName>updateStatus</apiName><shortdesc> 
+	
+	Wird ausgelöst, nachdem der Updater die Updatedeskriptordatei erfolgreich heruntergeladen und interpretiert hat.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.StatusUpdateEvent.UPDATE_STATUS</apiEventType><adobeApiEventClassifier>air.update.events.StatusUpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	
+	Wird ausgelöst, nachdem der Updater die Updatedeskriptordatei erfolgreich heruntergeladen und interpretiert hat. 
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdaterUI_air.update.events.UpdateEvent.BEFORE_INSTALL_beforeInstall"><apiName>beforeInstall</apiName><shortdesc> 
+	 Wird unmittelbar vor der Installation des Updates ausgelöst, nachdem die installUpdate()-Methode aufgerufen wurde.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.UpdateEvent.BEFORE_INSTALL</apiEventType><adobeApiEventClassifier>air.update.events.UpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	 Wird kurz vor der Installation des Updates ausgelöst, nachdem die<codeph>installUpdate()</codeph>-Methode aufgerufen wurde. Es kann sinnvoll sein, die Installation des Updates zu diesem Zeitpunkt zu verhindern, da der Benutzer die gesamte aktuelle Arbeit verlieren kann, wenn die Laufzeit die Anwendung beendet, um das Update zu installieren. 
+	 
+	 <p>Das Aufrufen der <codeph>preventDefault()</codeph>-Methode dieses Ereignisses verschiebt die Installation bis zum nächsten Neustart. Wenn Sie die <codeph>preventDefault()</codeph>-Methode aufrufen, kann in dieser Anwendungssitzung kein zusätzlicher Aktualisierungsvorgang gestartet werden (über einen Aufruf der <codeph>installUpdate()</codeph>-Methode oder aufgrund der regelmäßigen Suche). </p>
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdaterUI_air.update.events.UpdateEvent.DOWNLOAD_COMPLETE_downloadComplete"><apiName>downloadComplete</apiName><shortdesc> 
+	
+	Wird ausgelöst, wenn das Herunterladen der Updatedatei abgeschlossen ist. </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.UpdateEvent.DOWNLOAD_COMPLETE</apiEventType><adobeApiEventClassifier>air.update.events.UpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	
+	Wird ausgelöst, wenn das Herunterladen der Updatedatei abgeschlossen ist. 
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdaterUI_air.update.events.UpdateEvent.DOWNLOAD_START_downloadStart"><apiName>downloadStart</apiName><shortdesc> 
+	
+	 Wird ausgelöst, nachdem ein Aufruf der downloadUpdate()-Methode ausgeführt und die Verbindung zum Server hergestellt wurde.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.UpdateEvent.DOWNLOAD_START</apiEventType><adobeApiEventClassifier>air.update.events.UpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	
+	 Wird ausgelöst, nachdem ein Aufruf der <codeph>downloadUpdate()</codeph>-Methode ausgeführt und die Verbindung zum Server hergestellt wurde. Wenn Sie die ApplicationUpdater-Bibliothek verwenden, möchten Sie möglicherweise, dass die Ereignisprozedur für den Benutzer eine Downloadfortschrittsleiste anzeigt. 
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdaterUI_air.update.events.UpdateEvent.CHECK_FOR_UPDATE_checkForUpdate"><apiName>checkForUpdate</apiName><shortdesc> 
+	Wird vor dem Beginn des Aktualisierungsvorgangs ausgelöst, unmittelbar bevor der Updater versucht, die Updatedeskriptordatei herunterzuladen.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.UpdateEvent.CHECK_FOR_UPDATE</apiEventType><adobeApiEventClassifier>air.update.events.UpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	Wird vor dem Beginn des Aktualisierungsvorgangs ausgelöst, unmittelbar bevor der Updater versucht, die Updatedeskriptordatei herunterzuladen. Der Updater kann dieses Ereignis als ein Ergebnis des direkten Aufrufs der <codeph>checkNow()</codeph>-Methode auslösen oder weil der Timer für die regelmäßige Suche abgelaufen ist. 
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdaterUI_air.update.events.UpdateEvent.INITIALIZED_initialized"><apiName>initialized</apiName><shortdesc> 
+	
+	Wird ausgelöst, nachdem die Initialisierung abgeschlossen ist.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.UpdateEvent.INITIALIZED</apiEventType><adobeApiEventClassifier>air.update.events.UpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	
+	Wird ausgelöst, nachdem die Initialisierung abgeschlossen ist. 
+	 
+	 <p>Dieses Ereignis verfügt über die folgenden schreibgeschützten Eigenschaften: </p>
+	 <ul><li>
+	 <p>	<codeph>isFirstRun</codeph> (Boolescher Wert) <codeph>true</codeph>, wenn dies die erste Ausführung nach einer erfolgreichen Aktualisierung ist; andernfalls <codeph>false</codeph>.</p>
+	 </li><li>
+	 <p>	<codeph>previousVersion</codeph> (String) Die vorherige Version der Anwendung vor der Aktualisierung (nur festgelegt, wenn <codeph>isfirstRun</codeph> <codeph>true</codeph> ist). </p>
+	 </li><li>
+	 <p>	<codeph>currentVersion</codeph> (String) Die Version von der Anwendungsdeskriptordatei der aktuell installierten Version.</p>
+	 </li>
+	 </ul>
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><apiConstructor id="air.update:ApplicationUpdaterUI:ApplicationUpdaterUI"><apiName>ApplicationUpdaterUI</apiName><shortdesc>
+		Die Konstruktorfunktion.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/></apiConstructorDef><apiDesc>
+		Die Konstruktorfunktion. 
+		
+		</apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="air.update:ApplicationUpdaterUI:addResources"><apiName>addResources</apiName><shortdesc> 
+		 Fügt dynamisch ein neues Ressourcen-Bundle für die festgelegte Sprache hinzu.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>lang</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Der Sprachcode (z. B. <codeph>"ro"</codeph> für Rumänisch).
+		 
+		 </apiDesc></apiParam><apiParam><apiItemName>res</apiItemName><apiOperationClassifier>Object</apiOperationClassifier><apiDesc>Das Objekt enthält die Schlüssel und Werte für die Übersetzung. Die Schlüssel stammen aus der Spracheigenschaftsdatei. Die folgende Tabelle enthält die möglichen Schlüssel (Eigenschaftsnamen).
+		 
+		 <p>
+		 <adobetable class="innertable">
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 <tgroup cols="4"><thead><row><entry> Schlüssel  </entry><entry> Deutscher Wert  </entry><entry> Dialogfeld </entry><entry> Beschreibung  </entry></row></thead><tbody><row>
+		 <entry> <codeph>appWidth </codeph> </entry>
+		 <entry> 530  </entry>
+		 <entry> Alle  </entry>
+		 <entry> Breite des Dialogfelds. </entry></row><row>
+		 <entry> <codeph>titleWindow </codeph> </entry>
+		 <entry> Aktualisierung wird durchgeführt:  </entry>
+		 <entry> Alle  </entry>
+		 <entry> Wird in der nativen Fenstertitelleiste vor dem Anwendungsnamen angezeigt. </entry></row><row>
+		 <entry> <codeph>titleCheck </codeph> </entry>
+		 <entry> Nach Updates suchen  </entry>
+		 <entry> Nach Updates suchen  </entry>
+		 <entry> Dialogfeldtitel.  </entry></row><row>
+		 <entry> <codeph>msgCheck </codeph> </entry>
+		 <entry> Zulassen, dass die Anwendung nach Updates sucht?  </entry>
+		 <entry> Nach Updates suchen  </entry>
+		 <entry> Dialogfeldmeldung.  </entry></row><row>
+		 <entry> <codeph>btnCheck </codeph> </entry>
+		 <entry> Nach Updates suchen  </entry>
+		 <entry> Nach Updates suchen  </entry>
+		 <entry> Beschriftung der Schaltfläche „Nach Updates suchen“.  </entry></row><row>
+		 <entry> <codeph>btnCancel</codeph> </entry>
+		 <entry> Abbrechen  </entry>
+		 <entry> Alle Dialogfelder mit der Schaltfläche „Abbrechen“  </entry>
+		 <entry> Beschriftung der Schaltfläche „Abbrechen“. </entry></row><row>
+		 <entry> <codeph>titleCheckNoUpdates </codeph> </entry>
+		 <entry> Keine Updates verfügbar  </entry>
+		 <entry> CheckForUpdates – Keine Updates verfügbar  </entry>
+		 <entry> Dialogfeldtitel. </entry></row><row>
+		 <entry> <codeph>msgCheckNoUpdates </codeph> </entry>
+		 <entry> Für die Anwendung sind keine Updates verfügbar.  </entry>
+		 <entry> Nach Updates suchen – Keine Updates verfügbar  </entry>
+		 <entry> Dialogfeldmeldung.  </entry></row><row>
+		 <entry> <codeph>btnClose </codeph> </entry>
+		 <entry> Schließen  </entry>
+		 <entry> Alle Dialogfelder mit der Schaltfläche „Schließen“  </entry>
+		 <entry> Beschriftung der Schaltfläche „Schließen“ </entry></row><row>
+		 <entry> <codeph>titleCheckError </codeph> </entry>
+		 <entry> Updatefehler  </entry>
+		 <entry> Nach Updates suchen – Verbindungsfehler  </entry>
+		 <entry> Dialogfeldtitel.  </entry></row><row>
+		 <entry> <codeph>msgCheckError </codeph> </entry>
+		 <entry> Bei der Suche nach Updates ist ein Fehler aufgetreten. Fehlernr. {0}  </entry>
+		 <entry> Nach Updates suchen – Verbindungsfehler  </entry>
+		 <entry> Dialogfeldmeldung. {0} wird durch die Fehler-ID ersetzt. </entry></row><row>
+		 <entry> <codeph>titleUpdate </codeph> </entry>
+		 <entry> Update verfügbar  </entry>
+		 <entry> Update verfügbar  </entry>
+		 <entry> Dialogfeldtitel. </entry></row><row>
+		 <entry> <codeph>msgUpdate </codeph> </entry>
+		 <entry> Eine aktualisierte Version der Anwendung steht zum Herunterladen bereit.  </entry>
+		 <entry> Update verfügbar  </entry>
+		 <entry> Dialogfeldmeldung. </entry></row><row>
+		 <entry> <codeph>lblApplication </codeph> </entry>
+		 <entry> Anwendung:  </entry>
+		 <entry> Update verfügbar  </entry>
+		 <entry> Beschriftung, die vor dem Anwendungsnamen angezeigt wird. </entry></row><row>
+		 <entry> <codeph>lblInstalledVersion </codeph> </entry>
+		 <entry> Installierte Version:  </entry>
+		 <entry> Update verfügbar  </entry>
+		 <entry> Beschriftung, die vor der installierten Version angezeigt wird. </entry></row><row>
+		 <entry> <codeph>lblAvailableVersion </codeph> </entry>
+		 <entry> Updateversion:  </entry>
+		 <entry> Update verfügbar  </entry>
+		 <entry> Beschriftung, die vor der Updateversion angezeigt wird. </entry></row><row>
+		 <entry> <codeph>btnDownload </codeph> </entry>
+		 <entry> Jetzt herunterladen  </entry>
+		 <entry> Update verfügbar  </entry>
+		 <entry> Beschriftung der Schaltfläche „Jetzt herunterladen“  </entry></row><row>
+		 <entry> <codeph>btnDownloadLater </codeph> </entry>
+		 <entry> Später herunterladen  </entry>
+		 <entry> Update verfügbar  </entry>
+		 <entry> Beschriftung der Schaltfläche „Später herunterladen“.  </entry></row><row>
+		 <entry> <codeph>lnkReleaseNotes </codeph> </entry>
+		 <entry> Versionshinweise  </entry>
+		 <entry> Alle mit einem Hyperlink „Versionshinweise“  </entry>
+		 <entry> Der Hyperlinkname „Versionshinweise“.  </entry></row><row>
+		 <entry> <codeph>titleProgress </codeph> </entry>
+		 <entry> Downloadfortschritt...  </entry>
+		 <entry> Downloadfortschritt  </entry>
+		 <entry> Dialogfeldtitel. </entry></row><row>
+		 <entry> <codeph>msgProgress </codeph> </entry>
+		 <entry> Update wird heruntergeladen  </entry>
+		 <entry> Downloadfortschritt  </entry>
+		 <entry> Dialogfeldmeldung. </entry></row><row>
+		 <entry> <codeph>titleDownloadError </codeph> </entry>
+		 <entry> Download fehlgeschlagen  </entry>
+		 <entry> Downloadfehler  </entry>
+		 <entry> Dialogfeldtitel. </entry></row><row>
+		 <entry> <codeph>msgDownloadError </codeph> </entry>
+		 <entry> Beim Herunterladen des Updates ist ein Fehler aufgetreten. Fehlernr. {0}  </entry>
+		 <entry> Downloadfehler  </entry>
+		 <entry> Dialogfeldmeldung. {0} wird durch die Fehler-ID ersetzt.  </entry></row><row>
+		 <entry> <codeph>titleInstall </codeph> </entry>
+		 <entry> Update installieren  </entry>
+		 <entry> Update installieren  </entry>
+		 <entry> Dialogfeldtitel. </entry></row><row>
+		 <entry> <codeph>msgInstall </codeph> </entry>
+		 <entry> Das Update für die Anwendung wurde heruntergeladen und ist bereit zur Installation.  </entry>
+		 <entry> Update installieren  </entry>
+		 <entry> Dialogfeldmeldung. </entry></row><row>
+		 <entry> <codeph>btnInstall </codeph> </entry>
+		 <entry> Jetzt installieren  </entry>
+		 <entry> Update installieren  </entry>
+		 <entry> Beschriftung der Schaltfläche „Installieren“  </entry></row><row>
+		 <entry> <codeph>btnInstallLater </codeph> </entry>
+		 <entry> Nach dem Neustart  </entry>
+		 <entry> Update installieren  </entry>
+		 <entry> Beschriftung der Schaltfläche „Nach dem Neustart“  </entry></row><row>
+		 <entry> <codeph>titleFileUpdate </codeph> </entry>
+		 <entry> Update verfügbar  </entry>
+		 <entry> Datei – Update verfügbar  </entry>
+		 <entry> Dialogfeldtitel.  </entry></row><row>
+		 <entry> <codeph>msgFileUpdate </codeph> </entry>
+		 <entry> Die Datei enthält eine aktualisierte Version der Anwendung. Installieren?  </entry>
+		 <entry> Datei – Update verfügbar  </entry>
+		 <entry> Dialogfeldmeldung. </entry></row><row>
+		 <entry> <codeph>lblFile </codeph> </entry>
+		 <entry> File:  </entry>
+		 <entry> Datei – Update verfügbar  </entry>
+		 <entry> Beschriftung, die vor dem Dateinamen angezeigt wird.  </entry></row><row>
+		 <entry> <codeph>titleFileNoUpdate </codeph> </entry>
+		 <entry> Kein Update verfügbar  </entry>
+		 <entry> Datei – Keine Updates verfügbar  </entry>
+		 <entry> Dialogfeldtitel. </entry></row><row>
+		 <entry> <codeph>msgFileNoUpdate </codeph> </entry>
+		 <entry> Die Datei enthält keine neuere Version der Anwendung.  </entry>
+		 <entry> Datei – Keine Updates verfügbar  </entry>
+		 <entry> Dialogfeldmeldung. </entry></row><row>
+		 <entry> <codeph>titleFileError </codeph> </entry>
+		 <entry> Dateifehler  </entry>
+		 <entry> Datei – Fehler  </entry>
+		 <entry> Dialogfeldtitel.  </entry></row><row>
+		 <entry> <codeph>msgFileError </codeph> </entry>
+		 <entry> Ein Fehler ist beim Validieren der Updatedatei aufgetreten. Fehlernr. {0}  </entry>
+		 <entry> Datei – Fehler  </entry>
+		 <entry> Dialogfeldmeldung. {0} wird durch die Fehler-ID ersetzt. </entry></row><row>
+		 <entry> <codeph>titleUnexpectedError </codeph> </entry>
+		 <entry> Unerwarteter Fehler  </entry>
+		 <entry> Unerwarteter Fehler  </entry>
+		 <entry> Dialogfeldtitel. </entry></row><row>
+		 <entry> <codeph>msgUnexpectedError </codeph> </entry>
+		 <entry> Ein unerwarteter Fehler ist aufgetreten. Fehlernr. {0}  </entry>
+		 <entry> Unerwarteter Fehler  </entry>
+		 <entry> Dialogfeldmeldung. {0} wird durch die Fehler-ID ersetzt.  </entry></row></tbody></tgroup></adobetable>
+		 
+		 </p>
+		 
+		 </apiDesc></apiParam></apiOperationDef><apiDesc> 
+		 Fügt dynamisch ein neues Ressourcen-Bundle für die festgelegte Sprache hinzu. JavaScript-Entwickler verwenden diese Methode, um dynamisch eine neue Sprache für die Dialogfelder hinzuzufügen, die die Updater-UI der Anwendung anzeigt. (Flex-Entwickler können direkt eine neue Sprache zum Ressourcen-Bundle „ApplicationUpdaterDialogs“ hinzufügen.)
+		 
+		 </apiDesc></apiOperationDetail><related-links><link href="air.update.xml#ApplicationUpdaterUI/localeChain"><linktext>localeChain</linktext></link></related-links></apiOperation><apiOperation id="air.update:ApplicationUpdaterUI:cancelUpdate"><apiName>cancelUpdate</apiName><shortdesc>
+		Bricht den Aktualisierungsvorgang ab.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+		Bricht den Aktualisierungsvorgang ab. Das Aufrufen dieser Methode bricht alle ausstehenden Downloads ab, löscht unvollständig heruntergeladene Dateien und startet den Timer für die regelmäßige Suche neu.
+		
+		<p>Der Aktualisierungsvorgang kann jederzeit abgebrochen werden, wenn sich der Zustandsautomat im Status „UNINITIALIZED“ oder „INITIALIZING“ befindet. Dies hat keine Auswirkung, wenn die Methode in einem der Status „UNINITIALIZED“ oder „INITIALIZING“ aufgerufen wird.</p>
+		
+		</apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.update:ApplicationUpdaterUI:checkNow"><apiName>checkNow</apiName><shortdesc>
+		Startet den Aktualisierungsvorgang.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+		Startet den Aktualisierungsvorgang. Das Aufrufen dieser Methode stoppt nicht den Timer für die regelmäßige Suche; die Methode erkennt jedoch, dass ein Aktualisierungsvorgang ausgeführt wird und überspringt die aktuelle Iteration.
+		
+		<p>Diese Methode wird nur ausgeführt, wenn der aktuelle Status „READY“ ist. </p>
+		
+		<p>Diese Methode kann dazu führen, dass das Updaterobjekt das folgende Ereignis auslöst:</p>
+		
+		</apiDesc></apiOperationDetail><adobeApiEvent id="air.update:ApplicationUpdaterUI:checkNow_checkForUpdate"><apiName>checkForUpdate</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>air.update.events:UpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>Wird unmittelbar vor Beginn des Aktualisierungsvorgangs ausgelöst.
+		
+		</apiDesc></adobeApiEventDetail><shortdesc>Wird unmittelbar vor Beginn des Aktualisierungsvorgangs ausgelöst.</shortdesc></adobeApiEvent></apiOperation><apiOperation id="air.update:ApplicationUpdaterUI:initialize"><apiName>initialize</apiName><shortdesc>
+		 Initialisiert den Updater.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+		 Initialisiert den Updater. Das Aufrufen dieser Methode bewirkt Folgendes: 
+		
+		<p><ol><li>
+		<p>Sie initialisiert das Updateframework, wobei ohne weitere Meldung (und synchron) die ggf. ausstehenden Aktualisierungen installiert werden. Sie sollten diese Methode beim Anwendungsstart aufrufen, da dadurch die Anwendung möglicherweise neu gestartet wird.</p>
+		</li><li>
+		
+		<p>Sie sucht nach einer verschobenen Aktualisierung und installiert sie ggf.</p>
+		</li><li>
+		<p>Wenn eine vorherige Aktualisierung fehlgeschlagen ist, werden die Updatedatei und die Versionsinformationen aus dem Speicherbereich gelöscht.</p>
+		</li><li>
+		<p>Wenn die Timer-Verzögerung abgelaufen ist, wird der Aktualisierungsvorgang gestartet; andernfalls wird der Timer gestartet. Wenn Sie jedoch eine Anwendung mit dem AIR Debug Launcher (ADL) testen, führt ein Versuch der Aktualisierung der Anwendung zu einer IllegalOperationError-Ausnahme.</p>
+		</li>
+		</ol></p>
+		
+		</apiDesc></apiOperationDetail><adobeApiEvent id="air.update:ApplicationUpdaterUI:initialize_initialized"><apiName>initialized</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>air.update.events:UpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>Die Initialisierung ist abgeschlossen. 
+		
+		</apiDesc></adobeApiEventDetail><shortdesc>Die Initialisierung ist abgeschlossen.</shortdesc></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdaterUI:initialize_error"><apiName>error</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:ErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>Bei der Initialisierung tritt ein Fehler auf.
+		
+		</apiDesc></adobeApiEventDetail><shortdesc>Bei der Initialisierung tritt ein Fehler auf.</shortdesc></adobeApiEvent></apiOperation><apiOperation id="air.update:ApplicationUpdaterUI:installFromAIRFile"><apiName>installFromAIRFile</apiName><shortdesc>
+		Startet den Aktualisierungsvorgang mithilfe einer lokalen AIR-Datei.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>file</apiItemName><apiOperationClassifier>flash.filesystem:File</apiOperationClassifier><apiDesc>Die zu installierende AIR-Datei.
+		
+		</apiDesc></apiParam></apiOperationDef><apiDesc>
+		Startet den Aktualisierungsvorgang mithilfe einer lokalen AIR-Datei. 
+		
+		<p>Das Aufrufen dieser Methode hat keine Wirkung, wenn ein Aktualisierungsvorgang ausgeführt wird (wenn der Status nicht <codeph>„Downloaded“</codeph> ist).</p>
+		
+		<p>Diese Funktion ist hilfreich für eine Anwendung, für die das <codeph>customUpdateUI</codeph>-Element in der Anwendungsdeskriptordatei als <codeph>true</codeph> festgelegt hat.</p>
+		
+		<p>Wenn Sie eine Anwendung mit dem AIR Debug Launcher (ADL) testen, führt der Aufruf dieser Methode zu einer IllegalOperationError-Ausnahme.</p>
+		
+		</apiDesc></apiOperationDetail><adobeApiEvent id="air.update:ApplicationUpdaterUI:installFromAIRFile_fileUpdateStatus"><apiName>fileUpdateStatus</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>air.update.events:StatusFileUpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>Wird ausgelöst, nachdem der Updater die AIR-Datei erfolgreich überprüft hat.
+		
+		</apiDesc></adobeApiEventDetail><shortdesc>Wird ausgelöst, nachdem der Updater die AIR-Datei erfolgreich überprüft hat.</shortdesc></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdaterUI:installFromAIRFile_updateError"><apiName>updateError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>air.update.events:StatusFileUpdateErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>Wird ausgelöst, wenn ein Fehler beim Versuch des Parsings der Updatedeskriptordatei auftritt.
+		 
+		</apiDesc></adobeApiEventDetail><shortdesc>Wird ausgelöst, wenn ein Fehler beim Versuch des Parsings der Updatedeskriptordatei auftritt.</shortdesc></adobeApiEvent></apiOperation><apiValue id="air.update:ApplicationUpdaterUI:configurationFile:get"><apiName>configurationFile</apiName><shortdesc>
+		Der Speicherort der Konfigurationsdatei, die die Werte für die delay- und updateURL-Eigenschaften festlegt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>flash.filesystem:File</apiValueClassifier></apiValueDef><apiDesc>
+		Der Speicherort der Konfigurationsdatei, die die Werte für die <codeph>delay</codeph>- und <codeph>updateURL</codeph>-Eigenschaften festlegt. Außerdem sind Einstellungen vorhanden, ob die Anwendung verschiedene Bestätigungsdialogfelder beim Aktualisierungsvorgang anzeigt. Wenn diese Eigenschaft auf eine nicht vorhandene Datei verweist, führt der Aufruf der <codeph>initialize()</codeph>-Methode dazu, dass ein Fehler ausgegeben wird.
+		
+		<p>Ein Beispiel einer Konfigurationsdatei:</p>
+		
+		<codeblock> &lt;?xml version="1.0" encoding="utf-8"?> 
+ 		&lt;configuration xmlns="http://ns.adobe.com/air/framework/update/configuration/1.0" >
+ 		  &lt;url>app:/server/update.xml&lt;/url>
+ 		  &lt;delay>1&lt;/delay>
+		   &lt;defaultUI>
+		      &lt;dialog name="checkForUpdate" visible="true" />
+		       &lt;dialog name="downloadUpdate" visible="false" />
+		       &lt;dialog name="downloadProgress" visible="true" />
+		       &lt;dialog name="installUpdate" visible="true" />    
+		   &lt;/defaultUI>
+		&lt;/configuration></codeblock>
+		
+		<p>Anstatt eine Konfigurationsdatei zu laden, können Sie den <ph platform="actionscript">ActionScript</ph> <ph platform="javascript">JavaScript</ph>-Code verwenden, um die folgenden Eigenschaften des ApplicationUpdaterUI-Objekts festzulegen: <codeph>delay</codeph>-, <codeph>isCheckForUpdateVisible</codeph>-, <codeph>isDownloadProgressVisible</codeph>-, <codeph>isDownloadUpdateVisible</codeph>-, <codeph>isFileUpdateVisible</codeph>-, <codeph>isInstallUpdateVisible</codeph>- und <codeph>updateURL</codeph>-Eigenschaften.</p>
+		
+		</apiDesc></apiValueDetail><related-links><link href="air.update.xml#ApplicationUpdaterUI/delay"><linktext>delay</linktext></link><link href="air.update.xml#ApplicationUpdaterUI/updateURL"><linktext>updateURL</linktext></link></related-links></apiValue><apiValue id="air.update:ApplicationUpdaterUI:currentVersion:get"><apiName>currentVersion</apiName><shortdesc>
+		Die aktuelle Version der Anwendung.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		Die aktuelle Version der Anwendung. Diese Eigenschaft wird bei einem Aufruf der <codeph>initialize()</codeph>-Methode festgelegt. Sie wird als die Version der Anwendungsdeskriptordatei festgelegt.
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdaterUI:delay:get"><apiName>delay</apiName><shortdesc>
+		Das Intervall in Tagen zwischen regelmäßigen Suchen nach neuen Updates.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Number</apiValueClassifier><apiDefaultValue>0
+		
+		</apiDefaultValue></apiValueDef><apiDesc>
+		Das Intervall in Tagen zwischen regelmäßigen Suchen nach neuen Updates.
+		
+		<p>Ein Wert 0 (der Standardwert) zeigt an, dass der Timer nicht aktiv ist, sodass keine regelmäßige Suche ausgeführt wird. Die Verzögerung kann über diese Eigenschaft oder über die Konfigurationsdatei festlegen. Wenn der Wert mithilfe beider Methoden festgelegt ist, wird der durch diese Eigenschaft festgelegte Wert verwendet.</p>
+		
+		</apiDesc></apiValueDetail><related-links><link href="air.update.xml#ApplicationUpdaterUI/configurationFile"><linktext>configurationFile</linktext></link></related-links></apiValue><apiValue id="air.update:ApplicationUpdaterUI:isCheckForUpdateVisible:get"><apiName>isCheckForUpdateVisible</apiName><shortdesc>
+		Aktiviert die Sichtbarkeit der Dialogfelder „Nach Updates suchen“, „Keine Updates verfügbar“ und „Updatefehler“.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+		Aktiviert die Sichtbarkeit der Dialogfelder „Nach Updates suchen“, „Keine Updates verfügbar“ und „Updatefehler“. Wenn <codeph>true</codeph> festgelegt wird, zeigt der Updater diese Dialogfelder als Teil des Aktualisierungsvorgangs an. Dies kann auch in der Aktualisierungskonfigurationsdatei festgelegt werden. Ein mithilfe dieser Eigenschaft festgelegter Wert überschreibt die Einstellung in der Aktualisierungskonfigurationsdatei. 
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdaterUI:isDownloadProgressVisible:get"><apiName>isDownloadProgressVisible</apiName><shortdesc>
+		
+		Aktiviert die Sichtbarkeit des Dialogfelds „Update herunterladen“.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+		
+		Aktiviert die Sichtbarkeit des Dialogfelds „Update herunterladen“. Wenn <codeph>true </codeph> festgelegt wird, zeigt der Updater diese Dialogfelder als Teil des Aktualisierungsvorgangs an. Dies kann auch in der Aktualisierungskonfigurationsdatei festgelegt werden. Ein mithilfe dieser Eigenschaft festgelegter Wert überschreibt die Einstellung in der Aktualisierungskonfigurationsdatei.
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdaterUI:isDownloadUpdateVisible:get"><apiName>isDownloadUpdateVisible</apiName><shortdesc>
+		Aktiviert die Sichtbarkeit des Dialogfelds „Update herunterladen“.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+		Aktiviert die Sichtbarkeit des Dialogfelds „Update herunterladen“. Wenn <codeph>true</codeph> festgelegt wird, zeigt der Updater diese Dialogfelder als Teil des Aktualisierungsvorgangs an. Dies kann auch in der Aktualisierungskonfigurationsdatei festgelegt werden. Ein mithilfe dieser Eigenschaft festgelegter Wert überschreibt die Einstellung in der Aktualisierungskonfigurationsdatei.
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdaterUI:isFileUpdateVisible:get"><apiName>isFileUpdateVisible</apiName><shortdesc>
+		
+		Aktiviert die Sichtbarkeit der Dialogfelder „Datei-Update“, „Kein Datei-Update“ und „Dateifehler“.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+		
+		Aktiviert die Sichtbarkeit der Dialogfelder „Datei-Update“, „Kein Datei-Update“ und „Dateifehler“. Wenn <codeph>true</codeph> festgelegt wird, zeigt der Updater diese Dialogfelder als Teil des Aktualisierungsvorgangs an. Dies kann auch in der Aktualisierungskonfigurationsdatei festgelegt werden. Ein mithilfe dieser Eigenschaft festgelegter Wert überschreibt die Einstellung in der Aktualisierungskonfigurationsdatei.
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdaterUI:isFirstRun:get"><apiName>isFirstRun</apiName><shortdesc>
+		Gibt an, ob dies die erste Ausführung nach einer erfolgreichen Aktualisierung („true“) ist oder nicht („false“).</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+		Gibt an, ob dies die erste Ausführung nach einer erfolgreichen Aktualisierung (<codeph>true</codeph>) ist oder nicht (<codeph>false</codeph>). Der Updater legt diesen Wert während des Aufrufs der <codeph>initialize()</codeph>-Methode fest. Der Entwickler sollte überprüfen, ob <codeph>isFirstRun</codeph> als <codeph>true</codeph> festgelegt ist, wenn Daten von einer Version auf die andere migriert werden sollen.
+		
+		</apiDesc></apiValueDetail><related-links><link href="air.update.xml#ApplicationUpdaterUI/wasPendingUpdate"><linktext>wasPendingUpdate</linktext></link></related-links></apiValue><apiValue id="air.update:ApplicationUpdaterUI:isInstallUpdateVisible:get"><apiName>isInstallUpdateVisible</apiName><shortdesc>
+		Aktiviert die Sichtbarkeit des Dialogfelds „Update installieren“.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+		Aktiviert die Sichtbarkeit des Dialogfelds „Update installieren“. Wenn <codeph>true </codeph> festgelegt wird, zeigt der Updater diese Dialogfelder als Teil des Aktualisierungsvorgangs an. Dies kann auch in der Aktualisierungskonfigurationsdatei festgelegt werden. Ein mithilfe dieser Eigenschaft festgelegter Wert überschreibt die Einstellung in der Aktualisierungskonfigurationsdatei.
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdaterUI:isNewerVersionFunction:get"><apiName>isNewerVersionFunction</apiName><shortdesc>
+		Eine Funktion, die der Updater verwenden sollte, um Versionsvergleiche auszuführen.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Function</apiValueClassifier></apiValueDef><apiDesc>
+		Eine Funktion, die der Updater verwenden sollte, um Versionsvergleiche auszuführen. Standardmäßig führt das Updateframework einen Versionsvergleich durch, um zu erkennen, ob die Version der Remote Site neuer als die Version der installierten Anwendung ist. Manchmal stimmt der Standardvergleich jedoch nicht mit dem Versionsschema des Entwicklers überein. Legen Sie diese Eigenschaft fest, um eine neue Funktion bereitzustellen, die den Vergleich ausführt. 
+		
+		<p>Die Standardvergleichsfunktion akzeptiert Versionen wie <i>x.y.z</i>, wobei x, y, z Buchstaben und Ziffern enthalten können. Es gibt einige spezielle Bedingungen, die die Standardvergleichsfunktion erkennt. Wenn die Testfunktion in den Versionsstrings <codeph>"alpha"</codeph>, <codeph>"beta"</codeph> oder <codeph>"rc"</codeph> findet, ist die Reihenfolge <codeph>alpha</codeph> &lt; <codeph>beta</codeph> &lt; <codeph>rc</codeph>.</p>
+		
+		</apiDesc><example conref="examples\ApplicationUpdater.configurationFunction.1.as"> Der folgende Code definiert die benutzerdefinierte Funktion <codeph>customFn</codeph> für das <codeph>appUpdate</codeph>-Updaterobjekt. Die Beispielsfunktion ist absichtlich einfach gehalten. Ihre benutzerdefinierte Funktion sollte einen booleschen Wert zurückgeben, der auf den Regeln Ihres Versionsschemas basiert.
+<codeblock>
+appUpdate.isNewerVersionFunction = customFn; 
+
+function customFn (currentVersion:String, updateVersion:String):Boolean 
+{
+    return updateVersion > currentVersion;
+}
+</codeblock></example></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdaterUI:isUnexpectedErrorVisible:get"><apiName>isUnexpectedErrorVisible</apiName><shortdesc>
+		Aktiviert die Sichtbarkeit des Dialogfelds „Unerwarteter Fehler“.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+		Aktiviert die Sichtbarkeit des Dialogfelds „Unerwarteter Fehler“. Wenn <codeph>true</codeph> festgelegt wird, zeigt der Anwendungsupdater dieses Dialogfeld als Teil des Aktualisierungsvorgangs an. Dies kann auch in der Aktualisierungskonfigurationsdatei festgelegt werden. Ein mithilfe dieser Eigenschaft festgelegter Wert überschreibt die Einstellung in der Aktualisierungskonfigurationsdatei. 
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdaterUI:isUpdateInProgress:get"><apiName>isUpdateInProgress</apiName><shortdesc>
+		Ein boolescher Ausdruck, der als „true“ festgelegt ist, wenn eine Aktualisierung ausgeführt wird, andernfalls „false“.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+		Eine boolesche Eigenschaft, die als <codeph>true</codeph> festgelegt ist, wenn eine Aktualisierung ausgeführt wird, andernfalls <codeph>false</codeph>.
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdaterUI:localeChain:get"><apiName>localeChain</apiName><shortdesc>
+		Ein Array, das die Gebietsschemakette definiert, die von der Benutzeroberfläche verwendet wird.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Array</apiValueClassifier></apiValueDef><apiDesc>
+		Ein Array, das die Gebietsschemakette definiert, die von der Benutzeroberfläche verwendet wird. Üblicherweise verwenden nur JavaScript-Entwickler (HTML) diese Eigenschaft. 
+		
+		<p>Flex-Entwickler können den ResourceManager verwenden, um die Gebietsschemakette zu verarbeiten. </p>
+		
+		<p>Standardmäßig werden die Sprachen in einer HTML-basierten Anwendung im Hinblick auf die Sprachen im <codeph>Capabilities.languages</codeph>-Array und die zehn Sprachen sortiert, die von der Benutzeroberfläche unterstützt werden. Wenn keine Übereinstimmung gefunden wird, wird die Benutzeroberfläche in englischer Sprache angezeigt. </p>
+		
+		<p>Dieses JavaScript-Beispiel verwendet die AIR-HTML-Lokalisierungsarchitektur, die im AIR SDK enthalten ist. Die Sprachen werden im Hinblick auf die Liste der Sprachen sortiert und anschließend wird Englisch als die standardmäßige Fallback-Sprache festgelegt.</p>
+		
+		<codeblock> appUpdater.addResources("ro_RO", {titleCheck: "Titlu", msgCheck: "Mesaj", btnCheck: "Buton"});
+		appUpdater.addResources("hu", {titleCheck: "C�m", msgCheck: "�zenet"}); 
+		var languages = ["ro", "hu"];
+		languages = languages.concat(air.Capabilities.languages);
+		var sortedLanguages = air.Localizer.sortLanguagesByPreference(languages, air.Capabilities.language, "en-US");  
+		sortedLanguages.push("en-US");
+		appUpdater.localeChain = sortedLanguages;</codeblock>
+		
+		</apiDesc></apiValueDetail><related-links><link href="air.update.xml#ApplicationUpdaterUI/addResources()"><linktext>addResources()</linktext></link></related-links></apiValue><apiValue id="air.update:ApplicationUpdaterUI:previousApplicationStorageDirectory:get"><apiName>previousApplicationStorageDirectory</apiName><shortdesc>
+		Der vorherige Speicherort des Anwendungsspeicherordners, falls er nach einer Aktualisierung geändert wurde.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>flash.filesystem:File</apiValueClassifier></apiValueDef><apiDesc>
+		Der vorherige Speicherort des Anwendungsspeicherordners, falls er nach einer Aktualisierung geändert wurde. Der Speicherort des Anwendungsspeicherordners wird nach einer Aktualisierung mit einer Zertifikatmigration geändert. Findet keine Zertifikatmigration statt, wird der Anwendungsspeicherordner nicht geändert, wenn der Benutzer die Anwendung aktualisiert und diese Eigenschaft ist als <codeph>null</codeph> festgelegt. Diese Eigenschaft wird bei einem Aufruf der <codeph>initialize()</codeph>-Methode festgelegt. 
+		
+		<p>Ein Entwickler kann die neue Version der AIR-Anwendung mit einem neuen Zertifikat unterzeichnen, wenn er beim Komprimieren der AIR-Datei mit ADT die <codeph>-migrate</codeph>-Option verwendet. Wenn eine neue Version einer AIR-Anwendung ein neues Signaturzertifikat verwendet, wird der lokale Speicherordner der Anwendung geändert, sobald der Benutzer die neue Version installiert. Verwenden Sie diese Eigenschaft, um Daten vom alten Anwendungsspeicherordner in den neuen Anwendungsspeicherordner zu übertragen (<codeph>File.applicationStorageDirectory</codeph>). Weitere Informationen finden Sie unter „Unterzeichnen von AIR-Dateien, um das Anwendungszertifikat zu wechseln“ im Kapitel „Erstellen von AIR-Anwendungen mit Befehlszeilenwerkzeugen“ des Adobe AIR-Entwicklerhandbuchs. </p>
+		
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdaterUI:previousVersion:get"><apiName>previousVersion</apiName><shortdesc>
+		Die vorherige Version der Anwendung.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		Die vorherige Version der Anwendung. Diese Eigenschaft wird bei einem Aufruf der <codeph>initialize()</codeph>-Methode festgelegt. Gibt die <i>vorherige Version</i> der Anwendung vor dem Upgrade zurück (nur festgelegt, wenn <codeph>isfirstRun</codeph> <codeph>true</codeph> ist); andernfalls als <codeph>null</codeph> festgelegt.
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdaterUI:updateDescriptor:get"><apiName>updateDescriptor</apiName><shortdesc>
+		Der Inhalt der Updatedeskriptordatei, der von der Aktualisierungs-URL heruntergeladen wurde.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>XML</apiValueClassifier></apiValueDef><apiDesc>
+		Der Inhalt der Updatedeskriptordatei, der von der Aktualisierungs-URL heruntergeladen wurde. Diese Eigenschaft ist nur nicht „null“, nachdem das Updaterobjekt ein <codeph>updateStatus</codeph>-Ereignis auslöst.
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdaterUI:updateURL:get"><apiName>updateURL</apiName><shortdesc>
+		Der Speicherort der Updatedeskriptordatei.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		Der Speicherort der Updatedeskriptordatei. Jeder für einen URLRequest-Pfad gültige Speicherort wird akzeptiert. Dies ist die einzige obligatorische Einstellung, die vom Updater erfordert wird. Sie können die Aktualisierungs-URL über diese Eigenschaft oder über die Konfigurationsdatei festlegen. Wenn der Wert mithilfe beider Methoden festgelegt ist, verwendet der Updater den durch diese Eigenschaft festgelegten Wert.
+		
+		</apiDesc></apiValueDetail><related-links><link href="air.update.xml#ApplicationUpdaterUI/configurationFile"><linktext>configurationFile</linktext></link></related-links></apiValue><apiValue id="air.update:ApplicationUpdaterUI:wasPendingUpdate:get"><apiName>wasPendingUpdate</apiName><shortdesc>
+		Gibt an, ob es sich um eine verschobene Aktualisierung handelt, auch wenn sie nicht installiert werden konnte („true“); andernfalls „false“.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+		Gibt an, ob es sich um eine verschobene Aktualisierung handelt, auch wenn sie nicht installiert werden konnte (<codeph>true</codeph>); andernfalls <codeph>false</codeph>. Der Updater legt diese Eigenschaft während eines Aufrufs der <codeph>initialize()</codeph>-Methode fest. Verwenden Sie die <codeph>wasPendingUpdate</codeph>- und <codeph>isFirstRun</codeph>-Eigenschaften, um zu überprüfen, ob die Installation eines Updates fehlgeschlagen ist, (in diesem Fall wird <codeph>wasPendingUpdate</codeph> als <codeph>true</codeph> und <codeph>isFirstRun</codeph> als <codeph>false</codeph> festgelegt).
+		
+		</apiDesc></apiValueDetail><related-links><link href="air.update.xml#ApplicationUpdaterUI/isFirstRun"><linktext>isFirstRun</linktext></link></related-links></apiValue></apiClassifier></apiPackage>

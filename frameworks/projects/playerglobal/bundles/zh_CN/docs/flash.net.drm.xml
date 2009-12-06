@@ -1,0 +1,212 @@
+<?xml version="1.0"?>
+<apiPackage id="flash.net.drm"><apiName>flash.net.drm</apiName><apiDetail/><apiClassifier id="flash.net.drm:DRMContentData"><apiName>DRMContentData</apiName><shortdesc>
+	 DRMContentData 类提供获取凭证所需的信息，查看受 DRM 保护的内容时需要该凭证。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 DRMContentData 类提供获取凭证所需的信息，查看受 DRM 保护的内容时需要该凭证。
+	 
+	 <p>通过调用 NetStream <codeph>preloadEmbeddedContent()</codeph> 方法并在 NetStream 客户端对象上提供 <codeph>onDRMContentData</codeph> 回调函数，可以从 NetStream 实例获取 DRMContentData 对象。使用传递给回调函数的 DRMContentData 对象作为 DRMManager <codeph>loadVoucher()</codeph> 方法的参数。</p>
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="flash.net.xml#NetStream"><linktext>flash.net.NetStream</linktext></link><link href="flash.net.drm.xml#DRMManager"><linktext>flash.net.drm.DRMManager</linktext></link><link href="flash.net.drm.xml#DRMVoucher"><linktext>flash.net.drm.DRMVoucher</linktext></link></related-links><apiValue id="flash.net.drm:DRMContentData:authenticationMethod:get"><apiName>authenticationMethod</apiName><shortdesc>
+		 获取关联内容凭证所需的身份验证的类型。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 获取关联内容凭证所需的身份验证的类型。
+		 
+		 <p>支持的身份验证类型包括：</p>
+		 <ul>
+		 <li>AuthenticationMethod.ANONYMOUS — 任何人都可以获得凭证。</li>
+		 <li>AuthenticationMethod.USERNAME_AND_PASSWORD — 必须提供经授权可以查看关联内容的帐户的用户名和密码，才能获得凭证。</li>
+		 </ul>
+		 
+		 <p>AuthenticationMethod 类提供与 <codeph>authenticationMethod</codeph> 属性配合使用的字符串常量。</p>
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:DRMContentData:domain:get"><apiName>domain</apiName><shortdesc>
+		 用户必须通过媒体权限服务器的内容域的验证身份，才能获得关联内容的凭证。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 用户必须通过媒体权限服务器的内容域的验证身份，才能获得关联内容的凭证。
+		 
+		 <p>如果身份验证针对的是<i>默认</i> 域或不需要身份验证，则 <codeph>domainName</codeph> 将为 <codeph>null</codeph>。</p>
+		 
+		 <p><b>注意：</b>此属性返回的域与网络或 Internet 域名无关。在这种情况下，域是指一组内容或用户帐户。例如，一台服务器可以支持多个域，每个域都有自己的一组内容频道和订阅者。</p>
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:DRMContentData:licenseID:get"><apiName>licenseID</apiName><shortdesc>
+		 标识媒体权限服务器上与此元数据关联的内容的唯一 ID。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 标识媒体权限服务器上与此元数据关联的内容的唯一 ID。
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:DRMContentData:serverURL:get"><apiName>serverURL</apiName><shortdesc>
+		 可以提供查看关联内容所需的凭证的媒体权限服务器的 URL。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 可以提供查看关联内容所需的凭证的媒体权限服务器的 URL。
+		 
+		 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.net.drm:DRMVoucher"><apiName>DRMVoucher</apiName><shortdesc>
+	 DRMVoucher 类代表允许用户查看 DRM 保护内容的一种许可标记。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 DRMVoucher 类代表允许用户查看受 DRM 保护的内容的一种许可标记。
+	 
+	 <p>DRMVoucher 属性描述凭证所授予的查看权限。可以使用 DRMManager 对象的 <codeph>loadVoucher()</codeph> 方法获取凭证。而此方法又需要用 NetStream 类的 <codeph>preloadEmbeddedMetadata()</codeph> 方法获取的 DRMContentData 对象。</p>
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="flash.net.drm.xml#DRMContentData"><linktext>flash.net.drm.DRMContentData</linktext></link><link href="flash.net.drm.xml#DRMManager/loadVoucher()"><linktext>flash.net.drm.DRMManager.loadVoucher()</linktext></link><link href="flash.net.xml#NetStream/preloadEmbeddedMetaData()"><linktext>flash.net.NetStream.preloadEmbeddedMetaData()</linktext></link></related-links><apiValue id="flash.net.drm:DRMVoucher:offlineLeaseEndDate:get"><apiName>offlineLeaseEndDate</apiName><shortdesc>
+		 此凭证对于脱机播放到期的日期和时间。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Date</apiValueClassifier></apiValueDef><apiDesc>
+		 此凭证对于脱机播放到期的日期和时间。
+		 
+		 <p>如果凭证仅对当前在线会话有效，则 <codeph>offlineLeaseStartDate</codeph> 为 <codeph>null</codeph>。</p>
+		 
+ 		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:DRMVoucher:offlineLeaseStartDate:get"><apiName>offlineLeaseStartDate</apiName><shortdesc>
+		 此凭证对于脱机播放开始有效的日期和时间。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Date</apiValueClassifier></apiValueDef><apiDesc>
+		 此凭证对于脱机播放开始有效的日期和时间。
+		 
+		 <p>如果凭证仅对当前在线会话有效，则 <codeph>offlineLeaseStartDate</codeph> 为 <codeph>null</codeph>。</p>
+		 
+	 	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:DRMVoucher:playbackTimeWindow:get"><apiName>playbackTimeWindow</apiName><shortdesc>
+		 第一次查看之后，查看或回顾相关内容所能持续的时间段。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>flash.net.drm:DRMPlaybackTimeWindow</apiValueClassifier></apiValueDef><apiDesc>
+		 第一次查看之后，查看或回顾相关内容所能持续的时间段。
+		 
+		 <p>播放窗口在用户第一次查看内容时打开，在经过允许查看的时间长度之后关闭。如果不允许显示播放窗口，则 <codeph>playbackTimeWindow</codeph> 为 <codeph>null</codeph>。 </p>
+		 
+	 	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:DRMVoucher:policies:get"><apiName>policies</apiName><shortdesc>
+		 一个动态对象，用于报告应用程序定义的策略。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Object</apiValueClassifier></apiValueDef><apiDesc>
+		 报告由应用程序定义的策略的动态对象。
+		 
+		 <p>策略对象对于每个有效策略都包含一个名称-值对。</p>
+		  
+	 	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:DRMVoucher:voucherEndDate:get"><apiName>voucherEndDate</apiName><shortdesc>
+		 此凭证的到期日期。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Date</apiValueClassifier></apiValueDef><apiDesc>
+		 此凭证到期的日期。
+		 
+	 	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:DRMVoucher:voucherStartDate:get"><apiName>voucherStartDate</apiName><shortdesc>
+		 此凭证有效期的起始日期。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Date</apiValueClassifier></apiValueDef><apiDesc>
+		 此凭证有效期的起始日期。
+		    
+	 	 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.net.drm:DRMPlaybackTimeWindow"><apiName>DRMPlaybackTimeWindow</apiName><shortdesc>
+	 DRMPlaybackWindow 类表示 DRM 凭证的有效时段。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 DRMPlaybackWindow 类表示 DRM 凭证的有效时段。
+	 
+	 <p><codeph>startDate</codeph> 和 <codeph>endDate</codeph> 属性为 <codeph>null</codeph>，直到用户第一次查看内容为止。</p>
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="flash.net.drm.xml#DRMVoucher"><linktext>flash.net.drm.DRMVoucher</linktext></link></related-links><apiValue id="flash.net.drm:DRMPlaybackTimeWindow:endDate:get"><apiName>endDate</apiName><shortdesc>
+		 播放窗口结束的日期。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Date</apiValueClassifier></apiValueDef><apiDesc>
+		 播放窗口结束的日期。
+		 
+		 <p>如果未启动播放窗口，则 <codeph>endDate</codeph> 将为 <codeph>null</codeph>。</p> 
+		 
+	 	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:DRMPlaybackTimeWindow:period:get"><apiName>period</apiName><shortdesc>
+		 时间范围长度（以毫秒为单位）。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>uint</apiValueClassifier></apiValueDef><apiDesc>
+		 时间范围长度（以毫秒为单位）。 
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:DRMPlaybackTimeWindow:startDate:get"><apiName>startDate</apiName><shortdesc>
+		 播放窗口开始的日期。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Date</apiValueClassifier></apiValueDef><apiDesc>
+		 播放窗口开始的日期。
+		 
+		 <p>如果未启动播放窗口，则 <codeph>startDate</codeph> 将为 <codeph>null</codeph>。</p> 
+		 
+	 	 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.net.drm:LoadVoucherSetting"><apiName>LoadVoucherSetting</apiName><shortdesc>
+	 LoadVoucherSetting 类提供一些字符串常量，用于枚举与 loadVoucher() 方法的 DRMManager settings 参数配合使用的选项。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 LoadVoucherSetting 类提供一些字符串常量，用于枚举与 <codeph>loadVoucher()</codeph> 方法的 DRMManager <codeph>settings</codeph> 参数配合使用的选项。
+	 
+	 </apiDesc></apiClassifierDetail><apiValue id="flash.net.drm:LoadVoucherSetting:ALLOW_SERVER"><apiName>ALLOW_SERVER</apiName><shortdesc>
+	  只要有可能，就从本地缓存加载凭证。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>allowServer</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	  只要有可能，就从本地缓存加载凭证。只有不存在本地缓存的副本时，才从媒体权限服务器下载凭证。
+	  
+	  </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:LoadVoucherSetting:FORCE_REFRESH"><apiName>FORCE_REFRESH</apiName><shortdesc>
+	  只从媒体权限服务器下载凭证。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>forceRefresh</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	  只从媒体权限服务器下载凭证。不从本地缓存加载凭证。
+	  
+	  </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:LoadVoucherSetting:LOCAL_ONLY"><apiName>LOCAL_ONLY</apiName><shortdesc>
+	  只从本地缓存加载凭证。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>localOnly</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	  只从本地缓存加载凭证。不从媒体权限服务器下载凭证。
+	  
+	  </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.net.drm:AuthenticationMethod"><apiName>AuthenticationMethod</apiName><shortdesc>
+	 AuthenticationMethod 类提供一些字符串常量，用于枚举 DRMContentData 类的 authenticationMethod 属性所使用的各种类型的身份验证。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 AuthenticationMethod 类提供一些字符串常量，用于枚举 DRMContentData 类的 <codeph>authenticationMethod</codeph> 属性所使用的各种类型的身份验证。
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="flash.net.drm.xml#DRMContentData"><linktext>flash.net.drm.DRMContentData</linktext></link></related-links><apiValue id="flash.net.drm:AuthenticationMethod:ANONYMOUS"><apiName>ANONYMOUS</apiName><shortdesc>
+		 不需要身份验证。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>anonymous</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 不需要身份验证。
+		 
+	 	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.net.drm:AuthenticationMethod:USERNAME_AND_PASSWORD"><apiName>USERNAME_AND_PASSWORD</apiName><shortdesc>
+		 需要有效的用户帐户和密码。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>usernameAndPassword</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 需要有效的用户帐户和密码。 
+		 
+	 	 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.net.drm:DRMManager"><apiName>DRMManager</apiName><shortdesc>
+	 DRMManager 负责管理查看 DRM 保护的内容时所需凭证的检索和存储。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.events:EventDispatcher</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 DRMManager 负责管理查看 DRM 保护的内容时所需凭证的检索和存储。
+	 
+	 <p>可以使用从受 DRM 保护的媒体文件的元数据获取的 DRMContentData 对象，从媒体权限服务器预加载凭证。可以使用 DRMContentData 对象查询本地缓存中的单个凭证。此外，还可以重置所有凭证。不提供用于枚举本地缓存中所有凭证的方法。</p>
+	 
+	 <p>您的应用程序不应该创建 DRMManager 类的新实例。请使用静态 <codeph>DRMManager.getDRMManager()</codeph> 访问现有的 DRMManager 对象。</p>
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="flash.net.xml#NetStream"><linktext>flash.net.NetStream</linktext></link><link href="flash.net.drm.xml#DRMVoucher"><linktext>flash.net.drm.DRMVoucher</linktext></link><link href="flash.net.drm.xml#DRMContentData"><linktext>flash.net.drm.DRMContentData</linktext></link></related-links><adobeApiEvent id="flash.net.drm:DRMManager_flash.events.DRMErrorEvent.LOAD_VOUCHER_ERROR_loadVoucherError"><apiName>loadVoucherError</apiName><shortdesc> 
+	 如果无法从媒体权限服务器获得所需凭证，DRMManager 将分派 DRMErrorEvent 对象。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.DRMErrorEvent.LOAD_VOUCHER_ERROR</apiEventType><adobeApiEventClassifier>flash.events.DRMErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	 如果无法从媒体权限服务器获得所需凭证，DRMManager 将分派 DRMErrorEvent 对象。 
+	 
+	 <p><b>注意：</b>如果尝试从本地凭证缓存中加载凭证（使用 <codeph>localOnly</codeph> 作为 <codeph>source</codeph> 参数）失败，则不会分派 DRMErrorEvent 对象。而改为分派 <codeph>voucher</codeph> 属性设置为 <codeph>null</codeph> 的 DRMStatusEvent 对象。</p>
+	 
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.net.drm:DRMManager_flash.events.DRMStatusEvent.LOAD_VOUCHER_COMPLETE_loadVoucherComplete"><apiName>loadVoucherComplete</apiName><shortdesc> 
+	 如果可以从媒体权限服务器获得所需凭证，DRMManager 将分派 DRMStatusEvent 对象。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.DRMStatusEvent.LOAD_VOUCHER_COMPLETE</apiEventType><adobeApiEventClassifier>flash.events.DRMStatusEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	 如果可以从媒体权限服务器获得所需凭证，DRMManager 将分派 DRMStatusEvent 对象。
+	 
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.net.drm:DRMManager_flash.events.DRMAuthenticationErrorEvent.AUTHENTICATION_ERROR_authenticationError"><apiName>authenticationError</apiName><shortdesc> 
+	 如果用户在调用 authenticate() 方法后，没有通过媒体权限服务器的身份验证，DRMManager 将分派 DRMAuthenticationErrorEvent 对象。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.DRMAuthenticationErrorEvent.AUTHENTICATION_ERROR</apiEventType><adobeApiEventClassifier>flash.events.DRMAuthenticationErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	 如果用户在调用 <codeph>authenticate()</codeph> 方法后，没有通过媒体权限服务器的身份验证，DRMManager 将分派 DRMAuthenticationErrorEvent 对象。
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.net.drm:DRMManager_flash.events.DRMAuthenticationCompleteEvent.AUTHENTICATION_COMPLETE_authenticationComplete"><apiName>authenticationComplete</apiName><shortdesc> 
+	 如果用户在调用 authenticate() 方法后，通过媒体权限服务器的身份验证，DRMManager 将分派 DRMAuthenticationCompleteEvent 对象。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.DRMAuthenticationCompleteEvent.AUTHENTICATION_COMPLETE</apiEventType><adobeApiEventClassifier>flash.events.DRMAuthenticationCompleteEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	 如果用户在调用 <codeph>authenticate()</codeph> 方法后，通过媒体权限服务器的身份验证，DRMManager 将分派 DRMAuthenticationCompleteEvent 对象。
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><apiOperation id="flash.net.drm:DRMManager:authenticate"><apiName>authenticate</apiName><shortdesc>
+		 对用户进行身份验证。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>serverURL</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>可以提供查看受保护内容所需的凭证的媒体权限服务器的 URL
+		 </apiDesc></apiParam><apiParam><apiItemName>domain</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>服务器上的域（并非网络或 Internet 域名）
+		 </apiDesc></apiParam><apiParam><apiItemName>username</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>用户帐户名
+		 </apiDesc></apiParam><apiParam><apiItemName>password</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>用户帐户密码
+		 
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+		 对用户进行身份验证。
+		 
+		 <p>侦听 <codeph>authenticationComplete</codeph> 和 <codeph>authenticationError</codeph> 事件来判断身份验证尝试的结果。多个 <codeph>authenticate()</codeph> 调用将进行排队。为 <codeph>authenticationComplete</codeph> 事件分派的 AuthenticationCompleteEvent 对象包含一个身份验证标记，您的应用程序可以保存该标记。</p> 
+		 
+		 <p>以后，可以使用所保存的身份验证标记（或通过其它方法下载的标记）与媒体权限服务器建立经身份验证的会话。要使用标记建立会话，请调用 DRMManager <codeph>setAuthenticationToken()</codeph> 方法。标记的属性（如到期日期）由生成该标记的服务器的设置确定。</p>
+		 
+		 <p><b>重要说明：</b>如果用户的 Internet 连接经过需要身份验证的代理服务器，<codeph>authenticate()</codeph> 方法将无法成功。虽然此类用户无法预加载需要身份验证的 DRM 凭证，但通过开始播放，并使用 NetStream <codeph>setAuthenticationCredentials()</codeph> 方法将用户同时登录到代理服务器和媒体权限服务器，您的应用程序可以获得凭证。一旦获得凭证，用户便可脱机查看相应内容（只要凭证代表的许可证允许脱机播放）。</p>
+		  
+		 </apiDesc></apiOperationDetail><related-links><link href="flash.net.xml#NetStream/setAuthenticationCredentials()"><linktext>flash.net.NetStream.setAuthenticationCredentials()</linktext></link><link href="flash.net.drm.xml#DRMManager/setAuthenticationToken()"><linktext>setAuthenticationToken()</linktext></link></related-links></apiOperation><apiOperation id="flash.net.drm:DRMManager:getDRMManager"><apiName>getDRMManager</apiName><shortdesc>
+		 返回单一 DRMManager 对象的实例。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiOperationClassifier>flash.net.drm:DRMManager</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+		 返回单一 DRMManager 对象的实例。
+		 
+		 <p>每个安全域对应存在一个 DRMManager 实例。</p>
+		 
+		 </apiDesc></apiOperationDetail><related-links><link href="flash.system.xml#SecurityDomain"><linktext>flash.system.SecurityDomain</linktext></link></related-links></apiOperation><apiOperation id="flash.net.drm:DRMManager:loadVoucher"><apiName>loadVoucher</apiName><shortdesc>
+		 从媒体权限服务器或本地凭证缓存加载凭证。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>contentData</apiItemName><apiOperationClassifier>flash.net.drm:DRMContentData</apiOperationClassifier><apiDesc>受 DRM 保护的媒体文件中的 DRMContentData 对象
+		 </apiDesc></apiParam><apiParam><apiItemName>setting</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>确定凭证是从本地缓存还是从媒体权限服务器检索的
+		 
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+		 从媒体权限服务器或本地凭证缓存加载凭证。
+		 
+		 <p>根据 <codeph>setting</codeph> 参数加载凭证：</p>
+		 <ul>
+		 <li>LoadVoucherSetting.FORCE_REFRESH：始终从媒体权限服务器下载凭证。</li>
+		 <li>LoadVoucherSetting.LOCAL_ONLY：只从本地缓存加载凭证。</li>
+		 <li>LoadVoucherSetting.ALLOW_SERVER：如有可能，就从本地缓存加载凭证，否则从服务器下载。</li>
+		 </ul>
+		 <p>LoadVoucherSetting 类定义将用作 <codeph>setting</codeph> 参数的值的字符串常量。</p>
+		 
+		 <p>成功加载凭证后，DRMManager 将分派 DRM 状态事件。一旦加载凭证，您的应用程序即可开始播放。可以在所分派的 DRMStatusEvent 对象的 <codeph>voucher</codeph> 属性中获得所加载的凭证。可以使用此凭证对象向用户显示关联的媒体权限信息。 </p>
+		 
+		 <p>如果无法从媒体权限服务器加载凭证，则将分派一个 DRM 错误事件。所分派的 DRMErrorEvent 对象的 <codeph>errorID</codeph> 属性指示失败的原因。失败的常见原因包括用户脱机时尝试连接到 FMRMS 服务器以及用户未登录时尝试加载凭证。您的应用程序可以对这些错误作出响应并采取纠正措施。例如，如果需要身份验证凭据才能下载凭证，则可以提示用户输入其帐户用户名和密码，调用 DRMManager <codeph>authenticate()</codeph> 方法，然后尝试再次加载凭证。</p>
+		 
+		 <p>如果无法从本地缓存获取凭证，且使用 <codeph>localOnly</codeph> 设置，则不会分派 DRMErrorEvent。而是将分派一个 DRM 状态事件。DRMStatusEvent 对象的 <codeph>detail</codeph> 属性仍为 <codeph>DRM.voucherObtained</codeph>，但 <codeph>voucher</codeph> 属性为 <codeph>null</codeph>。</p>
+		 
+		 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.net.drm:DRMManager:resetDRMVouchers"><apiName>resetDRMVouchers</apiName><shortdesc>
+	    删除所有本地缓存的数字权限管理 (DRM) 凭证数据。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata><asCustoms><keyword>DRMManager, resetDRMVouchers
+	    
+	    </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>无法删除凭证数据。
+	    
+	    </apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+	    删除所有本地缓存的数字权限管理 (DRM) 凭证数据。
+	    <p>
+	    应用程序必须重新下载所需的凭证，用户才能访问加密的内容。调用此函数等同于调用 <codeph>Netstream.resetDRMVouchers()</codeph>。</p>
+	    
+	    </apiDesc></apiOperationDetail><related-links><link href="flash.net.xml#NetStream/resetDRMVouchers()"><linktext>flash.net.NetStream.resetDRMVouchers()</linktext></link></related-links></apiOperation><apiOperation id="flash.net.drm:DRMManager:setAuthenticationToken"><apiName>setAuthenticationToken</apiName><shortdesc>
+		 设置用来与所指定服务器和域进行通信的身份验证令牌。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>serverUrl</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>媒体权限服务器的 URL
+		 </apiDesc></apiParam><apiParam><apiItemName>domain</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>媒体权限服务器上的域
+		 </apiDesc></apiParam><apiParam><apiItemName>token</apiItemName><apiOperationClassifier>flash.utils:ByteArray</apiOperationClassifier><apiDesc>身份验证标记 
+		  
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+		 设置用来与所指定服务器和域进行通信的身份验证令牌。
+		 
+		 <p>可以从成功调用 <codeph>authenticate()</codeph> 方法之后分派的 DRMAuthenticationCompleteEvent 对象的 <codeph>token</codeph> 属性中获得身份验证标记。自动为会话缓存标记，但您可以使用 <codeph>setAuthenticationToken()</codeph> 方法直接管理标记。</p>
+		 
+		 <p>设置标记将覆盖服务器和域中任何现有的已缓存标记。将 <codeph>token</codeph> 参数设置为 <codeph>null</codeph> 可清除已缓存的标记。</p>
+		 
+		 </apiDesc></apiOperationDetail></apiOperation></apiClassifier></apiPackage>

@@ -1,0 +1,514 @@
+<?xml version="1.0"?>
+<apiPackage id="flash.security"><apiName>flash.security</apiName><apiDetail/><apiClassifier id="flash.security:XMLSignatureValidator"><apiName>XMLSignatureValidator</apiName><shortdesc>
+	 Класс XMLSignatureValidator проверяет, действительно ли файл сигнатуры XML сформирован правильно и не изменялся, а также при необходимости – действительно ли он подписан с помощью ключа, связанного с доверенным цифровым сертификатом.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.events:EventDispatcher</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 Класс XMLSignatureValidator проверяет, действительно ли файл сигнатуры XML сформирован правильно и не изменялся, а также при необходимости – действительно ли он подписан с помощью ключа, связанного с доверенным цифровым сертификатом.
+	 
+	 <p>Класс XMLSignatureValidator реализует набор рекомендаций W3C в отношении синтаксиса и обработки XML-сигнатур, но его не следует считать полной реализацией всех рекомендаций. Поддерживаемый набор включает следующие рекомендации.</p>
+	 <ul>
+	  <li>Синтаксис всех базовых сигнатур, за исключением элементов KeyInfo.</li>
+	  <li>Элементы KeyInfo поддерживают только элементы X509Data.</li>
+	  <li>Элементы X509Data поддерживают только элементы X509Certificate.</li>
+	  <li>Алгоритм метода создания дайджеста SHA256.</li>
+	  <li>Алгоритм подписания PKCS1.</li>
+	  <li>Алгоритм преобразования и метод канонизации «Канонический XML без комментариев».</li>
+	  <li>Элемент Manifest в дополнительном синтаксисе сигнатуры.</li>
+	 </ul>
+	 
+	 <p>Для проверки сигнатуры необходимо предоставить реализацию IURIDereferencer Этот класс реализации отвечает за разрешение идентификаторов URI, указанных в элементах SignedInfo файла сигнатуры, и возвращает ссылочные данные в объект, например ByteArray, реализующий интерфейс IDataInput.</p>
+	 
+	 <p>Чтобы проверить, что подписывающий сертификат находится в одной цепи с доверенным сертификатом, в сигнатуре XML должны содержаться сертификаты, необходимые для создания цепи в элементах X509Certificate, или необходимо предоставить сертификаты, требуемые для создания цепи с помощью метода <codeph>addCertificate()</codeph>.</p>
+	 
+	 <p><b>Проверка XMLSignature:</b></p>
+	 <ol>
+	 <li>Создайте экземпляр класса XMLSignatureValidator.</li>
+	 <li>Установите свойство <codeph>uriDereferencer</codeph> для этого экземпляра как для экземпляра класса реализации IURIDereferencer.</li>
+	 <li>При необходимости предоставьте зашифрованные в формате DER сертификаты для построения доверительной цепи сертификата с помощью метода <codeph>addCertificate()</codeph>.</li>
+	 <li>Вызовите метод <codeph>verify</codeph> XMLSignatureValidator, передав в него сигнатуру для проверки.</li>
+	 <li>Проверьте свойство <codeph>validityStatus</codeph> после того, как объект XMLSignatureValidator отправит событие complete.</li>  
+	 </ol>
+	 
+	 <p><b>О состоянии сигнатуры:</b></p>
+	 <p>Достоверность сигнатуры XML может иметь три значения: действительно, недействительно, неизвестно. Общее состояние зависит от состояния проверки отдельных компонентов файла сигнатуры.</p>
+	 <ul>
+	 <li><codeph>digestStatus</codeph> – криптографическая достоверность подписи вычисляется по элементу SignedInfo. Может принимать значения <codeph>valid</codeph>, <codeph>invalid</codeph> или <codeph>unknown</codeph>.</li>
+	 <li><codeph>identityStatus</codeph> – достоверность подписывающего сертификата. Если срок действия сертификата истек или он был аннулирован или изменен, он приобретает состояние <codeph>invalid</codeph>. Если сертификат невозможно заменить доверенным корневым сертификатом, устанавливается состояние <codeph>unknown</codeph>. Если дайджест недействителен, сертификат не проверяется. Если проверка не выполнена, возвращается состояние <codeph>unknown</codeph>.</li>
+	 <li><codeph>referencesStatus</codeph> – достоверность данных, к которым обращаются ссылки в элементе SignedInfo файла подписи. Может принимать значения <codeph>valid</codeph>, <codeph>invalid</codeph> или <codeph>unknown</codeph>. Если дайджест или сертификат недействителен, ссылки не проверяются. Проверка ссылок может не выполняться также в зависимости от значения свойства <codeph>referencesValidationSetting</codeph>. Если проверка не выполнена, возвращается состояние <codeph>unknown</codeph>.</li>
+	 </ul>
+	 <p>Достоверность сигнатуры, указанная в свойстве <codeph>validityStatus</codeph>, может принимать следующие значения.</p>
+	 <ul>
+	 <li><codeph>valid</codeph> – если свойства <codeph>referencesStatus</codeph>, <codeph>digestStatus</codeph> и <codeph>identityStatus</codeph> все имеют значение <codeph>valid</codeph>.</li>
+	 <li><codeph>invalid</codeph> – если для какого-либо отдельного состояния задано значение <codeph>invalid</codeph>.</li>
+	 <li><codeph>unknown</codeph> – если свойства <codeph>referencesStatus</codeph>, <codeph>digestStatus</codeph> или <codeph>identityStatus</codeph> имеют значение <codeph>unknown</codeph>.</li>
+	 </ul>
+	 
+	 <p><b>Ограничения канонизации:</b></p>
+	 <p>Модуль XML в AIR не всегда создает ожидаемую XML-строку при канонизации XML-документа. В связи с этим не рекомендуется вставлять межэлементные пробелы в документах с запечатанной или неприсоединенной подписью и переопределять пространства имен в документе с подписью. В обоих случаях AIR может воссоздать документ с иной последовательностью символов (отличной от оригинала), вследствие чего произойдет сбой проверки.</p>
+	   
+	 </apiDesc><example conref="examples\XMLSignatureValidatorExample.as"> В следующем примере загружается и проверяется файл, содержащий XML-подпись. Чтобы использовать этот пример, необходимо реализовать IURIDereferencer, соответствующий проверяемым подписям (заменив класс SignedMessageDereferencer, используемый в примере). Выполните пример, вызвав <codeph>SignatureValidatorExample.validateSignature(signatureFile)</codeph> и передав файл, ссылающийся на проверяемый документ с подписью XML.
+ 
+<codeblock>
+import flash.events.Event;
+import flash.filesystem.File;
+import flash.filesystem.FileStream;
+import flash.security.ReferencesValidationSetting;
+import flash.security.XMLSignatureValidator; 
+
+import com.example.SignedMessageDereferencer; //A custom class implementing IURIDereferencer
+
+public class SignatureValidatorExample{ 
+    private var xmlSig:XML;
+    private const signatureNS:Namespace = new Namespace( "http://www.w3.org/2000/09/xmldsig#" );
+    
+    public static function validateSignature( signatureFile:File ):void{
+        try{
+            //Set up the XMLSignatureValidator
+            var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+            verifier.addEventListener( Event.COMPLETE, verificationComplete );
+            verifier.uriDereferencer = new SignedMessageDereferencer();
+            verifier.referencesValidationSetting = ReferencesValidationSetting.VALID_OR_UNKNOWN_IDENTITY;
+    
+            //Load the signed document
+            var sigFileStream:FileStream = new FileStream();
+            sigFileStream.open( signatureFile, FileMode.READ );
+            var xmlDoc:XML = XML( sigFileStream.readUTFBytes(sigFileStream.bytesAvailable) );
+            
+            //Get the last Signature element in the document
+            if( xmlDoc.name().localName != "Signature" ){
+                var signatureList:XMLList = xmlDoc..signatureNS::Signature;
+                xmlSig = XML( signatureList[ signatureList.length()-1 ] );
+            } else{
+                xmlSig = xmlDoc;
+            }
+    
+            //Validate the signature
+            verifier.verify( xmlSig );
+            
+        }catch (e:Error){
+            statusDisplay.text = "Verification error.\n" + e;
+        }
+    }
+    
+    private static function verificationComplete(event:Event):void{
+        trace( "Signature Validity: " + verifier.validityStatus );
+        trace( "Digest validity: " + verifier.digestStatus );
+        trace( "Certificate validity: " + verifier.identityStatus );
+        trace( "Data validity: " + verifier.referencesStatus );
+    }
+}
+</codeblock></example></apiClassifierDetail><related-links><link href="flash.security.xml#IURIDereferencer"><linktext>IURIDereferencer</linktext></link><link href="http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/"><linktext>Синтаксис и порядок обработки XML-сигнатуры</linktext></link><link href="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"><linktext>Канонический XML</linktext></link><link href="http://www.ietf.org/rfc/rfc2437.txt"><linktext>PKCS #1</linktext></link></related-links><adobeApiEvent id="flash.security:XMLSignatureValidator_flash.events.ErrorEvent.ERROR_error"><apiName>error</apiName><shortdesc>
+	 Передается, если невозможно выполнить проверку из-за ошибок.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.ErrorEvent.ERROR</apiEventType><adobeApiEventClassifier>flash.events.ErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 Передается, если невозможно выполнить проверку из-за ошибок. 
+	 
+	 </apiDesc><example conref="examples\XMLSignatureValidator.error.1.as"> В следующем примере выполняется прослушивание события ошибки, отправляемого объектом XMLSignatureValidator, и отслеживание сообщения об ошибке:
+<codeblock>
+private function verificationError(event:ErrorEvent):void{
+    trace("Verification error: " + event.text);                
+}
+</codeblock></example></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.security:XMLSignatureValidator_flash.events.Event.COMPLETE_complete"><apiName>complete</apiName><shortdesc>
+	 Передается, если выполнена проверка.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.COMPLETE</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 Передается, если выполнена проверка.
+	 
+	 <p>Событие <codeph>complete</codeph> не подразумевает, что сигнатура действительна. Проверьте свойство <codeph>validityStatus</codeph> объекта XMLSignatureValidator, чтобы узнать результат проверки подписи.</p>
+	 
+	 </apiDesc><example conref="examples\XMLSignatureValidator.complete.1.as"> В следующем примере выполняется прослушивание события complete, отправляемого объектом XMLSignatureValidator, и отслеживание результатов проверки:
+<codeblock>
+private function verificationComplete(event:Event):void{
+    var validator:XMLSignatureValidator = event.target as XMLSignatureValidator;
+    trace("Digest status: " + validator.digestStatus);
+    trace("Identity status: " + validator.identityStatus);
+    trace("Reference status: " + validator.referencesStatus);
+    trace("Signature status: " + validator.validityStatus);    
+}
+</codeblock></example></adobeApiEventDetail><related-links><link href="flash.security.xml#XMLSignatureValidator/validityStatus"><linktext>validityStatus</linktext></link></related-links></adobeApiEvent><apiConstructor id="flash.security:XMLSignatureValidator:XMLSignatureValidator"><apiName>XMLSignatureValidator</apiName><shortdesc>
+		 Создает объект XMLSignatureValidator.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/></apiConstructorDef><apiDesc>
+		 Создает объект XMLSignatureValidator.
+		 
+		 <p>Необходимо установить свойство <codeph>uriDereferencer</codeph> перед вызовом метода <codeph>verify()</codeph> для нового объекта.</p>
+		 
+		 </apiDesc><example conref="examples\XMLSignatureValidator.constructor.1.as"> В следующем примере создается и настраивается новый объект XMLSignatureValidator:
+<codeblock> 
+import com.example.EnvelopedDereferencer; //Your custom IURIDereferencer implementation
+
+//Create the object
+var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+
+//Provide the IURIDerferencer
+verifier.uriDereferencer = new EnvelopedDereferencer(xmlDoc);
+
+//Set validation options
+verifier.referencesValidationSetting = ReferencesValidationSetting.VALID_OR_UNKNOWN_IDENTITY;
+verifier.revocationCheckSetting = RevocationCheckSettings.NEVER;
+verifier.useSystemTrustStore = true;
+
+//Add listeners to handle results
+verifier.addEventListener(Event.COMPLETE, verificationComplete);
+verifier.addEventListener(ErrorEvent.ERROR, verificationError);
+</codeblock></example></apiConstructorDetail><related-links><link href="flash.security.xml#XMLSignatureValidator/uriDereferencer"><linktext>uriDereferencer</linktext></link></related-links></apiConstructor><apiOperation id="flash.security:XMLSignatureValidator:addCertificate"><apiName>addCertificate</apiName><shortdesc>
+	   Добавляется сертификат x509 для построения цепи.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Если вызывается во время проверки сигнатуры.
+	   
+	   </apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException><apiReturn><apiType value="any"/></apiReturn><apiParam><apiItemName>cert</apiItemName><apiOperationClassifier>flash.utils:ByteArray</apiOperationClassifier><apiDesc>Объект ByteArray, содержащий зашифрованный в формате DER цифровой сертификат x509.
+	   </apiDesc></apiParam><apiParam><apiItemName>trusted</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiDesc>Установите значение <codeph>true</codeph>, чтобы обозначить этот сертификат в качестве якоря доверия.
+	   </apiDesc></apiParam></apiOperationDef><apiDesc>
+	   Добавляется сертификат x509 для построения цепи. 
+	   
+	   <p>Добавляемый сертификат должен быть зашифрованным в формате DER сертификатом x509.</p>
+	   
+	   <p>Если для параметра <codeph>trusted</codeph> задано значение <codeph>true</codeph>, то данный сертификат считается якорем доверия.</p>
+	   
+	   <p><b>Примечание.</b> Сигнатура XML может включать сертификаты для построения цепи сертификатов подписывающего. Класс XMLSignatureValidator использует эти сертификаты для построения цепи, но не в качестве доверенных корней (по умолчанию).</p>
+	   
+	   </apiDesc><example conref="examples\XMLSignatureValidator.addCertificate.1.as"> В следующем примере из файловой системы загружается сертификат и добавляется в качестве якоря доверия.
+<codeblock>
+ import flash.utils.ByteArray;
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+ var certificate:ByteArray = new ByteArray();
+ 
+ var certFile:File = new File("certificate.cer");
+ var certFileStream:FileStream = new FileStream();
+ certFileStream.open(certFile, FileMode.READ);
+ certFileStream.readBytes(certificate, 0, certFileStream.bytesAvailable);
+
+ verifier.addCertificate(certificate, true);
+</codeblock></example></apiOperationDetail></apiOperation><apiOperation id="flash.security:XMLSignatureValidator:verify"><apiName>verify</apiName><shortdesc>
+		Проверяет указанную сигнатуру.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Если вызывается во время проверки сигнатуры. 
+		 </apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException><apiException><apiDesc>Если встретились другие ошибки, например неправильно сформированный XML или неподдерживаемые элементы в файле сигнатуры. 
+		</apiDesc><apiItemName>Error</apiItemName><apiOperationClassifier>Error</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>signature</apiItemName><apiOperationClassifier>XML</apiOperationClassifier><apiDesc>Сигнатура XML для проверки.
+		</apiDesc></apiParam></apiOperationDef><apiDesc>
+		Проверяет указанную сигнатуру. 
+		
+		<p>Проверка выполняется в асинхронном режиме. Объект XMLSignatureValidator передает событие <codeph>complete</codeph>, если проверка завершается успешно, или событие <codeph>error</codeph>, если проверка не может быть выполнена из-за ошибок.</p> 
+		
+		<p>Процесс проверки не может быть отменен. Пока происходит процесс проверки, последующие вызовы метода <codeph>verify()</codeph> завершаются со сбоем. После того как текущая проверка завершена, можно снова вызывать метод <codeph>verify()</codeph>.</p> 
+		
+		<p><b>Примечание.</b> Поскольку класс XMLSignatureValidator реализует только часть набора рекомендаций W3C для синтаксиса и обработки подписей XML, многие действительные в других случаях подписи XML не могут быть проверены.</p>
+		 
+		 
+		</apiDesc><example conref="examples\XMLSignatureValidator.verify.1.as"> В следующем примере считывается файл, содержащий XML-подпись, и проверяется путем вызова метода <codeph>verify()</codeph>. (В данном примере предполагается, что реализация IURIDereferencer соответствует подписи.)
+<codeblock>
+import flash.filesystem.File;
+import flash.filesystem.FileStream;
+import com.example.SignedMessageDereferencer; //Your IURIDereferencer implementation
+ 
+const xmlSignatureNS:Namespace = new Namespace( "http://www.w3.org/2000/09/xmldsig#" );
+
+var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+verifier.uriDereferencer = new SignedMessageDereferencer();
+
+var signatureFile:File = new File( "path/to/XMLSignatureDocument.xml" );
+var sigFileStream:FileStream = new FileStream();
+sigFileStream.open( signatureFile, FileMode.READ );
+
+var xmlDoc:XML = XML( sigFileStream.readUTFBytes(sigFileStream.bytesAvailable) );
+var xmlSig:XML = XML( xmlDoc..xmlSignatureNS::Signature );
+
+verifier.verify( xmlSig );
+</codeblock></example></apiOperationDetail><adobeApiEvent id="flash.security:XMLSignatureValidator:verify_complete"><apiName>complete</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>Передается, если проверка завершилась успешно.
+		</apiDesc></adobeApiEventDetail><shortdesc>Передается, если проверка завершилась успешно.</shortdesc></adobeApiEvent><adobeApiEvent id="flash.security:XMLSignatureValidator:verify_error"><apiName>error</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:ErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>Передается, если при проверке ссылок обнаружены ошибки. 
+		</apiDesc></adobeApiEventDetail><shortdesc>Передается, если при проверке ссылок обнаружены ошибки.</shortdesc></adobeApiEvent></apiOperation><apiValue id="flash.security:XMLSignatureValidator:digestStatus:get"><apiName>digestStatus</apiName><shortdesc>
+	    Состояние достоверности для криптографической сигнатуры, рассчитанной по элементу SignedInfo.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier><apiException><apiDesc>Если происходит обращение во время проверки сигнатуры.
+		 
+		 </apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	    Состояние достоверности для криптографической сигнатуры, рассчитанной по элементу <codeph>SignedInfo</codeph>.
+	    
+	    <p>Значение состояния:</p>
+	    <ul>
+	    <li><codeph>valid</codeph> – если сигнатура криптографически действительна.</li>
+	    <li><codeph>invalid</codeph> – если дайджест менялся после подписания.</li>
+	    <li><codeph>unknown</codeph> – если метод <codeph>verify()</codeph> не вызывался.</li>
+		</ul>
+		
+		 <p><b>Примечание.</b> Если <codeph>digestStatus</codeph> имеет значение invalid, свойства <codeph>identityStatus</codeph> и <codeph>referencesStatus</codeph> не проверяются и принимают значение <codeph>unknown</codeph>.</p>
+		 
+		 </apiDesc><example conref="examples\XMLSignature.digestStatus.1.as"/></apiValueDetail></apiValue><apiValue id="flash.security:XMLSignatureValidator:identityStatus:get"><apiName>identityStatus</apiName><shortdesc>
+	    Состояние достоверности подписывающего сертификата.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier><apiException><apiDesc>Если происходит обращение во время проверки сигнатуры.
+ 		</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	    Состояние достоверности подписывающего сертификата. 
+	    
+	    <p>Состояние может принимать следующие значения:</p>
+	    <ul>
+	    <li><codeph>valid</codeph> – срок действия сертификата не истек, не было ошибок при проверке аннулирования, сертификат связан цепью с доверенным корневым сертификатом.</li>
+	    <li><codeph>unknown</codeph> – срок действия сертификата не истек, не было ошибок при проверке аннулирования, но цепь к доверенному корневому сертификату отсутствует. Состояние<codeph>unknown</codeph> также будет выставляться, если еще не проведена проверка, потому что метод <codeph>verify()</codeph> еще не вызывался или потому что криптографическая сигнатура элемента SignedInfo (<codeph>digestStatus</codeph>) недействительна.</li>
+	    <li><codeph>invalid</codeph> – срок действия сертификата истек или обнаружена ошибка при проверке аннулирования.</li>
+	    </ul>
+	    <p>Сертификаты добавляются с помощью метода <codeph>addCertificate()</codeph>, а установки свойств <codeph>revocationCheckSetting</codeph> и <codeph>useSystemTrustStore</codeph> можно изменить в зависимости от того, считается ли сертификат действительным.</p>
+	    
+		<p><b>Примечание.</b> Если <codeph>identityStatus</codeph> имеет значение invalid, свойство <codeph>referencesStatus</codeph> не проверяется и принимает значение <codeph>unknown</codeph>. Более того, ссылки не проверяются, если <codeph>identityStatus</codeph> имеет значение unknown, если только <codeph>referencesValidationSetting</codeph> не имеет значение <codeph>validOrUnknownIdentity</codeph></p>
+		
+ 		</apiDesc><example conref="examples\XMLSignatureValidator.identityStatus.1.as"> Следующий пример получает результаты проверки сертификата подписи (после проверки подписи):
+<codeblock>
+ import flash.security.XMLSignatureValidator;
+ 
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+ //validate a signature...
+  
+ var identityResult:String = verifier.identityStatus;
+</codeblock></example></apiValueDetail><related-links><link href="flash.security.xml#XMLSignatureValidator/addCertificate()"><linktext>addCertificate()</linktext></link><link href="flash.security.xml#XMLSignatureValidator/revocationCheckSetting"><linktext>revocationCheckSetting</linktext></link><link href="flash.security.xml#XMLSignatureValidator/useSystemTrustStore"><linktext>useSystemTrustStore</linktext></link><link href="flash.security.xml#XMLSignatureValidator/referencesValidationSetting"><linktext>referencesValidationSetting</linktext></link></related-links></apiValue><apiValue id="flash.security:XMLSignatureValidator:referencesStatus:get"><apiName>referencesStatus</apiName><shortdesc>
+	    Состояние достоверности данных в ссылках элемента SignedInfo.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier><apiException><apiDesc>Если происходит обращение во время проверки сигнатуры.
+ 		</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	    Состояние достоверности данных в ссылках элемента <codeph>SignedInfo</codeph>.
+	    
+	    <p>Состояние может принимать следующие значения:</p>
+	    <ul>
+	    <li><codeph>valid</codeph> – если все ссылки действительны.</li>
+	    <li><codeph>invalid</codeph> – если какая-либо ссылка недействительна.</li>
+	    <li><codeph>unknown</codeph> – если проверка не была выполнена. Ссылки могут не проверяться по следующим причинам:
+	    <ul> 
+	    	<li>метод <codeph>verify()</codeph> не был вызван;</li>
+	    	<li>криптографическая подпись элемента SignedInfo (<codeph>digestStatus</codeph>) недействительна;</li>
+	    	<li>сертификат подписи (<codeph>identityStatus</codeph>) недействителен;</li>
+	    	<li><codeph>referencesValidationSetting</codeph> имеет значение <codeph>validIdentity</codeph> (настройка по умолчанию), и значение <codeph>identityStatus</codeph> сертификата подписи неизвестно;</li>
+	    	<li><codeph>referencesValidationSetting</codeph> имеет значение <codeph>never</codeph>.</li>
+	    </ul>
+	    </li>
+		</ul>
+		
+		 <p><b>Важно!</b> Внешние ресурсы не проверяются, если в элементе SignedInfo документа подписи нет прямой ссылки на них. Внешние ресурсы, на которые указывают вторичные ссылки, не проверяются. Например, если XML-подпись используется для элемента манифеста, проверяется только целостность самого элемента манифеста. Файлы, перечисленные в манифесте, не проверяются.</p>
+		 
+		</apiDesc><example conref="examples\XMLSignatureValidator.referencesStatus.1.as"> Следующий пример получает результаты проверки ссылок в подписи (после проверки подписи):
+<codeblock>
+ import flash.security.XMLSignatureValidator;
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+ //validate a signature...
+  
+ var dataResult:String = verifier.referencesStatus;
+</codeblock></example></apiValueDetail><related-links><link href="flash.security.xml#XMLSignatureValidator/referencesValidationSetting"><linktext>referencesValidationSetting</linktext></link></related-links></apiValue><apiValue id="flash.security:XMLSignatureValidator:referencesValidationSetting:set"><apiName>referencesValidationSetting</apiName><shortdesc>
+	    Указывает условия проверки ссылок.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>String</apiValueClassifier><apiException><apiDesc>Если устанавливается во время проверки сигнатуры.
+		 </apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException><apiException><apiDesc>если параметр <codeph>setting</codeph> содержит значение, не определенное в классе ReferencesValidationSetting.
+		 
+		</apiDesc><apiItemName>ArgumentError</apiItemName><apiOperationClassifier>ArgumentError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	    Указывает условия проверки ссылок.
+		
+		 <p>Для настройки этого свойства используются константы, определенные в классе ReferencesValidationSetting. Эти параметры включают:</p>
+		 <ul>	
+		 <li><codeph>ReferencesValidationSetting.VALID_IDENTITY</codeph> – проверка ссылок выполняется, только если сертификат подписи действительный и ведет к доверенному корневому сертификату. Это настройка по умолчанию.</li>
+		 <li><codeph>ReferencesValidationSetting.VALID_OR_UNKNOWN_IDENTITY</codeph> – проверка ссылок выполняется, если сертификат подписи действительный, даже если он не ведет к доверенному корневому сертификату.</li>
+		 <li><codeph>ReferencesValidationSetting.NEVER</codeph> – проверка ссылок никогда не выполняется.</li> 
+		 </ul>
+		 
+		 <p>
+		 Используйте настройку по умолчанию (<codeph>validIdentity</codeph>) для коммерческих сертификатов подписи или в случае предоставления собственного сертификата в качестве якоря доверия в методе <codeph>addCertificate()</codeph>. Эта настройка позволит избежать излишней проверки действительности ссылки, если подписанный документ будет отклонен в любом случае.
+		 </p>
+		 <p>
+		 Используйте настройку <codeph>validOrUnknownIdentity</codeph> для самозаверяющих сертификатов. Данная настройка позволяет проверить, не были ли изменены подписанные данные, но не позволяет проверить личность подписавшего. 
+		 </p>
+		 <p>
+		 Используйте настройку <codeph>never</codeph>, чтобы избежать излишней проверки ссылок, если такая проверка не важна в контексте вашего приложения.
+		 </p>
+		 </apiDesc><example conref="examples\XMLSignatureValidator.referencesValidationSetting.1.as"> Следующий пример задает объект XMLSignatureValidator для проверки ссылок, только если сертификат подписи ведет к якорю доверия:
+<codeblock>
+ import flash.security.ReferencesValidationSetting;
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator(); 
+ verifier.referencesValidationSetting = ReferencesValidationSetting.VALID_OR_UNKNOWN_IDENTITY;
+</codeblock></example></apiValueDetail><related-links><link href="flash.security.xml#ReferencesValidationSetting"><linktext>ReferencesValidationSetting</linktext></link></related-links></apiValue><apiValue id="flash.security:XMLSignatureValidator:revocationCheckSetting:set"><apiName>revocationCheckSetting</apiName><shortdesc>
+	    Указывает, как проверяется аннулирование сертификата.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>String</apiValueClassifier><apiException><apiDesc>Если устанавливается во время проверки сигнатуры.
+		</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	    Указывает, как проверяется аннулирование сертификата.
+		
+		 <p>Используются константы, определенные в классе RevocationSettings для настройки этого свойства. Возможны следующие параметры:</p>
+		 <ul>	
+		 <li><codeph>RevocationCheckSettings.NEVER</codeph> – аннулирование сертификата не проверяется.</li>
+		 <li><codeph>RevocationCheckSettings.BEST_EFFORT</codeph> – проверяется аннулирование сертификата, если информация об аннулировании сертификата доступна, а состояние аннулирования может быть получено. Если состояние аннулирования невозможно установить определенно, сертификат не отвергается.</li>
+		 <li><codeph>RevocationCheckSettings.REQUIRED_IF_AVAILABLE</codeph> – если сертификат содержит информацию об аннулировании, состояние аннулирования должно быть точно установлено для проверки действительности сертификата.</li> 
+		 <li><codeph>RevocationCheckSettings.ALWAYS_REQUIRED</codeph> – всегда проверять аннулирование сертификата. Сертификаты без информации об отзыве отвергаются.</li>
+		 </ul>
+		 
+		 </apiDesc><example conref="examples\XMLSignature.revocationCheckSetting.1.as"/></apiValueDetail><related-links><link href="flash.security.xml#RevocationCheckSettings"><linktext>RevocationCheckSettings</linktext></link></related-links></apiValue><apiValue id="flash.security:XMLSignatureValidator:signerCN:get"><apiName>signerCN</apiName><shortdesc>
+	   Поле «Общее имя» в подписывающем сертификате.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	   Поле «Общее имя» в подписывающем сертификате.  
+	   
+	   </apiDesc><example conref="examples\XMLSignatureValidator.signerCN.1.as"> Следующий пример считывает общее имя сертификата подписи (после проверки подписи):
+<codeblock>
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+ //validate a signature...
+  
+ var commonName:String = verifier.signerCN;
+</codeblock></example></apiValueDetail></apiValue><apiValue id="flash.security:XMLSignatureValidator:signerDN:get"><apiName>signerDN</apiName><shortdesc>
+	   Поле «Отличительное имя» в подписывающем сертификате.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	   Поле «Отличительное имя» в подписывающем сертификате.  
+	   
+	   </apiDesc><example conref="examples\XMLSignatureValidator.signerDN.1.as"> Следующий пример считывает отличительное имя сертификата подписи (после проверки подписи):
+<codeblock>
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+ //validate a signature...
+  
+ var distinguishedName:String = verifier.signerDN;
+</codeblock></example></apiValueDetail></apiValue><apiValue id="flash.security:XMLSignatureValidator:signerExtendedKeyUsages:get"><apiName>signerExtendedKeyUsages</apiName><shortdesc>
+	   Массив, содержащий объектные идентификаторы расширенного использования ключей, перечисленные в подписывающем сертификате.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Array</apiValueClassifier><apiException><apiDesc>Если происходит обращение во время проверки сигнатуры.
+	   
+	   </apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	   Массив, содержащий объектные идентификаторы расширенного использования ключей, перечисленные в подписывающем сертификате.
+	   
+	   <p>Каждое расширенное использование ключей регистрируется в форме цифрового объектного идентификатора.</p>
+	   
+	   </apiDesc><example conref="examples\XMLSignatureValidator.signerExtendedKeyUsages.1.as"> Следующий пример считывает объектные идентификаторы расширенного использования ключей сертификата подписи (после проверки подписи):
+<codeblock>
+ import flash.security.XMLSignatureValidator;
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+ //validate a signature...
+  
+ var extendedKeyOIDs:Array = verifier.signerExtendedKeyUsages;
+</codeblock></example></apiValueDetail></apiValue><apiValue id="flash.security:XMLSignatureValidator:signerTrustSettings:get"><apiName>signerTrustSettings</apiName><shortdesc>
+		Массив, содержащий доверительные параметры подписывающего сертификата.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Array</apiValueClassifier><apiException><apiDesc>Если происходит обращение во время проверки сигнатуры.
+		
+		</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+		Массив, содержащий доверительные параметры подписывающего сертификата.
+		
+		<p>Доверительные параметры выводятся из системного объектного идентификатора и идентификатора использования ключей, встроенных в сертификат. Константы для строк, представляющие распознанные доверительные параметры, определенные в классе SignerTrustSettings.</p>
+		 
+		 <p>Массив <codeph>signerTrustSettings</codeph> для сертификата в состоянии <codeph>unknown</codeph> или <codeph>invalid</codeph> не содержит данных.</p>
+		
+		<p>Модификация массива не изменяет доверительных параметров сертификата. </p>
+		
+  	    </apiDesc><example conref="examples\XMLSignatureValidator.signerTrustSettings.1.as"> Следующий пример считывает настройки доверия сертификата подписи (после проверки подписи):
+<codeblock>
+ import flash.security.XMLSignatureValidator;
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+ //validate a signature...
+  
+ var certificateTrustedFor:Array = verifier.signerTrustSettings;
+</codeblock></example></apiValueDetail><related-links><link href="flash.security.xml#SignerTrustSettings"><linktext>SignerTrustSettings</linktext></link></related-links></apiValue><apiValue id="flash.security:XMLSignatureValidator:uriDereferencer:set"><apiName>uriDereferencer</apiName><shortdesc>
+	     Реализация IURIDereferencer.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>flash.security:IURIDereferencer</apiValueClassifier><apiException><apiDesc>Если устанавливается во время проверки сигнатуры.
+		 </apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	     Реализация IURIDereferencer.
+		 
+		 <p>Реализация IURIDereferencer должна быть предоставлена до попытки проверки сигнатуры.</p>
+		 
+		 </apiDesc><example conref="examples\XMLSignatureValidator.uriDereferencer.1.as"> В данном примере создается экземпляр SignedMessageDereferencer, который реализует интерфейс IURIDereferencer и устанавливается в качестве оператора разыменования, используемого при проверке подписи:
+<codeblock>
+ import com.example.SignedMessageDereferencer; //A custom class implementing IURIDereferencer
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator(); 
+ verifier.uriDereferencer = new SignedMessageDereferencer();
+</codeblock></example></apiValueDetail><related-links><link href="flash.security.xml#IURIDereferencer"><linktext>IURIDereferencer</linktext></link></related-links></apiValue><apiValue id="flash.security:XMLSignatureValidator:useSystemTrustStore:set"><apiName>useSystemTrustStore</apiName><shortdesc>
+	    Указывает, какие сертификаты из хранилища доверенных сертификатов используются для создания цепи.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier><apiException><apiDesc>Если устанавливается во время проверки сигнатуры.
+		 
+		 </apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	    Указывает, какие сертификаты из хранилища доверенных сертификатов используются для создания цепи.
+	    
+	    <p>Если значение <codeph>true</codeph>, то якоря доверия в хранилище доверенных сертификатов используются в качестве доверенных корней. Хранилище доверенных сертификатов по умолчанию не используется.</p>
+		
+		</apiDesc><example conref="examples\XMLSignatureValidator.useSystemTrustStore.1.as"> В следующем примере создается экземпляр XMLSignatureValidator, который использует системный репозиторий доверенных сертификатов при проверке XML-подписи:
+<codeblock>
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator(); 
+ verifier.useSystemTrustStore = true;
+</codeblock></example></apiValueDetail></apiValue><apiValue id="flash.security:XMLSignatureValidator:validityStatus:get"><apiName>validityStatus</apiName><shortdesc>
+	    Состояние достоверности проверенной сигнатуры XML.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier><apiException><apiDesc>Если происходит обращение во время проверки сигнатуры.
+		
+		</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	    Состояние достоверности проверенной сигнатуры XML.
+	    
+		<p>Проверка XML-подписи включает в себя проверку криптографической подписи элемента SignedInfo, сертификата подписи и данных, на которые указывают ссылки в элементе SignedInfo. Достоверность каждого из этих элементов регистрируется отдельно с помощью свойств <codeph>digestStatus</codeph>, <codeph>identityStatus()</codeph> и <codeph>referencesStatus</codeph> соответственно.</p>
+		
+	    <p>Достоверность сигнатуры XML может иметь три значения: действительно, недействительно, неизвестно. Общее состояние зависит от состояния проверки отдельных компонентов файла сигнатуры.</p>
+	    <ul>
+	    <li><codeph>digestStatus</codeph> – криптографическая достоверность сигнатуры вычисляется по элементу SignedInfo.</li>
+	    <li><codeph>identityStatus</codeph> – достоверность подписывающего сертификата.</li>
+	    <li><codeph>referencesStatus</codeph> – достоверность дайджеста ссылок в элементе сигнатуры SignedInfo.</li>
+	    </ul>
+	    <p>Достоверность сигнатуры, указанная в свойстве <codeph>validityStatus</codeph>, может принимать следующие значения.</p>
+	    <ul>
+	    <li><codeph>valid</codeph> – если свойства <codeph>referencesStatus</codeph>, <codeph>digestStatus</codeph> и <codeph>identityStatus</codeph> все имеют значение <codeph>valid</codeph>.</li>
+	    <li><codeph>invalid</codeph> – если для какого-либо отдельного состояния задано значение <codeph>invalid</codeph>.</li>
+	    <li><codeph>unknown</codeph> – если какое-либо отдельное состояние имеет значение <codeph>unknown</codeph>.</li>
+	    </ul>
+		
+		</apiDesc><example conref="examples\XMLSignatureValidator.validityStatus.1.as"> Следующий пример получает результаты проверки XML-подписи 
+<codeblock>
+ import flash.security.XMLSignatureValidator;
+ 
+ var verifier:XMLSignatureValidator = new XMLSignatureValidator();
+ //validate the signature...
+  
+ var validationResult:String = verifier.validityStatus;
+</codeblock></example></apiValueDetail><related-links><link href="flash.security.xml#XMLSignatureValidator/digestStatus"><linktext>digestStatus</linktext></link><link href="flash.security.xml#XMLSignatureValidator/identityStatus"><linktext>identityStatus</linktext></link><link href="flash.security.xml#XMLSignatureValidator/referencesStatus"><linktext>referencesStatus</linktext></link><link href="flash.security.xml#SignatureStatus"><linktext>SignatureStatus</linktext></link></related-links></apiValue></apiClassifier><apiClassifier id="flash.security:IURIDereferencer"><apiName>IURIDereferencer</apiName><shortdesc>
+	IURIDereferencer определяет интерфейс для объектов, который разрешает идентификаторы URI в сигнатуре XML.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiInterface/><apiAccess value="public"/><apiStatic/><apiBaseClassifier/></apiClassifierDef><apiDesc>
+	IURIDereferencer определяет интерфейс для объектов, который разрешает идентификаторы URI в сигнатуре XML.
+	 
+	<p>Реализация IURIDereferencer отвечает за разрешение идентификаторов URI, указанных в элементах SignedInfo файла сигнатуры XML, и возвращает ссылочные данные в объект, например ByteArray, реализующий интерфейс IDataInput. <ph platform="javascript">Для использования интерфейса IURIDereferencer необходимо создать класс ActionScript, обеспечивающий реализацию интерфейса. В JavaScript можно использовать тег <codeph>script</codeph> для загрузки файла SWF, содержащего этот класс ActionScript.</ph></p>
+	
+	<p>Этот интерфейс содержит один метод: <codeph>dereference()</codeph>. Для стандартной реализации также может потребоваться метод передачи объекта сигнатуры XML, содержащего идентификаторы URI, которые будут разрешаться для разыменовывателя.</p> 
+	 
+	 <p>Интерфейс IURIDereferencer используется с классом XMLSignatureValidator.</p>
+	
+	</apiDesc><example conref="examples\IURIDereferencerExample.as"/></apiClassifierDetail><related-links><link href="flash.security.xml#XMLSignatureValidator"><linktext>XMLSignatureValidator</linktext></link><link href="flash.security.xml#XMLSignatureValidator/uriDereferencer"><linktext>XMLSignatureValidator.uriDereferencer</linktext></link></related-links><apiOperation id="flash.security:IURIDereferencer:flash.security:IURIDereferencer:dereference"><apiName>dereference</apiName><shortdesc>
+		Разрешает и разыменовывает указанный идентификатор URI.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Данные, на которые ссылается идентификатор URI.
+		</apiDesc><apiOperationClassifier>flash.utils:IDataInput</apiOperationClassifier></apiReturn><apiParam><apiItemName>uri</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Идентификатор URI для разыменовывания.
+		</apiDesc></apiParam></apiOperationDef><apiDesc>
+		Разрешает и разыменовывает указанный идентификатор URI.
+		
+		</apiDesc></apiOperationDetail></apiOperation></apiClassifier><apiClassifier id="flash.security:SignerTrustSettings"><apiName>SignerTrustSettings</apiName><shortdesc>
+	Класс SignerTrustSettings определяет постоянные, используемые свойством SignerTrustSettings объекта XMLSignatureValidator.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	Класс SignerTrustSettings определяет постоянные, используемые свойством <codeph>SignerTrustSettings</codeph> объекта XMLSignatureValidator.
+	
+	</apiDesc></apiClassifierDetail><related-links><link href="flash.security.xml#XMLSignatureValidator/signerTrustSettings"><linktext>XMLSignatureValidator.signerTrustSettings</linktext></link></related-links><apiValue id="flash.security:SignerTrustSettings:CODE_SIGNING"><apiName>CODE_SIGNING</apiName><shortdesc> 
+	   Сертификат является доверенным для подписывания программного кода.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>codeSigning</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	   Сертификат является доверенным для подписывания программного кода. Предполагается, что сертификат связан цепью с доверенным корнем, этот корень является доверенным для подписи программного кода, а подписывающий сертификат имеет объектный идентификатор CodeSigning в своем расширении для расширенного использования ключей.
+	   
+	   </apiDesc></apiValueDetail></apiValue><apiValue id="flash.security:SignerTrustSettings:PLAYLIST_SIGNING"><apiName>PLAYLIST_SIGNING</apiName><shortdesc> 
+	   Сертификат является доверенным для подписывания списков воспроизведения.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>playlistSigning</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	   Сертификат является доверенным для подписывания списков воспроизведения. Предполагается, что сертификат связан цепью с доверенным корнем и имеет объектный идентификатор подписывания списков в своем расширении для расширенного использования ключей.
+	   
+	   </apiDesc></apiValueDetail></apiValue><apiValue id="flash.security:SignerTrustSettings:SIGNING"><apiName>SIGNING</apiName><shortdesc> 
+	  Сертификат является доверенным для подписывания в целом.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>signing</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	  Сертификат является доверенным для подписывания в общем случае. 
+	  
+	  </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.security:SignatureStatus"><apiName>SignatureStatus</apiName><shortdesc>
+	Класс SignatureStatus определяет постоянные, используемые свойством validityStatus объекта XMLSignatureValidator.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	Класс SignatureStatus определяет постоянные, используемые свойством <codeph>validityStatus</codeph> объекта XMLSignatureValidator.
+	
+	</apiDesc></apiClassifierDetail><related-links><link href="flash.security.xml#XMLSignatureValidator/validityStatus"><linktext>XMLSignatureValidator.validityStatus</linktext></link></related-links><apiValue id="flash.security:SignatureStatus:INVALID"><apiName>INVALID</apiName><shortdesc> 
+	Состояние «Недействительно».</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>invalid</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	Состояние «Недействительно».
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.security:SignatureStatus:UNKNOWN"><apiName>UNKNOWN</apiName><shortdesc> 
+	Состояние «Неизвестно».</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>unknown</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	Состояние «Неизвестно».
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.security:SignatureStatus:VALID"><apiName>VALID</apiName><shortdesc> 
+	Состояние «Действительно».</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>valid</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	Состояние «Действительно».
+	
+	</apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.security:ReferencesValidationSetting"><apiName>ReferencesValidationSetting</apiName><shortdesc>
+	Класс ReferencesValidationSetting определяет константы, используемые свойством referencesValidationSetting объекта XMLSignatureValidator.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	Класс ReferencesValidationSetting определяет константы, используемые свойством <codeph>referencesValidationSetting</codeph> объекта XMLSignatureValidator.
+	
+	</apiDesc></apiClassifierDetail><related-links><link href="flash.security.xml#XMLSignatureValidator/ReferencesValidationSetting"><linktext>XMLSignatureValidator.ReferencesValidationSetting</linktext></link></related-links><apiValue id="flash.security:ReferencesValidationSetting:NEVER"><apiName>NEVER</apiName><shortdesc> 
+	Проверка ссылок никогда не выполняется.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>never</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	Проверка ссылок никогда не выполняется.
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.security:ReferencesValidationSetting:VALID_IDENTITY"><apiName>VALID_IDENTITY</apiName><shortdesc> 
+	Проверка ссылок выполняется, только если сертификат подписи действительный и доверенный.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>validIdentity</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	Проверка ссылок выполняется, только если сертификат подписи действительный и доверенный.
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.security:ReferencesValidationSetting:VALID_OR_UNKNOWN_IDENTITY"><apiName>VALID_OR_UNKNOWN_IDENTITY</apiName><shortdesc> 
+	Проверка ссылок выполняется, даже если сертификат подписи не является доверенным (не ведет к известному доверенному корневому сертификату).</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>validOrUnknownIdentity</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	Проверка ссылок выполняется, даже если сертификат подписи не является доверенным (не ведет к известному доверенному корневому сертификату).
+	
+	</apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.security:RevocationCheckSettings"><apiName>RevocationCheckSettings</apiName><shortdesc>
+	Класс RevocationCheckSettings определяет постоянные, используемые свойством revocationCheckSetting объекта XMLSignatureValidator.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	Класс RevocationCheckSettings определяет постоянные, используемые свойством <codeph>revocationCheckSetting</codeph> объекта XMLSignatureValidator.
+	
+	</apiDesc></apiClassifierDetail><related-links><link href="flash.security.xml#XMLSignatureValidator/revocationCheckSetting"><linktext>XMLSignatureValidator.revocationCheckSetting</linktext></link></related-links><apiValue id="flash.security:RevocationCheckSettings:ALWAYS_REQUIRED"><apiName>ALWAYS_REQUIRED</apiName><shortdesc>
+		Всегда проверять наличие аннулированных сертификатов.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>alwaysRequired</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		Всегда проверять наличие аннулированных сертификатов. Сертификаты без информации об отзыве отвергаются.
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="flash.security:RevocationCheckSettings:BEST_EFFORT"><apiName>BEST_EFFORT</apiName><shortdesc>
+		Проверить аннулирование сертификата, если информация об аннулировании сертификата доступна, и может быть получено состояние аннулирования.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>bestEffort</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		Проверить аннулирование сертификата, если информация об аннулировании сертификата доступна, и может быть получено состояние аннулирования. Если состояние аннулирования невозможно установить определенно, сертификат не отвергается.
+		</apiDesc></apiValueDetail></apiValue><apiValue id="flash.security:RevocationCheckSettings:NEVER"><apiName>NEVER</apiName><shortdesc>
+		Не проверять аннулирование сертификата.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>never</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		Не проверять аннулирование сертификата.
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="flash.security:RevocationCheckSettings:REQUIRED_IF_AVAILABLE"><apiName>REQUIRED_IF_AVAILABLE</apiName><shortdesc>
+		Проверить аннулирование сертификата, если в нем содержится информация об аннулировании.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>requiredIfInfoAvailable</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		Проверить аннулирование сертификата, если в нем содержится информация об аннулировании. Если эта информация присутствует, но состояние аннулирования невозможно установить определенно, сертификат отвергается.
+		
+		</apiDesc></apiValueDetail></apiValue></apiClassifier></apiPackage>

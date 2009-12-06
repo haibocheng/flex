@@ -1,0 +1,1653 @@
+<?xml version="1.0"?>
+<apiPackage id="flash.filesystem"><apiName>flash.filesystem</apiName><apiDetail/><apiClassifier id="flash.filesystem:FileStream"><apiName>FileStream</apiName><shortdesc>
+ FileStream オブジェクトは、ファイルの読み取りと書き込みに使用されます。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseInterface>flash.utils:IDataInput</apiBaseInterface><apiBaseInterface>flash.utils:IDataOutput</apiBaseInterface><apiBaseClassifier>flash.events:EventDispatcher</apiBaseClassifier></apiClassifierDef><apiDesc>
+ FileStream オブジェクトは、ファイルの読み取りと書き込みに使用されます。ファイルは、<codeph>open()</codeph> メソッドを呼び出して同期的に開くことも、<codeph>openAsync()</codeph> メソッドを呼び出して非同期で開くこともできます。
+ 
+ <p>ファイルを非同期で開くことの利点は、Adobe AIR がバックグラウンドで読み取りと書き込みの処理を実行している間に、他のコードを実行できることです。非同期で開いた場合は、処理が進むにつれて <codeph>progress</codeph> イベントが送出されます。</p>
+ 
+ <p>同期的に開いた File オブジェクトは ByteArray オブジェクトと同じように動作し、非同期で開いたファイルは Socket または URLStream オブジェクトと同じように動作します。File オブジェクトを同期的に開いた場合、要求されたデータの読み取りまたは書き込みを基になるファイルに対して実行している間、呼び出し元は一時停止します。非同期で開いた場合、ストリームに書き込まれたデータは即時にバッファーに格納され、後でファイルに書き込まれます。</p>
+ 
+ <p>ファイルからの読み取りが同期的であるか非同期であるかにかかわらず、実際の読み取りメソッドは同期的です。どちらの場合も、現在 "使用可能な" データから読み取られます。違いは、同期的に読み取る場合は常にすべてのデータが使用可能であるのに対して、非同期で読み取る場合はデータストリームが読み取りバッファーに読み取られるにつれてデータが徐々に使用可能になる点です。どちらの場合も、現時点で同期的に読み取れるデータは、<codeph>bytesAvailable</codeph> プロパティで表されます。</p>
+ 
+ <p>一般に、非同期入力を処理するアプリケーションは <codeph>progress</codeph> イベントに登録し、データが使用可能になると、読み取りメソッドを呼び出してデータを処理します。アプリケーションは、<codeph>complete</codeph> イベントに登録して、すべてのデータが使用可能になるまで待機し、<codeph>complete</codeph> イベントが送出された時点でデータセット全体を処理することもできます。 </p>
+ 
+ </apiDesc></apiClassifierDetail><adobeApiEvent id="flash.filesystem:FileStream_flash.events.Event.COMPLETE_complete"><apiName>complete</apiName><shortdesc>
+ ストリームの終わりに達したことを通知します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.COMPLETE</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ ストリームの終わりに達したことを通知します。
+ 
+ </apiDesc></adobeApiEventDetail><related-links><link href="flash.filesystem.xml#FileStream/position"><linktext>position</linktext></link></related-links></adobeApiEvent><adobeApiEvent id="flash.filesystem:FileStream_flash.events.OutputProgressEvent.OUTPUT_PROGRESS_outputProgress"><apiName>outputProgress</apiName><shortdesc>
+ バッファーに格納されたデータがファイルに書き込まれたことを通知します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.OutputProgressEvent.OUTPUT_PROGRESS</apiEventType><adobeApiEventClassifier>flash.events.OutputProgressEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ バッファーに格納されたデータがファイルに書き込まれたことを通知します。
+ 
+ </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.filesystem:FileStream_flash.events.ProgressEvent.PROGRESS_progress"><apiName>progress</apiName><shortdesc>
+ ストリーム上で新しいデータが使用可能になったことを通知します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.ProgressEvent.PROGRESS</apiEventType><adobeApiEventClassifier>flash.events.ProgressEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ ストリーム上で新しいデータが使用可能になったことを通知します。
+ 
+ </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.filesystem:FileStream_flash.events.IOErrorEvent.IO_ERROR_ioError"><apiName>ioError</apiName><shortdesc>
+ 非同期のファイル I/O 処理中にエラーが発生したことを示します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.IOErrorEvent.IO_ERROR</apiEventType><adobeApiEventClassifier>flash.events.IOErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ 非同期のファイル I/O 処理中にエラーが発生したことを示します。
+ 
+ </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.filesystem:FileStream_flash.events.Event.CLOSE_close"><apiName>close</apiName><shortdesc>
+ close() メソッドの明示的な呼び出しによってストリームが閉じられたことを示します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.CLOSE</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ <codeph>close()</codeph> メソッドの明示的な呼び出しによってストリームが閉じられたことを示します。
+ 
+ </apiDesc></adobeApiEventDetail><related-links><link href="flash.filesystem.xml#FileStream/close()"><linktext>close()</linktext></link></related-links></adobeApiEvent><apiConstructor id="flash.filesystem:FileStream:FileStream"><apiName>FileStream</apiName><shortdesc>
+	 FileStream オブジェクトを作成します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/></apiConstructorDef><apiDesc>
+	 FileStream オブジェクトを作成します。ファイルを開くには、<codeph>open()</codeph> メソッドまたは <codeph>openAsync()</codeph> メソッドを使用します。
+	 
+	 </apiDesc></apiConstructorDetail><related-links><link href="flash.filesystem.xml#FileStream/open()"><linktext>open()</linktext></link><link href="flash.filesystem.xml#FileStream/openAsync()"><linktext>openAsync()</linktext></link></related-links></apiConstructor><apiOperation id="flash.filesystem:FileStream:close"><apiName>close</apiName><shortdesc>
+	 FileStream オブジェクトを閉じます。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+	 FileStream オブジェクトを閉じます。 
+	 
+	 <p><codeph>close()</codeph> メソッドを呼び出した後は、データの読み取りや書き込みを行うことはできません。ファイルを非同期で開いた（FileStream オブジェクトが <codeph>openAsync()</codeph> メソッドを使用してファイルを開いた）場合は、<codeph>close()</codeph> メソッドを呼び出すと、<codeph>close</codeph> イベントが送出されます。 </p>
+	 
+	 <p>アプリケーションを閉じると、アプリケーションの FileStream オブジェクトに関連付けられているすべてのファイルが自動的に閉じられます。ただし、アプリケーションを閉じる前に、非同期で開いた、書き込み保留中のデータのあるすべての FileStream オブジェクトについて <codeph>closed</codeph> イベントに登録することをお勧めします（これにより、データが確実に書き込まれます）。</p>
+	 
+	 <p>FileStream オブジェクトを再利用するには、<codeph>open()</codeph> メソッドまたは <codeph>openAsync()</codeph> メソッドを呼び出します。これにより、FileStream オブジェクトに関連付けられたすべてのファイルが閉じられますが、このオブジェクトの <codeph>close</codeph> イベントは送出されません。</p>
+	 
+	 <p>（<codeph>openAsync()</codeph> メソッドを使用して）非同期で開いた FileStream オブジェクトについては、その FileStream オブジェクトの <codeph>close()</codeph> イベントを呼び出し、そのオブジェクトを参照しているプロパティおよび変数を削除したとしても、保留中の処理があり、その完了のためのイベントハンドラーが登録されている場合は FileStream はガベージコレクションの対象になりません。つまり、参照されていない FileStream オブジェクトであっても、次のいずれかの可能性がある限りは存在し続けます。 </p>
+	 
+	 <ul>
+	 
+	 	<li>ファイルの読み取り処理で、ファイルの末尾に達していない（<codeph>complete</codeph> イベントが送出されていない）。 </li>
+	 
+	 	<li>書き込み用の出力データがまだ存在し、出力関連のイベント（<codeph>outputProgress</codeph> イベント、<codeph>ioError</codeph> イベントなど）がイベントリスナーを登録している。 </li>
+	 
+	 </ul>
+	 
+	 </apiDesc><example conref="examples\FileStream.close.1.as">     次のコードでは、FileStream を非同期で開き、ユーザーのドキュメントディレクトリ内の Apollo Test サブディレクトリにある test.txt という名前のテキストファイルに書き込みます。<i/>データが書き込まれたら、FileStream オブジェクトの <codeph>close()</codeph> メソッドを呼び出してファイルを閉じます。 
+<codeblock>
+import flash.filesystem.*;
+import flash.events.Event;
+            
+var file:File = File.documentsDirectory;
+file = file.resolvePath("Apollo Test/test.txt");
+var fileStream:FileStream = new FileStream();
+fileStream.openAsync(file, FileMode.WRITE);
+fileStream.writeUTFBytes("Hello");
+fileStream.addEventListener(Event.CLOSE, fileClosed);
+fileStream.close();
+
+function fileClosed(event:Event):void {
+    trace("closed");
+}            
+</codeblock></example><example conref="examples\FileStream.close.2.as">     次のコードでは、FileStream を同期的に開き、ユーザーのドキュメントディレクトリ内の Apollo Test サブディレクトリにある test.txt という名前のテキストファイルに書き込みます。<i/>データが書き込まれたら、FileStream オブジェクトの <codeph>close()</codeph> メソッドを呼び出してファイルを閉じます。
+<codeblock>
+import flash.filesystem.*;
+            
+var file:File = File.documentsDirectory;
+file = file.resolvePath("Apollo Test/test.txt");
+var fileStream:FileStream = new FileStream();
+fileStream.open(file, FileMode.WRITE);
+fileStream.writeUTF("Hello");
+fileStream.close();
+</codeblock></example></apiOperationDetail><related-links><link href="flash.filesystem.xml#FileStream/open()"><linktext>open()</linktext></link><link href="flash.filesystem.xml#FileStream/event:close"><linktext>close イベント</linktext></link></related-links><adobeApiEvent id="flash.filesystem:FileStream:close_close"><apiName>close</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>非同期で開かれたファイルが閉じられました。
+	 
+	 </apiDesc></adobeApiEventDetail><shortdesc>非同期で開かれたファイルが閉じられました。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.filesystem:FileStream:open"><apiName>open</apiName><shortdesc>
+	 file パラメーターで指定されたファイルを読み込み元として、FileStream オブジェクトを同期的に開きます。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>ファイルが存在しないか、ファイルを開くために必要なアクセス権を持っていないか、読み取りアクセスのためにファイルを開こうとしているが読み取りアクセス権を持っていないか、または書き込みアクセスのためにファイルを開こうとしているが書き込みアクセス権を持っていません。 
+	 
+	 </apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiException><apiDesc>ファイルがアプリケーションディレクトリ内にあり、<codeph>fileMode</codeph> パラメーターが「append」、「update」または「write」の各モードに設定されています。 
+	 
+	 </apiDesc><apiItemName>SecurityError</apiItemName><apiOperationClassifier>SecurityError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>file</apiItemName><apiOperationClassifier>flash.filesystem:File</apiOperationClassifier><apiDesc>開くファイルを表す File オブジェクトです。
+	 
+	 </apiDesc></apiParam><apiParam><apiItemName>fileMode</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>FileMode クラスのストリングであり、FileStream の機能（ファイルからの読み取り、ファイルへの書き込みなど）を定義するものです。
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 <codeph>file</codeph> パラメーターで指定されたファイルを読み込み元として、FileStream オブジェクトを同期的に開きます。 
+	 
+	 <p>FileStream オブジェクトが既に開いている場合、このメソッドを呼び出すと、ファイルは、いったん閉じてから開かれます。前に開かれていたファイルに対する追加のイベント（<codeph>close</codeph> を含む）は送出されません。</p>
+	 
+	 <p>ファイルのロックをサポートするシステムでは、"書き込み" モードまたは "更新" モード（<codeph>FileMode.WRITE</codeph> または <codeph>FileMode.UPDATE</codeph>）で開かれたファイルは、そのファイルが閉じられない限り、読み取り可能になりません。</p>
+	 
+	 <p>ファイルに対する操作を実行し終えたら、FileStream オブジェクトの <codeph>close()</codeph> メソッドを呼び出します。オペレーティングシステムによっては、並行して開いておけるファイルの数に制限があります。</p>
+	 
+	 </apiDesc><example conref="examples\FileStream.open.1.as"> 次のコードは、ユーザーのドキュメントディレクトリ内の Apollo Test サブディレクトリにある test.txt というファイルを同期的に開き、テキストのエンコーディングとしてシステムの文字セットを使用してファイルをストリングに読み取る方法を示しています。
+<codeblock>
+import flash.filesystem.*;
+
+var file:File = File.documentsDirectory;
+file = file.resolvePath("Apollo Test/test.txt");
+var fileStream:FileStream = new FileStream();
+fileStream.open(file, FileMode.READ);
+var str:String = fileStream.readMultiByte(file.size, File.systemCharset);
+trace(str);
+fileStream.close();
+</codeblock></example></apiOperationDetail><related-links><link href="flash.filesystem.xml#FileStream/close()"><linktext>close()</linktext></link><link href="flash.filesystem.xml#File"><linktext>File</linktext></link><link href="flash.filesystem.xml#FileMode"><linktext>FileMode</linktext></link></related-links></apiOperation><apiOperation id="flash.filesystem:FileStream:openAsync"><apiName>openAsync</apiName><shortdesc>
+	 file パラメーターで指定されたファイルを読み込み元として、FileStream オブジェクトを非同期的に開きます。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>ファイルがアプリケーションディレクトリ内にあり、<codeph>fileMode</codeph> パラメーターが「append」、「update」または「write」の各モードに設定されています。 
+	 
+	 </apiDesc><apiItemName>SecurityError</apiItemName><apiOperationClassifier>SecurityError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>file</apiItemName><apiOperationClassifier>flash.filesystem:File</apiOperationClassifier><apiDesc>開くファイルを表す File オブジェクトです。
+	 
+	 </apiDesc></apiParam><apiParam><apiItemName>fileMode</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>FileMode クラスのストリングであり、FileStream の機能（ファイルからの読み取り、ファイルへの書き込みなど）を定義するものです。
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 <codeph>file</codeph> パラメーターで指定されたファイルを読み込み元として、FileStream オブジェクトを非同期的に開きます。 
+	 
+	 <p>FileStream オブジェクトが既に開いている場合、このメソッドを呼び出すと、ファイルは、いったん閉じてから開かれます。前に開かれていたファイルに対する追加のイベント（<codeph>close</codeph> を含む）は送出されません。</p>
+	 
+	 <p><codeph>fileMode</codeph> パラメーターが <codeph>FileMode.READ</codeph> または <codeph>FileMode.UPDATE</codeph> に設定されている場合、ファイルが開かれるとすぐに入力バッファーへのデータの読み取りが開始され、この読み取り処理中に <codeph>progress</codeph> イベントおよび <codeph>open</codeph> イベントが送出されます。</p>
+	 
+	 <p>ファイルのロックをサポートするシステムでは、"書き込み" モードまたは "更新" モード（<codeph>FileMode.WRITE</codeph> または <codeph>FileMode.UPDATE</codeph>）で開かれたファイルは、閉じられるまでは読み取り可能になりません。</p>
+	 
+	 <p>ファイルに対する操作を実行し終えたら、FileStream オブジェクトの <codeph>close()</codeph> メソッドを呼び出します。オペレーティングシステムによっては、並行して開いておけるファイルの数に制限があります。</p>
+	 
+`	 </apiDesc><example conref="examples\FileStream.openAsync.1.as"> 次のコードは、ユーザーのドキュメントディレクトリ内の Apollo Test サブディレクトリにある test.txt というファイルを非同期的に開き、テキストのエンコーディングとしてシステムの文字セットを使用してファイルをストリングに読み取る方法を示しています。
+<codeblock>
+import flash.filesystem.*;
+import flash.events.Event;
+
+var file:File = File.documentsDirectory;
+file = file.resolvePath("Apollo Test/test.txt");
+var fileStream:FileStream = new FileStream();
+fileStream.addEventListener(Event.COMPLETE, fileCompleteHandler)
+fileStream.openAsync(file, FileMode.READ);
+
+function fileCompleteHandler(event:Event):void {
+    var str:String = fileStream.readMultiByte(fileStream.bytesAvailable, File.systemCharset);
+    trace(str);
+    fileStream.close();
+}
+</codeblock></example></apiOperationDetail><related-links><link href="flash.filesystem.xml#FileStream/close()"><linktext>close()</linktext></link><link href="flash.filesystem.xml#FileStream/event:complete"><linktext>complete イベント</linktext></link><link href="flash.filesystem.xml#FileStream/event:ioError"><linktext>ioError イベント</linktext></link><link href="flash.filesystem.xml#FileStream/event:progress"><linktext>progress イベント</linktext></link><link href="flash.filesystem.xml#FileMode"><linktext>FileMode</linktext></link></related-links><adobeApiEvent id="flash.filesystem:FileStream:openAsync_ioError"><apiName>ioError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:IOErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ファイルが存在しないか、ファイルを開くために必要なアクセス権を持っていないか、読み取りアクセスのためにファイルを開こうとしているが読み取りアクセス権を持っていないか、または書き込みアクセスのためにファイルを開こうとしているが書き込みアクセス権を持っていません。 
+	 
+	 </apiDesc></adobeApiEventDetail><shortdesc>ファイルが存在しないか、ファイルを開くために必要なアクセス権を持っていないか、読み取りアクセスのためにファイルを開こうとしているが読み取りアクセス権を持っていないか、または書き込みアクセスのためにファイルを開こうとしているが書き込みアクセス権を持っていません。</shortdesc></adobeApiEvent><adobeApiEvent id="flash.filesystem:FileStream:openAsync_progress"><apiName>progress</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:ProgressEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>入力バッファーへのデータの読み取り処理中に送出されます。（ファイルは、<codeph>fileMode</codeph> パラメーターを <codeph>FileMode.READ</codeph> または <codeph>FileMode.UPDATE</codeph> に設定して開く必要があります。）
+	 
+	 </apiDesc></adobeApiEventDetail><shortdesc>入力バッファーへのデータの読み取り処理中に送出されます。</shortdesc></adobeApiEvent><adobeApiEvent id="flash.filesystem:FileStream:openAsync_complete"><apiName>complete</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>入力バッファーへのファイルデータの読み取りが完了しました。（ファイルは、<codeph>fileMode</codeph> パラメーターを <codeph>FileMode.READ</codeph> または <codeph>FileMode.UPDATE</codeph> に設定して開く必要があります。）
+	 
+	 </apiDesc></adobeApiEventDetail><shortdesc>入力バッファーへのファイルデータの読み取りが完了しました。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.filesystem:FileStream:readBoolean"><apiName>readBoolean</apiName><shortdesc>
+	
+	 ファイルストリーム、バイトストリームまたはバイト配列からブール値を読み取ります。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>ファイルが開かれていないか、ファイルが開かれたが読み取り機能を指定して開かれていなかったか、または（<codeph>open()</codeph> メソッドを使用して）同期処理のために開かれたファイルを読み取ることができません（例えば、ファイルがないため）。
+	
+	</apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiException><apiDesc>データの読み取りのために指定された位置が、(<codeph>bytesAvailable</codeph> プロパティで指定された) 使用可能なバイト数を超えています。
+	
+	</apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>バイトがゼロ以外の場合は <codeph>true</codeph>、それ以外の場合は <codeph>false</codeph> のブール値が返されます。
+	 </apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	
+	 ファイルストリーム、バイトストリームまたはバイト配列からブール値を読み取ります。 1 バイトが読み取られ、バイトがゼロ以外の場合は <codeph>true</codeph>、それ以外の場合は <codeph>false</codeph> が返されます。
+	 </apiDesc></apiOperationDetail><adobeApiEvent id="flash.filesystem:FileStream:readBoolean_ioError"><apiName>ioError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:IOErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ファイルを読み取ることができないか、またはファイルが開いていません。このイベントは、非同期処理のために（<codeph>openAsync()</codeph> メソッドを使用して）開かれたファイルに対してのみ送出されます。
+	
+	</apiDesc></adobeApiEventDetail><shortdesc>ファイルを読み取ることができないか、またはファイルが開いていません。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.filesystem:FileStream:readByte"><apiName>readByte</apiName><shortdesc>
+	
+	 ファイルストリーム、バイトストリームまたはバイト配列から符号付きバイトを読み取ります。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>ファイルが開かれていないか、ファイルが開かれたが読み取り機能を指定して開かれていなかったか、または（<codeph>open()</codeph> メソッドを使用して）同期処理のために開かれたファイルを読み取ることができません（例えば、ファイルがないため）。
+	
+	</apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiException><apiDesc>データの読み取りのために指定された位置が、(<codeph>bytesAvailable</codeph> プロパティで指定された) 使用可能なバイト数を超えています。
+	
+	</apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>戻り値は -128 ～ 127 の範囲です。
+	 </apiDesc><apiOperationClassifier>int</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	
+	 ファイルストリーム、バイトストリームまたはバイト配列から符号付きバイトを読み取ります。
+	 </apiDesc></apiOperationDetail><adobeApiEvent id="flash.filesystem:FileStream:readByte_ioError"><apiName>ioError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:IOErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ファイルを読み取ることができないか、またはファイルが開いていません。このイベントは、非同期処理のために（<codeph>openAsync()</codeph> メソッドを使用して）開かれたファイルに対してのみ送出されます。
+	
+	</apiDesc></adobeApiEventDetail><shortdesc>ファイルを読み取ることができないか、またはファイルが開いていません。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.filesystem:FileStream:readBytes"><apiName>readBytes</apiName><shortdesc>
+	
+	 ファイルストリーム、バイトストリームまたはバイト配列から、length パラメーターで指定したデータバイト数を読み取ります。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>ファイルが開かれていないか、ファイルが開かれたが読み取り機能を指定して開かれていなかったか、または（<codeph>open()</codeph> メソッドを使用して）同期処理のために開かれたファイルを読み取ることができません（例えば、ファイルがないため）。
+	
+	</apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiException><apiDesc>データの読み取りのために指定された位置が、(<codeph>bytesAvailable</codeph> プロパティで指定された) 使用可能なバイト数を超えています。
+	
+	</apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>bytes</apiItemName><apiOperationClassifier>flash.utils:ByteArray</apiOperationClassifier><apiDesc>データの読み込み先の <codeph>ByteArray</codeph> オブジェクトです。
+	 </apiDesc></apiParam><apiParam><apiItemName>offset</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiData>0</apiData><apiDesc>データの読み取りを開始する <codeph>bytes</codeph> パラメーターへのオフセットです。
+	 </apiDesc></apiParam><apiParam><apiItemName>length</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiData>0</apiData><apiDesc>読み取るバイト数です。デフォルト値の 0 に設定すると、すべてのデータが読み取られます。
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	
+	 ファイルストリーム、バイトストリームまたはバイト配列から、<codeph>length</codeph> パラメーターで指定したデータバイト数を読み取ります。 このバイトは、<codeph>bytes</codeph> パラメーターで指定した ByteArray オブジェクトの、<codeph>offset</codeph> で指定された位置以降に読み込まれます。
+	 </apiDesc></apiOperationDetail><adobeApiEvent id="flash.filesystem:FileStream:readBytes_ioError"><apiName>ioError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:IOErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ファイルを読み取ることができないか、またはファイルが開いていません。このイベントは、非同期処理のために（<codeph>openAsync()</codeph> メソッドを使用して）開かれたファイルに対してのみ送出されます。
+	
+	</apiDesc></adobeApiEventDetail><shortdesc>ファイルを読み取ることができないか、またはファイルが開いていません。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.filesystem:FileStream:readDouble"><apiName>readDouble</apiName><shortdesc>
+	
+	 ファイルストリーム、バイトストリームまたはバイト配列から IEEE 754 倍精度浮動小数点数を読み取ります。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>ファイルが開かれていないか、ファイルが開かれたが読み取り機能を指定して開かれていなかったか、または（<codeph>open()</codeph> メソッドを使用して）同期処理のために開かれたファイルを読み取ることができません（例えば、ファイルがないため）。
+	
+	</apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiException><apiDesc>データの読み取りのために指定された位置が、(<codeph>bytesAvailable</codeph> プロパティで指定された) 使用可能なバイト数を超えています。
+	
+	</apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>IEEE 754 倍精度浮動小数点数です。
+	 </apiDesc><apiOperationClassifier>Number</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	
+	 ファイルストリーム、バイトストリームまたはバイト配列から IEEE 754 倍精度浮動小数点数を読み取ります。
+	 </apiDesc></apiOperationDetail><adobeApiEvent id="flash.filesystem:FileStream:readDouble_ioError"><apiName>ioError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:IOErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ファイルを読み取ることができないか、またはファイルが開いていません。このイベントは、非同期処理のために（<codeph>openAsync()</codeph> メソッドを使用して）開かれたファイルに対してのみ送出されます。
+	
+	</apiDesc></adobeApiEventDetail><shortdesc>ファイルを読み取ることができないか、またはファイルが開いていません。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.filesystem:FileStream:readFloat"><apiName>readFloat</apiName><shortdesc>
+	
+	 ファイルストリーム、バイトストリームまたはバイト配列から IEEE 754 単精度浮動小数点数を読み取ります。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>ファイルが開かれていないか、ファイルが開かれたが読み取り機能を指定して開かれていなかったか、または（<codeph>open()</codeph> メソッドを使用して）同期処理のために開かれたファイルを読み取ることができません（例えば、ファイルがないため）。
+	
+	</apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiException><apiDesc>データの読み取りのために指定された位置が、(<codeph>bytesAvailable</codeph> プロパティで指定された) 使用可能なバイト数を超えています。
+	
+	</apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>IEEE 754 単精度浮動小数点数です。
+	 </apiDesc><apiOperationClassifier>Number</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	
+	 ファイルストリーム、バイトストリームまたはバイト配列から IEEE 754 単精度浮動小数点数を読み取ります。
+	 </apiDesc></apiOperationDetail><adobeApiEvent id="flash.filesystem:FileStream:readFloat_ioError"><apiName>ioError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:IOErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ファイルを読み取ることができないか、またはファイルが開いていません。このイベントは、非同期処理のために（<codeph>openAsync()</codeph> メソッドを使用して）開かれたファイルに対してのみ送出されます。
+	
+	</apiDesc></adobeApiEventDetail><shortdesc>ファイルを読み取ることができないか、またはファイルが開いていません。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.filesystem:FileStream:readInt"><apiName>readInt</apiName><shortdesc>
+	
+	 ファイルストリーム、バイトストリームまたはバイト配列から符号付き 32 ビット整数を読み取ります。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>ファイルが開かれていないか、ファイルが開かれたが読み取り機能を指定して開かれていなかったか、または（<codeph>open()</codeph> メソッドを使用して）同期処理のために開かれたファイルを読み取ることができません（例えば、ファイルがないため）。
+	
+	</apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiException><apiDesc>データの読み取りのために指定された位置が、(<codeph>bytesAvailable</codeph> プロパティで指定された) 使用可能なバイト数を超えています。
+	
+	</apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>戻り値は -2147483648 ～ 2147483647 の範囲です。
+	 </apiDesc><apiOperationClassifier>int</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	
+	 ファイルストリーム、バイトストリームまたはバイト配列から符号付き 32 ビット整数を読み取ります。
+     </apiDesc></apiOperationDetail><adobeApiEvent id="flash.filesystem:FileStream:readInt_ioError"><apiName>ioError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:IOErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ファイルを読み取ることができないか、またはファイルが開いていません。このイベントは、非同期処理のために（<codeph>openAsync()</codeph> メソッドを使用して）開かれたファイルに対してのみ送出されます。
+	
+	</apiDesc></adobeApiEventDetail><shortdesc>ファイルを読み取ることができないか、またはファイルが開いていません。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.filesystem:FileStream:readMultiByte"><apiName>readMultiByte</apiName><shortdesc>
+	
+	 指定した文字セットを使用して、ファイルストリーム、バイトストリームまたはバイト配列から指定した長さのマルチバイトストリングを読み取ります。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>ファイルが開かれていないか、ファイルが開かれたが読み取り機能を指定して開かれていなかったか、または（<codeph>open()</codeph> メソッドを使用して）同期処理のために開かれたファイルを読み取ることができません（例えば、ファイルがないため）。
+	
+	</apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiException><apiDesc>データの読み取りのために指定された位置が、(<codeph>bytesAvailable</codeph> プロパティで指定された) 使用可能なバイト数を超えています。
+	
+	</apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>UTF-8 エンコードされたストリングです。
+	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn><apiParam><apiItemName>length</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiDesc>バイトストリームから読み取るバイト数です。
+	 </apiDesc></apiParam><apiParam><apiItemName>charSet</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>バイトの解釈に使用する文字セットを表すストリングです。文字セットのストリングには、<codeph>"shift-jis"</codeph>、<codeph>"cn-gb"</codeph>、および <codeph>"iso-8859-1"</codeph> などがあります。完全な一覧については、<xref href="../../charset-codes.html">「サポートする文字セット」</xref>を参照してください。 
+	 
+     <p><b>メモ：</b><codeph>charSet</codeph> パラメーターの値が現在のシステムで認識されない場合、<ph platform="actionscript">Adobe<sup>®</sup> Flash<sup>®</sup> Player または</ph> Adobe<sup>®</sup> AIR<sup>®</sup> は、システムのデフォルトコードページを文字セットとして使用します。 例えば、<codeph>charSet</codeph> パラメーターの指定で <codeph>myTest.readMultiByte(22, "iso-8859-01")</codeph> のように <codeph>01</codeph> を <codeph>1</codeph> の代わりに使用した場合、その文字セットパラメーターは開発マシンでは認識される場合がありますが、別のマシンでは認識されない可能性があります。もう一方のマシンでは、<ph platform="actionscript">Flash Player または</ph> AIR ランタイムがシステムのデフォルトコードページを使用することになります。</p>
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	
+	 指定した文字セットを使用して、ファイルストリーム、バイトストリームまたはバイト配列から指定した長さのマルチバイトストリングを読み取ります。
+	 
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.filesystem.xml#File/systemCharset"><linktext>File.systemCharset</linktext></link></related-links><adobeApiEvent id="flash.filesystem:FileStream:readMultiByte_ioError"><apiName>ioError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:IOErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ファイルを読み取ることができないか、またはファイルが開いていません。このイベントは、非同期処理のために（<codeph>openAsync()</codeph> メソッドを使用して）開かれたファイルに対してのみ送出されます。
+	
+	</apiDesc></adobeApiEventDetail><shortdesc>ファイルを読み取ることができないか、またはファイルが開いていません。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.filesystem:FileStream:readObject"><apiName>readObject</apiName><shortdesc>
+	
+	 ファイルストリーム、バイトストリームまたはバイト配列から、AMF 直列化形式でエンコードされたオブジェクトを読み取ります。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>ファイルが開かれていないか、ファイルが開かれたが読み取り機能を指定して開かれていなかったか、または（<codeph>open()</codeph> メソッドを使用して）同期処理のために開かれたファイルを読み取ることができません（例えば、ファイルがないため）。
+	
+	</apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiException><apiDesc>データの読み取りのために指定された位置が、(<codeph>bytesAvailable</codeph> プロパティで指定された) 使用可能なバイト数を超えています。
+	
+	</apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>非直列化されたオブジェクトです。
+	 
+	 </apiDesc><apiType value="any"/></apiReturn></apiOperationDef><apiDesc>
+	
+	 ファイルストリーム、バイトストリームまたはバイト配列から、AMF 直列化形式でエンコードされたオブジェクトを読み取ります。
+	 </apiDesc></apiOperationDetail><related-links><link href="../../flash/net/package.html#registerClassAlias()"><linktext>flash.net.registerClassAlias()</linktext></link></related-links><adobeApiEvent id="flash.filesystem:FileStream:readObject_ioError"><apiName>ioError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:IOErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ファイルを読み取ることができないか、またはファイルが開いていません。このイベントは、非同期処理のために（<codeph>openAsync()</codeph> メソッドを使用して）開かれたファイルに対してのみ送出されます。
+	
+	</apiDesc></adobeApiEventDetail><shortdesc>ファイルを読み取ることができないか、またはファイルが開いていません。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.filesystem:FileStream:readShort"><apiName>readShort</apiName><shortdesc>
+	
+	 ファイルストリーム、バイトストリームまたはバイト配列から符号付き 16 ビット整数を読み取ります。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>ファイルが開かれていないか、ファイルが開かれたが読み取り機能を指定して開かれていなかったか、または（<codeph>open()</codeph> メソッドを使用して）同期処理のために開かれたファイルを読み取ることができません（例えば、ファイルがないため）。
+	
+	</apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiException><apiDesc>データの読み取りのために指定された位置が、(<codeph>bytesAvailable</codeph> プロパティで指定された) 使用可能なバイト数を超えています。
+	
+	</apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>戻り値は -32768 ～ 32767 の範囲です。
+	 </apiDesc><apiOperationClassifier>int</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	
+	 ファイルストリーム、バイトストリームまたはバイト配列から符号付き 16 ビット整数を読み取ります。
+	 </apiDesc></apiOperationDetail><adobeApiEvent id="flash.filesystem:FileStream:readShort_ioError"><apiName>ioError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:IOErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ファイルを読み取ることができないか、またはファイルが開いていません。このイベントは、非同期処理のために（<codeph>openAsync()</codeph> メソッドを使用して）開かれたファイルに対してのみ送出されます。
+	
+	</apiDesc></adobeApiEventDetail><shortdesc>ファイルを読み取ることができないか、またはファイルが開いていません。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.filesystem:FileStream:readUTF"><apiName>readUTF</apiName><shortdesc>
+	
+	 ファイルストリーム、バイトストリームまたはバイト配列から UTF-8 ストリングを読み取ります。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>ファイルが開かれていないか、ファイルが開かれたが読み取り機能を指定して開かれていなかったか、または（<codeph>open()</codeph> メソッドを使用して）同期処理のために開かれたファイルを読み取ることができません（例えば、ファイルがないため）。
+	
+	</apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiException><apiDesc>データの読み取りのために指定された位置が、(<codeph>bytesAvailable</codeph> プロパティで指定された) 使用可能なバイト数を超えています。
+	
+	</apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>文字のバイト表現で作成された UTF-8 ストリングです。
+	 
+	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	
+	 ファイルストリーム、バイトストリームまたはバイト配列から UTF-8 ストリングを読み取ります。 このストリングには、バイト単位の長さを示す符号なし short が前に付いているものと見なされます。
+	 
+	 <p>このメソッドは、Java IDataInput インターフェイスの <codeph>readUTF()</codeph> メソッドによく似ています。<sup/></p>
+	 </apiDesc></apiOperationDetail><adobeApiEvent id="flash.filesystem:FileStream:readUTF_ioError"><apiName>ioError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:IOErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ファイルを読み取ることができないか、またはファイルが開いていません。このイベントは、非同期処理のために（<codeph>openAsync()</codeph> メソッドを使用して）開かれたファイルに対してのみ送出されます。
+	
+	</apiDesc></adobeApiEventDetail><shortdesc>ファイルを読み取ることができないか、またはファイルが開いていません。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.filesystem:FileStream:readUTFBytes"><apiName>readUTFBytes</apiName><shortdesc>
+	
+	 バイトストリームまたはバイト配列から UTF-8 の   バイトのシーケンスを読み取り、ストリングを返します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>ファイルが開かれていないか、ファイルが開かれたが読み取り機能を指定して開かれていなかったか、または（<codeph>open()</codeph> メソッドを使用して）同期処理のために開かれたファイルを読み取ることができません（例えば、ファイルがないため）。
+	
+	</apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiException><apiDesc>データの読み取りのために指定された位置が、(<codeph>bytesAvailable</codeph> プロパティで指定された) 使用可能なバイト数を超えています。
+	
+	</apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>指定した長さの文字のバイト表現で作成された UTF-8 ストリングです。	 
+	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn><apiParam><apiItemName>length</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiDesc>読み取るバイト数です。
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	
+	 バイトストリームまたはバイト配列から UTF-8 の   バイトのシーケンスを読み取り、ストリングを返します。
+	 </apiDesc></apiOperationDetail><adobeApiEvent id="flash.filesystem:FileStream:readUTFBytes_ioError"><apiName>ioError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:IOErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ファイルを読み取ることができないか、またはファイルが開いていません。このイベントは、非同期処理のために（<codeph>openAsync()</codeph> メソッドを使用して）開かれたファイルに対してのみ送出されます。
+	
+	</apiDesc></adobeApiEventDetail><shortdesc>ファイルを読み取ることができないか、またはファイルが開いていません。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.filesystem:FileStream:readUnsignedByte"><apiName>readUnsignedByte</apiName><shortdesc>
+	
+	 ファイルストリーム、バイトストリームまたはバイト配列から符号なしバイトを読み取ります。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>ファイルが開かれていないか、ファイルが開かれたが読み取り機能を指定して開かれていなかったか、または（<codeph>open()</codeph> メソッドを使用して）同期処理のために開かれたファイルを読み取ることができません（例えば、ファイルがないため）。
+	
+	</apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiException><apiDesc>データの読み取りのために指定された位置が、(<codeph>bytesAvailable</codeph> プロパティで指定された) 使用可能なバイト数を超えています。
+	
+	</apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>戻り値は 0 ～ 255 の範囲です。 	   
+	 </apiDesc><apiOperationClassifier>uint</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	
+	 ファイルストリーム、バイトストリームまたはバイト配列から符号なしバイトを読み取ります。
+	 </apiDesc></apiOperationDetail><adobeApiEvent id="flash.filesystem:FileStream:readUnsignedByte_ioError"><apiName>ioError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:IOErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ファイルを読み取ることができないか、またはファイルが開いていません。このイベントは、非同期処理のために（<codeph>openAsync()</codeph> メソッドを使用して）開かれたファイルに対してのみ送出されます。
+	
+	</apiDesc></adobeApiEventDetail><shortdesc>ファイルを読み取ることができないか、またはファイルが開いていません。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.filesystem:FileStream:readUnsignedInt"><apiName>readUnsignedInt</apiName><shortdesc>
+	
+	 ファイルストリーム、バイトストリームまたはバイト配列から符号なし 32 ビット整数を読み取ります。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>ファイルが開かれていないか、ファイルが開かれたが読み取り機能を指定して開かれていなかったか、または（<codeph>open()</codeph> メソッドを使用して）同期処理のために開かれたファイルを読み取ることができません（例えば、ファイルがないため）。
+	
+	</apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiException><apiDesc>データの読み取りのために指定された位置が、(<codeph>bytesAvailable</codeph> プロパティで指定された) 使用可能なバイト数を超えています。
+	
+	</apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>戻り値は 0 ～ 4294967295 の範囲です。
+	 </apiDesc><apiOperationClassifier>uint</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	
+	 ファイルストリーム、バイトストリームまたはバイト配列から符号なし 32 ビット整数を読み取ります。
+	 </apiDesc></apiOperationDetail><adobeApiEvent id="flash.filesystem:FileStream:readUnsignedInt_ioError"><apiName>ioError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:IOErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ファイルを読み取ることができないか、またはファイルが開いていません。このイベントは、非同期処理のために（<codeph>openAsync()</codeph> メソッドを使用して）開かれたファイルに対してのみ送出されます。
+	
+	</apiDesc></adobeApiEventDetail><shortdesc>ファイルを読み取ることができないか、またはファイルが開いていません。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.filesystem:FileStream:readUnsignedShort"><apiName>readUnsignedShort</apiName><shortdesc>
+	
+	 ファイルストリーム、バイトストリームまたはバイト配列から符号なし 16 ビット整数を読み取ります。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>ファイルが開かれていないか、ファイルが開かれたが読み取り機能を指定して開かれていなかったか、または（<codeph>open()</codeph> メソッドを使用して）同期処理のために開かれたファイルを読み取ることができません（例えば、ファイルがないため）。
+	
+	</apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiException><apiDesc>データの読み取りのために指定された位置が、(<codeph>bytesAvailable</codeph> プロパティで指定された) 使用可能なバイト数を超えています。
+	
+	</apiDesc><apiItemName>EOFError</apiItemName><apiOperationClassifier>flash.errors:EOFError</apiOperationClassifier></apiException><apiReturn><apiDesc>戻り値は 0 ～ 65535 の範囲です。 
+	 </apiDesc><apiOperationClassifier>uint</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	
+	 ファイルストリーム、バイトストリームまたはバイト配列から符号なし 16 ビット整数を読み取ります。
+	 </apiDesc></apiOperationDetail><adobeApiEvent id="flash.filesystem:FileStream:readUnsignedShort_ioError"><apiName>ioError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:IOErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ファイルを読み取ることができないか、またはファイルが開いていません。このイベントは、非同期処理のために（<codeph>openAsync()</codeph> メソッドを使用して）開かれたファイルに対してのみ送出されます。
+	
+	</apiDesc></adobeApiEventDetail><shortdesc>ファイルを読み取ることができないか、またはファイルが開いていません。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.filesystem:FileStream:truncate"><apiName>truncate</apiName><shortdesc>
+	 FileStream オブジェクトの position プロパティで指定された位置でファイルを切り捨てます。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>ファイルは書き込み用に開かれていません。
+	 
+	 </apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+	 FileStream オブジェクトの <codeph>position</codeph> プロパティで指定された位置でファイルを切り捨てます。 
+	 
+	 <p><codeph>position</codeph> プロパティで指定された位置からファイルの末尾までのバイトが削除されます。ファイルは書き込み用に開かれている必要があります。</p>
+	 
+	 </apiDesc><example conref="examples\FileStream.truncate.1.as"> 次のコードでは、ユーザーのドキュメントディレクトリ内の Apollo Test サブディレクトリにある test.txt というファイルを同期的に開き、ファイルの長さが 100 文字を超える場合は 100 文字に切り詰めます。
+<codeblock>
+import flash.filesystem.*;
+
+var file:File = File.documentsDirectory;
+file = file.resolvePath("Apollo Test/test.txt");
+var fileStream:FileStream = new FileStream();
+fileStream.open(file, FileMode.UPDATE);
+if (file.size > 100) {
+    fileStream.position = 100;
+    fileStream.truncate();
+}
+fileStream.close();
+</codeblock></example><example conref="examples\FileStream.truncate.2.as"> 次のコードでは、ユーザーのドキュメントディレクトリ内の Apollo Test サブディレクトリにある test.txt というファイルを非同期的に開き、ファイルの長さが 100 文字を超える場合は 100 文字に切り詰めます。<i/>
+<codeblock>
+var file:File = File.documentsDirectory;
+file = file.resolvePath("Apollo Test/test.txt");
+var fileStream:FileStream = new FileStream();
+fileStream.openAsync(file, FileMode.UPDATE);
+trace("start", file.size)
+if (file.size > 100) {
+    fileStream.position = 100;
+    fileStream.truncate();
+}
+fileStream.addEventListener(Event.CLOSE, fileClosed);
+fileStream.close();
+function fileClosed(event:Event):void {
+    trace("closed", file.size); 
+}
+</codeblock></example></apiOperationDetail><related-links><link href="flash.filesystem.xml#FileStream/position"><linktext>position</linktext></link></related-links></apiOperation><apiOperation id="flash.filesystem:FileStream:writeBoolean"><apiName>writeBoolean</apiName><shortdesc>
+	
+	 ブール値を書き込みます。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>ファイルが開かれていないか、ファイルが開かれたが書き込み機能を指定して開かれていなかったか、または（<codeph>open()</codeph> メソッドを使用して）同期処理のために開かれたファイルに書き込むことができません（例えば、ファイルがないため）。
+	
+	</apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>value</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiDesc>書き込むバイトを決定するブール値です。このパラメーターが <codeph>true</codeph> の場合は 1、<codeph>false</codeph> の場合は 0 が書き込まれます。
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	
+	 ブール値を書き込みます。<codeph>value</codeph> パラメーターに従って、1 バイトが書き込まれます。<codeph>true</codeph> の場合は 1、<codeph>false</codeph> の場合は 0 のいずれかが書き込まれます。
+	 
+	 </apiDesc></apiOperationDetail><adobeApiEvent id="flash.filesystem:FileStream:writeBoolean_ioError"><apiName>ioError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:IOErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ファイルに書き込むことができません（例えば、ファイルがないため）。このイベントは、非同期処理のために（<codeph>openAsync()</codeph> メソッドを使用して）開かれたファイルに対してのみ送出されます。
+	
+	</apiDesc></adobeApiEventDetail><shortdesc>ファイルに書き込むことができません（例えば、ファイルがないため）。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.filesystem:FileStream:writeByte"><apiName>writeByte</apiName><shortdesc>
+	
+	 バイトを書き込みます。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>ファイルが開かれていないか、ファイルが開かれたが書き込み機能を指定して開かれていなかったか、または（<codeph>open()</codeph> メソッドを使用して）同期処理のために開かれたファイルに書き込むことができません（例えば、ファイルがないため）。
+	
+	</apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>value</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiDesc>整数としてのバイト値です。
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	
+	 バイトを書き込みます。パラメーターの下位 8 ビットが使用されます。上位 24 ビットは無視されます。
+	 </apiDesc></apiOperationDetail><adobeApiEvent id="flash.filesystem:FileStream:writeByte_ioError"><apiName>ioError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:IOErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ファイルに書き込むことができません（例えば、ファイルがないため）。このイベントは、非同期処理のために（<codeph>openAsync()</codeph> メソッドを使用して）開かれたファイルに対してのみ送出されます。
+	
+	</apiDesc></adobeApiEventDetail><shortdesc>ファイルに書き込むことができません（例えば、ファイルがないため）。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.filesystem:FileStream:writeBytes"><apiName>writeBytes</apiName><shortdesc>
+	
+	 指定したバイト配列（bytes）の offset（0 から始まるインデックス値）バイトから開始される length バイトのシーケンスをファイルストリーム、バイトストリームまたはバイト配列に書き込みます。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>ファイルが開かれていないか、ファイルが開かれたが書き込み機能を指定して開かれていなかったか、または（<codeph>open()</codeph> メソッドを使用して）同期処理のために開かれたファイルに書き込むことができません（例えば、ファイルがないため）。
+	
+	</apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>bytes</apiItemName><apiOperationClassifier>flash.utils:ByteArray</apiOperationClassifier><apiDesc>書き込むバイト配列です。
+	 </apiDesc></apiParam><apiParam><apiItemName>offset</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiData>0</apiData><apiDesc>書き込みを開始する配列の位置を指定する、0 から始まるインデックスです。
+	 </apiDesc></apiParam><apiParam><apiItemName>length</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiData>0</apiData><apiDesc>書き込むバッファーの長さを指定する符号なし整数です。
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	
+	 指定したバイト配列（<codeph>bytes</codeph>）の <codeph>offset</codeph>（0 から始まるインデックス値）バイトから開始される <codeph>length</codeph> バイトのシーケンスをファイルストリーム、バイトストリームまたはバイト配列に書き込みます。
+	 
+	 <p><codeph>length</codeph> パラメーターを省略すると、デフォルトの長さの 0 が使用され、<codeph>offset</codeph> から開始されるバッファー全体が書き込まれます。 <codeph>offset</codeph> パラメーターも省略した場合は、バッファー全体が書き込まれます。 </p>
+	 
+	 <p><codeph>offset</codeph> または <codeph>length</codeph> パラメーターが範囲外の場合は、これらは <codeph>bytes</codeph> 配列の最初と最後に固定されます。</p>
+ 	 </apiDesc></apiOperationDetail><adobeApiEvent id="flash.filesystem:FileStream:writeBytes_ioError"><apiName>ioError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:IOErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ファイルに書き込むことができません（例えば、ファイルがないため）。このイベントは、非同期処理のために（<codeph>openAsync()</codeph> メソッドを使用して）開かれたファイルに対してのみ送出されます。
+	
+	</apiDesc></adobeApiEventDetail><shortdesc>ファイルに書き込むことができません（例えば、ファイルがないため）。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.filesystem:FileStream:writeDouble"><apiName>writeDouble</apiName><shortdesc>
+	
+	 IEEE 754 倍精度（64 ビット）浮動小数点数を書き込みます。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>ファイルが開かれていないか、ファイルが開かれたが書き込み機能を指定して開かれていなかったか、または（<codeph>open()</codeph> メソッドを使用して）同期処理のために開かれたファイルに書き込むことができません（例えば、ファイルがないため）。
+	
+	</apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>value</apiItemName><apiOperationClassifier>Number</apiOperationClassifier><apiDesc>倍精度（64 ビット）浮動小数点数です。
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	
+	 IEEE 754 倍精度（64 ビット）浮動小数点数を書き込みます。
+	 </apiDesc></apiOperationDetail><adobeApiEvent id="flash.filesystem:FileStream:writeDouble_ioError"><apiName>ioError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:IOErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ファイルに書き込むことができません（例えば、ファイルがないため）。このイベントは、非同期処理のために（<codeph>openAsync()</codeph> メソッドを使用して）開かれたファイルに対してのみ送出されます。
+	
+	</apiDesc></adobeApiEventDetail><shortdesc>ファイルに書き込むことができません（例えば、ファイルがないため）。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.filesystem:FileStream:writeFloat"><apiName>writeFloat</apiName><shortdesc>
+	
+	 IEEE 754 単精度（32 ビット）浮動小数点数を書き込みます。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>ファイルが開かれていないか、ファイルが開かれたが書き込み機能を指定して開かれていなかったか、または（<codeph>open()</codeph> メソッドを使用して）同期処理のために開かれたファイルに書き込むことができません（例えば、ファイルがないため）。
+	
+	</apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>value</apiItemName><apiOperationClassifier>Number</apiOperationClassifier><apiDesc>単精度（32 ビット）浮動小数点数です。
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	
+	 IEEE 754 単精度（32 ビット）浮動小数点数を書き込みます。
+	 </apiDesc></apiOperationDetail><adobeApiEvent id="flash.filesystem:FileStream:writeFloat_ioError"><apiName>ioError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:IOErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ファイルに書き込むことができません（例えば、ファイルがないため）。このイベントは、非同期処理のために（<codeph>openAsync()</codeph> メソッドを使用して）開かれたファイルに対してのみ送出されます。
+	
+	</apiDesc></adobeApiEventDetail><shortdesc>ファイルに書き込むことができません（例えば、ファイルがないため）。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.filesystem:FileStream:writeInt"><apiName>writeInt</apiName><shortdesc>
+	
+	 32 ビット符号付き整数を書き込みます。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>ファイルが開かれていないか、ファイルが開かれたが書き込み機能を指定して開かれていなかったか、または（<codeph>open()</codeph> メソッドを使用して）同期処理のために開かれたファイルに書き込むことができません（例えば、ファイルがないため）。
+	
+	</apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>value</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiDesc>符号付き整数としてのバイト値です。
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	
+	 32 ビット符号付き整数を書き込みます。
+	 </apiDesc></apiOperationDetail><adobeApiEvent id="flash.filesystem:FileStream:writeInt_ioError"><apiName>ioError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:IOErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ファイルに書き込むことができません（例えば、ファイルがないため）。このイベントは、非同期処理のために（<codeph>openAsync()</codeph> メソッドを使用して）開かれたファイルに対してのみ送出されます。
+	
+	</apiDesc></adobeApiEventDetail><shortdesc>ファイルに書き込むことができません（例えば、ファイルがないため）。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.filesystem:FileStream:writeMultiByte"><apiName>writeMultiByte</apiName><shortdesc>
+	
+	 指定した文字セットを使用して、ファイルストリーム、バイトストリームまたはバイト配列にマルチバイトストリングを書き込みます。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>ファイルが開かれていないか、ファイルが開かれたが書き込み機能を指定して開かれていなかったか、または（<codeph>open()</codeph> メソッドを使用して）同期処理のために開かれたファイルに書き込むことができません（例えば、ファイルがないため）。
+	
+	</apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>value</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>書き込まれるストリング値です。
+	 </apiDesc></apiParam><apiParam><apiItemName>charSet</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>使用する文字セットを表すストリングです。文字セットのストリングには、<codeph>"shift-jis"</codeph>、<codeph>"cn-gb"</codeph>、および <codeph>"iso-8859-1"</codeph> などがあります。完全な一覧については、<xref href="../../charset-codes.html">「サポートする文字セット」</xref>を参照してください。 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	
+	 指定した文字セットを使用して、ファイルストリーム、バイトストリームまたはバイト配列にマルチバイトストリングを書き込みます。 
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.filesystem.xml#File/systemCharset"><linktext>File.systemCharset</linktext></link></related-links><adobeApiEvent id="flash.filesystem:FileStream:writeMultiByte_ioError"><apiName>ioError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:IOErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ファイルに書き込むことができません（例えば、ファイルがないため）。このイベントは、非同期処理のために（<codeph>openAsync()</codeph> メソッドを使用して）開かれたファイルに対してのみ送出されます。
+	
+	</apiDesc></adobeApiEventDetail><shortdesc>ファイルに書き込むことができません（例えば、ファイルがないため）。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.filesystem:FileStream:writeObject"><apiName>writeObject</apiName><shortdesc>
+	
+	 ファイルストリーム、バイトストリームまたはバイト配列に、AMF 直列化形式でオブジェクトを書き込みます。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>ファイルが開かれていないか、ファイルが開かれたが書き込み機能を指定して開かれていなかったか、または（<codeph>open()</codeph> メソッドを使用して）同期処理のために開かれたファイルに書き込むことができません（例えば、ファイルがないため）。
+	
+	</apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>object</apiItemName><apiType value=""/><apiDesc>直列化されるオブジェクトです。
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	
+	 ファイルストリーム、バイトストリームまたはバイト配列に、AMF 直列化形式でオブジェクトを書き込みます。
+	 </apiDesc></apiOperationDetail><related-links><link href="../../flash/net/package.html#registerClassAlias()"><linktext>flash.net.registerClassAlias()</linktext></link></related-links><adobeApiEvent id="flash.filesystem:FileStream:writeObject_ioError"><apiName>ioError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:IOErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ファイルに書き込むことができません（例えば、ファイルがないため）。このイベントは、非同期処理のために（<codeph>openAsync()</codeph> メソッドを使用して）開かれたファイルに対してのみ送出されます。
+	
+	</apiDesc></adobeApiEventDetail><shortdesc>ファイルに書き込むことができません（例えば、ファイルがないため）。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.filesystem:FileStream:writeShort"><apiName>writeShort</apiName><shortdesc>
+	
+	 16 ビット整数を書き込みます。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>ファイルが開かれていないか、ファイルが開かれたが書き込み機能を指定して開かれていなかったか、または（<codeph>open()</codeph> メソッドを使用して）同期処理のために開かれたファイルに書き込むことができません（例えば、ファイルがないため）。
+	
+	</apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>value</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiDesc>整数としてのバイト値です。
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	
+	 16 ビット整数を書き込みます。パラメーターの下位 16 ビットが使用されます。上位 16 ビットは無視されます。
+	 </apiDesc></apiOperationDetail><adobeApiEvent id="flash.filesystem:FileStream:writeShort_ioError"><apiName>ioError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:IOErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ファイルに書き込むことができません（例えば、ファイルがないため）。このイベントは、非同期処理のために（<codeph>openAsync()</codeph> メソッドを使用して）開かれたファイルに対してのみ送出されます。
+	
+	</apiDesc></adobeApiEventDetail><shortdesc>ファイルに書き込むことができません（例えば、ファイルがないため）。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.filesystem:FileStream:writeUTF"><apiName>writeUTF</apiName><shortdesc>
+	
+	 ファイルストリーム、バイトストリームまたはバイト配列に UTF-8 ストリングを書き込みます。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>ファイルが開かれていないか、ファイルが開かれたが書き込み機能を指定して開かれていなかったか、または (<codeph>open()</codeph> メソッドを使用して) 同期処理のために開かれたファイルに書き込むことができません (例えば、ファイルがないため)。
+	
+	</apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>value</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>書き込まれるストリング値です。
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	
+	 ファイルストリーム、バイトストリームまたはバイト配列に UTF-8 ストリングを書き込みます。 最初に UTF-8 ストリングの長さがバイト単位で 16 ビット整数として書き込まれ、その後にストリングの文字を表すバイトが続きます。
+	 </apiDesc></apiOperationDetail><adobeApiEvent id="flash.filesystem:FileStream:writeUTF_ioError"><apiName>ioError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:IOErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ファイルに書き込むことができません（例えば、ファイルがないため）。このイベントは、非同期処理のために（<codeph>openAsync()</codeph> メソッドを使用して）開かれたファイルに対してのみ送出されます。
+	
+	</apiDesc></adobeApiEventDetail><shortdesc>ファイルに書き込むことができません（例えば、ファイルがないため）。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.filesystem:FileStream:writeUTFBytes"><apiName>writeUTFBytes</apiName><shortdesc>
+	
+	 UTF-8 ストリングを書き込みます。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>ファイルが開かれていないか、ファイルが開かれたが書き込み機能を指定して開かれていなかったか、または（<codeph>open()</codeph> メソッドを使用して）同期処理のために開かれたファイルに書き込むことができません（例えば、ファイルがないため）。
+	
+	</apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>value</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>書き込まれるストリング値です。
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	
+	 UTF-8 ストリングを書き込みます。<codeph>writeUTF()</codeph> と似ていますが、ストリングに 16 ビット長の接頭辞が付きません。
+	 </apiDesc></apiOperationDetail><adobeApiEvent id="flash.filesystem:FileStream:writeUTFBytes_ioError"><apiName>ioError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:IOErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ファイルに書き込むことができません（例えば、ファイルがないため）。このイベントは、非同期処理のために（<codeph>openAsync()</codeph> メソッドを使用して）開かれたファイルに対してのみ送出されます。
+	
+	</apiDesc></adobeApiEventDetail><shortdesc>ファイルに書き込むことができません（例えば、ファイルがないため）。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.filesystem:FileStream:writeUnsignedInt"><apiName>writeUnsignedInt</apiName><shortdesc>
+	
+	 32 ビット符号なし整数を書き込みます。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>ファイルが開かれていないか、ファイルが開かれたが書き込み機能を指定して開かれていなかったか、または（<codeph>open()</codeph> メソッドを使用して）同期処理のために開かれたファイルに書き込むことができません（例えば、ファイルがないため）。
+	
+	</apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>value</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiDesc>符号なし整数としてのバイト値です。
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	
+	 32 ビット符号なし整数を書き込みます。
+	 </apiDesc></apiOperationDetail><adobeApiEvent id="flash.filesystem:FileStream:writeUnsignedInt_ioError"><apiName>ioError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:IOErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ファイルに書き込むことができません（例えば、ファイルがないため）。このイベントは、非同期処理のために（<codeph>openAsync()</codeph> メソッドを使用して）開かれたファイルに対してのみ送出されます。
+	
+	</apiDesc></adobeApiEventDetail><shortdesc>ファイルに書き込むことができません（例えば、ファイルがないため）。</shortdesc></adobeApiEvent></apiOperation><apiValue id="flash.filesystem:FileStream:bytesAvailable:get"><apiName>bytesAvailable</apiName><shortdesc>
+	
+	 入力バッファーで読み取ることができるデータのバイト数を返します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>uint</apiValueClassifier></apiValueDef><apiDesc>
+	
+	 入力バッファーで読み取ることができるデータのバイト数を返します。読み取りメソッドを使用する前に、ユーザーコードで <codeph>bytesAvailable</codeph> を呼び出して、読み取るデータが十分にあることを確認します。
+	 </apiDesc><example conref="examples\FileStream.bytesAvailable.1.as"/></apiValueDetail></apiValue><apiValue id="flash.filesystem:FileStream:endian:get"><apiName>endian</apiName><shortdesc>
+	
+	 データのバイト順序（Endian クラスの BIG_ENDIAN 定数または LITTLE_ENDIAN 定数）です。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	
+	 データのバイト順序（Endian クラスの <codeph>BIG_ENDIAN</codeph> 定数または <codeph>LITTLE_ENDIAN</codeph> 定数）です。
+	 
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.filesystem:FileStream:objectEncoding:get"><apiName>objectEncoding</apiName><shortdesc>
+     readObject() メソッドまたは writeObject() メソッドを使用してバイナリデータの書き込みまたは読み取りを行うときに AMF3 と AMF0 のどちらのフォーマットを使用するかを指定します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>uint</apiValueClassifier></apiValueDef><apiDesc>
+     <codeph>readObject()</codeph> メソッドまたは <codeph>writeObject()</codeph> メソッドを使用してバイナリデータの書き込みまたは読み取りを行うときに AMF3 と AMF0 のどちらのフォーマットを使用するかを特定するために使用されます。
+	 
+	 <p>この値は、ObjectEncoding クラスの定数です。デフォルトでは、AMF3 フォーマットが使用されます。</p>
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.net.xml#ObjectEncoding"><linktext>ObjectEncoding</linktext></link><link href="flash.filesystem.xml#FileStream/readObject()"><linktext>readObject()</linktext></link><link href="flash.filesystem.xml#FileStream/writeObject()"><linktext>writeObject()</linktext></link></related-links></apiValue><apiValue id="flash.filesystem:FileStream:position:get"><apiName>position</apiName><shortdesc>
+	 ファイルでの現在の位置です。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Number</apiValueClassifier></apiValueDef><apiDesc>
+	 ファイルでの現在の位置です。 
+	 
+	 <p>この値は、次のいずれかの方法で変更されます。</p>
+	 
+	 <ul>
+	 
+	 	<li>プロパティを明示的に設定したとき</li>
+	 
+	 	<li>(いずれかの読み取りメソッドを使用して) FileStream オブジェクトから読み取るとき</li>
+	 
+	 	<li>FileStream オブジェクトに書き込むとき</li>
+	 
+	 </ul>
+	 
+	 <p>位置は、2<sup>32</sup> バイトを超える長さのファイルをサポートするために、（uint ではなく）Number として定義されます。このプロパティの値は、常に 2<sup>53</sup> 未満の整数です。この値を小数部を持つ数値に設定した場合は、最も近い整数に切り捨てられます。</p>
+	 
+	 <p>ファイルを非同期で読み取ると、<codeph>position</codeph> プロパティを設定した場合、アプリケーションが読み取りバッファーに指定された位置から始まるデータの埋め込みを開始し、<codeph>bytesAvailable</codeph> プロパティが 0 に設定される可能性があります。読み取りメソッドを使ってデータを読み取る前に <codeph>complete</codeph> イベントを待つか、または読み取りメソッドを使う前に <codeph>progress</codeph> イベントを待って <codeph>bytesAvailable</codeph> プロパティをチェックします。</p>
+	  
+	 </apiDesc><example conref="examples\FileStream.position.1.as"> 次のコードは、ファイルからデータが読み取られると、それに応じて FileStream オブジェクトの <codeph>position</codeph> プロパティが更新される様子を示しています。
+<codeblock>
+import flash.fileSystem.*;
+import flash.utils.ByteArray;
+import flash.events.Event;
+
+var sourceFile:File = File.documentsDirectory.resolvePath("Apollo Test/test.txt");
+var stream:FileStream = new FileStream();
+stream.addEventListener(Event.COMPLETE, readBytes);
+stream.openAsync(sourceFile, File);
+
+function readBytes(e:Event):void {
+    var bytes:ByteArray = new ByteArray();
+    trace("position 0:", stream.position); // 0
+    bytes[0] = stream.readByte();
+    trace("position 1:", stream.position); // 1
+    fileStream.readBytes(bytes, stream.position, 4); 
+    trace("position 2:", stream.position); // 5
+    stream.close();
+}
+</codeblock></example></apiValueDetail></apiValue><apiValue id="flash.filesystem:FileStream:readAhead:get"><apiName>readAhead</apiName><shortdesc>
+	 ファイルを非同期で読み取るときに、要求されるデータの量です。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><internal>Should the readAhead value dwindle to 0 as the data is read in.
+	 
+	 </internal></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Number</apiValueClassifier></apiValueDef><apiDesc>
+	 ファイルを非同期で読み取るときに、要求されるデータの量です。
+	 
+	 <p>このプロパティでは、現在の位置以降、非同期ストリームで読み取るデータの量を指定します。このプロパティのデフォルト値は無限大です。デフォルトでは、読み取りのために非同期で開かれたファイルは、ファイルの末尾に達するまで読み取られます。</p>
+	 
+	 <p>読み取りバッファーからデータを読み取っても、<codeph>readAhead</codeph> プロパティの値は変わりません。バッファーからデータを読み取ると、読み取りバッファーの空いた部分を埋めるために新しいデータが読み取られます。</p>
+	 
+	 <p><codeph>readAhead</codeph> プロパティは、同期的に開かれたファイルに対しては効果がありません。</p>
+	 
+	 <p>データが非同期的に読み込まれると、FileStream オブジェクトは <codeph>progress</codeph> イベントを送出します。<codeph>progress</codeph> イベントのイベントハンドラーメソッドでは、(<codeph>bytesAvailable</codeph> プロパティを調べて) 必要なバイト数が利用可能であるかどうかを確認し、読み取りメソッドを使用して読み取りバッファーからデータを読み取ります。</p>
+	 
+	 </apiDesc><example conref="examples\FileStream.readAhead.1.as">     次のコードは、<codeph>readAhead</codeph> プロパティを使用して、ファイルに読み取るデータの量を 100 バイトに制限する方法を示しています。
+<codeblock>
+import flash.filesystem.*;
+
+var file:File = File.desktopDirectory.resolvePath("test.txt");
+var fileStream:FileStream = new FileStream();
+fileStream.readAhead = 100;
+fileStream.addEventListener(ProgressEvent.PROGRESS, readProgressHandler)
+fileStream.openAsync(file, FileMode.READ);
+var results:ByteArray;
+
+function readProgressHandler(event:ProgressEvent):void {
+    if (fileStream.bytesAvailable >= 100) {
+        fileStream.readBytes(results, 0, 100);
+    }
+}
+</codeblock><swfblock conref="examples\FileStream.readAhead.1.swf"/></example></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.filesystem:FileMode"><apiName>FileMode</apiName><shortdesc>
+ FileMode クラスは、FileStream クラスの open() メソッドおよび openAsync() メソッドの fileMode パラメーターで使用されるストリング定数を定義します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ FileMode クラスは、<codeph>fileMode</codeph> パラメーターで使用されるストリング定数を定義します。このパラメーターは、FileStream クラスの <codeph>open()</codeph> メソッドおよび <codeph>openAsync()</codeph> メソッドで指定します。これらのメソッドの <codeph>fileMode</codeph> パラメーターによって、ファイルが開かれたときに FileStream オブジェクトで利用できる機能が決まります。 
+ 
+ <p>open メソッドで指定した <codeph>fileMode</codeph> パラメーター値に基づいて、次の機能が、様々な組み合わせで利用できるようになります。</p>
+ 
+ <ul>
+ 
+ 	<li>読み取り - FileStream オブジェクトはファイルからデータを読み取ることができます。</li>
+ 	<li>書き込み - FileStream オブジェクトはファイルにデータを書き込むことができます。</li>
+ 	<li>作成 - オープン時にファイルが存在しなかった場合、FileStream オブジェクトはそのファイルを作成します。</li>
+ 	<li>オープン時の切り捨て - オープン時に（ファイルにデータを書き込む前に）ファイル内のデータが削除されます。</li>
+ 	<li>書き込みデータの追加 - データは常にファイルの末尾に書き込まれます（書き込みメソッドの呼び出し時）。</li>
+ 
+ </ul>
+ 
+ <p>FileStream オブジェクトの open メソッドの <codeph>fileMode</codeph> パラメーターとして使用された場合に FileMode クラスの各定数が提供する機能を次の表に示します。</p>
+ 
+ <adobetable class="innertable">
+ 
+ 
+ 
+ 
+ 
+ <tgroup cols="6"><thead><row><entry>FileMode の定数</entry><entry align="center">読み取り</entry><entry align="center">書き込み</entry><entry align="center">作成</entry><entry align="center">オープン時の切り捨て</entry><entry align="center">書き込みデータの追加</entry></row></thead><tbody><row>
+ 	<entry><codeph>READ</codeph></entry>
+ 	<entry align="center"> • </entry>
+ 	<entry> </entry>
+ 	<entry> </entry>
+ 	<entry> </entry>
+ 	<entry> </entry>
+ </row><row>
+ 	<entry><codeph>WRITE</codeph></entry>
+ 	<entry> </entry>
+ 	<entry align="center"> • </entry>
+ 	<entry align="center"> • </entry>
+ 	<entry align="center"> • </entry>
+ 	<entry> </entry>
+ </row><row>
+ 	<entry><codeph>APPEND</codeph></entry>
+ 	<entry> </entry>
+ 	<entry align="center"> • </entry>
+ 	<entry align="center"> • </entry>
+ 	<entry/>
+ 	<entry align="center"> • </entry>
+ </row><row>
+ 	<entry><codeph>UPDATE</codeph></entry>
+ 	<entry align="center"> • </entry>
+ 	<entry align="center"> • </entry>
+ 	<entry align="center"> • </entry>
+ 	<entry align="center"/>
+ 	<entry> </entry>
+ </row></tbody></tgroup></adobetable>
+ 
+ </apiDesc></apiClassifierDetail><related-links><link href="flash.filesystem.xml#FileStream/open()"><linktext>FileStream.open()</linktext></link><link href="flash.filesystem.xml#FileStream/openAsync()"><linktext>FileStream.openAsync()</linktext></link></related-links><apiValue id="flash.filesystem:FileMode:APPEND"><apiName>APPEND</apiName><shortdesc> 
+	ファイルは書き込みモードで開かれるファイルについて使用され、すべての書き込みデータはファイルの末尾に追加されます。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>append</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	ファイルは書き込みモードで開かれるファイルについて使用され、すべての書き込みデータはファイルの末尾に追加されます。オープン時に、ファイルが存在しない場合は作成されます。 
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.filesystem:FileMode:READ"><apiName>READ</apiName><shortdesc> 
+	読み取り専用モードで開かれるファイルについて使用されます。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>read</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	読み取り専用モードで開かれるファイルについて使用されます。ファイルは、存在している必要があります（ファイルが存在しない場合、ファイルは作成されません）。
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.filesystem:FileMode:UPDATE"><apiName>UPDATE</apiName><shortdesc> 
+	読み書きモードで開かれるファイルについて使用されます。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>update</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	読み書きモードで開かれるファイルについて使用されます。オープン時に、ファイルが存在しない場合は作成されます。 
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.filesystem:FileMode:WRITE"><apiName>WRITE</apiName><shortdesc> 
+	書き込み専用モードで開かれるファイルについて使用されます。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>write</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+	書き込み専用モードで開かれるファイルについて使用されます。オープン時に、ファイルが存在しない場合は作成され、ファイルが存在する場合は切り捨てられます (ファイルのデータが削除されます)。
+	
+	</apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.filesystem:File"><apiName>File</apiName><shortdesc>
+ File オブジェクトは、ファイルまたはディレクトリへのパスを表します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.net:FileReference</apiBaseClassifier></apiClassifierDef><apiDesc>
+ File オブジェクトは、ファイルまたはディレクトリへのパスを表します。既存のファイルまたはディレクトリを指定できます。また、存在しないファイルまたはディレクトリを指定することもできます。例えば、作成するファイルまたはディレクトリへのパスを表すことができます。 
+ 
+  <p>File クラスには、ファイルシステムについての情報の取得と、操作の実行（ファイルおよびディレクトリのコピーなど）のためのプロパティとメソッドが用意されています。</p>
+  
+  <p>File オブジェクトを FileStream クラスと組み合わせて使用すると、ファイルの読み取りと書き込みを行うことができます。 </p>
+  
+  <p>File クラスは FileReference クラスを拡張します。FileReference クラス（Flash<sup>®</sup> Player および Adobe<sup>®</sup> AIR<sup>®</sup> で利用可能）はファイルへのポインターを表しますが、File クラスには、セキュリティ上の考慮事項により Flash Player（ブラウザーで実行している SWF）上では公開されない追加のプロパティおよびメソッドがあります。</p>
+  
+  <p>File クラスには、共通的に使用されるディレクトリの場所を参照するための静的プロパティがあります。それらのプロパティを次に示します。</p>
+  
+  <ul>
+  	<li><codeph>File.applicationStorageDirectory</codeph> - インストールされている各 AIR アプリケーションごとに固有の記憶領域ディレクトリ</li>
+      <li><codeph>File.applicationDirectory</codeph> - アプリケーションがインストールされている（インストールされるアセットがある場合はそれらも含まれる）読み取り専用ディレクトリ</li>
+      <li><codeph>File.desktopDirectory</codeph> - ユーザーのデスクトップディレクトリ</li>
+      <li><codeph>File.documentsDirectory</codeph> - ユーザーのドキュメントディレクトリ</li>
+      <li><codeph>File.userDirectory</codeph> - ユーザーディレクトリ</li>
+  </ul>
+  
+  <p>これらのプロパティには、オペレーティングシステムに応じた意味のある値が設定されています。例えば、Mac OS、Linux および Windows では、ユーザーのデスクトップディレクトリを指すネイティブパスがそれぞれ次のように異なっています。こうした差異を反映して、<codeph>File.desktopDirectory</codeph> プロパティは、プラットフォームに応じた正しいデスクトップディレクトリパスを示すようになっています。異なるプラットフォームでも正しく動作するアプリケーションを作成するために、アプリケーションで他のファイルを使用する際は、これらのプロパティを起点としてください。その上で、<codeph>resolvePath()</codeph> メソッドを使用してパスを調整してください。例えば、次のコードでは、アプリケーション記憶領域ディレクトリ内の preferences.xml ファイルを参照しています。</p>
+  
+  <codeblock platform="actionscript"> var prefsFile:File = File.applicationStorageDirectory;
+  prefsFile = prefsFile.resolvePath("preferences.xml");</codeblock>
+  
+  <codeblock platform="javascript"> var prefsFile = air.File.applicationStorageDirectory;
+  prefsFile = prefsFile.resolvePath("preferences.xml");</codeblock>
+  
+  <p>ファイル参照時にネイティブパスをリテラル表記すると、そのコードは 1 つのプラットフォームでしか動作しないものになります。例えば、次の File オブジェクトは Windows 上でしか使用できません。</p> 
+  
+  <codeblock platform="actionscript">new File("C:\Documents and Settings\joe\My Documents\test.txt")</codeblock>
+  <codeblock platform="javascript">new air.File("C:\Documents and Settings\joe\My Documents\test.txt")</codeblock>
+  
+  <p>アプリケーション記憶領域ディレクトリは特に有用性が高く、当該 AIR アプリケーション用に固有の記憶領域ディレクトリを示します。これは、<codeph>File.applicationStorageDirectory</codeph> プロパティで定義されています。</p>
+  
+  <p>アプリケーションディレクトリは、当該 AIR アプリケーションがインストールされている場所なので、内容を追加したり削除したりしないでください。そのような変更を加えると、AIR アプリケーションが損傷し、アプリケーションの署名が無効になることがあります。AIR は、既定ではユーザーがアプリケーションディレクトリに書き込めるように設計されていません。このディレクトリは、すべてのオペレーティングシステムのすべてのユーザーアカウントから書き込み可能になっていないためです。アプリケーション内部ファイルの書き込み場所としては、アプリケーション記憶領域ディレクトリを使用してください。編集された画像やテキストファイルなど、ユーザーがアプリケーション外で使用する可能性があるファイルに書き込むには、ドキュメントディレクトリを使用します。</p>
+  
+  </apiDesc></apiClassifierDetail><related-links><link href="flash.filesystem.xml#FileStream"><linktext>FileStream</linktext></link></related-links><adobeApiEvent id="flash.filesystem:File_flash.events.FileListEvent.DIRECTORY_LISTING_directoryListing"><apiName>directoryListing</apiName><shortdesc>
+ getDirectoryListingAsync() メソッドを呼び出した結果、ディレクトリ一覧が得られると送出されます。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.FileListEvent.DIRECTORY_LISTING</apiEventType><adobeApiEventClassifier>flash.events.FileListEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ <codeph>getDirectoryListingAsync()</codeph> メソッドを呼び出した結果、ディレクトリ一覧が得られると送出されます。
+ 
+ </apiDesc></adobeApiEventDetail><related-links><link href="flash.filesystem.xml#File/getDirectoryListingAsync()"><linktext>File.getDirectoryListingAsync()</linktext></link></related-links></adobeApiEvent><adobeApiEvent id="flash.filesystem:File_flash.events.FileListEvent.SELECT_MULTIPLE_selectMultiple"><apiName>selectMultiple</apiName><shortdesc>
+ ユーザーが browseForOpenMultiple() メソッドの呼び出しによって開かれたダイアログボックスからファイルを選択すると、送出されます。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.FileListEvent.SELECT_MULTIPLE</apiEventType><adobeApiEventClassifier>flash.events.FileListEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ ユーザーが <codeph>browseForOpenMultiple()</codeph> メソッドの呼び出しによって開かれたダイアログボックスからファイルを選択すると、送出されます。 
+ 
+ 
+ </apiDesc></adobeApiEventDetail><related-links><link href="flash.filesystem.xml#File/browseForMultiple()"><linktext>browseForMultiple()</linktext></link></related-links></adobeApiEvent><adobeApiEvent id="flash.filesystem:File_flash.events.Event.SELECT_select"><apiName>select</apiName><shortdesc>
+ ユーザーがファイルまたはディレクトリ参照ダイアログボックスからファイルまたはディレクトリを選択すると、送出されます。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.SELECT</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ ユーザーがファイルまたはディレクトリ参照ダイアログボックスからファイルまたはディレクトリを選択すると、送出されます。 
+ 
+ 
+ </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.filesystem:File_flash.events.SecurityErrorEvent.SECURITY_ERROR_securityError"><apiName>securityError</apiName><shortdesc>
+ 操作がセキュリティ制約に違反していると、送出されます。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.SecurityErrorEvent.SECURITY_ERROR</apiEventType><adobeApiEventClassifier>flash.events.SecurityErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ 操作がセキュリティ制約に違反していると、送出されます。
+ 
+ 
+ </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.filesystem:File_flash.events.IOErrorEvent.IO_ERROR_ioError"><apiName>ioError</apiName><shortdesc>
+ 非同期ファイル処理中にエラーが発生すると、送出されます。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.IOErrorEvent.IO_ERROR</apiEventType><adobeApiEventClassifier>flash.events.IOErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ 非同期ファイル処理中にエラーが発生すると、送出されます。
+ 
+ </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.filesystem:File_flash.events.Event.COMPLETE_complete"><apiName>complete</apiName><shortdesc>
+ 非同期処理が完了すると、送出されます。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.COMPLETE</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ 非同期処理が完了すると、送出されます。
+ 
+ </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.filesystem:File_flash.events.Event.CANCEL_cancel"><apiName>cancel</apiName><shortdesc>
+ 保留中の非同期処理がキャンセルされると、送出されます。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.CANCEL</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ 保留中の非同期処理がキャンセルされると、送出されます。
+ 
+ </apiDesc></adobeApiEventDetail></adobeApiEvent><apiConstructor id="flash.filesystem:File:File"><apiName>File</apiName><shortdesc>
+	File クラスのコンストラクター関数です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiException><apiDesc><codeph>path</codeph> パラメーターのシンタックスが無効です。
+	
+	</apiDesc><apiItemName>ArgumentError</apiItemName><apiOperationClassifier>ArgumentError</apiOperationClassifier></apiException><apiParam><apiItemName>path</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData>null</apiData><apiDesc>ファイルのパスです。パスの指定には、URL を使用するか、またはネイティブの（プラットフォーム固有の）パス表記を使用します。 
+	
+	<p>URL を指定する場合は、<codeph>file</codeph>、<codeph>app</codeph>、または <codeph>app-storage</codeph> の URL スキームを使用できます。URL 表記を使用する場合に有効な <codeph>path</codeph> パラメーターの値を次に示します。 </p>
+	
+	<ul>
+	
+		<li><codeph>"app:/DesktopPathTest.xml"</codeph></li> 
+		<li><codeph>"app-storage:/preferences.xml"</codeph></li> 
+		<li><codeph>"file:///C:/Documents%20and%20Settings/bob/Desktop"</codeph>（Bob の Windows コンピューターのデスクトップ）</li>
+		<li><codeph>"file:///Users/bob/Desktop"</codeph>（Bob の Macintosh コンピューターのデスクトップ）</li>
+	
+	</ul>
+	
+	<p><codeph>app</codeph> および <codeph>app-storage</codeph> の URL スキームは、あらゆるファイルシステムで有効なファイルを指定できるため便利です。しかし、<codeph>file</codeph> URL スキームを使用してユーザーのデスクトップディレクトリを指定している他の 2 つの例では、<i/><codeph>path</codeph> 引数を <codeph>File()</codeph> コンストラクターに渡さずに、File オブジェクトに <codeph>File.desktopDirectory</codeph> を代入する方法をお勧めします。こうすると、プラットフォームやユーザーに依存しない方法でデスクトップディレクトリにアクセスできます。</p>
+	
+	<p>ネイティブのパスを指定する場合、Windows では、円記号文字またはスラッシュ文字をパス区切り文字としてこの引数で使用できます。Macintosh および Linux では、スラッシュ文字を使用します。ネイティブのパス表記を使用する場合に有効な <codeph>path</codeph> パラメーターの値を次に示します。</p>
+	
+	<ul>
+	
+		<li><codeph>"C:/Documents and Settings/bob/Desktop"</codeph></li>
+		<li><codeph>"/Users/bob/Desktop"</codeph></li>
+	
+	</ul>
+	
+	<p>ただし、この 2 つの例の場合は、<i/><codeph>path</codeph> 引数を <codeph>File()</codeph> コンストラクターに渡さないで、File オブジェクトに <codeph>File.desktopDirectory</codeph> を代入してください。これにより、プラットフォームやユーザーに依存しない方法でデスクトップディレクトリにアクセスできます。</p>
+	
+	</apiDesc></apiParam></apiConstructorDef><apiDesc>
+	File クラスのコンストラクター関数です。 
+	
+	<p><codeph>path</codeph> 引数を渡した場合、File オブジェクトは指定されたパスを参照し、そのパスを反映するように <codeph>nativePath</codeph> プロパティと <codeph>url</codeph> プロパティが設定されます。</p>
+	
+	<p>引数 <codeph>path</codeph> を渡してファイルパスを指定することは可能ですが、特定プラットフォーム上でしか動作しないコードになる可能性があることに注意してください。例えば、<codeph>"C:\\\\Documents and Settings\\bob\\Desktop"</codeph> のようなネイティブパスや <codeph>"file:///C:/Documents%20and%20Settings/bob/Desktop"</codeph> のような URL は、Windows 上でのみ有効です。それよりも、共通的に使用されるディレクトリを次の静的プロパティで参照するほうがはるかに望ましく、どのプラットフォームでも有効なコードを作成できます。</p>
+	
+	<ul>
+	<li><codeph>File.applicationDirectory</codeph></li>
+	<li><codeph>File.applicationStorageDirectory</codeph></li>
+	<li><codeph>File.desktopDirectory</codeph></li>
+	<li><codeph>File.documentsDirectory</codeph></li>
+	<li><codeph>File.userDirectory</codeph></li>
+	</ul>
+	
+	<p>その上で、<codeph>resolvePath()</codeph> メソッドを使用することにより、上記の各種ディレクトリからの相対パスを取得できます。例えば、次のコードでは、アプリケーション記憶領域ディレクトリ内の settings.xml ファイルを指すように File オブジェクトをセットアップしています。</p>
+	
+	<codeblock platform="actionscript">var file:File = File.applicationStorageDirectory.resolvePath("settings.xml");</codeblock>
+	
+	<codeblock platform="javascript">var file = air.File.applicationStorageDirectory.resolvePath("settings.xml");</codeblock>
+	
+	</apiDesc></apiConstructorDetail><related-links><link href="flash.filesystem.xml#File/nativePath"><linktext>nativePath</linktext></link></related-links></apiConstructor><apiOperation id="flash.filesystem:File:browseForDirectory"><apiName>browseForDirectory</apiName><shortdesc>
+	 ディレクトリ選択ダイアログボックスを表示して、ユーザーがディレクトリを選択できるようにします。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>title</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>ダイアログボックスのタイトルバーに表示するストリングです。
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 ディレクトリ選択ダイアログボックスを表示して、ユーザーがディレクトリを選択できるようにします。ユーザーがディレクトリを選択すると、<codeph>select</codeph> イベントが送出されます。<codeph>target</codeph> プロパティ（<codeph>select</codeph> イベントで指定）は、選択されたディレクトリを指している File オブジェクトです。
+	 
+	 </apiDesc><example conref="examples\File.browseForDirectory.1.as"> 次のコードは、<codeph>File.browseForDirectory()</codeph> メソッドを使用して、ユーザーがディレクトリを選択できるようにしています。ディレクトリを選択すると、選択したディレクトリの内容が <codeph>trace()</codeph> の出力に列挙されます。
+<codeblock>
+import flash.filesystem.File;
+import flash.events.Event;
+
+var directory:File = File.documentsDirectory;
+
+try
+{
+    directory.browseForDirectory("Select Directory");
+    directory.addEventListener(Event.SELECT, directorySelected);
+}
+catch (error:Error)
+{
+    trace("Failed:", error.message);
+}
+
+function directorySelected(event:Event):void 
+{
+    directory = event.target as File;
+    var files:Array = directory.getDirectoryListing();
+    for(var i:uint = 0; i &lt; files.length; i++)
+    {
+        trace(files[i].name);
+    }
+}
+</codeblock></example></apiOperationDetail><related-links><link href="flash.filesystem.xml#File/browseForOpen()"><linktext>browseForOpen()</linktext></link><link href="flash.filesystem.xml#File/browseForSave()"><linktext>browseForSave()</linktext></link><link href="flash.filesystem.xml#File/event:select"><linktext>select</linktext></link><link href="flash.net.xml#FileFilter"><linktext>flash.net.FileFilter</linktext></link></related-links><adobeApiEvent id="flash.filesystem:File:browseForDirectory_cancel"><apiName>cancel</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ファイルを開くダイアログボックスでユーザーが「キャンセル」をクリックすると、送出されます。 
+	 
+	 </apiDesc></adobeApiEventDetail><shortdesc>ファイルを開くダイアログボックスでユーザーが「キャンセル」をクリックすると、送出されます。</shortdesc></adobeApiEvent><adobeApiEvent id="flash.filesystem:File:browseForDirectory_select"><apiName>select</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ユーザーがディレクトリを選択して、ディレクトリ選択ダイアログボックスを閉じると、送出されます。 
+	 
+	 </apiDesc></adobeApiEventDetail><shortdesc>ユーザーがディレクトリを選択して、ディレクトリ選択ダイアログボックスを閉じると、送出されます。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.filesystem:File:browseForOpen"><apiName>browseForOpen</apiName><shortdesc>
+	 ファイルを開くダイアログボックスを表示して、ユーザーが開くファイルを選択できるようにします。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>title</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>ダイアログボックスのタイトルバーに表示するストリングです。
+	 
+	 </apiDesc></apiParam><apiParam><apiItemName>typeFilter</apiItemName><apiOperationClassifier>Array</apiOperationClassifier><apiData>null</apiData><apiDesc>ダイアログボックスに表示するファイルをフィルターにかける場合に使用する FileFilter インスタンスの配列です。このパラメーターを省略すると、すべてのファイルが表示されます。詳細については、FileFilter クラスを参照してください。
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 ファイルを開くダイアログボックスを表示して、ユーザーが開くファイルを選択できるようにします。
+	 
+	 <p>ユーザーがファイルを選択すると、<codeph>select</codeph> イベントが送出されます。<codeph>target</codeph> プロパティ（<codeph>select</codeph> イベントで指定）は、選択されたファイルを指している File オブジェクトです。</p>
+	 
+	 </apiDesc><example conref="examples\File.browseForOpen.1.as"> 次のコードは、<codeph>File.browseForOpen()</codeph> メソッドを使用して、ユーザーがテキストファイルを選択できるようにしています。ファイルを選択すると、ファイルのデータがストリングに読み込まれます。
+<codeblock>
+import flash.filesystem.*;
+import flash.events.Event;
+import flash.net.FileFilter;
+
+var fileToOpen:File = new File();
+var txtFilter:FileFilter = new FileFilter("Text", "*.as;*.css;*.html;*.txt;*.xml");
+
+try 
+{
+    fileToOpen.browseForOpen("Open", [txtFilter]);
+    fileToOpen.addEventListener(Event.SELECT, fileSelected);
+}
+catch (error:Error)
+{
+    trace("Failed:", error.message);
+}
+
+function fileSelected(event:Event):void 
+{
+    var stream:FileStream = new FileStream();
+    stream.open(event.target, FileMode.READ);
+    var fileData:String = stream.readUTFBytes(stream.bytesAvailable);
+    trace(fileData);
+}
+</codeblock></example></apiOperationDetail><related-links><link href="flash.filesystem.xml#File/browseForSave()"><linktext>browseForSave()</linktext></link><link href="flash.filesystem.xml#File/browseForOpenMultiple()"><linktext>browseForOpenMultiple()</linktext></link><link href="flash.filesystem.xml#File/browseDirectory()"><linktext>browseDirectory()</linktext></link><link href="flash.filesystem.xml#File/event:select"><linktext>select</linktext></link><link href="flash.net.xml#FileFilter"><linktext>flash.net.FileFilter</linktext></link></related-links><adobeApiEvent id="flash.filesystem:File:browseForOpen_cancel"><apiName>cancel</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ファイルを開くダイアログボックスでユーザーが「キャンセル」をクリックすると、送出されます。 
+	 
+	 </apiDesc></adobeApiEventDetail><shortdesc>ファイルを開くダイアログボックスでユーザーが「キャンセル」をクリックすると、送出されます。</shortdesc></adobeApiEvent><adobeApiEvent id="flash.filesystem:File:browseForOpen_select"><apiName>select</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ユーザーがファイルを選択して、ファイルを開くダイアログボックスを閉じると、送出されます。 
+	 
+	 </apiDesc></adobeApiEventDetail><shortdesc>ユーザーがファイルを選択して、ファイルを開くダイアログボックスを閉じると、送出されます。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.filesystem:File:browseForOpenMultiple"><apiName>browseForOpenMultiple</apiName><shortdesc>
+	 ファイルを開くダイアログボックスを表示して、ユーザーが開くファイルを 1 つ以上選択できるようにします。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>title</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>ダイアログボックスのタイトルバーに表示するストリングです。
+	 
+	 </apiDesc></apiParam><apiParam><apiItemName>typeFilter</apiItemName><apiOperationClassifier>Array</apiOperationClassifier><apiData>null</apiData><apiDesc>ダイアログボックスに表示するファイルをフィルターにかける場合に使用する FileFilter インスタンスの配列です。このパラメーターを省略すると、すべてのファイルが表示されます。詳細については、FileFilter クラスを参照してください。
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 ファイルを開くダイアログボックスを表示して、ユーザーが開くファイルを 1 つ以上選択できるようにします。
+	 
+	 <p>ユーザーがファイルを選択すると、<codeph>selectMultiple</codeph> イベントが送出されます。<codeph>target</codeph> プロパティ（<codeph>select</codeph> イベントで指定）は、この File オブジェクトです。<codeph>browseForOpen()</codeph> とは異なり、<codeph>browseForOpenMultiple()</codeph> メソッドを使用すると、この File オブジェクトは、選択されたファイルを参照するために更新されません。その代わり、結果として得られる <codeph>selectMultiple</codeph> イベントには、選択されたファイルの配列が格納されます。</p>
+	 
+	 </apiDesc><example conref="examples\File.browseForOpenMultiple.1.as"> 次のコードは、<codeph>File.browseForOpenMultiple()</codeph> メソッドを使用して、ユーザーが複数のファイルを選択できるようにしています。ファイルを選択すると、選択されたファイルのパスが出力されます。
+<codeblock>
+import flash.filesystem.*;
+import flash.events.FileListEvent;
+
+var docsDir:File = File.documentsDirectory;
+try
+{
+    docsDir.browseForOpenMultiple("Select Files");
+    docsDir.addEventListener(FileListEvent.SELECT_MULTIPLE, filesSelected);
+}
+catch (error:Error)
+{
+    trace("Failed:", error.message);
+}
+
+function filesSelected(event:FileListEvent):void 
+{
+    for (var i:uint = 0; i &lt; event.files.length; i++) 
+    {
+        trace(event.files[i].nativePath);
+    }
+}
+</codeblock></example></apiOperationDetail><related-links><link href="flash.filesystem.xml#File/browseForSave()"><linktext>browseForSave()</linktext></link><link href="flash.filesystem.xml#File/browseForOpen()"><linktext>browseForOpen()</linktext></link><link href="flash.filesystem.xml#File/browseDirectory()"><linktext>browseDirectory()</linktext></link><link href="flash.filesystem.xml#File/event:selectMultiple"><linktext>selectMultiple</linktext></link><link href="flash.net.xml#FileFilter"><linktext>flash.net.FileFilter</linktext></link></related-links><adobeApiEvent id="flash.filesystem:File:browseForOpenMultiple_cancel"><apiName>cancel</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ファイルを開くダイアログボックスでユーザーが「キャンセル」をクリックすると、送出されます。 
+	 
+	 </apiDesc></adobeApiEventDetail><shortdesc>ファイルを開くダイアログボックスでユーザーが「キャンセル」をクリックすると、送出されます。</shortdesc></adobeApiEvent><adobeApiEvent id="flash.filesystem:File:browseForOpenMultiple_selectMultiple"><apiName>selectMultiple</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:FileListEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ユーザーがファイルを選択して、ファイルを開くダイアログボックスを閉じると、送出されます。 
+	 
+	 </apiDesc></adobeApiEventDetail><shortdesc>ユーザーがファイルを選択して、ファイルを開くダイアログボックスを閉じると、送出されます。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.filesystem:File:browseForSave"><apiName>browseForSave</apiName><shortdesc>
+	 ファイルの保存ダイアログボックスを表示して、ユーザーがファイルの保存先を選択できるようにします。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>title</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>ダイアログボックスのタイトルバーに表示するストリングです。
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 ファイルの保存ダイアログボックスを表示して、ユーザーがファイルの保存先を選択できるようにします。 
+	 
+	 <p>ユーザーがファイルを選択すると、<codeph>select</codeph> イベントが送出されます。<codeph>target</codeph> プロパティ（<codeph>select</codeph> イベントで指定）は、選択された保存先を指している File オブジェクトです。</p>
+	 
+	 </apiDesc><example conref="examples\File.browseForSave.1.as"> 次のコードは、<codeph>File.browseForSave()</codeph> メソッドを使用して、ユーザーがファイルを保存するためのパスを選択できるようにしています。ファイルを選択すると、選択したファイルパスにデータが保存されます。
+<codeblock>
+import flash.filesystem.*;
+import flash.events.Event;
+
+var docsDir:File = File.documentsDirectory;
+try
+{
+    docsDir.browseForSave("Save As");
+    docsDir.addEventListener(Event.SELECT, saveData);
+}
+catch (error:Error)
+{
+    trace("Failed:", error.message);
+}
+
+function saveData(event:Event):void 
+{
+    var newFile:File = event.target as File;
+    var str:String = "Hello.";
+    if (!newFile.exists)
+    {
+        var stream:FileStream = new FileStream();
+        stream.open(newFile, FileMode.WRITE);
+        stream.writeUTFBytes(str);
+        stream.close();
+    }
+}
+</codeblock></example></apiOperationDetail><related-links><link href="flash.filesystem.xml#File/browseDirectory()"><linktext>browseDirectory()</linktext></link><link href="flash.filesystem.xml#File/browseForOpen()"><linktext>browseForOpen()</linktext></link><link href="flash.filesystem.xml#File/event:select"><linktext>select</linktext></link><link href="flash.net.xml#FileFilter"><linktext>flash.net.FileFilter</linktext></link></related-links><adobeApiEvent id="flash.filesystem:File:browseForSave_cancel"><apiName>cancel</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ファイルの保存ダイアログボックスでユーザーが「キャンセル」をクリックすると、送出されます。 
+	 
+	 </apiDesc></adobeApiEventDetail><shortdesc>ファイルの保存ダイアログボックスでユーザーが「キャンセル」をクリックすると、送出されます。</shortdesc></adobeApiEvent><adobeApiEvent id="flash.filesystem:File:browseForSave_select"><apiName>select</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ユーザーがファイルを選択して、ファイルの保存ダイアログボックスを閉じると、送出されます。 
+	 
+	 </apiDesc></adobeApiEventDetail><shortdesc>ユーザーがファイルを選択して、ファイルの保存ダイアログボックスを閉じると、送出されます。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.filesystem:File:cancel"><apiName>cancel</apiName><shortdesc>
+	 保留中の非同期処理をキャンセルします。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+	 保留中の非同期処理をキャンセルします。
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.filesystem:File:canonicalize"><apiName>canonicalize</apiName><shortdesc>
+	 File のパスを標準化します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+	 File のパスを標準化します。
+	 
+	 <p>File オブジェクトが既存のファイルまたはディレクトリを表している場合は、標準化によって、実際のファイル名またはディレクトリ名と大文字小文字が一致するようにパスが調整されます。File オブジェクトがシンボリックリンクである場合は、標準化によって、参照先のファイルまたはディレクトリが存在するかどうかにかかわらず、リンクが指しているファイルまたはディレクトリに一致するようにパスが調整されます。小文字と大文字が区別されるファイルシステム（Linux など）では、小文字と大文字が異なるだけの名前のファイルが複数存在すると、<codeph>canonicalize()</codeph> メソッドは（ファイルシステムによって指定された順序で）最初に発見されたファイルと一致するようにパスを調整します。</p>
+	 
+	 <p>また、Windows では、標準化によって、短いファイル名が長いファイル名に変換されます。</p>
+	 
+	 </apiDesc><example conref="examples\File.canonicalize.2.as">     次のコードは、<codeph>canonicalize()</codeph> メソッドを使用して、大文字小文字が区別された正しいディレクトリ名を確認する方法を示しています。この例を実行する前に、ローカルコンピューターのデスクトップ上に AIR Test という名前のディレクトリを作成してください。
+<codeblock>
+import flash.filesystem.*;
+
+var path:File = File.desktopDirectory.resolvePath("air test");
+trace(path.nativePath); 
+path.canonicalize();
+trace(path.nativePath); // ...\AIR Test
+
+</codeblock></example><example conref="examples\File.canonicalize.1.as">     次のコードは、<codeph>canonicalize()</codeph> メソッドを使用して、Windows ディレクトリの短い名前に基づいて長い名前を確認する方法を示しています。この例では、C: ドライブのルートに AIR Test という名前のディレクトリが存在し、このディレクトリに対してシステムが短い名前 AIR~1 を割り当てていることを前提としています。
+<codeblock>
+import flash.filesystem.*;
+
+var path:File = new File();
+path.nativePath = "C:\\AIR~1";
+path.canonicalize();
+trace(path.nativePath); // C:\AIR Test
+</codeblock></example></apiOperationDetail></apiOperation><apiOperation id="flash.filesystem:File:clone"><apiName>clone</apiName><shortdesc>
+	 この File オブジェクトのコピーを返します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiOperationClassifier>flash.filesystem:File</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 この File オブジェクトのコピーを返します。イベント登録はコピーされません。
+	 
+	 <p><i/>注意：このメソッドでは、ファイル自体がコピーされるのではありません。<i/> 単に、<ph platform="actionscript">ActionScript</ph> <ph platform="javascript">JavaScript</ph> File オブジェクトのインスタンスのコピーが作成されるだけです。ファイルをコピーするには、<codeph>copyTo()</codeph> メソッドを使用します。</p>
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.filesystem:File:copyTo"><apiName>copyTo</apiName><shortdesc>
+	 この File オブジェクトで指定された場所にあるファイルまたはディレクトリを、newLocation パラメーターで指定された場所にコピーします。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>ソースが存在しないか、宛先が存在し、かつ <codeph>overwrite</codeph> が <codeph>false</codeph> であるか、ソースをターゲットにコピーできなかったか、またはソースおよび宛先が同じファイルまたはフォルダーを参照し、かつ <codeph>overwrite</codeph> が <codeph>true</codeph> に設定されています。 Windows では、開いているファイルや、開いているファイルが格納されているディレクトリをコピーすることはできません。
+	 
+	 </apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>newLocation</apiItemName><apiOperationClassifier>flash.net:FileReference</apiOperationClassifier><apiDesc>新しいファイルの宛先の場所です。この File オブジェクトは、結果として得られる（コピーされる）ファイルまたはディレクトリを表すものであり、それを格納しているディレクトリへのパスを表すものではありません。<i/>
+	 
+	 </apiDesc></apiParam><apiParam><apiItemName>overwrite</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc><codeph>false</codeph> の場合、<codeph>target</codeph> パラメーターで指定されたファイルが既に存在すると、コピーが失敗します。<codeph>true</codeph> の場合は、同じ名前のファイルまたはディレクトリが存在すると、このファイルまたはディレクトリが上書きされます。  
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 この File オブジェクトで指定された場所にあるファイルまたはディレクトリを、<codeph>newLocation</codeph> パラメーターで指定された場所にコピーします。コピー処理によって、可能な場合には必要な親ディレクトリが作成されます。
+	 
+	 </apiDesc><example conref="examples\File.copyTo.1.as"> 次のコードは、<codeph>copyTo()</codeph> メソッドを使用してファイルをコピーする方法を示しています。このコードを実行する前に、ローカルコンピューターのドキュメントディレクトリ内の AIR Test サブディレクトリに test1.txt というファイルを作成しておく必要があります。結果として得られるコピーファイルには test2.txt という名前が付けられ、同じ AIR Test サブディレクトリに置かれます。<codeph>clobber</codeph> パラメーターを <codeph>true</codeph> に設定すると、test2.txt という名前の既存のファイルがあった場合はこのファイルが上書きされます。
+<codeblock>
+import flash.filesystem.File;
+import flash.events.Event;
+
+var sourceFile:FileReference = File.documentsDirectory;
+sourceFile = sourceFile.resolvePath("AIR Test/test1.txt");
+var destination:FileReference = File.documentsDirectory;
+destination = destination.resolvePath("AIR Test/test2.txt");
+
+if (sourceFile.copyTo(destination, true)) {
+    trace("Done.");
+}
+</codeblock></example><example conref="examples\File.copyTo.2.as"> 次のコードは、<codeph>copyTo()</codeph> メソッドを使用してファイルをコピーする方法を示しています。このコードを実行する前に、ローカルコンピューターのホームディレクトリ内の AIR Test サブディレクトリに test1.txt というファイルを作成しておく必要があります。結果として得られるコピーファイルには、test2.txt という名前が付けられます。<codeph>try</codeph> ステートメントと <codeph>catch</codeph> ステートメントは、エラーへの対処方法を示しています。
+<codeblock>
+import flash.filesystem.File;
+
+var sourceFile:File = File.documentsDirectory;
+sourceFile = sourceFile.resolvePath("AIR Test/test1.txt");
+var destination:File = File.documentsDirectory;
+destination = destination.resolvePath("AIR Test/test2.txt");
+
+try 
+{
+    sourceFile.copyTo(destination, true);
+}
+catch (error:Error)
+{
+    trace("Error:", error.message);
+}
+</codeblock></example></apiOperationDetail><related-links><link href="flash.filesystem.xml#File/copyToAsync()"><linktext>copyToAsync()</linktext></link><link href="flash.filesystem.xml#File/moveTo()"><linktext>moveTo()</linktext></link></related-links></apiOperation><apiOperation id="flash.filesystem:File:copyToAsync"><apiName>copyToAsync</apiName><shortdesc>
+	 この File オブジェクトで指定された場所にあるファイルまたはディレクトリを、destination パラメーターで指定された場所にコピーする処理を開始します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>newLocation</apiItemName><apiOperationClassifier>flash.net:FileReference</apiOperationClassifier><apiDesc>新しいファイルの宛先の場所です。この File オブジェクトは、結果として得られる（コピーされる）ファイルまたはディレクトリを表すものであり、それを格納しているディレクトリへのパスを表すものではありません。<i/>
+	 
+	 </apiDesc></apiParam><apiParam><apiItemName>overwrite</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc><codeph>false</codeph> の場合、<codeph>target</codeph> ファイルで指定されたファイルが既に存在すると、コピーが失敗します。<codeph>true</codeph> の場合は、同じ名前のファイルまたはディレクトリが存在すると、このファイルまたはディレクトリが上書きされます。
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 この File オブジェクトで指定された場所にあるファイルまたはディレクトリを、<codeph>destination</codeph> パラメーターで指定された場所にコピーする処理を開始します。 
+	 
+	 <p>完了後、<codeph>complete</codeph> イベント（成功）または <codeph>ioError</codeph> イベント（失敗）が送出されます。コピー処理によって、可能な場合には必要な親ディレクトリが作成されます。</p>
+	 
+	 </apiDesc><example conref="examples\File.copyToAsync.1.as"> 次のコードは、<codeph>copyToAsync()</codeph> メソッドを使用してファイルをコピーする方法を示しています。このコードを実行する前に、ローカルコンピューターのドキュメントディレクトリ内の AIR Test サブディレクトリに test1.txt というファイルを作成しておく必要があります。結果として得られるコピーファイルには test2.txt という名前が付けられ、同じ AIR Test サブディレクトリに置かれます。<codeph>clobber</codeph> パラメーターを <codeph>true</codeph> に設定すると、test2.txt という名前の既存のファイルがあった場合はこのファイルが上書きされます。
+<codeblock>
+import flash.filesystem.File;
+import flash.events.Event;
+
+var sourceFile:File = File.documentsDirectory;
+sourceFile = sourceFile.resolvePath("AIR Test/test1.txt");
+var destination:File = File.documentsDirectory;
+destination = destination.resolvePath("AIR Test/test2.txt");
+
+sourceFile.copyToAsync(destination, true);
+sourceFile.addEventListener(Event.COMPLETE, fileCopiedHandler);
+
+function fileCopiedHandler(event:Event):void {
+    trace("Done.");
+}
+</codeblock></example></apiOperationDetail><related-links><link href="flash.filesystem.xml#File/copyTo()"><linktext>copyTo()</linktext></link><link href="flash.filesystem.xml#File/moveToAsync()"><linktext>moveToAsync()</linktext></link></related-links><adobeApiEvent id="flash.filesystem:File:copyToAsync_complete"><apiName>complete</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ファイルまたはディレクトリが正常にコピーされると送出されます。 
+	 
+	 </apiDesc></adobeApiEventDetail><shortdesc>ファイルまたはディレクトリが正常にコピーされると送出されます。</shortdesc></adobeApiEvent><adobeApiEvent id="flash.filesystem:File:copyToAsync_ioError"><apiName>ioError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:IOErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ソースが存在しないか、宛先が存在し、かつ <codeph>overwrite</codeph> が <codeph>false</codeph> であるか、ソースをターゲットにコピーできなかったか、またはソースおよび宛先が同じファイルまたはフォルダーを参照し、かつ <codeph>overwrite</codeph> が <codeph>true</codeph> に設定されています。 Windows では、開いているファイルや、開いているファイルが格納されているディレクトリをコピーすることはできません。
+	 
+	 </apiDesc></adobeApiEventDetail><shortdesc>ソースが存在しないか、宛先が存在し、かつ overwrite が false であるか、ソースをターゲットにコピーできなかったか、またはソースおよび宛先が同じファイルまたはフォルダーを参照し、かつ overwrite が true に設定されています。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.filesystem:File:createDirectory"><apiName>createDirectory</apiName><shortdesc>
+	 指定されたディレクトリおよび必要な親ディレクトリを作成します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>ディレクトリが存在せず、作成できませんでした。 
+	 
+	 </apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+	 指定されたディレクトリおよび必要な親ディレクトリを作成します。ディレクトリがすでに存在する場合は、何も行われません。
+	 
+	 </apiDesc><example conref="examples\File.createDirectory.1.as">     次のコードでは、デスクトップ上の test.txt という名前のファイルをドキュメントディレクトリ内の AIR Test サブディレクトリに移動します。<codeph>createDirectory()</codeph> メソッドを呼び出すことによって、ファイルを移動する前に AIR Test ディレクトリが作成されます。
+<codeblock>
+import flash.filesystem.*;
+
+var source:File = File.desktopDirectory.resolvePath("test.txt");
+var target:File = File.documentsDirectory.resolvePath("AIR Test/test.txt");
+var targetParent:File = target.parent;
+targetParent.createDirectory();
+source.moveTo(target, true);
+</codeblock></example></apiOperationDetail></apiOperation><apiOperation id="flash.filesystem:File:createTempDirectory"><apiName>createTempDirectory</apiName><shortdesc>
+	 新しい一時ディレクトリへの参照を返します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiDesc>新しい一時ディレクトリを参照している File オブジェクトです。
+	 
+	 </apiDesc><apiOperationClassifier>flash.filesystem:File</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 新しい一時ディレクトリへの参照を返します。これは、システムの一時ディレクトリパスに作成される新しいディレクトリです。
+	 
+	 <p>このメソッドを使用すると、新しい一意のディレクトリを指定できます。システムに照会してディレクトリが新規かつ一意であることを確認する必要はありません。</p>
+	 
+	 <p>一時ディレクトリは自動では削除されないため、アプリケーションを閉じる前に削除することを検討してください。</p>
+	 
+	 </apiDesc><example conref="examples\File.createTempDirectory.1.as"> 次のコードでは、<codeph>createTempFile()</codeph> メソッドを使用して新しい一時ディレクトリへの参照を取得します。
+<codeblock>
+import flash.File;
+
+var temp:File = File.createTempDirectory();
+trace(temp.nativePath);
+</codeblock> このコードを実行するたびに、新しい（一意の）ファイルが作成されます。 
+</example></apiOperationDetail><related-links><link href="flash.filesystem.xml#File/createTempFile()"><linktext>createTempFile()</linktext></link></related-links></apiOperation><apiOperation id="flash.filesystem:File:createTempFile"><apiName>createTempFile</apiName><shortdesc>
+	 新しい一時ファイルへの参照を返します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiDesc>新しい一時ファイルを参照している File オブジェクトです。
+	 
+	 </apiDesc><apiOperationClassifier>flash.filesystem:File</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 新しい一時ファイルへの参照を返します。これは、システムの一時ディレクトリパスに作成される新しいファイルです。
+	 
+	 <p>このメソッドを使用すると、新しい一意のファイルを指定できます。システムに照会してファイルが新規かつ一意であることを確認する必要はありません。</p>
+	 
+	 <p>一時ファイルは自動では削除されないため、アプリケーションを閉じる前に削除することを検討してください。</p>
+	 
+	 </apiDesc><example conref="examples\File.createTempFile.1.as"> 次のコードでは、<codeph>createTempFile()</codeph> メソッドを使用して新しい一時ファイルへの参照を取得します。
+<codeblock>
+import flash.File;
+
+var temp:File = File.createTempFile();
+trace(temp.nativePath);
+</codeblock> このコードを実行するたびに、新しい（一意の）ファイルが作成されます。 
+</example></apiOperationDetail><related-links><link href="flash.filesystem.xml#File/createTempDirectory()"><linktext>createTempDirectory()</linktext></link></related-links></apiOperation><apiOperation id="flash.filesystem:File:deleteDirectory"><apiName>deleteDirectory</apiName><shortdesc>
+	 ディレクトリを削除します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>ディレクトリが存在しないか、削除できませんでした。Windows では、開いているファイルのあるディレクトリを削除することはできません。
+	 
+	 </apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>deleteDirectoryContents</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>ファイルまたはサブディレクトリが格納されているディレクトリを削除するかどうかを指定します。<codeph>false</codeph> の場合、ディレクトリにファイルまたはサブディレクトリが格納されていると、このメソッドの呼び出しで例外がスローされます。
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 ディレクトリを削除します。このファイルが実際にディレクトリに対するシンボリックリンクの場合は、ディレクトリではなくこのリンクが削除されます。
+	 
+	 </apiDesc><example conref="examples\File.deleteDirectory.1.as"> 次のコード例では、空のディレクトリを作成し、次に <codeph>deleteDirectory()</codeph> メソッドを使用してこのディレクトリを削除します。 
+<codeblock>
+import flash.filesystem.File;
+
+var directory:File = File.documentsDirectory.resolvePath("Empty Junk Directory/");
+File.createDirectory(directory);
+trace(directory.exists); // true
+directory.deleteDirectory();
+trace(directory.exists); // false
+</codeblock></example></apiOperationDetail><related-links><link href="flash.filesystem.xml#File/deleteDirectoryAsync()"><linktext>deleteDirectoryAsync()</linktext></link><link href="flash.filesystem.xml#File/deleteFile()"><linktext>deleteFile()</linktext></link><link href="flash.filesystem.xml#File/moveToTrash()"><linktext>moveToTrash()</linktext></link></related-links></apiOperation><apiOperation id="flash.filesystem:File:deleteDirectoryAsync"><apiName>deleteDirectoryAsync</apiName><shortdesc>
+	 ディレクトリを非同期で削除します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>deleteDirectoryContents</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>ファイルまたはサブディレクトリが格納されているディレクトリを削除するかどうかを指定します。<codeph>false</codeph> の場合、ディレクトリにファイルまたはサブディレクトリが格納されていると、<codeph>ioError</codeph> イベントが送出されます。
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 ディレクトリを非同期で削除します。このファイルが実際にディレクトリに対するシンボリックリンクの場合は、ディレクトリではなくこのリンクが削除されます。
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.filesystem.xml#File/deleteDirectory()"><linktext>deleteDirectory()</linktext></link><link href="flash.filesystem.xml#File/deleteFileAsync()"><linktext>deleteFileAsync()</linktext></link><link href="flash.filesystem.xml#File/moveToTrashAsync()"><linktext>moveToTrashAsync()</linktext></link></related-links><adobeApiEvent id="flash.filesystem:File:deleteDirectoryAsync_complete"><apiName>complete</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ディレクトリが正常に削除されると送出されます。 
+	 
+	 </apiDesc></adobeApiEventDetail><shortdesc>ディレクトリが正常に削除されると送出されます。</shortdesc></adobeApiEvent><adobeApiEvent id="flash.filesystem:File:deleteDirectoryAsync_ioError"><apiName>ioError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:IOErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ディレクトリが存在しないか、削除できませんでした。Windows では、開いているファイルのあるディレクトリを削除することはできません。
+	 
+	 </apiDesc></adobeApiEventDetail><shortdesc>ディレクトリが存在しないか、削除できませんでした。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.filesystem:File:deleteFile"><apiName>deleteFile</apiName><shortdesc>
+	 ファイルを削除します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>ファイルが存在しないか、削除できませんでした。Windows では、現在開いているファイルを削除することはできません。
+	 
+	 </apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+	 ファイルを削除します。このファイルが実際にシンボリックリンクの場合は、ターゲットファイルではなくこのリンクが削除されます。
+	 
+	 </apiDesc><example conref="examples\File.deleteFile.1.as"> 次のコードでは、一時ファイルを作成し、次に <codeph>deleteFile()</codeph> メソッドを呼び出して一時ファイルを削除します。
+<codeblock>
+import flash.filesystem.*;
+
+var file:File = File.createTempFile();
+trace(file.exists); // true
+file.deleteFile();
+trace(file.exists); // false
+</codeblock></example></apiOperationDetail><related-links><link href="flash.filesystem.xml#File/deleteDirectory()"><linktext>deleteDirectory()</linktext></link><link href="flash.filesystem.xml#File/deleteFileAsync()"><linktext>deleteFileAsync()</linktext></link><link href="flash.filesystem.xml#File/moveToTrash()"><linktext>moveToTrash()</linktext></link></related-links></apiOperation><apiOperation id="flash.filesystem:File:deleteFileAsync"><apiName>deleteFileAsync</apiName><shortdesc>
+	 ファイルを非同期で削除します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+	 ファイルを非同期で削除します。このファイルが実際にシンボリックリンクの場合は、ターゲットファイルではなくこのリンクが削除されます。
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.filesystem.xml#File/deleteDirectoryAsync()"><linktext>deleteDirectoryAsync()</linktext></link><link href="flash.filesystem.xml#File/deleteFile()"><linktext>deleteFile()</linktext></link><link href="flash.filesystem.xml#File/moveToTrashAsync()"><linktext>moveToTrashAsync()</linktext></link></related-links><adobeApiEvent id="flash.filesystem:File:deleteFileAsync_complete"><apiName>complete</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ファイルが正常に削除されると送出されます。 
+	 
+	 </apiDesc></adobeApiEventDetail><shortdesc>ファイルが正常に削除されると送出されます。</shortdesc></adobeApiEvent><adobeApiEvent id="flash.filesystem:File:deleteFileAsync_ioError"><apiName>ioError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:IOErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ファイルが存在しないか、削除できませんでした。Windows では、現在開いているファイルを削除することはできません。
+	 
+	 </apiDesc></adobeApiEventDetail><shortdesc>ファイルが存在しないか、削除できませんでした。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.filesystem:File:getDirectoryListing"><apiName>getDirectoryListing</apiName><shortdesc>
+	 この File オブジェクトによって表されるディレクトリ内のファイルおよびディレクトリに対応する File オブジェクトの配列を返します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>File オブジェクトの配列です。
+	 
+	 </apiDesc><apiOperationClassifier>Array</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 この File オブジェクトによって表されるディレクトリ内のファイルおよびディレクトリに対応する File オブジェクトの配列を返します。このメソッドは、サブディレクトリの内容は調べません。
+	 
+	 </apiDesc><example conref="examples\File.getDirectoryListing.1.as"> 次のコードは、<codeph>getDirectoryListing()</codeph> メソッドを使用してユーザーディレクトリの内容を列挙する方法を示しています。
+<codeblock>
+import flash.filesystem.File;
+
+var directory:File = File.userDirectory;
+var list:Array = directory.getDirectoryListing();
+for (var i:uint = 0; i &lt; list.length; i++) {
+    trace(list[i].nativePath);
+}
+</codeblock></example></apiOperationDetail><related-links><link href="flash.filesystem.xml#File/getDirectoryListingAsync()"><linktext>getDirectoryListingAsync()</linktext></link><link href="flash.filesystem.xml#File/getRootDirectories()"><linktext>getRootDirectories()</linktext></link></related-links></apiOperation><apiOperation id="flash.filesystem:File:getDirectoryListingAsync"><apiName>getDirectoryListingAsync</apiName><shortdesc>
+	 この File オブジェクトによって表されるディレクトリの内容に対応する File オブジェクトの配列を非同期で取得します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+	 この File オブジェクトによって表されるディレクトリの内容に対応する File オブジェクトの配列を非同期で取得します。 
+	 
+	 </apiDesc><example conref="examples\File.getDirectoryListingAsync.1.as"> 次のコードは、<codeph>getDirectoryListingAsync()</codeph> メソッドを使用してユーザーディレクトリの内容を列挙する方法を示しています。
+<codeblock>
+import flash.filesystem.File;
+import flash.events.FileListEvent;
+
+var directory:File = File.userDirectory;
+directory.getDirectoryListingAsync();
+directory.addEventListener(FileListEvent.DIRECTORY_LISTING, directoryListingHandler);
+
+function directoryListingHandler(event:FileListEvent):void {
+    var list:Array = event.files;
+    for (var i:uint = 0; i &lt; list.length; i++) {
+        trace(list[i].nativePath);
+    }
+}
+</codeblock></example></apiOperationDetail><related-links><link href="flash.filesystem.xml#File/getDirectoryListing()"><linktext>getDirectoryListing()</linktext></link><link href="flash.filesystem.xml#File/getRootDirectories()"><linktext>getRootDirectories()</linktext></link><link href="flash.filesystem.xml#File/event:directoryListing"><linktext>directoryListing イベント</linktext></link></related-links><adobeApiEvent id="flash.filesystem:File:getDirectoryListingAsync_ioError"><apiName>ioError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:ErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>このディレクトリを読み取るために必要なアクセス権がないか、ディレクトリが存在しません。
+	 
+	 </apiDesc></adobeApiEventDetail><shortdesc>このディレクトリを読み取るために必要なアクセス権がないか、ディレクトリが存在しません。</shortdesc></adobeApiEvent><adobeApiEvent id="flash.filesystem:File:getDirectoryListingAsync_directoryListing"><apiName>directoryListing</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:FileListEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ディレクトリの内容が正常に列挙されました。<codeph>contents</codeph> イベントには <codeph>files</codeph> プロパティが含まれており、これは結果の Files オブジェクトの配列です。
+	 
+	 </apiDesc></adobeApiEventDetail><shortdesc>ディレクトリの内容が正常に列挙されました。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.filesystem:File:getRelativePath"><apiName>getRelativePath</apiName><shortdesc>
+	 2 つの File パス間の相対パスを探します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>参照が <codeph>null</codeph> です。
+	 
+	 </apiDesc><apiItemName>ArgumentError</apiItemName><apiOperationClassifier>ArgumentError</apiOperationClassifier></apiException><apiException><apiDesc>呼び出し元がアプリケーションのセキュリティサンドボックス内ではありません。
+	 
+	 </apiDesc><apiItemName>SecurityError</apiItemName><apiOperationClassifier>SecurityError</apiOperationClassifier></apiException><apiReturn><apiDesc>このファイル（またはディレクトリ）と <codeph>ref</codeph> ファイル（またはディレクトリ）との間の相対パス（可能な場合）、または <codeph>null</codeph> です。
+	 
+	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn><apiParam><apiItemName>ref</apiItemName><apiOperationClassifier>flash.net:FileReference</apiOperationClassifier><apiDesc> パスを指定する File オブジェクトです。
+	 
+	 </apiDesc></apiParam><apiParam><apiItemName>useDotDot</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc> 結果として得られる相対パスで ".." コンポーネントを使用できるかどうかを指定します。
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 2 つの File パス間の相対パスを探します。
+	 
+	 <p>相対パスは、2 つ目の（パラメーター）参照を見つけるためにこの参照に追加（解決）されるコンポーネントのリストです。相対パスは、区切り文字 "/" を使用して返されます。</p>
+	 
+	 <p>必要に応じて、相対パスに ".." 参照を含めることができますが、そのようなパスが明確なボリューム境界を越えることはありません。</p>
+	 
+	 </apiDesc><example conref="examples\File.getRelativePath.1.as"/></apiOperationDetail></apiOperation><apiOperation id="flash.filesystem:File:getRootDirectories"><apiName>getRootDirectories</apiName><shortdesc>
+	 ファイルシステムのルートディレクトリを列挙している File オブジェクトの配列を返します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiDesc>ルートディレクトリを列挙している File オブジェクトの配列。 
+	 
+	 </apiDesc><apiOperationClassifier>Array</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 ファイルシステムのルートディレクトリを列挙している File オブジェクトの配列を返します。 
+	 
+	 <p>例えば、Windows ではこれは C: ドライブや D: ドライブなどのボリュームのリストです。ディスクが挿入されていない CD または DVD ドライブなどの空のドライブは、この配列に含まれません。Mac OS および Linux の場合、このメソッドは常にマシンの一意のルートディレクトリを返します（「/」ディレクトリ）。</p>
+	 
+	 </apiDesc><example conref="examples\File.getRootDirectories.1.as"> 次のコードでは、ルートディレクトリの一覧を出力します。
+<codeblock>
+import flash.filesystem.File;
+var rootDirs:Array = File.getRootDirectories();
+
+for (var i:uint = 0; i &lt; rootDirs.length; i++) {
+    trace(rootDirs[i].nativePath);
+}
+</codeblock></example></apiOperationDetail></apiOperation><apiOperation id="flash.filesystem:File:moveTo"><apiName>moveTo</apiName><shortdesc>
+	 この File オブジェクトで指定された場所にあるファイルまたはディレクトリを、destination パラメーターで指定された場所に移動します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>ソースが存在しないか、宛先が存在し、かつ <codeph>overwrite</codeph> が <codeph>false</codeph> に設定されているか、ソースファイルまたはディレクトリをターゲットの場所に移動できなかったか、またはソースおよび宛先が同じファイルまたはフォルダーを参照し、かつ <codeph>overwrite</codeph> が <codeph>true</codeph> に設定されています。Windows では、開いているファイルや、開いているファイルが格納されているディレクトリを移動することはできません。
+	 
+	 </apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>newLocation</apiItemName><apiOperationClassifier>flash.net:FileReference</apiOperationClassifier><apiDesc>移動先の場所です。このオブジェクトは、結果として得られる（移動される）ファイルまたはディレクトリを表すものであり、それを格納しているディレクトリへのパスを表すものではありません。<i/>
+	 
+	 </apiDesc></apiParam><apiParam><apiItemName>overwrite</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc><codeph>false</codeph> の場合、<codeph>target</codeph> ファイルが既に存在すると移動が失敗します。<codeph>true</codeph> の場合は、同じ名前のファイルまたはディレクトリが存在すると、このファイルまたはディレクトリが上書きされます。 
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 この File オブジェクトで指定された場所にあるファイルまたはディレクトリを、<codeph>destination </codeph>パラメーターで指定された場所に移動します。 
+	 
+	 <p>ファイルの名前を変更するには、そのファイルのディレクトリにある別の名前のファイルへのパスを指すように <codeph>destination</codeph> パラメーターを設定します。</p>
+	 
+	 <p>移動処理によって、可能な場合には必要な親ディレクトリが作成されます。</p>
+	 
+	 </apiDesc><example conref="examples\File.moveTo.1.as"> 次のコードは、<codeph>moveTo()</codeph> メソッドを使用してファイルの名前を変更する方法を示しています。元のファイル名は test1.txt で、変更後のファイル名は test2.txt です。ソースと宛先の File オブジェクトは両方とも同じディレクトリ（ユーザーのドキュメントディレクトリ内の Apollo Test サブディレクトリ）を指しているため、この <codeph>moveTo()</codeph> メソッドでは、ファイルが新しいディレクトリに移動されるのではなく、ファイルの名前が変更されます。このコードを実行する前に、ローカルコンピューターのドキュメントディレクトリ内の AIR Test サブディレクトリに test1.txt というファイルを作成しておく必要があります。<codeph>clobber</codeph> パラメーターを <codeph>true</codeph> に設定すると、test2.txt という名前の既存のファイルがあった場合はこのファイルが上書きされます。
+<codeblock>
+
+import flash.filesystem.File;
+import flash.events.Event;
+
+var sourceFile:File = File.documentsDirectory;
+sourceFile = sourceFile.resolvePath("AIR Test/test1.txt");
+var destination:File = File.documentsDirectory;
+destination = destination.resolvePath("Apollo Test/test2.txt");
+
+try  
+{
+    sourceFile.moveTo(destination, true);
+}
+catch (error:Error)
+{
+    trace("Error:" error.message);
+}
+</codeblock></example><example conref="examples\File.moveTo.2.as"> 次のコードは、<codeph>moveTo()</codeph> メソッドを使用してファイルを移動する方法を示しています。元のファイルはユーザーのドキュメントディレクトリ内の Apollo Test サブディレクトリに格納されている test1.txt ファイルであり、このファイルが Results サブディレクトリに移動されます。このコードを実行する前に、ローカルコンピューターのホームディレクトリ内の AIR Test サブディレクトリに test1.txt というファイルを作成しておく必要があります。<codeph>try</codeph> ステートメントと <codeph>catch</codeph> ステートメントは、エラーへの対処方法を示しています。
+<codeblock>
+import flash.filesystem.File;
+
+var sourceFile:File = File.documentsDirectory;
+sourceFile = sourceFile.resolvePath("AIR Test/test1.txt");
+var destination:File = File.documentsDirectory;
+destination = destination.resolvePath("AIR Test/Results/test1.txt");
+
+try 
+{
+    sourceFile.moveTo(destination, true);
+}
+catch (error:Error)
+{
+    trace("Error:" error.message);
+}
+</codeblock></example></apiOperationDetail><related-links><link href="flash.filesystem.xml#File/copyTo()"><linktext>copyTo()</linktext></link><link href="flash.filesystem.xml#File/moveToAsync()"><linktext>moveToAsync()</linktext></link><link href="flash.filesystem.xml#File/moveToTrash()"><linktext>moveToTrash()</linktext></link></related-links></apiOperation><apiOperation id="flash.filesystem:File:moveToAsync"><apiName>moveToAsync</apiName><shortdesc>
+	 この File オブジェクトで指定された場所にあるファイルまたはディレクトリを、newLocation パラメーターで指定された場所に移動する処理を開始します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>newLocation</apiItemName><apiOperationClassifier>flash.net:FileReference</apiOperationClassifier><apiDesc>移動先の場所です。このオブジェクトは、結果として得られる（移動される）ファイルまたはディレクトリを表すものであり、それを格納しているディレクトリへのパスを表すものではありません。<i/>
+	 
+	 </apiDesc></apiParam><apiParam><apiItemName>overwrite</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc><codeph>false</codeph> の場合、<codeph>target</codeph> ファイルが既に存在すると移動が失敗します。<codeph>true</codeph> の場合は、同じ名前のファイルまたはディレクトリが存在すると、このファイルまたはディレクトリが上書きされます。
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 この File オブジェクトで指定された場所にあるファイルまたはディレクトリを、<codeph>newLocation</codeph> パラメーターで指定された場所に移動する処理を開始します。 
+	 
+	 <p>ファイルの名前を変更するには、そのファイルのディレクトリにある別の名前のファイルへのパスを指すように <codeph>destination</codeph> パラメーターを設定します。</p>
+	 
+	 <p>移動処理によって、可能な場合には必要な親ディレクトリが作成されます。</p>
+	 
+	 </apiDesc><example conref="examples\File.moveToAsync.1.as"> 次のコードは、<codeph>moveToAsync()</codeph> メソッドを使用してファイルの名前を変更する方法を示しています。元のファイル名は test1.txt で、変更後の名前は test2.txt です。ソースと宛先の File オブジェクトは両方とも同じディレクトリ（ユーザーのドキュメントディレクトリ内の Apollo Test サブディレクトリ）を指しているため、この <codeph>moveToAsync()</codeph> メソッドでは、ファイルが新しいディレクトリに移動されるのではなく、ファイルの名前が変更されます。このコードを実行する前に、ローカルコンピューターのドキュメントディレクトリ内の Apollo Test サブディレクトリに test1.txt というファイルを作成しておく必要があります。<codeph>clobber</codeph> パラメーターを <codeph>true</codeph> に設定すると、test2.txt という名前の既存のファイルがあった場合はこのファイルが上書きされます。
+<codeblock>
+import flash.filesystem.File;
+import flash.events.Event;
+
+var sourceFile:File = File.documentsDirectory;
+sourceFile = sourceFile.resolvePath("Apollo Test/test1.txt");
+var destination:File = File.documentsDirectory;
+destination = destination.resolvePath("Apollo Test/test2.txt");
+
+var sourceFile.moveToAsync(destination, true);
+sourceFile.addEventListener(Event.COMPLETE, fileMoveCompleteHandler);
+
+function fileMoveCompleteHandler(event:Event):void 
+{
+    trace("Done.")
+}
+</codeblock></example></apiOperationDetail><related-links><link href="flash.filesystem.xml#File/copyToAsync()"><linktext>copyToAsync()</linktext></link><link href="flash.filesystem.xml#File/moveTo()"><linktext>moveTo()</linktext></link><link href="flash.filesystem.xml#File/moveToTrashAsync()"><linktext>moveToTrashAsync()</linktext></link></related-links><adobeApiEvent id="flash.filesystem:File:moveToAsync_complete"><apiName>complete</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ファイルまたはディレクトリが正常に移動されると送出されます。 
+	 
+	 </apiDesc></adobeApiEventDetail><shortdesc>ファイルまたはディレクトリが正常に移動されると送出されます。</shortdesc></adobeApiEvent><adobeApiEvent id="flash.filesystem:File:moveToAsync_ioError"><apiName>ioError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:IOErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ソースが存在しないか、宛先が存在し <codeph>overwrite</codeph> が <codeph>false</codeph> であるか、またはソースをターゲットに移動できなかったか、またはソースと宛先が同じファイルまたはフォルダーを参照し <codeph>overwrite</codeph> が <codeph>true</codeph> に設定されています。Windows では、開いているファイルや、開いているファイルが格納されているディレクトリを移動することはできません。
+	 
+	 </apiDesc></adobeApiEventDetail><shortdesc>ソースが存在しないか、宛先が存在し、かつ overwrite が false であるか、ソースをターゲットに移動できなかったか、またはソースおよび宛先が同じファイルまたはフォルダーを参照し、かつ overwrite が true に設定されています。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.filesystem:File:moveToTrash"><apiName>moveToTrash</apiName><shortdesc>
+	 ファイルまたはディレクトリをごみ箱に移動します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><internal>TBC: what to do when Trash is not supported?  SB part of general policy about optional system facilities.
+	 </internal></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>操作がオペレーティングシステムによって許可されなかったか、ファイルまたはディレクトリが存在しません。Windows では、開いているファイルや、現在開いているファイルが格納されているディレクトリを移動することはできません。
+	 
+	 </apiDesc><apiItemName>IOError</apiItemName><apiOperationClassifier>flash.errors:IOError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+	 ファイルまたはディレクトリをごみ箱に移動します。
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.filesystem.xml#File/moveToTrashAsync()"><linktext>moveToTrashAsync()</linktext></link></related-links></apiOperation><apiOperation id="flash.filesystem:File:moveToTrashAsync"><apiName>moveToTrashAsync</apiName><shortdesc>
+	 ファイルまたはディレクトリを非同期でごみ箱に移動します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><internal>TBC: what to do when Trash is not supported?  SB part of general policy about optional system facilities.
+	 </internal></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+	 ファイルまたはディレクトリを非同期でごみ箱に移動します。 
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.filesystem.xml#File/moveToTrash()"><linktext>moveToTrash()</linktext></link></related-links><adobeApiEvent id="flash.filesystem:File:moveToTrashAsync_ioError"><apiName>ioError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:IOErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>操作がオペレーティングシステムによって許可されなかったか、ファイルまたはディレクトリが存在しません。Windows では、開いているファイルや、現在開いているファイルが格納されているディレクトリを移動することはできません。
+	 
+	 </apiDesc></adobeApiEventDetail><shortdesc>操作がオペレーティングシステムによって許可されなかったか、ファイルまたはディレクトリが存在しません。</shortdesc></adobeApiEvent><adobeApiEvent id="flash.filesystem:File:moveToTrashAsync_complete"><apiName>complete</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>ファイルまたはディレクトリが正常にゴミ箱に移動されると送出されます。 
+	 
+	 </apiDesc></adobeApiEventDetail><shortdesc>ファイルまたはディレクトリが正常にゴミ箱に移動されると送出されます。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.filesystem:File:resolvePath"><apiName>resolvePath</apiName><shortdesc>
+	 path パラメーター（ストリング）に基づいて、この File オブジェクトのパスを基準とした相対的なパスを持つ新しい File オブジェクトを作成します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>結果として得られたパスを示す新しい File オブジェクト。
+	 
+	 </apiDesc><apiOperationClassifier>flash.filesystem:File</apiOperationClassifier></apiReturn><apiParam><apiItemName>path</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>この File オブジェクトのパスに追加するパス（<codeph>path</codeph> パラメーターが相対パスである場合）、または返すパス（<codeph>path</codeph> パラメーターが絶対パスである場合）。
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 <codeph>path</codeph> パラメーター（ストリング）に基づいて、この File オブジェクトのパスを基準とした相対的なパスを持つ新しい File オブジェクトを作成します。
+	 
+	 <p><codeph>path</codeph> パラメーターとして相対パスまたは絶対パスを使用できます。</p>
+	 
+	 <p>相対パスを指定した場合、指定した <codeph>path</codeph> は File オブジェクトのパスの末尾に「追加」されます。ただし、「..」を <codeph>path</codeph> で使用すると、File オブジェクトの子ではないパスが結果として返されることがあります。結果として得られる参照は、実際のファイルシステムの場所を参照していなくても構いません。</p>
+	 
+	 <p>絶対ファイル参照を指定した場合、メソッドは、そのパスをポイントする File オブジェクトを返します。絶対ファイル参照では、ユーザーのオペレーティングシステムの有効なネイティブパス構文（Windows の<codeph>「C:\\test」</codeph>など）を使用する必要があります。<i/>URL（<codeph>「file:///c:/test」</codeph>など）は <codeph>path</codeph> パラメーターには使用しないでください。</p>
+	 
+	 <p>結果として得られたパスは、すべて次のように正規化されます。 </p>
+	 
+	 <ul>
+	 
+	 	<li>すべての "."エレメントは無視されます。</li>
+	 
+	 	<li>すべての ".."エレメントは、その親エントリを使用します。  </li>
+	 
+	 	<li>".." 参照がファイルシステムのルートまたはアプリケーションの永続記憶領域のルートに達している場合、そのノードを越えることはありません。これは無視されます。</li>
+	 
+	 </ul>
+	 
+	 <p>パスの区切り文字としては、常にスラッシュ（<codeph>/</codeph>）を使用してください。Windows では円記号（<codeph>¥</codeph>）も使用できますが、これを使用すると、アプリケーションが他のプラットフォームで動作しなくなる可能性があります。</p>
+	 
+	 <p>Linux では、ファイル名およびディレクトリ名の大文字と小文字は区別されます。</p>
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiValue id="flash.filesystem:File:applicationDirectory:get"><apiName>applicationDirectory</apiName><shortdesc>
+	 インストールされたアプリケーションファイルが格納されているフォルダーです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>flash.filesystem:File</apiValueClassifier></apiValueDef><apiDesc>
+	 インストールされたアプリケーションファイルが格納されているフォルダーです。
+	 
+	 <p>このオブジェクトの <codeph>url</codeph> プロパティは、<codeph>app</codeph> URL スキーム（<codeph>file</codeph> URL スキームではない）を使用します。したがって、<codeph>url</codeph> ストリングの指定は<codeph>「app:」</codeph>（<codeph>「file:」</codeph>）ではない）で始めます。また、<codeph>File.applicationDirectory</codeph> ディレクトリを基準とする相対位置に（<codeph>resolvePath()</codeph> メソッドを使用して）File オブジェクトを作成すると、その File オブジェクトの <codeph>url</codeph> プロパティでも <codeph>app</codeph> URL スキームが使用されます。 
+	 </p>
+	 
+	 <p><i/>注意：<codeph>app</codeph> URL スキームを使用するパスを持つファイルまたはディレクトリに書き込むことはできません。また、<codeph>app</codeph> URL スキームを使用するパスを持つファイルやフォルダーの削除または作成を行うこともできません。セキュリティ上の理由から、アプリケーションディレクトリの内容は変更しないでください。アプリケーション固有のデータを格納する必要がある場合は、アプリケーションの記憶領域ディレクトリ（<codeph>File.applicationStorageDirectory</codeph>）を使用することを検討してください。アプリケーションの記憶領域ディレクトリ内のコンテンツがアプリケーション特権機能（AIR API）にアクセスできるようにする必要がある場合は、サンドボックスブリッジを使用してその機能を公開します。</p>
+	 
+	 <p><codeph>applicationDirectory</codeph> プロパティを使用すると、異なるプラットフォームでも動作する方法でアプリケーションディレクトリを参照できます。アプリケーションディレクトリを参照するように File オブジェクトを設定する際、<codeph>nativePath</codeph> または <codeph>url</codeph> プロパティを直接に使用すると、そのパスが有効であるプラットフォーム上でしか動作しないコードになります。</p>
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.filesystem.xml#File/applicationStorageDirectory"><linktext>applicationStorageDirectory</linktext></link></related-links></apiValue><apiValue id="flash.filesystem:File:applicationStorageDirectory:get"><apiName>applicationStorageDirectory</apiName><shortdesc>
+     アプリケーションのプライベート記憶領域ディレクトリです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>flash.filesystem:File</apiValueClassifier></apiValueDef><apiDesc>
+     アプリケーションのプライベート記憶領域ディレクトリです。 
+	 
+	 <p>それぞれの AIR アプリケーションは、永続的な固有のアプリケーション記憶領域ディレクトリを持っています。このディレクトリは、<codeph>File.applicationStorageDirectory</codeph> に初めてアクセスしたときに作成されます。このディレクトリは、アプリケーション固有のデータを格納するために利用されます。</p>
+	 
+	 <p>AIR アプリケーションをアンインストールする場合、アンインストーラーではアプリケーション記憶領域ディレクトリに保存されたファイルは削除されません。</p>
+	 
+	 <p>このオブジェクトの <codeph>url</codeph> プロパティは、<codeph>app-storage</codeph> URL スキーム（<codeph>file</codeph> URL スキームではない）を使用します。したがって、<codeph>url</codeph> ストリングの指定は<codeph>「app-storage:」</codeph>（<codeph>「file:」</codeph>）ではない）で始めます。また、<codeph>applicationStoreDirectory</codeph> ディレクトリを基準とする相対位置に（<codeph>resolvePath()</codeph> メソッドを使用して）File オブジェクトを作成すると、その File オブジェクトの <codeph>url</codeph> でも <codeph>app-storage</codeph> URL スキームが使用されます（例を参照）。</p>
+	 
+	 <p><codeph>applicationStorageDirectory</codeph> プロパティを使用すると、異なるプラットフォームでも動作する方法でアプリケーション記憶領域ディレクトリを参照できます。アプリケーション記憶領域ディレクトリを参照するように File オブジェクトを設定する際、<codeph>nativePath</codeph> または <codeph>url</codeph> プロパティを直接に使用すると、そのパスが有効であるプラットフォーム上でしか動作しないコードになります。</p>
+	 
+	 </apiDesc><example conref="examples\File.applicationStorageDirectory.1.as"> 次の例では、アプリケーション記憶領域ディレクトリの "images" サブディレクトリを指している File オブジェクトを作成します。
+<codeblock>
+import flash.filesystem.File;
+
+var tempFiles:File = File.applicationStorageDirectory;
+tempFiles = tempFiles.resolvePath("images/");
+trace(tempFiles.url); // app-storage:/images
+</codeblock></example></apiValueDetail></apiValue><apiValue id="flash.filesystem:File:desktopDirectory:get"><apiName>desktopDirectory</apiName><shortdesc>
+	 ユーザーのデスクトップディレクトリです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>flash.filesystem:File</apiValueClassifier></apiValueDef><apiDesc>
+	 ユーザーのデスクトップディレクトリです。
+	 
+	 <p><codeph>desktopDirectory</codeph> プロパティを使用すると、異なるプラットフォームでも動作する方法でデスクトップディレクトリを参照できます。デスクトップディレクトリを参照するように File オブジェクトを設定する際、<codeph>nativePath</codeph> または <codeph>url</codeph> プロパティを直接に使用すると、そのパスが有効であるプラットフォーム上でしか動作しないコードになります。</p>
+	 
+	 </apiDesc><example conref="examples\File.desktopDirectory.1.as"> 次のコードでは、ユーザーのデスクトップディレクトリに格納されているファイルおよびディレクトリの一覧を出力します。
+<codeblock>
+import flash.filesystem.File;
+var desktop:File = File.desktopDirectory;
+
+var files:Array = desktop.getDirectoryListing();
+
+for (var i:uint = 0; i &lt; files.length; i++) {
+    trace(files[i].nativePath);
+}
+</codeblock><swfblock conref="examples\File.desktopDirectory.1.swf"/></example></apiValueDetail></apiValue><apiValue id="flash.filesystem:File:documentsDirectory:get"><apiName>documentsDirectory</apiName><shortdesc>
+	 ユーザーのドキュメントディレクトリです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>flash.filesystem:File</apiValueClassifier></apiValueDef><apiDesc>
+	 ユーザーのドキュメントディレクトリです。
+	 
+	 <p>Windows では、これは My Documents ディレクトリ（例えば C:\Documents and Settings\userName\My Documents）です。Mac OS のデフォルトの位置は /Users/userName/Documents です。Linux のデフォルトの位置は /home/userName/Documents（英語システムの場合）で、プロパティは <codeph>xdg-user-dirs</codeph> 設定に従います。</p>
+	 
+	 <p><codeph>documentsDirectory</codeph> プロパティを使用すると、異なるプラットフォームでも動作する方法でドキュメントディレクトリを参照できます。ドキュメントディレクトリを参照するように File オブジェクトを設定する際、<codeph>nativePath</codeph> または <codeph>url</codeph> プロパティを直接に使用すると、そのパスが有効であるプラットフォーム上でしか動作しないコードになります。</p>
+	 
+	 </apiDesc><example conref="examples\File.documentsDirectory.1.as"> 次のコードでは、<codeph>File.documentsDirectory</codeph> プロパティと <codeph>File.createDirectory()</codeph> メソッドを使用して、ユーザーのドキュメントディレクトリに "AIR Test" という名前のディレクトリが確実に存在するようにしています。
+<codeblock>
+import flash.filesystem.File;
+
+var directory:File = File.documentsDirectory;
+directory = directory.resolvePath("AIR Test");
+
+File.createDirectory(directory);
+trace(directory.exists); // true
+</codeblock></example></apiValueDetail></apiValue><apiValue id="flash.filesystem:File:exists:get"><apiName>exists</apiName><shortdesc>
+     参照先のファイルまたはディレクトリが存在するかどうかを示します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+     参照先のファイルまたはディレクトリが存在するかどうかを示します。値は、File オブジェクトが既存のファイルまたはディレクトリを指している場合は <codeph>true</codeph>、それ以外の場合は <codeph>false</codeph> です。
+	 
+	 </apiDesc><example conref="examples\File.exists.1.as"> 次のコードでは、一時ファイルを作成し、このファイルを削除します。次に、<codeph>File.exists</codeph> プロパティを使用して、このファイルが存在するかどうかを確認します。
+<codeblock>
+import flash.filesystem.*;
+
+var temp:File = File.createTempFile();
+trace(temp.exists); // true
+temp.deleteFile();
+trace(temp.exists); // false
+</codeblock><swfblock conref="examples\File.exists.1.swf"/></example></apiValueDetail></apiValue><apiValue id="flash.filesystem:File:icon:get"><apiName>icon</apiName><shortdesc>
+	 ファイルに対して定義されたアイコンを格納している Icon オブジェクトです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>flash.desktop:Icon</apiValueClassifier></apiValueDef><apiDesc>
+	 ファイルに対して定義されたアイコンを格納している Icon オブジェクトです。Icon オブジェクトは、様々なアイコン状態に対応する BitmapData オブジェクトの配列です。Linux　では、Icon オブジェクトにアイコンはありません。
+	 
+	 </apiDesc><example conref="examples\File.icon.1.as"> 次のコードは、<codeph>icon</codeph> 配列内で高さが最大のイメージを探し、Bitmap オブジェクトをそのイメージに設定する方法を示しています。
+<codeblock>
+import flash.filesystem.File;
+import flash.display.*;
+
+var directory:File = File.documentsDirectory;
+var bitmaps:Array = directory.icon.bitmaps;
+var bmpData:BitmapData = new BitmapData(1, 1);
+for (var i:uint = 0; i &lt; bitmaps.length; i++) {
+    if (bitmaps[i].height > bmpData.height) {
+        bmpData = directory.icon.bitmaps[i];
+    }
+}
+var iconBmp:Bitmap = new Bitmap(bmpData);
+</codeblock> この Bitmap オブジェクトを表示オブジェクトコンテナ（Sprite オブジェクト、Flex UIComponent オブジェクトなど）の子として追加できます。
+</example></apiValueDetail></apiValue><apiValue id="flash.filesystem:File:isDirectory:get"><apiName>isDirectory</apiName><shortdesc>
+     参照先がディレクトリであるかどうかを示します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+     参照先がディレクトリであるかどうかを示します。値は、File オブジェクトの参照先がディレクトリの場合は <codeph>true</codeph>、それ以外の場合は <codeph>false</codeph> です。
+	 
+	 </apiDesc><example conref="examples\File.isDirectory.1.as"> 次のコードでは、ユーザーディレクトリ内のファイルおよびディレクトリを参照している File オブジェクトの配列を作成し、<codeph>isDirectory</codeph> プロパティを使用して、（ファイルではなく）ディレクトリを参照している File オブジェクトだけを列挙します。
+<codeblock>
+import flash.filesystem.*;
+
+var userDirFiles:Array = File.userDirectory.getDirectoryListing();
+for (var i:uint = 0; i &lt; userDirFiles.length; i++) {
+    if (userDirFiles[i].isDirectory) {
+        trace(userDirFiles[i].nativePath);
+    }
+}    
+</codeblock><swfblock conref="examples\File.isDirectory.1.swf"/></example></apiValueDetail></apiValue><apiValue id="flash.filesystem:File:isHidden:get"><apiName>isHidden</apiName><shortdesc>
+     参照先のファイルまたはディレクトリが "非表示" かどうかを示します。値は、参照先のファイルまたはディレクトリが非表示の場合は true、それ以外の場合は false です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><internal>(Waiting for Stan's OK:)
+	 
+	 <ul>
+	 
+	 	<li>On Windows, a file or directory is designated as hidden by specifying the 
+	 Hidden attribute (for example, in the File Properties dialog box) for the file.</li>
+	 
+	 	<li>On Mac OS and Linux, files can be designated as hidden for a number of reasons. Files with 
+	 names that begin with the dot (.) character are designated as hidden. A .hidden file 
+	 in the root directory lists other hidden files. Also, there is a bit in the file that, 
+	 when set, makes it hidden.</li>
+	 
+	 </ul>
+	 
+	 </internal></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+     参照先のファイルまたはディレクトリが "非表示" かどうかを示します。値は、参照先のファイルまたはディレクトリが非表示の場合は <codeph>true</codeph>、それ以外の場合は <codeph>false</codeph> です。
+	 
+	 </apiDesc><example conref="examples\File.isHidden.1.as"> 次のコードでは、ユーザーディレクトリ内のファイルおよびディレクトリを参照している File オブジェクトの配列を作成し、<codeph>isHidden</codeph> プロパティを使用して非表示のファイルおよびディレクトリを列挙します。
+<codeblock>
+import flash.filesystem.*;
+
+var userDirFiles:Array = File.userDirectory.getDirectoryListing();
+for (var i:uint = 0; i &lt; userDirFiles.length; i++) {
+    if (userDirFiles[i].isHidden) {
+        trace(userDirFiles[i].nativePath);
+    }
+}    
+</codeblock><swfblock conref="examples\File.isHidden.1.swf"/></example></apiValueDetail></apiValue><apiValue id="flash.filesystem:File:isPackage:get"><apiName>isPackage</apiName><shortdesc>
+     参照先のディレクトリがパッケージであるかどうかを示します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+     参照先のディレクトリがパッケージであるかどうかを示します。
+     
+	 <p>値は、参照先のディレクトリがパッケージである場合は <codeph>true</codeph>、それ以外の場合は <codeph>false</codeph> です。File クラスでは、パッケージを直接作成することはできません。</p>
+	 
+	 <ul>
+	 
+	 	<li>Macintosh では、ディレクトリをパッケージとして指定して、Finder にディレクトリではなく単一のファイルとして表示することができます。このプロパティは、参照先のディレクトリがパッケージである場合は <codeph>true</codeph>、そのファイルがディレクトリでない場合、存在しない場合、またはパッケージでない場合は <codeph>false</codeph> に設定されます。</li>
+	 
+	 	<li>他のオペレーティングシステムでは、このプロパティは常に <codeph>false</codeph> に設定されます。</li>
+	 
+	 </ul>
+	 
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.filesystem:File:isSymbolicLink:get"><apiName>isSymbolicLink</apiName><shortdesc>
+     参照がシンボリックリンクであるかどうかを示します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+     参照がシンボリックリンクであるかどうかを示します。
+     
+	 <p>値は、File オブジェクトがシンボリックリンクの場合は <codeph>true</codeph>、それ以外の場合は <codeph>false</codeph> です。File クラスでは、シンボリックリンクを直接作成することはできません。</p>
+	 
+	 <p>シンボリックリンクを使用すると、ファイルが、ディスク上の別のファイルまたはディレクトリを参照できるようになります。シンボリックリンクは、エイリアス（Macintosh）およびショートカット（Windows）に似ていますが、同じではありません。エイリアスまたはショートカットは常に（ディレクトリではなく）ファイルとして報告され、エイリアスまたはショートカットの読み取りや書き込みを行っても、そのエイリアスまたはショートカットの参照先である元のファイルまたはディレクトリが影響を受けることはありません。これに対し、シンボリックリンクは、通常、参照先のファイルまたはディレクトリと同じように動作します。シンボリックリンクは、ファイルまたはディレクトリとして報告され、シンボリックリンクの読み取りや書き込みを行うと、シンボリックリンク自体ではなく、参照先のファイルまたはディレクトリが影響を受けます。ただし、シンボリックリンクを削除すると、リンクの対象ではなくリンクが削除されます。</p>
+	 
+	 <p>シンボリックリンクは Mac<sup>®</sup> OS<sup>®</sup>、Linux、および Windows<sup>®</sup> Vista<sup>®</sup> でサポートされています。さらに、Windows では、NTFS ファイルシステムで使用される接続点を参照している File オブジェクトの <codeph>isSymbolicLink</codeph> プロパティは <codeph>true</codeph> に設定されます。</p>
+	 
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.filesystem:File:lineEnding:get"><apiName>lineEnding</apiName><shortdesc>
+	 ホストオペレーティングシステムで使用される行終了文字です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 ホストオペレーティングシステムで使用される行終了文字です。
+	 
+	 <p>Macintosh OS および Linux では、これは改行文字（16 進の文字コード 0x0A）です。Windows では、復帰文字（16 進の文字コード 0x0A）の後に改行文字（16 進の文字コード 0x0A) が続いたものです。</p>
+	 
+	 </apiDesc><example conref="examples\File.lineEnding.1.as"> 次のコードでは、ストリング（<codeph>str</codeph>）をテキストファイルに書き込み、<codeph>File.lineEnding</codeph> 静的プロパティを使用して、すべての改行文字（コードでは正規表現 <codeph>/\n/g</codeph> で表現）を、ホストオペレーティングシステムで推奨される行終了文字に置き換えます。
+<codeblock>
+import flash.filesystem.*;
+
+var str:String = "Hello\n" + 
+        "World\n";
+str = str.replace(/\n/g, File.lineEnding);
+var file:File = File.documentsDirectory.resolvePath("AIR Test/test.txt");
+var fileStream:FileStream = new FileStream();
+fileStream.open(file, FileMode.WRITE);
+fileStream.writeUTF(str);
+fileStream.close();
+</codeblock></example></apiValueDetail></apiValue><apiValue id="flash.filesystem:File:nativePath:get"><apiName>nativePath</apiName><shortdesc>
+	 ホストオペレーティングシステムの表現形式に従った完全パスです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>String</apiValueClassifier><apiException><apiDesc>呼び出し元がアプリケーションのセキュリティサンドボックス内ではありません。
+	 
+	 </apiDesc><apiItemName>SecurityError</apiItemName><apiOperationClassifier>SecurityError</apiOperationClassifier></apiException><apiException><apiDesc>path のシンタックスが無効です。
+	 
+	 </apiDesc><apiItemName>ArgumentError</apiItemName><apiOperationClassifier>ArgumentError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	 ホストオペレーティングシステムの表現形式に従った完全パスです。Macintosh OS および Linux では、パス区切り文字としてスラッシュ（/）文字を使用します。<i/>ただし、Windows では、<codeph>nativePath</codeph> プロパティでパス区切り文字としてスラッシュ（/）を使用するか円記号（¥）を使用するかを設定できます。AIR では、スラッシュが適切な円記号（¥）文字に自動で変換されます。
+	 
+	<p>直接に<i/> <codeph>nativePath</codeph> プロパティを設定するコードを記述することは可能ですが、特定プラットフォーム上でしか動作しないコードになる可能性があることに注意してください。例えば、<codeph>"C:\\Documents and Settings\\bob\\Desktop"</codeph> のようなネイティブパスは Windows 上でのみ有効です。それよりも、共通的に使用されるディレクトリを次の静的プロパティで参照するほうがはるかに望ましく、どのプラットフォームでも有効なコードを作成できます。</p>
+	
+	<ul>
+	<li><codeph>File.applicationDirectory</codeph></li>
+	<li><codeph>File.applicationStorageDirectory</codeph></li>
+	<li><codeph>File.desktopDirectory</codeph></li>
+	<li><codeph>File.documentsDirectory</codeph></li>
+	<li><codeph>File.userDirectory</codeph></li>
+	</ul>
+	
+	<p><codeph>resolvePath()</codeph> メソッドを使用すると、上記の各種ディレクトリからの相対パスを取得できます。</p>
+	
+	<p product="flex">一部の Flex API（SWFLoader クラスの <codeph>source</codeph> プロパティなど）では、URL（File オブジェクトの <codeph>url</codeph> プロパティ）を使用します。ネイティブパス（<codeph>nativePath</codeph>  プロパティ）は使用しません。</p>
+	
+	<p platform="javascript">一部の API（例えば IMG オブジェクトの <codeph>src</codeph> プロパティなど）では、URL（<codeph>url</codeph> プロパティ）を使用します（ネイティブパス（<codeph>nativePath</codeph> プロパティ）ではなく ）。</p>
+	
+	 </apiDesc><example conref="examples\File.nativePath.1.as"> 次のコードでは、File オブジェクトの <codeph>nativePath</codeph> プロパティと <codeph>url</codeph> プロパティの違いを表示します。コメントは、Windows コンピューターでの結果の例を示しています。
+<codeblock>
+import flash.filesystem.File;
+
+var docs:File = File.documentsDirectory;
+trace(docs.nativePath); // C:\Documents and Settings\turing\My Documents
+trace(docs.url); // file:///C:/Documents%20and%20Settings/turing/My%20Documents
+</codeblock></example></apiValueDetail></apiValue><apiValue id="flash.filesystem:File:parent:get"><apiName>parent</apiName><shortdesc>
+     この File オブジェクトによって参照されているファイルまたはディレクトリを格納しているディレクトリです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>flash.filesystem:File</apiValueClassifier></apiValueDef><apiDesc>
+     この File オブジェクトによって参照されているファイルまたはディレクトリを格納しているディレクトリです。 
+	 
+	 <p><codeph>parent</codeph> プロパティは、参照先のファイルまたはディレクトリが存在しない場合でも、それを格納しているディレクトリを指す File オブジェクトを返します（そのディレクトリが存在しなくても返します）。</p>
+	 
+	 <p>このプロパティは、<codeph>resolvePath("..")</codeph> の戻り値と同じですが、ルートディレクトリの親が <codeph>null</codeph> である点が異なります。</p>
+	 
+	 </apiDesc><example conref="examples\File.parent.1.as"> 次のコードでは、<codeph>parent</codeph> プロパティを使用して、一時ファイルを格納しているディレクトリを表示します。
+<codeblock>
+import flash.filesystem.File;
+
+var tempFile:File = File.createTempDirectory();
+trace(tempFile.parent.nativePath);
+tempFile.deleteFile();
+</codeblock></example></apiValueDetail></apiValue><apiValue id="flash.filesystem:File:separator:get"><apiName>separator</apiName><shortdesc>
+	 ホストオペレーティングシステムのパスコンポーネントの区切り文字です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 ホストオペレーティングシステムのパスコンポーネントの区切り文字です。
+	 
+	 <p>Macintosh OS および Linux では、スラッシュ（/）文字です。 Windows では、円記号（\）です。</p>
+	 
+	 <p><i/>注意：ストリングリテラル内で円記号文字を使用する場合は、円記号を 2 回入力してください（例：<codeph>"directory\\file.ext"</codeph>）。ストリングリテラル内では、2 つの円記号によってストリング内の単一の円記号を表します。</p>
+	 
+	 </apiDesc><example conref="examples\File.separator.1.as"> 次のコードでは、<codeph>getRelativePath()</codeph> メソッドを使用してディレクトリとファイルとの間の相対パスを取得しています。このコードでは、<codeph>File.separator</codeph> 静的プロパティを使用して、パス内のスラッシュ（/）文字をオペレーティングシステムによって使用される区切り文字に置き換えます。区切り文字は、Windows では円記号（\）で、他のオペレーティング システムではスラッシュ文字です。
+<codeblock>
+import flash.filesystem.File;
+
+var directory:File = File.documentsDirectory.resolvePath("Apollo Test");
+var file:File = File.documentsDirectory.resolvePath("Apollo Test/employees/bob/test.txt");
+
+var relativePath:String = directory.getRelativePath(file); // employees/bob/test.txt
+relativePath = relativePath.replace(/\//g, File.separator);
+trace(relativePath); 
+</codeblock> この例の <codeph>replace()</codeph> メソッドでは、すべてのスラッシュ文字に一致させるために正規表現 <codeph>/\//g</codeph> を使用しています。<i/>
+</example></apiValueDetail></apiValue><apiValue id="flash.filesystem:File:spaceAvailable:get"><apiName>spaceAvailable</apiName><shortdesc>
+	 この File の場所で使用可能な領域（バイト）。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.1"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Number</apiValueClassifier></apiValueDef><apiDesc>
+	 この File の場所で使用可能な領域（バイト）。 
+	 
+	 <p> File オブジェクトがディレクトリを参照する場合、<codeph>spaceAvailable</codeph> はファイルで使用できるディレクトリの領域を示します。File オブジェクトがファイルを参照する場合、<codeph>spaceAvailable</codeph> はファイルを拡張できる領域を示します。ファイルの場所が存在しない場合、<codeph>spaceAvailable</codeph> は 0 に設定されます。File オブジェクトがシンボリックリンクを参照する場合、<codeph>spaceAvailable</codeph> はシンボリックリンクが参照する位置で使用可能な領域を示します。</p>
+	 
+	 <p>一般的に、ディレクトリまたはファイルで使用可能な領域は、ディレクトリまたはファイルを含むボリュームで使用可能な領域と同じです。ただし、使用可能な領域では、割り当ておよびディレクトリごとの制限が考慮される場合があります。</p>
+	 
+	 <p>一般に、ボリュームにファイルまたはディレクトリを追加すると、ファイルの実際のサイズまたはディレクトリの内容のサイズよりも大きな領域が必要になります。例えば、オペレーティングシステムでは、インデックス情報を保存するための追加領域が必要になる場合があります。また、必要なディスクセクタにより追加領域が使用される場合があります。さらに、使用可能な領域は動的に変化します。したがって、報告された<i/>すべての領域がファイル記憶域のために割り当てられることを期待するのは不可能です。</p>
+	 
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.filesystem:File:systemCharset:get"><apiName>systemCharset</apiName><shortdesc>
+	 ホストオペレーティングシステムで使用されるデフォルトのエンコーディングです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 ホストオペレーティングシステムで使用されるデフォルトのエンコーディングです。 
+	 
+	 <p>有効な値は、<codeph>"windows-1252"</codeph>、<codeph>"shift-jis"</codeph>、<codeph>"cn-gb"</codeph>、<codeph>"iso-8859-1"</codeph> などです。完全な一覧については、<xref href="../../charset-codes.html">サポートする文字セット</xref>を参照してください。</p>
+	 
+	 <p>この値は、FileStream クラスの <codeph>readMultiByte()</codeph> メソッドおよび <codeph>writeMultiByte()</codeph> メソッドで使用できます。</p>
+	 
+	 </apiDesc><example conref="examples\File.systemCharSet.1.as"> 次のコードでは、ファイル（ユーザーのドキュメントディレクトリ内の AIR Test サブディレクトリにある test.txt という名前のファイル）を開き、<codeph>File.systemCharset</codeph> 静的プロパティを <codeph>charSet</codeph> パラメーターとして使用して、FileStream オブジェクトの <codeph>readMultiByte()</codeph> メソッドを呼び出します。
+<codeblock>
+import flash.filesystem.File;
+
+var file:File = File.documentsDirectory.resolvePath("AIR Test/test.txt");
+var fileStream:FileStream = new FileStream();
+fileStream.open(file, FileMode.READ);
+var str:String = fileStream.readMultiByte(file.size, File.systemCharset);
+trace(str);    
+</codeblock></example></apiValueDetail><related-links><link href="flash.filesystem.xml#FileStream/readMultiByte()"><linktext>FileStream.readMultiByte()</linktext></link><link href="flash.filesystem.xml#FileStream/writeMultiByte()"><linktext>FileStream.writeMultiByte()</linktext></link></related-links></apiValue><apiValue id="flash.filesystem:File:url:get"><apiName>url</apiName><shortdesc>
+	 このファイルパスの URL です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><internal>The URL will have a null "host" specification. (As opposed to "localhost". This is more confusing than 
+	 informative.
+	 
+	 </internal></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>String</apiValueClassifier><apiException><apiDesc>URL シンタックスが無効です。
+	 
+	 </apiDesc><apiItemName>ArgumentError</apiItemName><apiOperationClassifier>ArgumentError</apiOperationClassifier></apiException><apiException><apiDesc>呼び出し元がアプリケーションのセキュリティサンドボックス内ではありません。
+	 
+	 </apiDesc><apiItemName>SecurityError</apiItemName><apiOperationClassifier>SecurityError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+	 このファイルパスの URL です。
+	 
+	 <p>この URL スキームは、アプリケーションの記憶領域ディレクトリ内のパスへの参照である場合は<codeph>「app-storage」</codeph>、アプリケーションディレクトリ内のパスへの参照である場合は<codeph>「app」</codeph>、それ以外の場合は<codeph>「file」</codeph>です。 </p>
+	 
+	 <p>（<codeph>"%20"</codeph>ではなく）空白文字を使用して、<i/><codeph>url</codeph> プロパティに値を代入できます。この場合、AIR によってストリングが自動的にエンコードされます（例えば、スペースが <codeph>"%20"</codeph> に変換されます）。</p>
+	 
+	 </apiDesc><example conref="examples\File.nativePath.1.as"> 次のコードでは、File オブジェクトの <codeph>nativePath</codeph> プロパティと <codeph>url</codeph> プロパティの違いを表示します。コメントは、Windows コンピューターでの結果の例を示しています。
+<codeblock>
+import flash.filesystem.File;
+
+var docs:File = File.documentsDirectory;
+trace(docs.nativePath); // C:\Documents and Settings\turing\My Documents
+trace(docs.url); // file:///C:/Documents%20and%20Settings/turing/My%20Documents
+</codeblock></example></apiValueDetail><related-links><link href="flash.filesystem.xml#File/nativePath"><linktext>nativePath</linktext></link><link href="../../package.html#decodeURI()"><linktext>decodeURI() グローバル関数</linktext></link><link href="../../package.html#decodeURIComponent()"><linktext>decodeURIComponent() グローバル関数</linktext></link><link href="../../package.html#encodeURI()"><linktext>decodeURI() グローバル関数</linktext></link><link href="../../package.html#encodeURIComponent()"><linktext>decodeURIComponent() グローバル関数</linktext></link></related-links></apiValue><apiValue id="flash.filesystem:File:userDirectory:get"><apiName>userDirectory</apiName><shortdesc>
+	 ユーザーのディレクトリです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>flash.filesystem:File</apiValueClassifier></apiValueDef><apiDesc>
+	 ユーザーのディレクトリです。
+	 
+	 <p>Windows では、これは "My Documents" ディレクトリの親（例えば C:¥Documents and Settings¥userName）です。Macintosh では、/Users/userName です。 Linux では、/home/userName です。</p>
+	 
+	 <p><codeph>userDirectory</codeph> プロパティを使用すると、異なるプラットフォームでも動作する方法でユーザーディレクトリを参照できます。File オブジェクトの <codeph>nativePath</codeph> または <codeph>url</codeph> プロパティを直接に設定するコードは、そのパスが有効であるプラットフォーム上でしか動作しません。</p>
+	 
+	 </apiDesc><example conref="examples\File.userDirectory.1.as"> 次のコードでは、ユーザーディレクトリのルートレベルに格納されているファイルおよびディレクトリの一覧を出力します。
+<codeblock>
+import flash.filesystem.File;
+
+var files:Array = File.userDirectory.listDirectory();
+for (var i:uint = 0; i &lt; files.length; i++) {
+    trace(files[i].nativePath);
+}
+</codeblock></example></apiValueDetail></apiValue></apiClassifier></apiPackage>

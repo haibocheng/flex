@@ -141,7 +141,7 @@ package flashx.textLayout.conversion
 			var textFlowElement:XML = rootName == "TextFlow" ? rootStory : rootStory..*::TextFlow[0];
 			if (!textFlowElement)
 			{
-				reportError(GlobalSettings.getResourceStringFunction("missingTextFlow")); 
+				reportError(GlobalSettings.resourceStringFunction("missingTextFlow")); 
 				return null;
 			}
 			if (!checkNamespace(textFlowElement))
@@ -388,7 +388,7 @@ package flashx.textLayout.conversion
 			// parse the TextLayoutFormat child object		
 			var formatList:XMLList = xmlToParse..*::TextLayoutFormat;
 			if (formatList.length() != 1)
-				reportError(GlobalSettings.getResourceStringFunction("expectedExactlyOneTextLayoutFormat",[ xmlToParse.name() ]));
+				reportError(GlobalSettings.resourceStringFunction("expectedExactlyOneTextLayoutFormat",[ xmlToParse.name() ]));
 			
 			var parseThis:XML = formatList.length() > 0 ? formatList[0] : xmlToParse;
 			parseAttributes(parseThis,formatImporters);

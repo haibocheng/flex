@@ -1,0 +1,302 @@
+<?xml version="1.0"?>
+<apiPackage id="air.net"><apiName>air.net</apiName><apiDetail/><apiClassifier id="air.net:URLMonitor"><apiName>URLMonitor</apiName><shortdesc>
+ La classe URLMonitor surveille la disponibilité d’un service de type HTTP ou HTTPS.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>air.net:ServiceMonitor</apiBaseClassifier></apiClassifierDef><apiDesc>
+ La classe URLMonitor surveille la disponibilité d’un service de type HTTP ou HTTPS.
+ 
+ <p product="flex">Cette classe est incluse dans le fichier ServiceMonitor.swc. Adobe<sup>®</sup> Flash<sup>®</sup> Builder™ charge cette classe automatiquement lors de la création d’un projet pour Adobe<sup>®</sup> AIR<sup>®</sup>. Le kit de développement Adobe<sup>®</sup> Flex<sup>®</sup> comprend également le fichier servicemonitor.swc, que vous devez inclure lors de la compilation de l’application avec Flex SDK.
+ </p>
+ 
+ <p product="flash">Dans Adobe<sup>®</sup> Flash<sup>®</sup> CS3 Professional, cette classe est incluse dans le fichier ServiceMonitorShim.swc. Pour utiliser les classes du package air.net, vous devez tout d’abord faire glisser le composant ServiceMonitorShim situé dans le panneau Composants jusqu’à la bibliothèque, puis ajouter l’instruction <codeph>import</codeph> suivante à votre code ActionScript 3.0 :
+ </p>
+ 
+ <codeblock product="flash">import air.net.~~;</codeblock>
+ 
+ <p product="flash">Pour utiliser le package air.net dans Adobe<sup>®</sup> Flash<sup>®</sup> CS4 Professional : </p>
+ 
+ <ol product="flash">
+ <li>Sélectionnez la commande Fichier > Paramètres de publication.</li>
+ <li>Dans le panneau Flash, cliquez sur le bouton Paramètres pour ActionScript 3.0, puis sélectionnez Chemin de la bibliothèque.</li>
+ <li>Cliquez sur le bouton Localiser le fichier SWC. Recherchez le fichier Adobe Flash CS4/AIK1.1/frameworks/libs/air/servicemoniter.swc dans le dossier d’installation d’Adobe Flash CS4.</li>
+ <li>Cliquez sur le bouton OK.</li>
+ <li>Ajoutez l’instruction <codeph>import</codeph> suivante à votre code ActionScript 3.0 : <codeph>import air.net.~~;</codeph></li>
+ </ol>
+ 
+ <p platform="javascript">Pour utiliser cette classe dans le code JavaScript, chargez le fichier ServiceMonitor.swf de la manière suivante :</p>
+ 
+ <codeblock platform="javascript">&lt;script src="ServiceMonitor.swf" type="application/x-shockwave-flash"></codeblock>
+ 
+ </apiDesc></apiClassifierDetail><apiConstructor id="air.net:URLMonitor:URLMonitor"><apiName>URLMonitor</apiName><shortdesc>
+     Crée un objet URLMonitor pour un service HTTP ou HTTPS spécifique.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>urlRequest</apiItemName><apiOperationClassifier>flash.net:URLRequest</apiOperationClassifier><apiDesc>Objet URLRequest représentant une requête de sondage pour interroger le serveur.
+     
+     </apiDesc></apiParam><apiParam><apiItemName>acceptableStatusCodes</apiItemName><apiOperationClassifier>Array</apiOperationClassifier><apiData>null</apiData><apiDesc>Tableau de codes d’état numériques qui répertorie les codes représentant un résultat satisfaisant.
+     
+     <p>Si vous ne spécifiez aucune valeur pour la propriété <codeph>acceptableStatusCodes</codeph>, les codes d’état suivants sont considérés comme réponses satisfaisantes :</p>
+     
+     <ul>
+      <li>200 (OK) </li>
+      <li>202 (Accepté) </li>
+      <li>204 (Pas de contenu) </li>
+      <li>205 (Contenu réinitialisé) </li>
+      <li>206 (Contenu partiel, en réponse à la requête comportant un en-tête Range) </li>
+     </ul>
+     
+     </apiDesc></apiParam></apiConstructorDef><apiDesc>
+     Crée un objet URLMonitor pour un service HTTP ou HTTPS spécifique.
+     
+     <p>Après avoir créé un objet URLMonitor, l’appelant doit appeler la méthode <codeph>start()</codeph> pour procéder au contrôle de l’état du service.</p>
+     
+     <p>A l’instar de l’objet Timer, l’appelant doit conserver une référence à l’objet URLMonitor. Dans le cas contraire, l’objet pourrait être supprimé à l’exécution, ce qui mettrait fin au contrôle.</p>
+     
+     <p>Un paramètre URLRequest spécifie la requête de sondage permettant d’interroger le serveur. En règle générale, la méthode de requête est soit <codeph>"GET"</codeph>, soit <codeph>"HEAD"</codeph>.</p>
+     
+     </apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="air.net:URLMonitor:protected:checkStatus"><apiName>checkStatus</apiName><shortdesc>
+    Il s’est produit une tentative de chargement de contenu dans l’arrière-plan à partir d’une URL en vue de vérifier un code d’état HTTP renvoyé.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiIsOverride/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+    Il s’est produit une tentative de chargement de contenu dans l’arrière-plan à partir d’une URL en vue de vérifier un code d’état HTTP renvoyé. 
+    <p>
+    Si un code d’état répertorié dans la propriété <codeph>acceptableStatusCodes</codeph> est reçu, la propriété <codeph>available</codeph> est définie sur <codeph>true</codeph>. Si un code d’état ne figurant pas dans la liste des propriétés <codeph>acceptableStatusCodes</codeph> est reçu, ou s’il existe une erreur de sécurité ou d’E/S, la propriété <codeph>available</codeph> est définie sur <codeph>false</codeph>.
+    </p>
+    
+    </apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.net:URLMonitor:toString"><apiName>toString</apiName><shortdesc>
+     
+     
+	 Renvoie la représentation sous forme de chaîne de l’objet spécifié.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiDesc>Représentation sous forme de chaîne de l’objet.
+	 
+	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+     
+     
+	 Renvoie la représentation sous forme de chaîne de l’objet spécifié.
+	 
+     <p platform="actionscript"><b>Remarque :</b> les méthodes de la classe Object sont créées dynamiquement sur le prototype correspondant. Pour redéfinir cette méthode dans une sous-classe d’Object, n’utilisez pas le mot-clé <codeph>override</codeph>. Par exemple, une sous-classe d’Object met en œuvre <codeph>function toString():String</codeph> au lieu d’utiliser un remplacement de la classe de base.</p>
+     
+     </apiDesc></apiOperationDetail></apiOperation><apiValue id="air.net:URLMonitor:acceptableStatusCodes:get"><apiName>acceptableStatusCodes</apiName><shortdesc>
+     Codes d’état numériques représentant un résultat satisfaisant.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Array</apiValueClassifier></apiValueDef><apiDesc>
+     Codes d’état numériques représentant un résultat satisfaisant.
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="air.net:URLMonitor:urlRequest:get"><apiName>urlRequest</apiName><shortdesc>
+     Objet URLRequest représentant la requête de sondage.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>flash.net:URLRequest</apiValueClassifier></apiValueDef><apiDesc>
+     Objet URLRequest représentant la requête de sondage.
+     
+     </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="air.net:ServiceMonitor"><apiName>ServiceMonitor</apiName><shortdesc>
+ La classe ServiceMonitor implémente la structure qui permet de surveiller l’état et la disponibilité des services réseau.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiDynamic/><apiBaseClassifier>flash.events:EventDispatcher</apiBaseClassifier></apiClassifierDef><apiDesc>
+ La classe ServiceMonitor implémente la structure qui permet de surveiller l’état et la disponibilité des services réseau. La classe ServiceMonitor agit en tant que classe de base de tous les autres moniteurs de services.
+ 
+ <p product="flex">Cette classe est incluse dans le fichier ServiceMonitor.swc. Adobe<sup>®</sup> Flash<sup>®</sup> Builder™ charge cette classe automatiquement lors de la création d’un projet pour Adobe<sup>®</sup> AIR™. Le kit de développement Adobe<sup>®</sup> Flex<sup>®</sup> comprend également le fichier servicemonitor.swc, que vous devez inclure lors de la compilation de l’application avec Flex SDK.
+ </p>
+ 
+ <p product="flash">Dans Adobe<sup>®</sup> Flash<sup>®</sup> CS3 Professional, cette classe est incluse dans le fichier ServiceMonitorShim.swc. Pour utiliser les classes du package air.net, vous devez tout d’abord faire glisser le composant ServiceMonitorShim situé dans le panneau Composants jusqu’à la bibliothèque, puis ajouter l’instruction <codeph>import</codeph> suivante à votre code ActionScript 3.0 :
+ </p>
+ 
+ <codeblock product="flash">import air.net.~~;</codeblock>
+ 
+ <p product="flash">Pour utiliser le package air.net dans Adobe<sup>®</sup> Flash<sup>®</sup> CS4 Professional : </p>
+ 
+ <ol product="flash">
+ <li>Sélectionnez la commande Fichier > Paramètres de publication.</li>
+ <li>Dans le panneau Flash, cliquez sur le bouton Paramètres pour ActionScript 3.0, puis sélectionnez Chemin de la bibliothèque.</li>
+ <li>Cliquez sur le bouton Localiser le fichier SWC. Recherchez le fichier Adobe Flash CS4/AIK1.1/frameworks/libs/air/servicemoniter.swc dans le dossier d’installation d’Adobe Flash CS4.</li>
+ <li>Cliquez sur le bouton OK.</li>
+ <li>Ajoutez l’instruction <codeph>import</codeph> suivante à votre code ActionScript 3.0 : <codeph>import air.net.~~;</codeph></li>
+ </ol>
+ 
+ <p platform="javascript">Pour utiliser cette classe dans le code JavaScript, chargez le fichier ServiceMonitor.swf de la manière suivante :</p>
+ 
+ <codeblock platform="javascript">&lt;script src="ServiceMonitor.swf" type="application/x-shockwave-flash"></codeblock>
+ 
+ </apiDesc></apiClassifierDetail><adobeApiEvent id="air.net:ServiceMonitor_flash.events.StatusEvent.STATUS_status"><apiName>status</apiName><shortdesc>
+ Indique que l’état du service a changé.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.StatusEvent.STATUS</apiEventType><adobeApiEventClassifier>flash.events.StatusEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ Indique que l’état du service a changé.
+ 
+ <p>La valeur de la propriété <codeph>code</codeph> est soit <codeph>"Service.available"</codeph>, soit <codeph>"Service.unavailable"</codeph>, mais il est conseillé de vérifier la valeur de la propriété <codeph>ServiceMonitor.available</codeph>.</p>
+ 
+ </apiDesc></adobeApiEventDetail></adobeApiEvent><apiConstructor id="air.net:ServiceMonitor:ServiceMonitor"><apiName>ServiceMonitor</apiName><shortdesc>
+     Crée un objet ServiceMonitor.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/></apiConstructorDef><apiDesc>
+     Crée un objet ServiceMonitor. 
+     
+     <p platform="actionscript">Cette classe est généralement sous-classée pour contrôler des types de service spécifiques.</p>
+     
+     <p platform="javascript">La classe peut être spécialisée dans JavaScript (à partir du contenu de l’application HTML), comme indiqué dans la description de la méthode <codeph>makeJavascriptSubclass()</codeph>.</p>
+     
+     <p>Après avoir créé un objet ServiceMonitor (ou un objet de sous-classe), appelez la méthode <codeph>start()</codeph> pour procéder au contrôle de l’état du service.</p>
+     
+     <p>A l’instar de l’objet Timer, l’appelant doit conserver une référence à l’objet ServiceMonitor. Dans le cas contraire, l’objet est supprimé à l’exécution et le contrôle cesse.</p>
+     
+     </apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="air.net:ServiceMonitor:protected:checkStatus"><apiName>checkStatus</apiName><shortdesc>
+     Vérifie l’état du service.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+     Vérifie l’état du service.
+     
+     <p>Méthode d’annulation de sous-classes pour le contrôle de l’état du service.</p>
+     
+     <p>En règle générale, cette méthode lance une opération réseau dont la réussite ou l’échec entraîne la définition de la propriété <codeph>available</codeph>.</p>
+     
+     <p>Le code JavaScript peut spécialiser cette méthode en définissant une méthode <codeph>checkStatus()</codeph> dans l’objet « specializer ».</p>
+     
+     </apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.net:ServiceMonitor:makeJavascriptSubclass"><apiName>makeJavascriptSubclass</apiName><shortdesc>
+     Ajoute des méthodes ServiceMonitor publiques à un prototype de la fonction constructeur de JavaScript.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>constructorFunction</apiItemName><apiOperationClassifier>Object</apiOperationClassifier><apiDesc>Propriété <codeph>prototype</codeph> de l’objet JavaScript. Par exemple, si l’objet JavaScript que vous utilisez pour agir comme objet specializer est nommé MyHTTPMonitor, transmettez <codeph>MyHTTPMonitor.prototype</codeph> comme valeur de ce paramètre.
+     
+     </apiDesc></apiParam></apiOperationDef><apiDesc>
+     Ajoute des méthodes ServiceMonitor publiques à un prototype de la fonction constructeur de JavaScript.
+     
+     <p>Ajoute des fonctions au prototype de la fonction constructeur JavaScript qui transfèrent des fonctions publiques ServiceMonitor à l’objet ServiceMonitor. Elle se rapproche d’une sous-classe JavaScript standard de la classe ActionScript de base.</p>
+     
+     <p>Une classe JavaScript spécialisant une méthode ServiceMonitor pourrait se présenter sous la forme suivante :</p>
+     
+     <codeblock>
+     // JavaScript Constructor function
+     function MyHTTPMonitor(url, method)
+     {
+         // "that" variable makes "this" available in closures below
+         var that = this;
+         // Required initialization of the service monitor, returns the actual ServiceMonitor object.
+         this.monitor = this.initServiceMonitor();
+         // Initializes URLStream and event handlers.
+         this._urlStream = new air.URLStream();
+         this._urlRequest = new air.URLRequest(url);
+         if (method)
+         {
+             this._urlRequest.method = method;
+         }
+         else
+         {
+             this._urlRequest.method = "GET";
+         }
+         function onStatus(event) {
+             that.monitor.available = Number(event.status) == 200;
+             that._urlStream.close();
+         }
+         function onError(event)
+         {
+             that.monitor.available = false;
+             that._urlStream.close();
+         }
+         this._urlStream.addEventListener(air.HTTPStatusEvent.HTTP_RESPONSE_STATUS, onStatus);
+         this._urlStream.addEventListener(air.SecurityErrorEvent.SECURITY_ERROR, onError);
+         this._urlStream.addEventListener(air.IOErrorEvent.IO_ERROR, onError);
+     }
+     
+     // Augment JavaScript prototype with public methods from ServiceMonitor
+     air.ServiceMonitor.makeJavascriptSubclass(MyHTTPMonitor);
+     
+     // Implement specializer functions, just as you would when subclassing a JavaScript class
+     MyHTTPMonitor.prototype.checkStatus = function()
+     {
+         air.trace('OVERRIDDEN checkStatus!', this);
+         this._urlStream.load(this._urlRequest);
+     }
+     </codeblock>
+     
+     <p>Pour utiliser la classe JavaScript :</p>
+     
+     <codeblock>
+     var httpMon = new MyHTTPMonitor('http://www.adobe.com')
+     </codeblock>
+     
+     <p>Veillez à charger les fichiers AIRAliases.js et ServiceMonitor.swf avec les balises <codeph>script</codeph>.</p>
+     
+     </apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.net:ServiceMonitor:start"><apiName>start</apiName><shortdesc>
+     Démarre le moniteur du service.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+     Démarre le moniteur du service.
+     
+     </apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.net:ServiceMonitor:stop"><apiName>stop</apiName><shortdesc>
+     Interrompt le moniteur du service.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+     Interrompt le moniteur du service.
+     
+     </apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.net:ServiceMonitor:toString"><apiName>toString</apiName><shortdesc>
+     
+	 Renvoie la représentation sous forme de chaîne de l’objet spécifié.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiDesc>Représentation sous forme de chaîne de l’objet.
+	 
+	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+     
+	 Renvoie la représentation sous forme de chaîne de l’objet spécifié.
+	 
+     <p platform="actionscript"><b>Remarque :</b> les méthodes de la classe Object sont créées dynamiquement sur le prototype correspondant. Pour redéfinir cette méthode dans une sous-classe d’Object, n’utilisez pas le mot-clé <codeph>override</codeph>. Par exemple, une sous-classe d’Object met en œuvre <codeph>function toString():String</codeph> au lieu d’utiliser un remplacement de la classe de base.</p>
+     
+     </apiDesc></apiOperationDetail></apiOperation><apiValue id="air.net:ServiceMonitor:available:get"><apiName>available</apiName><shortdesc>
+     Indique si le service est actuellement disponible (« available »). La valeur initiale est false jusqu’à ce que la propriété soit définie sur true après une vérification d’état ou jusqu’à ce qu’elle soit définie sur true de façon explicite. En général, cette propriété est définie lorsque la méthode checkStatus() est implémentée dans une sous-classe ou un objet specializer. Toutefois, si l’application possède des informations indépendantes sur la disponibilité d’un service (par exemple, une requête qui vient d’aboutir ou d’échouer), il est possible de définir la propriété de façon explicite.
+     
+     </shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+     Indique si le service est actuellement disponible (« available »). 
+     
+     <p>La valeur initiale est <codeph>false</codeph> jusqu’à ce que la propriété soit définie sur <codeph>true</codeph> après une vérification d’état ou jusqu’à ce qu’elle soit définie sur <codeph>true</codeph> de façon explicite.</p>
+     
+     <p>En général, cette propriété est définie lorsque la méthode <codeph>checkStatus()</codeph> est implémentée dans une sous-classe ou un objet specializer ; toutefois, si l’application possède des informations indépendantes sur la disponibilité d’un service (par exemple, une requête qui vient d’aboutir ou d’échouer), il est possible de définir la propriété de façon explicite.</p>
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="air.net:ServiceMonitor:lastStatusUpdate:get"><apiName>lastStatusUpdate</apiName><shortdesc>
+     Heure de la dernière mise à jour de l’état.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Date</apiValueClassifier></apiValueDef><apiDesc>
+     Heure de la dernière mise à jour de l’état.
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="air.net:ServiceMonitor:pollInterval:get"><apiName>pollInterval</apiName><shortdesc>
+     Intervalle d’interrogation du serveur, en millisecondes.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Number</apiValueClassifier><apiDefaultValue>0
+     
+     </apiDefaultValue></apiValueDef><apiDesc>
+     Intervalle d’interrogation du serveur, en millisecondes.
+     
+     <p>Si cet intervalle est de zéro, le serveur n’est pas interrogé régulièrement, mais uniquement après l’appel de la méthode <codeph>start()</codeph> et lorsque l’état du réseau change.</p>
+     
+     <p>L’objet ServiceMonitor ne distribue qu’un événement <codeph>status</codeph> si l’état du service a changé (pas sur tous les intervalles d’interrogation). Cet objet distribue également un événement <codeph>status</codeph> suite à des modifications de connectivité réseau (quel que soit l’intervalle d’interrogation).</p>
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="air.net:ServiceMonitor:running:get"><apiName>running</apiName><shortdesc>
+     Indique si le contrôle a démarré.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+     Indique si le contrôle a démarré.
+     
+     </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="air.net:SocketMonitor"><apiName>SocketMonitor</apiName><shortdesc>
+ Un objet SocketMonitor surveille la disponibilité d’un point de fin TCP.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>air.net:ServiceMonitor</apiBaseClassifier></apiClassifierDef><apiDesc>
+ Un objet SocketMonitor surveille la disponibilité d’un point de fin TCP.
+ 
+ <p product="flex">Cette classe est incluse dans le fichier ServiceMonitor.swc. Adobe<sup>®</sup> Flash<sup>®</sup> Builder™ charge cette classe automatiquement lors de la création d’un projet pour AIR. Le Flex<sup>®</sup> SDK comprend également le fichier servicemonitor.swc, que vous devez inclure lors de la compilation de l’application avec Flex SDK.
+ </p>
+ 
+ <p product="flash">Dans Adobe<sup>®</sup> Flash<sup>®</sup> CS3 Professional, cette classe est incluse dans le fichier ServiceMonitorShim.swc. Pour utiliser les classes du package air.net, vous devez tout d’abord faire glisser le composant ServiceMonitorShim situé dans le panneau Composants jusqu’à la bibliothèque, puis ajouter l’instruction <codeph>import</codeph> suivante à votre code ActionScript 3.0 :
+ </p>
+ 
+ <codeblock product="flash">import air.net.~~;</codeblock>
+ 
+ <p product="flash">Pour utiliser le package air.net dans Adobe<sup>®</sup> Flash<sup>®</sup> CS4 Professional : </p>
+ 
+ <ol product="flash">
+ <li>Sélectionnez la commande Fichier > Paramètres de publication.</li>
+ <li>Dans le panneau Flash, cliquez sur le bouton Paramètres pour ActionScript 3.0, puis sélectionnez Chemin de la bibliothèque.</li>
+ <li>Cliquez sur le bouton Localiser le fichier SWC. Recherchez le fichier Adobe Flash CS4/AIK1.1/frameworks/libs/air/servicemoniter.swc dans le dossier d’installation d’Adobe Flash CS4.</li>
+ <li>Cliquez sur le bouton OK.</li>
+ <li>Ajoutez l’instruction <codeph>import</codeph> suivante à votre code ActionScript 3.0 : <codeph>import air.net.~~;</codeph></li>
+ </ol>
+ 
+ <p platform="javascript">Pour utiliser cette classe dans le code JavaScript, chargez le fichier ServiceMonitor.swf de la manière suivante :</p>
+ 
+ <codeblock platform="javascript">&lt;script src="ServiceMonitor.swf" type="application/x-shockwave-flash"></codeblock>
+ 
+ </apiDesc></apiClassifierDetail><apiConstructor id="air.net:SocketMonitor:SocketMonitor"><apiName>SocketMonitor</apiName><shortdesc>
+	 Crée un objet SocketMonitor pour un point de fin TCP spécifique.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>host</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Hôte à surveiller.
+	 </apiDesc></apiParam><apiParam><apiItemName>port</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiDesc>Port à surveiller.
+	 
+	 </apiDesc></apiParam></apiConstructorDef><apiDesc>
+	 Crée un objet SocketMonitor pour un point de fin TCP spécifique.
+	 
+	 <p>Après avoir créé un objet SocketMonitor, l’appelant doit appeler la méthode <codeph>start</codeph> pour commencer à surveiller l’état du service.</p>
+	 
+	 <p>A l’instar de l’objet Timer, l’appelant doit conserver une référence à l’objet SocketMonitor. Dans le cas contraire, l’objet est supprimé à l’exécution et le contrôle cesse.</p>
+	 
+	 </apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="air.net:SocketMonitor:protected:checkStatus"><apiName>checkStatus</apiName><shortdesc>
+	Lors de l’appel de la méthode checkStatus() d’un objet SocketMonitor, l’application tente de se connecter au socket en vue de détecter un événement connect.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiIsOverride/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+	Lors de l’appel de la méthode <codeph>checkStatus()</codeph> d’un objet SocketMonitor, l’application tente de se connecter au socket en vue de détecter un événement <codeph>connect</codeph>.
+	
+	</apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.net:SocketMonitor:toString"><apiName>toString</apiName><shortdesc>
+	 
+     
+	 Renvoie la représentation sous forme de chaîne de l’objet spécifié.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiDesc>Représentation sous forme de chaîne de l’objet.
+	 
+	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 
+     
+	 Renvoie la représentation sous forme de chaîne de l’objet spécifié.
+	 
+     <p platform="actionscript"><b>Remarque :</b> les méthodes de la classe Object sont créées dynamiquement sur le prototype correspondant. Pour redéfinir cette méthode dans une sous-classe d’Object, n’utilisez pas le mot-clé <codeph>override</codeph>. Par exemple, une sous-classe d’Object met en œuvre <codeph>function toString():String</codeph> au lieu d’utiliser un remplacement de la classe de base.</p>
+     
+     </apiDesc></apiOperationDetail></apiOperation><apiValue id="air.net:SocketMonitor:host:get"><apiName>host</apiName><shortdesc>
+	 Hôte faisant l’objet d’une surveillance.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 Hôte faisant l’objet d’une surveillance.
+	 
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="air.net:SocketMonitor:port:get"><apiName>port</apiName><shortdesc>
+	 Port faisant l’objet d’une surveillance.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+	 Port faisant l’objet d’une surveillance.
+	 
+	 </apiDesc></apiValueDetail></apiValue></apiClassifier></apiPackage>

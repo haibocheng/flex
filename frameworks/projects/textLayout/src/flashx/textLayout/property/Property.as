@@ -28,7 +28,7 @@ package flashx.textLayout.property
 		}
 		public static function createErrorString(p:Property,value:Object):String
 		{
-			return GlobalSettings.getResourceStringFunction("badPropertyValue",[ p.name, value.toString() ])
+			return GlobalSettings.resourceStringFunction("badPropertyValue",[ p.name, value.toString() ])
 		}
 		
 		/** not yet enabled.  @private */

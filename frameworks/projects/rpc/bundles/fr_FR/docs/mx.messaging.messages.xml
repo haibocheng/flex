@@ -147,30 +147,30 @@
       Fournit un accès à l’horodatage du message. Un horodatage est la date et l’heure auxquelles le message a été envoyé. L’horodatage permet de suivre le message à travers le système, assurant une qualité des niveaux de service et fournissant un mécanisme d’expiration du message.
      
       </apiDesc></apiValueDetail><related-links><link href="mx.messaging.messages.xml#AbstractMessage/timeToLive"><linktext>timeToLive</linktext></link></related-links></apiValue></apiClassifier><apiClassifier id="mx.messaging.messages:MessagePerformanceUtils"><apiName>MessagePerformanceUtils</apiName><shortdesc> 
-     </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc> 
-      
+     La classe d’utilitaire MessagePerformanceUtils est utilisée pour extraire diverses métriques sur la taille et l’heure d’un message envoyé depuis un client vers le serveur et son message de réponse, ainsi que sur les messages envoyés du serveur vers le client.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc> 
+     La classe d’utilitaire MessagePerformanceUtils est utilisée pour extraire diverses métriques sur la taille et l’heure d’un message envoyé depuis un client vers le serveur et son message de réponse, ainsi que sur les messages envoyés du serveur vers le client. Les métriques sont collectées lorsque les propriétés correspondantes sur le canal utilisé sont activées : &lt;record-message-times> indique la capture d’informations sur le minutage, &lt;record-message-sizes> indique la capture d’informations de dimensionnement. 
      
-     <p/>
+     <p>Vous pouvez ensuite utiliser les méthodes de cette classe d’utilitaires pour récupérer différentes informations sur le message que vous venez de recevoir. </p>
      
-     <p> </p>
+     <p>Lorsque ces métriques sont activées, une occurrence de cette classe doit être créée à partir d’un gestionnaire de réponse, de reçu ou de message au format suivant : </p>
      </apiDesc><example>
      <pre>
           var mpiutil:MessagePerformanceUtils = new MessagePerformanceUtils(event.message);
      </pre> 
      
      </example></apiClassifierDetail><apiConstructor id="mx.messaging.messages:MessagePerformanceUtils:MessagePerformanceUtils"><apiName>MessagePerformanceUtils</apiName><shortdesc>
+         Constructeur crée une occurrence MPUtils avec les informations des en-têtes MPI du message transmis
          
-         
-         </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>message</apiItemName><apiType value="Object"/><apiDesc>
+         </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>message</apiItemName><apiType value="Object"/><apiDesc>Message dont les en-têtes MPI seront utilisés dans la récupération d’informations MPI
          
          </apiDesc></apiParam></apiConstructorDef><apiDesc>
-         
+         Constructeur crée une occurrence MPUtils avec les informations des en-têtes MPI du message transmis
          
          </apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="mx.messaging.messages:MessagePerformanceUtils:prettyPrint"><apiName>prettyPrint</apiName><shortdesc>
-         </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>
+         La méthode renvoie un résumé de toutes les informations disponibles dans MPI. </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Chaîne contenant un résumé de toutes les informations disponibles dans MPI 
          
          </apiDesc><apiType value="String"/></apiReturn></apiOperationDef><apiDesc>
-          
+         La méthode renvoie un résumé de toutes les informations disponibles dans MPI. Utilisation suggérée, par exemple : 
          </apiDesc><example>
          <codeblock rev="3.0">
               var mpiutil:MessagePerformanceUtils = new MessagePerformanceUtils(message);                     
@@ -178,56 +178,56 @@
          </codeblock>            
          
          </example></apiOperationDetail></apiOperation><apiValue id="mx.messaging.messages:MessagePerformanceUtils:clientReceiveTime:get"><apiName>clientReceiveTime</apiName><shortdesc>
-         
+         Temps en millisecondes écoulé depuis le moment où le client a reçu message de réponse du serveur 
          
          </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
-         
+         Temps en millisecondes écoulé depuis le moment où le client a reçu message de réponse du serveur 
          
          </apiDesc></apiValueDetail></apiValue><apiValue id="mx.messaging.messages:MessagePerformanceUtils:messageSize:get"><apiName>messageSize</apiName><shortdesc>
-         
+         Taille du message client original telle que mesurée depuis la désérialisation par l’extrémité du serveur
          
          </shortdesc><prolog/><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="int"/></apiValueDef><apiDesc>
-         
+         Taille du message client original telle que mesurée depuis la désérialisation par l’extrémité du serveur
          
          </apiDesc></apiValueDetail></apiValue><apiValue id="mx.messaging.messages:MessagePerformanceUtils:networkRTT:get"><apiName>networkRTT</apiName><shortdesc>
-         
+         Temps d’aller-retour pour un message client et la réponse du serveur, calculé par la différence entre le temps total et le temps de traitement serveur
          
          </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
-         
+         Temps d’aller-retour pour un message client et la réponse du serveur, calculé par la différence entre le temps total et le temps de traitement serveur
          
          </apiDesc></apiValueDetail></apiValue><apiValue id="mx.messaging.messages:MessagePerformanceUtils:originatingMessageSentTime:get"><apiName>originatingMessageSentTime</apiName><shortdesc>
-         </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
-         
+         Uniquement renseigné en cas d’horodatage d’un message envoyé en millisecondes écoulées depuis le moment où le client qui a provoqué le message poussé a envoyé son message. </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
+         Uniquement renseigné en cas d’horodatage d’un message envoyé en millisecondes écoulées depuis le moment où le client qui a provoqué le message poussé a envoyé son message. 
          
          </apiDesc></apiValueDetail></apiValue><apiValue id="mx.messaging.messages:MessagePerformanceUtils:originatingMessageSize:get"><apiName>originatingMessageSize</apiName><shortdesc>
-         
+         Uniquement renseigné en cas de message poussé, taille en octets du message à l’origine du message poussé 
          
          </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
-         
+         Uniquement renseigné en cas de message poussé, taille en octets du message à l’origine du message poussé
          
          </apiDesc></apiValueDetail></apiValue><apiValue id="mx.messaging.messages:MessagePerformanceUtils:pushOneWayTime:get"><apiName>pushOneWayTime</apiName><shortdesc>
-         </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
-          
+         Uniquement renseigné en cas de message poussé, il s’agit du temps réseau entre le serveur poussant le message et le client qui le reçoit. </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
+         Uniquement renseigné en cas de message poussé, il s’agit du temps réseau entre le serveur poussant le message et le client qui le reçoit. Notez que les horloges du serveur et du client doivent être synchronisées pour cette opération soit efficace. 
          
          </apiDesc></apiValueDetail></apiValue><apiValue id="mx.messaging.messages:MessagePerformanceUtils:pushedMessageFlag:get"><apiName>pushedMessageFlag</apiName><shortdesc>
-         
+         Renvoie true si le message a été envoyé au client, mais ne constitue par une réponse à un message provenant du client
          
          </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Boolean"/></apiValueDef><apiDesc>
-         
+         Renvoie true si le message a été envoyé au client, mais ne constitue par une réponse à un message provenant du client
          
          </apiDesc></apiValueDetail></apiValue><apiValue id="mx.messaging.messages:MessagePerformanceUtils:responseMessageSize:get"><apiName>responseMessageSize</apiName><shortdesc>
-         
+         Taille du message de réponse envoyé au client par le serveur telle que mesurée pendant la sérialisation au niveau de l’extrémité du serveur
          
          </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="int"/></apiValueDef><apiDesc>
-         
+         Taille du message de réponse envoyé au client par le serveur telle que mesurée pendant la sérialisation au niveau de l’extrémité du serveur
          
          </apiDesc></apiValueDetail></apiValue><apiValue id="mx.messaging.messages:MessagePerformanceUtils:serverAdapterExternalTime:get"><apiName>serverAdapterExternalTime</apiName><shortdesc>
-         </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
-           
+         Durée écoulée dans un module invoqué depuis l’adaptateur associé à la destination de ce message, mais externe à ce dernier, avant que la réponse au message ne soit prête ou que le message ne soit préparé à être envoyé vers le client de réception.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
+         Durée écoulée dans un module invoqué depuis l’adaptateur associé à la destination de ce message, mais externe à ce dernier, avant que la réponse au message ne soit prête ou que le message ne soit préparé à être envoyé vers le client de réception.  
          
          </apiDesc></apiValueDetail></apiValue><apiValue id="mx.messaging.messages:MessagePerformanceUtils:serverAdapterTime:get"><apiName>serverAdapterTime</apiName><shortdesc>
-         </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
-           
+         Durée écoulée dans l’adaptateur associé à la destination de ce message, avant que la réponse au message ne soit prête ou que le message ne soit préparé à être envoyé vers le client de réception.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
+         Durée écoulée dans l’adaptateur associé à la destination de ce message, avant que la réponse au message ne soit prête ou que le message ne soit préparé à être envoyé vers le client de réception.  
          
          </apiDesc></apiValueDetail></apiValue><apiValue id="mx.messaging.messages:MessagePerformanceUtils:serverNonAdapterTime:get"><apiName>serverNonAdapterTime</apiName><shortdesc>
          Durée de traitement du serveur écoulée en dehors de l’adaptateur associé à la destination de ce message
@@ -236,32 +236,32 @@
          Durée de traitement du serveur écoulée en dehors de l’adaptateur associé à la destination de ce message
          
          </apiDesc></apiValueDetail></apiValue><apiValue id="mx.messaging.messages:MessagePerformanceUtils:serverPollDelay:get"><apiName>serverPollDelay</apiName><shortdesc>
-         </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
-         
+         Durée d’attente du message sur le serveur une fois qu’il était prêt à être transmis aux clients sans avoir encore été sondé. </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
+         Durée d’attente du message sur le serveur une fois qu’il était prêt à être transmis aux clients sans avoir encore été sondé. 
          
          </apiDesc></apiValueDetail></apiValue><apiValue id="mx.messaging.messages:MessagePerformanceUtils:serverPrePushTime:get"><apiName>serverPrePushTime</apiName><shortdesc>
-         </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
-           
+         Délai entre la réception du message client par le serveur et le début de la transmission des messages par le serveur à d’autres clients en tant que résultat du message d’origine. </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
+         Délai entre la réception du message client par le serveur et le début de la transmission des messages par le serveur à d’autres clients en tant que résultat du message d’origine.   
          
          </apiDesc></apiValueDetail></apiValue><apiValue id="mx.messaging.messages:MessagePerformanceUtils:serverProcessingTime:get"><apiName>serverProcessingTime</apiName><shortdesc>
-         </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
-           
+         Durée écoulée entre le moment où le serveur reçoit le message client et celui où le serveur a répondu au message reçu ou celui où le message envoyé est prêt à être envoyé à un client de réception.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
+         Durée écoulée entre le moment où le serveur reçoit le message client et celui où le serveur a répondu au message reçu ou celui où le message envoyé est prêt à être envoyé à un client de réception.  
          
          </apiDesc></apiValueDetail></apiValue><apiValue id="mx.messaging.messages:MessagePerformanceUtils:serverSendTime:get"><apiName>serverSendTime</apiName><shortdesc>
-         
+         Durée, en millisecondes, écoulée depuis le moment où le serveur a envoyé un message de réponse au client 
          
          </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
-         
+         Durée, en millisecondes, écoulée depuis le moment où le serveur a envoyé un message de réponse au client 
          
          </apiDesc></apiValueDetail></apiValue><apiValue id="mx.messaging.messages:MessagePerformanceUtils:totalPushTime:get"><apiName>totalPushTime</apiName><shortdesc>
-         </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
-          
+         Uniquement renseigné dans le cas d’un message poussé, il s’agit de la durée entre la poussée provoquant l’envoi du message du client et celle de réception du client destinataire. </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
+         Uniquement renseigné dans le cas d’un message poussé, il s’agit de la durée entre la poussée provoquant l’envoi du message du client et celle de réception du client destinataire. Notez que les horloges des deux clients doivent être synchronisées pour cette opération soit efficace. 
          
          </apiDesc></apiValueDetail></apiValue><apiValue id="mx.messaging.messages:MessagePerformanceUtils:totalTime:get"><apiName>totalTime</apiName><shortdesc>
-         
+         Durée écoulée entre le moment où ce client envoie un message et celui où il reçoit une réponse du serveur
          
          </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
-         
+         Durée écoulée entre le moment où ce client envoie un message et celui où il reçoit une réponse du serveur
          
          </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.messaging.messages:HTTPRequestMessage"><apiName>HTTPRequestMessage</apiName><shortdesc>
   Les demandes HTTP sont envoyées à l’extrémité HTTP à l’aide de ce type de message.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>mx.messaging.messages:AbstractMessage</apiBaseClassifier></apiClassifierDef><apiDesc>
@@ -275,7 +275,7 @@
       Indique que le contenu de ce message est un formulaire.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>application/x-www-form-urlencoded</apiData><apiType value="String"/></apiValueDef><apiDesc>
       Indique que le contenu de ce message est un formulaire.
      
-      <p/>
+      <p>L’exemple suivant utilise cette constante :</p>
         <pre>
           var msg:HTTPRequestMessage = new HTTPRequestMessage();
           msg.contentType = HTTPRequestMessage.CONTENT_TYPE_FORM;
@@ -287,7 +287,7 @@
       Indique que le contenu de ce message est un contenu XML destiné à une demande SOAP.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>text/xml; charset=utf-8</apiData><apiType value="String"/></apiValueDef><apiDesc>
       Indique que le contenu de ce message est un contenu XML destiné à une demande SOAP.
      
-      <p/>
+      <p>L’exemple suivant utilise cette constante :</p>
         <pre>
           var msg:HTTPRequestMessage = new HTTPRequestMessage();
           msg.contentType = HTTPRequestMessage.CONTENT_TYPE_SOAP_XML;
@@ -299,7 +299,7 @@
       Indique que le contenu de ce message est un contenu XML.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>application/xml</apiData><apiType value="String"/></apiValueDef><apiDesc>
       Indique que le contenu de ce message est un contenu XML.
      
-      <p/>
+      <p>L’exemple suivant utilise cette constante :</p>
         <pre>
           var msg:HTTPRequestMessage = new HTTPRequestMessage();
           msg.contentType = HTTPRequestMessage.CONTENT_TYPE_XML;
@@ -311,7 +311,7 @@
       Indique que la méthode utilisée pour cette demande doit être « delete ».</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>DELETE</apiData><apiType value="String"/></apiValueDef><apiDesc>
       Indique que la méthode utilisée pour cette demande doit être « delete ».
       
-      <p/>
+      <p>L’exemple suivant utilise cette constante :</p>
         <pre>
           var msg:HTTPRequestMessage = new HTTPRequestMessage();
           msg.contentType = HTTPRequestMessage.CONTENT_TYPE_FORM;
@@ -323,7 +323,7 @@
       Indique que la méthode utilisée pour cette demande doit être « get ».</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>GET</apiData><apiType value="String"/></apiValueDef><apiDesc>
       Indique que la méthode utilisée pour cette demande doit être « get ».
      
-      <p/>
+      <p>L’exemple suivant utilise cette constante :</p>
         <pre>
           var msg:HTTPRequestMessage = new HTTPRequestMessage();
           msg.contentType = HTTPRequestMessage.CONTENT_TYPE_FORM;
@@ -335,7 +335,7 @@
       Indique que la méthode utilisée pour cette demande doit être « head ».</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>HEAD</apiData><apiType value="String"/></apiValueDef><apiDesc>
       Indique que la méthode utilisée pour cette demande doit être « head ».
      
-      <p/>
+      <p>L’exemple suivant utilise cette constante :</p>
         <pre>
           var msg:HTTPRequestMessage = new HTTPRequestMessage();
           msg.contentType = HTTPRequestMessage.CONTENT_TYPE_FORM;
@@ -347,7 +347,7 @@
       Indique que la méthode utilisée pour cette demande doit être « options ».</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>OPTIONS</apiData><apiType value="String"/></apiValueDef><apiDesc>
       Indique que la méthode utilisée pour cette demande doit être « options ».
      
-      <p/>
+      <p>L’exemple suivant utilise cette constante :</p>
         <pre>
           var msg:HTTPRequestMessage = new HTTPRequestMessage();
           msg.contentType = HTTPRequestMessage.CONTENT_TYPE_FORM;
@@ -359,7 +359,7 @@
       Indique que la méthode utilisée pour cette demande doit être « post ».</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>POST</apiData><apiType value="String"/></apiValueDef><apiDesc>
       Indique que la méthode utilisée pour cette demande doit être « post ».
      
-      <p/>
+      <p>L’exemple suivant utilise cette constante :</p>
         <pre>
           var msg:HTTPRequestMessage = new HTTPRequestMessage();
           msg.contentType = HTTPRequestMessage.CONTENT_TYPE_FORM;
@@ -371,7 +371,7 @@
       Indique que la méthode utilisée pour cette demande doit être « put ».</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>PUT</apiData><apiType value="String"/></apiValueDef><apiDesc>
       Indique que la méthode utilisée pour cette demande doit être « put ».
      
-      <p/>
+      <p>L’exemple suivant utilise cette constante :</p>
         <pre>
           var msg:HTTPRequestMessage = new HTTPRequestMessage();
           msg.contentType = HTTPRequestMessage.CONTENT_TYPE_FORM;
@@ -383,7 +383,7 @@
       Indique que la méthode utilisée pour cette demande doit être « trace ».</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>TRACE</apiData><apiType value="String"/></apiValueDef><apiDesc>
       Indique que la méthode utilisée pour cette demande doit être « trace ».
      
-      <p/>
+      <p>L’exemple suivant utilise cette constante :</p>
         <pre>
           var msg:HTTPRequestMessage = new HTTPRequestMessage();
           msg.contentType = HTTPRequestMessage.CONTENT_TYPE_FORM;
@@ -395,7 +395,7 @@
       Indique le type de contenu de ce message.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="String"/></apiValueDef><apiDesc>
       Indique le type de contenu de ce message. Cette valeur doit être comprise par la destination à laquelle cette demande est envoyée.
      
-      <p><codeph/></p>
+      <p>L’exemple suivant définit la propriété <codeph>contentType</codeph> : </p>
         <pre>
           var msg:HTTPRequestMessage = new HTTPRequestMessage();
           msg.contentType = HTTPRequestMessage.CONTENT_TYPE_FORM;
@@ -415,7 +415,7 @@
       Contient la destination finale de cette demande.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="String"/></apiValueDef><apiDesc>
       Contient la destination finale de cette demande. Il s’agit de l’URL à laquelle le contenu de ce message, figurant dans la propriété <codeph>body</codeph>, sera envoyé, à l’aide de la méthode spécifiée.
      
-      <p><codeph/></p>
+      <p>L’exemple suivant définit la propriété <codeph>url</codeph> : </p>
         <pre>
           var msg:HTTPRequestMessage = new HTTPRequestMessage();
           msg.contentType = HTTPRequestMessage.CONTENT_TYPE_FORM;
@@ -436,7 +436,7 @@
         <li><codeph>HTTPRequestMessage.TRACE_METHOD</codeph></li>
       </ul>
      
-      <p><codeph/></p>
+      <p>L’exemple suivant définit la propriété <codeph>method</codeph> : </p>
         <pre>
           var msg:HTTPRequestMessage = new HTTPRequestMessage();
           msg.contentType = HTTPRequestMessage.CONTENT_TYPE_FORM;

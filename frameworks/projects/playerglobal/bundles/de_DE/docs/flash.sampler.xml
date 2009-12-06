@@ -1,0 +1,592 @@
+<?xml version="1.0"?>
+<apiPackage id="flash.sampler"><apiName>flash.sampler</apiName><apiDetail/><apiClassifier id="flash.sampler:StackFrame"><apiName>StackFrame</apiName><shortdesc>
+     Die StackFrame-Klasse ermöglicht den Zugriff auf die Eigenschaften eines Datenblocks, der eine Funktion enthält.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>StackFrame      
+     </keyword></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+     Die StackFrame-Klasse ermöglicht den Zugriff auf die Eigenschaften eines Datenblocks, der eine Funktion enthält. Nur für Flash Player-Debugger-Version.
+     </apiDesc></apiClassifierDetail><apiOperation id="flash.sampler:StackFrame:toString"><apiName>toString</apiName><shortdesc>
+     Konvertiert den StackFrame in einen String seiner Eigenschaften.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>StackFrame.toString, toString      
+     </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Ein String, der die <codeph>name</codeph>-Eigenschaft enthält und optional die Eigenschaften <codeph>file</codeph> und <codeph>line</codeph> (falls Debugging für eine SWF-Datei ausgeführt wird) des StackFrame-Objekts. Nur für Flash Player-Debugger-Version.
+     </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+     Konvertiert den StackFrame in einen String seiner Eigenschaften.
+     </apiDesc></apiOperationDetail></apiOperation><apiValue id="flash.sampler:StackFrame:file"><apiName>file</apiName><shortdesc>
+     Der Dateiname der SWF-Datei, für die ein Debugging ausgeführt wird.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>StackFrame.file, file      
+     </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiDynamic/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+     Der Dateiname der SWF-Datei, für die ein Debugging ausgeführt wird. Nur für Flash Player-Debugger-Version.
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.sampler:StackFrame:line"><apiName>line</apiName><shortdesc>
+     Die Zeilennummer für die Funktion in der SWF-Datei, für ein Debugging ausgeführt wird.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>StackFrame.line, line      
+     </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiDynamic/><apiValueClassifier>uint</apiValueClassifier></apiValueDef><apiDesc>
+     Die Zeilennummer für die Funktion in der SWF-Datei, für ein Debugging ausgeführt wird. Nur für Flash Player-Debugger-Version.
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.sampler:StackFrame:name"><apiName>name</apiName><shortdesc>
+     Der Funktionsname im Stack-Frame.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>StackFrame.name, name      
+     </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiDynamic/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+     Der Funktionsname im Stack-Frame. Nur für Flash Player-Debugger-Version.
+     </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.sampler:NewObjectSample"><apiName>NewObjectSample</apiName><shortdesc>
+    Die NewObjectSample-Klasse repräsentiert Objekte, die innerhalb eines getSamples()-Streams erstellt werden.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>NewObjectSample 
+    </keyword></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>flash.sampler:Sample</apiBaseClassifier></apiClassifierDef><apiDesc>
+    Die NewObjectSample-Klasse repräsentiert Objekte, die innerhalb eines <codeph>getSamples()</codeph>-Streams erstellt werden. Nur für Flash Player-Debugger-Version.
+    </apiDesc><example conref="examples\SampleTypesExample.as"> Im folgenden Beispiel werden mit den <codeph>stack</codeph>- und <codeph>time</codeph>-Eigenschaft eines Sample-Objekts <codeph>s</codeph> Speicher-Samples gesammelt. Die Samples enthalten NewObjectSample-Objekte (das <codeph>newSamples</codeph>-Array), DeleteObjectSample-Objekte (das <codeph>delSamples</codeph>-Array) und CPU-Speicher-Sample-Objekte (das <codeph>cpuSamples</codeph>-Array). Um den Speicherprofiler zu verwenden, muss die Flash Player-Debugger-Version 9.0.115.0 oder höher installiert sein.
+<codeblock>
+package 
+{
+    import flash.sampler.*
+    import flash.system.*
+    import flash.utils.*
+    import flash.display.Sprite
+    public class sampleTypes extends Sprite
+    {
+      var b:Boolean = true
+        public function sampleTypes() {
+            flash.sampler.startSampling();
+            for(var i:int=0;i&lt;10000;i++)
+              new Object();
+
+            var cpuSamples:Array=[];
+            var newSamples:Array=[];
+            var delSamples:Array=[];
+            var ids:Array=[]
+
+            var lastTime:Number=0;
+            for each(var s:Sample in getSamples()) {
+              
+              assert(s.time > 0); // positive
+              assert(Math.floor(s.time) == s.time, s.time); // integral
+              assert(s.time >= lastTime, s.time + ":" + lastTime); // ascending
+              assert(s.stack == null || s.stack is Array)
+              if(s.stack) {
+                assert(s.stack[0] is StackFrame);
+                assert(s.stack[0].name is String);
+            }
+              
+              if(s is NewObjectSample) {
+                var nos = NewObjectSample(s);
+                assert(s.id > 0, s.id);
+                assert(s.type is Class, getQualifiedClassName(s.type));
+                newSamples.push(s);
+                ids[s.id] = "got one";
+              } else if(s is DeleteObjectSample) {
+                var dos = DeleteObjectSample(s);
+                delSamples.push(s);
+                assert(ids[dos.id] == "got one");
+              } else if(s is Sample)
+                cpuSamples.push(s);
+              else {
+                assert(false);
+              }
+              lastTime = s.time;
+            }
+
+            trace(b)
+            trace(newSamples.length > 0)
+            trace(cpuSamples.length > 0)
+            trace(delSamples.length > 0)
+
+        }
+
+        private function assert(e:Boolean, mess:String=null):void {
+          b = e &amp;&amp; b;
+          if(true &amp;&amp; !e) {
+            if(mess) trace(mess);
+            trace(new Error().getStackTrace());
+          }     
+        }         
+    }
+}
+</codeblock></example></apiClassifierDetail><related-links><link href="package.html#getSamples()"><linktext>flash.sampler.getSamples()</linktext></link></related-links><apiValue id="flash.sampler:NewObjectSample:type"><apiName>type</apiName><shortdesc>
+         Das Class-Objekt, das dem Objekt entspricht, das innerhalb eines getSamples()-Streams erstellt wurde.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>NewObjectSample, NewObjectSample.type, type 
+    	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiDynamic/><apiValueClassifier>Class</apiValueClassifier></apiValueDef><apiDesc>
+         Das Class-Objekt, das dem Objekt entspricht, das innerhalb eines <codeph>getSamples()</codeph>-Streams erstellt wurde. Nur für Flash Player-Debugger-Version.
+         </apiDesc></apiValueDetail></apiValue><apiValue id="flash.sampler:NewObjectSample:object:get"><apiName>object</apiName><shortdesc>
+    	 Das NewObjectSample-Objekt, falls es immer noch vorhanden ist.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>NewObjectSample, NewObjectSample.object, object 
+         </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="any"/></apiValueDef><apiDesc>
+    	 Das NewObjectSample-Objekt, falls es immer noch vorhanden ist. Wenn das Objekt vom Speichermanagement gelöscht wurde (Garbagekollektor), ist diese Eigenschaft undefiniert und ein entsprechendes DeleteObjectSample ist vorhanden. Nur für Flash Player-Debugger-Version.
+         </apiDesc></apiValueDetail><related-links><link href="flash.sampler.xml#DeleteObjectSample"><linktext>flash.sampler.DeleteObjectSample</linktext></link></related-links></apiValue></apiClassifier><apiOperation id="globalOperation:flash.sampler:clearSamples"><apiName>clearSamples</apiName><shortdesc>
+     Löscht den aktuellen Satz von Sample-Objekten.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>clearSamples      
+     </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+     Löscht den aktuellen Satz von Sample-Objekten. Diese Methode wird normalerweise aufgerufen, nachdem <codeph>getSamples()</codeph> aufgerufen wurde und die Sample-Objekte durchlaufen hat. Nur für Flash Player-Debugger-Version.
+     </apiDesc></apiOperationDetail><related-links><link href="package.html#getSamples()"><linktext>getSamples()</linktext></link></related-links></apiOperation><apiOperation id="globalOperation:flash.sampler:getGetterInvocationCount"><apiName>getGetterInvocationCount</apiName><shortdesc>
+     Gibt die Anzahl der Ausführungen einer get-Funktion zurück.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>getInvocationCount   
+     </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Die Anzahl der Ausführungen einer get-Methode.
+     </apiDesc><apiOperationClassifier>Number</apiOperationClassifier></apiReturn><apiParam><apiItemName>obj</apiItemName><apiOperationClassifier>Object</apiOperationClassifier><apiDesc>Eine Methodeninstanz oder eine Klasse.
+     </apiDesc></apiParam><apiParam><apiItemName>qname</apiItemName><apiOperationClassifier>QName</apiOperationClassifier><apiDesc>Wenn qname den Wert <codeph>undefined</codeph> aufweist, wird die Anzahl der Iterationen der Konstruktorfunktion zurückgegeben.
+     </apiDesc></apiParam></apiOperationDef><apiDesc>
+     Gibt die Anzahl der Ausführungen einer get-Funktion zurück. Überprüfen Sie mit <codeph>isGetterSetter()</codeph>, dass Sie über eine get/set-Funktion verfügen, bevor Sie <codeph>getGetterInvocationCount()</codeph> verwenden. Nur für Flash Player-Debugger-Version.
+     </apiDesc></apiOperationDetail><related-links><link href="package.html#isGetterSetter()"><linktext>isGetterSetter()</linktext></link><link href="package.html#getInvocationCount()"><linktext>getInvocationCount()</linktext></link></related-links></apiOperation><apiOperation id="globalOperation:flash.sampler:getInvocationCount"><apiName>getInvocationCount</apiName><shortdesc>
+     Gibt die Anzahl der Ausführungen der Methode zurück.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>getInvocationCount     
+     </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Die Anzahl der Ausführungen der Methode.
+     </apiDesc><apiOperationClassifier>Number</apiOperationClassifier></apiReturn><apiParam><apiItemName>obj</apiItemName><apiOperationClassifier>Object</apiOperationClassifier><apiDesc>Eine Methodeninstanz oder eine Klasse. Wenn keine Methodeninstanz verfügbar ist, kann die Anzahl der Aufrufe von Instanzfunktionen mithilfe einer Klasse abgerufen werden. Wenn <codeph>obj</codeph> den Wert·<codeph>undefined</codeph> hat, gibt diese Methode die Anzahl der für das Paket gültigen Funktion zurück, die von <codeph>qname</codeph> benannt wird.
+     </apiDesc></apiParam><apiParam><apiItemName>qname</apiItemName><apiOperationClassifier>QName</apiOperationClassifier><apiDesc>Wenn qname den Wert <codeph>undefined</codeph> aufweist, wird die Anzahl der Iterationen der Konstruktorfunktion zurückgegeben.
+     </apiDesc></apiParam></apiOperationDef><apiDesc>
+     Gibt die Anzahl der Ausführungen der Methode zurück. Wenn der <codeph>obj</codeph>-Parameter eine Klasse ist und der <codeph>qname</codeph>-Parameter den Wert <codeph>undefined</codeph> hat, gibt diese Methode die Anzahl der Iterationen der Konstruktorfunktion zurück. Nur für Flash Player-Debugger-Version.
+     </apiDesc><example conref="examples\GetInvocationCountExample.as"> 
+<codeblock>
+ package 
+{
+  public function exec3() {}
+
+  import flash.sampler.*;
+  import flash.system.*;
+  import flash.display.Sprite;
+  import flash.utils.*;
+  public class getInvocationCountTest extends Sprite
+    {
+      public function getInvocationCountTest()
+    {
+      for(var i:int=0;i&lt;10;i++)
+        exec();
+      for(var i:int=0;i&lt;10;i++)
+        exec2();
+      for(var i:int=0;i&lt;10;i++)
+        exec3();
+
+      // get exec QName
+      var execName:QName;
+          var name:QName;
+      var fooName:QName;
+      for each(name in getMemberNames(this)) {
+          if(name.localName == "exec")
+          execName = name;
+          if(name.localName == "foo")
+          fooName = name;
+      }
+
+      var exec2Name:QName;
+      for each(name in getMemberNames(getInvocationCountTest)) {
+          if(name.localName == "exec2")
+          exec2Name = name;
+      }
+
+      // execute get/set
+      foo = "bar";
+
+      trace(isGetterSetter(this, fooName));
+      trace(getSetterInvocationCount(this, fooName) == 1);
+      trace(getGetterInvocationCount(this, fooName) == 0);
+
+      foo;
+      
+      trace(getSetterInvocationCount(getInvocationCountTest, fooName) == 1);
+      trace(getGetterInvocationCount(getInvocationCountTest, fooName) == 1);
+
+      trace(getInvocationCount(this, execName) == 10);
+      trace(getInvocationCount(getInvocationCountTest, execName) == 10);
+      trace(getInvocationCount(getInvocationCountTest, exec2Name) == 10);
+      trace(getInvocationCount(getInvocationCountTest, undefined) == 1);
+    
+      getTimer();
+      getTimer();
+
+      trace(getInvocationCount(undefined, new QName("", "trace")) == 9);
+      trace(getInvocationCount(undefined, new QName("flash.utils", "getTimer")) == 2);
+      trace(getInvocationCount(undefined, new QName("", "exec3")) == 10);
+
+    }
+
+      private function exec():void {}
+      private static function exec2():void {}
+
+      private function get foo():String { return "fo"; }
+      private function set foo(s:String) { }
+      
+    }
+}
+</codeblock></example></apiOperationDetail></apiOperation><apiOperation id="globalOperation:flash.sampler:getMemberNames"><apiName>getMemberNames</apiName><shortdesc>
+     Gibt ein Objekt zurück, das alle Mitglieder eines angegebenen Objekts einschließlich privater Mitglieder enthält.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>getMemberNames
+     </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Ein Objekt, das Sie mit einer <codeph>for each..in</codeph>-Schleife durchlaufen müssen, um die QNames für jede Eigenschaft zu erhalten. 
+     </apiDesc><apiOperationClassifier>Object</apiOperationClassifier></apiReturn><apiParam><apiItemName>o</apiItemName><apiOperationClassifier>Object</apiOperationClassifier><apiDesc>Das zu analysierende Objekt.
+     </apiDesc></apiParam><apiParam><apiItemName>instanceNames</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>Wenn das Objekt eine Klasse ist und instanceNames den Wert „true“ hat, melden Sie anstatt der Namen der Klassenmitglieder die Instanznamen, als ob das Objekt eine Instanz der Klasse wäre.
+     </apiDesc></apiParam></apiOperationDef><apiDesc>
+     Gibt ein Objekt zurück, das alle Mitglieder eines angegebenen Objekts einschließlich privater Mitglieder enthält. Sie können das zurückgegebene Objekt dann durchlaufen, um alle Werte zu sehen. Diese Methode ähnelt der flash.utils.describeType()-Methode, ermöglicht Ihnen jedoch auch, private Member zu sehen und überspringt den Zwischenschritt der XML-Objekterstellung. Nur für Flash Player-Debugger-Version.
+     
+     </apiDesc><example conref="examples\GetMemberNamesExample.as"> Das folgende Beispiel verwendet die <codeph>getMemberNames()</codeph>-Methode, um ein Objekt zu analysieren und die <codeph>buttonMode</codeph>-, <codeph>filters</codeph>- und <codeph>dispatchEvent</codeph>-Eigenschaft ihrer Mitglieder anzuzeigen. Um den Speicherprofiler zu verwenden, muss die Flash Player-Debugger-Version 9.0.115.0 oder höher installiert sein.
+<codeblock>
+ package 
+{
+  import flash.sampler.*;
+  import flash.system.*;
+  import flash.display.Sprite;
+  public class getMemberNamesTest extends Sprite
+    {
+      public function getMemberNamesTest()
+    {
+      var name_iter = getMemberNames(this);
+      var o={};
+      for each(var name:QName in name_iter) {
+        o[name.localName] = "got it";
+      }
+
+      name_iter = getMemberNames(this);
+      var count=0;
+      for(var dum in name_iter) {
+        count++;
+      }
+      trace(count == 1);
+
+      // my member
+      trace("buttonMode" in o);
+      // inherited member
+      trace("filters" in o);
+      // inherited function
+      trace("dispatchEvent" in o);
+
+      var name_iter = getMemberNames(getMemberNamesTest, true);
+      var o={};
+      for each(var name:QName in name_iter) {
+        o[name.localName] = "got it";
+      }
+
+      // my member
+      trace("buttonMode" in o);
+      // inherited member
+      trace("filters" in o);
+      // inherited function
+      trace("dispatchEvent" in o);
+
+    }
+    }
+}
+</codeblock></example></apiOperationDetail><related-links><link href="flash.utils.xml#/describeType()"><linktext>flash.utils.describeType()</linktext></link><link href="../../statements.html#for_each..in"><linktext>for each..in</linktext></link></related-links></apiOperation><apiOperation id="globalOperation:flash.sampler:getSampleCount"><apiName>getSampleCount</apiName><shortdesc> 
+     Gibt die Anzahl der gesammelten Samples zurück.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>getSampleCount     
+     </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Ein Iterator von Sample-Instanzen.
+     </apiDesc><apiOperationClassifier>Number</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc> 
+     Gibt die Anzahl der gesammelten Samples zurück. Nur für Flash Player-Debugger-Version.
+     
+     </apiDesc></apiOperationDetail><related-links><link href="flash.sampler.xml#Sample"><linktext>flash.sampler.Sample</linktext></link></related-links></apiOperation><apiOperation id="globalOperation:flash.sampler:getSamples"><apiName>getSamples</apiName><shortdesc>
+     Gibt ein Objekt von Speichernutzungs-Sample-Instanzen aus der letzten Sampling-Sitzung zurück.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>getSamples     
+     </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Ein Iterator von Sample-Instanzen.
+     </apiDesc><apiOperationClassifier>Object</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+     Gibt ein Objekt von Speichernutzungs-Sample-Instanzen aus der letzten Sampling-Sitzung zurück. Nur für Flash Player-Debugger-Version.
+     
+     </apiDesc></apiOperationDetail><related-links><link href="flash.sampler.xml#Sample"><linktext>flash.sampler.Sample</linktext></link></related-links></apiOperation><apiOperation id="globalOperation:flash.sampler:getSetterInvocationCount"><apiName>getSetterInvocationCount</apiName><shortdesc>
+     Gibt die Anzahl der Ausführungen einer set-Funktion zurück.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>getInvocationCount   
+     </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Die Anzahl der Ausführungen einer set-Methode.
+     </apiDesc><apiOperationClassifier>Number</apiOperationClassifier></apiReturn><apiParam><apiItemName>obj</apiItemName><apiOperationClassifier>Object</apiOperationClassifier><apiDesc>Eine Methodeninstanz oder eine Klasse.
+     </apiDesc></apiParam><apiParam><apiItemName>qname</apiItemName><apiOperationClassifier>QName</apiOperationClassifier><apiDesc>Wenn qname den Wert <codeph>undefined</codeph> aufweist, wird die Anzahl der Iterationen der Konstruktorfunktion zurückgegeben.
+     </apiDesc></apiParam></apiOperationDef><apiDesc>
+     Gibt die Anzahl der Ausführungen einer set-Funktion zurück. Überprüfen Sie mit <codeph>isGetterSetter()</codeph>, dass Sie über eine get/set-Funktion verfügen, bevor Sie <codeph>getSetterInvocationCount()</codeph> verwenden. Nur für Flash Player-Debugger-Version.
+     </apiDesc></apiOperationDetail><related-links><link href="package.html#isGetterSetter()"><linktext>isGetterSetter()</linktext></link><link href="package.html#getInvocationCount()"><linktext>getInvocationCount()</linktext></link></related-links></apiOperation><apiOperation id="globalOperation:flash.sampler:getSize"><apiName>getSize</apiName><shortdesc>
+	Gibt die Größe eines angegebenen Objekts im Speicher zurück, wenn die Debugger-Version von Flash Player 9.0.115.0 oder höher verwendet wird.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>getSize      
+	</keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Die Bytezählung des vom angegebenen Objekt verwendeten Speichers.
+    </apiDesc><apiOperationClassifier>Number</apiOperationClassifier></apiReturn><apiParam><apiItemName>o</apiItemName><apiType value=""/><apiDesc>Das für die Speichernutzung zu analysierende Objekt.
+    </apiDesc></apiParam></apiOperationDef><apiDesc>
+	Gibt die Größe eines angegebenen Objekts im Speicher zurück, wenn die Debugger-Version von Flash Player 9.0.115.0 oder höher verwendet wird. Wenn diese Methode mit einer anderen Flash Player-Version als der Debugger-Version verwendet wird, gibt sie <codeph>0</codeph> zurück.
+    </apiDesc><example conref="examples\DeletedObjectSizeExample.as"> Im folgenden Beispiel werden <codeph>startSampling()</codeph> und <codeph>pauseSampling</codeph> verwendet, um Sample-Objekte zu sammeln. Dann werden die Sample-Objekte nach <codeph>id</codeph>-Werten und Größen durchlaufen. Nach dem Aufruf von <codeph>System.gc()</codeph> zum Stoppen des aktuellen Prozesses werden die deletedObjectSample-Objekte mit den ursprünglichen <codeph>id</codeph>-Werten verglichen und ihre Größe wird angezeigt. Um den Speicherprofiler zu verwenden, muss die Flash Player-Debugger-Version 9.0.115.0 oder höher installiert sein.
+<codeblock>
+ package {
+  import flash.sampler.*;
+  import flash.system.*;
+  import flash.display.Sprite;
+  import flash.utils.Dictionary;
+  public class deletedObjectSize extends Sprite {
+    public function deletedObjectSize() {
+
+      startSampling();
+      var obj = {};
+      pauseSampling();
+
+      var id:Number;
+      var sampleIter = getSamples();
+      for each(var s:Sample in sampleIter) {
+    id = s.id;
+      }
+      
+      sampleIter = getSamples();
+      var count=0;
+      for(var dum in sampleIter) {
+    count++;
+      }
+      trace(count == 1);
+
+      var size:Number = getSize(obj);
+      obj = undefined;
+
+      startSampling();
+
+      // force DRC
+      for(var i:int=0;i&lt;1000;i++)
+    new Object();
+      
+      System.gc();
+
+      pauseSampling();
+      
+      var sampleIter = getSamples();
+      for each(var s:Sample in sampleIter) {
+    //    trace(s);
+    if(s is DeleteObjectSample &amp;&amp; s.id == id) {
+      trace(s.size == size);
+    }      
+      }       
+
+    }
+  }
+}
+</codeblock></example></apiOperationDetail></apiOperation><apiOperation id="globalOperation:flash.sampler:isGetterSetter"><apiName>isGetterSetter</apiName><shortdesc>
+     Überprüft, ob eine Eigenschaft durch eine get/set-Funktion definiert wird.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>getInvocationCount   
+     </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Ein boolescher Wert, der angibt, ob die Eigenschaft durch eine get/set-Funktion definiert wird (<codeph>true</codeph>) oder nicht (<codeph>false</codeph>).
+     </apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn><apiParam><apiItemName>obj</apiItemName><apiOperationClassifier>Object</apiOperationClassifier><apiDesc>Eine Methodeninstanz oder eine Klasse.
+     </apiDesc></apiParam><apiParam><apiItemName>qname</apiItemName><apiOperationClassifier>QName</apiOperationClassifier><apiDesc>Wenn qname den Wert <codeph>undefined</codeph> aufweist, wird die Anzahl der Iterationen der Konstruktorfunktion zurückgegeben.
+     </apiDesc></apiParam></apiOperationDef><apiDesc>
+     Überprüft, ob eine Eigenschaft durch eine get/set-Funktion definiert wird. Wenn Sie <codeph>getInvocationCount()</codeph> mit einer get/set-Funktion für eine Eigenschaft verwenden möchten, rufen Sie zuerst <codeph>isGetterSetter()</codeph> auf, um zu überprüfen, ob es sich um eine get/set-Funktion handelt, und rufen Sie die entsprechende Anzahl dann mit <codeph>getSetterInvocationCount</codeph> oder <codeph>getGetterInvocationCount</codeph> ab. Nur für Flash Player-Debugger-Version.
+     </apiDesc><example conref="examples\GetInvocationCountExample.as"> 
+<codeblock>
+ package 
+{
+  public function exec3() {}
+
+  import flash.sampler.*;
+  import flash.system.*;
+  import flash.display.Sprite;
+  import flash.utils.*;
+  public class getInvocationCountTest extends Sprite
+    {
+      public function getInvocationCountTest()
+    {
+      for(var i:int=0;i&lt;10;i++)
+        exec();
+      for(var i:int=0;i&lt;10;i++)
+        exec2();
+      for(var i:int=0;i&lt;10;i++)
+        exec3();
+
+      // get exec QName
+      var execName:QName;
+          var name:QName;
+      var fooName:QName;
+      for each(name in getMemberNames(this)) {
+          if(name.localName == "exec")
+          execName = name;
+          if(name.localName == "foo")
+          fooName = name;
+      }
+
+      var exec2Name:QName;
+      for each(name in getMemberNames(getInvocationCountTest)) {
+          if(name.localName == "exec2")
+          exec2Name = name;
+      }
+
+      // execute get/set
+      foo = "bar";
+
+      trace(isGetterSetter(this, fooName));
+      trace(getSetterInvocationCount(this, fooName) == 1);
+      trace(getGetterInvocationCount(this, fooName) == 0);
+
+      foo;
+      
+      trace(getSetterInvocationCount(getInvocationCountTest, fooName) == 1);
+      trace(getGetterInvocationCount(getInvocationCountTest, fooName) == 1);
+
+      trace(getInvocationCount(this, execName) == 10);
+      trace(getInvocationCount(getInvocationCountTest, execName) == 10);
+      trace(getInvocationCount(getInvocationCountTest, exec2Name) == 10);
+      trace(getInvocationCount(getInvocationCountTest, undefined) == 1);
+    
+      getTimer();
+      getTimer();
+
+      trace(getInvocationCount(undefined, new QName("", "trace")) == 9);
+      trace(getInvocationCount(undefined, new QName("flash.utils", "getTimer")) == 2);
+      trace(getInvocationCount(undefined, new QName("", "exec3")) == 10);
+
+    }
+
+      private function exec():void {}
+      private static function exec2():void {}
+
+      private function get foo():String { return "fo"; }
+      private function set foo(s:String) { }
+      
+    }
+}
+</codeblock></example></apiOperationDetail><related-links><link href="package.html#getInvocationCount()"><linktext>getInvocationCount()</linktext></link><link href="package.html#getSetterInvocationCount()"><linktext>getSetterInvocationCount()</linktext></link><link href="package.html#getGetterInvocationCount()"><linktext>getGetterInvocationCount()</linktext></link></related-links></apiOperation><apiOperation id="globalOperation:flash.sampler:pauseSampling"><apiName>pauseSampling</apiName><shortdesc>
+     Beendet den Sammelvorgang vorübergehend.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>pauseSampling      
+     </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+     Beendet den Sammelvorgang vorübergehend. Starten Sie den Sampling-Prozess mit <codeph>startSampling()</codeph> neu. Nur für Flash Player-Debugger-Version.
+     </apiDesc></apiOperationDetail><related-links><link href="package.html#startSampling()"><linktext>startSampling()</linktext></link></related-links></apiOperation><apiOperation id="globalOperation:flash.sampler:startSampling"><apiName>startSampling</apiName><shortdesc>
+     Beginnt mit dem Sammeln von Speichernutzungs-Sample-Objekten.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>startSampling      
+     </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+     Beginnt mit dem Sammeln von Speichernutzungs-Sample-Objekten. Nur für Flash Player-Debugger-Version.
+     </apiDesc><example conref="examples\StartSamplingExample.as"> Im folgenden Beispiel wird der Sampling-Prozess eingeleitet und durchläuft die gesammelten Objekte. Um den Speicherprofiler zu verwenden, muss die Flash Player-Debugger-Version 9.0.115.0 oder höher installiert sein.
+<codeblock>
+package 
+{
+    import flash.sampler.*
+    import flash.system.*
+    import flash.display.Sprite
+    public class startSampling extends Sprite
+    {
+        public function startSampling()
+        {
+            flash.sampler.startSampling();
+            for(var i:int=0;i&lt;1000;i++)
+                new Object()
+            trace(getSampleCount() > 0)
+        }
+    }
+}
+</codeblock></example></apiOperationDetail><related-links><link href="flash.sampler.xml#Sample"><linktext>Sample-Klasse</linktext></link></related-links></apiOperation><apiOperation id="globalOperation:flash.sampler:stopSampling"><apiName>stopSampling</apiName><shortdesc>
+	 Beendet das Sammeln von Speichernutzungs-Sample-Objekten und macht Ressourcen frei, die für das Sammeln verwendet wurden.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>stopSampling      
+     </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+	 Beendet das Sammeln von Speichernutzungs-Sample-Objekten und macht Ressourcen frei, die für das Sammeln verwendet wurden. Sie starten den Sampling-Prozess mit <codeph>startSampling()</codeph>. Nur für Flash Player-Debugger-Version.
+     </apiDesc></apiOperationDetail><related-links><link href="flash.sampler.xml#Sample"><linktext>Sample-Klasse</linktext></link></related-links></apiOperation><apiClassifier id="flash.sampler:Sample"><apiName>Sample</apiName><shortdesc>
+     Die Sample-Klasse erstellt Objekte, die Speicheranalyseinformationen für einen bestimmten Zeitraum enthalten.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>Sample      
+     </keyword></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+     Die Sample-Klasse erstellt Objekte, die Speicheranalyseinformationen für einen bestimmten Zeitraum enthalten. Nur für Flash Player-Debugger-Version.
+     
+     </apiDesc><example conref="examples\SampleTypesExample.as"> Im folgenden Beispiel werden mit den <codeph>stack</codeph>- und <codeph>time</codeph>-Eigenschaft eines Sample-Objekts <codeph>s</codeph> Speicher-Samples gesammelt. Die Samples enthalten NewObjectSample-Objekte (das <codeph>newSamples</codeph>-Array), DeleteObjectSample-Objekte (das <codeph>delSamples</codeph>-Array) und CPU-Speicher-Sample-Objekte (das <codeph>cpuSamples</codeph>-Array). Um den Speicherprofiler zu verwenden, muss die Flash Player-Debugger-Version 9.0.115.0 oder höher installiert sein.
+<codeblock>
+package 
+{
+    import flash.sampler.*
+    import flash.system.*
+    import flash.utils.*
+    import flash.display.Sprite
+    public class sampleTypes extends Sprite
+    {
+      var b:Boolean = true
+        public function sampleTypes() {
+            flash.sampler.startSampling();
+            for(var i:int=0;i&lt;10000;i++)
+              new Object();
+
+            var cpuSamples:Array=[];
+            var newSamples:Array=[];
+            var delSamples:Array=[];
+            var ids:Array=[]
+
+            var lastTime:Number=0;
+            for each(var s:Sample in getSamples()) {
+              
+              assert(s.time > 0); // positive
+              assert(Math.floor(s.time) == s.time, s.time); // integral
+              assert(s.time >= lastTime, s.time + ":" + lastTime); // ascending
+              assert(s.stack == null || s.stack is Array)
+              if(s.stack) {
+                assert(s.stack[0] is StackFrame);
+                assert(s.stack[0].name is String);
+            }
+              
+              if(s is NewObjectSample) {
+                var nos = NewObjectSample(s);
+                assert(s.id > 0, s.id);
+                assert(s.type is Class, getQualifiedClassName(s.type));
+                newSamples.push(s);
+                ids[s.id] = "got one";
+              } else if(s is DeleteObjectSample) {
+                var dos = DeleteObjectSample(s);
+                delSamples.push(s);
+                assert(ids[dos.id] == "got one");
+              } else if(s is Sample)
+                cpuSamples.push(s);
+              else {
+                assert(false);
+              }
+              lastTime = s.time;
+            }
+
+            trace(b)
+            trace(newSamples.length > 0)
+            trace(cpuSamples.length > 0)
+            trace(delSamples.length > 0)
+
+        }
+
+        private function assert(e:Boolean, mess:String=null):void {
+          b = e &amp;&amp; b;
+          if(true &amp;&amp; !e) {
+            if(mess) trace(mess);
+            trace(new Error().getStackTrace());
+          }     
+        }         
+    }
+}
+</codeblock></example></apiClassifierDetail><related-links><link href="package.html#getSamples()"><linktext>flash.sampler.getSamples()</linktext></link></related-links><apiValue id="flash.sampler:Sample:stack"><apiName>stack</apiName><shortdesc>
+		 Enthält Informationen zu den Methoden, die in einem bestimmten Zeitraum vom Flash Player ausgeführt wurden.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>Sample, Sample.stack, stack     
+		 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiDynamic/><apiValueClassifier>Array</apiValueClassifier></apiValueDef><apiDesc>
+		 Enthält Informationen zu den Methoden, die in einem bestimmten Zeitraum vom Flash Player ausgeführt wurden. Das Format der Stack-Trace ähnelt dem Inhalt, der im Ausnahme-Dialogfeld der Debugger-Version des Flash Player angezeigt wird. Nur für Flash Player-Debugger-Version.
+         </apiDesc></apiValueDetail></apiValue><apiValue id="flash.sampler:Sample:time"><apiName>time</apiName><shortdesc>
+	     Die Mikrosekunden, die die Dauer der Sample-Instanz definieren.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>Sample, Sample.time, time         
+		 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiDynamic/><apiValueClassifier>Number</apiValueClassifier></apiValueDef><apiDesc>
+	     Die Mikrosekunden, die die Dauer der Sample-Instanz definieren. Nur für Flash Player-Debugger-Version.
+             
+             </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.sampler:DeleteObjectSample"><apiName>DeleteObjectSample</apiName><shortdesc>
+    Die DeleteObjectSample-Klasse repräsentiert Objekte, die innerhalb eines getSamples()-Streams erstellt werden; jedes DeleteObjectSample-Objekt entspricht einem NewObjectSample-Objekt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>DeleteObjectSample 
+    </keyword></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>flash.sampler:Sample</apiBaseClassifier></apiClassifierDef><apiDesc>
+    Die DeleteObjectSample-Klasse repräsentiert Objekte, die innerhalb eines <codeph>getSamples()</codeph>-Streams erstellt werden; jedes DeleteObjectSample-Objekt entspricht einem NewObjectSample-Objekt. Nur für Flash Player-Debugger-Version.
+    </apiDesc><example conref="examples\SampleTypesExample.as"> Im folgenden Beispiel werden mit den <codeph>stack</codeph>- und <codeph>time</codeph>-Eigenschaft eines Sample-Objekts <codeph>s</codeph> Speicher-Samples gesammelt. Die Samples enthalten NewObjectSample-Objekte (das <codeph>newSamples</codeph>-Array), DeleteObjectSample-Objekte (das <codeph>delSamples</codeph>-Array) und CPU-Speicher-Sample-Objekte (das <codeph>cpuSamples</codeph>-Array). Um den Speicherprofiler zu verwenden, muss die Flash Player-Debugger-Version 9.0.115.0 oder höher installiert sein.
+<codeblock>
+package 
+{
+    import flash.sampler.*
+    import flash.system.*
+    import flash.utils.*
+    import flash.display.Sprite
+    public class sampleTypes extends Sprite
+    {
+      var b:Boolean = true
+        public function sampleTypes() {
+            flash.sampler.startSampling();
+            for(var i:int=0;i&lt;10000;i++)
+              new Object();
+
+            var cpuSamples:Array=[];
+            var newSamples:Array=[];
+            var delSamples:Array=[];
+            var ids:Array=[]
+
+            var lastTime:Number=0;
+            for each(var s:Sample in getSamples()) {
+              
+              assert(s.time > 0); // positive
+              assert(Math.floor(s.time) == s.time, s.time); // integral
+              assert(s.time >= lastTime, s.time + ":" + lastTime); // ascending
+              assert(s.stack == null || s.stack is Array)
+              if(s.stack) {
+                assert(s.stack[0] is StackFrame);
+                assert(s.stack[0].name is String);
+            }
+              
+              if(s is NewObjectSample) {
+                var nos = NewObjectSample(s);
+                assert(s.id > 0, s.id);
+                assert(s.type is Class, getQualifiedClassName(s.type));
+                newSamples.push(s);
+                ids[s.id] = "got one";
+              } else if(s is DeleteObjectSample) {
+                var dos = DeleteObjectSample(s);
+                delSamples.push(s);
+                assert(ids[dos.id] == "got one");
+              } else if(s is Sample)
+                cpuSamples.push(s);
+              else {
+                assert(false);
+              }
+              lastTime = s.time;
+            }
+
+            trace(b)
+            trace(newSamples.length > 0)
+            trace(cpuSamples.length > 0)
+            trace(delSamples.length > 0)
+
+        }
+
+        private function assert(e:Boolean, mess:String=null):void {
+          b = e &amp;&amp; b;
+          if(true &amp;&amp; !e) {
+            if(mess) trace(mess);
+            trace(new Error().getStackTrace());
+          }     
+        }         
+    }
+}
+</codeblock></example></apiClassifierDetail><related-links><link href="package.html#getSamples()"><linktext>flash.sampler.getSamples()</linktext></link></related-links><apiValue id="flash.sampler:DeleteObjectSample:id"><apiName>id</apiName><shortdesc> 
+         Die eindeutige Identifikationsnummer, die mit der Identifikationsnummer eines NewObjectSample abgeglichen wird.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>DeleteObjectSample, DeleteObjectSample.id, id  
+         </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiDynamic/><apiValueClassifier>Number</apiValueClassifier></apiValueDef><apiDesc> 
+         Die eindeutige Identifikationsnummer, die mit der Identifikationsnummer eines NewObjectSample abgeglichen wird. Nur für Flash Player-Debugger-Version.
+         </apiDesc></apiValueDetail><related-links><link href="flash.sampler.xml#NewObjectSample/id"><linktext>flash.sampler.NewObjectSample.id</linktext></link></related-links></apiValue><apiValue id="flash.sampler:DeleteObjectSample:size"><apiName>size</apiName><shortdesc>
+         Die Größe des DeleteObjectSample-Objekts vor dem Löschen.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>DeleteObjectSample, DeleteObjectSample.size, size  
+         </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiDynamic/><apiValueClassifier>Number</apiValueClassifier></apiValueDef><apiDesc>
+         Die Größe des DeleteObjectSample-Objekts vor dem Löschen. Nur für Flash Player-Debugger-Version.
+         </apiDesc></apiValueDetail><related-links><link href="flash.sampler.xml#NewObjectSample/id"><linktext>flash.sampler.NewObjectSample.id</linktext></link></related-links></apiValue></apiClassifier></apiPackage>

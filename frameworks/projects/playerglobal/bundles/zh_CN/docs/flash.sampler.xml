@@ -1,0 +1,592 @@
+<?xml version="1.0"?>
+<apiPackage id="flash.sampler"><apiName>flash.sampler</apiName><apiDetail/><apiClassifier id="flash.sampler:StackFrame"><apiName>StackFrame</apiName><shortdesc>
+     通过 StackFrame 类可以访问包含函数的数据块的属性。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>StackFrame      
+     </keyword></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+     通过 StackFrame 类可以访问包含函数的数据块的属性。仅适用于 Flash Player 调试版。
+     </apiDesc></apiClassifierDetail><apiOperation id="flash.sampler:StackFrame:toString"><apiName>toString</apiName><shortdesc>
+     将 StackFrame 转换为其属性的字符串。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>StackFrame.toString, toString      
+     </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>一个字符串，其中包含 StackFrame 对象的 <codeph>name</codeph> 属性以及（可选）<codeph>file</codeph> 和 <codeph>line</codeph> 属性（如果正在调试 SWF 文件）。仅适用于 Flash Player 调试版。
+     </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+     将 StackFrame 转换为其属性的字符串。
+     </apiDesc></apiOperationDetail></apiOperation><apiValue id="flash.sampler:StackFrame:file"><apiName>file</apiName><shortdesc>
+     所调试的 SWF 文件的文件名。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>StackFrame.file, file      
+     </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiDynamic/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+     所调试的 SWF 文件的文件名。仅适用于 Flash Player 调试版。
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.sampler:StackFrame:line"><apiName>line</apiName><shortdesc>
+     所调试的 SWF 文件中的函数的行号。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>StackFrame.line, line      
+     </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiDynamic/><apiValueClassifier>uint</apiValueClassifier></apiValueDef><apiDesc>
+     所调试的 SWF 文件中的函数的行号。仅适用于 Flash Player 调试版。
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.sampler:StackFrame:name"><apiName>name</apiName><shortdesc>
+     堆栈帧中的函数名称。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>StackFrame.name, name      
+     </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiDynamic/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+     堆栈帧中的函数名称。仅适用于 Flash Player 调试版。
+     </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.sampler:NewObjectSample"><apiName>NewObjectSample</apiName><shortdesc>
+    NewObjectSample 类表示在 getSamples() 流中创建的对象。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>NewObjectSample 
+    </keyword></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>flash.sampler:Sample</apiBaseClassifier></apiClassifierDef><apiDesc>
+    NewObjectSample 类表示在 <codeph>getSamples()</codeph> 流中创建的对象。仅适用于 Flash Player 调试版。
+    </apiDesc><example conref="examples\SampleTypesExample.as"> 下面的示例使用 Sample 对象 <codeph>s</codeph> 的 <codeph>stack</codeph> 和 <codeph>time</codeph> 属性来收集内存样本。该样本包含 NewObjectSample 对象（<codeph>newSamples</codeph> 数组）、DeleteObjectSample 对象（<codeph>delSamples</codeph> 数组）和 CPU 内存样本对象（<codeph>cpuSamples</codeph> 数组）。为了使用内存设置，需要安装 Flash Player 调试版 9.0.115.0 或更高版本。
+<codeblock>
+package 
+{
+    import flash.sampler.*
+    import flash.system.*
+    import flash.utils.*
+    import flash.display.Sprite
+    public class sampleTypes extends Sprite
+    {
+      var b:Boolean = true
+        public function sampleTypes() {
+            flash.sampler.startSampling();
+            for(var i:int=0;i&lt;10000;i++)
+              new Object();
+
+            var cpuSamples:Array=[];
+            var newSamples:Array=[];
+            var delSamples:Array=[];
+            var ids:Array=[]
+
+            var lastTime:Number=0;
+            for each(var s:Sample in getSamples()) {
+              
+              assert(s.time > 0); // positive
+              assert(Math.floor(s.time) == s.time, s.time); // integral
+              assert(s.time >= lastTime, s.time + ":" + lastTime); // ascending
+              assert(s.stack == null || s.stack is Array)
+              if(s.stack) {
+                assert(s.stack[0] is StackFrame);
+                assert(s.stack[0].name is String);
+            }
+              
+              if(s is NewObjectSample) {
+                var nos = NewObjectSample(s);
+                assert(s.id > 0, s.id);
+                assert(s.type is Class, getQualifiedClassName(s.type));
+                newSamples.push(s);
+                ids[s.id] = "got one";
+              } else if(s is DeleteObjectSample) {
+                var dos = DeleteObjectSample(s);
+                delSamples.push(s);
+                assert(ids[dos.id] == "got one");
+              } else if(s is Sample)
+                cpuSamples.push(s);
+              else {
+                assert(false);
+              }
+              lastTime = s.time;
+            }
+
+            trace(b)
+            trace(newSamples.length > 0)
+            trace(cpuSamples.length > 0)
+            trace(delSamples.length > 0)
+
+        }
+
+        private function assert(e:Boolean, mess:String=null):void {
+          b = e &amp;&amp; b;
+          if(true &amp;&amp; !e) {
+            if(mess) trace(mess);
+            trace(new Error().getStackTrace());
+          }     
+        }         
+    }
+}
+</codeblock></example></apiClassifierDetail><related-links><link href="package.html#getSamples()"><linktext>flash.sampler.getSamples()</linktext></link></related-links><apiValue id="flash.sampler:NewObjectSample:type"><apiName>type</apiName><shortdesc>
+         与 getSamples() 流中创建的对象相对应的 Class 对象。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>NewObjectSample, NewObjectSample.type, type 
+    	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiDynamic/><apiValueClassifier>Class</apiValueClassifier></apiValueDef><apiDesc>
+         与 <codeph>getSamples()</codeph> 流中创建的对象相对应的 Class 对象。仅适用于 Flash Player 调试版。
+         </apiDesc></apiValueDetail></apiValue><apiValue id="flash.sampler:NewObjectSample:object:get"><apiName>object</apiName><shortdesc>
+    	 NewObjectSample 对象（如果仍存在）。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>NewObjectSample, NewObjectSample.object, object 
+         </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="any"/></apiValueDef><apiDesc>
+    	 NewObjectSample 对象（如果仍存在）。如果已将该对象作为垃圾回收，则此属性是未定义的并存在对应的 DeleteObjectSample。仅适用于 Flash Player 调试版。
+         </apiDesc></apiValueDetail><related-links><link href="flash.sampler.xml#DeleteObjectSample"><linktext>flash.sampler.DeleteObjectSample</linktext></link></related-links></apiValue></apiClassifier><apiOperation id="globalOperation:flash.sampler:clearSamples"><apiName>clearSamples</apiName><shortdesc>
+     清除当前的 Sample 对象集合。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>clearSamples      
+     </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+     清除当前的 Sample 对象集合。通常在调用 <codeph>getSamples()</codeph> 并遍历 Sample 对象后调用此方法。仅适用于 Flash Player 调试版。
+     </apiDesc></apiOperationDetail><related-links><link href="package.html#getSamples()"><linktext>getSamples()</linktext></link></related-links></apiOperation><apiOperation id="globalOperation:flash.sampler:getGetterInvocationCount"><apiName>getGetterInvocationCount</apiName><shortdesc>
+     返回 get 函数的执行次数。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>getInvocationCount   
+     </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>get 函数的执行次数。
+     </apiDesc><apiOperationClassifier>Number</apiOperationClassifier></apiReturn><apiParam><apiItemName>obj</apiItemName><apiOperationClassifier>Object</apiOperationClassifier><apiDesc>方法实例或类。
+     </apiDesc></apiParam><apiParam><apiItemName>qname</apiItemName><apiOperationClassifier>QName</apiOperationClassifier><apiDesc>如果 qname 为 <codeph>undefined</codeph>，则返回构造函数的迭代次数。
+     </apiDesc></apiParam></apiOperationDef><apiDesc>
+     返回 get 函数的执行次数。在使用 <codeph>getGetterInvocationCount()</codeph> 之前使用 <codeph>isGetterSetter()</codeph> 验证是否具有 get/set 函数。仅适用于 Flash Player 调试版。
+     </apiDesc></apiOperationDetail><related-links><link href="package.html#isGetterSetter()"><linktext>isGetterSetter()</linktext></link><link href="package.html#getInvocationCount()"><linktext>getInvocationCount()</linktext></link></related-links></apiOperation><apiOperation id="globalOperation:flash.sampler:getInvocationCount"><apiName>getInvocationCount</apiName><shortdesc>
+     返回方法的执行次数。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>getInvocationCount     
+     </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>方法的执行次数。
+     </apiDesc><apiOperationClassifier>Number</apiOperationClassifier></apiReturn><apiParam><apiItemName>obj</apiItemName><apiOperationClassifier>Object</apiOperationClassifier><apiDesc>方法实例或类。在方法实例不可用时，可以使用类来获取实例函数的调用计数。如果 <codeph>obj</codeph> 为 <codeph>undefined</codeph>，则此方法返回由 <codeph>qname</codeph> 命名的范围限于包的函数计数。
+     </apiDesc></apiParam><apiParam><apiItemName>qname</apiItemName><apiOperationClassifier>QName</apiOperationClassifier><apiDesc>如果 qname 为 <codeph>undefined</codeph>，则返回构造函数的迭代次数。
+     </apiDesc></apiParam></apiOperationDef><apiDesc>
+     返回方法的执行次数。如果参数 <codeph>obj</codeph> 为类并且参数 <codeph>qname</codeph> 为 <codeph>undefined</codeph>，则此方法返回构造函数的迭代次数。仅适用于 Flash Player 调试版。
+     </apiDesc><example conref="examples\GetInvocationCountExample.as"> 
+<codeblock>
+ package 
+{
+  public function exec3() {}
+
+  import flash.sampler.*;
+  import flash.system.*;
+  import flash.display.Sprite;
+  import flash.utils.*;
+  public class getInvocationCountTest extends Sprite
+    {
+      public function getInvocationCountTest()
+    {
+      for(var i:int=0;i&lt;10;i++)
+        exec();
+      for(var i:int=0;i&lt;10;i++)
+        exec2();
+      for(var i:int=0;i&lt;10;i++)
+        exec3();
+
+      // get exec QName
+      var execName:QName;
+          var name:QName;
+      var fooName:QName;
+      for each(name in getMemberNames(this)) {
+          if(name.localName == "exec")
+          execName = name;
+          if(name.localName == "foo")
+          fooName = name;
+      }
+
+      var exec2Name:QName;
+      for each(name in getMemberNames(getInvocationCountTest)) {
+          if(name.localName == "exec2")
+          exec2Name = name;
+      }
+
+      // execute get/set
+      foo = "bar";
+
+      trace(isGetterSetter(this, fooName));
+      trace(getSetterInvocationCount(this, fooName) == 1);
+      trace(getGetterInvocationCount(this, fooName) == 0);
+
+      foo;
+      
+      trace(getSetterInvocationCount(getInvocationCountTest, fooName) == 1);
+      trace(getGetterInvocationCount(getInvocationCountTest, fooName) == 1);
+
+      trace(getInvocationCount(this, execName) == 10);
+      trace(getInvocationCount(getInvocationCountTest, execName) == 10);
+      trace(getInvocationCount(getInvocationCountTest, exec2Name) == 10);
+      trace(getInvocationCount(getInvocationCountTest, undefined) == 1);
+    
+      getTimer();
+      getTimer();
+
+      trace(getInvocationCount(undefined, new QName("", "trace")) == 9);
+      trace(getInvocationCount(undefined, new QName("flash.utils", "getTimer")) == 2);
+      trace(getInvocationCount(undefined, new QName("", "exec3")) == 10);
+
+    }
+
+      private function exec():void {}
+      private static function exec2():void {}
+
+      private function get foo():String { return "fo"; }
+      private function set foo(s:String) { }
+      
+    }
+}
+</codeblock></example></apiOperationDetail></apiOperation><apiOperation id="globalOperation:flash.sampler:getMemberNames"><apiName>getMemberNames</apiName><shortdesc>
+     返回一个对象，其中包含指定对象的所有成员（包括私有成员）。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>getMemberNames
+     </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>一个对象，必须使用 <codeph>for each..in</codeph> 循环进行遍历以检索每个属性的 QName。 
+     </apiDesc><apiOperationClassifier>Object</apiOperationClassifier></apiReturn><apiParam><apiItemName>o</apiItemName><apiOperationClassifier>Object</apiOperationClassifier><apiDesc>要分析的对象。
+     </apiDesc></apiParam><apiParam><apiItemName>instanceNames</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>如果对象是类并且 instanceNames 为 true，则将 o 视为类的实例来报告实例名称而不是类的成员名称。
+     </apiDesc></apiParam></apiOperationDef><apiDesc>
+     返回一个对象，其中包含指定对象的所有成员（包括私有成员）。然后可以遍历返回的对象以查看所有的值。此方法与 flash.utils.describeType() 方法类似，不过使用它还可以查看私有成员并跳过创建 XML 对象的中间步骤。仅适用于 Flash Player 调试版。
+     
+     </apiDesc><example conref="examples\GetMemberNamesExample.as"> 以下示例使用 <codeph>getMemberNames()</codeph> 方法分析对象并显示其成员的 <codeph>buttonMode</codeph>、<codeph>filters</codeph> 和 <codeph>dispatchEvent</codeph> 属性。为了使用内存设置，需要安装 Flash Player 调试版 9.0.115.0 或更高版本。
+<codeblock>
+ package 
+{
+  import flash.sampler.*;
+  import flash.system.*;
+  import flash.display.Sprite;
+  public class getMemberNamesTest extends Sprite
+    {
+      public function getMemberNamesTest()
+    {
+      var name_iter = getMemberNames(this);
+      var o={};
+      for each(var name:QName in name_iter) {
+        o[name.localName] = "got it";
+      }
+
+      name_iter = getMemberNames(this);
+      var count=0;
+      for(var dum in name_iter) {
+        count++;
+      }
+      trace(count == 1);
+
+      // my member
+      trace("buttonMode" in o);
+      // inherited member
+      trace("filters" in o);
+      // inherited function
+      trace("dispatchEvent" in o);
+
+      var name_iter = getMemberNames(getMemberNamesTest, true);
+      var o={};
+      for each(var name:QName in name_iter) {
+        o[name.localName] = "got it";
+      }
+
+      // my member
+      trace("buttonMode" in o);
+      // inherited member
+      trace("filters" in o);
+      // inherited function
+      trace("dispatchEvent" in o);
+
+    }
+    }
+}
+</codeblock></example></apiOperationDetail><related-links><link href="flash.utils.xml#/describeType()"><linktext>flash.utils.describeType()</linktext></link><link href="../../statements.html#for_each..in"><linktext>for each..in</linktext></link></related-links></apiOperation><apiOperation id="globalOperation:flash.sampler:getSampleCount"><apiName>getSampleCount</apiName><shortdesc> 
+     返回收集的样本数。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>getSampleCount     
+     </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Sample 实例的迭代器。
+     </apiDesc><apiOperationClassifier>Number</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc> 
+     返回收集的样本数。仅适用于 Flash Player 调试版。
+     
+     </apiDesc></apiOperationDetail><related-links><link href="flash.sampler.xml#Sample"><linktext>flash.sampler.Sample</linktext></link></related-links></apiOperation><apiOperation id="globalOperation:flash.sampler:getSamples"><apiName>getSamples</apiName><shortdesc>
+     从上次采样会话中返回内存使用 Sample 实例的对象。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>getSamples     
+     </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Sample 实例的迭代器。
+     </apiDesc><apiOperationClassifier>Object</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+     从上次采样会话中返回内存使用 Sample 实例的对象。仅适用于 Flash Player 调试版。
+     
+     </apiDesc></apiOperationDetail><related-links><link href="flash.sampler.xml#Sample"><linktext>flash.sampler.Sample</linktext></link></related-links></apiOperation><apiOperation id="globalOperation:flash.sampler:getSetterInvocationCount"><apiName>getSetterInvocationCount</apiName><shortdesc>
+     返回 set 函数的执行次数。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>getInvocationCount   
+     </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>set 方法的执行次数。
+     </apiDesc><apiOperationClassifier>Number</apiOperationClassifier></apiReturn><apiParam><apiItemName>obj</apiItemName><apiOperationClassifier>Object</apiOperationClassifier><apiDesc>方法实例或类。
+     </apiDesc></apiParam><apiParam><apiItemName>qname</apiItemName><apiOperationClassifier>QName</apiOperationClassifier><apiDesc>如果 qname 为 <codeph>undefined</codeph>，则返回构造函数的迭代次数。
+     </apiDesc></apiParam></apiOperationDef><apiDesc>
+     返回 set 函数的执行次数。在使用 <codeph>getSetterInvocationCount()</codeph> 之前使用 <codeph>isGetterSetter()</codeph> 验证是否具有 get/set 函数。仅适用于 Flash Player 调试版。
+     </apiDesc></apiOperationDetail><related-links><link href="package.html#isGetterSetter()"><linktext>isGetterSetter()</linktext></link><link href="package.html#getInvocationCount()"><linktext>getInvocationCount()</linktext></link></related-links></apiOperation><apiOperation id="globalOperation:flash.sampler:getSize"><apiName>getSize</apiName><shortdesc>
+	返回指定对象在与 Flash Player 9.0.115.0 或更高的调试版一起使用时在内存中的大小。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>getSize      
+	</keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>指定对象使用的内存字节计数。
+    </apiDesc><apiOperationClassifier>Number</apiOperationClassifier></apiReturn><apiParam><apiItemName>o</apiItemName><apiType value=""/><apiDesc>要分析其内存使用量的对象。
+    </apiDesc></apiParam></apiOperationDef><apiDesc>
+	当所指定对象用于 Flash Player 9.0.115.0 或更高调试器版本时，返回该对象所占用的内存大小。如果与非调试版的 Flash Player 一起使用，则此方法返回 <codeph>0</codeph>。
+    </apiDesc><example conref="examples\DeletedObjectSizeExample.as"> 下面的示例使用 <codeph>startSampling()</codeph> 和 <codeph>pauseSampling</codeph> 收集 Sample 对象。然后，示例针对 <codeph>id</codeph> 值和大小遍历 Sample 对象。在调用 <codeph>System.gc()</codeph> 停止当前过程后，示例将 deletedObjectSample 对象与原始 <codeph>id</codeph> 值进行比较并显示它们的大小。为了使用内存设置，需要安装 Flash Player 调试版 9.0.115.0 或更高版本。
+<codeblock>
+ package {
+  import flash.sampler.*;
+  import flash.system.*;
+  import flash.display.Sprite;
+  import flash.utils.Dictionary;
+  public class deletedObjectSize extends Sprite {
+    public function deletedObjectSize() {
+
+      startSampling();
+      var obj = {};
+      pauseSampling();
+
+      var id:Number;
+      var sampleIter = getSamples();
+      for each(var s:Sample in sampleIter) {
+    id = s.id;
+      }
+      
+      sampleIter = getSamples();
+      var count=0;
+      for(var dum in sampleIter) {
+    count++;
+      }
+      trace(count == 1);
+
+      var size:Number = getSize(obj);
+      obj = undefined;
+
+      startSampling();
+
+      // force DRC
+      for(var i:int=0;i&lt;1000;i++)
+    new Object();
+      
+      System.gc();
+
+      pauseSampling();
+      
+      var sampleIter = getSamples();
+      for each(var s:Sample in sampleIter) {
+    //    trace(s);
+    if(s is DeleteObjectSample &amp;&amp; s.id == id) {
+      trace(s.size == size);
+    }      
+      }       
+
+    }
+  }
+}
+</codeblock></example></apiOperationDetail></apiOperation><apiOperation id="globalOperation:flash.sampler:isGetterSetter"><apiName>isGetterSetter</apiName><shortdesc>
+     检查以确定 get/set 函数是否定义了属性。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>getInvocationCount   
+     </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>一个布尔值，指示 get/set 函数是否定义了该属性；如果是，则为 <codeph>true</codeph>，否则为 <codeph>false</codeph>。
+     </apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn><apiParam><apiItemName>obj</apiItemName><apiOperationClassifier>Object</apiOperationClassifier><apiDesc>方法实例或类。
+     </apiDesc></apiParam><apiParam><apiItemName>qname</apiItemName><apiOperationClassifier>QName</apiOperationClassifier><apiDesc>如果 qname 为 <codeph>undefined</codeph>，则返回构造函数的迭代次数。
+     </apiDesc></apiParam></apiOperationDef><apiDesc>
+     检查以确定 get/set 函数是否定义了属性。如果要对某一属性的 get/set 函数使用 <codeph>getInvocationCount()</codeph>，请首先调用 <codeph>isGetterSetter()</codeph> 以检查它是否为 get/set 函数，然后使用 <codeph>getSetterInvocationCount</codeph> 或 <codeph>getGetterInvocationCount</codeph> 来获取各自的计数。仅适用于 Flash Player 调试版。
+     </apiDesc><example conref="examples\GetInvocationCountExample.as"> 
+<codeblock>
+ package 
+{
+  public function exec3() {}
+
+  import flash.sampler.*;
+  import flash.system.*;
+  import flash.display.Sprite;
+  import flash.utils.*;
+  public class getInvocationCountTest extends Sprite
+    {
+      public function getInvocationCountTest()
+    {
+      for(var i:int=0;i&lt;10;i++)
+        exec();
+      for(var i:int=0;i&lt;10;i++)
+        exec2();
+      for(var i:int=0;i&lt;10;i++)
+        exec3();
+
+      // get exec QName
+      var execName:QName;
+          var name:QName;
+      var fooName:QName;
+      for each(name in getMemberNames(this)) {
+          if(name.localName == "exec")
+          execName = name;
+          if(name.localName == "foo")
+          fooName = name;
+      }
+
+      var exec2Name:QName;
+      for each(name in getMemberNames(getInvocationCountTest)) {
+          if(name.localName == "exec2")
+          exec2Name = name;
+      }
+
+      // execute get/set
+      foo = "bar";
+
+      trace(isGetterSetter(this, fooName));
+      trace(getSetterInvocationCount(this, fooName) == 1);
+      trace(getGetterInvocationCount(this, fooName) == 0);
+
+      foo;
+      
+      trace(getSetterInvocationCount(getInvocationCountTest, fooName) == 1);
+      trace(getGetterInvocationCount(getInvocationCountTest, fooName) == 1);
+
+      trace(getInvocationCount(this, execName) == 10);
+      trace(getInvocationCount(getInvocationCountTest, execName) == 10);
+      trace(getInvocationCount(getInvocationCountTest, exec2Name) == 10);
+      trace(getInvocationCount(getInvocationCountTest, undefined) == 1);
+    
+      getTimer();
+      getTimer();
+
+      trace(getInvocationCount(undefined, new QName("", "trace")) == 9);
+      trace(getInvocationCount(undefined, new QName("flash.utils", "getTimer")) == 2);
+      trace(getInvocationCount(undefined, new QName("", "exec3")) == 10);
+
+    }
+
+      private function exec():void {}
+      private static function exec2():void {}
+
+      private function get foo():String { return "fo"; }
+      private function set foo(s:String) { }
+      
+    }
+}
+</codeblock></example></apiOperationDetail><related-links><link href="package.html#getInvocationCount()"><linktext>getInvocationCount()</linktext></link><link href="package.html#getSetterInvocationCount()"><linktext>getSetterInvocationCount()</linktext></link><link href="package.html#getGetterInvocationCount()"><linktext>getGetterInvocationCount()</linktext></link></related-links></apiOperation><apiOperation id="globalOperation:flash.sampler:pauseSampling"><apiName>pauseSampling</apiName><shortdesc>
+     立即停止采样过程。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>pauseSampling      
+     </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+     立即停止采样过程。使用 <codeph>startSampling()</codeph> 重新启动采样过程。仅适用于 Flash Player 调试版。
+     </apiDesc></apiOperationDetail><related-links><link href="package.html#startSampling()"><linktext>startSampling()</linktext></link></related-links></apiOperation><apiOperation id="globalOperation:flash.sampler:startSampling"><apiName>startSampling</apiName><shortdesc>
+     开始收集内存使用 Sample 对象的过程。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>startSampling      
+     </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+     开始收集内存使用 Sample 对象的过程。仅适用于 Flash Player 调试版。
+     </apiDesc><example conref="examples\StartSamplingExample.as"> 下面的示例启动采样过程并遍历收集的对象。为了使用内存设置，需要安装 Flash Player 调试版 9.0.115.0 或更高版本。
+<codeblock>
+package 
+{
+    import flash.sampler.*
+    import flash.system.*
+    import flash.display.Sprite
+    public class startSampling extends Sprite
+    {
+        public function startSampling()
+        {
+            flash.sampler.startSampling();
+            for(var i:int=0;i&lt;1000;i++)
+                new Object()
+            trace(getSampleCount() > 0)
+        }
+    }
+}
+</codeblock></example></apiOperationDetail><related-links><link href="flash.sampler.xml#Sample"><linktext>Sample 类</linktext></link></related-links></apiOperation><apiOperation id="globalOperation:flash.sampler:stopSampling"><apiName>stopSampling</apiName><shortdesc>
+	 结束收集内存使用 Sample 对象的过程，并释放采样过程的专用资源。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>stopSampling      
+     </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+	 结束收集内存使用 Sample 对象的过程，并释放采样过程的专用资源。使用 <codeph>startSampling()</codeph> 启动采样过程。仅适用于 Flash Player 调试版。
+     </apiDesc></apiOperationDetail><related-links><link href="flash.sampler.xml#Sample"><linktext>Sample 类</linktext></link></related-links></apiOperation><apiClassifier id="flash.sampler:Sample"><apiName>Sample</apiName><shortdesc>
+     Sample 类创建一些对象，它们保存不同时段的内存分析信息。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>Sample      
+     </keyword></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+     Sample 类创建一些对象，它们保存不同时段的内存分析信息。仅适用于 Flash Player 调试版。
+     
+     </apiDesc><example conref="examples\SampleTypesExample.as"> 下面的示例使用 Sample 对象 <codeph>s</codeph> 的 <codeph>stack</codeph> 和 <codeph>time</codeph> 属性来收集内存样本。该样本包含 NewObjectSample 对象（<codeph>newSamples</codeph> 数组）、DeleteObjectSample 对象（<codeph>delSamples</codeph> 数组）和 CPU 内存样本对象（<codeph>cpuSamples</codeph> 数组）。为了使用内存设置，需要安装 Flash Player 调试版 9.0.115.0 或更高版本。
+<codeblock>
+package 
+{
+    import flash.sampler.*
+    import flash.system.*
+    import flash.utils.*
+    import flash.display.Sprite
+    public class sampleTypes extends Sprite
+    {
+      var b:Boolean = true
+        public function sampleTypes() {
+            flash.sampler.startSampling();
+            for(var i:int=0;i&lt;10000;i++)
+              new Object();
+
+            var cpuSamples:Array=[];
+            var newSamples:Array=[];
+            var delSamples:Array=[];
+            var ids:Array=[]
+
+            var lastTime:Number=0;
+            for each(var s:Sample in getSamples()) {
+              
+              assert(s.time > 0); // positive
+              assert(Math.floor(s.time) == s.time, s.time); // integral
+              assert(s.time >= lastTime, s.time + ":" + lastTime); // ascending
+              assert(s.stack == null || s.stack is Array)
+              if(s.stack) {
+                assert(s.stack[0] is StackFrame);
+                assert(s.stack[0].name is String);
+            }
+              
+              if(s is NewObjectSample) {
+                var nos = NewObjectSample(s);
+                assert(s.id > 0, s.id);
+                assert(s.type is Class, getQualifiedClassName(s.type));
+                newSamples.push(s);
+                ids[s.id] = "got one";
+              } else if(s is DeleteObjectSample) {
+                var dos = DeleteObjectSample(s);
+                delSamples.push(s);
+                assert(ids[dos.id] == "got one");
+              } else if(s is Sample)
+                cpuSamples.push(s);
+              else {
+                assert(false);
+              }
+              lastTime = s.time;
+            }
+
+            trace(b)
+            trace(newSamples.length > 0)
+            trace(cpuSamples.length > 0)
+            trace(delSamples.length > 0)
+
+        }
+
+        private function assert(e:Boolean, mess:String=null):void {
+          b = e &amp;&amp; b;
+          if(true &amp;&amp; !e) {
+            if(mess) trace(mess);
+            trace(new Error().getStackTrace());
+          }     
+        }         
+    }
+}
+</codeblock></example></apiClassifierDetail><related-links><link href="package.html#getSamples()"><linktext>flash.sampler.getSamples()</linktext></link></related-links><apiValue id="flash.sampler:Sample:stack"><apiName>stack</apiName><shortdesc>
+		 包含 Flash Player 在指定时段执行的方法的相关信息。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>Sample, Sample.stack, stack     
+		 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiDynamic/><apiValueClassifier>Array</apiValueClassifier></apiValueDef><apiDesc>
+		 包含 Flash Player 在指定时段执行的方法的相关信息。堆栈跟踪的格式与 Flash Player 调试版的异常对话框中显示的内容类似。仅适用于 Flash Player 调试版。
+         </apiDesc></apiValueDetail></apiValue><apiValue id="flash.sampler:Sample:time"><apiName>time</apiName><shortdesc>
+	     定义 Sample 实例持续时间的微秒数。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>Sample, Sample.time, time         
+		 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiDynamic/><apiValueClassifier>Number</apiValueClassifier></apiValueDef><apiDesc>
+	     定义 Sample 实例持续时间的微秒数。仅适用于 Flash Player 调试版。
+             
+             </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.sampler:DeleteObjectSample"><apiName>DeleteObjectSample</apiName><shortdesc>
+    DeleteObjectSample 类表示在 getSamples() 流中创建的对象；每个 DeleteObjectSample 对象与一个 NewObjectSample 对象相对应。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>DeleteObjectSample 
+    </keyword></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>flash.sampler:Sample</apiBaseClassifier></apiClassifierDef><apiDesc>
+    DeleteObjectSample 类表示在 <codeph>getSamples()</codeph> 流中创建的对象；每个 DeleteObjectSample 对象与一个 NewObjectSample 对象相对应。仅适用于 Flash Player 调试版。
+    </apiDesc><example conref="examples\SampleTypesExample.as"> 下面的示例使用 Sample 对象 <codeph>s</codeph> 的 <codeph>stack</codeph> 和 <codeph>time</codeph> 属性来收集内存样本。该样本包含 NewObjectSample 对象（<codeph>newSamples</codeph> 数组）、DeleteObjectSample 对象（<codeph>delSamples</codeph> 数组）和 CPU 内存样本对象（<codeph>cpuSamples</codeph> 数组）。为了使用内存设置，需要安装 Flash Player 调试版 9.0.115.0 或更高版本。
+<codeblock>
+package 
+{
+    import flash.sampler.*
+    import flash.system.*
+    import flash.utils.*
+    import flash.display.Sprite
+    public class sampleTypes extends Sprite
+    {
+      var b:Boolean = true
+        public function sampleTypes() {
+            flash.sampler.startSampling();
+            for(var i:int=0;i&lt;10000;i++)
+              new Object();
+
+            var cpuSamples:Array=[];
+            var newSamples:Array=[];
+            var delSamples:Array=[];
+            var ids:Array=[]
+
+            var lastTime:Number=0;
+            for each(var s:Sample in getSamples()) {
+              
+              assert(s.time > 0); // positive
+              assert(Math.floor(s.time) == s.time, s.time); // integral
+              assert(s.time >= lastTime, s.time + ":" + lastTime); // ascending
+              assert(s.stack == null || s.stack is Array)
+              if(s.stack) {
+                assert(s.stack[0] is StackFrame);
+                assert(s.stack[0].name is String);
+            }
+              
+              if(s is NewObjectSample) {
+                var nos = NewObjectSample(s);
+                assert(s.id > 0, s.id);
+                assert(s.type is Class, getQualifiedClassName(s.type));
+                newSamples.push(s);
+                ids[s.id] = "got one";
+              } else if(s is DeleteObjectSample) {
+                var dos = DeleteObjectSample(s);
+                delSamples.push(s);
+                assert(ids[dos.id] == "got one");
+              } else if(s is Sample)
+                cpuSamples.push(s);
+              else {
+                assert(false);
+              }
+              lastTime = s.time;
+            }
+
+            trace(b)
+            trace(newSamples.length > 0)
+            trace(cpuSamples.length > 0)
+            trace(delSamples.length > 0)
+
+        }
+
+        private function assert(e:Boolean, mess:String=null):void {
+          b = e &amp;&amp; b;
+          if(true &amp;&amp; !e) {
+            if(mess) trace(mess);
+            trace(new Error().getStackTrace());
+          }     
+        }         
+    }
+}
+</codeblock></example></apiClassifierDetail><related-links><link href="package.html#getSamples()"><linktext>flash.sampler.getSamples()</linktext></link></related-links><apiValue id="flash.sampler:DeleteObjectSample:id"><apiName>id</apiName><shortdesc> 
+         与 NewObjectSample 的标识号相匹配的唯一标识号。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>DeleteObjectSample, DeleteObjectSample.id, id  
+         </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiDynamic/><apiValueClassifier>Number</apiValueClassifier></apiValueDef><apiDesc> 
+         与 NewObjectSample 的标识号相匹配的唯一标识号。仅适用于 Flash Player 调试版。
+         </apiDesc></apiValueDetail><related-links><link href="flash.sampler.xml#NewObjectSample/id"><linktext>flash.sampler.NewObjectSample.id</linktext></link></related-links></apiValue><apiValue id="flash.sampler:DeleteObjectSample:size"><apiName>size</apiName><shortdesc>
+         DeleteObjectSample 对象在删除之前的大小。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9.0.115.0"/></apiVersion></asMetadata><asCustoms><keyword>DeleteObjectSample, DeleteObjectSample.size, size  
+         </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiDynamic/><apiValueClassifier>Number</apiValueClassifier></apiValueDef><apiDesc>
+         DeleteObjectSample 对象在删除之前的大小。仅适用于 Flash Player 调试版。
+         </apiDesc></apiValueDetail><related-links><link href="flash.sampler.xml#NewObjectSample/id"><linktext>flash.sampler.NewObjectSample.id</linktext></link></related-links></apiValue></apiClassifier></apiPackage>

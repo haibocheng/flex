@@ -256,7 +256,7 @@ package flashx.textLayout.conversion
 						importFilter.addChild(parent, brElem);
 					}
 					else
-						importFilter.reportError(GlobalSettings.getResourceStringFunction("unexpectedXMLElementInSpan",[ elemName ]));
+						importFilter.reportError(GlobalSettings.resourceStringFunction("unexpectedXMLElementInSpan",[ elemName ]));
 				}
 				else if (elemName == "tab")
 				{
@@ -267,10 +267,10 @@ package flashx.textLayout.conversion
 						importFilter.addChild(parent, tabElem);
 					}
 					else
-						importFilter.reportError(GlobalSettings.getResourceStringFunction("unexpectedXMLElementInSpan",[ elemName ]));
+						importFilter.reportError(GlobalSettings.resourceStringFunction("unexpectedXMLElementInSpan",[ elemName ]));
 				}
 				else
-					importFilter.reportError(GlobalSettings.getResourceStringFunction("unexpectedXMLElementInSpan",[ elemName ]));				
+					importFilter.reportError(GlobalSettings.resourceStringFunction("unexpectedXMLElementInSpan",[ elemName ]));				
 			}
 		}
 		
@@ -310,7 +310,7 @@ package flashx.textLayout.conversion
 				// TextFlow element: allow only empty namespace and flow namespace
 				if (elementNS != ns) 
 				{
-					reportError(GlobalSettings.getResourceStringFunction("unexpectedNamespace", [elementNS.toString()]));
+					reportError(GlobalSettings.resourceStringFunction("unexpectedNamespace", [elementNS.toString()]));
 					return false;
 				}
 				_textFlowNamespace = elementNS;
@@ -319,7 +319,7 @@ package flashx.textLayout.conversion
 			// Specifically, can't be empty unless the TextFlow element's namespace is also empty 
 			else if (elementNS != _textFlowNamespace) 
 			{
-				reportError(GlobalSettings.getResourceStringFunction("unexpectedNamespace", [elementNS.toString()]));
+				reportError(GlobalSettings.resourceStringFunction("unexpectedNamespace", [elementNS.toString()]));
 				return false;
 			}
 			
@@ -470,12 +470,12 @@ package flashx.textLayout.conversion
 		
 		protected function handleUnknownElement(name:String, xmlToParse:XML, parent:FlowGroupElement):void
 		{
-			reportError(GlobalSettings.getResourceStringFunction("unknownElement", [ name ]));	
+			reportError(GlobalSettings.resourceStringFunction("unknownElement", [ name ]));	
 		}
 		
 		protected function handleUnknownAttribute(elementName:String, propertyName:String):void
 		{
-			reportError(GlobalSettings.getResourceStringFunction("unknownAttribute", [ propertyName, elementName ]));	
+			reportError(GlobalSettings.resourceStringFunction("unknownAttribute", [ propertyName, elementName ]));	
 		}
 		
 		protected function getElementInfo(xmlToParse:XML):FlowElementInfo

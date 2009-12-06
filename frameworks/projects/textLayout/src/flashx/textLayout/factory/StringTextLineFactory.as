@@ -1,8 +1,8 @@
 //========================================================================================
 //  $File: //a3t/argon/dev/textLayout_core/src/flashx/textLayout/factory/StringTextLineFactory.as $
-//  $DateTime: 2009/10/30 16:50:45 $
-//  $Revision: #10 $
-//  $Change: 725673 $
+//  $DateTime: 2009/11/25 11:47:25 $
+//  $Revision: #11 $
+//  $Change: 729457 $
 //  
 //  ADOBE CONFIDENTIAL
 //  

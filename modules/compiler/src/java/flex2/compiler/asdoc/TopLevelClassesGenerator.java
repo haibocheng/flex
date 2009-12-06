@@ -19,6 +19,7 @@ import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -45,8 +46,9 @@ import flex2.compiler.util.ThreadLocalToolkit;
 import flex2.tools.ASDoc.ValidationMessage;
 
 /**
- * This class converts the toplevel.xml to dita based xml files. It create one file per package 
- * and one additional file (packages.dita) containing the list of packages.
+ * This class converts the toplevel.xml to dita based xml files. It create one
+ * file per package and one additional file (packages.dita) containing the list
+ * of packages.
  * 
  * @author gauravj
  */
@@ -237,8 +239,8 @@ public class TopLevelClassesGenerator
             }
 
             ThreadLocalToolkit.log(new ValidationMessage(errorFile));
-            
-            if(!lenient)
+
+            if (!lenient)
             {
                 return;
             }
@@ -297,7 +299,7 @@ public class TopLevelClassesGenerator
                         Pattern pattern = Pattern.compile("\r");
                         Matcher match = pattern.matcher(xmlString);
                         xmlString = match.replaceAll("");
-                        
+
                         pattern = Pattern.compile("\n\n");
                         match = pattern.matcher(xmlString);
                         xmlString = match.replaceAll("\n");
@@ -367,26 +369,26 @@ public class TopLevelClassesGenerator
         {
             Element classRec = (Element)recordList.item(ix);
 
-            if(classRec.getAttribute("access").equals("private") && !includePrivate)
+            if (classRec.getAttribute("access").equals("private") && !includePrivate)
             {
                 continue;
             }
-            
+
             // ignore if private
             NodeList children = classRec.getElementsByTagName("private");
             if ((children != null && children.getLength() != 0) && !includePrivate)
             {
                 boolean flag = false;
-                for(int iChild =0; iChild < children.getLength(); iChild++)
+                for (int iChild = 0; iChild < children.getLength(); iChild++)
                 {
-                    if(children.item(iChild).getParentNode().equals(classRec))
+                    if (children.item(iChild).getParentNode().equals(classRec))
                     {
                         flag = true;
                         break;
                     }
                 }
-                
-                if(flag)
+
+                if (flag)
                 {
                     continue;
                 }
@@ -413,32 +415,32 @@ public class TopLevelClassesGenerator
         for (int ix = 0; ix < recordList.getLength(); ix++)
         {
             Element interfaceRec = (Element)recordList.item(ix);
-            
-            if(interfaceRec.getAttribute("access").equals("private") && !includePrivate)
+
+            if (interfaceRec.getAttribute("access").equals("private") && !includePrivate)
             {
                 continue;
             }
-            
+
             // ignore if private
             NodeList children = interfaceRec.getElementsByTagName("private");
             if ((children != null && children.getLength() != 0) && !includePrivate)
             {
                 boolean flag = false;
-                for(int iChild =0; iChild < children.getLength(); iChild++)
+                for (int iChild = 0; iChild < children.getLength(); iChild++)
                 {
-                    if(children.item(iChild).getParentNode().equals(interfaceRec))
+                    if (children.item(iChild).getParentNode().equals(interfaceRec))
                     {
                         flag = true;
                         break;
                     }
                 }
-                
-                if(flag)
+
+                if (flag)
                 {
                     continue;
                 }
             }
-            
+
             children = interfaceRec.getElementsByTagName("ExcludeClass");
             if (children != null && children.getLength() != 0)
             {
@@ -490,28 +492,27 @@ public class TopLevelClassesGenerator
 
             asDocUtil.convertDescToDITA(apiDescElement, oldNewNamesMap);
 
-            
             NodeList privateChilds = packageRec.getElementsByTagName("private");
             if ((privateChilds != null && privateChilds.getLength() != 0))
             {
                 boolean flag = false;
-                for(int iChild =0; iChild < privateChilds.getLength(); iChild++)
+                for (int iChild = 0; iChild < privateChilds.getLength(); iChild++)
                 {
-                    if(privateChilds.item(iChild).getParentNode().equals(packageRec))
+                    if (privateChilds.item(iChild).getParentNode().equals(packageRec))
                     {
                         flag = true;
                         break;
                     }
                 }
-                
-                if(flag)
+
+                if (flag)
                 {
                     Element apiAccessElement = outputObject.createElement("apiAccess");
                     apiAccessElement.setAttribute("value", "private");
                     apiPackageElement.appendChild(apiAccessElement);
                 }
             }
-            
+
             processCustoms(packageRec, apiPackageElement, false, "", "", "");
         }
     }
@@ -539,7 +540,7 @@ public class TopLevelClassesGenerator
         thisClass.setBaseName(record.getAttribute("baseclass"));
         thisClass.setInterfaceFlag(isInterface);
         thisClass.setSourceFile(record.getAttribute("sourcefile"));
-        
+
         classTable.put(fullName, thisClass);
 
         if (packageName == null || packageName.equals(""))
@@ -583,7 +584,7 @@ public class TopLevelClassesGenerator
 
         String author = "";
         Element authorElement = asDocUtil.getElementByTagName(record, "author");
-        if (authorElement != null )
+        if (authorElement != null)
         {
             author = authorElement.getTextContent();
         }
@@ -693,10 +694,10 @@ public class TopLevelClassesGenerator
         NodeList nodeList = record.getElementsByTagName("example");
         if (nodeList != null)
         {
-        	for(int ix = 0; ix < nodeList.getLength(); ix ++)
-        	{
-        		Element inputExampleElement = (Element)nodeList.item(ix);
-        		
+            for (int ix = 0; ix < nodeList.getLength(); ix++)
+            {
+                Element inputExampleElement = (Element)nodeList.item(ix);
+
                 Element exampleElement = outputObject.createElement("example");
                 CDATASection cdata = outputObject.createCDATASection(asDocUtil.validateText(inputExampleElement.getTextContent(), "example", fullName));
                 exampleElement.appendChild(cdata);
@@ -704,7 +705,7 @@ public class TopLevelClassesGenerator
                 apiClassifierDetail.appendChild(exampleElement);
 
                 asDocUtil.convertDescToDITA(exampleElement, oldNewNamesMap);
-        	}
+            }
         }
 
         thisClass.setNode(nuClass);
@@ -722,27 +723,27 @@ public class TopLevelClassesGenerator
         for (int ix = 0; ix < recordList.getLength(); ix++)
         {
             Element classRec = (Element)recordList.item(ix);
-            
-            if(classRec.getAttribute("access").equals("private") && !includePrivate)
+
+            if (classRec.getAttribute("access").equals("private") && !includePrivate)
             {
                 continue;
             }
-            
+
             // ignore if private
             NodeList children = classRec.getElementsByTagName("private");
             if ((children != null && children.getLength() != 0) && !includePrivate)
             {
                 boolean flag = false;
-                for(int iChild =0; iChild < children.getLength(); iChild++)
+                for (int iChild = 0; iChild < children.getLength(); iChild++)
                 {
-                    if(children.item(iChild).getParentNode().equals(classRec))
+                    if (children.item(iChild).getParentNode().equals(classRec))
                     {
                         flag = true;
                         break;
                     }
                 }
-                
-                if(flag)
+
+                if (flag)
                 {
                     continue;
                 }
@@ -762,32 +763,32 @@ public class TopLevelClassesGenerator
         for (int ix = 0; ix < recordList.getLength(); ix++)
         {
             Element interfaceRec = (Element)recordList.item(ix);
-            
-            if(interfaceRec.getAttribute("access").equals("private") && !includePrivate)
+
+            if (interfaceRec.getAttribute("access").equals("private") && !includePrivate)
             {
                 continue;
             }
-            
+
             // ignore if private
             NodeList children = interfaceRec.getElementsByTagName("private");
             if ((children != null && children.getLength() != 0) && !includePrivate)
             {
                 boolean flag = false;
-                for(int iChild =0; iChild < children.getLength(); iChild++)
+                for (int iChild = 0; iChild < children.getLength(); iChild++)
                 {
-                    if(children.item(iChild).getParentNode().equals(interfaceRec))
+                    if (children.item(iChild).getParentNode().equals(interfaceRec))
                     {
                         flag = true;
                         break;
                     }
                 }
-                
-                if(flag)
+
+                if (flag)
                 {
                     continue;
                 }
             }
-            
+
             children = interfaceRec.getElementsByTagName("ExcludeClass");
             if (children != null && children.getLength() != 0)
             {
@@ -802,7 +803,7 @@ public class TopLevelClassesGenerator
      * process all custom elements for the class xml node and resolve
      * 
      * @see references now that we have AClass records for every class name
-     *      record inner class relationship.
+     * record inner class relationship.
      * @param record
      * @param isInterface
      */
@@ -870,7 +871,7 @@ public class TopLevelClassesGenerator
         String langVersion = "";
         boolean versionFound = false;
 
-        Element langVersionElement  = asDocUtil.getElementByTagName(record, "langversion");
+        Element langVersionElement = asDocUtil.getElementByTagName(record, "langversion");
         if (langVersionElement != null)
         {
             versionFound = true;
@@ -885,11 +886,11 @@ public class TopLevelClassesGenerator
             versionFound = true;
             for (int ix = 0; ix < playerVersionList.getLength(); ix++)
             {
-                if(!playerVersionList.item(ix).getParentNode().equals(record))
+                if (!playerVersionList.item(ix).getParentNode().equals(record))
                 {
                     continue;
                 }
-                
+
                 String playerVersionStr = playerVersionList.item(ix).getTextContent();
                 playerVersionStr = playerVersionStr.replaceAll("\\A\\s+", "");
                 playerVersionStr = playerVersionStr.replaceAll("\\Z\\s+", "");
@@ -907,11 +908,11 @@ public class TopLevelClassesGenerator
             versionFound = true;
             for (int ix = 0; ix < productVersionList.getLength(); ix++)
             {
-                if(!productVersionList.item(ix).getParentNode().equals(record))
+                if (!productVersionList.item(ix).getParentNode().equals(record))
                 {
                     continue;
                 }
-                
+
                 String productVersionStr = productVersionList.item(ix).getTextContent();
                 productVersionStr = productVersionStr.replaceAll("\\A\\s+", "");
                 productVersionStr = productVersionStr.replaceAll("\\Z\\s+", "");
@@ -929,11 +930,11 @@ public class TopLevelClassesGenerator
             versionFound = true;
             for (int ix = 0; ix < toolVersionList.getLength(); ix++)
             {
-                if(!toolVersionList.item(ix).getParentNode().equals(record))
+                if (!toolVersionList.item(ix).getParentNode().equals(record))
                 {
                     continue;
                 }
-                
+
                 String toolVersionStr = toolVersionList.item(ix).getTextContent();
                 toolVersionStr = toolVersionStr.replaceAll("\\A\\s+", "");
                 toolVersionStr = toolVersionStr.replaceAll("\\Z\\s+", "");
@@ -942,7 +943,7 @@ public class TopLevelClassesGenerator
                 toolVersion.add(toolVersionArr);
             }
         }
-        
+
         String sinceVersion = null;
 
         NodeList sinceList = record.getElementsByTagName("since");
@@ -951,15 +952,15 @@ public class TopLevelClassesGenerator
             versionFound = true;
             for (int ix = 0; ix < sinceList.getLength(); ix++)
             {
-                if(!sinceList.item(ix).getParentNode().equals(record))
+                if (!sinceList.item(ix).getParentNode().equals(record))
                 {
                     continue;
                 }
-                
+
                 sinceVersion = sinceList.item(ix).getTextContent();
                 sinceVersion = sinceVersion.trim();
             }
-        }        
+        }
 
         // if version info not found.. then don't bother.
         if (!versionFound)
@@ -977,7 +978,7 @@ public class TopLevelClassesGenerator
         Element prolog = asDocUtil.getElementByTagName(target, "prolog");
         if (prolog != null)
         {
-            asMetadata  = asDocUtil.getElementByTagName(prolog, "asMetadata");
+            asMetadata = asDocUtil.getElementByTagName(prolog, "asMetadata");
             if (asMetadata != null)
             {
                 apiVersion = asDocUtil.getElementByTagName(asMetadata, "apiVersion");
@@ -1033,26 +1034,26 @@ public class TopLevelClassesGenerator
         {
             String[] playerVersionArr = playerVersion.get(ix);
             StringBuilder versionDescription = new StringBuilder();
-            
+
             if (playerVersionArr.length > 2)
             {
                 for (int iy = 2; iy < playerVersionArr.length; iy++)
                 {
-                    if(!"".equals(playerVersionArr[iy]) && !"\n".equals(playerVersionArr[iy]))
+                    if (!"".equals(playerVersionArr[iy]) && !"\n".equals(playerVersionArr[iy]))
                     {
-                        if( (iy != playerVersionArr.length - 1) && !playerVersionArr[iy].matches("\\s") )
+                        if ((iy != playerVersionArr.length - 1) && !playerVersionArr[iy].matches("\\s"))
                         {
-                            versionDescription.append(playerVersionArr[iy].replaceAll("\\s",""));
+                            versionDescription.append(playerVersionArr[iy].replaceAll("\\s", ""));
                             versionDescription.append(" ");
                         }
-                        else 
+                        else
                         {
-                            versionDescription.append(playerVersionArr[iy].replaceAll("\\s",""));
+                            versionDescription.append(playerVersionArr[iy].replaceAll("\\s", ""));
                         }
                     }
                 }
             }
-            
+
             if (playerVersionArr.length > 1)
             {
                 Element apiPlatform = outputObject.createElement("apiPlatform");
@@ -1066,7 +1067,7 @@ public class TopLevelClassesGenerator
         for (int ix = 0; ix < productVersion.size(); ix++)
         {
             String[] productVersionArr = productVersion.get(ix);
-            
+
             if (productVersionArr.length > 1)
             {
                 Element apiTool = outputObject.createElement("apiTool");
@@ -1087,25 +1088,21 @@ public class TopLevelClassesGenerator
                 apiVersion.appendChild(apiTool);
             }
         }
-        
-        if(sinceVersion != null )
+
+        if (sinceVersion != null)
         {
             Element apiSince = outputObject.createElement("apiSince");
             apiSince.setAttribute("version", sinceVersion);
-            apiVersion.appendChild(apiSince);            
+            apiVersion.appendChild(apiSince);
         }
     }
 
-    private void processCustoms(Element record, Element target,
-            boolean useParams, String paramNames, String paramTypes,
-            String paramDefaults)
+    private void processCustoms(Element record, Element target, boolean useParams, String paramNames, String paramTypes, String paramDefaults)
     {
         processCustoms(record, target, useParams, paramNames, paramTypes, paramDefaults, null);
     }
 
-    private void processCustoms(Element record, Element target,
-            boolean useParams, String paramNames, String paramTypes,
-            String paramDefaults, AsClass fromClass)
+    private void processCustoms(Element record, Element target, boolean useParams, String paramNames, String paramTypes, String paramDefaults, AsClass fromClass)
     {
         NodeList childNodes = record.getChildNodes();
         if (childNodes != null && childNodes.getLength() != 0)
@@ -1256,15 +1253,15 @@ public class TopLevelClassesGenerator
                         }
 
                         String desc = child.getTextContent();
-                        
+
                         int tabIndex = desc.indexOf('\t');
                         int spaceIndex = desc.indexOf(" ");
-                        
-                        if(tabIndex != -1 && tabIndex < spaceIndex)
+
+                        if (tabIndex != -1 && tabIndex < spaceIndex)
                         {
                             spaceIndex = tabIndex;
                         }
-                        
+
                         if (spaceIndex != -1)
                         {
                             desc = desc.substring(spaceIndex + 1);
@@ -1328,7 +1325,7 @@ public class TopLevelClassesGenerator
                     }
 
                     Element apiDesc = asDocUtil.getElementImmediateChildByTagName(detailNode, "apiDesc");
-                   
+
                     if (apiDesc != null)
                     {
                         apiDesc.setAttribute("conref", copyRef);
@@ -1470,7 +1467,7 @@ public class TopLevelClassesGenerator
                     {
                         apiOperationDef = outputObject.createElement("apiOperationDef");
                     }
-                    
+
                     NodeList listofChilds = params.getElementsByTagName("apiParam");
                     for (int iChild = 0; iChild < listofChilds.getLength(); iChild++)
                     {
@@ -1480,7 +1477,7 @@ public class TopLevelClassesGenerator
                 }
                 else
                 {
-                	Element apiConstructorDetail = asDocUtil.getElementByTagName(target, "apiConstructorDetail");
+                    Element apiConstructorDetail = asDocUtil.getElementByTagName(target, "apiConstructorDetail");
                     if (apiConstructorDetail != null)
                     {
                         Element apiConstructorDef = asDocUtil.getElementByTagName(apiConstructorDetail, "apiConstructorDef");
@@ -1509,7 +1506,7 @@ public class TopLevelClassesGenerator
             if (includeExamplesFound)
             {
                 Element detailNode = asDocUtil.getDetailNode(target);
-                for (int ix =0; ix < includeExamples.size(); ix++)
+                for (int ix = 0; ix < includeExamples.size(); ix++)
                 {
                     detailNode.appendChild(includeExamples.get(ix));
                 }
@@ -1524,7 +1521,7 @@ public class TopLevelClassesGenerator
                 Element prolog = asDocUtil.getElementByTagName(target, "prolog");
                 if (prolog != null)
                 {
-                	asCustoms = asDocUtil.getElementByTagName(prolog, "asCustoms");
+                    asCustoms = asDocUtil.getElementByTagName(prolog, "asCustoms");
                     if (asCustoms == null)
                     {
                         asCustoms = outputObject.createElement("asCustoms");
@@ -1675,7 +1672,7 @@ public class TopLevelClassesGenerator
         String labelStr = "";
         String hrefStr = "";
         String invalidHrefStr = null;
-        
+
         seeStr = asDocUtil.normalizeString(seeStr);
         if (seeStr.length() == 0)
         {
@@ -1726,7 +1723,7 @@ public class TopLevelClassesGenerator
                 {
                     hrefStr = hrefStr.substring(0, lastDot) + ":" + hrefStr.substring(lastDot + 1);
                 }
-                
+
                 int colonLoc = hrefStr.indexOf(":");
                 String packageNameStr = "";
                 String className = "";
@@ -1749,16 +1746,16 @@ public class TopLevelClassesGenerator
                         {
                             String fullNameStr = packageNameStr + "." + className;
                             fullNameStr = fullNameStr.replaceAll(":", ".");
-                            
-                            if(fullNameStr.endsWith("."))
+
+                            if (fullNameStr.endsWith("."))
                             {
                                 fullNameStr = fullNameStr.substring(0, fullNameStr.length() - 1);
                             }
-                            
-                            if(packageContentsTable.get(fullNameStr) != null )
+
+                            if (packageContentsTable.get(fullNameStr) != null)
                             {
                                 packageNameStr = fullNameStr;
-                                className = "";                                
+                                className = "";
                             }
                             else
                             {
@@ -1814,7 +1811,7 @@ public class TopLevelClassesGenerator
                     else
                     {
                         hrefStr = "";
-                        
+
                         if (!packageNameStr.equals(""))
                         {
                             invalidHrefStr = packageNameStr + ".xml#" + className + "/" + memberName;
@@ -1822,7 +1819,7 @@ public class TopLevelClassesGenerator
                         else
                         {
                             invalidHrefStr = "#" + className + "/" + memberName;
-                        }                        
+                        }
                     }
                 }
                 else
@@ -1889,9 +1886,8 @@ public class TopLevelClassesGenerator
                 hrefStr = hrefStr.replaceAll("effect!", "effect:");
                 hrefStr = hrefStr.replaceAll("skinstate!", "skinstate:");
                 hrefStr = hrefStr.replaceAll("skinpart!", "skinpart:");
-                
-                
-                if(invalidHrefStr != null )
+
+                if (invalidHrefStr != null)
                 {
                     invalidHrefStr = invalidHrefStr.replaceAll("event!", "event:");
                     invalidHrefStr = invalidHrefStr.replaceAll("style!", "style:");
@@ -1913,19 +1909,19 @@ public class TopLevelClassesGenerator
                 labelStr = labelStr.replaceAll("style:", "");
                 labelStr = labelStr.replaceAll("effect:", "");
                 labelStr = labelStr.replaceAll("skinstate:", "");
-                labelStr = labelStr.replaceAll("skinpart:", "");                
+                labelStr = labelStr.replaceAll("skinpart:", "");
                 labelStr = labelStr.replaceAll("global\\.", "");
             }
         }
 
         Element link = outputObject.createElement("link");
         link.setAttribute("href", hrefStr);
-        
-        if(invalidHrefStr != null )
+
+        if (invalidHrefStr != null)
         {
             link.setAttribute("invalidHref", invalidHrefStr);
         }
-            
+
         Element linkText = outputObject.createElement("linktext");
         linkText.setTextContent(labelStr);
 
@@ -1943,12 +1939,25 @@ public class TopLevelClassesGenerator
         boolean noSwf = false;
         Element result = null;
 
+        int versionIdx = exampleStr.indexOf("-version");
+        String versionStr = "";
+
         // remove -noswf from the @includeExample string
         int noSwfIdx = exampleStr.indexOf("-noswf");
         if (noSwfIdx != -1)
         {
             noSwf = true;
+            if (versionIdx != -1 && versionIdx > noSwfIdx)
+            {
+                versionStr = exampleStr.substring(versionIdx + 8);
+            }
+
             exampleStr = exampleStr.substring(0, noSwfIdx);
+        }
+        else if (versionIdx != -1)
+        {
+            versionStr = exampleStr.substring(versionIdx + 8);
+            exampleStr = exampleStr.substring(0, versionIdx);
         }
 
         // remove whitespace from @includeExample string
@@ -2005,7 +2014,7 @@ public class TopLevelClassesGenerator
             codeFileName = codeFileName.toLowerCase();
             Pattern pattern = Pattern.compile("\n");
             Matcher matcher = pattern.matcher(codePart);
-            codePart = matcher.replaceAll("\n\n");            
+            codePart = matcher.replaceAll("\n\n");
 
             codePart = codePart.replaceAll("\\t", "    ");
 
@@ -2022,7 +2031,7 @@ public class TopLevelClassesGenerator
                 descEnd1 = codePart.indexOf("@", descBegin + 1);
 
                 // depending upon the extension of the external examples file.. the comment closing will be different.
-                if(codeFileName.endsWith(".mxml"))
+                if (codeFileName.endsWith(".mxml"))
                 {
                     descEnd = codePart.indexOf("-->", descBegin); // mxml files have xml comment closing
                 }
@@ -2030,7 +2039,7 @@ public class TopLevelClassesGenerator
                 {
                     descEnd = codePart.indexOf("*/", descBegin); // as files have */ comment closing.
                 }
-                
+
                 if (descEnd1 != -1)
                 {
                     if (descEnd1 < descEnd)
@@ -2043,8 +2052,8 @@ public class TopLevelClassesGenerator
                 pattern = Pattern.compile("^\\s*\\*", Pattern.MULTILINE);
                 matcher = pattern.matcher(temp);
                 descText = matcher.replaceAll("");
-                
-                if(codeFileName.endsWith(".mxml"))
+
+                if (codeFileName.endsWith(".mxml"))
                 {
                     pattern = Pattern.compile("^\\s*-", Pattern.MULTILINE); // for consistency mxml comment may have a - at the line start.
                     matcher = pattern.matcher(descText);
@@ -2053,20 +2062,20 @@ public class TopLevelClassesGenerator
             }
 
             int codeBegin = -1;
-            
+
             // depending upon the extension of the external examples file.. the comment closing will be different.
-            if(codeFileName.endsWith(".mxml"))
+            if (codeFileName.endsWith(".mxml"))
             {
-                if(codePart.indexOf("<!---") != -1 )
+                if (codePart.indexOf("<!---") != -1)
                 {
                     codeBegin = codePart.indexOf("-->"); // mxml files have xml comment closing
                 }
             }
-            else 
+            else
             {
-                codeBegin = codePart.indexOf("*/");    // as files have */ comment closing.
+                codeBegin = codePart.indexOf("*/"); // as files have */ comment closing.
             }
-            
+
             if (codeBegin == -1)
             {
                 codeBegin = 0;
@@ -2074,30 +2083,30 @@ public class TopLevelClassesGenerator
             else
             {
                 codeBegin += 2;
-                
-                if(codeFileName.endsWith(".mxml")) // mxml files have xml comment closing -->, so lets skip one more character.
+
+                if (codeFileName.endsWith(".mxml")) // mxml files have xml comment closing -->, so lets skip one more character.
                 {
-                    codeBegin += 1;    
+                    codeBegin += 1;
                 }
             }
 
             int codeEnd = -1;
-            
+
             //depending upon the extension of the external examples file.. the comment beginning will also be different.
-            if(codeFileName.endsWith(".mxml"))
+            if (codeFileName.endsWith(".mxml"))
             {
                 codeEnd = codePart.indexOf("<!---", codeBegin);
             }
-            else 
+            else
             {
-                codeEnd = codePart.indexOf("/*", codeBegin);    
-            }            
+                codeEnd = codePart.indexOf("/*", codeBegin);
+            }
 
             if (codeEnd != -1 && codeEnd < codeBegin)
             {
                 codeBegin = 0;
             }
-            
+
             String codeBlock = "";
             if (codeEnd == -1)
             {
@@ -2147,16 +2156,16 @@ public class TopLevelClassesGenerator
                     descEnd1 = codePart.indexOf("@", descBegin + 1);
 
                     // depending upon the extension of the external examples file.. the comment closing will be different.
-                    if(codeFileName.endsWith(".mxml"))
+                    if (codeFileName.endsWith(".mxml"))
                     {
                         descEnd = codePart.indexOf("-->", descBegin);
                     }
                     else
                     {
                         descEnd = codePart.indexOf("*/", descBegin);
-                        
+
                     }
-                    
+
                     if (descEnd1 != -1)
                     {
                         if (descEnd1 < descEnd)
@@ -2170,14 +2179,14 @@ public class TopLevelClassesGenerator
                     pattern = Pattern.compile("^\\s*\\*", Pattern.MULTILINE);
                     matcher = pattern.matcher(temp);
                     descText2 = matcher.replaceAll("");
-                    
-                    if(codeFileName.endsWith(".mxml"))
+
+                    if (codeFileName.endsWith(".mxml"))
                     {
                         pattern = Pattern.compile("^\\s*-", Pattern.MULTILINE);
                         matcher = pattern.matcher(descText2);
-                        descText2 = matcher.replaceAll("");                        
-                    }                    
-                    
+                        descText2 = matcher.replaceAll("");
+                    }
+
                     output.append(descText2);
                 }
             }
@@ -2201,6 +2210,229 @@ public class TopLevelClassesGenerator
             swfBlock.setAttribute("conref", swfPartFile);
             result.appendChild(swfBlock);
         }
+
+        if (!versionStr.equals(""))
+        {
+            int langVersionIdx = versionStr.indexOf("-langversion");
+            int productVersionIdx = versionStr.indexOf("-productversion");
+            int playerVersionIdx = versionStr.indexOf("-playerversion");
+
+            boolean skipVersions = false;
+
+            if (langVersionIdx != -1 && versionStr.indexOf("-langversion", langVersionIdx + 1) != -1)
+            {
+                String validationErrors = asDocUtil.getValidationErrors();
+                validationErrors += "@includeExample for " + fullName + " contains multiple -langversion \n";
+                asDocUtil.setValidationErrors(validationErrors);
+                asDocUtil.setErrors(true);
+                skipVersions = true;
+            }
+
+            if (productVersionIdx != -1 && versionStr.indexOf("-productversion", productVersionIdx + 1) != -1)
+            {
+                String validationErrors = asDocUtil.getValidationErrors();
+                validationErrors += "@includeExample for " + fullName + " contains multiple -productversion \n";
+                asDocUtil.setValidationErrors(validationErrors);
+                asDocUtil.setErrors(true);
+                skipVersions = true;
+            }
+
+            if (playerVersionIdx != -1 && versionStr.indexOf("-playerversion", playerVersionIdx + 1) != -1)
+            {
+                String validationErrors = asDocUtil.getValidationErrors();
+                validationErrors += "@includeExample for " + fullName + " contains multiple -playerversion \n";
+                asDocUtil.setValidationErrors(validationErrors);
+                asDocUtil.setErrors(true);
+                skipVersions = true;
+            }
+
+            if (!skipVersions)
+            {
+                ArrayList<Integer> tagIndexs = new ArrayList<Integer>();
+
+                if (langVersionIdx != -1)
+                {
+                    tagIndexs.add(langVersionIdx);
+                }
+
+                if (productVersionIdx != -1)
+                {
+                    tagIndexs.add(productVersionIdx);
+                }
+
+                if (playerVersionIdx != -1)
+                {
+                    tagIndexs.add(playerVersionIdx);
+                }
+
+                int tagLength = tagIndexs.size();
+
+                Collections.sort(tagIndexs);
+
+                Element asMetadata = outputObject.createElement("asMetadata");
+                Element apiVersion = outputObject.createElement("apiVersion");
+                asMetadata.appendChild(apiVersion);
+
+                Element prolog = outputObject.createElement("prolog");
+                prolog.appendChild(asMetadata);
+
+                if (langVersionIdx != -1)
+                {
+                    int idx = tagIndexs.indexOf(langVersionIdx);
+
+                    String langVersion = "";
+                    if (idx != tagLength - 1)
+                    {
+                        langVersion = versionStr.substring(langVersionIdx + 12, tagIndexs.get(idx + 1));
+                    }
+                    else
+                    {
+                        langVersion = versionStr.substring(langVersionIdx + 12);
+                    }
+
+                    langVersion = langVersion.replaceAll("\n", "").replaceAll("\r", "");
+
+                    if (langVersion.length() > 0)
+                    {
+                        Element apiLanguage = outputObject.createElement("apiLanguage");
+
+                        langVersion = langVersion.replaceAll("^\\s+", "");
+                        langVersion = langVersion.replaceAll("^\\s+$", "");
+                        langVersion = langVersion.replaceAll("\\s+", " ");
+
+                        String[] langVersionArr = langVersion.split(" ");
+
+                        if (langVersionArr.length > 1)
+                        {
+                            apiLanguage.setAttribute("name", langVersionArr[0]);
+                            apiLanguage.setAttribute("version", langVersionArr[1]);
+                        }
+                        else
+                        {
+                            apiLanguage.setAttribute("version", langVersionArr[0]);
+                        }
+                        apiVersion.appendChild(apiLanguage);
+                    }
+                }
+
+                if (playerVersionIdx != -1)
+                {
+                    int idx = tagIndexs.indexOf(playerVersionIdx);
+
+                    String playerVersionStr = "";
+                    if (idx != tagLength - 1)
+                    {
+                        playerVersionStr = versionStr.substring(playerVersionIdx + 14, tagIndexs.get(idx + 1));
+                    }
+                    else
+                    {
+                        playerVersionStr = versionStr.substring(playerVersionIdx + 14);
+                    }
+
+                    playerVersionStr = playerVersionStr.replaceAll("\n", "").replaceAll("\r", "");
+
+                    if (playerVersionStr.length() > 0)
+                    {
+                        ArrayList<String[]> playerVersion = new ArrayList<String[]>();
+
+                        playerVersionStr = playerVersionStr.replaceAll("\\A\\s+", "");
+                        playerVersionStr = playerVersionStr.replaceAll("\\Z\\s+", "");
+                        playerVersionStr = playerVersionStr.replaceAll("\\s+", " ");
+
+                        String[] playerVersionArr = playerVersionStr.split(",");
+                        for (int ix = 0; ix < playerVersionArr.length; ix++)
+                        {
+                            String tmpPlayerVersion = playerVersionArr[ix].trim();
+                            playerVersion.add(tmpPlayerVersion.split(" "));
+                        }
+
+                        for (int ix = 0; ix < playerVersion.size(); ix++)
+                        {
+                            String[] tempPlayerVersionArr = playerVersion.get(ix);
+                            StringBuilder versionDescription = new StringBuilder();
+
+                            if (tempPlayerVersionArr.length > 2)
+                            {
+                                for (int iy = 2; iy < tempPlayerVersionArr.length; iy++)
+                                {
+                                    if (!"".equals(tempPlayerVersionArr[iy]) && !"\n".equals(tempPlayerVersionArr[iy]))
+                                    {
+                                        if ((iy != tempPlayerVersionArr.length - 1) && !tempPlayerVersionArr[iy].matches("\\s"))
+                                        {
+                                            versionDescription.append(tempPlayerVersionArr[iy].replaceAll("\\s", ""));
+                                            versionDescription.append(" ");
+                                        }
+                                        else
+                                        {
+                                            versionDescription.append(tempPlayerVersionArr[iy].replaceAll("\\s", ""));
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (tempPlayerVersionArr.length > 1)
+                            {
+                                Element apiPlatform = outputObject.createElement("apiPlatform");
+                                apiPlatform.setAttribute("name", tempPlayerVersionArr[0]);
+                                apiPlatform.setAttribute("version", tempPlayerVersionArr[1].replaceAll("\\s", ""));
+                                apiPlatform.setAttribute("description", versionDescription.toString());
+                                apiVersion.appendChild(apiPlatform);
+                            }
+                        }
+                    }
+                }
+
+                if (productVersionIdx != -1)
+                {
+                    int idx = tagIndexs.indexOf(productVersionIdx);
+
+                    String productVersionStr = "";
+                    if (idx != tagLength - 1)
+                    {
+                        productVersionStr = versionStr.substring(productVersionIdx + 15, tagIndexs.get(idx + 1));
+                    }
+                    else
+                    {
+                        productVersionStr = versionStr.substring(productVersionIdx + 15);
+                    }
+
+                    productVersionStr = productVersionStr.replaceAll("\n", "").replaceAll("\r", "");
+
+                    if (productVersionStr.length() > 0)
+                    {
+                        ArrayList<String[]> productVersion = new ArrayList<String[]>();
+
+                        productVersionStr = productVersionStr.replaceAll("\\A\\s+", "");
+                        productVersionStr = productVersionStr.replaceAll("\\Z\\s+", "");
+                        productVersionStr = productVersionStr.replaceAll("\\s+", " ");
+
+                        String[] productVersionArr = productVersionStr.split(",");
+                        for (int ix = 0; ix < productVersionArr.length; ix++)
+                        {
+                            String tmpProductVersion = productVersionArr[ix].trim();
+                            productVersion.add(tmpProductVersion.split(" "));
+                        }
+
+                        for (int ix = 0; ix < productVersion.size(); ix++)
+                        {
+                            String[] tmpProductVersionArr = productVersion.get(ix);
+
+                            if (tmpProductVersionArr.length > 1)
+                            {
+                                Element apiTool = outputObject.createElement("apiTool");
+                                apiTool.setAttribute("name", tmpProductVersionArr[0]);
+                                apiTool.setAttribute("version", tmpProductVersionArr[1].replaceAll("\\s", ""));
+                                apiVersion.appendChild(apiTool);
+                            }
+                        }
+                    }
+                }
+
+                result.appendChild(prolog);
+            }
+
+        }
+
         return result;
     }
 
@@ -2225,10 +2457,10 @@ public class TopLevelClassesGenerator
                         Element prolog = asDocUtil.getElementByTagName(baseClass.getNode(), "prolog");
                         if (prolog != null)
                         {
-                        	Element asMetadata = asDocUtil.getElementByTagName(prolog, "asMetadata");
+                            Element asMetadata = asDocUtil.getElementByTagName(prolog, "asMetadata");
                             if (asMetadata != null)
                             {
-                            	Element exclude = asDocUtil.getElementByTagName(asMetadata, "Exclude");
+                                Element exclude = asDocUtil.getElementByTagName(asMetadata, "Exclude");
                                 if (exclude != null)
                                 {
                                     tempClass.getExcludedProperties().addAll(baseClass.getExcludedProperties());
@@ -2268,12 +2500,12 @@ public class TopLevelClassesGenerator
                 Element prolog = asDocUtil.getElementByTagName(node, "prolog");
                 if (prolog != null)
                 {
-                	asMetadata = asDocUtil.getElementByTagName(prolog, "asMetadata");
+                    asMetadata = asDocUtil.getElementByTagName(prolog, "asMetadata");
                     if (asMetadata == null)
                     {
                         asMetadata = outputObject.createElement("asMetadata");
                         prolog.appendChild(asMetadata);
-                    } 
+                    }
                 }
                 else
                 {
@@ -2371,7 +2603,7 @@ public class TopLevelClassesGenerator
             Element prolog = asDocUtil.getElementByTagName(myClass.getNode(), "prolog");
             if (prolog != null)
             {
-            	Element asMetadata = asDocUtil.getElementByTagName(prolog, "asMetadata");
+                Element asMetadata = asDocUtil.getElementByTagName(prolog, "asMetadata");
                 if (asMetadata != null)
                 {
                     NodeList excludeList = prolog.getElementsByTagName("Exclude");
@@ -2503,17 +2735,17 @@ public class TopLevelClassesGenerator
             children = ((Element)parent).getElementsByTagName("example");
             if (children != null)
             {
-            	for(int ix = 0; ix < children.getLength(); ix ++)
-            	{
-            		Element inputExampleElement = (Element)children.item(ix);
-            		
-            		Element example = outputObject.createElement("example");
+                for (int ix = 0; ix < children.getLength(); ix++)
+                {
+                    Element inputExampleElement = (Element)children.item(ix);
+
+                    Element example = outputObject.createElement("example");
 
                     CDATASection cdata = outputObject.createCDATASection(asDocUtil.validateText(inputExampleElement.getTextContent(), "example", fullName));
                     example.appendChild(cdata);
                     apiValueDetail.appendChild(example);
                     asDocUtil.convertDescToDITA(example, oldNewNamesMap);
-            	}
+                }
             }
 
             children = ((Element)parent).getElementsByTagName("throws");
@@ -2526,7 +2758,7 @@ public class TopLevelClassesGenerator
                 }
             }
 
-            processVersions((Element)parent, apiValue );
+            processVersions((Element)parent, apiValue);
             processCustoms((Element)parent, apiValue, false, "", "", "");
 
             children = ((Element)parent).getElementsByTagName("eventType");
@@ -2619,8 +2851,7 @@ public class TopLevelClassesGenerator
     // <apiOperationClassifier>Class name</apiOperationClassifier>
     // <apiDesc>Help text</apiDesc>
     // </apiException>
-    private Element createCanThrow(Element source,
-            QualifiedNameInfo qualifiedFullName)
+    private Element createCanThrow(Element source, QualifiedNameInfo qualifiedFullName)
     {
         String throwComment = "";
         String fullThrows = source.getTextContent();
@@ -2653,7 +2884,7 @@ public class TopLevelClassesGenerator
             }
             errorClass = classTable.get("flash.errors:" + errorClassStr);
         }
-        
+
         if (errorClass == null)
         {
             if (errorClassStr.indexOf(".") != -1 && errorClassStr.indexOf(":") == -1)
@@ -2684,7 +2915,7 @@ public class TopLevelClassesGenerator
 
         Element apiItemName = outputObject.createElement("apiItemName");
         Element apiOperationClassifier = outputObject.createElement("apiOperationClassifier");
-        
+
         // no matter if we generate the error class or not. We should still show it in the generated asdoc. 
         // if class is missing. the link should be inactive. i.e. just display and no link.
         if (errorClass != null)
@@ -2692,15 +2923,15 @@ public class TopLevelClassesGenerator
             apiItemName.setTextContent(errorClass.getName());
             apiOperationClassifier.setTextContent(errorClass.getFullName());
         }
-        else 
+        else
         {
             apiItemName.setTextContent(errorClassStr);
             apiOperationClassifier.setTextContent(errorClassStr);
         }
-        
+
         apiException.appendChild(apiItemName);
         apiException.appendChild(apiOperationClassifier);
-        
+
         return apiException;
     }
 
@@ -2780,7 +3011,7 @@ public class TopLevelClassesGenerator
                 Element prolog = asDocUtil.getElementByTagName(myClass.getNode(), "prolog");
                 if (prolog != null)
                 {
-                	Element asMetadata = asDocUtil.getElementByTagName(prolog, "asMetadata");
+                    Element asMetadata = asDocUtil.getElementByTagName(prolog, "asMetadata");
                     if (asMetadata != null)
                     {
                         NodeList excludeList = asMetadata.getElementsByTagName("Exclude");
@@ -2837,13 +3068,13 @@ public class TopLevelClassesGenerator
                 apiValueDetail.appendChild(apiValueDef);
 
                 boolean isOverride = Boolean.parseBoolean(((Element)parent).getAttribute("isOverride"));
-                
+
                 if (isOverride)
                 {
                     Element apiIsOverride = outputObject.createElement("apiIsOverride");
                     apiValueDef.appendChild(apiIsOverride);
                 }
-                
+
                 apiValue.appendChild(apiValueDetail);
 
                 Element apiProperty = outputObject.createElement("apiProperty");
@@ -2882,7 +3113,7 @@ public class TopLevelClassesGenerator
                     apiProperty.setAttribute("isBindable", "true");
                 }
 
-                processVersions((Element)parent, apiValue );
+                processVersions((Element)parent, apiValue);
 
                 if (myClass.getFieldGetSet().get(name) == null)
                 {
@@ -2972,17 +3203,17 @@ public class TopLevelClassesGenerator
                 NodeList exampleList = ((Element)parent).getElementsByTagName("example");
                 if (exampleList != null)
                 {
-                	for(int ix = 0; ix < exampleList.getLength(); ix ++)
-                	{
-                		Element inputExampleElement = (Element)exampleList.item(ix);
-                		
-                		Element example = outputObject.createElement("example");
+                    for (int ix = 0; ix < exampleList.getLength(); ix++)
+                    {
+                        Element inputExampleElement = (Element)exampleList.item(ix);
+
+                        Element example = outputObject.createElement("example");
 
                         CDATASection cdata = outputObject.createCDATASection(asDocUtil.validateText(inputExampleElement.getTextContent(), "example", fullName));
                         example.appendChild(cdata);
                         apiValueDetail.appendChild(example);
                         asDocUtil.convertDescToDITA(example, oldNewNamesMap);
-                	}
+                    }
                 }
 
                 NodeList throwsList = ((Element)parent).getElementsByTagName("throws");
@@ -3029,37 +3260,37 @@ public class TopLevelClassesGenerator
                             myClass.setFieldCount(myClass.getFieldCount() + 1);
 
                         }
-                        else 
+                        else
                         {
                             boolean replaceFlag = false;
-                            if(getterSetterFullDesc != null && getterSetterFullDesc.trim().length() != 0)
+                            if (getterSetterFullDesc != null && getterSetterFullDesc.trim().length() != 0)
                             {
                                 Element foundApiDesc = null;
                                 Element foundApiValueDetail = asDocUtil.getElementByTagName(foundField, "apiValueDetail");
 
                                 if (foundApiValueDetail != null)
                                 {
-                                	foundApiDesc = asDocUtil.getElementByTagName(foundApiValueDetail, "apiDesc");
+                                    foundApiDesc = asDocUtil.getElementByTagName(foundApiValueDetail, "apiDesc");
                                     if (foundApiDesc != null)
                                     {
-                                        if(foundApiDesc.getTextContent().trim().length() == 0) 
+                                        if (foundApiDesc.getTextContent().trim().length() == 0)
                                         {
                                             replaceFlag = true;
                                         }
-                                    } 
-                                    else 
+                                    }
+                                    else
                                     {
                                         replaceFlag = true;
                                     }
-                                    
-                                    if(replaceFlag )
-                                    {
-                                        temp.replaceChild(apiValue, foundField);    
-                                    }                                    
-                                }
-                            } 
 
-                            if(!replaceFlag)
+                                    if (replaceFlag)
+                                    {
+                                        temp.replaceChild(apiValue, foundField);
+                                    }
+                                }
+                            }
+
+                            if (!replaceFlag)
                             {
                                 Element foundApiValueDef = null;
                                 Element foundApiValueDetail = null;
@@ -3067,10 +3298,10 @@ public class TopLevelClassesGenerator
                                 Element apiType = asDocUtil.getElementByTagName(apiValueDef, "apiType");
                                 if (apiType != null)
                                 {
-                                	foundApiValueDetail = asDocUtil.getElementByTagName(foundField, "apiValueDetail");
+                                    foundApiValueDetail = asDocUtil.getElementByTagName(foundField, "apiValueDetail");
                                     if (foundApiValueDetail != null)
                                     {
-                                    	foundApiValueDef = asDocUtil.getElementByTagName(foundApiValueDetail, "apiValueDef");
+                                        foundApiValueDef = asDocUtil.getElementByTagName(foundApiValueDetail, "apiValueDef");
                                         if (foundApiValueDef == null)
                                         {
                                             foundApiValueDef = outputObject.createElement("apiValueDef");
@@ -3085,21 +3316,21 @@ public class TopLevelClassesGenerator
 
                                         foundField.appendChild(foundApiValueDetail);
                                     }
-                                    
-                                    if(asDocUtil.getElementByTagName(foundApiValueDef, "apiType") == null)
+
+                                    if (asDocUtil.getElementByTagName(foundApiValueDef, "apiType") == null)
                                     {
-                                    	foundApiValueDef.appendChild(apiType);
+                                        foundApiValueDef.appendChild(apiType);
                                     }
                                 }
                                 else
                                 {
-                                	Element apiValueClassifier = asDocUtil.getElementByTagName(apiValueDef, "apiValueClassifier");
+                                    Element apiValueClassifier = asDocUtil.getElementByTagName(apiValueDef, "apiValueClassifier");
                                     if (apiValueClassifier != null)
                                     {
-                                    	foundApiValueDetail = asDocUtil.getElementByTagName(foundField, "apiValueDetail");
+                                        foundApiValueDetail = asDocUtil.getElementByTagName(foundField, "apiValueDetail");
                                         if (foundApiValueDetail != null)
                                         {
-                                        	foundApiValueDef = asDocUtil.getElementByTagName(foundApiValueDetail, "apiValueDef");
+                                            foundApiValueDef = asDocUtil.getElementByTagName(foundApiValueDetail, "apiValueDef");
                                             if (foundApiValueDef == null)
                                             {
                                                 foundApiValueDef = outputObject.createElement("apiValueDef");
@@ -3114,10 +3345,10 @@ public class TopLevelClassesGenerator
 
                                             foundField.appendChild(foundApiValueDetail);
                                         }
-                                        
-                                        if(asDocUtil.getElementByTagName(foundApiValueDef, "apiValueClassifier") == null)
+
+                                        if (asDocUtil.getElementByTagName(foundApiValueDef, "apiValueClassifier") == null)
                                         {
-                                        	foundApiValueDef.appendChild(apiValueClassifier);
+                                            foundApiValueDef.appendChild(apiValueClassifier);
                                         }
                                     }
                                     else
@@ -3127,7 +3358,7 @@ public class TopLevelClassesGenerator
                                             System.out.println("Error : No type definition for " + name);
                                         }
                                     }
-                                }                                
+                                }
                             }
                         }
                     }
@@ -3234,13 +3465,13 @@ public class TopLevelClassesGenerator
                 if (descriptionList != null && descriptionList.getLength() != 0)
                 {
                     String fullDesc = descriptionList.item(0).getTextContent();
-                    
+
                     // if constructor for a mxml file - lets add default description of Constructor
-                    if(isConstructor && fullDesc.length() == 0 && myClass.getSourceFile().toLowerCase().endsWith(".mxml") )
+                    if (isConstructor && fullDesc.length() == 0 && myClass.getSourceFile().toLowerCase().endsWith(".mxml"))
                     {
                         fullDesc = "Constructor.";
                     }
-                    
+
                     Element apiDesc = outputObject.createElement("apiDesc");
                     CDATASection cdata = outputObject.createCDATASection(asDocUtil.validateText(fullDesc, "description", fullName));
                     apiDesc.appendChild(cdata);
@@ -3252,17 +3483,17 @@ public class TopLevelClassesGenerator
                 NodeList exampleList = ((Element)parent).getElementsByTagName("example");
                 if (exampleList != null)
                 {
-                	for(int ix = 0; ix < exampleList.getLength(); ix ++)
-                	{
-                		Element inputExampleElement = (Element)exampleList.item(ix);
-                		
-                		Element example = outputObject.createElement("example");
+                    for (int ix = 0; ix < exampleList.getLength(); ix++)
+                    {
+                        Element inputExampleElement = (Element)exampleList.item(ix);
+
+                        Element example = outputObject.createElement("example");
 
                         CDATASection cdata = outputObject.createCDATASection(asDocUtil.validateText(inputExampleElement.getTextContent(), "example", fullName));
                         example.appendChild(cdata);
                         detailNode.appendChild(example);
                         asDocUtil.convertDescToDITA(example, oldNewNamesMap);
-                	}
+                    }
                 }
 
                 NodeList throwsList = ((Element)parent).getElementsByTagName("throws");
@@ -3287,7 +3518,7 @@ public class TopLevelClassesGenerator
                     }
                 }
 
-                processVersions((Element)parent, apiOperation );
+                processVersions((Element)parent, apiOperation);
 
                 if (!isConstructor)
                 {
@@ -3375,12 +3606,12 @@ public class TopLevelClassesGenerator
                             }
                         }
 
-                        if(eventClassStr != null && eventClassStr.indexOf(':') == -1 && eventClassStr.indexOf('.') != -1)
+                        if (eventClassStr != null && eventClassStr.indexOf(':') == -1 && eventClassStr.indexOf('.') != -1)
                         {
-                        	int periodIndex = eventClassStr.lastIndexOf('.');
-                        	eventClassStr = eventClassStr.substring(0, periodIndex) + ':' + eventClassStr.substring(periodIndex + 1);
+                            int periodIndex = eventClassStr.lastIndexOf('.');
+                            eventClassStr = eventClassStr.substring(0, periodIndex) + ':' + eventClassStr.substring(periodIndex + 1);
                         }
-                        
+
                         AsClass eventClass = classTable.get(eventClassStr);
 
                         if (eventClass == null)
@@ -3390,14 +3621,14 @@ public class TopLevelClassesGenerator
                                 System.out.println("   Can not resolve event name: " + eventClassStr + " looking in flash.events");
                             }
                             eventClass = classTable.get("flash.events:" + eventClassStr);
-                            
+
                             if (eventClass == null)
                             {
                                 if (verbose)
                                 {
                                     System.out.println("   Can not resolve event name: " + eventClassStr + " looking in air.update.events");
                                 }
-                                eventClass = classTable.get("air.update.events:" + eventClassStr);                                
+                                eventClass = classTable.get("air.update.events:" + eventClassStr);
                             }
                         }
 
@@ -3545,11 +3776,11 @@ public class TopLevelClassesGenerator
                 Element prolog = asDocUtil.getElementByTagName(node, "prolog");
                 if (prolog != null)
                 {
-                	Element asMetadata = asDocUtil.getElementByTagName(prolog, "asMetadata");
+                    Element asMetadata = asDocUtil.getElementByTagName(prolog, "asMetadata");
 
                     if (asMetadata != null)
                     {
-                    	Element excludeElement = asDocUtil.getElementByTagName(asMetadata, "Exclude");
+                        Element excludeElement = asDocUtil.getElementByTagName(asMetadata, "Exclude");
                         if (excludeElement != null)
                         {
                             String kind = excludeElement.getAttribute("kind");
@@ -3650,14 +3881,14 @@ public class TopLevelClassesGenerator
 
                 if (prolog != null)
                 {
-                	asMetadata = asDocUtil.getElementByTagName(prolog, "asMetadata");
+                    asMetadata = asDocUtil.getElementByTagName(prolog, "asMetadata");
 
                     if (asMetadata != null)
                     {
-                    	stylesElement = asDocUtil.getElementByTagName(asMetadata, "styles");
+                        stylesElement = asDocUtil.getElementByTagName(asMetadata, "styles");
 
                         if (stylesElement == null)
-                        {                    	
+                        {
                             stylesElement = outputObject.createElement("styles");
                             asMetadata.appendChild(stylesElement);
                         }
@@ -3719,25 +3950,25 @@ public class TopLevelClassesGenerator
                 Element prolog = asDocUtil.getElementByTagName(node, "prolog");
                 if (prolog != null)
                 {
-                	Element asMetadata = asDocUtil.getElementByTagName(prolog, "asMetadata");
+                    Element asMetadata = asDocUtil.getElementByTagName(prolog, "asMetadata");
 
                     if (asMetadata != null)
                     {
-                    	Element excludeElement = asDocUtil.getElementByTagName(asMetadata, "Exclude");
-                    	if(excludeElement != null)
-                    	{
-	                        String kind = excludeElement.getAttribute("kind");
-	                        String effectName = excludeElement.getAttribute("name");
-	
-	                        if (kind.equals("effect") && effectName.equals(name))
-	                        {
-	                            if (verbose)
-	                            {
-	                                System.out.println("Excluding effect " + name + " from " + myClass.getName());
-	                            }
-	                            return;
-	                        }
-                    	}
+                        Element excludeElement = asDocUtil.getElementByTagName(asMetadata, "Exclude");
+                        if (excludeElement != null)
+                        {
+                            String kind = excludeElement.getAttribute("kind");
+                            String effectName = excludeElement.getAttribute("name");
+
+                            if (kind.equals("effect") && effectName.equals(name))
+                            {
+                                if (verbose)
+                                {
+                                    System.out.println("Excluding effect " + name + " from " + myClass.getName());
+                                }
+                                return;
+                            }
+                        }
                     }
                 }
 
@@ -3796,11 +4027,11 @@ public class TopLevelClassesGenerator
 
                 if (prolog != null)
                 {
-                	asMetadata = asDocUtil.getElementByTagName(prolog, "asMetadata");
+                    asMetadata = asDocUtil.getElementByTagName(prolog, "asMetadata");
 
                     if (asMetadata != null)
                     {
-                    	effectsElement = asDocUtil.getElementByTagName(asMetadata, "effects");
+                        effectsElement = asDocUtil.getElementByTagName(asMetadata, "effects");
 
                         if (effectsElement == null)
                         {
@@ -3863,25 +4094,25 @@ public class TopLevelClassesGenerator
                 Element prolog = asDocUtil.getElementByTagName(node, "prolog");
                 if (prolog != null)
                 {
-                	Element asMetadata = asDocUtil.getElementByTagName(prolog, "asMetadata");
+                    Element asMetadata = asDocUtil.getElementByTagName(prolog, "asMetadata");
 
                     if (asMetadata != null)
                     {
-                    	Element excludeElement = asDocUtil.getElementByTagName(asMetadata, "Exclude");
-                    	if(excludeElement != null)
-                    	{
-	                        String kind = excludeElement.getAttribute("kind");
-	                        String eventName = excludeElement.getAttribute("name");
-	
-	                        if (kind.equals("event") && eventName.equals(name))
-	                        {
-	                            if (verbose)
-	                            {
-	                                System.out.println("Excluding event " + name + " from " + myClass.getName());
-	                            }
-	                            return;
-	                        }
-                    	}
+                        Element excludeElement = asDocUtil.getElementByTagName(asMetadata, "Exclude");
+                        if (excludeElement != null)
+                        {
+                            String kind = excludeElement.getAttribute("kind");
+                            String eventName = excludeElement.getAttribute("name");
+
+                            if (kind.equals("event") && eventName.equals(name))
+                            {
+                                if (verbose)
+                                {
+                                    System.out.println("Excluding event " + name + " from " + myClass.getName());
+                                }
+                                return;
+                            }
+                        }
                     }
                 }
 
@@ -3957,7 +4188,7 @@ public class TopLevelClassesGenerator
 
                 eventElement.setAttribute("fullname", fullName);
 
-                processVersions(eventElement, adobeApiEvent );
+                processVersions(eventElement, adobeApiEvent);
 
                 processCustoms(eventElement, adobeApiEvent, false, "", "", "");
 
@@ -3990,17 +4221,17 @@ public class TopLevelClassesGenerator
                 childrenOfEvent = eventElement.getElementsByTagName("example");
                 if (childrenOfEvent != null)
                 {
-                	for(int ix = 0; ix < childrenOfEvent.getLength(); ix ++)
-                	{
-                		Element inputExampleElement = (Element)childrenOfEvent.item(ix);
-                		
-                		Element example = outputObject.createElement("example");
+                    for (int ix = 0; ix < childrenOfEvent.getLength(); ix++)
+                    {
+                        Element inputExampleElement = (Element)childrenOfEvent.item(ix);
+
+                        Element example = outputObject.createElement("example");
 
                         CDATASection cdata2 = outputObject.createCDATASection(asDocUtil.validateText(inputExampleElement.getTextContent(), "example", fullName));
                         example.appendChild(cdata2);
                         adobeApiEvent.appendChild(example);
                         asDocUtil.convertDescToDITA(example, oldNewNamesMap);
-                	}
+                    }
                 }
 
                 if (myClass != null && eventElement != null)
@@ -4150,11 +4381,11 @@ public class TopLevelClassesGenerator
                     Element prolog = asDocUtil.getElementByTagName(node, "prolog");
                     if (prolog != null)
                     {
-                    	asMetadata = asDocUtil.getElementByTagName(prolog, "asMetadata");
+                        asMetadata = asDocUtil.getElementByTagName(prolog, "asMetadata");
 
                         if (asMetadata != null)
                         {
-                        	asMetadata.appendChild(defaultProperty);
+                            asMetadata.appendChild(defaultProperty);
                         }
                         else
                         {
@@ -4273,7 +4504,7 @@ public class TopLevelClassesGenerator
 
                 defNode.appendChild(apiDeprecated);
             }
-            
+
             Element skinStateElement = asDocUtil.getElementByTagName((Element)parent, "SkinState");
             if (skinStateElement != null)
             {
@@ -4283,7 +4514,7 @@ public class TopLevelClassesGenerator
                 {
                     return;
                 }
-                
+
                 String fullName = skinStateElement.getAttribute("owner");
                 String name = skinStateElement.getAttribute("name");
 
@@ -4298,25 +4529,25 @@ public class TopLevelClassesGenerator
                     Element prolog = asDocUtil.getElementByTagName(node, "prolog");
                     if (prolog != null)
                     {
-                    	asMetadata = asDocUtil.getElementByTagName(prolog, "asMetadata");
+                        asMetadata = asDocUtil.getElementByTagName(prolog, "asMetadata");
                         if (asMetadata != null)
                         {
-                        	Element excludeElement = asDocUtil.getElementByTagName(asMetadata, "Exclude");
-                        	if(excludeElement != null)
-                        	{
-	                            String kind = excludeElement.getAttribute("kind");
-	                            String skinStateName = excludeElement.getAttribute("name");
-	                            
-	                            if (kind.equals("SkinState") && name.equals(skinStateName))
-	                            {
-	                                if (verbose)
-	                                {
-	                                    System.out.println("Excluding SkinState " + name + " from " + myClass.getName());
-	                                }
-	                                return;
-	                            }
-                        	}
- 
+                            Element excludeElement = asDocUtil.getElementByTagName(asMetadata, "Exclude");
+                            if (excludeElement != null)
+                            {
+                                String kind = excludeElement.getAttribute("kind");
+                                String skinStateName = excludeElement.getAttribute("name");
+
+                                if (kind.equals("SkinState") && name.equals(skinStateName))
+                                {
+                                    if (verbose)
+                                    {
+                                        System.out.println("Excluding SkinState " + name + " from " + myClass.getName());
+                                    }
+                                    return;
+                                }
+                            }
+
                             skinStatesElement = asDocUtil.getElementByTagName(asMetadata, "skinStates");
                             if (skinStatesElement == null)
                             {
@@ -4343,9 +4574,9 @@ public class TopLevelClassesGenerator
 
                         myClass.getNode().appendChild(prolog);
                     }
-                    
+
                     Element newSkinStateElement = (Element)outputObject.importNode(skinStateElement, true);
-                    
+
                     asDocUtil.processCustoms(newSkinStateElement, outputObject);
 
                     childrenOfSkinState = newSkinStateElement.getElementsByTagName("default");
@@ -4423,11 +4654,11 @@ public class TopLevelClassesGenerator
                         newSkinStateElement.setAttribute("playerVersion", playerversion);
                         newSkinStateElement.removeChild(childrenOfSkinState.item(0));
                     }
-                    
+
                     skinStatesElement.appendChild(newSkinStateElement);
                 }
             }
-            
+
             Element skinPartElement = asDocUtil.getElementByTagName((Element)parent, "SkinPart");
             if (skinPartElement != null)
             {
@@ -4437,7 +4668,7 @@ public class TopLevelClassesGenerator
                 {
                     return;
                 }
-                
+
                 String fullName = skinPartElement.getAttribute("owner");
                 String name = skinPartElement.getAttribute("name");
 
@@ -4452,25 +4683,25 @@ public class TopLevelClassesGenerator
                     Element prolog = asDocUtil.getElementByTagName(node, "prolog");
                     if (prolog != null)
                     {
-                    	asMetadata = asDocUtil.getElementByTagName(prolog, "asMetadata");
+                        asMetadata = asDocUtil.getElementByTagName(prolog, "asMetadata");
                         if (asMetadata != null)
                         {
-                        	Element excludeElement = asDocUtil.getElementByTagName(asMetadata, "Exclude");
-                        	if(excludeElement != null)
-                        	{
-	                            String kind = excludeElement.getAttribute("kind");
-	                            String skinPartName = excludeElement.getAttribute("name");
-	                            
-	                            if (kind.equals("SkinPart") && name.equals(skinPartName))
-	                            {
-	                                if (verbose)
-	                                {
-	                                    System.out.println("Excluding SkinPart " + name + " from " + myClass.getName());
-	                                }
-	                                return;
-	                            }
-                        	}
- 
+                            Element excludeElement = asDocUtil.getElementByTagName(asMetadata, "Exclude");
+                            if (excludeElement != null)
+                            {
+                                String kind = excludeElement.getAttribute("kind");
+                                String skinPartName = excludeElement.getAttribute("name");
+
+                                if (kind.equals("SkinPart") && name.equals(skinPartName))
+                                {
+                                    if (verbose)
+                                    {
+                                        System.out.println("Excluding SkinPart " + name + " from " + myClass.getName());
+                                    }
+                                    return;
+                                }
+                            }
+
                             skinPartsElement = asDocUtil.getElementByTagName(asMetadata, "skinParts");
                             if (skinPartsElement == null)
                             {
@@ -4497,9 +4728,9 @@ public class TopLevelClassesGenerator
 
                         myClass.getNode().appendChild(prolog);
                     }
-                    
+
                     Element newSkinPartElement = (Element)outputObject.importNode(skinPartElement, true);
-                    
+
                     asDocUtil.processCustoms(newSkinPartElement, outputObject);
 
                     childrenOfSkinPart = newSkinPartElement.getElementsByTagName("default");
@@ -4577,11 +4808,11 @@ public class TopLevelClassesGenerator
                         newSkinPartElement.setAttribute("playerVersion", playerversion);
                         newSkinPartElement.removeChild(childrenOfSkinPart.item(0));
                     }
-                    
+
                     skinPartsElement.appendChild(newSkinPartElement);
                 }
             }
-            
+
             Element alternativeElement = asDocUtil.getElementByTagName((Element)parent, "Alternative");
             if (alternativeElement != null)
             {
@@ -4593,11 +4824,11 @@ public class TopLevelClassesGenerator
                 {
                     Element node = myClass.getNode();
                     Element asMetadata = null;
-                    
+
                     Element prolog = asDocUtil.getElementByTagName(node, "prolog");
                     if (prolog != null)
                     {
-                    	asMetadata = asDocUtil.getElementByTagName(prolog, "asMetadata");
+                        asMetadata = asDocUtil.getElementByTagName(prolog, "asMetadata");
 
                         if (asMetadata == null)
                         {
@@ -4616,7 +4847,7 @@ public class TopLevelClassesGenerator
                     }
 
                     Element alternative = (Element)outputObject.importNode(alternativeElement, true);
-                    
+
                     asDocUtil.processCustoms(alternative, outputObject);
 
                     NodeList descriptionList = alternative.getElementsByTagName("description");
@@ -4646,7 +4877,7 @@ public class TopLevelClassesGenerator
 
                         for (int ix = 0; ix < childrenOfAlternative.getLength(); ix++)
                         {
-                        	alternative.removeChild(childrenOfAlternative.item(ix));
+                            alternative.removeChild(childrenOfAlternative.item(ix));
                         }
 
                     }
@@ -4675,7 +4906,7 @@ public class TopLevelClassesGenerator
 
                     asMetadata.appendChild(alternative);
                 }
-            }            
+            }
         }
     }
 
@@ -4696,7 +4927,7 @@ public class TopLevelClassesGenerator
 
             Element defNode = null;
 
-            Element apiClassifierDetailElement = asDocUtil.getElementByTagName( asClass.getNode(), "apiClassifierDetail");
+            Element apiClassifierDetailElement = asDocUtil.getElementByTagName(asClass.getNode(), "apiClassifierDetail");
             if (apiClassifierDetailElement != null)
             {
                 NodeList apiClassifierDefList = apiClassifierDetailElement.getElementsByTagName("apiClassifierDef");
@@ -4751,10 +4982,10 @@ public class TopLevelClassesGenerator
                     baseClass = classTable.get(baseClass.getBaseName());
                 }
             }
-            
+
             asDocUtil.processCopyDoc(asClass, classTable);
         }
-        
+
         // if @copy wasn't processed in the first pass. try one more time for those pending copyDoc updates.
         classes = classTable.values();
         classIterator = classes.iterator();
@@ -4765,8 +4996,8 @@ public class TopLevelClassesGenerator
             if (asClass.getNode() == null || !asClass.isPendingCopyDoc() || asClass.getName().equals(GLOBAL) || (asClass.getName().startsWith("$$") && asClass.getName().endsWith("$$")) || asClass.getName().equals("Object") || (asClass.isInterfaceFlag() && asClass.getInterfaceStr() == null))
             {
                 continue;
-            }        
-            
+            }
+
             asDocUtil.processCopyDoc(asClass, classTable);
         }
     }
@@ -4882,11 +5113,11 @@ public class TopLevelClassesGenerator
                         apiValueDetail = asDocUtil.getElementByTagName(apiValue, "apiValueDetail");
                         if (apiValueDetail != null)
                         {
-                        	apiValueDef = asDocUtil.getElementByTagName(apiValueDetail, "apiValueDef");
+                            apiValueDef = asDocUtil.getElementByTagName(apiValueDetail, "apiValueDef");
                             if (apiValueDef != null)
                             {
-                            	apiValueAccess = asDocUtil.getElementByTagName(apiValueDef, "apiValueAccess");
-                                if (apiValueAccess == null )
+                                apiValueAccess = asDocUtil.getElementByTagName(apiValueDef, "apiValueAccess");
+                                if (apiValueAccess == null)
                                 {
                                     apiValueAccess = outputObject.createElement("apiValueAccess");
                                     apiValueDef.appendChild(apiValueAccess);
@@ -5047,7 +5278,7 @@ public class TopLevelClassesGenerator
                     else if (!asClass.isInnerClass())
                     {
                         Element apiAccess = asDocUtil.getElementByTagName(asClass.getNode(), "apiAccess");
-                        if (apiAccess != null )
+                        if (apiAccess != null)
                         {
                             if (!apiAccess.getAttribute("value").equals("private") || includePrivate)
                             {
@@ -5058,7 +5289,6 @@ public class TopLevelClassesGenerator
                 }
             }
 
-            
             NodeList apiClassifierList = packageElement.getElementsByTagName("apiClassifier");
             NodeList apiValueList = packageElement.getElementsByTagName("apiValue");
             NodeList apiOperationList = packageElement.getElementsByTagName("apiOperation");

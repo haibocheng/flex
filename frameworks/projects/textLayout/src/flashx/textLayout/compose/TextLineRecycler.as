@@ -11,6 +11,7 @@
 package flashx.textLayout.compose
 {	
 	import flash.text.engine.TextLine;
+	import flash.text.engine.TextLineValidity;
 	import flash.utils.Dictionary;
 	
 	import flashx.textLayout.debug.assert;
@@ -54,7 +55,7 @@ package flashx.textLayout.compose
 
 		static public function addLineForReuse(textLine:TextLine):void
 		{
-			CONFIG::debug { assert(textLine.parent == null && textLine.userData == null && (textLine.validity == "invalid"||textLine.validity == "static"),"textLine not ready for reuse"); }
+			CONFIG::debug { assert(textLine.parent == null && textLine.userData == null && (textLine.validity == TextLineValidity.INVALID || textLine.validity == TextLineValidity.STATIC),"textLine not ready for reuse"); }
 			if (_textLineRecyclerEnabled)
 			{
 				CONFIG::debug 
@@ -64,10 +65,28 @@ package flashx.textLayout.compose
 						 assert(line != textLine,"READDING LINE TO CACHE");
 					}
 				}
-
+				CONFIG::debug { cacheTotal++; }
 				reusableLineCache[textLine] = null;
 			}
 		} 
+		CONFIG::debug
+		{
+			/** @private */
+			static tlf_internal var cacheTotal:int = 0;
+			/** @private */
+			static tlf_internal var fetchTotal:int = 0;
+			/** @private */
+			static tlf_internal var hitTotal:int = 0;		
+			
+			static private function recordFetch(hit:int):void
+			{
+				fetchTotal++;
+				hitTotal += hit;
+				
+				/*if ((fetchTotal%100) == 0)
+					trace(fetchTotal,hitTotal,cacheTotal);*/
+			}
+		}
 		
 		/**
 		 * Return a TextLine from the pool for reuse. 
@@ -84,8 +103,11 @@ package flashx.textLayout.compose
 				{
 					// remove from the cache
 					delete reusableLineCache[obj];
+					CONFIG::debug { assert(reusableLineCache[obj] === undefined,"Bad delete"); }
+					CONFIG::debug { recordFetch(1); }
 					return obj as TextLine;
 				}
+				CONFIG::debug { recordFetch(0); }
 			}
 			return null;
 		}

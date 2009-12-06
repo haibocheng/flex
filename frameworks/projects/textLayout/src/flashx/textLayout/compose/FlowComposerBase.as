@@ -137,7 +137,7 @@ package flashx.textLayout.compose
 			{
 				for each (var line:TextFlowLine in _lines)
 				{
-					var textLine:TextLine = line.getTextLine(false);
+					var textLine:TextLine = line.peekTextLine();
 					if (textLine && !textLine.parent)
 					{
 						// releasing all textLines so release each still connected textBlock
@@ -571,9 +571,29 @@ package flashx.textLayout.compose
 		
 	    public function callInContext(fn:Function, thisArg:Object, argsArray:Array, returns:Boolean=true):*
 		{
-	        if (returns)
-	            return fn.apply(thisArg, argsArray);
-	        fn.apply(thisArg, argsArray);
+			CONFIG::debug
+			{
+				var rslt:*
+				try
+				{
+					if (returns)
+						rslt = fn.apply(thisArg, argsArray);
+					else
+						fn.apply(thisArg, argsArray);
+				}
+				catch(e:Error)
+				{
+					// trace(e);
+					throw(e);
+				}
+				return rslt;
+			}
+			CONFIG::release
+			{
+		        if (returns)
+		            return fn.apply(thisArg, argsArray);
+		        fn.apply(thisArg, argsArray);
+			}
 		}
 
 		/**

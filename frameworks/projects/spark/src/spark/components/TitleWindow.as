@@ -155,6 +155,10 @@ use namespace mx_internal;
  *               Width is the larger of the default or explicit width of the widest child, plus the left and 
  *               right container borders padding, or the width of the title text.</td>
  *        </tr>
+ *        <tr>
+ *           <td>Default skin class</td>
+ *           <td>spark.skins.spark.TitleWindowSkin</td>
+ *        </tr>
  *     </table>
  *  
  *  @mxml
@@ -166,10 +170,10 @@ use namespace mx_internal;
  *  &lt;s:TitleWindow&gt;
  *    <strong>Events</strong>
  *    close="<i>No default</i>"
- *    windowMoveStart="<i>No default</i>"
- *    windowMoving="<i>No default</i>"
  *    windowMove="<i>No default</i>"
  *    windowMoveEnd="<i>No default</i>"
+ *    windowMoveStart="<i>No default</i>"
+ *    windowMoving="<i>No default</i>"
  *  &lt;/s:TitleWindow&gt;
  *  </pre>
  *  
@@ -372,12 +376,13 @@ public class TitleWindow extends Panel
                                                 
         if (instance == moveArea)
             moveArea.removeEventListener(MouseEvent.MOUSE_DOWN, moveArea_mouseDownHandler);
+
         else if (instance == closeButton)
             closeButton.removeEventListener(MouseEvent.CLICK, closeButton_clickHandler);
     }
     
     /**
-     *  @inheritDoc
+     *  @private
      *  
      *  @langversion 3.0
      *  @playerversion Flash 10

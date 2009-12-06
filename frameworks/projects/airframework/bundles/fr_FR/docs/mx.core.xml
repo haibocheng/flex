@@ -40,21 +40,21 @@
      
       <p>Pour optimiser votre application, si un composant enfant de votre composant implémente l’interface IFocusManagerComponent et que vous ne souhaitez jamais qu’il reçoive le focus, définissez <codeph>focusEnabled</codeph> sur <codeph>false</codeph> avant d’appeler la méthode <codeph>addChild()</codeph> sur le composant enfant.</p>
      
-      <p><codeph/><codeph/><codeph/> Cela implique également que vous ne pouvez pas changer cette valeur après l’appel de <codeph>addChild()</codeph> et espérer que le FocusManager s’en aperçoive.</p>
+      <p>Ainsi, la classe FocusManager ignorera ce composant et n’y surveillera pas le changement des propriétés <codeph>tabFocusEnabled</codeph>, <codeph>tabChildren</codeph> et <codeph>mouseFocusEnabled</codeph>. Cela implique également que vous ne pouvez pas changer cette valeur après l’appel de <codeph>addChild()</codeph> et espérer que le FocusManager s’en aperçoive.</p>
      
       <p>Remarque : cela ne signifie pas que vous ne pouvez pas attribuer le focus à cet objet par programme dans votre méthode <codeph>setFocus()</codeph>, mais simplement que le FocusManager ignore ce composant IFocusManagerComponent dans ses recherches d’actions de souris et de tabulation.</p>
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.core:FlexHTMLLoader:hasFocusableChildren:get"><apiName>hasFocusableChildren</apiName><shortdesc>
-       </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="4.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Boolean"/><apiDefaultValue>false
+      Indicateur qui signale si les objets enfant peuvent recevoir le focus. Cette fonction est similaire à la propriété tabChildren de Flash Player. Elle possède généralement la valeur false, car la plupart des composants reçoivent le focus ou le délèguent à un seul sous-composant interne et apparaissent comme s’ils avaient reçu le focus. </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="4.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Boolean"/><apiDefaultValue>false
       
       </apiDefaultValue></apiValueDef><apiDesc>
-      
+      Indicateur qui signale si les objets enfant peuvent recevoir le focus 
      
-      <p><codeph/></p>
+      <p>Cette fonction est similaire à la propriété <codeph>tabChildren</codeph> de Flash Player. </p>
      
-      <p><codeph/>  <codeph/><codeph/> </p>
+      <p>Cette valeur est généralement <codeph>false</codeph>, car la plupart des composants reçoivent le focus ou le délèguent à un sous-composant interne unique et apparaissent comme s’ils avaient reçu le focus. Par exemple, un TextInput contient un contrôle RichEditableText enfant pouvant recevoir le focus, mais si le sous-composant RichEditableText reçoit le focus, le composant TextInput s’affiche comme s’il avait le focus. TextInput définit <codeph>hasFocusableChildren</codeph> sur <codeph>false</codeph>, car TextInput est considéré comme le composant ayant le focus. Sa structure interne est une abstraction. </p>
      
-      <p><codeph/></p>
+      <p>Généralement, seuls les indicateurs des composants de navigateur tels que TabNavigator et Accordion sont définis sur <codeph>true</codeph>, car, bien qu’ils reçoivent le focus sur l’onglet, le focus est attribué aux composants des conteneurs enfant des onglets ultérieurs. </p>
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.core:FlexHTMLLoader:mouseFocusEnabled:get"><apiName>mouseFocusEnabled</apiName><shortdesc>
       Indique si le composant peut recevoir le focus à l’aide de la souris.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Boolean"/><apiDefaultValue>true
@@ -63,14 +63,14 @@
       Indique si le composant peut recevoir le focus à l’aide de la souris. Si la valeur est <codeph>false</codeph>, le focus est transféré au premier parent ayant une propriété <codeph>mouseFocusEnabled</codeph> définie sur <codeph>true</codeph>. 
      
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.core:FlexHTMLLoader:tabFocusEnabled:get"><apiName>tabFocusEnabled</apiName><shortdesc>
-       </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="4.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Boolean"/><apiDefaultValue>true
+      Indicateur qui signale si les objets enfant peuvent recevoir le focus. Cette fonction est similaire à la propriété tabEnabled de Flash Player. Sa valeur est généralement true pour les composants qui gèrent l’entrée au clavier, mais certains composants des barres de contrôle les définissent sur false, car il est conseillé de ne pas voler le focus d’un autre composant (un éditeur, par exemple).</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="4.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Boolean"/><apiDefaultValue>true
       
       </apiDefaultValue></apiValueDef><apiDesc>
-      
+      Indicateur qui signale si les objets enfant peuvent recevoir le focus 
      
-      <p><codeph/></p>
+      <p>Cette fonction est similaire à la propriété <codeph>tabEnabled</codeph> de Flash Player. </p>
      
-      <p><codeph/><codeph/>
+      <p>Cette valeur est généralement <codeph>true</codeph> pour les composants qui traitent les entrée au clavier, mais certains composants des barres de contrôle la définissent sur <codeph>false</codeph>, car il est conseillé de ne pas voler le focus d’un autre composant (un éditeur, par exemple). 
       </p>
      
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.core:Window"><apiName>Window</apiName><shortdesc>
@@ -486,7 +486,7 @@
       Crée puis ouvre le composant NativeWindow sous-jacent.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>openWindowActive</apiItemName><apiType value="Boolean"/><apiData>true</apiData><apiDesc>Spécifie si la fenêtre s’ouvre activée (indique si elle a le focus). La valeur par défaut est <codeph>true</codeph>.
       
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Crée puis ouvre le composant NativeWindow sous-jacent.
+      Crée puis ouvre le composant NativeWindow sous-jacent. Après sa fermeture, l’objet Window demeure une référence valide, mais l’accès à la plupart des propriétés et des méthodes sera impossible. Les fenêtres fermées ne peuvent pas être rouvertes.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.core:Window:orderInBackOf"><apiName>orderInBackOf</apiName><shortdesc>
       Classe la fenêtre juste derrière une autre. </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc><codeph>true</codeph> si cette fenêtre a été déplacée vers l’arrière ; <codeph>false</codeph> si cette fenêtre est invisible ou réduite.

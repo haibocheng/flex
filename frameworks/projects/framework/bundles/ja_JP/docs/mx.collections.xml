@@ -37,24 +37,25 @@
       
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.collections:AsyncListView"><apiName>AsyncListView</apiName><shortdesc>
   </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseInterface>mx.collections:IList</apiBaseInterface><apiBaseClassifier>mx.utils:OnDemandEventDispatcher</apiBaseClassifier></apiClassifierDef><apiDesc>
-  <codeph/>
+  <codeph/><codeph/><codeph/>
  
-  <p><codeph/><codeph/></p>
+  <p>getItemAt() メソッドは、基になる要求が成功または失敗するまで、暫定保留アイテムを返すことで ItemPendingErrors を処理します。暫定アイテムは <codeph>createPendingItemFunction</codeph> を呼び出すことで生成されます。要求が成功した場合は、暫定アイテムが実際のアイテムに置き換わり、失敗した場合は、<codeph>createFailedItemFunction</codeph> の呼び出しで返されたアイテムに置き換わります。</p>
  
-  <p><codeph/></p>
+  <p>このクラスは、IList メソッドおよびプロパティを <codeph>list</codeph> に委譲します。リストが指定されていない場合、コレクションを変更するメソッドは no-op になり、コレクションに対するクエリでは null やゼロなどの空の値が返されます。</p>
+ 
+  <p>このクラスは、List や ComboBox などの DataGroup に基づく Spark コンポーネントでの使用を意図しています。これらのコンポーネントには ItemPendingError 処理のサポートが本来含まれていません。</p>
  
   <p/>
  
- 
   </apiDesc></apiClassifierDetail><adobeApiEvent id="mx.collections:AsyncListView_mx.events.CollectionEvent.COLLECTION_CHANGE_collectionChange"><apiName>collectionChange</apiName><shortdesc>
-  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>mx.events.CollectionEvent.COLLECTION_CHANGE</apiEventType><adobeApiEventClassifier>mx.events.CollectionEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
-  
+  リストの長さが変更されたときや、リストのエレメントが置換されたときに送出されます。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>mx.events.CollectionEvent.COLLECTION_CHANGE</apiEventType><adobeApiEventClassifier>mx.events.CollectionEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+  リストの長さが変更されたときや、リストのエレメントが置換されたときに送出されます。
  
   </apiDesc></adobeApiEventDetail></adobeApiEvent><apiConstructor id="mx.collections:AsyncListView:AsyncListView"><apiName>AsyncListView</apiName><shortdesc>
-      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>list</apiItemName><apiOperationClassifier>mx.collections:IList</apiOperationClassifier><apiData>null</apiData><apiDesc>
+      AsyncListView コンストラクターです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>list</apiItemName><apiOperationClassifier>mx.collections:IList</apiOperationClassifier><apiData>null</apiData><apiDesc>list プロパティの初期値です。委譲先のリストです。
       
       </apiDesc></apiParam></apiConstructorDef><apiDesc>
-      
+      AsyncListView コンストラクターです。
      
       </apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="mx.collections:AsyncListView:addItem"><apiName>addItem</apiName><shortdesc>
       
@@ -75,16 +76,16 @@
       指定されたインデックス位置にアイテムを追加します。 追加したアイテムより大きいインデックスを持つすべてのアイテムのインデックスが 1 ずつ増えます。 指定されたインデックスが 0 未満であるか、またはリストの長さより大きい場合は、RangeError がスローされます。
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.collections:AsyncListView:getItemAt"><apiName>getItemAt</apiName><shortdesc>
-      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc><codeph>index &lt; 0</codeph> または <codeph>index >= length</codeph> の場合。
-      </apiDesc><apiItemName>RangeError</apiItemName><apiOperationClassifier>RangeError</apiOperationClassifier></apiException><apiReturn><apiDesc>
-      </apiDesc><apiType value="Object"/></apiReturn><apiParam><apiItemName>index</apiItemName><apiType value="int"/><apiDesc>
+      list.getItemAt(index) の値を返します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc><codeph>index &lt; 0</codeph> または <codeph>index >= length</codeph> の場合。
+      </apiDesc><apiItemName>RangeError</apiItemName><apiOperationClassifier>RangeError</apiOperationClassifier></apiException><apiReturn><apiDesc>指定したインデックスのリストアイテムです。
+      </apiDesc><apiType value="Object"/></apiReturn><apiParam><apiItemName>index</apiItemName><apiType value="int"/><apiDesc>アイテムを取得するリストインデックスです。
       </apiDesc></apiParam><apiParam><apiItemName>prefetch</apiItemName><apiType value="int"/><apiData>0</apiData><apiDesc>アイテムがローカルでない場合に要求時に取得するアイテムの方向と量を示す <codeph>int</codeph> 値です。
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      <codeph/>
+      <codeph>list.getItemAt(index)</codeph> の値を返します。
      
-      <p><codeph/><codeph/><codeph/></p>
+      <p>このメソッドは、getItemAt() の呼び出し結果として生成された ItemPendingErrors (IPEs) を受け取ります。IPE がスローされると、IPE に <codeph>IResponder</codeph> が追加され、<codeph>createPendingItemFunction</codeph> で作成された暫定保留アイテムが返されます。最終的に基になる要求が成功した場合、保留アイテムが実際のアイテムで置換されます。要求が失敗した場合、保留アイテムは <codeph>createFailedItemFunction</codeph> を呼び出して生成された値で置換されます。</p>
      
-      </apiDesc></apiOperationDetail><related-links><link href="" invalidHref="mx.collections.createPendingItemFunction.xml"><linktext/></link><link href="" invalidHref="mx.collections.createFailedItemFunction.xml"><linktext/></link><link href="mx.collections.errors.xml#ItemPendingError"><linktext>mx.collections.errors.ItemPendingError</linktext></link><link href="mx.rpc.xml#IResponder"><linktext>mx.rpc.IResponder</linktext></link></related-links></apiOperation><apiOperation id="mx.collections:AsyncListView:getItemIndex"><apiName>getItemIndex</apiName><shortdesc>
+      </apiDesc></apiOperationDetail><related-links><link href="" invalidHref="mx.collections.createPendingItemFunction.xml"><linktext>createPendingItemFunction</linktext></link><link href="" invalidHref="mx.collections.createFailedItemFunction.xml"><linktext>createFailedItemFunction</linktext></link><link href="mx.collections.errors.xml#ItemPendingError"><linktext>mx.collections.errors.ItemPendingError</linktext></link><link href="mx.rpc.xml#IResponder"><linktext>mx.rpc.IResponder</linktext></link></related-links></apiOperation><apiOperation id="mx.collections:AsyncListView:getItemIndex"><apiName>getItemIndex</apiName><shortdesc>
       
       リスト内の、getItemAt(index) == アイテムとなるアイテムのインデックスを返します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>アイテムのインデックスです。アイテムがリスト内にない場合は -1 です。
       
@@ -121,14 +122,14 @@
       <p><codeph>ItemPendingError</codeph> の使用の詳細については、ItemPendingError およびコレクションの説明を参照してください。</p>
       
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.collections:AsyncListView:removeItemAt"><apiName>removeItemAt</apiName><shortdesc>
+      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc><codeph>index &lt; 0</codeph> または <codeph>index >= length</codeph> の場合。
+      </apiDesc><apiItemName>RangeError</apiItemName><apiOperationClassifier>RangeError</apiOperationClassifier></apiException><apiReturn><apiDesc>
       
-      指定されたインデックス位置にあるアイテムを削除し、返します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>削除されたアイテムです。
-     
-      </apiDesc><apiType value="Object"/></apiReturn><apiParam><apiItemName>index</apiItemName><apiType value="int"/><apiDesc>アイテムが削除されるインデックスです。
-     
+      </apiDesc><apiType value="Object"/></apiReturn><apiParam><apiItemName>index</apiItemName><apiType value="int"/><apiDesc>アイテムを取得するリストインデックスです。
       </apiDesc></apiParam></apiOperationDef><apiDesc>
       
-      指定されたインデックス位置にあるアイテムを削除し、返します。 このインデックスより後にあったアイテムは、インデックスが 1 つずつ前になります。
+     
+      <p><codeph/></p>
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.collections:AsyncListView:setItemAt"><apiName>setItemAt</apiName><shortdesc>
       
@@ -143,25 +144,22 @@
       指定されたインデックス位置にアイテムを配置します。 アイテムが既にそのインデックス位置にある場合は、新しいアイテムに置き換えられ、インデックス位置にあったアイテムが返されます。
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.collections:AsyncListView:toArray"><apiName>toArray</apiName><shortdesc>
-      
-      IList 実装と同じ順序で指定された配列を返します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>配列です。
-      
+      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>
       </apiDesc><apiType value="Array"/></apiReturn></apiOperationDef><apiDesc>
       
-      IList 実装と同じ順序で指定された配列を返します。 このメソッドでは、ItemPendingError がスローされることがあります。
-     
+      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.collections:AsyncListView:toString"><apiName>toString</apiName><shortdesc>
-      このビューのコンテンツをストリングにプリントし、返します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>このビューのストリング形式のコンテンツです。
+      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>
       
       </apiDesc><apiType value="String"/></apiReturn></apiOperationDef><apiDesc>
-      このビューのコンテンツをストリングにプリントし、返します。
+      
      
       </apiDesc></apiOperationDetail></apiOperation><apiValue id="mx.collections:AsyncListView:createFailedItemFunction:get"><apiName>createFailedItemFunction</apiName><shortdesc>
-      </shortdesc><prolog/><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Function"/><apiDefaultValue>A function that unconditionally returns null. 
+      ItemPendingError のスロー原因となった要求が失敗に終わったときに、代替アイテムを作成するために使用する関数です。</shortdesc><prolog/><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Function"/><apiDefaultValue>A function that unconditionally returns null. 
       </apiDefaultValue></apiValueDef><apiDesc>
-      <codeph/><codeph/>
+      <codeph>ItemPendingError</codeph> のスロー原因となった要求が失敗に終わったときに、代替アイテムを作成するために使用する関数です。既存のアイテム（通常は、<codeph>createPendingItemFunction()</codeph> の値で作成された保留アイテム）が、失敗アイテムで置換されます。
       
-      <p/> 
+      <p>このプロパティの値は、2 つのパラメーターを持つ関数である必要があります。パラメーターは、要求されたアイテムのインデックスと、IResponder fault() メソッドから渡される失敗の "info" オブジェクトです。多くの場合、2 つ目のパラメーターは無視できます。次に例を示します。</p> 
       <pre>
      function createFailedItem(index:int, info:Object):Object
      {
@@ -170,15 +168,15 @@
        </pre>
       
      
-      <p>
+      <p>このプロパティを設定しても、作成済みの失敗アイテムに影響はありません。このプロパティを null に設定すると、失敗アイテムは作成されなくなります。
       </p>
      
-      </apiDesc></apiValueDetail><related-links><link href="mx.collections.xml#AsyncListView/getItemAt"><linktext>getItemAt</linktext></link><link href="" invalidHref="mx.collections.createPendingItemFunction.xml"><linktext/></link><link href="mx.rpc.xml#IResponder/fault"><linktext/></link></related-links></apiValue><apiValue id="mx.collections:AsyncListView:createPendingItemFunction:get"><apiName>createPendingItemFunction</apiName><shortdesc>
-       </shortdesc><prolog/><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Function"/><apiDefaultValue>A function that unconditionally returns null. 
+      </apiDesc></apiValueDetail><related-links><link href="mx.collections.xml#AsyncListView/getItemAt"><linktext>getItemAt</linktext></link><link href="" invalidHref="mx.collections.createPendingItemFunction.xml"><linktext>createPendingItemFunction</linktext></link><link href="mx.rpc.xml#IResponder/fault"><linktext>mx.rpc.IResponder.fault</linktext></link></related-links></apiValue><apiValue id="mx.collections:AsyncListView:createPendingItemFunction:get"><apiName>createPendingItemFunction</apiName><shortdesc>
+       最初の要求で ItemPendingError がスローされたときに、暫定アイテムを作成するために使用する関数です。</shortdesc><prolog/><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Function"/><apiDefaultValue>A function that unconditionally returns null. 
       </apiDefaultValue></apiValueDef><apiDesc>
-       <codeph/><codeph/>
+       最初の要求で <codeph>ItemPendingError</codeph> がスローされたときに、暫定アイテムを作成するために使用する関数です。最終的に要求が成功した場合、暫定アイテムは実際のアイテムに自動的に置換されます。要求が失敗した場合、アイテムは <codeph>createFailedItemFunction</codeph> で作成されたアイテムに置換されます。
       
-       <p> 
+       <p>このプロパティの値は、2 つのパラメーターを持つ関数である必要があります。パラメーターは、要求された dataProvider アイテムのインデックスと、ItemPendingError 自体です。多くの場合、2 つ目のパラメーターは無視できます。次に例を示します。 
        <pre>
      function createPendingItem(index:int, ipe:ItemPendingError):Object
      {
@@ -187,21 +185,21 @@
        </pre>
        </p>
      
-      <p/>
+      <p>このプロパティを設定しても、作成済みの暫定保留アイテムに影響はありません。このプロパティを null に設定すると、暫定保留アイテムは作成されなくなります。</p>
      
-      </apiDesc></apiValueDetail><related-links><link href="mx.collections.xml#AsyncListView/getItemAt"><linktext>getItemAt</linktext></link><link href="" invalidHref="mx.collections.createFailedItemFunction.xml"><linktext/></link><link href="mx.collections.errors.xml#ItemPendingError"><linktext>mx.collections.errors.ItemPendingError</linktext></link></related-links></apiValue><apiValue id="mx.collections:AsyncListView:length:get"><apiName>length</apiName><shortdesc>
+      </apiDesc></apiValueDetail><related-links><link href="mx.collections.xml#AsyncListView/getItemAt"><linktext>getItemAt</linktext></link><link href="" invalidHref="mx.collections.createFailedItemFunction.xml"><linktext>createFailedItemFunction</linktext></link><link href="mx.collections.errors.xml#ItemPendingError"><linktext>mx.collections.errors.ItemPendingError</linktext></link></related-links></apiValue><apiValue id="mx.collections:AsyncListView:length:get"><apiName>length</apiName><shortdesc>
       
       コレクション内のアイテムの数です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="int"/></apiValueDef><apiDesc>
       
       コレクション内のアイテムの数です。 0 はアイテムがないことを意味し、-1 は長さが不明であることを意味します。 
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.collections:AsyncListView:list:get"><apiName>list</apiName><shortdesc>
-      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>mx.collections:IList</apiValueClassifier><apiDefaultValue>null  
+      このコレクションビューがラップする IList です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>mx.collections:IList</apiValueClassifier><apiDefaultValue>null  
       
       </apiDefaultValue></apiValueDef><apiDesc>
-      
+      このコレクションビューがラップする IList です。つまり、すべての IList メソッドの委譲先オブジェクトです。
      
-      <p><codeph/><codeph/><codeph/></p>
+      <p>このプロパティが null の場合、<codeph>setItemAt()</codeph> などの IList 変更メソッドは no-op になり、<codeph>getItemAt()</codeph> などの IList クエリメソッドでは、null またはゼロ（<codeph>getItemIndex()</codeph> の場合は -1）が返されます。</p>
      
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.collections:ItemResponder"><apiName>ItemResponder</apiName><shortdesc>
   ItemResponder クラスは、mx.rpc.IResponder インターフェイスのデフォルト実装を提供します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseInterface>mx.rpc:IResponder</apiBaseInterface><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>

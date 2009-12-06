@@ -15,7 +15,9 @@ import flex2.compiler.SymbolTable;
 import flex2.compiler.TranscoderException;
 import flex2.compiler.common.PathResolver;
 import flex2.compiler.io.VirtualFile;
+import flex2.compiler.util.CompilerMessage;
 import flex2.compiler.util.MimeMappings;
+import flex2.compiler.util.ThreadLocalToolkit;
 import flash.svg.SpriteTranscoder;
 import flash.swf.tags.DefineSprite;
 import org.apache.batik.transcoder.TranscoderInput;
@@ -36,6 +38,8 @@ import java.util.zip.GZIPInputStream;
  */
 public class SVGTranscoder extends AbstractTranscoder
 {
+	private Boolean deprecationIssued = false;
+	
 	public SVGTranscoder()
 	{
 		super(new String[]{MimeMappings.SVG, MimeMappings.SVG_XML}, DefineSprite.class, true);
@@ -45,6 +49,14 @@ public class SVGTranscoder extends AbstractTranscoder
                                            Map<String, Object> args, String className, boolean generateSource )
         throws TranscoderException
 	{
+        // Flag a deprecation warning, as SVG has been deprecated since Flex 4.0. We only issue 
+        // a warning once per compilation.
+        if (!deprecationIssued)
+        {
+            ThreadLocalToolkit.log(new Deprecated());
+            deprecationIssued = true;
+        }
+        
         TranscodingResults results = new TranscodingResults( resolveSource( context, args ));
         String newName = (String) args.get( NEWNAME );
 
@@ -180,5 +192,10 @@ public class SVGTranscoder extends AbstractTranscoder
 		}
 
 		return b;
+	}
+	
+	public static class Deprecated extends CompilerMessage.CompilerWarning
+	{
+		private static final long serialVersionUID = 274970449301472265L;
 	}
 }

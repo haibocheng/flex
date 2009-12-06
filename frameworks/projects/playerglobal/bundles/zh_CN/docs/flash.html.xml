@@ -1,0 +1,709 @@
+<?xml version="1.0"?>
+<apiPackage id="flash.html"><apiName>flash.html</apiName><apiDetail/><apiClassifier id="flash.html:HTMLHistoryItem"><apiName>HTMLHistoryItem</apiName><shortdesc>
+ HTMLHistoryItem 对象描述 HTMLLoader 对象的导航历史记录中的位置。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ HTMLHistoryItem 对象描述 HTMLLoader 对象的导航历史记录中的位置。
+ 
+ </apiDesc></apiClassifierDetail><related-links><link href="HTMLLoader.html"><linktext>HTMLLoader</linktext></link><link href="HTMLWindowCreateOptions.html"><linktext>HTMLWindowCreateOptions</linktext></link></related-links><apiValue id="flash.html:HTMLHistoryItem:isPost:get"><apiName>isPost</apiName><shortdesc>
+	指示 HTML 页是否包含 POST 数据。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	指示 HTML 页是否包含 POST 数据。
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLHistoryItem:originalUrl:get"><apiName>originalUrl</apiName><shortdesc>
+	在进行任何重定向之前，HTML 页的原始 URL。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	在进行任何重定向之前，HTML 页的原始 URL。
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLHistoryItem:title:get"><apiName>title</apiName><shortdesc>
+	HTML 页的标题。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	HTML 页的标题。
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLHistoryItem:url:get"><apiName>url</apiName><shortdesc>
+	HTML 页的 URL。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	HTML 页的 URL。
+	
+	</apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.html:HTMLHost"><apiName>HTMLHost</apiName><shortdesc>
+ HTMLHost 对象定义用户界面元素的 HTMLLoader 对象的行为，用户界面元素可通过设置 HTML 页的 window 对象的各个属性或调用该对象的各个方法进行控制。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ HTMLHost 对象定义用户界面元素的 HTMLLoader 对象的行为，用户界面元素可通过设置 HTML 页的 <codeph>window</codeph> 对象的各个属性或调用该对象的各个方法进行控制。这些方法和属性是：
+ 
+ <ul>
+ 
+ 		<li><codeph>window.blur()</codeph></li>
+ 		<li><codeph>window.focus()</codeph></li>
+ 		<li><codeph>window.moveBy()</codeph></li>
+ 		<li><codeph>window.moveTo()</codeph></li>
+ 		<li><codeph>window.location</codeph></li>
+ 		<li><codeph>window.close()</codeph></li>
+ 		<li><codeph>window.open()</codeph></li>
+ 		<li><codeph>window.resizeBy()</codeph></li>
+ 		<li><codeph>window.resizeTo()</codeph></li>
+ 		<li><codeph>window.status</codeph></li>
+ 		<li><codeph>window.document.title</codeph></li>
+ </ul>
+ 
+ <p>HTMLHost 类中的方法为处理这些 <codeph>window</codeph> 设置的每种设置的更改提供了途径。要使用此类，请创建一个扩展 HTMLHost 类并覆盖要定义其行为的方法的新类（一个子类）。HTMLHost 类的方法处理 JavaScript 的以下属性和方法：</p>
+ 
+ <adobetable class="innertable">
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ <tgroup cols="2"><thead><row><entry>JavaScript 属性或方法</entry><entry>HTMLHost 方法</entry></row></thead><tbody><row>
+ 		<entry><codeph>window.blur()</codeph></entry>
+ 		<entry><codeph>windowBlur()</codeph></entry>
+ </row><row>
+ 		<entry><codeph>window.focus()</codeph></entry>
+ 		<entry><codeph>windowFocus</codeph></entry>
+ </row><row>
+ 		<entry><codeph>window.location</codeph></entry>
+ 		<entry><codeph>updateLocation</codeph></entry>
+ </row><row>
+ 		<entry><codeph>window.close()</codeph></entry>
+ 		<entry><codeph>windowClose</codeph></entry>
+ </row><row>
+ 		<entry><codeph>window.open()</codeph></entry>
+ 		<entry><codeph>createWindow</codeph></entry>
+ </row><row>
+ 		<entry><codeph>window.status</codeph></entry>
+ 		<entry><codeph>updateStatus</codeph></entry>
+ </row><row>
+ 		<entry><codeph>window.document.title</codeph></entry>
+ 		<entry><codeph>updateTitle</codeph></entry>
+ </row></tbody></tgroup></adobetable>
+ 
+ <p>要响应 <codeph>window.moveBy()</codeph>、<codeph>window.moveTo()</codeph>、<codeph>window.resizeBy()</codeph> 和 <codeph>window.resizeTo()</codeph> 方法中的更改，请覆盖 HTMLHost 的子类中的 <codeph>set windowRect()</codeph> 方法。</p>
+ 
+ <p>每个 HTMLHost 对象最多可与一个 HTMLLoader 对象相关联。将 HTMLHost 实例分配给 HTMLLoader 对象的 <codeph>htmlHost</codeph> 属性可建立此关系。将 <codeph>null</codeph> 分配给 HTMLLoader 对象的 <codeph>htmlHost</codeph> 属性或将 HTMLHost 对象设置为另一个 HTMLLoader 对象的 <codeph>htmlHost</codeph> 属性可以从第一个 HTMLLoader 对象中删除该 HTMLHost。</p>
+ 
+ </apiDesc><example conref="examples\HTMLHost.1.as"> 下面的代码定义 HTMLHost 的子类 CustomHost。CustomHost 类的方法覆盖 HTMLHost 类中继承的方法以定义 HTMLLoader 页面中的 JavaScript 代码设置各个属性或调用 <codeph>window</codeph> 对象的各个方法时所要采取的动作：
+<codeblock>
+package
+{
+    import flash.html.HTMLHost;
+    import flash.html.HTMLLoader;
+    import flash.display.NativeWindow;
+    import flash.display.NativeWindowInitOptions;
+    import flash.display.StageScaleMode;
+    import flash.geom.Rectangle;
+    import flash.text.TextField;
+
+    public class CustomHost extends HTMLHost
+    {
+        import flash.html.*;
+        public var statusField:TextField;
+        public function CustomHost(defaultBehaviors:Boolean=true)
+        {
+            super(defaultBehaviors);
+        }
+        override public function windowClose():void
+        {
+            htmlLoader.stage.window.close();
+        }
+        override public function createWindow(windowCreateOptions:HTMLWindowCreateOptions):HTMLLoader
+        {
+            var initOptions:NativeWindowInitOptions = new NativeWindowInitOptions();
+            var window:NativeWindow = new NativeWindow(initOptions);
+            window.visible = true;
+            var htmlLoader2:HTMLLoader = new HTMLLoader();
+            htmlLoader2.width = window.width;
+            htmlLoader2.height = window.height;
+            window.stage.scaleMode = StageScaleMode.NO_SCALE;
+            window.stage.addChild(htmlLoader2);
+            return htmlLoader2;
+        }
+        override public function updateLocation(locationURL:String):void
+        {
+            trace(locationURL);
+        }        
+        override public function set windowRect(value:Rectangle):void
+        {
+            htmlLoader.stage.nativeWindow.bounds = value;
+        }
+        override public function updateStatus(status:String):void
+        {
+            statusField.text = status;
+        }        
+        override public function updateTitle(title:String):void
+        {
+            htmlLoader.stage.nativeWindow.title = title + "- Example Application";
+        }
+        override public function windowBlur():void
+        {
+            htmlLoader.alpha = 0.5;
+        }
+        override public function windowFocus():void
+        {
+            htmlLoader.alpha = 1;
+        }
+    }
+}
+</codeblock> 创建下面的类（它将 HTMLLoader 对象添加到舞台）以及一个名为 <codeph>statusBar</codeph> 的 TextField 对象。HTMLLoader 对象将 CustomHost 对象定义为其 <codeph>htmlHost</codeph> 属性：
+ 
+ <codeblock>package
+ {
+     import flash.display.Sprite;
+ 
+     public class SimpleHTMLBox extends Sprite
+     {
+         import mx.controls.HTML;
+         import flash.html.HTMLLoader;
+         import flash.text.TextField;
+         import flash.net.URLRequest;
+         import CustomHost;
+         private var host:CustomHost;
+         private var statusField:TextField;
+         private var html:HTMLLoader;
+         
+         public function SimpleHTMLBox()
+         {
+             html = new HTMLLoader();
+             var url:String = "Test.html";
+             var urlReq:URLRequest = new URLRequest(url); 
+             html.load(urlReq);
+             
+             host = new CustomHost();
+             html.htmlHost = host;
+             statusField = new TextField();
+             host.statusField = statusField;
+             
+             configureUI();
+         }
+         private function configureUI():void
+         {
+             html.width = 400;
+             html.height = 200;
+             statusField.width = 400;
+             statusField.height = 24;
+             statusField.border = true;
+             statusField.y = 200;
+             
+             addChild(html);
+             addChild(statusField);                
+         }
+         
+     }
+ }</codeblock>
+ 
+ <p>构建一个 AIR 应用程序，该应用程序将由此类定义的对象添加到主窗口的舞台。</p>
+ 
+ <p>在应用程序资源目录（包含应用程序描述符文件的目录）中创建一个名为 Test.html 的 HTML 页，并在其中添加以下内容：</p>
+ 
+ <codeblock>&lt;html>
+     &lt;head>
+         &lt;title>Test&lt;/title>
+     &lt;/head>
+     &lt;body>
+         &lt;a href="#" onclick="window.open('Test.html')">window.open('Test.html')&lt;/a>
+         &lt;br/>&lt;a href="#" onclick="window.document.location = 'www.adobe.com'">window.document.location = 'www.adobe.com'&lt;/a>
+         &lt;br/>&lt;a href="#" onclick="window.moveBy(6, 12)">moveBy(6, 12)&lt;/a>
+         &lt;br/>&lt;a href="#" onclick="window.close()">window.close()&lt;/a>
+         &lt;br/>&lt;a href="#" onclick="window.blur()">window.blur()&lt;/a>
+         &lt;br/>&lt;a href="#" onclick="window.focus()">window.focus()&lt;/a>
+         &lt;br/>&lt;a href="#" onclick="window.status = new Date().toString()">window.status = new Date().toString()&lt;/a>
+     &lt;/body>
+ &lt;/html></codeblock>
+ 
+ <p>测试应用程序时，CustomHost 类可以处理 HTML 页中与用户界面相关的 JavaScript 设置。</p>
+</example></apiClassifierDetail><related-links><link href="HTMLLoader.html"><linktext>HTMLLoader</linktext></link><link href="HTMLWindowCreateOptions.html"><linktext>HTMLWindowCreateOptions</linktext></link></related-links><apiConstructor id="flash.html:HTMLHost:HTMLHost"><apiName>HTMLHost</apiName><shortdesc>
+	 创建 HTMLHost 对象。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>defaultBehaviors</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>true</apiData><apiDesc>指示默认情况下是否应该提供根内容行为。
+	 
+	 </apiDesc></apiParam></apiConstructorDef><apiDesc>
+	 创建 HTMLHost 对象。
+	 
+	 </apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="flash.html:HTMLHost:createWindow"><apiName>createWindow</apiName><shortdesc>
+	HTMLLoader 对象中的 JavaScript 代码调用 window.open() 方法时调用的函数。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>包含新的 HTML 页的 HTMLLoader 对象。通常，可以在此方法中创建一个新 HTMLLoader 对象，将该对象添加到新 NativeWindow 对象的舞台，然后返回该对象。
+	
+	</apiDesc><apiOperationClassifier>flash.html:HTMLLoader</apiOperationClassifier></apiReturn><apiParam><apiItemName>windowCreateOptions</apiItemName><apiOperationClassifier>flash.html:HTMLWindowCreateOptions</apiOperationClassifier><apiDesc>一个对象，其字符串中包含作为对 <codeph>window.open()</codeph> 的调用的 <codeph>features</codeph> 参数进行传递的属性。
+	
+	</apiDesc></apiParam></apiOperationDef><apiDesc>
+	HTMLLoader 对象中的 JavaScript 代码调用 <codeph>window.open()</codeph> 方法时调用的函数。 
+	
+	<p>默认情况下，HTMLLoader 的 HTML 页中对 <codeph>window.open()</codeph> 进行的 JavaScript 调用<i>不会</i> 在运行时打开新的 NativeWindow 对象。通过在 HTMLHost 类的子类的 <codeph>createWindow</codeph> 方法覆盖中创建新的 NativeWindow 对象，可以在运行时打开新的 NativeWindow 对象。</p>
+	
+	</apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.html:HTMLHost:updateLocation"><apiName>updateLocation</apiName><shortdesc>
+	HTMLLoader 对象中的 JavaScript 代码设置 window.location 属性时调用的函数。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>locationURL</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>为 HTMLLoader 对象的 <codeph>window</codeph> 属性的 <codeph>location</codeph> 属性设置的值。
+	
+	</apiDesc></apiParam></apiOperationDef><apiDesc>
+	HTMLLoader 对象中的 JavaScript 代码设置 <codeph>window.location</codeph> 属性时调用的函数。 
+	
+	</apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.html:HTMLHost:updateStatus"><apiName>updateStatus</apiName><shortdesc>
+	HTMLLoader 对象中的 JavaScript 代码设置 window.status 属性时调用的函数。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>status</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>为 HTMLLoader 对象的 <codeph>window</codeph> 属性的 <codeph>status</codeph> 属性设置的值。
+	
+	</apiDesc></apiParam></apiOperationDef><apiDesc>
+	HTMLLoader 对象中的 JavaScript 代码设置 <codeph>window.status</codeph> 属性时调用的函数。 
+	
+	</apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.html:HTMLHost:updateTitle"><apiName>updateTitle</apiName><shortdesc>
+	HTMLLoader 对象中的 JavaScript 代码设置 window.document.title 属性或 title 元素发生更改（通过 DOM 或由于加载新页面）时调用的函数。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>title</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>为 HTMLLoader 对象的 <codeph>window.document.title</codeph> 属性设置的值。
+	
+	</apiDesc></apiParam></apiOperationDef><apiDesc>
+	HTMLLoader 对象中的 JavaScript 代码设置 <codeph>window.document.title</codeph> 属性或 <codeph>title</codeph> 元素发生更改（通过 DOM 或由于加载新页面）时调用的函数。
+	
+	</apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.html:HTMLHost:windowBlur"><apiName>windowBlur</apiName><shortdesc>
+	HTMLLoader 对象中的 JavaScript 代码调用 window.blur() 方法时调用的函数。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+	HTMLLoader 对象中的 JavaScript 代码调用 <codeph>window.blur()</codeph> 方法时调用的函数。
+	
+	</apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.html:HTMLHost:windowClose"><apiName>windowClose</apiName><shortdesc>
+	HTMLLoader 对象中的 JavaScript 代码调用 window.close() 方法时调用的函数。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+	HTMLLoader 对象中的 JavaScript 代码调用 <codeph>window.close()</codeph> 方法时调用的函数。 
+	
+	<p>默认情况下，HTMLLoader 对象的 HTML 页中对 <codeph>window.close()</codeph> 进行的 JavaScript 调用将会关闭包含 HTMLLoader 对象的窗口。</p>
+	
+	</apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.html:HTMLHost:windowFocus"><apiName>windowFocus</apiName><shortdesc>
+	HTMLLoader 对象中的 JavaScript 代码调用 window.focus() 方法时调用的函数。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+	HTMLLoader 对象中的 JavaScript 代码调用 <codeph>window.focus()</codeph> 方法时调用的函数。
+	
+	</apiDesc></apiOperationDetail></apiOperation><apiValue id="flash.html:HTMLHost:htmlLoader:get"><apiName>htmlLoader</apiName><shortdesc>
+	将此 HostControl 对象应用到的 HTMLLoader 对象。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>flash.html:HTMLLoader</apiValueClassifier></apiValueDef><apiDesc>
+	将此 HostControl 对象应用到的 HTMLLoader 对象。将该 HTMLLoader 对象的 <codeph>htmlHost</codeph> 属性设置为此 HostControl 对象。
+	
+	</apiDesc></apiValueDetail><related-links><link href="HTMLLoader.html#htmlHost"><linktext>HTMLLoader.htmlHost</linktext></link></related-links></apiValue><apiValue id="flash.html:HTMLHost:windowRect:get"><apiName>windowRect</apiName><shortdesc>
+	HTMLLoader 对象中的 JavaScript 代码调用 window.moveBy()、window.moveTo()、window.resizeBy() 或 window.resizeTo() 方法时发生变化的属性。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>flash.geom:Rectangle</apiValueClassifier></apiValueDef><apiDesc>
+	HTMLLoader 对象中的 JavaScript 代码调用 <codeph>window.moveBy()</codeph>、<codeph>window.moveTo()</codeph>、<codeph>window.resizeBy()</codeph> 或 <codeph>window.resizeTo()</codeph> 方法时发生变化的属性。 
+	
+	<p>在 HTMLHost 的子类中，根据需要覆盖 <codeph>set windowRect()</codeph> 方法以处理新窗口范围。</p>
+	
+	</apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.html:HTMLPDFCapability"><apiName>HTMLPDFCapability</apiName><shortdesc>
+	HTMLPDFCapability 类包含 HTMLLoader 对象的 pdfCapability 属性的可能值。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	HTMLPDFCapability 类包含 HTMLLoader 对象的 <codeph>pdfCapability</codeph> 属性的可能值。它还定义尝试加载 PDF 内容失败时分派的 ErrorEvent 对象的 <codeph>errorID</codeph> 属性的值。
+	
+	</apiDesc></apiClassifierDetail><related-links><link href="HTMLLoader.html#pdfCapability"><linktext>HTMLLoader.pdfCapability</linktext></link></related-links><apiValue id="flash.html:HTMLPDFCapability:ERROR_CANNOT_LOAD_READER"><apiName>ERROR_CANNOT_LOAD_READER</apiName><shortdesc>
+				在尝试加载 Reader 或 Adobe Acrobat 应用程序或者其所需的某个库时，操作系统返回一个错误。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>3204</apiData><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+				在尝试加载 Reader 或 Adobe Acrobat 应用程序或者其所需的某个库时，操作系统返回一个错误。
+		
+              <p><i>注意：</i>此值不是从 <codeph>HTMLLoader.pdfCapability</codeph> 返回的，而是作为 HTMLLoader 对象尝试加载 PDF 内容且操作系统返回错误时分派的 ErrorEvent 对象的 <codeph>errorID</codeph> 属性发送的。<codeph>HTMLLoader.pdfCapability</codeph> 可能返回 <codeph>PDFCapability.STATUS_OK</codeph>，这是由于它只检查配置而不尝试加载任何库。</p>
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLPDFCapability:ERROR_INSTALLED_READER_NOT_FOUND"><apiName>ERROR_INSTALLED_READER_NOT_FOUND</apiName><shortdesc>
+				未检测到任何 Adobe Reader 版本。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>3201</apiData><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+				未检测到任何 Adobe Reader 版本。HTMLLoader 对象无法显示 PDF 内容。
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLPDFCapability:ERROR_INSTALLED_READER_TOO_OLD"><apiName>ERROR_INSTALLED_READER_TOO_OLD</apiName><shortdesc>
+				已检测到 Adobe Reader，但版本太旧。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>3202</apiData><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+				已检测到 Adobe Reader，但版本太旧。HTMLLoader 对象无法显示 PDF 内容。
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLPDFCapability:ERROR_PREFERRED_READER_TOO_OLD"><apiName>ERROR_PREFERRED_READER_TOO_OLD</apiName><shortdesc>
+				已检测到足够高的 Adobe Reader 或 Acrobat 版本（8.1 或更高版本），但为处理 PDF 内容而设置的 Adobe Reader 版本比 Adobe Reader 或 Acrobat 8.1 旧。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>3203</apiData><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+				已检测到足够高的 Adobe Reader 或 Acrobat 版本（8.1 或更高版本），但为处理 PDF 内容而设置的 Adobe Reader 版本比 Adobe Reader 或 Acrobat 8.1 旧。HTMLLoader 对象无法显示 PDF 内容。
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLPDFCapability:STATUS_OK"><apiName>STATUS_OK</apiName><shortdesc>
+				已检测到足够高的 Adobe Reader 版本（8.1 或更高版本），可以在 HTMLLoader 对象中加载 PDF 内容。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>0</apiData><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+				已检测到足够高的 Adobe Reader 版本（8.1 或更高版本），可以在 HTMLLoader 对象中加载 PDF 内容。
+		
+				<p><i>注意：</i>在 Windows 中，如果在用户系统上安装并正在运行 Acrobat 的较早版本，则即使安装了较新的版本，仍会使用正在运行的 Acrobat 或 Adobe Reader 版本（7.x 或更高版本）。在这种情况下，如果 <codeph>pdfCapability</codeph> 属性的值为 <codeph>PDFCapability.STATUS_OK</codeph>，则当 AIR 应用程序尝试将 PDF 内容加载到 HTMLLoader 对象时，Acrobat 或 Adobe Reader 的较早版本会显示警告，而不出现 AIR 运行时显示的错误消息。如果您的用户可能会遇到这种情况，请考虑指导他们在运行您的应用程序时关闭 Acrobat 或 Adobe Reader。或考虑在 PDF 内容没有在可接受的时间范围内加载时显示这些说明。</p>
+		
+		</apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.html:HTMLLoader"><apiName>HTMLLoader</apiName><shortdesc>
+    HTMLLoader 类定义作为 HTML 内容容器的显示对象的类型。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.display:Sprite</apiBaseClassifier></apiClassifierDef><apiDesc>
+    HTMLLoader 类定义作为 HTML 内容容器的显示对象的类型。 
+	
+    <p platform="actionscript">HTMLLoader 的默认尺寸为 0 x 0 像素。设置 <codeph>width</codeph> 和 <codeph>height</codeph> 属性可使 HTMLLoader 对象可见。</p>
+	
+    	<p platform="actionscript">
+	HTMLLoader 对象的最大高度为 2,880 像素，最大宽度为 2,880 像素。将 HTMLLoader 对象的 <codeph>width</codeph> 或 <codeph>height</codeph> 设置为超出限制的某个数字，将导致 HTMLLoader 对象引发 ArgumentError 异常。
+	</p>
+	
+	<p platform="javascript">在 JavaScript 中，通过获取 <codeph>runtime.htmlLoader</codeph> 属性可以访问 HTML 页的 HTMLLoader 对象。此属性仅可用于应用程序安全沙箱中运行的内容。</p>
+	
+	<p platform="javascript">从其它类继承的许多 HTMLLoader 属性和方法都与在 SWF 文件（使用 ActionScript 3.0 显示列表）中运行的 HTMLLoader 对象有关。这些属性和方法没有在基于 HTML 的 AIR 应用程序中运行的 JavaScript 代码有用。有关这些属性和方法的详细信息，请参阅<xref href="http://www.adobe.com/go/learn_flex3_aslr" scope="external">《ActionScript 3.0 语言参考》</xref>。</p>
+	
+    </apiDesc><example conref="examples\HTMLLoader.1.as"> 下面的代码初始化一个 HTMLLoader 对象、配置其宽度和高度、加载 URL http://www.adobe.com 并将该对象添加到显示列表中：
+<codeblock>
+package {
+    import flash.display.Sprite;
+    import flash.html.HTMLLoader;
+    import flash.net.URLRequest;
+
+    public class HTMLLoaderExample extends Sprite
+    {
+        public function HTMLLoaderExample()
+        {
+            var html:HTMLLoader = new HTMLLoader();
+            var urlReq:URLRequest = new URLRequest("http://www.adobe.com/");
+            html.width = stage.stageWidth;
+            html.height = stage.stageHeight;
+            html.load(urlReq); 
+            addChild(html);
+        }
+    }
+}
+</codeblock></example></apiClassifierDetail><adobeApiEvent id="flash.html:HTMLLoader_flash.events.Event.HTML_DOM_INITIALIZE_htmlDOMInitialize"><apiName>htmlDOMInitialize</apiName><shortdesc>
+ 指出已创建 HTML DOM 以响应加载操作。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.HTML_DOM_INITIALIZE</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ 指出已创建 HTML DOM 以响应加载操作。在分派此事件时，HTMLLoader 对象的 <codeph>load()</codeph> 和 <codeph>loadString()</codeph> 方法将引发异常。在分派此事件时，可从 HTMLLoader 对象（控制 HTMLLoader 对象中加载的 URL）的 <codeph>window</codeph> 属性访问的任何 JavaScript 对象的任何属性或方法在进行设置或调用时会引发异常。例如，通过设置 HTMLLoader 对象的 <codeph>window</codeph> 属性来设置 <codeph>window.location</codeph> 会导致 JavaScript 异常。
+ 
+ </apiDesc></adobeApiEventDetail><related-links><link href="HTMLLoader.html#loadString()"><linktext>loadString()</linktext></link><link href="HTMLLoader.html#load()"><linktext>load()</linktext></link></related-links></adobeApiEvent><adobeApiEvent id="flash.html:HTMLLoader_flash.events.HTMLUncaughtScriptExceptionEvent.UNCAUGHT_SCRIPT_EXCEPTION_uncaughtScriptException"><apiName>uncaughtScriptException</apiName><shortdesc>
+ 指出在 HTMLLoader 对象中发生了未捕获的 JavaScript 异常。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.HTMLUncaughtScriptExceptionEvent.UNCAUGHT_SCRIPT_EXCEPTION</apiEventType><adobeApiEventClassifier>flash.events.HTMLUncaughtScriptExceptionEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ 指出在 HTMLLoader 对象中发生了未捕获的 JavaScript 异常。事件处理函数可以调用 HTMLLoader 对象的任何方法或访问该对象的任何属性。该事件可以取消，在 AIR Debug Launcher 中运行时，其默认行为是将 JavaScript 堆栈发送到跟踪输出。
+ 
+ </apiDesc></adobeApiEventDetail><related-links><link href="HTMLLoader.html#loadString()"><linktext>loadString()</linktext></link><link href="HTMLLoader.html#load()"><linktext>load()</linktext></link></related-links></adobeApiEvent><adobeApiEvent id="flash.html:HTMLLoader_flash.events.Event.SCROLL_scroll"><apiName>scroll</apiName><shortdesc>
+ 指出 scrollH 或 scrollV 属性已被 HTMLLoader 对象更改。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.SCROLL</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ 指出 <codeph>scrollH</codeph> 或 <codeph>scrollV</codeph> 属性已被 HTMLLoader 对象更改。当 HTMLLoader 对象中运行的 JavaScript 调用 <codeph>window</codeph> 对象的 <codeph>scrollTo()</codeph> 方法且需要的位置尚不可见时，HTMLLoader 对象分派此事件。当 ActionScript 代码更改 <codeph>scrollH</codeph> 或 <codeph>scrollV</codeph> 属性时，不分派此事件。事件处理函数可以调用 HTMLLoader 对象的任何方法或访问该对象的任何属性。
+ 
+ <p>此事件的事件处理函数应该检查 <codeph>scrollH</codeph> 和 <codeph>scrollV</codeph> 属性以更新与 HTMLLoader 对象相关联的任何滚动条。</p>
+ 
+ <p>HTMLLoader 对象可以在加载操作初始化后的任何时间，甚至是在已分派 <codeph>complete</codeph> 事件后，分派此事件。</p>
+ 
+ </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.html:HTMLLoader_flash.events.Event.HTML_BOUNDS_CHANGE_htmlBoundsChange"><apiName>htmlBoundsChange</apiName><shortdesc>
+ 指出 HTMLLoader 对象的 contentWidth 和/或 contentHeight 属性已发生更改。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.HTML_BOUNDS_CHANGE</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ 指出 HTMLLoader 对象的 <codeph>contentWidth</codeph> 和/或 <codeph>contentHeight</codeph> 属性已发生更改。例如，这可能是加载新图像或其它内容的结果。事件处理函数可以调用 HTMLLoader 对象的任何方法或访问该对象的任何属性。
+ 
+ <p>HTMLLoader 对象可以在加载操作初始化后的任何时间，甚至是在已分派 <codeph>complete</codeph> 事件后，分派此事件。</p>
+ 
+ </apiDesc></adobeApiEventDetail><related-links><link href="HTMLLoader.html#contentWidth"><linktext>contentWidth</linktext></link><link href="HTMLLoader.html#contentHeight"><linktext>contentHeight</linktext></link></related-links></adobeApiEvent><adobeApiEvent id="flash.html:HTMLLoader_flash.events.Event.LOCATION_CHANGE_locationChange"><apiName>locationChange</apiName><shortdesc>
+ 指出更改了 HTMLLoader 对象的 location 属性。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.LOCATION_CHANGE</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/><apiTipTexts><apiTipText>指出更改了 HTMLLoader 对象的 location 属性。
+ 
+ </apiTipText></apiTipTexts></adobeApiEventDef><apiDesc>
+ 指出更改了 HTMLLoader 对象的 <codeph>location</codeph> 属性。此事件的事件处理函数可以调用 HTMLLoader 对象的任何方法或访问该对象的任何属性。
+ 
+ </apiDesc></adobeApiEventDetail><related-links><link href="HTMLLoader.html#loadString()"><linktext>loadString()</linktext></link><link href="HTMLLoader.html#load()"><linktext>load()</linktext></link></related-links></adobeApiEvent><adobeApiEvent id="flash.html:HTMLLoader_flash.events.Event.HTML_RENDER_htmlRender"><apiName>htmlRender</apiName><shortdesc>
+ 指出 HTMLLoader 对象中的内容呈现完全处于最新状态。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.HTML_RENDER</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ 指出 HTMLLoader 对象中的内容呈现完全处于最新状态。可以相当频繁地分派此事件，即每当对 HTML 内容进行任何呈现更改时。例如，当因为用户单击某一链接而显示新内容或页面中的 JavaScript 呈现 HTML 时，将分派此事件。事件侦听器可以调用 HTMLLoader 对象的任何方法或访问其任何属性。
+ 
+ <p>此事件的处理函数应该检查 HTMLLoader 对象的 <codeph>contentWidth</codeph> 和 <codeph>contentHeight</codeph> 属性以更新与该对象相关联的任何滚动条。</p>
+ 
+ <p>HTMLLoader 对象可以在加载操作初始化后的任何时间，甚至是在已分派 <codeph>complete</codeph> 事件后，分派此事件。</p>
+ 
+ </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.html:HTMLLoader_flash.events.Event.COMPLETE_complete"><apiName>complete</apiName><shortdesc>
+ 指出 loadString 或 load 方法上次请求的加载操作已完成。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.COMPLETE</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ 指出 <codeph>loadString</codeph> 或 <codeph>load</codeph> 方法上次请求的加载操作已完成。对 HTMLLoader 对象中的 HTML DOM 引发 JavaScript <codeph>load</codeph> 事件<i>之后</i> 分派此事件。此事件始终异步分派。此事件的事件处理函数可以调用 HTMLLoader 对象的任何方法或访问该对象的任何属性。
+ 
+ </apiDesc></adobeApiEventDetail><related-links><link href="HTMLLoader.html#loadString()"><linktext>loadString()</linktext></link><link href="HTMLLoader.html#load()"><linktext>load()</linktext></link></related-links></adobeApiEvent><apiConstructor id="flash.html:HTMLLoader:HTMLLoader"><apiName>HTMLLoader</apiName><shortdesc>
+        创建 HTMLLoader 对象。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/></apiConstructorDef><apiDesc>
+        创建 HTMLLoader 对象。 
+		
+		</apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="flash.html:HTMLLoader:cancelLoad"><apiName>cancelLoad</apiName><shortdesc>
+		 取消正在进行的任何加载操作。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+		 取消正在进行的任何加载操作。
+		 
+		 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.html:HTMLLoader:createRootWindow"><apiName>createRootWindow</apiName><shortdesc>
+         创建新的 NativeWindow 对象，其中包含 HTMLLoader 对象。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiDesc>位于新 NativeWindow 对象的舞台上的新 HTMLLoader 对象。
+		 
+		 </apiDesc><apiOperationClassifier>flash.html:HTMLLoader</apiOperationClassifier></apiReturn><apiParam><apiItemName>visible</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>true</apiData><apiDesc>指定该窗口是否可见。
+		 
+		 </apiDesc></apiParam><apiParam><apiItemName>windowInitOptions</apiItemName><apiOperationClassifier>flash.display:NativeWindowInitOptions</apiOperationClassifier><apiData>null</apiData><apiDesc>指定窗口初始化选项；如果为 <codeph>null</codeph>，则使用默认的 <codeph>NativeWindowInitOptions</codeph> 值。
+		 
+		 </apiDesc></apiParam><apiParam><apiItemName>scrollBarsVisible</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>true</apiData><apiDesc>指定该窗口是否提供滚动条。
+		 
+		 </apiDesc></apiParam><apiParam><apiItemName>bounds</apiItemName><apiOperationClassifier>flash.geom:Rectangle</apiOperationClassifier><apiData>null</apiData><apiDesc>如果不为 <codeph>null</codeph>，则指定窗口范围。如果 <codeph>x</codeph>、<codeph>y</codeph>、<codeph>width</codeph> 或 <codeph>height</codeph> 中的任何一个为 <codeph>NaN</codeph>，则该窗口的相应尺寸将保留为其默认值。
+		 
+         </apiDesc></apiParam></apiOperationDef><apiDesc>
+         创建新的 NativeWindow 对象，其中包含 HTMLLoader 对象。使用由此方法返回的 HTMLLoader 对象可加载 HTML 内容。
+		 
+		 <p>默认情况下（在调用此方法时不设置任何参数），新窗口将使用标准系统镶边并对内容包括滚动条控件。可以设置参数以更改新窗口的属性。</p>
+		 
+		 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.html:HTMLLoader:getHistoryAt"><apiName>getHistoryAt</apiName><shortdesc>
+		 返回指定位置的历史记录条目。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>位于指定位置的历史记录条目的 URLRequest 对象。
+		 
+		 </apiDesc><apiOperationClassifier>flash.html:HTMLHistoryItem</apiOperationClassifier></apiReturn><apiParam><apiItemName>position</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiDesc>历史记录列表中的位置。
+		 
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+		 返回指定位置的历史记录条目。
+		 
+		 </apiDesc></apiOperationDetail><related-links><link href="HTMLLoader.html#historyPosition"><linktext>historyPosition</linktext></link></related-links></apiOperation><apiOperation id="flash.html:HTMLLoader:historyBack"><apiName>historyBack</apiName><shortdesc>
+		 如果可能，在浏览器历史记录中向后浏览。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+		 如果可能，在浏览器历史记录中向后浏览。
+		 
+         <p>调用 HTMLLoader 对象的此方法与调用 HTML 页中 JavaScript 中的 <codeph>window.history</codeph> 属性的 <codeph>back()</codeph> 方法具有相同的效果。</p>
+		 
+		 <p>此函数不引发错误。</p>
+		 
+		 </apiDesc></apiOperationDetail><related-links><link href="HTMLLoader.html#historyPosition"><linktext>historyPosition</linktext></link></related-links></apiOperation><apiOperation id="flash.html:HTMLLoader:historyForward"><apiName>historyForward</apiName><shortdesc>
+		 如果可能，在浏览器历史记录中向前浏览。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+		 如果可能，在浏览器历史记录中向前浏览。
+		 
+         <p>调用 HTMLLoader 对象的此方法与调用 HTML 页中 JavaScript 中的 <codeph>window.history</codeph> 属性的 <codeph>forward()</codeph> 方法具有相同的效果。</p>
+		 
+		 <p>此函数不引发错误。</p>
+		 
+		 </apiDesc></apiOperationDetail><related-links><link href="HTMLLoader.html#historyPosition"><linktext>historyPosition</linktext></link></related-links></apiOperation><apiOperation id="flash.html:HTMLLoader:historyGo"><apiName>historyGo</apiName><shortdesc>
+		 在浏览器历史记录中浏览指定的步骤数。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>steps</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiDesc>历史记录列表中要向前移动（正数）或向后移动（负数）的步骤数。
+		 
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+		 在浏览器历史记录中浏览指定的步骤数。如果为正数，则向前浏览；如果为负数，则向后浏览。零导航强制重新加载。
+		 
+		 <p>此方法等效于调用 HTML 页中 JavaScript 中的 <codeph>window.history</codeph> 属性的 <codeph>go()</codeph> 方法。</p>
+		 
+		 <p>此函数不引发错误。</p>
+		 
+		 </apiDesc></apiOperationDetail><related-links><link href="HTMLLoader.html#historyPosition"><linktext>historyPosition</linktext></link></related-links></apiOperation><apiOperation id="flash.html:HTMLLoader:load"><apiName>load</apiName><shortdesc>
+         使用 urlRequestToLoad 参数指定的站点中的数据加载 HTMLLoader 对象。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>urlRequestToLoad</apiItemName><apiOperationClassifier>flash.net:URLRequest</apiOperationClassifier><apiDesc>包含有关要加载的 URL 的信息的 URLRequest 对象。除了要加载的 URL 以外，URLRequest 对象还包含定义 HTTP 式提交方法（GET 或 POST）的属性、要与请求一起传输的任何数据和请求标头。
+		 
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+         使用 <codeph>urlRequestToLoad</codeph> 参数指定的站点中的数据加载 HTMLLoader 对象。初始调用此方法时会将 <codeph>loaded</codeph> 属性设置为 <codeph>false</codeph>。此方法启动一个始终异步完成的操作。
+		 
+		 <p>调用此方法可隐式取消用此方法或 <codeph>loadString()</codeph> 方法初始化的任何先前未处理的加载操作。永远不会传送先前加载操作的 <codeph>complete</codeph> 事件。</p>
+		 
+		 <p>有可能永远不会传送 <codeph>complete</codeph> 事件。如果加载到 HTMLLoader 对象中的任何 HTML 内容不能完全下载，则会发生这种情况。如果 HTML 内容引用了到无限反复生成内容的 CGI 脚本的 URL，则会发生这种情况。</p>
+		 
+		 </apiDesc></apiOperationDetail><related-links><link href="flash.net.xml#URLRequest"><linktext>flash.net.URLRequest</linktext></link></related-links></apiOperation><apiOperation id="flash.html:HTMLLoader:loadString"><apiName>loadString</apiName><shortdesc>
+         使用 HTML 字符串中包含的 HTML 内容加载 HTMLLoader 对象。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>htmlContent</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>包含要加载到 HTMLLoader 对象中的 HTML 内容的字符串。
+		 
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+         使用 HTML 字符串中包含的 HTML 内容加载 HTMLLoader 对象。当字符串中的 HTML 呈现完毕时，将分派 <codeph>complete</codeph> 事件。<codeph>complete</codeph> 事件始终异步分派。
+		 
+		 <p>调用此方法可隐式取消用此方法或 <codeph>load()</codeph> 方法初始化的任何先前未处理的加载操作。永远不会传送先前加载操作的 <codeph>complete</codeph> 事件。</p>
+		 
+		 <p>如果字符串中指定的 HTML 不引用外部资源，则此方法将同步呈现 HTML。不过，<codeph>complete</codeph> 事件仍将异步分派。如果此类的 <codeph>loaded</codeph> 属性为 <codeph>true</codeph>，则在调用此函数后，会立即同步呈现 <codeph>htmlContent</codeph> 参数中指定的 HTML 内容。</p>
+		 
+		 <p>有可能永远不会传送 <codeph>complete</codeph> 事件。如果加载到 HTMLLoader 对象中的任何 HTML 内容不能完全下载，则会发生这种情况。如果 HTML 内容引用了到无限反复生成内容的 CGI 脚本的 URL，则会发生这种情况。</p>
+		 
+		 <p>只有在将 <codeph>placeLoadStringContentInApplicationSandbox</codeph> 属性设置为 <codeph>true</codeph> 时，通过 <codeph>loadString()</codeph> 方法加载的内容才会放置在应用程序安全沙箱中。</p>
+		 
+         </apiDesc></apiOperationDetail><related-links><link href="HTMLLoader.html#placeLoadStringContentInApplicationSandbox"><linktext>placeLoadStringContentInApplicationSandbox</linktext></link></related-links></apiOperation><apiOperation id="flash.html:HTMLLoader:reload"><apiName>reload</apiName><shortdesc>
+		 从当前位置重新加载页面。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+		 从当前位置重新加载页面。
+		 
+		 </apiDesc></apiOperationDetail></apiOperation><apiValue id="flash.html:HTMLLoader:authenticate:get"><apiName>authenticate</apiName><shortdesc>
+		指定是否应为此对象发出的 HTTP 请求处理验证请求，如果是，则为 true，否则为 false。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier><apiDefaultValue>initialized from URLRequestDefaults.authenticate
+		
+        </apiDefaultValue></apiValueDef><apiDesc>
+		指定是否应为此对象发出的 HTTP 请求处理验证请求，如果是，则为 <codeph>true</codeph>，否则为 <codeph>false</codeph>。如果为 <codeph>false</codeph>，则验证挑战返回 HTTP 错误。  
+		
+        </apiDesc></apiValueDetail><related-links><link href="flash.net.xml#URLRequest/authenticate"><linktext>flash.net.URLRequest.authenticate</linktext></link><link href="flash.net.xml#URLRequestDefaults/authenticate"><linktext>flash.net.URLRequestDefaults.authenticate</linktext></link></related-links></apiValue><apiValue id="flash.html:HTMLLoader:cacheResponse:get"><apiName>cacheResponse</apiName><shortdesc>
+		指定是否应为此对象发出的 HTTP 请求缓存成功的响应数据。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier><apiDefaultValue>initialized from URLRequestDefaults.cacheResponse
+		
+        </apiDefaultValue></apiValueDef><apiDesc>
+		指定是否应为此对象发出的 HTTP 请求缓存成功的响应数据。设置为 <codeph>true</codeph> 时，HTMLLoader 对象将使用操作系统的 HTTP 缓存。
+		
+        </apiDesc></apiValueDetail><related-links><link href="flash.net.xml#URLRequestDefaults/cacheResponse"><linktext>flash.net.URLRequestDefaults.cacheResponse</linktext></link></related-links></apiValue><apiValue id="flash.html:HTMLLoader:contentHeight:get"><apiName>contentHeight</apiName><shortdesc>
+		 HTML 内容的高度（以像素为单位）。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Number</apiValueClassifier></apiValueDef><apiDesc>
+		 HTML 内容的高度（以像素为单位）。此属性可以随着 HTMLLoader 对象尺寸的更改而更改。例如，HTML 页通常使用 HTMLLoader 对象的整个高度，如果更改 HTMLLoader 对象的高度，则 <codeph>contentHeight</codeph> 属性可能会发生更改。
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLLoader:contentWidth:get"><apiName>contentWidth</apiName><shortdesc>
+		 HTML 内容的宽度（以像素为单位）。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Number</apiValueClassifier></apiValueDef><apiDesc>
+		 HTML 内容的宽度（以像素为单位）。此属性可以随着 HTMLLoader 对象尺寸的更改而更改。例如，HTML 页通常使用 HTMLLoader 对象的整个宽度，如果更改 HTMLLoader 对象的宽度，则 <codeph>contentWidth</codeph> 属性可能会发生更改。
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLLoader:hasFocusableContent:get"><apiName>hasFocusableContent</apiName><shortdesc>
+		指示 HTMLLoader 对象中的任何内容是否可获得焦点。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+		指示 HTMLLoader 对象中的任何内容是否可获得焦点。 
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLLoader:height:set"><apiName>height</apiName><shortdesc>
+		 指定所呈现的 HTML 画布的矩形高度。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Number</apiValueClassifier></apiValueDef><apiDesc>
+		 指定所呈现的 HTML 画布的矩形高度。这是 HTMLLoader 显示对象的高度（以像素为单位）。更改此属性将导致 HTMLLoader 对象重新呈现 HTML 文档。可以分派 <codeph>htmlBoundsChanged</codeph> 事件以响应此属性的更改。在设置 HTMLLoader 对象的 <codeph>width</codeph> 或 <codeph>height</codeph> 属性时，该对象的范围将发生更改，但内容不会缩放（其它类型的显示对象将会发生缩放）。
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLLoader:historyLength:get"><apiName>historyLength</apiName><shortdesc>
+		 历史记录列表的总长度，包括向后和向前的条目。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>uint</apiValueClassifier></apiValueDef><apiDesc>
+		 历史记录列表的总长度，包括向后和向前的条目。此属性具有与 HTML 页的 <codeph>window.history.length</codeph> JavaScript 属性相同的值。
+		 
+		 </apiDesc></apiValueDetail><related-links><link href="HTMLLoader.html#historyPosition"><linktext>historyPosition</linktext></link></related-links></apiValue><apiValue id="flash.html:HTMLLoader:historyPosition:get"><apiName>historyPosition</apiName><shortdesc>
+		 历史记录列表中的当前位置。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>uint</apiValueClassifier></apiValueDef><apiDesc>
+		 历史记录列表中的当前位置。历史记录列表对应于 HTML 页的 <codeph>window.history</codeph> 对象。低于当前位置的条目为“向前”列表，高于当前位置的条目为“向后”列表。尝试将位置设置在末尾以外的会将位置设置到末尾处。
+		 
+		 </apiDesc></apiValueDetail><related-links><link href="HTMLLoader.html#getHistoryAt()"><linktext>getHistoryAt()</linktext></link><link href="HTMLLoader.html#historyBack()"><linktext>historyBack()</linktext></link><link href="HTMLLoader.html#historyGo()"><linktext>historyGo()</linktext></link><link href="HTMLLoader.html#historyForward()"><linktext>historyForward()</linktext></link><link href="HTMLLoader.html#historyLength"><linktext>historyLength</linktext></link></related-links></apiValue><apiValue id="flash.html:HTMLLoader:htmlHost:get"><apiName>htmlHost</apiName><shortdesc>
+		用于处理某些用户界面元素更改的 HTMLHost 对象，如 HTMLLoader 对象的 window.document.title 属性。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>flash.html:HTMLHost</apiValueClassifier><apiTipTexts><apiTipText>用于处理某些用户界面元素更改的 HTMLHost 对象，如 HTMLLoader 对象的 window.document.title 属性。
+		
+		</apiTipText></apiTipTexts></apiValueDef><apiDesc>
+		用于处理某些用户界面元素更改的 HTMLHost 对象，如 HTMLLoader 对象的 <codeph>window.document.title</codeph> 属性。<ph platform="javascript">此属性仅适用于使用 HTMLLoader 类的 SWF 内容；它在 JavaScript 代码中不起作用。</ph><ph platform="actionscript">要覆盖 HTMLLoader 对象的默认行为，请创建 HTMLHost 类的一个子类，然后覆盖其成员函数以处理 HTML 内容中的各种用户界面更改。</ph>
+		
+		</apiDesc></apiValueDetail><related-links><link href="HTMLHost.html"><linktext>HTMLHost 类</linktext></link></related-links></apiValue><apiValue id="flash.html:HTMLLoader:loaded:get"><apiName>loaded</apiName><shortdesc>
+		 指示与先前调用 load() 或 loadString() 方法相对应的 JavaScript load 事件是否已传送到 HTMLLoader 对象中的 HTML DOM。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+		 指示与先前调用 <codeph>load()</codeph> 或 <codeph>loadString()</codeph> 方法相对应的 JavaScript load 事件是否已传送到 HTMLLoader 对象中的 HTML DOM。分派 <codeph>complete</codeph> 事件之前，此属性为 <codeph>true</codeph>。此属性有可能永远也不会变为 <codeph>true</codeph>。在从来不分派 <codeph>complete</codeph> 事件的情况下也会发生这种情况。
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLLoader:location:get"><apiName>location</apiName><shortdesc>
+        在 HTMLLoader 对象中加载的内容的 URL。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+        在 HTMLLoader 对象中加载的内容的 URL。 
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLLoader:manageCookies:get"><apiName>manageCookies</apiName><shortdesc>
+		指定 HTTP 协议堆栈是否应管理此对象的 cookie。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier><apiDefaultValue>initialized from URLRequestDefaults.manageCookies
+		
+		</apiDefaultValue></apiValueDef><apiDesc>
+		指定 HTTP 协议堆栈是否应管理此对象的 cookie。如果为 <codeph>true</codeph>，则将 cookie 添加到请求中并记住响应 cookie。如果为 <codeph>false</codeph>，则<i>不</i> 将 cookie 添加到请求中且<i>不</i> 记住响应 cookie。 
+		
+		</apiDesc></apiValueDetail><related-links><link href="flash.net.xml#URLRequest/manageCookies"><linktext>flash.net.URLRequest.manageCookies</linktext></link><link href="flash.net.xml#URLRequestDefaults/manageCookies"><linktext>flash.net.URLRequestDefaults.manageCookies</linktext></link></related-links></apiValue><apiValue id="flash.html:HTMLLoader:navigateInSystemBrowser:get"><apiName>navigateInSystemBrowser</apiName><shortdesc>
+		指定 HTML 内容根帧的导航（如用户单击链接时、设置 window.location 属性时或调用 window.open() 时）是导致在 HTMLLoader 对象中导航 (false) 还是在默认系统 Web 浏览器中导航 (true)。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier><apiDefaultValue>false
+		
+		</apiDefaultValue><apiTipTexts><apiTipText>HTML 内容根帧的导航是导致在 HTMLLoader 对象中导航 (false) 还是在默认系统 Web 浏览器中导航 (true)。
+		
+		</apiTipText></apiTipTexts></apiValueDef><apiDesc>
+		指定 HTML 内容根帧的导航（如用户单击链接时、设置 <codeph>window.location</codeph> 属性时或调用 <codeph>window.open()</codeph> 时）是导致在 HTMLLoader 对象中导航 (<codeph>false</codeph>) 还是在默认系统 Web 浏览器中导航 (<codeph>true</codeph>)。如果希望所有导航都在系统 Web 浏览器中（而不是在 HTMLLoader 对象中）进行，请将此属性设置为 <codeph>true</codeph>。
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLLoader:paintsDefaultBackground:set"><apiName>paintsDefaultBackground</apiName><shortdesc>
+        指定 HTMLLoader 文档背景是否为不透明白色，如果是，则为 true，否则为 false。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier><apiTipTexts><apiTipText>确定 HTMLLoader 文档背景是否为不透明白色，如果是，则为 true，否则为 false。 
+		
+		</apiTipText></apiTipTexts></apiValueDef><apiDesc>
+        指定 HTMLLoader 文档背景是否为不透明白色，如果是，则为 <codeph>true</codeph>，否则为 <codeph>false</codeph>。如果将此属性设置为 <codeph>false</codeph>，HTMLLoader 对象将使用其显示对象容器作为 HTML 的背景，而 HTML 将使用显示对象容器的不透明度（<codeph>alpha</codeph> 值）作为 HTML 背景。但是，如果 HTML 文档的 <codeph>body</codeph> 元素或任何其它元素具有不透明背景颜色（例如，由 <codeph>style="background-color:gray"</codeph> 指定），则所呈现的 HTML 部分将使用指定的不透明背景颜色。
+		
+        </apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLLoader:pdfCapability:get"><apiName>pdfCapability</apiName><shortdesc>
+		 用户系统上的 PDF 支持类型，它被定义为整数代码值。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+		 用户系统上的 PDF 支持类型，它被定义为整数代码值。只有在此属性的计算结果为 <codeph>PDFCapability.STATUS_OK</codeph> 时，HTMLLoader 对象才能显示 PDF 内容。PDFCapability 类定义用作 <codeph>pdfCapability</codeph> 属性的可能值的常数，如下所示：
+		 
+		 <adobetable class="innertable">
+		 
+		 	
+		 
+		 	
+		 
+		 	
+		 
+		 	
+		 
+		 	
+		 
+		 <tgroup cols="2"><thead><row><entry>PDFCapability 常数</entry><entry>意义</entry></row></thead><tbody><row>
+		 		<entry><codeph>STATUS_OK</codeph></entry>
+		 		<entry>已检测到足够高的 Acrobat 或 Adobe Reader 版本（8.1 或更高版本），可以在 HTMLLoader 对象中加载 PDF 内容。
+		 
+		 		<p><i>注意：</i>在 Windows 中，如果用户系统上当前正在运行 Acrobat 或 Adobe Reader 7.x 或更高版本，则即使安装了支持加载在 HTMLLoader 对象中已加载的 PDF 的更高版本，也会使用正在运行的那个版本。在这种情况下，如果 <codeph>pdfCapability</codeph> 属性的值为 <codeph>PDFCapability.STATUS_OK</codeph>，则当 AIR 应用程序尝试加载 PDF 内容时，Acrobat 或 Adobe Reader 的较早版本会显示警告（而 AIR 运行时不显示任何错误消息）。如果您的用户可能会遇到这种情况，请考虑指导他们在运行您的应用程序时关闭 Acrobat 或 Adobe Reader。如果 PDF 内容没有在可接受的时间范围内加载，可以考虑显示这些说明。</p></entry>
+		 	</row><row>
+		 		<entry><codeph>ERROR_INSTALLED_READER_NOT_FOUND</codeph></entry>
+		 		<entry>未检测到任何 Acrobat 或 Adobe Reader 版本。HTMLLoader 对象无法显示 PDF 内容。</entry>
+		 	</row><row>
+		 		<entry><codeph>ERROR_INSTALLED_READER_TOO_OLD</codeph></entry>
+		 		<entry>已检测到 Acrobat 或 Adobe Reader，但版本太旧。HTMLLoader 对象无法显示 PDF 内容。</entry>
+		 	</row><row>
+		 		<entry><codeph>ERROR_PREFERED_READER_TOO_OLD</codeph></entry>
+		 		<entry>已检测到足够高的 Acrobat 或 Adobe Reader 版本（8.1 或更高版本），但为处理 PDF 内容而设置的版本比 8.1 版旧。HTMLLoader 对象无法显示 PDF 内容。</entry>
+		 	</row></tbody></tgroup></adobetable>
+		 
+ 		 </apiDesc></apiValueDetail><related-links><link href="HTMLPDFCapability.html"><linktext>HTMLPDFCapability 类</linktext></link></related-links></apiValue><apiValue id="flash.html:HTMLLoader:placeLoadStringContentInApplicationSandbox:get"><apiName>placeLoadStringContentInApplicationSandbox</apiName><shortdesc>
+		指定通过 loadString() 方法加载的内容放置在应用程序沙箱中 (true) 还是非应用程序沙箱中 (false)。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier><apiDefaultValue>false
+		
+		</apiDefaultValue></apiValueDef><apiDesc>
+		指定通过 <codeph>loadString()</codeph> 方法加载的内容放置在应用程序沙箱中 (<codeph>true</codeph>) 还是非应用程序沙箱中 (<codeph>false</codeph>)。
+		
+		<p>将此属性设置为 <codeph>false</codeph> 时，通过 <codeph>loadString()</codeph> 方法加载的内容放置在具有以下特征的非应用程序沙箱中：</p>
+		
+		<ul>
+			<li>它有权从网络加载内容（但不能从文件系统加载）。</li>
+			<li>无法使用 XMLHttpRequest 加载数据。</li>
+		<li><codeph>window.location</codeph> 属性设置为 <codeph>"about:blank"</codeph>。</li>
+		<li>内容无法访问 <codeph>window.runtime</codeph> 属性（如同任何非应用程序沙箱中的内容）。</li>
+		</ul>
+		
+		<p>将此属性设置为 <codeph>true</codeph> 时，通过 <codeph>loadString()</codeph> 方法加载的内容放置在应用程序沙箱中，并有权访问 <codeph>window.runtime</codeph> 属性和所有 AIR API。您应该确保调用 <codeph>loadString()</codeph> 方法过程中使用的字符串的数据源受信任。此属性设置为 <codeph>true</codeph> 时，将以完整的应用程序权限执行 HTML 字符串中的代码语句。只有在确定字符串不会包含有害代码时，才应该将此属性设置为 <codeph>true</codeph>。 </p>
+		
+		<p>在用 AIR 1.0 或 AIR 1.1 SDK 编译的应用程序中，通过 <codeph>loadString()</codeph> 方法加载的内容放置在应用程序沙箱中。</p>
+		
+		</apiDesc></apiValueDetail><related-links><link href="HTMLLoader.html#loadString()"><linktext>loadString()</linktext></link></related-links></apiValue><apiValue id="flash.html:HTMLLoader:runtimeApplicationDomain:get"><apiName>runtimeApplicationDomain</apiName><shortdesc>
+		 用于 HTML 页的 JavaScript 中的 window.runtime 对象的应用程序域。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>flash.system:ApplicationDomain</apiValueClassifier><apiException><apiDesc>如果 ApplicationDomain 对象不是来自调用方的安全域。
+		 
+         </apiDesc><apiItemName>SecurityError</apiItemName><apiOperationClassifier>SecurityError</apiOperationClassifier></apiException><apiTipTexts><apiTipText>用于 HTML 页的 JavaScript 中的 window.runtime 对象的应用程序域。
+		 
+		 </apiTipText></apiTipTexts></apiValueDef><apiDesc>
+		 用于 HTML 页的 JavaScript 中的 <codeph>window.runtime</codeph> 对象的应用程序域。<ph platform="javascript">此属性仅适用于使用 HTMLLoader 类的 SWF 内容；它在 JavaScript 代码中不起作用。</ph>
+		 
+		 <p platform="actionscript">如果为 <codeph>null</codeph>，或者如果 HTML 内容来自与包含 HTMLLoader 对象的 SWF 内容不同的另一个安全域，则页面将对页面域使用默认的应用程序域。</p>
+		 
+		 </apiDesc></apiValueDetail><related-links><link href="flash.system.xml#ApplicationDomain"><linktext>flash.system.ApplicationDomain</linktext></link><link href="flash.system.xml#SecurityDomain"><linktext>flash.system.SecurityDomain</linktext></link></related-links></apiValue><apiValue id="flash.html:HTMLLoader:scrollH:get"><apiName>scrollH</apiName><shortdesc>
+         HTMLLoader 对象中的 HTML 内容的水平滚动位置。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Number</apiValueClassifier></apiValueDef><apiDesc>
+         HTMLLoader 对象中的 HTML 内容的水平滚动位置。
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLLoader:scrollV:get"><apiName>scrollV</apiName><shortdesc>
+         HTMLLoader 对象中的 HTML 内容的垂直滚动位置。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Number</apiValueClassifier></apiValueDef><apiDesc>
+         HTMLLoader 对象中的 HTML 内容的垂直滚动位置。
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLLoader:textEncodingFallback:set"><apiName>textEncodingFallback</apiName><shortdesc>
+        在 HTML 页未指定字符编码时 HTMLLoader 内容使用的字符编码。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+        在 HTML 页未指定字符编码时 HTMLLoader 内容使用的字符编码。HTML 页在 <codeph>meta</codeph> 标记中指定字符编码，如下所示：
+		
+		<codeblock>&lt;meta http-equiv="content-type" content="text/html" charset="ISO-8859-1"></codeblock>
+		
+		<p>在 <xref href="http://www.iana.org/assignments/character-sets" scope="external"> 有效的字符集 </xref> 的 IANA 列表中定义值。
+		</p>
+		
+		<p>如果 HTML 页、<codeph>textEncodingFallback</codeph> 属性或 <codeph>textEncodingOverride</codeph> 属性未指定编码，则 HTML 内容将使用 ISO-8859-1 编码。</p>
+		
+		</apiDesc></apiValueDetail><related-links><link href="HTMLLoader.html#textEncodingOverride"><linktext>textEncodingOverride</linktext></link></related-links></apiValue><apiValue id="flash.html:HTMLLoader:textEncodingOverride:set"><apiName>textEncodingOverride</apiName><shortdesc>
+        HTMLLoader 内容使用的字符编码，它将覆盖 HTML 页中的任何设置。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+        HTMLLoader 内容使用的字符编码，它将覆盖 HTML 页中的任何设置。HTML 页在 <codeph>meta</codeph> 标记中指定字符编码，如下所示：
+		
+		<codeblock>&lt;meta http-equiv="content-type" content="text/html" charset="ISO-8859-1"></codeblock>
+		
+		<p>此设置也覆盖 <codeph>textEncodingFallback</codeph> 属性中的任何设置。 </p>
+		
+		<p>值在 <xref href="http://www.iana.org/assignments/character-sets" scope="external"> 有效字符集</xref>的 IANA 列表中定义。
+		</p>
+		
+		<p>加载 HTML 内容后设置 <codeph>textEncodingOverride</codeph> 属性可以让 AIR 使用指定编码刷新 HTML 内容。HTMLLoader 导航到新页面后，如果希望新页面使用特定编码，则需要再次设置此属性。</p>
+		
+		<p>如果 HTML 页、<codeph>textEncodingFallback</codeph> 属性或 <codeph>textEncodingOverride</codeph> 属性未指定编码，则 HTML 内容将使用 ISO-8859-1 编码。</p>
+		
+		<p>将 <codeph>textEncodingOverride</codeph> 属性设置为 <codeph>null</codeph> 可恢复默认行为。</p>
+		
+		</apiDesc></apiValueDetail><related-links><link href="HTMLLoader.html#textEncodingFallback"><linktext>textEncodingFallback</linktext></link></related-links></apiValue><apiValue id="flash.html:HTMLLoader:useCache:get"><apiName>useCache</apiName><shortdesc>
+		指定在此对象发出的 HTTP 请求获取数据之前是否应查询本地缓存。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier><apiDefaultValue>initialized from URLRequestDefaults.useCache
+		
+		</apiDefaultValue></apiValueDef><apiDesc>
+		指定在此对象发出的 HTTP 请求获取数据之前是否应查询本地缓存。 
+		
+		</apiDesc></apiValueDetail><related-links><link href="flash.net.xml#URLRequest/useCache"><linktext>flash.net.URLRequest.useCache</linktext></link><link href="flash.net.xml#URLRequestDefaults/useCache"><linktext>flash.net.URLRequestDefaults.useCache</linktext></link></related-links></apiValue><apiValue id="flash.html:HTMLLoader:userAgent:get"><apiName>userAgent</apiName><shortdesc>
+		 来自此 HTMLLoader 对象的任何后续内容请求中使用的用户代理字符串。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 来自此 HTMLLoader 对象的任何后续内容请求中使用的用户代理字符串。 
+		 
+		 <p>要设置用户代理字符串，请在调用 <codeph>load()</codeph> 方法之前设置 HTMLLoader 对象的 <codeph>userAgent</codeph> 属性。<i>不</i> 使用传递到 <codeph>load()</codeph> 方法的 URLRequest 对象的 <codeph>userAgent</codeph> 属性。</p>
+		 
+		 <p>通过设置 <codeph>URLRequestDefaults.userAgent</codeph> 属性，可以设置应用程序域中所有 HTMLLoader 对象使用的默认用户代理字符串。如果未为 HTMLLoader 对象的 <codeph>userAgent</codeph> 属性设置值（或者将该值设置为 <codeph>null</codeph>），则会将用户代理字符串设置为静态 <codeph>URLRequestDefaults.userAgent</codeph> 属性的值。 </p>
+		 
+		 <p>如果既未为 HTMLLoader 的 <codeph>userAgent</codeph> 属性设置值，也未为 <codeph>URLRequestDefaults.userAgent</codeph> 设置值，则会使用默认值作为用户代理字符串。此默认值随着运行时操作系统（如 Mac OS、Linux 或 Windows）、运行时语言和运行时版本而变化，如下面的示例所示：</p>
+		 
+		 <ul>
+		 
+		 	<li><codeph>"Mozilla/5.0 (Macintosh; U; PPC Mac OS X; en) AppleWebKit/526.9+ (KHTML, like Gecko) AdobeAIR/1.5"</codeph></li>
+		 	<li><codeph>"Mozilla/5.0 (Windows; U; en) AppleWebKit/526.9+ (KHTML, like Gecko) AdobeAIR/1.5"</codeph></li>
+		  <li><codeph>"Mozilla/5.0 (X11; U; Linux i686; en-US) AppleWebKit/526.9+ (KHTML, like Gecko) AdobeAIR/1.5"</codeph></li>
+		 </ul>
+		 
+		 </apiDesc></apiValueDetail><related-links><link href="flash.net.xml#URLRequest/userAgent"><linktext>flash.net.URLRequest.userAgent</linktext></link><link href="flash.net.xml#URLRequestDefaults/userAgent"><linktext>flash.net.URLRequestDefaults.userAgent</linktext></link></related-links></apiValue><apiValue id="flash.html:HTMLLoader:width:set"><apiName>width</apiName><shortdesc>
+		 指定所呈现的 HTML 画布的矩形宽度。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Number</apiValueClassifier></apiValueDef><apiDesc>
+		 指定所呈现的 HTML 画布的矩形宽度。这是 HTMLLoader 显示对象的宽度（以像素为单位）。更改此属性将导致 HTMLLoader 对象重新呈现 HTML 文档。可以分派 <codeph>htmlBoundsChange</codeph> 事件以响应此属性的更改。在设置 HTMLLoader 对象的 <codeph>width</codeph> 和 <codeph>height</codeph> 属性时，该对象的范围将发生更改，但内容不会缩放（其它类型的显示对象将会发生缩放）。
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLLoader:window:get"><apiName>window</apiName><shortdesc>
+		 加载到 HTML 控件中的内容的全局 JavaScript 对象。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Object</apiValueClassifier></apiValueDef><apiDesc>
+		 加载到 HTML 控件中的内容的全局 JavaScript 对象。
+		 
+		 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.html:HTMLWindowCreateOptions"><apiName>HTMLWindowCreateOptions</apiName><shortdesc>
+	 此类定义在 HTMLLoader 对象中运行的 JavaScript 尝试通过调用 window.open() 方法创建新的 HTML 窗口时可以指定的选项。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 此类定义在 HTMLLoader 对象中运行的 JavaScript 尝试通过调用 <codeph>window.open()</codeph> 方法创建新的 HTML 窗口时可以指定的选项。 
+	 
+	 <p>此类定义与在 JavaScript 中传递给 <codeph>window.open()</codeph> 方法的 <codeph>features</codeph> 参数中的选项相对应的属性和方法。</p>
+	 
+	 <p>例如，HTML 文档中的 JavaScript（位于 HTMLLoader 对象中）可以包括以下对 <codeph>window.open()</codeph> 的调用，在该调用中，<codeph>features</codeph> 参数（第三个参数）列出了多个选项：</p>
+	 
+	 <codeblock>window.open("http://www.adobe.com", "AdobeWindow", "scrollbars=1,menubar=1,location=0,status=0")</codeblock>
+	 
+	 <p>在覆盖 HTMLHost 类的子类的 <codeph>createWindow()</codeph> 方法时，可以使用 HTMLWindowCreateOptions 类。HTMLLoader 对象传递一个 HTMLWindowCreateOptions 对象作为 HTMLHost 对象的 <codeph>createWindow()</codeph> 方法的 <codeph>windowCreateOptions</codeph> 参数。</p>
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="HTMLHost.html#createWindow()"><linktext>HTMLHost#createWindow()</linktext></link></related-links><apiValue id="flash.html:HTMLWindowCreateOptions:fullscreen"><apiName>fullscreen</apiName><shortdesc>
+    	 指定此窗口是否应为全屏。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>false</apiData><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+    	 指定此窗口是否应为全屏。如果对 <codeph>window.open()</codeph> 方法的 JavaScript 调用的 <codeph>features</codeph> 字符串包括 <codeph>"fullscreen"</codeph>、<codeph>"fullscreen=1"</codeph> 或 <codeph>"fullscreen=y"</codeph>，则此属性设置为 <codeph>true</codeph>。
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLWindowCreateOptions:height"><apiName>height</apiName><shortdesc>
+		 指定新窗口所需的初始高度。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>NaN</apiData><apiValueClassifier>Number</apiValueClassifier></apiValueDef><apiDesc>
+		 指定新窗口所需的初始高度。此值设置为对 <codeph>window.open()</codeph> 方法的 JavaScript 调用的 <codeph>features</codeph> 字符串中的 <codeph>height</codeph> 值。如果此值为 <codeph>NaN</codeph>（默认值），当 <codeph>features</codeph> 字符串中未指定 <codeph>height</codeph> 值时，则会使用默认的窗口高度。
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLWindowCreateOptions:locationBarVisible"><apiName>locationBarVisible</apiName><shortdesc>
+    	 是否应显示位置栏。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>false</apiData><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+    	 是否应显示位置栏。如果对 <codeph>window.open()</codeph> 方法的 JavaScript 调用的 <codeph>features</codeph> 字符串包括 <codeph>"location"</codeph>、<codeph>"location=1"</codeph> 或 <codeph>"location=y"</codeph>，则此属性设置为 <codeph>true</codeph>。
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLWindowCreateOptions:menuBarVisible"><apiName>menuBarVisible</apiName><shortdesc>
+    	 指定是否应显示菜单栏。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>false</apiData><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+    	 指定是否应显示菜单栏。如果对 <codeph>window.open()</codeph> 方法的 JavaScript 调用的 <codeph>features</codeph> 字符串包括 <codeph>"menubar"</codeph>、<codeph>"menubar=1"</codeph> 或 <codeph>"menubar=y"</codeph>，则此属性设置为 <codeph>true</codeph>。
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLWindowCreateOptions:resizable"><apiName>resizable</apiName><shortdesc>
+    	 指定此窗口是否应可调整大小。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>false</apiData><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+    	 指定此窗口是否应可调整大小。如果对 <codeph>window.open()</codeph> 方法的 JavaScript 调用的 <codeph>features</codeph> 字符串包括 <codeph>"resizable"</codeph>、<codeph>"resizable=1"</codeph> 或 <codeph>"resizable=y"</codeph>，则此属性设置为 <codeph>true</codeph>。
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLWindowCreateOptions:scrollBarsVisible"><apiName>scrollBarsVisible</apiName><shortdesc>
+    	 指定是否应显示滚动条。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>true</apiData><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+    	 指定是否应显示滚动条。如果对 <codeph>window.open()</codeph> 方法的 JavaScript 调用的 <codeph>features</codeph> 字符串包括 <codeph>"scrollbars"</codeph>、<codeph>"scrollbars=1"</codeph> 或 <codeph>"scrollbars=y"</codeph>，则此属性设置为 <codeph>true</codeph>。
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLWindowCreateOptions:statusBarVisible"><apiName>statusBarVisible</apiName><shortdesc>
+    	 指定是否应显示状态栏。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>false</apiData><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+    	 指定是否应显示状态栏。如果对 <codeph>window.open()</codeph> 方法的 JavaScript 调用的 <codeph>features</codeph> 字符串包括 <codeph>"status"</codeph>、<codeph>"status=1"</codeph> 或 <codeph>"status=y"</codeph>，则此属性设置为 <codeph>true</codeph>。
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLWindowCreateOptions:toolBarVisible"><apiName>toolBarVisible</apiName><shortdesc>
+    	 指定是否应显示工具栏。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>false</apiData><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+    	 指定是否应显示工具栏。如果对 <codeph>window.open()</codeph> 方法的 JavaScript 调用的 <codeph>features</codeph> 字符串包括 <codeph>"toolbar"</codeph>、<codeph>"toolbar=1"</codeph> 或 <codeph>"toolbar=y"</codeph>，则此属性设置为 <codeph>true</codeph>。
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLWindowCreateOptions:width"><apiName>width</apiName><shortdesc>
+		 指定新窗口所需的初始宽度。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>NaN</apiData><apiValueClassifier>Number</apiValueClassifier></apiValueDef><apiDesc>
+		 指定新窗口所需的初始宽度。此值设置为对 <codeph>window.open()</codeph> 方法的 JavaScript 调用的 <codeph>features</codeph> 字符串中的 <codeph>width</codeph> 值。如果此值为 <codeph>NaN</codeph>（默认值），当 <codeph>features</codeph> 字符串中未指定 <codeph>width</codeph> 值时，则会使用默认的窗口宽度。
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLWindowCreateOptions:x"><apiName>x</apiName><shortdesc>
+		 指定屏幕上的新窗口所需的初始 x 位置。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>NaN</apiData><apiValueClassifier>Number</apiValueClassifier></apiValueDef><apiDesc>
+		 指定屏幕上的新窗口所需的初始 <i>x</i> 位置。此值设置为对 <codeph>window.open()</codeph> 方法的 JavaScript 调用的 <codeph>features</codeph> 字符串中为 <codeph>left</codeph> 或 <codeph>screenX</codeph> 指定的值。如果此值为 <codeph>NaN</codeph>（默认值），当 <codeph>features</codeph> 字符串中未指定 <codeph>left</codeph> 或 <codeph>screenX</codeph> 值时，则会使用默认的窗口 <i>x</i> 位置。
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.html:HTMLWindowCreateOptions:y"><apiName>y</apiName><shortdesc>
+		 指定屏幕上的新窗口所需的初始 y 位置。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>NaN</apiData><apiValueClassifier>Number</apiValueClassifier></apiValueDef><apiDesc>
+		 指定屏幕上的新窗口所需的初始 <i>y</i> 位置。此值设置为对 <codeph>window.open()</codeph> 方法的 JavaScript 调用的 <codeph>features</codeph> 字符串中为 <codeph>top</codeph> 或 <codeph>screenY</codeph> 指定的值。如果此值为 <codeph>NaN</codeph>（默认值），当 <codeph>features</codeph> 字符串中未指定 <codeph>left</codeph> 或 <codeph>screenX</codeph> 值时，则会使用默认的窗口 <i>x</i> 位置。
+		 
+		 </apiDesc></apiValueDetail></apiValue></apiClassifier></apiPackage>

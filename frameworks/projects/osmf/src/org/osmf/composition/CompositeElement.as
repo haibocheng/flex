@@ -29,7 +29,7 @@ package org.osmf.composition
 	import org.osmf.media.MediaElement;
 	import org.osmf.metadata.Metadata;
 	import org.osmf.traits.MediaTraitType;
-	import org.osmf.utils.MediaFrameworkStrings;
+	import org.osmf.utils.OSMFStrings;
 	
 	/**
 	 * A CompositeElement is a media element which encapsulates a collection
@@ -137,11 +137,11 @@ package org.osmf.composition
 		{
 			if (child == null)
 			{
-				throw new ArgumentError(MediaFrameworkStrings.INVALID_PARAM);
+				throw new ArgumentError(OSMFStrings.getString(OSMFStrings.INVALID_PARAM));
 			}
 			if (index < 0 || index > numChildren)
 			{
-				throw new RangeError(MediaFrameworkStrings.INVALID_PARAM);
+				throw new RangeError(OSMFStrings.getString(OSMFStrings.INVALID_PARAM));
 			}
 			
 			children.splice(index, 0, child);
@@ -164,7 +164,7 @@ package org.osmf.composition
 			var index:int = children.indexOf(child);
 			if (index == -1)
 			{
-				throw new ArgumentError(MediaFrameworkStrings.INVALID_PARAM);
+				throw new ArgumentError(OSMFStrings.getString(OSMFStrings.INVALID_PARAM));
 			}
 
 			return removeChildAt(index);
@@ -193,7 +193,7 @@ package org.osmf.composition
 			}
 			else
 			{
-				throw new RangeError(MediaFrameworkStrings.INVALID_PARAM);
+				throw new RangeError(OSMFStrings.getString(OSMFStrings.INVALID_PARAM));
 			}
 			
 			return child;

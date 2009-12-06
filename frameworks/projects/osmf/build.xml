@@ -1,83 +1,104 @@
+<?xml version="1.0"?>
+
 <!--
 
 	ADOBE SYSTEMS INCORPORATED
 	Copyright 2009 Adobe Systems Incorporated
 	All Rights Reserved.
+
 	NOTICE: Adobe permits you to use, modify, and distribute this file
 	in accordance with the terms of the license agreement accompanying it.
+
 -->
 
 <project name="osmf" default="main" basedir=".">
-	<property name="FLEX_HOME" location="${basedir}/../../.."/>
-	<property file="${FLEX_HOME}/build.properties"/>
-	<property name="output.file" value="${FLEX_HOME}/frameworks/libs/osmf.swc"/>
-	<property name="flexTasks.location" value="${FLEX_HOME}/lib/flexTasks.jar"/>
 
-        <!-- We use abbreviated token names here as, the 'release' 
-             and 'debug' tokens conflict with those specified in 
-             build.properties -->
-	<property name="dbg" value="false"/>
+  <!--
+    ============================================================================
+    PROPERTIES
+    ======================================================================== -->
+
+	<property name="FLEX_HOME" location="${basedir}/../../.."/>
+
+	<property file="${FLEX_HOME}/build.properties"/>
+    
+    <property name="dbg" value="false"/>
 	<property name="rel" value="true"/>
 
-	<target name="main" depends="clean,compile" description="Clean build of combined osmf.swc"/>
+	<target name="main" depends="clean,compile" description="Clean build of osmf.swc and its English resources"/>
+    <!-- needs to depend on en_US project -->
 
-	<target name="clean" description="Deletes the osmf swc">
+	<target name="other.locales" description="Build other locale SWCs"/>
+    <!-- needs to depend on other projects -->
+	
+	<target name="clean">
 		<delete failonerror="false">
+			<fileset dir="${basedir}" >
+				<include name="bundles.properties"/>
+			</fileset>
 			<fileset dir="${FLEX_HOME}/frameworks/libs">
 				<include name="osmf.swc"/>
 			</fileset>
+			<fileset dir="${FLEX_HOME}/frameworks/locale">
+				<include name="*/osmf_rb.swc"/>
+				<include name="*/osmf_rb.swc.incr"/>
+			</fileset>
 		</delete>
 	</target>
-
+	
 	<target name="compile" description="Compiles osmf.swc">
-		<taskdef resource="flexTasks.tasks" classpath="${flexTasks.location}"/>
+		<echo message="Compiling frameworks/libs/osmf.swc"/>
+		<!-- Load the <compc> task. We can't do this at the <project> level -->
+		<!-- because targets that run before flexTasks.jar gets built would fail. -->
+		<taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/lib/flexTasks.jar"/>
 		<compc fork="true"
-			   output="${output.file}"
-			   compute-digest="true"
-			   include-classes="OSMFClasses">
+			   output="${FLEX_HOME}/frameworks/libs/osmf.swc">
 			<jvmarg line="${compc.jvm.args}"/>
-			<source-path path-element="src"/>
-			<library-path/>
+			<include-classes>OSMFClasses</include-classes>
+			<source-path path-element="${basedir}/src"/>
+			<library-path />
+			<external-library-path dir="${FLEX_HOME}/frameworks/libs">
+                <include name="player/${global.playerglobal.version}/playerglobal.swc"/>
+			</external-library-path>
             <include-file name="manifest.xml" path="${basedir}/manifest.xml"/>
-			<static-link-runtime-shared-libraries/>
 			<define name="CONFIG::debug" value="${dbg}"/>
 			<define name="CONFIG::release" value="${rel}"/>
             <define name="CONFIG::FLASH_10_1" value="false"/>
             <define name="CONFIG::LOGGING" value="false"/>
+			<locale/>
 		</compc>
-     </target>
+	</target>
+    
+	<target name="doc" depends="clean-temp-docs" description="updates osmf.swc with asdoc xml">
+		<!-- Load the <asdoc> task. We can't do this at the <project> level -->
+		<!-- because targets that run before flexTasks.jar gets built would fail. -->
+		<taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/lib/flexTasks.jar"/>
 
-	<target name="doc" depends="clean-temp-docs" description="Updates osmf.swc with ASDoc XML">
-		<taskdef resource="flexTasks.tasks" classpath="${flexTasks.location}"/>
-		<condition property="asdoc.jvm.args" value="-Xmx384m">
-			<os family="windows"/>
-		</condition>
-		<condition property="asdoc.jvm.args" value="-Xmx512m">
-			<os family="mac"/>
-		</condition>
-		<condition property="asdoc.jvm.args" value="-Xmx512m">
-			<os family="unix"/>
-		</condition>
-		<!-- builds ASDoc XML -->
+	    <condition property="asdoc.jvm.args" value="-Xmx384m">
+	        <os family="windows"/>
+	    </condition>
+
+	    <condition property="asdoc.jvm.args" value="-Xmx512m">
+	        <os family="mac"/>
+	    </condition>
+
+	    <condition property="asdoc.jvm.args" value="-Xmx512m">
+	        <os family="unix"/>
+	    </condition>
+
+		<!-- Call asdoc to generate dita xml files -->
 		<asdoc output="${FLEX_HOME}/tempDoc" lenient="true" failonerror="true" keep-xml="true" skip-xsl="true" fork="true">
-			<doc-classes class="OSMFClasses"/>
-		    <compiler.source-path path-element="src"/>
-			<external-library-path dir="${output.file}"/>
+		    <compiler.source-path path-element="${basedir}/src"/>
+		    <doc-classes class="OSMFDocClasses"/>
 		    <jvmarg line="${asdoc.jvm.args}"/>
-			<static-link-runtime-shared-libraries/>
-			<define name="CONFIG::debug" value="${dbg}"/>
+            <define name="CONFIG::debug" value="${dbg}"/>
 			<define name="CONFIG::release" value="${rel}"/>
-			<define name="CONFIG::FLASH_10_1" value="false"/>
+            <define name="CONFIG::FLASH_10_1" value="false"/>
             <define name="CONFIG::LOGGING" value="false"/>
 		</asdoc>
-		<!-- updates combined swc with ASDoc XML -->
-		<zip destfile="${output.file}" update="true">
-		    <zipfileset dir="${FLEX_HOME}/tempDoc/tempdita" prefix="docs">
-			    <include name="*.*"/>
-				<exclude name="ASDoc_Config.xml"/>
-				<exclude name="overviews.xml"/>
-		    </zipfileset>
-		</zip>
+
+		<!-- updates osmf.swc with asdoc xml -->
+        <!-- not implemented yet -->
 	</target>
 
 	<target name="clean-temp-docs">

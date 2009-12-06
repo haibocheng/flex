@@ -1,0 +1,891 @@
+<?xml version="1.0"?>
+<apiPackage id="air.update"><apiName>air.update</apiName><apiDetail/><apiClassifier id="air.update:ApplicationUpdater"><apiName>ApplicationUpdater</apiName><shortdesc>
+	Класс ApplicationUpdater определяет основные функциональные возможности инфраструктуры обновления приложений Adobe&amp;#xAE; AIR&amp;#xAE; без предоставления пользовательского интерфейса по умолчанию.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.events:EventDispatcher</apiBaseClassifier></apiClassifierDef><apiDesc>
+	Класс ApplicationUpdater определяет основные функциональные возможности инфраструктуры обновления приложений Adobe<sup>®</sup> AIR<sup>®</sup> без предоставления пользовательского интерфейса по умолчанию. (Класс ApplicationUpdaterUI включает в себя возможность обновления <i>и</i> пользовательский интерфейс по умолчанию.) 
+		
+	<p product="flex">Этот класс включен в файл applicationupdater.swc. Adobe<sup>®</sup> Flex™ Builder™ загружает этот класс автоматически при создании проекта для Adobe AIR. Adobe<sup>®</sup> Flex™ SDK также включает файл applicationupdater.swc, который необходимо добавлять при компиляции приложения с использованием Flex SDK.</p>
+	
+	<p product="flash">Этот класс включен в файл applicationupdater_ui.swc, который входит в Adobe<sup>®</sup> Flex™ SDK. </p>
+	
+	<p platform="javascript">Для использования этого класса в коде JavaScript загрузите файл applicationupdater.swf (предоставляемый в AIR SDK), как описано ниже.</p>
+	
+	<codeblock platform="javascript">&lt;script src="applicationupdater.swf" type="application/x-shockwave-flash"></codeblock>
+		
+	<p>Управление обновлениями приложений может оказаться непростой задачей. Инфраструктура обновления AIR предоставляет API-интерфейсы, позволяющие разработчикам внедрить хорошие возможности обновления в приложения AIR. Функциональная инфраструктура обновления AIR предоставляет разработчикам следующие возможности.</p>
+	
+	<ul><li>
+	<p>Периодическая проверка наличия обновлений по расписанию или по запросу пользователя.</p>
+	</li>
+	<li>
+	<p>Загрузка файлов AIR (обновлений) из веб-источника.</p>
+	</li>
+	<li>
+	<p>Оповещение пользователя о первом запуске вновь установленной версии.</p>
+	</li>
+	<li>
+	<p>Запрос на подтверждение проверки наличия обновлений пользователем.</p>
+	</li>
+	<li>
+	<p>Отображение информации о версии обновления для пользователя.</p>
+	</li>
+	<li>
+	<p>Отображение хода загрузки и информации об ошибках для пользователя.</p>
+	</li></ul>
+	
+	<p>Инфраструктура обновления AIR позволяет сохранять информацию о версии обновления приложения AIR в простых XML-файлах конфигурации. Благодаря настройке файлов конфигурации и вставке основного кода большинство приложений способны предложить своим конечным пользователям хорошие функциональные возможности обновления.</p>
+	
+	<p>С помощью класса AIRUpdater можно определить собственный пользовательский интерфейс для использования в инфраструктуре обновления AIR.</p>
+	
+	<p>Процесс обновления включает в себя ряд состояний. Свойство <codeph>currentState</codeph> объекта программы обновления отражает текущее состояние программы обновления:</p>
+	
+	<p><adobetable class="innertable">
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<tgroup cols="2"><thead><row><entry>
+	Значение currentState
+	</entry><entry>
+	Описание
+	</entry></row></thead><tbody><row><entry>UNINITIALIZED</entry>
+	<entry>Программа обновления не инициализирована.</entry>
+	</row><row><entry>INITIALIZING</entry>
+	<entry>Выполняется инициализация программы обновления.</entry>
+	</row><row><entry>READY</entry>
+	<entry>Программа обновления инициализирована.</entry>
+	</row><row><entry>BEFORE_CHECKING</entry>
+	<entry>Программа обновления еще не выполнила проверку наличия файла дескриптора обновления.</entry>
+	</row><row><entry>CHECKING</entry>
+	<entry>Программа обновления выполняет проверку наличия файла дескриптора обновления.</entry>
+	</row><row><entry>AVAILABLE</entry>
+	<entry>Обнаружен доступный файл дескриптора обновления.</entry>
+	</row><row><entry>DOWNLOADING</entry>
+	<entry>Программа обновления выполняет загрузку файла AIR.</entry>
+	</row><row><entry>DOWNLOADED</entry>
+	<entry>Программа обновления завершила загрузку файла AIR.</entry>
+	</row><row><entry>INSTALLING</entry>
+	<entry>Программа обновления выполняет установку файла AIR.</entry>
+	</row><row><entry>PENDING_INSTALLING</entry>
+	<entry>Программа обновления инициализирована. Имеются обновления, ожидающие установки.</entry>
+	</row></tbody></tgroup></adobetable></p>
+	
+	<p>Однако при тестировании приложения в программе AIR Debug Launcher (ADL) попытка обновить приложение приводит к исключению IllegalOperationError.</p>
+	
+	<p product="flex">Подробнее об использовании инфраструктуры обновления AIR см. в главе «Обновление приложений AIR» документа <xref href="http://www.adobe.com/go/learn_air_flex3">Разработка приложений Adobe AIR с помощью Adobe Flex</xref>.</p> 
+	
+	<p product="flash">Подробнее об использовании инфраструктуры обновления AIR см. в главе «Обновление приложений AIR» документа <xref href="http://www.adobe.com/go/learn_air_flash">Разработка приложений Adobe AIR с помощью Adobe Flash</xref>.</p> 
+	
+	<p platform="javascript">Подробная информация об использовании инфраструктуры обновления AIR содержится в главе «Обновление приложений AIR» документа <xref href="http://www.adobe.com/go/learn_air_html">Разработка приложений Adobe AIR с помощью HTML и Ajax</xref>.</p> 
+	
+	</apiDesc></apiClassifierDetail><related-links><link href="air.update.xml#ApplicationUpdaterUI"><linktext>ApplicationUpdaterUI</linktext></link><link href="flash.desktop.xml#Updater"><linktext>flash.desktop.Updater</linktext></link></related-links><adobeApiEvent id="air.update:ApplicationUpdater_flash.events.ErrorEvent.ERROR_error"><apiName>error</apiName><shortdesc> 
+	Отправляется при возникновении ошибки во время инициализации или процесса обновления (если произошло непредвиденное событие).</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.ErrorEvent.ERROR</apiEventType><adobeApiEventClassifier>flash.events.ErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	Отправляется при возникновении ошибки во время инициализации или процесса обновления (если произошло непредвиденное событие).
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdater_flash.events.ProgressEvent.PROGRESS_progress"><apiName>progress</apiName><shortdesc> 
+	Отправляется после завершения инициализации.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.ProgressEvent.PROGRESS</apiEventType><adobeApiEventClassifier>flash.events.ProgressEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	Отправляется после завершения инициализации. 
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdater_air.update.events.StatusFileUpdateErrorEvent.FILE_UPDATE_ERROR_fileUpdateError"><apiName>fileUpdateError</apiName><shortdesc> 
+	 Отправляется в случае ошибки проверки файла, переданного в качестве параметра airFile в вызов метода installFromAIRFile().</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.StatusFileUpdateErrorEvent.FILE_UPDATE_ERROR</apiEventType><adobeApiEventClassifier>air.update.events.StatusFileUpdateErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	 Отправляется в случае ошибки проверки файла, переданного в качестве параметра <codeph>airFile</codeph> в вызов метода <codeph>installFromAIRFile()</codeph>.
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdater_air.update.events.StatusFileUpdateEvent.FILE_UPDATE_STATUS_fileUpdateStatus"><apiName>fileUpdateStatus</apiName><shortdesc> 
+	Отправляется после успешной проверки программой обновления файла в вызове метода installFromAIRFile().</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.StatusFileUpdateEvent.FILE_UPDATE_STATUS</apiEventType><adobeApiEventClassifier>air.update.events.StatusFileUpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	Отправляется после успешной проверки программой обновления файла в вызове метода <codeph>installFromAIRFile()</codeph>.
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdater_air.update.events.DownloadErrorEvent.DOWNLOAD_ERROR_downloadError"><apiName>downloadError</apiName><shortdesc> 
+	Отправляется в случае ошибки подключения к файлу обновления или его загрузки.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.DownloadErrorEvent.DOWNLOAD_ERROR</apiEventType><adobeApiEventClassifier>air.update.events.DownloadErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	Отправляется в случае ошибки подключения к файлу обновления или его загрузки. Отправляется также для неправильных состояний HTTP (например, 404 – файл не найден).
+	
+	<p>При отправке этого события периодический таймер автоматически перезапускается (если задержка больше 0). </p>
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdater_air.update.events.StatusUpdateErrorEvent.UPDATE_ERROR_updateError"><apiName>updateError</apiName><shortdesc> 
+	Отправляется в случае ошибки загрузки или разбора файла дескриптора обновления.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.StatusUpdateErrorEvent.UPDATE_ERROR</apiEventType><adobeApiEventClassifier>air.update.events.StatusUpdateErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	Отправляется в случае ошибки загрузки или разбора файла дескриптора обновления.
+	
+	<p>При отправке этого события программой обновления периодический таймер автоматически перезапускается (если значение настройки задержки больше 0). Приложение должно предусматривать скрытие всех сообщений об ошибках при отправке программой обновления нового события <codeph>checkForUpdate</codeph>. </p>
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdater_air.update.events.StatusUpdateEvent.UPDATE_STATUS_updateStatus"><apiName>updateStatus</apiName><shortdesc> 
+	Отправляется после успешной загрузки и интерпретации файла дескриптора обновления программой обновления.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.StatusUpdateEvent.UPDATE_STATUS</apiEventType><adobeApiEventClassifier>air.update.events.StatusUpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	Отправляется после успешной загрузки и интерпретации файла дескриптора обновления программой обновления. 
+	
+	<p>По умолчанию загрузка обновления начинается, если свойство available объекта StatusUpdateEvent имеет значение <codeph>true</codeph>. Поведения по умолчанию можно избежать только при использовании класса ApplicationUpdater, но не при использовании класса ApplicationUpdatorUI.</p>
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdater_air.update.events.UpdateEvent.BEFORE_INSTALL_beforeInstall"><apiName>beforeInstall</apiName><shortdesc> 
+	 Отправляется непосредственно перед установкой обновления, после вызова метода installUpdate().</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.UpdateEvent.BEFORE_INSTALL</apiEventType><adobeApiEventClassifier>air.update.events.UpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	 Отправляется непосредственно перед установкой обновления, после вызова метода <codeph>installUpdate()</codeph>. Иногда необходимо предотвратить установку обновления на этом этапе, так как все результаты текущей работы пользователя могут быть потеряны при выходе среды выполнения из приложения для установки обновления. 
+	 
+	 <p>Вызов метода <codeph>preventDefault()</codeph> этого события позволяет отложить установку до следующего запуска. При вызове метода <codeph>preventDefault()</codeph> ни один дополнительный процесс обновления не будет запущен во время данного сеанса работы приложения (путем вызова метода <codeph>installUpdate()</codeph> или проверки по расписанию). </p>
+	 
+	 <p>Поведением по умолчанию для библиотеки ApplicationUpdater является загрузка файла дескриптора обновления. С помощью вызова метода <codeph>preventDefault()</codeph> можно отменить это поведение.</p>
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdater_air.update.events.UpdateEvent.DOWNLOAD_COMPLETE_downloadComplete"><apiName>downloadComplete</apiName><shortdesc> 
+	Отправляется при завершении загрузки файла обновления.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.UpdateEvent.DOWNLOAD_COMPLETE</apiEventType><adobeApiEventClassifier>air.update.events.UpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	Отправляется при завершении загрузки файла обновления.
+	
+	<p>Как правило, данное событие используется для отображения сообщения с запросом продолжения установки обновления. </p>
+	
+	<p>Поведением по умолчанию для библиотеки ApplicationUpdater является автоматический вызов метода <codeph>installUpdate()</codeph>.</p>
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdater_air.update.events.UpdateEvent.DOWNLOAD_START_downloadStart"><apiName>downloadStart</apiName><shortdesc> 
+	 Отправляется после вызова метода downloadUpdate() и установки подключения к серверу.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.UpdateEvent.DOWNLOAD_START</apiEventType><adobeApiEventClassifier>air.update.events.UpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	 Отправляется после вызова метода <codeph>downloadUpdate()</codeph> и установки подключения к серверу. При использовании библиотеки ApplicationUpdater обработчик событий для данного события может отображать индикатор выполнения, чтобы пользователь мог следить за ходом загрузки. 
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdater_air.update.events.UpdateEvent.CHECK_FOR_UPDATE_checkForUpdate"><apiName>checkForUpdate</apiName><shortdesc> 
+	Отправляется до начала процесса обновления, непосредственно перед попыткой программы обновления загрузить файл дескриптора обновления.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.UpdateEvent.CHECK_FOR_UPDATE</apiEventType><adobeApiEventClassifier>air.update.events.UpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	Отправляется до начала процесса обновления, непосредственно перед попыткой программы обновления загрузить файл дескриптора обновления. Программа обновления может отправить это событие в результате прямого вызова метода <codeph>checkNow()</codeph> или по истечении времени, заданного для таймера периодической проверки. 
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdater_air.update.events.UpdateEvent.INITIALIZED_initialized"><apiName>initialized</apiName><shortdesc> 
+	Отправляется после завершения инициализации.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.UpdateEvent.INITIALIZED</apiEventType><adobeApiEventClassifier>air.update.events.UpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	Отправляется после завершения инициализации. 
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><apiConstructor id="air.update:ApplicationUpdater:ApplicationUpdater"><apiName>ApplicationUpdater</apiName><shortdesc>
+		Функция конструктора.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/></apiConstructorDef><apiDesc>
+		Функция конструктора. 
+		
+		</apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="air.update:ApplicationUpdater:cancelUpdate"><apiName>cancelUpdate</apiName><shortdesc>
+		Отменяет процесс обновления.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+		Отменяет процесс обновления. Вызов этого метода отменяет все ожидающие загрузки, удаляя не полностью загруженные файлы, и перезапускает таймер периодической проверки.
+		
+		<p>Процесс обновления можно отменить в любое время. Исключением являются состояния UNINITIALIZED и INITIALIZING. Вызов этого метода в состоянии UNINITIALIZED или INITIALIZING не работает.</p>
+		
+		</apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.update:ApplicationUpdater:checkForUpdate"><apiName>checkForUpdate</apiName><shortdesc>
+		Выполняет асинхронную загрузку и интерпретацию файла дескриптора обновления.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+		Выполняет асинхронную загрузку и интерпретацию файла дескриптора обновления. Вызов этого метода меняет состояние программы обновления на CHECKING. Этот метод следует вызывать только при отмене события <codeph>checkForUpdate</codeph>.
+		
+		<p>Этот метод выполняется, только если программа обновления находится в состоянии BEFORE_CHECKING. </p>
+		
+		</apiDesc></apiOperationDetail><adobeApiEvent id="air.update:ApplicationUpdater:checkForUpdate_updateStatus"><apiName>updateStatus</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>air.update.events:StatusUpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>Программа обновления успешно загрузила и интерпретировала файл дескриптора обновления.
+		
+		</apiDesc></adobeApiEventDetail><shortdesc>Программа обновления успешно загрузила и интерпретировала файл дескриптора обновления.</shortdesc></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdater:checkForUpdate_updateError"><apiName>updateError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>air.update.events:StatusUpdateErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>Во время загрузки или разбора файла дескриптора обновления произошла ошибка.
+		
+		</apiDesc></adobeApiEventDetail><shortdesc>Во время загрузки или разбора файла дескриптора обновления произошла ошибка.</shortdesc></adobeApiEvent></apiOperation><apiOperation id="air.update:ApplicationUpdater:checkNow"><apiName>checkNow</apiName><shortdesc>
+		Начинает процесс обновления.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+		Начинает процесс обновления. Вызов этого метода не останавливает периодический таймер. Однако этот метод определяет, что выполняется процесс обновления, и пропускает текущую итерацию.
+		
+		<p>Этот метод выполняется только в состоянии READY. </p>
+		
+		<p>Этот метод может вызвать объект программы обновления, отправляющий следующее событие:</p>
+		
+		</apiDesc></apiOperationDetail><adobeApiEvent id="air.update:ApplicationUpdater:checkNow_checkForUpdate"><apiName>checkForUpdate</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>air.update.events:UpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>Отправляется непосредственно перед началом процесса обновления.
+		
+		</apiDesc></adobeApiEventDetail><shortdesc>Отправляется непосредственно перед началом процесса обновления.</shortdesc></adobeApiEvent></apiOperation><apiOperation id="air.update:ApplicationUpdater:downloadUpdate"><apiName>downloadUpdate</apiName><shortdesc>
+		Выполняет асинхронную загрузку файла обновления.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+		Выполняет асинхронную загрузку файла обновления. Вызов этого метода приводит к изменению состояния на DOWNLOADING. Этот метод следует вызывать только при отмене события StatusUpdateEvent.UPDATE_STATUS, если свойство available этого события имело значение true.
+		
+		<p>Этот метод выполняется только в состоянии AVAILABLE.</p>
+		
+		</apiDesc></apiOperationDetail><adobeApiEvent id="air.update:ApplicationUpdater:downloadUpdate_downloadStart"><apiName>downloadStart</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>air.update.events:UpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>Отправляется после установки подключения к серверу. 
+		
+		</apiDesc></adobeApiEventDetail><shortdesc>Отправляется после установки подключения к серверу.</shortdesc></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdater:downloadUpdate_progress"><apiName>progress</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:ProgressEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>Отправляется после завершения инициализации.
+		
+		</apiDesc></adobeApiEventDetail><shortdesc>Отправляется после завершения инициализации.</shortdesc></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdater:downloadUpdate_downloadError"><apiName>downloadError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>air.update.events:DownloadErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>Отправляется в случае ошибки подключения к файлу обновления или его загрузки. Отправляется также для неправильных состояний HTTP (например, 404 – файл не найден).
+		
+		</apiDesc></adobeApiEventDetail><shortdesc>Отправляется в случае ошибки подключения к файлу обновления или его загрузки.</shortdesc></adobeApiEvent></apiOperation><apiOperation id="air.update:ApplicationUpdater:initialize"><apiName>initialize</apiName><shortdesc>
+		 Выполняет инициализацию программы обновления.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+		 Выполняет инициализацию программы обновления. При вызове данного метода происходит следующее: 
+		
+		<p><ol><li>
+		<p>Выполняется инициализация инфраструктуры обновления с автоматической (и синхронной) установкой ожидающих обновлений. Этот метод следует вызывать при запуске приложения, так как он может вызвать перезапуск приложения.</p>
+		</li><li>
+		
+		<p>Выполняется проверка наличия отложенных обновлений и их установка.</p>
+		</li><li>
+		<p>Если во время установки предыдущего обновления произошла ошибка, выполняется очистка файла обновления и данных о версии в области хранилища.</p>
+		</li><li>
+		<p>Если срок задержки периодического таймера истек, начинается процесс обновления; в противном случае запускается периодический таймер. Однако при тестировании приложения в программе AIR Debug Launcher (ADL) попытка обновить приложение приводит к исключению IllegalOperationError.</p>
+		</li>
+		</ol></p>
+		
+		</apiDesc></apiOperationDetail><adobeApiEvent id="air.update:ApplicationUpdater:initialize_initialized"><apiName>initialized</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>air.update.events:UpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>Инициализация завершена. 
+		
+		</apiDesc></adobeApiEventDetail><shortdesc>Инициализация завершена.</shortdesc></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdater:initialize_error"><apiName>error</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:ErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>Во время инициализации произошла ошибка.
+		
+		</apiDesc></adobeApiEventDetail><shortdesc>Во время инициализации произошла ошибка.</shortdesc></adobeApiEvent></apiOperation><apiOperation id="air.update:ApplicationUpdater:installFromAIRFile"><apiName>installFromAIRFile</apiName><shortdesc>
+		Начинает процесс обновления с помощью локального файла AIR.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>file</apiItemName><apiOperationClassifier>flash.filesystem:File</apiOperationClassifier><apiDesc>Локальный файл AIR для установки.
+		
+		</apiDesc></apiParam></apiOperationDef><apiDesc>
+		Начинает процесс обновления с помощью локального файла AIR. 
+		
+		<p>Вызов этого метода не работает, если выполняется процесс обновления (т. е. не в состоянии <codeph>DOWNLOADED</codeph>).</p>
+		
+		<p>Эта функция полезна для приложения, в котором элемент <codeph>customUpdateUI</codeph> в файле дескриптора приложения имеет значение <codeph>true</codeph>.</p>
+		
+		<p>При тестировании приложения с помощью AIR Debug Launcher (ADL) вызов этого метода приводит к исключению IllegalOperationError.</p>
+		
+		</apiDesc></apiOperationDetail><adobeApiEvent id="air.update:ApplicationUpdater:installFromAIRFile_fileUpdateStatus"><apiName>fileUpdateStatus</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>air.update.events:StatusFileUpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>Отправляется после успешной проверки файла AIR программой обновления.
+		
+		</apiDesc></adobeApiEventDetail><shortdesc>Отправляется после успешной проверки файла AIR программой обновления.</shortdesc></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdater:installFromAIRFile_updateError"><apiName>updateError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>air.update.events:StatusFileUpdateErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>Отправляется в случае ошибки разбора файла дескриптора обновления.
+		
+		</apiDesc></adobeApiEventDetail><shortdesc>Отправляется в случае ошибки разбора файла дескриптора обновления.</shortdesc></adobeApiEvent></apiOperation><apiOperation id="air.update:ApplicationUpdater:installUpdate"><apiName>installUpdate</apiName><shortdesc>
+		Выполняет установку файла обновления.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+		Выполняет установку файла обновления. Вызов этого метода изменяет состояние на INSTALLING. Его следует вызывать только при отмене события <codeph>downLoadComplete</codeph>.
+		
+		<p>Этот метод следует вызывать, когда программа обновления находится в состоянии DOWNLOADED. Вызов этого метода в другом состоянии не работает.</p>
+		
+		<p>При тестировании приложения с помощью AIR Debug Launcher (ADL) вызов этого метода приводит к исключению IllegalOperationError.</p>
+		
+		</apiDesc></apiOperationDetail><adobeApiEvent id="air.update:ApplicationUpdater:installUpdate_beforeInstall"><apiName>beforeInstall</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>air.update.events:UpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>Отправляется непосредственно перед установкой обновления. Иногда необходимо предотвратить установку обновления на этом этапе, так как все результаты текущей работы пользователя могут быть потеряны при выходе среды выполнения из приложения для установки обновления.
+		 
+		</apiDesc></adobeApiEventDetail><shortdesc>Отправляется непосредственно перед установкой обновления.</shortdesc></adobeApiEvent></apiOperation><apiValue id="air.update:ApplicationUpdater:configurationFile:get"><apiName>configurationFile</apiName><shortdesc>
+		Местоположение файла конфигурации, в котором заданы значения свойств delay и updateURL.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>flash.filesystem:File</apiValueClassifier></apiValueDef><apiDesc>
+		Местоположение файла конфигурации, в котором заданы значения свойств <codeph>delay</codeph> и <codeph>updateURL</codeph>. Если свойство указывает на несуществующий файл, вызов метода <codeph>initialize()</codeph> приведет к ошибке.
+		
+		<p>Образец файла конфигурации:</p>
+		
+		<codeblock> &lt;?xml version="1.0" encoding="utf-8"?> 
+ 		&lt;configuration xmlns="http://ns.adobe.com/air/framework/update/configuration/1.0" >
+ 		  &lt;url>app:/server/update.xml&lt;/url>
+ 		  &lt;delay>1&lt;/delay>
+		&lt;/configuration></codeblock>
+		
+		<p>Вместо загрузки файла конфигурации для определения свойств <codeph>delay</codeph> и <codeph>updateURL</codeph> можно использовать код <ph platform="actionscript">ActionScript</ph> <ph platform="javascript">JavaScript</ph>.</p> 
+		
+		</apiDesc></apiValueDetail><related-links><link href="air.update.xml#ApplicationUpdater/delay"><linktext>delay</linktext></link><link href="air.update.xml#ApplicationUpdater/updateURL"><linktext>updateURL</linktext></link></related-links></apiValue><apiValue id="air.update:ApplicationUpdater:currentState:get"><apiName>currentState</apiName><shortdesc>
+		Внутреннее состояние программы обновления.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		Внутреннее состояние программы обновления. Для этого свойства можно задать следующие значения:
+		
+		<p><ul><li>
+		<p><codeph>UNINITIALIZED</codeph> – программа обновления не инициализирована.</p>
+		</li><li>
+		<p><codeph>INITIALIZING</codeph> – выполняется инициализация программы обновления.</p>
+		</li><li>
+		<p><codeph>READY</codeph> – программа обновления инициализирована.</p>
+		</li><li>
+		<p><codeph>BEFORE_CHECKING</codeph> – программа обновления еще не выполнила проверку наличия файла дескриптора обновления.</p>
+		</li><li>
+		<p><codeph>CHECKING</codeph> – программа обновления выполняет проверку наличия файла дескриптора обновления.</p>
+		</li><li>
+		<p><codeph>AVAILABLE</codeph> – обнаружен доступный файл дескриптора обновления.</p>
+		</li><li>
+		<p><codeph>DOWNLOADING</codeph> – программа обновления выполняет загрузку файла AIR.</p>
+		</li><li>
+		<p><codeph>DOWNLOADED</codeph> – программа обновления завершила загрузку файла AIR.</p>
+		</li><li>
+		<p><codeph>INSTALLING</codeph> – программа обновления выполняет установку файла AIR.</p>
+		</li><li>
+		<p><codeph>PENDING_INSTALLING</codeph> – программа обновления инициализирована. Имеются обновления, ожидающие установки.</p>
+		</li></ul></p>
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdater:currentVersion:get"><apiName>currentVersion</apiName><shortdesc>
+		Текущая версия приложения.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		Текущая версия приложения. Значение для этого свойства задается во время вызова метода <codeph>initialize()</codeph>. Значением свойства является версия, указанная в файле дескриптора приложения.
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdater:delay:get"><apiName>delay</apiName><shortdesc>
+		Интервал в днях между периодическими проверками наличия новых обновлений.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Number</apiValueClassifier><apiDefaultValue>0
+		
+		</apiDefaultValue></apiValueDef><apiDesc>
+		Интервал в днях между периодическими проверками наличия новых обновлений.
+		
+		<p>Значение 0 (по умолчанию) указывает на неактивное состояние таймера, поэтому периодическая проверка не выполняется. Это значение можно задать в данном свойстве или в файле конфигурации. Если значение задано с помощью обоих методов, используется значение, заданное в свойстве.</p>
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdater:isFirstRun:get"><apiName>isFirstRun</apiName><shortdesc>
+		Является ли этот запуск первым после успешного обновления (true) или нет (false).</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+		Является ли этот запуск первым после успешного обновления (<codeph>true</codeph>) или нет (<codeph>false</codeph>). Программа обновления задает это значение во время вызова метода <codeph>initialize()</codeph>. Если требуется выполнить перенос данных из одной версии в другую, разработчик должен убедиться, что для свойства <codeph>isFirstRun</codeph> задано значение <codeph>true</codeph>.
+		
+		</apiDesc></apiValueDetail><related-links><link href="air.update.xml#ApplicationUpdater/wasPendingUpdate"><linktext>wasPendingUpdate</linktext></link></related-links></apiValue><apiValue id="air.update:ApplicationUpdater:isNewerVersionFunction:get"><apiName>isNewerVersionFunction</apiName><shortdesc>
+		Функция, используемая программой обновления для сравнения версий.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Function</apiValueClassifier></apiValueDef><apiDesc>
+		Функция, используемая программой обновления для сравнения версий. По умолчанию инфраструктура обновления выполняет сравнение версий с целью определить, является ли версия с удаленного сайта более новой, чем версия установленного приложения. Однако иногда сравнение по умолчанию не соответствует схеме версий разработчика. Задайте для данного свойства новую функцию для выполнения сравнения. 
+		
+		<p>Функция сравнения по умолчанию может работать с версиями формата <i>x.y.z</i>, где элементы x, y и z могут состоять из цифр и букв. Существуют некоторые особые условия, которые учитывает функция сравнения по умолчанию. Если функция проверки обнаруживает <codeph>alpha</codeph>, <codeph>beta</codeph> или <codeph>rc</codeph> в строках версий, принимается порядок <codeph>alpha</codeph> &lt; <codeph>beta</codeph> &lt; <codeph>rc</codeph>.</p>
+		
+		</apiDesc><example conref="examples\ApplicationUpdater.configurationFunction.1.as"> Следующий код определяет пользовательскую функцию <codeph>customFn</codeph> для объекта <codeph>appUpdate</codeph> программы обновления. Пример функции нарочито простой. Ваша пользовательская функция должна возвращать логическое значение, исходя из правил схемы версий.
+<codeblock>
+appUpdate.isNewerVersionFunction = customFn; 
+
+function customFn (currentVersion:String, updateVersion:String):Boolean 
+{
+    return updateVersion > currentVersion;
+}
+</codeblock></example></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdater:previousApplicationStorageDirectory:get"><apiName>previousApplicationStorageDirectory</apiName><shortdesc>
+		Предыдущее местоположение каталога хранилища приложения, если оно изменилось после обновления.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>flash.filesystem:File</apiValueClassifier></apiValueDef><apiDesc>
+		Предыдущее местоположение каталога хранилища приложения, если оно изменилось после обновления. Каталог хранилища приложения меняет свое местоположение при обновлении с переносом сертификата. Если перенос сертификата не выполняется, то при обновлении приложения пользователем местоположение каталога хранилища приложения не изменяется. и это свойство имеет значение <codeph>null</codeph>. Значение для этого свойства задается во время вызова метода <codeph>initialize()</codeph>. 
+		
+		<p>Разработчик может подписать новую версию приложения AIR с помощью нового сертификата, если при упаковке файла AIR с помощью ADT используется команда <codeph>-migrate</codeph>. Если в новой версии приложения AIR используется новый сертификат подписи, локальный каталог хранилища приложения меняет свое местоположение при установке новой версии. С помощью этого свойства можно перенести данные из старого каталога хранилища приложения в новый (<codeph>File.applicationStorageDirectory</codeph>). Дополнительную информацию см. в разделе «Подписание файла AIR с изменением сертификата приложения» главы «Создание приложения AIR с использованием инструментов командной строки» в руководстве разработчика Adobe AIR.</p>
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdater:previousVersion:get"><apiName>previousVersion</apiName><shortdesc>
+		Предыдущая версия приложения.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		Предыдущая версия приложения. Значение для этого свойства задается во время вызова метода <codeph>initialize()</codeph>. Возвращает <i>предыдущую версию</i> приложения перед обновлением (задано, только если свойство <codeph>isfirstRun</codeph> имеет значение <codeph>true</codeph>); в противном случае имеет значение <codeph>null</codeph>.
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdater:updateDescriptor:get"><apiName>updateDescriptor</apiName><shortdesc>
+		Содержимое файла дескриптора обновления, загруженного с URL-адреса обновления.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>XML</apiValueClassifier></apiValueDef><apiDesc>
+		Содержимое файла дескриптора обновления, загруженного с URL-адреса обновления. Это свойство не имеет значение null, только если объект программы обновления отправляет событие <codeph>updateStatus</codeph>.
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdater:updateURL:get"><apiName>updateURL</apiName><shortdesc>
+		Местоположение файла дескриптора обновления.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		Местоположение файла дескриптора обновления. Допустимо любое действительное для пути URLRequest местоположение. Это единственная обязательная для программы обновления настройка. URL-адрес обновления можно задать либо в этом свойстве либо в файле конфигурации. Если значение задано с помощью обоих методов, программа обновления использует значение, заданное в свойстве.
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdater:wasPendingUpdate:get"><apiName>wasPendingUpdate</apiName><shortdesc>
+		Имеется ли отложенное обновление, даже если его не удалось установить (true); в противном случае – false.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+		Имеется ли отложенное обновление, даже если его не удалось установить (<codeph>true</codeph>); в противном случае – <codeph>false</codeph>. Программа обновления задает значение для этого свойства во время вызова метода <codeph>initialize()</codeph>. С помощью свойств <codeph>wasPendingUpdate</codeph> и <codeph>isFirstRun</codeph> можно проверить, была ли попытка установки обновления неудачной (в этом случае свойство <codeph>wasPendingUpdate</codeph> имеет значение <codeph>true</codeph>, а свойство <codeph>isFirstRun</codeph> имеет значение <codeph>false</codeph>).
+		
+		</apiDesc></apiValueDetail><related-links><link href="air.update.xml#ApplicationUpdater/isFirstRun"><linktext>isFirstRun</linktext></link></related-links></apiValue></apiClassifier><apiClassifier id="air.update:ApplicationUpdaterUI"><apiName>ApplicationUpdaterUI</apiName><shortdesc>
+	Класс ApplicationUpdaterUI определяет основные функциональные возможности инфраструктуры обновления приложений Adobe&amp;#xAE; AIR&amp;#xAE; и предоставляет пользовательский интерфейс по умолчанию.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.events:EventDispatcher</apiBaseClassifier></apiClassifierDef><apiDesc>
+	Класс ApplicationUpdaterUI определяет основные функциональные возможности инфраструктуры обновления приложений Adobe<sup>®</sup> AIR<sup>®</sup> и предоставляет пользовательский интерфейс по умолчанию. (Класс ApplicationUpdater включает в себя возможность обновления <i>без</i> реализации пользовательского интерфейса по умолчанию.) 
+	
+	<p product="flex">Этот класс включен в файл applicationupdater_ui.swc. Adobe<sup>®</sup> Flex™ Builder™ загружает этот класс автоматически при создании проекта для Adobe AIR. Adobe<sup>®</sup> Flex™ SDK также включает файл applicationupdater_ui.swc, который необходимо добавлять при компиляции приложения с использованием Flex SDK.</p>
+	
+	<p product="flash">Этот класс включен в файл applicationupdater_ui.swc, который входит в Adobe<sup>®</sup> Flex™ SDK. </p>
+	
+	<p platform="javascript">Для использования этого класса в коде JavaScript загрузите файл applicationupdater_ui.swf (предоставляемый в AIR SDK), как описано ниже:</p>
+	
+	<codeblock platform="javascript">&lt;script src="applicationupdater_ui.swf" type="application/x-shockwave-flash"></codeblock>
+		
+	<p>Управление обновлениями приложений может оказаться непростой задачей. Инфраструктура обновления AIR предоставляет API-интерфейсы, позволяющие разработчикам внедрить хорошие возможности обновления в приложения AIR. Функциональная инфраструктура обновления AIR предоставляет разработчикам следующие возможности.</p>
+	
+	<ul><li>
+	<p>Периодическая проверка наличия обновлений по расписанию или по запросу пользователя.</p>
+	</li>
+	<li>
+	<p>Загрузка файлов AIR (обновлений) из веб-источника.</p>
+	</li>
+	<li>
+	<p>Оповещение пользователя о первом запуске вновь установленной версии.</p>
+	</li>
+	<li>
+	<p>Запрос на подтверждение проверки наличия обновлений пользователем.</p>
+	</li>
+	<li>
+	<p>Отображение информации о версии обновления для пользователя.</p>
+	</li>
+	<li>
+	<p>Отображение хода загрузки и информации об ошибках для пользователя.</p>
+	</li></ul>
+	
+	<p>Инфраструктура обновления AIR позволяет сохранять информацию о версии обновления приложения AIR в простых XML-файлах конфигурации. Благодаря настройке файлов конфигурации и вставке основного кода большинство приложений способны предложить своим конечным пользователям хорошие функциональные возможности обновления.</p>
+	
+	<p>Класс AIRUpdateUI реализует пользовательский интерфейс по умолчанию, который может использоваться вашим приложением. Он предоставляет пользователю основную информацию и параметры, связанные с обновлением приложения.</p>
+	
+	<p>Процесс обновления включает в себя ряд состояний.</p>
+	
+	<p><adobetable class="innertable">
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<tgroup cols="2"><thead><row><entry>
+	Состояние
+	</entry><entry>
+	Описание
+	</entry></row></thead><tbody><row><entry>Uninitialized</entry>
+	<entry>Программа обновления не инициализирована.</entry>
+	</row><row><entry>Initializing</entry>
+	<entry>Выполняется инициализация программы обновления.</entry>
+	</row><row><entry>Готово</entry>
+	<entry>Программа обновления инициализирована.</entry>
+	</row><row><entry>Before checking</entry>
+	<entry>Программа обновления еще не выполнила проверку наличия файла дескриптора обновления.</entry>
+	</row><row><entry>Checking</entry>
+	<entry>Программа обновления выполняет проверку наличия файла дескриптора обновления.</entry>
+	</row><row><entry>Доступен</entry>
+	<entry>Обнаружен доступный файл дескриптора обновления.</entry>
+	</row><row><entry>Downloading</entry>
+	<entry>Программа обновления выполняет загрузку файла AIR.</entry>
+	</row><row><entry>Downloaded</entry>
+	<entry>Программа обновления завершила загрузку файла AIR.</entry>
+	</row><row><entry>Installing</entry>
+	<entry>Программа обновления выполняет установку файла AIR.</entry>
+	</row><row><entry>Pending install</entry>
+	<entry>Программа обновления инициализирована. Имеются обновления, ожидающие установки.</entry>
+	</row></tbody></tgroup></adobetable></p>
+	
+	<p>Однако при тестировании приложения в программе AIR Debug Launcher (ADL) попытка обновить приложение приводит к исключению IllegalOperationError.</p>
+	
+	<p product="flex">Подробнее об использовании инфраструктуры обновления AIR см. в главе «Обновление приложений AIR» документа <xref href="http://www.adobe.com/go/learn_air_flex3">Разработка приложений Adobe AIR с помощью Adobe Flex</xref>.</p> 
+	
+	<p product="flash">Подробнее об использовании инфраструктуры обновления AIR см. в главе «Обновление приложений AIR» документа <xref href="http://www.adobe.com/go/learn_air_flash">Разработка приложений Adobe AIR с помощью Adobe Flash</xref>.</p> 
+	
+	<p platform="javascript">Подробная информация об использовании инфраструктуры обновления AIR содержится в главе «Обновление приложений AIR» документа <xref href="http://www.adobe.com/go/learn_air_html">Разработка приложений Adobe AIR с помощью HTML и Ajax</xref>.</p> 
+	
+	</apiDesc></apiClassifierDetail><related-links><link href="air.update.xml#ApplicationUpdater"><linktext>ApplicationUpdater</linktext></link><link href="flash.desktop.xml#Updater"><linktext>flash.desktop.Updater</linktext></link></related-links><adobeApiEvent id="air.update:ApplicationUpdaterUI_flash.events.ErrorEvent.ERROR_error"><apiName>error</apiName><shortdesc> 
+	Отправляется при возникновении ошибки во время инициализации или процесса обновления (если произошло непредвиденное событие).</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.ErrorEvent.ERROR</apiEventType><adobeApiEventClassifier>flash.events.ErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	Отправляется при возникновении ошибки во время инициализации или процесса обновления (если произошло непредвиденное событие).
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdaterUI_flash.events.ProgressEvent.PROGRESS_progress"><apiName>progress</apiName><shortdesc> 
+	Отправляется после завершения инициализации.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.ProgressEvent.PROGRESS</apiEventType><adobeApiEventClassifier>flash.events.ProgressEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	Отправляется после завершения инициализации. 
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdaterUI_air.update.events.StatusFileUpdateErrorEvent.FILE_UPDATE_ERROR_fileUpdateError"><apiName>fileUpdateError</apiName><shortdesc> 
+	 Отправляется в случае ошибки проверки файла, переданного в качестве параметра airFile в вызов метода installFromAIRFile().</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.StatusFileUpdateErrorEvent.FILE_UPDATE_ERROR</apiEventType><adobeApiEventClassifier>air.update.events.StatusFileUpdateErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	 Отправляется в случае ошибки проверки файла, переданного в качестве параметра <codeph>airFile</codeph> в вызов метода <codeph>installFromAIRFile()</codeph>.
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdaterUI_air.update.events.StatusFileUpdateEvent.FILE_UPDATE_STATUS_fileUpdateStatus"><apiName>fileUpdateStatus</apiName><shortdesc> 
+	
+	Отправляется после успешной проверки программой обновления файла в вызове метода installFromAIRFile().</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.StatusFileUpdateEvent.FILE_UPDATE_STATUS</apiEventType><adobeApiEventClassifier>air.update.events.StatusFileUpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	
+	Отправляется после успешной проверки программой обновления файла в вызове метода <codeph>installFromAIRFile()</codeph>.
+	
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdaterUI_air.update.events.DownloadErrorEvent.DOWNLOAD_ERROR_downloadError"><apiName>downloadError</apiName><shortdesc> 
+	Отправляется в случае ошибки подключения к файлу обновления или его загрузки.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.DownloadErrorEvent.DOWNLOAD_ERROR</apiEventType><adobeApiEventClassifier>air.update.events.DownloadErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	Отправляется в случае ошибки подключения к файлу обновления или его загрузки. Отправляется также для неправильных состояний HTTP (например, 404 – файл не найден).
+	
+	<p>При отправке этого события периодический таймер автоматически перезапускается (если задержка больше 0). </p>
+	
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdaterUI_air.update.events.StatusUpdateErrorEvent.UPDATE_ERROR_updateError"><apiName>updateError</apiName><shortdesc> 
+	
+	Отправляется в случае ошибки загрузки или разбора файла дескриптора обновления.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.StatusUpdateErrorEvent.UPDATE_ERROR</apiEventType><adobeApiEventClassifier>air.update.events.StatusUpdateErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	
+	Отправляется в случае ошибки загрузки или разбора файла дескриптора обновления.
+	
+	<p>При отправке этого события программой обновления периодический таймер автоматически перезапускается (если значение настройки задержки больше 0). Приложение должно предусматривать скрытие всех сообщений об ошибках при отправке программой обновления нового события <codeph>checkForUpdate</codeph>. </p>
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdaterUI_air.update.events.StatusUpdateEvent.UPDATE_STATUS_updateStatus"><apiName>updateStatus</apiName><shortdesc> 
+	
+	Отправляется после успешной загрузки и интерпретации файла дескриптора обновления программой обновления.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.StatusUpdateEvent.UPDATE_STATUS</apiEventType><adobeApiEventClassifier>air.update.events.StatusUpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	
+	Отправляется после успешной загрузки и интерпретации файла дескриптора обновления программой обновления. 
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdaterUI_air.update.events.UpdateEvent.BEFORE_INSTALL_beforeInstall"><apiName>beforeInstall</apiName><shortdesc> 
+	 Отправляется непосредственно перед установкой обновления, после вызова метода installUpdate().</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.UpdateEvent.BEFORE_INSTALL</apiEventType><adobeApiEventClassifier>air.update.events.UpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	 Отправляется непосредственно перед установкой обновления, после вызова метода <codeph>installUpdate()</codeph>. Иногда необходимо предотвратить установку обновления на этом этапе, так как все результаты текущей работы пользователя могут быть потеряны при выходе среды выполнения из приложения для установки обновления. 
+	 
+	 <p>Вызов метода <codeph>preventDefault()</codeph> этого события позволяет отложить установку до следующего запуска. При вызове метода <codeph>preventDefault()</codeph> ни один дополнительный процесс обновления не будет запущен во время данного сеанса работы приложения (путем вызова метода <codeph>installUpdate()</codeph> или проверки по расписанию). </p>
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdaterUI_air.update.events.UpdateEvent.DOWNLOAD_COMPLETE_downloadComplete"><apiName>downloadComplete</apiName><shortdesc> 
+	
+	Отправляется при завершении загрузки файла обновления.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.UpdateEvent.DOWNLOAD_COMPLETE</apiEventType><adobeApiEventClassifier>air.update.events.UpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	
+	Отправляется при завершении загрузки файла обновления.
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdaterUI_air.update.events.UpdateEvent.DOWNLOAD_START_downloadStart"><apiName>downloadStart</apiName><shortdesc> 
+	
+	 Отправляется после вызова метода downloadUpdate() и установки подключения к серверу.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.UpdateEvent.DOWNLOAD_START</apiEventType><adobeApiEventClassifier>air.update.events.UpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	
+	 Отправляется после вызова метода <codeph>downloadUpdate()</codeph> и установки подключения к серверу. При использовании библиотеки ApplicationUpdater обработчик событий для данного события может отображать индикатор выполнения, чтобы пользователь мог следить за ходом загрузки. 
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdaterUI_air.update.events.UpdateEvent.CHECK_FOR_UPDATE_checkForUpdate"><apiName>checkForUpdate</apiName><shortdesc> 
+	Отправляется до начала процесса обновления, непосредственно перед попыткой программы обновления загрузить файл дескриптора обновления.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.UpdateEvent.CHECK_FOR_UPDATE</apiEventType><adobeApiEventClassifier>air.update.events.UpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	Отправляется до начала процесса обновления, непосредственно перед попыткой программы обновления загрузить файл дескриптора обновления. Программа обновления может отправить это событие в результате прямого вызова метода <codeph>checkNow()</codeph> или по истечении времени, заданного для таймера периодической проверки. 
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdaterUI_air.update.events.UpdateEvent.INITIALIZED_initialized"><apiName>initialized</apiName><shortdesc> 
+	
+	Отправляется после завершения инициализации.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events.UpdateEvent.INITIALIZED</apiEventType><adobeApiEventClassifier>air.update.events.UpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc> 
+	
+	Отправляется после завершения инициализации. 
+	 
+	 <p>Данное событие имеет следующие свойства только для чтения: </p>
+	 <ul><li>
+	 <p>	<codeph>isFirstRun</codeph> (логическое) <codeph>true</codeph>, если это первый запуск после успешного обновления; в противном случае – <codeph>false</codeph>.</p>
+	 </li><li>
+	 <p>	<codeph>previousVersion</codeph> (строка) Предыдущая версия приложения до обновления (задано, только если свойство <codeph>isfirstRun</codeph> имеет значение <codeph>true</codeph>). </p>
+	 </li><li>
+	 <p>	<codeph>currentVersion</codeph> (строка) Версия, указанная в файле дескриптора текущей установленной версии приложения.</p>
+	 </li>
+	 </ul>
+	
+	</apiDesc></adobeApiEventDetail></adobeApiEvent><apiConstructor id="air.update:ApplicationUpdaterUI:ApplicationUpdaterUI"><apiName>ApplicationUpdaterUI</apiName><shortdesc>
+		Функция конструктора.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/></apiConstructorDef><apiDesc>
+		Функция конструктора. 
+		
+		</apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="air.update:ApplicationUpdaterUI:addResources"><apiName>addResources</apiName><shortdesc> 
+		 Динамически добавляет новый пакет ресурсов для указанного языка.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>lang</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Код языка (например, <codeph>ro</codeph> для румынского).
+		 
+		 </apiDesc></apiParam><apiParam><apiItemName>res</apiItemName><apiOperationClassifier>Object</apiOperationClassifier><apiDesc>Этот объект содержит ключи и значения для перевода. Ключи берутся из файла свойств языка. В таблице ниже приведены возможные ключи (названия свойств).
+		 
+		 <p>
+		 <adobetable class="innertable">
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 <tgroup cols="4"><thead><row><entry> Ключ  </entry><entry> Русское значение  </entry><entry> Диалоговое окно </entry><entry> Описание  </entry></row></thead><tbody><row>
+		 <entry> <codeph>appWidth </codeph> </entry>
+		 <entry> 530  </entry>
+		 <entry> Все  </entry>
+		 <entry> Ширина диалогового окна. </entry></row><row>
+		 <entry> <codeph>titleWindow </codeph> </entry>
+		 <entry> Обновление:  </entry>
+		 <entry> Все  </entry>
+		 <entry> Отображается в строке заголовка собственного окна перед именем приложения. </entry></row><row>
+		 <entry> <codeph>titleCheck </codeph> </entry>
+		 <entry> Проверить наличие обновлений  </entry>
+		 <entry> Проверка наличия обновлений  </entry>
+		 <entry> Заголовок диалогового окна.  </entry></row><row>
+		 <entry> <codeph>msgCheck </codeph> </entry>
+		 <entry> Разрешить приложению выполнить проверку наличия обновлений?  </entry>
+		 <entry> Проверка наличия обновлений  </entry>
+		 <entry> Сообщение диалогового окна.  </entry></row><row>
+		 <entry> <codeph>btnCheck </codeph> </entry>
+		 <entry> Проверить наличие обновлений  </entry>
+		 <entry> Проверка наличия обновлений  </entry>
+		 <entry> Метка кнопки «Проверить наличие обновлений».  </entry></row><row>
+		 <entry> <codeph>btnCancel</codeph> </entry>
+		 <entry> Отмена  </entry>
+		 <entry> Все диалоговые окна с кнопкой «Отмена»  </entry>
+		 <entry> Метка кнопки «Отмена». </entry></row><row>
+		 <entry> <codeph>titleCheckNoUpdates </codeph> </entry>
+		 <entry> Нет доступных обновлений  </entry>
+		 <entry> Проверка наличия обновлений – Нет доступных обновлений  </entry>
+		 <entry> Заголовок диалогового окна. </entry></row><row>
+		 <entry> <codeph>msgCheckNoUpdates </codeph> </entry>
+		 <entry> Нет доступных обновлений для приложения.  </entry>
+		 <entry> Проверка наличия обновлений – Нет доступных обновлений  </entry>
+		 <entry> Сообщение диалогового окна.  </entry></row><row>
+		 <entry> <codeph>btnClose </codeph> </entry>
+		 <entry> Закрыть  </entry>
+		 <entry> Все диалоговые окна с кнопкой «Закрыть»  </entry>
+		 <entry> Метка кнопки «Закрыть». </entry></row><row>
+		 <entry> <codeph>titleCheckError </codeph> </entry>
+		 <entry> Ошибка обновления  </entry>
+		 <entry> Проверка наличия обновлений – Ошибка подключения  </entry>
+		 <entry> Заголовок диалогового окна.  </entry></row><row>
+		 <entry> <codeph>msgCheckError </codeph> </entry>
+		 <entry> Во время проверки обновлений произошла ошибка. Ошибка# {0}  </entry>
+		 <entry> Проверка наличия обновлений – Ошибка подключения  </entry>
+		 <entry> Сообщение диалогового окна. Символ {0} будет заменен на идентификатор ошибки. </entry></row><row>
+		 <entry> <codeph>titleUpdate </codeph> </entry>
+		 <entry> Доступно обновление  </entry>
+		 <entry> Доступно обновление  </entry>
+		 <entry> Заголовок диалогового окна. </entry></row><row>
+		 <entry> <codeph>msgUpdate </codeph> </entry>
+		 <entry> Обновленная версия приложения доступна для загрузки.  </entry>
+		 <entry> Доступно обновление  </entry>
+		 <entry> Сообщение диалогового окна. </entry></row><row>
+		 <entry> <codeph>lblApplication </codeph> </entry>
+		 <entry> Приложение:  </entry>
+		 <entry> Доступно обновление  </entry>
+		 <entry> Метка, отображаемая перед именем приложения. </entry></row><row>
+		 <entry> <codeph>lblInstalledVersion </codeph> </entry>
+		 <entry> Установленная версия:  </entry>
+		 <entry> Доступно обновление  </entry>
+		 <entry> Метка, отображаемая перед обозначением установленной версии. </entry></row><row>
+		 <entry> <codeph>lblAvailableVersion </codeph> </entry>
+		 <entry> Версия обновления:  </entry>
+		 <entry> Доступно обновление  </entry>
+		 <entry> Метка, отображаемая перед обозначением версии обновления. </entry></row><row>
+		 <entry> <codeph>btnDownload </codeph> </entry>
+		 <entry> Загрузить сейчас  </entry>
+		 <entry> Доступно обновление  </entry>
+		 <entry> Метка кнопки «Загрузить сейчас»  </entry></row><row>
+		 <entry> <codeph>btnDownloadLater </codeph> </entry>
+		 <entry> Загрузить позже  </entry>
+		 <entry> Доступно обновление  </entry>
+		 <entry> Метка кнопки «Загрузить позже»  </entry></row><row>
+		 <entry> <codeph>lnkReleaseNotes </codeph> </entry>
+		 <entry> Заметки о выпуске  </entry>
+		 <entry> Все со ссылкой на заметки о выпуске  </entry>
+		 <entry> Имя ссылки «Заметки о выпуске».  </entry></row><row>
+		 <entry> <codeph>titleProgress </codeph> </entry>
+		 <entry> Ход загрузки...  </entry>
+		 <entry> Ход загрузки  </entry>
+		 <entry> Заголовок диалогового окна. </entry></row><row>
+		 <entry> <codeph>msgProgress </codeph> </entry>
+		 <entry> Загрузка обновления  </entry>
+		 <entry> Ход загрузки  </entry>
+		 <entry> Сообщение диалогового окна. </entry></row><row>
+		 <entry> <codeph>titleDownloadError </codeph> </entry>
+		 <entry> Ошибка загрузки  </entry>
+		 <entry> Ошибка загрузки  </entry>
+		 <entry> Заголовок диалогового окна. </entry></row><row>
+		 <entry> <codeph>msgDownloadError </codeph> </entry>
+		 <entry> Во время загрузки обновления произошла ошибка. Ошибка# {0}  </entry>
+		 <entry> Ошибка загрузки  </entry>
+		 <entry> Сообщение диалогового окна. Символ {0} будет заменен на идентификатор ошибки.  </entry></row><row>
+		 <entry> <codeph>titleInstall </codeph> </entry>
+		 <entry> Установить обновление  </entry>
+		 <entry> Установка обновления  </entry>
+		 <entry> Заголовок диалогового окна. </entry></row><row>
+		 <entry> <codeph>msgInstall </codeph> </entry>
+		 <entry> Обновление для приложения загружено и готово к установке.  </entry>
+		 <entry> Установка обновления  </entry>
+		 <entry> Сообщение диалогового окна. </entry></row><row>
+		 <entry> <codeph>btnInstall </codeph> </entry>
+		 <entry> Установить сейчас  </entry>
+		 <entry> Установка обновления  </entry>
+		 <entry> Метка кнопки «Установить»  </entry></row><row>
+		 <entry> <codeph>btnInstallLater </codeph> </entry>
+		 <entry> Отложить до следующего запуска  </entry>
+		 <entry> Установка обновления  </entry>
+		 <entry> Метка кнопки «Отложить до следующего запуска»  </entry></row><row>
+		 <entry> <codeph>titleFileUpdate </codeph> </entry>
+		 <entry> Доступно обновление  </entry>
+		 <entry> Файл – Доступно обновление  </entry>
+		 <entry> Заголовок диалогового окна.  </entry></row><row>
+		 <entry> <codeph>msgFileUpdate </codeph> </entry>
+		 <entry> Файл содержит обновленную версию приложения. Установить?  </entry>
+		 <entry> Файл – Доступно обновление  </entry>
+		 <entry> Сообщение диалогового окна. </entry></row><row>
+		 <entry> <codeph>lblFile </codeph> </entry>
+		 <entry> Файл:  </entry>
+		 <entry> Файл – Доступно обновление  </entry>
+		 <entry> Метка, отображаемая перед именем файла  </entry></row><row>
+		 <entry> <codeph>titleFileNoUpdate </codeph> </entry>
+		 <entry> Нет доступных обновлений  </entry>
+		 <entry> Файл – Нет доступных обновлений  </entry>
+		 <entry> Заголовок диалогового окна. </entry></row><row>
+		 <entry> <codeph>msgFileNoUpdate </codeph> </entry>
+		 <entry> Файл не содержит более новую версию приложения.  </entry>
+		 <entry> Файл – Нет доступных обновлений  </entry>
+		 <entry> Сообщение диалогового окна. </entry></row><row>
+		 <entry> <codeph>titleFileError </codeph> </entry>
+		 <entry> Ошибка файла  </entry>
+		 <entry> Файл – Ошибка  </entry>
+		 <entry> Заголовок диалогового окна.  </entry></row><row>
+		 <entry> <codeph>msgFileError </codeph> </entry>
+		 <entry> Во время проверки файла обновления произошла ошибка. Ошибка# {0}  </entry>
+		 <entry> Файл – Ошибка  </entry>
+		 <entry> Сообщение диалогового окна. Символ {0} будет заменен на идентификатор ошибки. </entry></row><row>
+		 <entry> <codeph>titleUnexpectedError </codeph> </entry>
+		 <entry> Непредвиденная ошибка  </entry>
+		 <entry> Непредвиденная ошибка  </entry>
+		 <entry> Заголовок диалогового окна. </entry></row><row>
+		 <entry> <codeph>msgUnexpectedError </codeph> </entry>
+		 <entry> Произошла непредвиденная ошибка. Ошибка# {0}  </entry>
+		 <entry> Непредвиденная ошибка  </entry>
+		 <entry> Сообщение диалогового окна. Символ {0} будет заменен на идентификатор ошибки.  </entry></row></tbody></tgroup></adobetable>
+		 
+		 </p>
+		 
+		 </apiDesc></apiParam></apiOperationDef><apiDesc> 
+		 Динамически добавляет новый пакет ресурсов для указанного языка. Разработчики JavaScript используют этот метод для динамического добавления нового языка для диалоговых окон, отображаемых в интерфейсе программы обновления приложения. (Разработчики Flex могут напрямую добавлять новый язык в пакет ресурсов ApplicationUpdaterDialogs.)
+		 
+		 </apiDesc></apiOperationDetail><related-links><link href="air.update.xml#ApplicationUpdaterUI/localeChain"><linktext>localeChain</linktext></link></related-links></apiOperation><apiOperation id="air.update:ApplicationUpdaterUI:cancelUpdate"><apiName>cancelUpdate</apiName><shortdesc>
+		Отменяет процесс обновления.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+		Отменяет процесс обновления. Вызов этого метода отменяет все ожидающие загрузки, удаляя не полностью загруженные файлы, и перезапускает таймер периодической проверки.
+		
+		<p>Процесс обновления можно отменить в любое время. Исключением являются состояния uninitialized и initializing. Вызов этого метода в состоянии uninitialized или initializing не работает.</p>
+		
+		</apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.update:ApplicationUpdaterUI:checkNow"><apiName>checkNow</apiName><shortdesc>
+		Начинает процесс обновления.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+		Начинает процесс обновления. Вызов этого метода не останавливает периодический таймер. Однако этот метод определяет, что выполняется процесс обновления, и пропускает текущую итерацию.
+		
+		<p>Этот метод выполняется только в состоянии Ready. </p>
+		
+		<p>Этот метод может вызвать объект программы обновления, отправляющий следующее событие:</p>
+		
+		</apiDesc></apiOperationDetail><adobeApiEvent id="air.update:ApplicationUpdaterUI:checkNow_checkForUpdate"><apiName>checkForUpdate</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>air.update.events:UpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>Отправляется непосредственно перед началом процесса обновления.
+		
+		</apiDesc></adobeApiEventDetail><shortdesc>Отправляется непосредственно перед началом процесса обновления.</shortdesc></adobeApiEvent></apiOperation><apiOperation id="air.update:ApplicationUpdaterUI:initialize"><apiName>initialize</apiName><shortdesc>
+		 Выполняет инициализацию программы обновления.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+		 Выполняет инициализацию программы обновления. При вызове данного метода происходит следующее: 
+		
+		<p><ol><li>
+		<p>Выполняется инициализация инфраструктуры обновления с автоматической (и синхронной) установкой ожидающих обновлений. Этот метод следует вызывать при запуске приложения, так как он может вызвать перезапуск приложения.</p>
+		</li><li>
+		
+		<p>Выполняется проверка наличия отложенных обновлений и их установка.</p>
+		</li><li>
+		<p>Если во время установки предыдущего обновления произошла ошибка, выполняется очистка файла обновления и данных о версии в области хранилища.</p>
+		</li><li>
+		<p>Если срок задержки периодического таймера истек, начинается процесс обновления; в противном случае запускается периодический таймер. Однако при тестировании приложения в программе AIR Debug Launcher (ADL) попытка обновить приложение приводит к исключению IllegalOperationError.</p>
+		</li>
+		</ol></p>
+		
+		</apiDesc></apiOperationDetail><adobeApiEvent id="air.update:ApplicationUpdaterUI:initialize_initialized"><apiName>initialized</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>air.update.events:UpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>Инициализация завершена. 
+		
+		</apiDesc></adobeApiEventDetail><shortdesc>Инициализация завершена.</shortdesc></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdaterUI:initialize_error"><apiName>error</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:ErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>Во время инициализации произошла ошибка.
+		
+		</apiDesc></adobeApiEventDetail><shortdesc>Во время инициализации произошла ошибка.</shortdesc></adobeApiEvent></apiOperation><apiOperation id="air.update:ApplicationUpdaterUI:installFromAIRFile"><apiName>installFromAIRFile</apiName><shortdesc>
+		Начинает процесс обновления с помощью локального файла AIR.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>file</apiItemName><apiOperationClassifier>flash.filesystem:File</apiOperationClassifier><apiDesc>Локальный файл AIR для установки.
+		
+		</apiDesc></apiParam></apiOperationDef><apiDesc>
+		Начинает процесс обновления с помощью локального файла AIR. 
+		
+		<p>Вызов этого метода не работает, если выполняется процесс обновления (т. е. не в состоянии <codeph>Downloaded</codeph>).</p>
+		
+		<p>Эта функция полезна для приложения, в котором элемент <codeph>customUpdateUI</codeph> в файле дескриптора приложения имеет значение <codeph>true</codeph>.</p>
+		
+		<p>При тестировании приложения с помощью AIR Debug Launcher (ADL) вызов этого метода приводит к исключению IllegalOperationError.</p>
+		
+		</apiDesc></apiOperationDetail><adobeApiEvent id="air.update:ApplicationUpdaterUI:installFromAIRFile_fileUpdateStatus"><apiName>fileUpdateStatus</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>air.update.events:StatusFileUpdateEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>Отправляется после успешной проверки файла AIR программой обновления.
+		
+		</apiDesc></adobeApiEventDetail><shortdesc>Отправляется после успешной проверки файла AIR программой обновления.</shortdesc></adobeApiEvent><adobeApiEvent id="air.update:ApplicationUpdaterUI:installFromAIRFile_updateError"><apiName>updateError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>air.update.events:StatusFileUpdateErrorEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>Отправляется в случае ошибки разбора файла дескриптора обновления.
+		 
+		</apiDesc></adobeApiEventDetail><shortdesc>Отправляется в случае ошибки разбора файла дескриптора обновления.</shortdesc></adobeApiEvent></apiOperation><apiValue id="air.update:ApplicationUpdaterUI:configurationFile:get"><apiName>configurationFile</apiName><shortdesc>
+		Местоположение файла конфигурации, в котором заданы значения свойств delay и updateURL.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>flash.filesystem:File</apiValueClassifier></apiValueDef><apiDesc>
+		Местоположение файла конфигурации, в котором заданы значения свойств <codeph>delay</codeph> и <codeph>updateURL</codeph>. В файле также имеются настройки, определяющие, будет ли приложение отображать различные диалоговые окна с запросом на подтверждение операции во время процесса обновления. Если свойство указывает на несуществующий файл, вызов метода <codeph>initialize()</codeph> приведет к ошибке.
+		
+		<p>Образец файла конфигурации:</p>
+		
+		<codeblock> &lt;?xml version="1.0" encoding="utf-8"?> 
+ 		&lt;configuration xmlns="http://ns.adobe.com/air/framework/update/configuration/1.0" >
+ 		  &lt;url>app:/server/update.xml&lt;/url>
+ 		  &lt;delay>1&lt;/delay>
+		   &lt;defaultUI>
+		      &lt;dialog name="checkForUpdate" visible="true" />
+		       &lt;dialog name="downloadUpdate" visible="false" />
+		       &lt;dialog name="downloadProgress" visible="true" />
+		       &lt;dialog name="installUpdate" visible="true" />    
+		   &lt;/defaultUI>
+		&lt;/configuration></codeblock>
+		
+		<p>Вместо загрузки файла конфигурации можно использовать код <ph platform="actionscript">ActionScript</ph> <ph platform="javascript">JavaScript</ph> для определения следующих свойств объекта ApplicationUpdaterUI: <codeph>delay</codeph>, <codeph>isCheckForUpdateVisible</codeph>, <codeph>isDownloadProgressVisible</codeph>, <codeph>isDownloadUpdateVisible</codeph>, <codeph>isFileUpdateVisible</codeph>, <codeph>isInstallUpdateVisible</codeph> и <codeph>updateURL</codeph>.</p>
+		
+		</apiDesc></apiValueDetail><related-links><link href="air.update.xml#ApplicationUpdaterUI/delay"><linktext>delay</linktext></link><link href="air.update.xml#ApplicationUpdaterUI/updateURL"><linktext>updateURL</linktext></link></related-links></apiValue><apiValue id="air.update:ApplicationUpdaterUI:currentVersion:get"><apiName>currentVersion</apiName><shortdesc>
+		Текущая версия приложения.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		Текущая версия приложения. Значение для этого свойства задается во время вызова метода <codeph>initialize()</codeph>. Значением свойства является версия, указанная в файле дескриптора приложения.
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdaterUI:delay:get"><apiName>delay</apiName><shortdesc>
+		Интервал в днях между периодическими проверками наличия новых обновлений.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Number</apiValueClassifier><apiDefaultValue>0
+		
+		</apiDefaultValue></apiValueDef><apiDesc>
+		Интервал в днях между периодическими проверками наличия новых обновлений.
+		
+		<p>Значение 0 (по умолчанию) указывает на неактивное состояние таймера, поэтому периодическая проверка не выполняется. Значение задержки можно задать в данном свойстве или в файле конфигурации. Если значение задано с помощью обоих методов, используется значение, заданное в свойстве.</p>
+		
+		</apiDesc></apiValueDetail><related-links><link href="air.update.xml#ApplicationUpdaterUI/configurationFile"><linktext>configurationFile</linktext></link></related-links></apiValue><apiValue id="air.update:ApplicationUpdaterUI:isCheckForUpdateVisible:get"><apiName>isCheckForUpdateVisible</apiName><shortdesc>
+		Включает видимость диалоговых окон «Проверка наличия обновлений», «Нет доступных обновлений» и «Ошибка обновления».</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+		Включает видимость диалоговых окон «Проверка наличия обновлений», «Нет доступных обновлений» и «Ошибка обновления». При значении <codeph>true</codeph> программа обновления отображает эти диалоговые окна в процессе обновления. Этот параметр можно задать также в файле конфигурации обновления. Значение, заданное с помощью этого свойства, переопределяет настройку в файле конфигурации обновления. 
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdaterUI:isDownloadProgressVisible:get"><apiName>isDownloadProgressVisible</apiName><shortdesc>
+		
+		Включает видимость диалогового окна «Загрузка обновления».</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+		
+		Включает видимость диалогового окна «Загрузка обновления». При значении <codeph>true</codeph> программа обновления отображает это диалоговое окно в процессе обновления. Этот параметр можно задать также в файле конфигурации обновления. Значение, заданное с помощью этого свойства, переопределяет настройку в файле конфигурации обновления.
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdaterUI:isDownloadUpdateVisible:get"><apiName>isDownloadUpdateVisible</apiName><shortdesc>
+		Включает видимость диалогового окна «Загрузка обновления».</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+		Включает видимость диалогового окна «Загрузка обновления». При значении <codeph>true</codeph> программа обновления отображает эти диалоговые окна в процессе обновления. Этот параметр можно задать также в файле конфигурации обновления. Значение, заданное с помощью этого свойства, переопределяет настройку в файле конфигурации обновления.
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdaterUI:isFileUpdateVisible:get"><apiName>isFileUpdateVisible</apiName><shortdesc>
+		
+		Включает видимость диалоговых окон «Файл – Доступно обновление», «Файл – Нет доступных обновлений» и «Файл – Ошибка».</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+		
+		Включает видимость диалоговых окон «Файл – Доступно обновление», «Файл – Нет доступных обновлений» и «Файл – Ошибка». При значении <codeph>true</codeph> программа обновления отображает эти диалоговые окна в процессе обновления. Этот параметр можно задать также в файле конфигурации обновления. Значение, заданное с помощью этого свойства, переопределяет настройку в файле конфигурации обновления.
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdaterUI:isFirstRun:get"><apiName>isFirstRun</apiName><shortdesc>
+		Является ли этот запуск первым после успешного обновления (true) или нет (false).</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+		Является ли этот запуск первым после успешного обновления (<codeph>true</codeph>) или нет (<codeph>false</codeph>). Программа обновления задает это значение во время вызова метода <codeph>initialize()</codeph>. Если требуется выполнить перенос данных из одной версии в другую, разработчик должен убедиться, что для свойства <codeph>isFirstRun</codeph> задано значение <codeph>true</codeph>.
+		
+		</apiDesc></apiValueDetail><related-links><link href="air.update.xml#ApplicationUpdaterUI/wasPendingUpdate"><linktext>wasPendingUpdate</linktext></link></related-links></apiValue><apiValue id="air.update:ApplicationUpdaterUI:isInstallUpdateVisible:get"><apiName>isInstallUpdateVisible</apiName><shortdesc>
+		Включает видимость диалогового окна «Установка обновления».</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+		Включает видимость диалогового окна «Установка обновления». При значении <codeph>true</codeph> программа обновления отображает это диалоговое окно в процессе обновления. Этот параметр можно задать также в файле конфигурации обновления. Значение, заданное с помощью этого свойства, переопределяет настройку в файле конфигурации обновления.
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdaterUI:isNewerVersionFunction:get"><apiName>isNewerVersionFunction</apiName><shortdesc>
+		Функция, используемая программой обновления для сравнения версий.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Function</apiValueClassifier></apiValueDef><apiDesc>
+		Функция, используемая программой обновления для сравнения версий. По умолчанию инфраструктура обновления выполняет сравнение версий с целью определить, является ли версия с удаленного сайта более новой, чем версия установленного приложения. Однако иногда сравнение по умолчанию не соответствует схеме версий разработчика. Задайте для данного свойства новую функцию для выполнения сравнения. 
+		
+		<p>Функция сравнения по умолчанию может работать с версиями формата <i>x.y.z</i>, где элементы x, y и z могут состоять из цифр и букв. Существуют некоторые особые условия, которые учитывает функция сравнения по умолчанию. Если функция проверки обнаруживает <codeph>alpha</codeph>, <codeph>beta</codeph> или <codeph>rc</codeph> в строках версий, принимается порядок <codeph>alpha</codeph> &lt; <codeph>beta</codeph> &lt; <codeph>rc</codeph>.</p>
+		
+		</apiDesc><example conref="examples\ApplicationUpdater.configurationFunction.1.as"> Следующий код определяет пользовательскую функцию <codeph>customFn</codeph> для объекта <codeph>appUpdate</codeph> программы обновления. Пример функции нарочито простой. Ваша пользовательская функция должна возвращать логическое значение, исходя из правил схемы версий.
+<codeblock>
+appUpdate.isNewerVersionFunction = customFn; 
+
+function customFn (currentVersion:String, updateVersion:String):Boolean 
+{
+    return updateVersion > currentVersion;
+}
+</codeblock></example></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdaterUI:isUnexpectedErrorVisible:get"><apiName>isUnexpectedErrorVisible</apiName><shortdesc>
+		Включает видимость диалогового окна «Непредвиденная ошибка».</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+		Включает видимость диалогового окна «Непредвиденная ошибка». При значении <codeph>true</codeph> компонент Application Updater отображает это диалоговое окно в процессе обновления. Этот параметр можно задать также в файле конфигурации обновления. Значение, заданное с помощью этого свойства, переопределяет настройку в файле конфигурации обновления. 
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdaterUI:isUpdateInProgress:get"><apiName>isUpdateInProgress</apiName><shortdesc>
+		Свойство, принимающее логическое значение true, если выполняется обновление, и значение false, если нет.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+		Свойство, принимающее логическое значение <codeph>true</codeph>, если выполняется обновление, и значение <codeph>false</codeph>, если нет.
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdaterUI:localeChain:get"><apiName>localeChain</apiName><shortdesc>
+		Массив, определяющий цепочку языковых стандартов, используемых в пользовательском интерфейсе.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Array</apiValueClassifier></apiValueDef><apiDesc>
+		Массив, определяющий цепочку языковых стандартов, используемых в пользовательском интерфейсе. Как правило, только разработчики JavaScript (HTML) используют это свойство. 
+		
+		<p>Разработчики Flex могут использовать ResourceManager для обработки цепочки языковых стандартов. </p>
+		
+		<p>По умолчанию в приложении HTML сортировка происходит среди языков массива <codeph>Capabilities.languages</codeph> и десяти языков, поддерживаемых пользовательским интерфейсом. Если соответствие не найдено, в пользовательском интерфейсе используется английский язык. </p>
+		
+		<p>В этом примере на языке JavaScript используется инфраструктура локализации AIR HTML, входящая в комплект AIR SDK. Она сортирует языки в соответствии со списком языков, а затем устанавливает английский язык в качестве базового языка по умолчанию.</p>
+		
+		<codeblock> appUpdater.addResources("ro_RO", {titleCheck: "Titlu", msgCheck: "Mesaj", btnCheck: "Buton"});
+		appUpdater.addResources("hu", {titleCheck: "C�m", msgCheck: "�zenet"}); 
+		var languages = ["ro", "hu"];
+		languages = languages.concat(air.Capabilities.languages);
+		var sortedLanguages = air.Localizer.sortLanguagesByPreference(languages, air.Capabilities.language, "en-US");  
+		sortedLanguages.push("en-US");
+		appUpdater.localeChain = sortedLanguages;</codeblock>
+		
+		</apiDesc></apiValueDetail><related-links><link href="air.update.xml#ApplicationUpdaterUI/addResources()"><linktext>addResources()</linktext></link></related-links></apiValue><apiValue id="air.update:ApplicationUpdaterUI:previousApplicationStorageDirectory:get"><apiName>previousApplicationStorageDirectory</apiName><shortdesc>
+		Предыдущее местоположение каталога хранилища приложения, если оно изменилось после обновления.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>flash.filesystem:File</apiValueClassifier></apiValueDef><apiDesc>
+		Предыдущее местоположение каталога хранилища приложения, если оно изменилось после обновления. Каталог хранилища приложения меняет свое местоположение при обновлении с переносом сертификата. Если перенос сертификата не выполняется, то при обновлении приложения пользователем местоположение каталога хранилища приложения не изменяется. и это свойство имеет значение <codeph>null</codeph>. Значение для этого свойства задается во время вызова метода <codeph>initialize()</codeph>. 
+		
+		<p>Разработчик может подписать новую версию приложения AIR с помощью нового сертификата, если при упаковке файла AIR с помощью ADT используется команда <codeph>-migrate</codeph>. Если в новой версии приложения AIR используется новый сертификат подписи, локальный каталог хранилища приложения меняет свое местоположение при установке новой версии. С помощью этого свойства можно перенести данные из старого каталога хранилища приложения в новый (<codeph>File.applicationStorageDirectory</codeph>). Дополнительную информацию см. в разделе «Подписание файла AIR с изменением сертификата приложения» главы «Создание приложения AIR с использованием инструментов командной строки» в руководстве разработчика Adobe AIR.</p>
+		
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdaterUI:previousVersion:get"><apiName>previousVersion</apiName><shortdesc>
+		Предыдущая версия приложения.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		Предыдущая версия приложения. Значение для этого свойства задается во время вызова метода <codeph>initialize()</codeph>. Возвращает <i>предыдущую версию</i> приложения перед обновлением (задано, только если свойство <codeph>isfirstRun</codeph> имеет значение <codeph>true</codeph>); в противном случае имеет значение <codeph>null</codeph>.
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdaterUI:updateDescriptor:get"><apiName>updateDescriptor</apiName><shortdesc>
+		Содержимое файла дескриптора обновления, загруженного с URL-адреса обновления.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>XML</apiValueClassifier></apiValueDef><apiDesc>
+		Содержимое файла дескриптора обновления, загруженного с URL-адреса обновления. Это свойство не имеет значение null только после того, как объект программы обновления отправляет событие <codeph>updateStatus</codeph>.
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="air.update:ApplicationUpdaterUI:updateURL:get"><apiName>updateURL</apiName><shortdesc>
+		Местоположение файла дескриптора обновления.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		Местоположение файла дескриптора обновления. Допустимо любое действительное для пути URLRequest местоположение. Это единственная обязательная для программы обновления настройка. URL-адрес обновления можно задать либо в этом свойстве либо в файле конфигурации. Если значение задано с помощью обоих методов, программа обновления использует значение, заданное в свойстве.
+		
+		</apiDesc></apiValueDetail><related-links><link href="air.update.xml#ApplicationUpdaterUI/configurationFile"><linktext>configurationFile</linktext></link></related-links></apiValue><apiValue id="air.update:ApplicationUpdaterUI:wasPendingUpdate:get"><apiName>wasPendingUpdate</apiName><shortdesc>
+		Имеется ли отложенное обновление, даже если его не удалось установить (true); в противном случае – false.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+		Имеется ли отложенное обновление, даже если его не удалось установить (<codeph>true</codeph>); в противном случае – <codeph>false</codeph>. Программа обновления задает значение для этого свойства во время вызова метода <codeph>initialize()</codeph>. С помощью свойств <codeph>wasPendingUpdate</codeph> и <codeph>isFirstRun</codeph> можно проверить, была ли попытка установки обновления неудачной (в этом случае свойство <codeph>wasPendingUpdate</codeph> имеет значение <codeph>true</codeph>, а свойство <codeph>isFirstRun</codeph> имеет значение <codeph>false</codeph>).
+		
+		</apiDesc></apiValueDetail><related-links><link href="air.update.xml#ApplicationUpdaterUI/isFirstRun"><linktext>isFirstRun</linktext></link></related-links></apiValue></apiClassifier></apiPackage>

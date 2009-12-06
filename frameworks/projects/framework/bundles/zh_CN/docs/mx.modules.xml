@@ -65,7 +65,7 @@
       模块的位置，以 URL 表示。
       
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.modules:Module"><apiName>Module</apiName><shortdesc>
-  基于 MXML 的动态可加载模块的基类。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>mx.core:LayoutContainer</apiBaseClassifier></apiClassifierDef><apiDesc>
+  基于 MXML 的动态可加载模块的基类。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseInterface>mx.modules:IModule</apiBaseInterface><apiBaseClassifier>mx.core:LayoutContainer</apiBaseClassifier></apiClassifierDef><apiDesc>
   基于 MXML 的动态可加载模块的基类。通过使用 MXML 文件中的 <codeph>&lt;mx:Module></codeph> 标签，可以在 MXML 中扩展此类，如下例所示：
   
   <PRE>
@@ -106,7 +106,11 @@
       </apiDesc></apiParam></apiOperationDef><apiDesc>
       获取与特定 URL 关联的 IModuleInfo 接口。没有成功加载此 URL 的要求，但是 ModuleManager 针对每个唯一的 URL 返回了一个唯一的 IModuleInfo 句柄。
       
-      </apiDesc></apiOperationDetail></apiOperation></apiClassifier><apiClassifier id="mx.modules:ModuleBase"><apiName>ModuleBase</apiName><shortdesc>
+      </apiDesc></apiOperationDetail></apiOperation></apiClassifier><apiClassifier id="mx.modules:IModule"><apiName>IModule</apiName><shortdesc>
+      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiInterface/><apiAccess value="public"/><apiStatic/><apiBaseClassifier/></apiClassifierDef><apiDesc>
+      
+     
+      </apiDesc></apiClassifierDetail><related-links><link href="mx.modules.xml#Module"><linktext>mx.modules.Module</linktext></link></related-links></apiClassifier><apiClassifier id="mx.modules:ModuleBase"><apiName>ModuleBase</apiName><shortdesc>
   基于 ActionScript 的动态加载模块的基类。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.events:EventDispatcher</apiBaseClassifier></apiClassifierDef><apiDesc>
   基于 ActionScript 的动态加载模块的基类。如果您编写仅 ActionScript 模块，则应该扩展此类。如果您使用 MXML 文件中的 <codeph>&lt;mx:Module></codeph> 标签编写基于 MXML 的模块，就应该扩展 Module 类。
   
@@ -141,7 +145,7 @@
      
       </apiDesc></apiParam><apiParam><apiItemName>bytes</apiItemName><apiType value="flash.utils:ByteArray"/><apiData>null</apiData><apiDesc>一个 ByteArray 对象。ByteArray 应该包含代表已编译 Module 的 SWF 文件的字节数。可以使用 URLLoader 类获得 ByteArray 对象。如果指定了此参数，则将从 ByteArray 加载模块。如果此参数为 null，则将从 url 属性中指定的 url 加载模块。
      
-      </apiDesc></apiParam><apiParam><apiItemName>moduleFactory</apiItemName><apiOperationClassifier>mx.core:IFlexModuleFactory</apiOperationClassifier><apiData>null</apiData><apiDesc>
+      </apiDesc></apiParam><apiParam><apiItemName>moduleFactory</apiItemName><apiOperationClassifier>mx.core:IFlexModuleFactory</apiOperationClassifier><apiData>null</apiData><apiDesc>调用者的 moduleFactory。moduleFactory 的一个用途是确定已加载模块的父样式管理器。
       
       </apiDesc></apiParam></apiOperationDef><apiDesc>
       请求加载该模块。如果已加载该模块，则调用不起任何作用。否则，会开始加载模块，并在加载过程中分派 <codeph>progress</codeph> 事件。

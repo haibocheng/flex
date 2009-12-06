@@ -159,11 +159,10 @@ package flashx.textLayout.compose
 			_outerTargetWidth = outerTargetWidth;
 			_absoluteStart = absoluteStart;
 			_textLength = numChars;
-			if (textLine)
-				_textLineCache = new WeakRef(textLine);
 			_released = (textLine == null);
 			if (textLine)
 			{
+				_textLineCache = new WeakRef(textLine);
 				textLine.userData = this;
 				_targetWidth = textLine.specifiedWidth;
 				_ascent = textLine.ascent;
@@ -174,9 +173,18 @@ package flashx.textLayout.compose
 				_lineOffset = lineOffset;
 				_validity = TextLineValidity.VALID;
 			}
-			else _validity = TextLineValidity.INVALID;
+			else 
+				_validity = TextLineValidity.INVALID;
 		}
 		
+		/** @private */
+		tlf_internal function releaseTextLine():void
+		{ _textLineCache = null; }
+
+		/** @private */
+		tlf_internal function peekTextLine():TextLine
+		{ return _textLineCache ? _textLineCache.get() : null; }
+				
 		/** 
 		 * The horizontal position of the line relative to its container, expressed as the offset in pixels from the 
 		 * left of the container.
@@ -498,7 +506,7 @@ package flashx.textLayout.compose
 			// when it was released. We want to ignore that invalid marking.
 			if (!_released)
 			{
-				var textLine:TextLine = TextLine(_textLineCache.get());
+				var textLine:TextLine = peekTextLine();
 				if (textLine && (_validity == FlowDamageType.GEOMETRY || _validity == TextLineValidity.VALID) && textLine.validity != TextLineValidity.VALID)
 					_validity = textLine.validity;
 			}
@@ -532,7 +540,7 @@ package flashx.textLayout.compose
 				return true;
 			if (!_released)
 			{
-				var textLine:TextLine = TextLine(_textLineCache.get()); 
+				var textLine:TextLine = peekTextLine(); 
 				if (textLine && textLine.validity != TextLineValidity.VALID)
 					return true;
 			}
@@ -548,9 +556,9 @@ package flashx.textLayout.compose
 				return;	
 			_validity = TextLineValidity.VALID; 
 			
-			CONFIG::debug { assert(_textLineCache != null, "bad call to clearDamage"); }
+			//CONFIG::debug { assert(_textLineCache != null, "bad call to clearDamage"); }
 
-			var textLine:TextLine = TextLine(_textLineCache.get());
+			var textLine:TextLine =  peekTextLine();
 
 			// The line in the cache, if there is one, is either invalid because its been released, or its geometry_damaged, or its already valid.
 			CONFIG::debug { assert(!textLine || _released || textLine.validity == TextLineValidity.VALID || textLine.validity == FlowDamageType.GEOMETRY, "can't clear TextLine damage other than geometry"); }
@@ -572,7 +580,7 @@ package flashx.textLayout.compose
 				return;	// totally damaged
 			_validity = damageType;
 			
-			var textLine:TextLine = _textLineCache ? TextLine(_textLineCache.get()) : null;
+			var textLine:TextLine = peekTextLine();
 			if (textLine && textLine.validity != TextLineValidity.INVALID)
 			{
 				textLine.validity = _validity;
@@ -580,12 +588,12 @@ package flashx.textLayout.compose
 			}
 		}
 		
-		// debugging only
+		/** @private */
 		CONFIG::debug public function toString():String
 		{
 			return "x:" + x + " y: " + y + " absoluteStart:" + absoluteStart + " textLength:" + textLength +  " location: " + location + " validity: " + _validity;
 		}
-
+	
 		/** 
 		 * Indicates whether the <code>flash.text.engine.TextLine</code> object for this TextFlowLine exists.  
 		 * The value is <code>true</code> if the TextLine object has <em>not</em> been garbage collected and 
@@ -600,7 +608,7 @@ package flashx.textLayout.compose
 		 
 		public function get textLineExists():Boolean
 		{
-			return _textLineCache && _textLineCache.get() != null;			
+			return peekTextLine() != null;			
 		}
 
 		/** 
@@ -622,7 +630,7 @@ package flashx.textLayout.compose
 		 
 		public function getTextLine(forceValid:Boolean = false):TextLine
 		{ 				
-			var textLine:TextLine = _textLineCache ? TextLine(_textLineCache.get()) : null;
+			var textLine:TextLine = peekTextLine();
 			if (!textLine || (textLine.validity != TextLineValidity.VALID && forceValid))
 			{
 				if (isDamaged() && validity != FlowDamageType.GEOMETRY)
@@ -675,12 +683,12 @@ package flashx.textLayout.compose
 			var textLine:TextLine;
 			var flowComposer:IFlowComposer = paragraph.getTextFlow().flowComposer;
 			
-			CONFIG::debug { assert(_textLineCache != null, "bad call to recreateTextLine"); }
+			//CONFIG::debug { assert(_textLineCache != null, "bad call to recreateTextLine"); }
 			
 			// If we already have a valid text line, just return it.
 			if (!_released)
 			{
-				textLine = _textLineCache.get();
+				textLine = peekTextLine();
 				if (textLine)
 					return textLine;
 			}
@@ -695,7 +703,7 @@ package flashx.textLayout.compose
 			if (textLine)
 			{
 				textLine.userData = this;	
-				var existingTextLine:TextLine = _textLineCache.get();
+				var existingTextLine:TextLine = peekTextLine();
 				// If there is an existing, released line, and it is currently being displayed, we can't replace it in the cache.
 				if (!existingTextLine || existingTextLine.parent == null)
 				{
@@ -909,7 +917,7 @@ package flashx.textLayout.compose
 			if (isDamaged())
 				return null;
 			
-			CONFIG::debug { assert(_textLineCache != null, "bad call to getSelectionShapesCacheEntry"); }
+			// CONFIG::debug { assert(_textLineCache != null, "bad call to getSelectionShapesCacheEntry"); }
 			
 			//get the absolute start of the paragraph.  Calculation is expensive, so just do this once.
 			var paraAbsStart:int = _para.getAbsoluteStart();
@@ -1214,9 +1222,9 @@ package flashx.textLayout.compose
  			else
  			{
  				// TODO-9/4/08-Is this the right way to check for first/last lines? 
- 				var isFirstLine:Boolean = !prevLine || prevLine.controller.container != controller.container || prevLine.columnIndex != columnIndex;
- 				var isLastLine:Boolean  = !nextLine || nextLine.controller.container != controller.container || nextLine.columnIndex != columnIndex
- 					|| nextLine.paragraph.getEffectiveLeadingModel() == LeadingModel.ROMAN_UP;
+				var isFirstLine:Boolean = !prevLine || prevLine.controller != controller || prevLine.columnIndex != columnIndex;
+				var isLastLine:Boolean  = !nextLine || nextLine.controller != controller || nextLine.columnIndex != columnIndex
+						|| nextLine.paragraph.getEffectiveLeadingModel() == LeadingModel.ROMAN_UP;
  					//I'm removing this line as it makes the assumption that AUTO leading dir is UP only for Roman text, which is incorrect.
  					//Korean also uses UP leading but uses the EastAsian justifier. - gak 01.22.09
  					//||(nextLine.paragraph.computedFormat.leadingDirection == LeadingDirection.AUTO && nextLine.paragraph.computedFormat.justificationRule == JustificationRule.SPACE); 
@@ -1726,9 +1734,9 @@ package flashx.textLayout.compose
 			if (isDamaged() || !_controller)
 				return;
 
-			CONFIG::debug { assert(_textLineCache != null, "bad call to hiliteBlockSelection"); }
+			// CONFIG::debug { assert(_textLineCache != null, "bad call to hiliteBlockSelection"); }
 	
-			var textLine:TextLine = TextLine(_textLineCache.get());
+			var textLine:TextLine = peekTextLine();
 			if (!textLine || !textLine.parent)
 				return;
 								
@@ -1763,10 +1771,10 @@ package flashx.textLayout.compose
 			if (isDamaged() || !_controller)
 				return null;
 
-			CONFIG::debug { assert(_textLineCache != null, "bad call to hiliteBlockSelection"); }
+			// CONFIG::debug { assert(_textLineCache != null, "bad call to hiliteBlockSelection"); }
 	
 			// no container for overflow lines, or lines scrolled out 
-			var textLine:TextLine = TextLine(_textLineCache.get());
+			var textLine:TextLine = peekTextLine();
 			if (!textLine || !textLine.parent)
 				return null;			
 			// adjust to this paragraph's TextBlock

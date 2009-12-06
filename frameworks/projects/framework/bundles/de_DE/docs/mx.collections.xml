@@ -37,24 +37,25 @@
       
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.collections:AsyncListView"><apiName>AsyncListView</apiName><shortdesc>
   </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseInterface>mx.collections:IList</apiBaseInterface><apiBaseClassifier>mx.utils:OnDemandEventDispatcher</apiBaseClassifier></apiClassifierDef><apiDesc>
-  <codeph/>
+  <codeph/><codeph/><codeph/>
  
-  <p> <codeph/> <codeph/></p>
+  <p>Die getItemAt()-Methode verarbeitet ItemPendingErrors, indem sie ein vorläufiges „ausstehendes“ Objekt zurückgibt, bis die zugrunde liegende Anforderung erfolgreich ausgeführt wurde oder fehlschlägt. Das vorläufige Objekt wird durch den Aufruf von <codeph>createPendingItemFunction</codeph> erstellt. Ist die Anforderung erfolgreich, ersetzt das tatsächliche Objekt das vorläufige. Schlägt sie dagegen fehl, wird das vorläufige Objekt durch das Objekt ersetzt, das auf den Aufruf von <codeph>createFailedItemFunction</codeph> hin zurückgegeben wird.</p>
  
-  <p><codeph/> </p>
+  <p>Diese Klasse delegiert die IList-Methoden und -Eigenschaften an ihre <codeph>list</codeph>. Wenn keine Liste angegeben ist, sind Methoden, die die Sammlung ändern, Leerbefehle, und Methoden, die die Sammlung abfragen, geben einen „leeren“ Wert wie z. B. null zurück.</p>
  
-  <p/>
+  <p>Diese Klasse ist für die Verwendung mit auf DataGroup basierenden Spark-Komponenten wie List und ComboBox vorgesehen, die keine eigene Unterstützung für die ItemPendingError-Verarbeitung bieten.</p>
  
+  <p>  </p>
  
   </apiDesc></apiClassifierDetail><adobeApiEvent id="mx.collections:AsyncListView_mx.events.CollectionEvent.COLLECTION_CHANGE_collectionChange"><apiName>collectionChange</apiName><shortdesc>
-  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>mx.events.CollectionEvent.COLLECTION_CHANGE</apiEventType><adobeApiEventClassifier>mx.events.CollectionEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
-  
+  Wird ausgelöst, wenn sich die Länge der Liste geändert hat oder wenn ein Listenelement ersetzt wird.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>mx.events.CollectionEvent.COLLECTION_CHANGE</apiEventType><adobeApiEventClassifier>mx.events.CollectionEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+  Wird ausgelöst, wenn sich die Länge der Liste geändert hat oder wenn ein Listenelement ersetzt wird.
  
   </apiDesc></adobeApiEventDetail></adobeApiEvent><apiConstructor id="mx.collections:AsyncListView:AsyncListView"><apiName>AsyncListView</apiName><shortdesc>
-      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>list</apiItemName><apiOperationClassifier>mx.collections:IList</apiOperationClassifier><apiData>null</apiData><apiDesc>
+      AsyncListView-Konstruktor.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>list</apiItemName><apiOperationClassifier>mx.collections:IList</apiOperationClassifier><apiData>null</apiData><apiDesc>Der Anfangswert der Listeneigenschaft, die IList, and die delegiert wird.
       
       </apiDesc></apiParam></apiConstructorDef><apiDesc>
-      
+      AsyncListView-Konstruktor.
      
       </apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="mx.collections:AsyncListView:addItem"><apiName>addItem</apiName><shortdesc>
       
@@ -75,16 +76,16 @@
       Fügt das Element an der angegebenen Indexposition hinzu. Der Index eines Elements, der größer als der Index des hinzugefügten Element ist, wird um 1 erhöht. Wenn der angegebene Index kleiner als 0 oder größer als die Länge der Liste ist, wird ein RangeError ausgegeben.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.collections:AsyncListView:getItemAt"><apiName>getItemAt</apiName><shortdesc>
-      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Wenn <codeph>index &lt; 0</codeph> oder <codeph>index >= length</codeph>.
-      </apiDesc><apiItemName>RangeError</apiItemName><apiOperationClassifier>RangeError</apiOperationClassifier></apiException><apiReturn><apiDesc>
-      </apiDesc><apiType value="Object"/></apiReturn><apiParam><apiItemName>index</apiItemName><apiType value="int"/><apiDesc>
+      Gibt den Wert von list.getItemAt(index) zurück.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Wenn <codeph>index &lt; 0</codeph> oder <codeph>index >= length</codeph>.
+      </apiDesc><apiItemName>RangeError</apiItemName><apiOperationClassifier>RangeError</apiOperationClassifier></apiException><apiReturn><apiDesc>Das Listenelement an der angegebenen Indexposition.
+      </apiDesc><apiType value="Object"/></apiReturn><apiParam><apiItemName>index</apiItemName><apiType value="int"/><apiDesc>Der Listenindex, von dem das Objekt abgerufen werden soll.
       </apiDesc></apiParam><apiParam><apiItemName>prefetch</apiItemName><apiType value="int"/><apiData>0</apiData><apiDesc>Ein <codeph>int</codeph>-Wert, der sowohl die Richtung als auch die Anzahl von Elementen angibt, die während der Anforderung abgerufen werden sollen, wenn das Element nicht lokal ist.
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      <codeph/>
+      Gibt den Wert von <codeph>list.getItemAt(index)</codeph> zurück.
      
-      <p> <codeph/><codeph/>  <codeph/></p>
+      <p>Diese Methode erfasst als Folge des Aufrufs von getItemAt() generierte ItemPendingErrors (IPEs). Wenn ein IPE ausgegeben wird, wird dem IPE ein <codeph>IResponder</codeph> hinzugefügt und es wird ein mit <codeph>createPendingItemFunction</codeph> erstelltes vorläufiges „ausstehendes“ Objekt zurückgegeben. Wenn die zugrunde liegende Anforderung schließlich erfüllt wird, wird das „ausstehende“ Objekt durch das tatsächliche Objekt ersetzt. Schlägt sie fehl, wird das „ausstehende“ Objekt durch einen von der <codeph>createFailedItemFunction</codeph> erzeugten Wert ersetzt.</p>
      
-      </apiDesc></apiOperationDetail><related-links><link href="" invalidHref="mx.collections.createPendingItemFunction.xml"><linktext/></link><link href="" invalidHref="mx.collections.createFailedItemFunction.xml"><linktext/></link><link href="mx.collections.errors.xml#ItemPendingError"><linktext>mx.collections.errors.ItemPendingError</linktext></link><link href="mx.rpc.xml#IResponder"><linktext>mx.rpc.IResponder</linktext></link></related-links></apiOperation><apiOperation id="mx.collections:AsyncListView:getItemIndex"><apiName>getItemIndex</apiName><shortdesc>
+      </apiDesc></apiOperationDetail><related-links><link href="" invalidHref="mx.collections.createPendingItemFunction.xml"><linktext>createPendingItemFunction</linktext></link><link href="" invalidHref="mx.collections.createFailedItemFunction.xml"><linktext>createFailedItemFunction</linktext></link><link href="mx.collections.errors.xml#ItemPendingError"><linktext>mx.collections.errors.ItemPendingError</linktext></link><link href="mx.rpc.xml#IResponder"><linktext>mx.rpc.IResponder</linktext></link></related-links></apiOperation><apiOperation id="mx.collections:AsyncListView:getItemIndex"><apiName>getItemIndex</apiName><shortdesc>
       
       Gibt den Index des Elements zurück, wenn es in der Liste enthalten ist, sodass gilt: getItemAt(Index) == Element.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Der Index des Elements oder -1, wenn das Element nicht in der Liste enthalten ist.
       
@@ -108,7 +109,7 @@
      
       </apiDesc></apiParam></apiOperationDef><apiDesc>
       
-      Informiert die Ansicht darüber, dass ein Element aktualisiert wurde. Dies ist nützlich, wenn der Inhalt der Ansicht <codeph>IEventDispatcher</codeph> nicht implementiert und ein <codeph>PropertyChangeEvent</codeph> auslöst. Wenn eine Eigenschaft angegeben wird, kann die Ansicht möglicherweise ihren Benachrichtigungsmechanismus optimieren. Andernfalls wird möglicherweise einfach die gesamte Ansicht aktualisiert.
+      Informiert die Ansicht darüber, dass ein Element aktualisiert wurde. Dies ist nützlich, wenn der Inhalt der Ansicht <codeph>IEventDispatcher</codeph> nicht implementiert und ein <codeph>PropertyChangeEvent</codeph> auslöst. Wenn eine Eigenschaft angegeben wird, kann die Ansicht möglicherweise ihre Benachrichtigungsfunktion optimieren. Andernfalls wird möglicherweise einfach die gesamte Ansicht aktualisiert.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.collections:AsyncListView:removeAll"><apiName>removeAll</apiName><shortdesc>
        
@@ -121,14 +122,14 @@
       <p>Weitere Informationen zur Verwendung von <codeph>ItemPendingError</codeph> finden Sie in der ItemPendingError-Dokumentation und der Dokumentation zu den Sammlungen.</p>
       
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.collections:AsyncListView:removeItemAt"><apiName>removeItemAt</apiName><shortdesc>
+      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Wenn <codeph>index &lt; 0</codeph> oder <codeph>index >= length</codeph>.
+      </apiDesc><apiItemName>RangeError</apiItemName><apiOperationClassifier>RangeError</apiOperationClassifier></apiException><apiReturn><apiDesc>
       
-      Entfernt das Element am angegebenen Index und gibt es zurück.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Das entfernte Element.
-     
-      </apiDesc><apiType value="Object"/></apiReturn><apiParam><apiItemName>index</apiItemName><apiType value="int"/><apiDesc>Der Index, an dem das Element entfernt werden soll.
-     
+      </apiDesc><apiType value="Object"/></apiReturn><apiParam><apiItemName>index</apiItemName><apiType value="int"/><apiDesc>Der Listenindex, von dem das Objekt abgerufen werden soll.
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      
-      Entfernt das Element am angegebenen Index und gibt es zurück. Alle Elemente, die sich nach diesem Index befanden, sind nun um eine Indexposition weiter vorne.
+       
+     
+      <p><codeph/> </p>
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.collections:AsyncListView:setItemAt"><apiName>setItemAt</apiName><shortdesc>
       
@@ -143,25 +144,22 @@
       Platziert das Element am angegebenen Index. Wenn sich bereits ein Element an diesem Index befand, wird es vom neuen Element ersetzt und zurückgegeben.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.collections:AsyncListView:toArray"><apiName>toArray</apiName><shortdesc>
-      
-      Gibt ein Array zurück, das in derselben Reihenfolge ausgefüllt wird wie die IList-Implementierung.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Anschließend wird das Array.
-      
+      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>
       </apiDesc><apiType value="Array"/></apiReturn></apiOperationDef><apiDesc>
+        
       
-      Gibt ein Array zurück, das in derselben Reihenfolge ausgefüllt wird wie die IList-Implementierung. Diese Methode kann einen ItemPendingError ausgeben.
-     
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.collections:AsyncListView:toString"><apiName>toString</apiName><shortdesc>
-      Gibt den Inhalt dieser Ansicht als String aus und gibt ihn zurück.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Der Inhalt dieser Ansicht in Stringform.
+      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>
       
       </apiDesc><apiType value="String"/></apiReturn></apiOperationDef><apiDesc>
-      Gibt den Inhalt dieser Ansicht als String aus und gibt ihn zurück.
+       
      
       </apiDesc></apiOperationDetail></apiOperation><apiValue id="mx.collections:AsyncListView:createFailedItemFunction:get"><apiName>createFailedItemFunction</apiName><shortdesc>
-      </shortdesc><prolog/><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Function"/><apiDefaultValue>A function that unconditionally returns null. 
+      Eine für das Erstellen eines Ersetzungsobjekts verwendete Funktion, wenn eine Anforderung, die zur Ausgabe eines ItemPendingError geführt hat, im Anschluss fehlschlägt.</shortdesc><prolog/><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Function"/><apiDefaultValue>A function that unconditionally returns null. 
       </apiDefaultValue></apiValueDef><apiDesc>
-      <codeph/> <codeph/>
+      Eine für das Erstellen eines Ersetzungsobjekts verwendete Funktion, wenn eine Anforderung, die zur Ausgabe eines <codeph>ItemPendingError</codeph> geführt hat, im Anschluss fehlschlägt. Das vorhandene Objekt, normalerweise ein mit dem <codeph>createPendingItemFunction()</codeph>-Wert erstelltes „ausstehendes“ Objekt, wird durch das fehlgeschlagene Objekt ersetzt.
       
-      <p> </p> 
+      <p>Der Wert dieser Eigenschaft muss eine Funktion mit zwei Parametern sein, dem Index des angeforderten Objekts sowie dem Informationsobjekt zum Fehler, das von der IResponder fault()-Methode übergeben wird. In den meisten Fällen kann der zweite Parameter ignoriert werden, z. B.:</p> 
       <pre>
      function createFailedItem(index:int, info:Object):Object
      {
@@ -170,15 +168,15 @@
        </pre>
       
      
-      <p> 
+      <p>Das Festlegen dieser Eigenschaft wirkt sich nicht auf fehlgeschlagene Objekte aus, die bereits erstellt waren. Das Setzen der Eigenschaft auf null verhindert das Erstellen von fehlgeschlagenen Objekten.
       </p>
      
-      </apiDesc></apiValueDetail><related-links><link href="mx.collections.xml#AsyncListView/getItemAt"><linktext>getItemAt</linktext></link><link href="" invalidHref="mx.collections.createPendingItemFunction.xml"><linktext/></link><link href="mx.rpc.xml#IResponder/fault"><linktext/></link></related-links></apiValue><apiValue id="mx.collections:AsyncListView:createPendingItemFunction:get"><apiName>createPendingItemFunction</apiName><shortdesc>
-       </shortdesc><prolog/><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Function"/><apiDefaultValue>A function that unconditionally returns null. 
+      </apiDesc></apiValueDetail><related-links><link href="mx.collections.xml#AsyncListView/getItemAt"><linktext>getItemAt</linktext></link><link href="" invalidHref="mx.collections.createPendingItemFunction.xml"><linktext>createPendingItemFunction</linktext></link><link href="mx.rpc.xml#IResponder/fault"><linktext>mx.rpc.IResponder.fault</linktext></link></related-links></apiValue><apiValue id="mx.collections:AsyncListView:createPendingItemFunction:get"><apiName>createPendingItemFunction</apiName><shortdesc>
+       Eine für das Erstellen eines vorläufigen Objekts verwendete Funktion, wenn die Erstanforderung zur Ausgabe eines ItemPendingError führt.</shortdesc><prolog/><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Function"/><apiDefaultValue>A function that unconditionally returns null. 
       </apiDefaultValue></apiValueDef><apiDesc>
-       <codeph/>  <codeph/>
+       Eine für das Erstellen eines vorläufigen Objekts verwendete Funktion, wenn die Erstanforderung zur Ausgabe eines <codeph>ItemPendingError</codeph> führt. Wenn die Anforderung schließlich erfüllt wird, wird das vorläufige Objekt automatisch durch das tatsächliche Objekt ersetzt. Schlägt die Anforderung fehl, wird das Objekt durch ein mit der <codeph>createFailedItemFunction</codeph> erstelltes Objekt ersetzt.
       
-       <p>  
+       <p>Der Wert dieser Eigenschaft muss eine Funktion mit zwei Parametern sein, dem Index des angeforderten dataProvider-Objekts sowie dem ItemPendingError selbst. In den meisten Fällen kann der zweite Parameter ignoriert werden, z. B.: 
        <pre>
      function createPendingItem(index:int, ipe:ItemPendingError):Object
      {
@@ -187,21 +185,21 @@
        </pre>
        </p>
      
-      <p> </p>
+      <p>Das Festlegen dieser Eigenschaft wirkt sich nicht auf vorläufige „ausstehende“ Objekte aus, die bereits erstellt waren. Das Setzen der Eigenschaft auf null verhindert das Erstellen von vorläufigen „ausstehenden“ Objekten.</p>
      
-      </apiDesc></apiValueDetail><related-links><link href="mx.collections.xml#AsyncListView/getItemAt"><linktext>getItemAt</linktext></link><link href="" invalidHref="mx.collections.createFailedItemFunction.xml"><linktext/></link><link href="mx.collections.errors.xml#ItemPendingError"><linktext>mx.collections.errors.ItemPendingError</linktext></link></related-links></apiValue><apiValue id="mx.collections:AsyncListView:length:get"><apiName>length</apiName><shortdesc>
+      </apiDesc></apiValueDetail><related-links><link href="mx.collections.xml#AsyncListView/getItemAt"><linktext>getItemAt</linktext></link><link href="" invalidHref="mx.collections.createFailedItemFunction.xml"><linktext>createFailedItemFunction</linktext></link><link href="mx.collections.errors.xml#ItemPendingError"><linktext>mx.collections.errors.ItemPendingError</linktext></link></related-links></apiValue><apiValue id="mx.collections:AsyncListView:length:get"><apiName>length</apiName><shortdesc>
       
       Die Anzahl der Elemente in dieser Sammlung.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="int"/></apiValueDef><apiDesc>
       
       Die Anzahl der Elemente in dieser Sammlung. 0 bedeutet keine Elemente, -1 bedeutet, dass die Länge unbekannt ist. 
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.collections:AsyncListView:list:get"><apiName>list</apiName><shortdesc>
-      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>mx.collections:IList</apiValueClassifier><apiDefaultValue>null  
+      Die IList, die diese Sammlung einschließt, d. h.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>mx.collections:IList</apiValueClassifier><apiDefaultValue>null  
       
       </apiDefaultValue></apiValueDef><apiDesc>
-      
+      Die IList, die diese Sammlung einschließt, d. h. das Objekt, an das alle IList-Methoden delegiert werden.
      
-      <p><codeph/><codeph/><codeph/></p>
+      <p>Ist diese Eigenschaft null, sind IList-Mutationsmethoden wie <codeph>setItemAt()</codeph> Leerbefehle und die IList-Abfragemethoden wie <codeph>getItemAt()</codeph> geben null zurück (-1 für <codeph>getItemIndex()</codeph>).</p>
      
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.collections:ItemResponder"><apiName>ItemResponder</apiName><shortdesc>
   Die ItemResponder-Klasse stellt eine Standardimplementierung der mx.rpc.IResponder-Schnittstelle bereit.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseInterface>mx.rpc:IResponder</apiBaseInterface><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
@@ -251,13 +249,13 @@
 	  Erstellt eine Instanz des Responders mit den angegebenen Daten und Prozeduren.
 	  
 	  </apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="mx.collections:ItemResponder:fault"><apiName>fault</apiName><shortdesc>
-	  Diese Methode wird von einem Dienst aufgerufen, wenn ein Fehler empfangen wurde.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>info</apiItemName><apiType value="Object"/><apiDesc>Objekt, das Informationen über den aufgetretenen Fehler enthält.
+	  Diese Methode wird von einem Dienst aufgerufen, wenn ein Fehler erhalten wurde.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>info</apiItemName><apiType value="Object"/><apiDesc>Objekt, das die Informationen zum aufgetretenen Fehler enthält.
 	  
 	  </apiDesc></apiParam></apiOperationDef><apiDesc>
-	  Diese Methode wird von einem Dienst aufgerufen, wenn ein Fehler empfangen wurde.
+	  Diese Methode wird von einem Dienst aufgerufen, wenn ein Fehler erhalten wurde.
 	 
 	  </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.collections:ItemResponder:result"><apiName>result</apiName><shortdesc>
-	  Diese Methode wird von einem Dienst aufgerufen, wenn der Rückgabewert empfangen wurde.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>data</apiItemName><apiType value="Object"/><apiDesc>Objekt, das die Informationen enthält, die von der Anforderung zurückgegeben wurden.
+	  Diese Methode wird von einem Dienst aufgerufen, wenn ein Rückgabewert erhalten wurde.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>data</apiItemName><apiType value="Object"/><apiDesc>Objekt, das die von der Anforderung zurückgegebenen Informationen enthält.
 	  
 	  </apiDesc></apiParam></apiOperationDef><apiDesc>
 	  Diese Methode wird von einem Dienst aufgerufen, wenn der Rückgabewert empfangen wurde.
@@ -321,11 +319,11 @@
      Sucht das angegebene Objekt im angegebenen Array (oder ggf. die Einfügemarke) und gibt den Index zurück, falls er gefunden wird, andernfalls -1. Die <codeph>find<i>xxx</i>()</codeph>-Methoden der ListCollectionView-Klasse verwenden diese Methode, um das abgefragte Elemente zu suchen. Es ist im Allgemeinen einfacher, diese Funktionen anstelle von <codeph>findItem()</codeph> zu verwenden, um Daten in ListCollectionView-basierten Objekten zu suchen. Sie rufen die <codeph>findItem()</codeph>-Methode direkt auf, wenn Sie eine Klasse schreiben, die die Sortierung unterstützt, wie etwa eine neue ICollectionView-Implementierung.
     
      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.collections:Sort:propertyAffectsSort"><apiName>propertyAffectsSort</apiName><shortdesc>
-      Rückgabe, ob die angegebene Eigenschaft zur Steuerung der Sortierung verwendet wird.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Ob der Eigenschaftswert Einfluss auf das Sortierergebnis haben kann. Wenn die Sortierung die compareFunction-Standardfunktion verwendet, wird <codeph>true</codeph> zurückgegeben, wenn der <codeph>property</codeph>-Parameter ein Sortierfeld angibt. Wenn die Sortierung oder ein beliebiges SortField einen benutzerdefinierten Komparator verwendet, ist es nicht möglich, dies zu ermitteln. Daher wird <codeph>true</codeph> zurückgegeben.
+      Gibt zurück, ob die angegebene Eigenschaft zur Steuerung der Sortierung verwendet wird.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Ob der Eigenschaftswert Einfluss auf das Sortierergebnis haben kann. Wenn die Sortierung die compareFunction-Standardfunktion verwendet, wird <codeph>true</codeph> zurückgegeben, wenn der <codeph>property</codeph>-Parameter ein Sortierfeld angibt. Wenn die Sortierung oder ein beliebiges SortField einen benutzerdefinierten Komparator verwendet, ist es nicht möglich, dies zu ermitteln. Daher wird <codeph>true</codeph> zurückgegeben.
       
       </apiDesc><apiType value="Boolean"/></apiReturn><apiParam><apiItemName>property</apiItemName><apiType value="String"/><apiDesc>Der Name des zu testenden Felds.
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Rückgabe, ob die angegebene Eigenschaft zur Steuerung der Sortierung verwendet wird. Die Funktion kann keine definitive Antwort ermitteln, wenn die Sortierung einen benutzerdefinierten Komparator verwendet. Sie gibt in diesem Fall immer <codeph>true</codeph> zurück.
+      Gibt zurück, ob die angegebene Eigenschaft zur Steuerung der Sortierung verwendet wird. Die Funktion kann keine definitive Antwort ermitteln, wenn die Sortierung einen benutzerdefinierten Komparator verwendet. Sie gibt in diesem Fall immer <codeph>true</codeph> zurück.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.collections:Sort:reverse"><apiName>reverse</apiName><shortdesc>
      Durchläuft alle SortFields und ruft reverse() für sie auf.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
@@ -421,7 +419,7 @@
       Ein Array von SortField-Objekten, das die zu vergleichenden Felder angibt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Array"/><apiDefaultValue>null
      
       </apiDefaultValue></apiValueDef><apiDesc>
-      Ein Array von SortField-Objekten, das die zu vergleichenden Felder angibt. Die Reihenfolge der SortField-Objekte im Array legt die Reihenfolge der Feldpriorität bei der Sortierung fest. Der Standardsortierkomparator prüft die Sortierfelder in der Arrayreihenfolge, bis eine Sortierreihenfolge für die beiden verglichenen Felder bestimmt werden kann.
+      Ein Array von SortField-Objekten, das die zu vergleichenden Felder angibt. Die Reihenfolge der SortField-Objekte im Array bestimmt die Reihenfolge der Feldpriorität bei der Sortierung. Der Standardsortierkomparator prüft die Sortierfelder in der Arrayreihenfolge, bis eine Sortierreihenfolge für die beiden verglichenen Felder bestimmt werden kann.
      
       </apiDesc></apiValueDetail><related-links><link href="mx.collections.xml#SortField"><linktext>SortField</linktext></link></related-links></apiValue><apiValue id="mx.collections:Sort:unique:get"><apiName>unique</apiName><shortdesc>
       Gibt an, ob die Sortierung eindeutig sein soll.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Boolean"/><apiDefaultValue>false
@@ -433,7 +431,7 @@
   Eine ordinal angelegte Sammlung von Elementen.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiInterface/><apiAccess value="public"/><apiStatic/><apiBaseInterface>flash.events:IEventDispatcher</apiBaseInterface><apiBaseClassifier/></apiClassifierDef><apiDesc>
   Eine ordinal angelegte Sammlung von Elementen. Sie stellt Methoden für den Zugriff und die Änderung basierend auf dem Index bereit.  
   
-  <p>Eine <codeph>IList</codeph> kann eine Ansicht auf Daten sein, die von einer Remote-Position abgerufen wurden. Wenn eine Sammlung, die möglicherweise remote ist, bearbeitet wird, muss der Fall behandelt werden, dass Daten noch nicht verfügbar sind. Dies wird von <codeph>ItemPendingError</codeph> angezeigt.</p>
+  <p>Eine <codeph>IList</codeph> kann eine Ansicht von Daten sein, die von einer Remote-Position abgerufen wurden. Wenn eine Sammlung, die möglicherweise remote ist, bearbeitet wird, muss der Fall behandelt werden, dass Daten noch nicht verfügbar sind. Dies wird von <codeph>ItemPendingError</codeph> angezeigt.</p>
   
   <p>Die <codeph>ICollectionView</codeph>-Instanz ist eine Alternative zu <codeph>IList</codeph>.</p>
  
@@ -491,7 +489,7 @@
       </apiDesc></apiParam><apiParam><apiItemName>newValue</apiItemName><apiType value="Object"/><apiData>null</apiData><apiDesc>Der neue Wert dieser Eigenschaft. (Wenn die Eigenschaft „null“ war, muss der Wert nicht angegeben werden, da davon ausgegangen wird, dass das Element den neuen Wert hat.)
      
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Informiert die Ansicht darüber, dass ein Element aktualisiert wurde. Dies ist nützlich, wenn der Inhalt der Ansicht <codeph>IEventDispatcher</codeph> nicht implementiert und ein <codeph>PropertyChangeEvent</codeph> auslöst. Wenn eine Eigenschaft angegeben wird, kann die Ansicht möglicherweise ihren Benachrichtigungsmechanismus optimieren. Andernfalls wird möglicherweise einfach die gesamte Ansicht aktualisiert.
+      Informiert die Ansicht darüber, dass ein Element aktualisiert wurde. Dies ist nützlich, wenn der Inhalt der Ansicht <codeph>IEventDispatcher</codeph> nicht implementiert und ein <codeph>PropertyChangeEvent</codeph> auslöst. Wenn eine Eigenschaft angegeben wird, kann die Ansicht möglicherweise ihre Benachrichtigungsfunktion optimieren. Andernfalls wird möglicherweise einfach die gesamte Ansicht aktualisiert.
      
       </apiDesc></apiOperationDetail><related-links><link href="mx.events.xml#CollectionEvent"><linktext>mx.events.CollectionEvent</linktext></link><link href="mx.events.xml#PropertyChangeEvent"><linktext>mx.events.PropertyChangeEvent</linktext></link></related-links></apiOperation><apiOperation id="mx.collections:IList:mx.collections:IList:removeAll"><apiName>removeAll</apiName><shortdesc> 
       Entfernt alle Elemente aus der Liste.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc> 
@@ -524,12 +522,12 @@
       Platziert das Element am angegebenen Index. Wenn sich bereits ein Element an diesem Index befand, wird es vom neuen Element ersetzt und zurückgegeben.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.collections:IList:mx.collections:IList:toArray"><apiName>toArray</apiName><shortdesc>
-      Gibt ein Array zurück, das in derselben Reihenfolge ausgefüllt wird wie die IList-Implementierung.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Wenn die Daten noch nicht vollständig von einem Remote-Speicherort geladen wurden.
+      Gibt ein Array zurück, das in derselben Reihenfolge gefüllt wird wie die IList-Implementierung.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Wenn die Daten noch nicht vollständig von einem Remote-Speicherort geladen wurden.
       
       </apiDesc><apiItemName>ItemPendingError</apiItemName><apiOperationClassifier>mx.collections.errors:ItemPendingError</apiOperationClassifier></apiException><apiReturn><apiDesc>Anschließend wird das Array.
       
       </apiDesc><apiType value="Array"/></apiReturn></apiOperationDef><apiDesc>
-      Gibt ein Array zurück, das in derselben Reihenfolge ausgefüllt wird wie die IList-Implementierung. Diese Methode kann einen ItemPendingError ausgeben.
+      Gibt ein Array zurück, das in derselben Reihenfolge gefüllt wird wie die IList-Implementierung. Diese Methode kann einen ItemPendingError ausgeben.
      
       </apiDesc></apiOperationDetail></apiOperation><apiValue id="mx.collections:IList:mx.collections:IList:length:get"><apiName>length</apiName><shortdesc>
       Die Anzahl der Elemente in dieser Sammlung.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="int"/></apiValueDef><apiDesc>
@@ -707,14 +705,14 @@
       </apiDesc></apiParam><apiParam><apiItemName>newValue</apiItemName><apiType value="Object"/><apiData>null</apiData><apiDesc>Der neue Wert dieser Eigenschaft. (Wenn die Eigenschaft „null“ war, muss der Wert nicht angegeben werden, da davon ausgegangen wird, dass das Element den neuen Wert hat.)
      
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Informiert die Ansicht darüber, dass ein Element aktualisiert wurde. Dies ist hilfreich, wenn der Inhalt der Ansicht den <codeph>IEventDispatcher</codeph> nicht implementiert. Wenn eine Eigenschaft angegeben wird, kann die Ansicht möglicherweise ihren Benachrichtigungsmechanismus optimieren. Andernfalls wird möglicherweise einfach die gesamte Ansicht aktualisiert.
+      Informiert die Ansicht darüber, dass ein Element aktualisiert wurde. Dies ist hilfreich, wenn der Inhalt der Ansicht den <codeph>IEventDispatcher</codeph> nicht implementiert. Wenn eine Eigenschaft angegeben wird, kann die Ansicht möglicherweise ihre Benachrichtigungsfunktion optimieren. Andernfalls wird möglicherweise einfach die gesamte Ansicht aktualisiert.
      
       </apiDesc></apiOperationDetail><related-links><link href="mx.events.xml#CollectionEvent"><linktext>mx.events.CollectionEvent</linktext></link><link href="mx.core.xml#IPropertyChangeNotifier"><linktext>mx.core.IPropertyChangeNotifier</linktext></link><link href="mx.events.xml#PropertyChangeEvent"><linktext>mx.events.PropertyChangeEvent</linktext></link></related-links></apiOperation><apiOperation id="mx.collections:ArrayList:removeAll"><apiName>removeAll</apiName><shortdesc> 
       Entfernt alle Elemente aus der Liste.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc> 
       Entfernt alle Elemente aus der Liste.
       
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.collections:ArrayList:removeItem"><apiName>removeItem</apiName><shortdesc>
-      Entfernt das angegebene Element aus der Liste, falls vorhanden.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Boolescher Ausdruck, der angibt, ob das Element entfernt wurde.
+      Entfernt das angegebene Element aus der Liste, falls vorhanden.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Boolescher Wert, der angibt, ob das Element entfernt wurde.
       
       </apiDesc><apiType value="Boolean"/></apiReturn><apiParam><apiItemName>item</apiItemName><apiType value="Object"/><apiDesc>Objektverweis auf das Element, das entfernt werden soll.
       </apiDesc></apiParam></apiOperationDef><apiDesc>
@@ -746,10 +744,10 @@
       Wenn es sich bei dem Element um einen IEventDispatcher handelt, unterbrechen Sie das Überwachen auf Aktualisierungen. Der Aufruf erfolgt durch removeItemAt, removeAll und vor dem Zuweisen einer neuen Quelle.
       
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.collections:ArrayList:toArray"><apiName>toArray</apiName><shortdesc>
-      Gibt ein Array zurück, das in derselben Reihenfolge ausgefüllt wird wie die IList-Implementierung.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Wenn die Daten noch nicht vollständig von einem Remote-Speicherort geladen wurden.
+      Gibt ein Array zurück, das in derselben Reihenfolge gefüllt wird wie die IList-Implementierung.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Wenn die Daten noch nicht vollständig von einem Remote-Speicherort geladen wurden.
       
       </apiDesc><apiItemName>ItemPendingError</apiItemName><apiOperationClassifier>ItemPendingError</apiOperationClassifier></apiException><apiReturn><apiType value="Array"/></apiReturn></apiOperationDef><apiDesc>
-      Gibt ein Array zurück, das in derselben Reihenfolge ausgefüllt wird wie die IList-Implementierung.  
+      Gibt ein Array zurück, das in derselben Reihenfolge gefüllt wird wie die IList-Implementierung.  
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.collections:ArrayList:toString"><apiName>toString</apiName><shortdesc>
       Gibt den Inhalt dieser ArrayList in einem String aus und gibt ihn zurück.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiType value="String"/></apiReturn></apiOperationDef><apiDesc>
@@ -787,7 +785,7 @@
   ]]></mxml></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseInterface>mx.collections:ICollectionView</apiBaseInterface><apiBaseInterface>mx.collections:IList</apiBaseInterface><apiBaseInterface>mx.core:IMXMLObject</apiBaseInterface><apiBaseClassifier>flash.utils:Proxy</apiBaseClassifier></apiClassifierDef><apiDesc>
  Die ListCollectionView-Klasse fügt die Eigenschaften und Methoden der <codeph>ICollectionView</codeph>-Schnittstelle einem Objekt hinzu, das mit der <codeph>IList</codeph>-Schnittstelle kompatibel ist. Als Ergebnis können Sie ein Objekt dieser Klasse an alle Objekte übergeben, die eine <codeph>IList</codeph>- oder <codeph>ICollectionView</codeph>-Schnittstelle erfordern.
  
- <p>Mit dieser Klasse können Sie auch die [] Array-Schreibweise verwenden, um auf die <codeph>getItemAt()</codeph>- und <codeph>setItemAt()</codeph>-Methode zuzugreifen. Wenn Sie Code wie <codeph>myListCollectionView[Index]</codeph> verwenden, ruft Flex die <codeph>setItemAt()</codeph>- oder <codeph>getItemAt()</codeph>-Methode des <codeph>myListCollectionView</codeph>-Objekts auf.</p>
+ <p>Bei dieser Klasse können Sie auch die Arrayschreibweise [] verwenden, um auf die <codeph>getItemAt()</codeph>- und <codeph>setItemAt()</codeph>-Methode zuzugreifen. Wenn Sie Code wie <codeph>myListCollectionView[Index]</codeph> verwenden, ruft Flex die <codeph>setItemAt()</codeph>- oder <codeph>getItemAt()</codeph>-Methode des <codeph>myListCollectionView</codeph>-Objekts auf.</p>
  
  </apiDesc></apiClassifierDetail><adobeApiEvent id="mx.collections:ListCollectionView_mx.events.CollectionEvent.COLLECTION_CHANGE_collectionChange"><apiName>collectionChange</apiName><shortdesc>
   Wird ausgelöst, wenn ICollectionView auf irgendeine Weise aktualisiert wurde.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>mx.events.CollectionEvent.COLLECTION_CHANGE</apiEventType><adobeApiEventClassifier>mx.events.CollectionEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
@@ -912,7 +910,7 @@
      
       </apiDesc></apiParam></apiOperationDef><apiDesc>
       
-      Informiert die Ansicht darüber, dass ein Element aktualisiert wurde. Diese Methode ist nützlich, wenn der Inhalt der Ansicht <codeph>IPropertyChangeNotifier</codeph> nicht implementiert. Wenn der Aufruf dieser Methode einen <codeph>property</codeph>-Parameter enthält, kann die Ansicht möglicherweise ihren Benachrichtigungsmechanismus optimieren. Andernfalls wird möglicherweise einfach die gesamte Ansicht aktualisiert.
+      Informiert die Ansicht darüber, dass ein Element aktualisiert wurde. Diese Methode ist nützlich, wenn der Inhalt der Ansicht <codeph>IPropertyChangeNotifier</codeph> nicht implementiert. Wenn der Aufruf dieser Methode einen <codeph>property</codeph>-Parameter enthält, kann die Ansicht möglicherweise ihre Benachrichtigungsfunktion optimieren. Andernfalls wird möglicherweise einfach die gesamte Ansicht aktualisiert.
      
       </apiDesc></apiOperationDetail><related-links><link href="mx.events.xml#CollectionEvent"><linktext>mx.events.CollectionEvent</linktext></link><link href="mx.core.xml#IPropertyChangeNotifier"><linktext>mx.core.IPropertyChangeNotifier</linktext></link><link href="mx.events.xml#PropertyChangeEvent"><linktext>mx.events.PropertyChangeEvent</linktext></link></related-links></apiOperation><apiOperation id="mx.collections:ListCollectionView:refresh"><apiName>refresh</apiName><shortdesc>
      
@@ -954,11 +952,11 @@
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.collections:ListCollectionView:toArray"><apiName>toArray</apiName><shortdesc>
      
-      Gibt ein Array zurück, das in derselben Reihenfolge ausgefüllt wird wie die IList-Implementierung.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Anschließend wird das Array.
+      Gibt ein Array zurück, das in derselben Reihenfolge gefüllt wird wie die IList-Implementierung.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Anschließend wird das Array.
       
       </apiDesc><apiType value="Array"/></apiReturn></apiOperationDef><apiDesc>
      
-      Gibt ein Array zurück, das in derselben Reihenfolge ausgefüllt wird wie die IList-Implementierung. Diese Methode kann einen ItemPendingError ausgeben.
+      Gibt ein Array zurück, das in derselben Reihenfolge gefüllt wird wie die IList-Implementierung. Diese Methode kann einen ItemPendingError ausgeben.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.collections:ListCollectionView:toString"><apiName>toString</apiName><shortdesc>
       Gibt den Inhalt dieser Ansicht als String aus und gibt ihn zurück.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Der Inhalt dieser Ansicht in Stringform.
@@ -1006,9 +1004,9 @@
 	 
       </apiDesc></apiValueDetail><related-links><link href="mx.collections.xml#ListCollectionView/refresh()"><linktext>aktualisieren()</linktext></link></related-links></apiValue></apiClassifier><apiClassifier id="mx.collections:ICollectionView"><apiName>ICollectionView</apiName><shortdesc>
   Eine ICollectionView ist eine Ansicht auf eine Sammlung von Daten.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiInterface/><apiAccess value="public"/><apiStatic/><apiBaseInterface>flash.events:IEventDispatcher</apiBaseInterface><apiBaseClassifier/></apiClassifierDef><apiDesc>
-  Eine <codeph>ICollectionView </codeph> ist eine Ansicht auf eine Sammlung von Daten. Die Ansicht kann modifiziert werden, um die Daten nach verschiedenen Kriterien sortiert oder durch Filter verringert anzuzeigen, ohne die zugrunde liegenden Daten zu ändern. Ein IViewCursor bietet Zugriff auf Elemente in einer Sammlung. Sie können die Sammlung mithilfe der Methoden <codeph>insert()</codeph> und <codeph>remove()</codeph> der IViewCursor-Schnittstelle modifizieren.
+  Eine <codeph>ICollectionView </codeph> ist eine Ansicht einer Sammlung von Daten. Die Ansicht kann modifiziert werden, um die Daten nach verschiedenen Kriterien sortiert oder durch Filter verringert anzuzeigen, ohne die zugrunde liegenden Daten zu ändern. Ein IViewCursor bietet Zugriff auf Elemente in einer Sammlung. Sie können die Sammlung mithilfe der Methoden <codeph>insert()</codeph> und <codeph>remove()</codeph> der IViewCursor-Schnittstelle modifizieren.
  
-  <p>Eine <codeph>ICollectionView</codeph> kann eine Ansicht auf Daten sein, die von einer Remote-Position abgerufen wurden. Wenn diese Schnittstelle für Daten implementiert wird, die möglicherweise remote gespeichert sind, muss der Fall berücksichtigt werden, wo Daten ggf. noch nicht verfügbar sind. Dies wird durch <codeph>ItemPendingError</codeph> angezeigt.</p>
+  <p>Eine <codeph>ICollectionView</codeph> kann eine Ansicht von Daten sein, die von einer Remote-Position abgerufen wurden. Wenn diese Schnittstelle für Daten implementiert wird, die möglicherweise remote gespeichert sind, muss der Fall berücksichtigt werden, wo Daten ggf. noch nicht verfügbar sind. Dies wird durch <codeph>ItemPendingError</codeph> angezeigt.</p>
  
   <p>Die <codeph>IList</codeph>-Schnittstelle ist eine Alternative zur <codeph>ICollectionView</codeph>-Schnittstelle.</p>
  
@@ -1049,7 +1047,7 @@
       </apiDesc></apiParam><apiParam><apiItemName>newValue</apiItemName><apiType value="Object"/><apiData>null</apiData><apiDesc>Der neue Wert dieser Eigenschaft. (Wenn die Eigenschaft „null“ war, muss der Wert nicht angegeben werden, da davon ausgegangen wird, dass das Element den neuen Wert hat.)
      
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Informiert die Ansicht darüber, dass ein Element aktualisiert wurde. Diese Methode ist nützlich, wenn der Inhalt der Ansicht <codeph>IPropertyChangeNotifier</codeph> nicht implementiert. Wenn der Aufruf dieser Methode einen <codeph>property</codeph>-Parameter enthält, kann die Ansicht möglicherweise ihren Benachrichtigungsmechanismus optimieren. Andernfalls wird möglicherweise einfach die gesamte Ansicht aktualisiert.
+      Informiert die Ansicht darüber, dass ein Element aktualisiert wurde. Diese Methode ist nützlich, wenn der Inhalt der Ansicht <codeph>IPropertyChangeNotifier</codeph> nicht implementiert. Wenn der Aufruf dieser Methode einen <codeph>property</codeph>-Parameter enthält, kann die Ansicht möglicherweise ihre Benachrichtigungsfunktion optimieren. Andernfalls wird möglicherweise einfach die gesamte Ansicht aktualisiert.
      
       </apiDesc></apiOperationDetail><related-links><link href="mx.events.xml#CollectionEvent"><linktext>mx.events.CollectionEvent</linktext></link><link href="mx.core.xml#IPropertyChangeNotifier"><linktext>mx.core.IPropertyChangeNotifier</linktext></link><link href="mx.events.xml#PropertyChangeEvent"><linktext>mx.events.PropertyChangeEvent</linktext></link></related-links></apiOperation><apiOperation id="mx.collections:ICollectionView:mx.collections:ICollectionView:refresh"><apiName>refresh</apiName><shortdesc>
       Wendet die Sortierung und den Filter auf die Ansicht an.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc><codeph>true</codeph>, wenn refresh() abgeschlossen wurde, <codeph>false</codeph>, wenn refresh() nicht abgeschlossen wurde.
@@ -1086,8 +1084,8 @@
   Definiert die Schnittstelle zur bidirektionalen Aufzählung einer hierarchischen Sammlungsansicht. Dieser Cursor stellt Such- und Lesezeichenfunktionen sowie die Änderungsmethoden „insert“ und „remove“ bereit. Wenn ein Cursor aus einer Ansicht abgerufen wird (normalerweise mit der <codeph>createCursor()</codeph>-Methode von ICollectionView) sollte der Wert der <codeph>current</codeph>-Eigenschaft das erste Element in der Ansicht sein, außer die Ansicht ist leer.
   
   </apiDesc></apiClassifierDetail><adobeApiEvent id="mx.collections:IViewCursor_mx.events.FlexEvent.CURSOR_UPDATE_cursorUpdate"><apiName>cursorUpdate</apiName><shortdesc>
-  Wird versendet, wenn die Cursorposition aktualisiert wird.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>mx.events.FlexEvent.CURSOR_UPDATE</apiEventType><adobeApiEventClassifier>mx.events.FlexEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
-  Wird versendet, wenn die Cursorposition aktualisiert wird.
+  Wird ausgelöst, wenn die Cursorposition aktualisiert wird.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>mx.events.FlexEvent.CURSOR_UPDATE</apiEventType><adobeApiEventClassifier>mx.events.FlexEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+  Wird ausgelöst, wenn die Cursorposition aktualisiert wird.
  
   </apiDesc></adobeApiEventDetail></adobeApiEvent><apiOperation id="mx.collections:IViewCursor:mx.collections:IViewCursor:findAny"><apiName>findAny</apiName><shortdesc>
       Sucht in der Sammlung ein Element mit den angegebenen Eigenschaften und platziert den Cursor auf diesem Element.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Wenn alle Daten lokal sind, gibt diese Methode <codeph>true</codeph> zurück, falls das Element gefunden werden kann, andernfalls <codeph>false</codeph>. 
@@ -1101,7 +1099,7 @@
       
       <p>Wenn die zugehörige Sammlung remote ist und nicht alle Elemente lokal zwischengespeichert wurden, beginnt diese Methode einen asynchronen Abruf aus der Remote-Sammlung. Wenn bereits ein Abruf ausgeführt wird, wartet diese Methode, bis der Abruf beendet wurde, bevor eine weitere Abrufanforderung gestellt wird.</p>
      
-      <p>Wenn mehrere Elemente die Suchkriterien erfüllen, ist das gefundene Elemente nicht-deterministisch. Wenn es wichtig ist, das erste oder letzte Vorkommen eines Elements in einem nicht eindeutigen Index zu finden, verwenden Sie die <codeph>findFirst()</codeph>- oder <codeph>findLast()</codeph>-Methode.</p>
+      <p>Wenn mehrere Elemente die Suchkriterien erfüllen, ist das gefundene Elemente nicht-deterministisch. Wenn es wichtig ist, das erste oder letzte Vorkommen eines Elements in einem nicht eindeutigen Index zu finden, verwenden Sie die Methode <codeph>findFirst()</codeph> oder <codeph>findLast()</codeph>.</p>
      
       <p>Wenn die Daten nicht lokal sind und ein asynchroner Vorgang ausgeführt werden muss, wird ein ItemPendingError ausgegeben.</p>
       
@@ -1117,7 +1115,7 @@
       
       <p>Wenn die zugehörige Sammlung remote ist und nicht alle Elemente lokal zwischengespeichert wurden, beginnt diese Methode einen asynchronen Abruf aus der Remote-Sammlung. Wenn bereits ein Abruf ausgeführt wird, wartet diese Methode, bis der Abruf beendet wurde, bevor eine weitere Abrufanforderung gestellt wird.</p>
      
-      <p>Wenn es nicht wichtig ist, das erste Vorkommen eines Elements in einem nicht eindeutigen Index zu finden, verwenden Sie die <codeph>findAny()</codeph>-Methode, die möglicherweise ein wenig schneller ist als die <codeph>findFirst()</codeph>-Methode.</p>
+      <p>Wenn es nicht wichtig ist, das erste Vorkommen eines Elements in einem nicht eindeutigen Index zu finden, verwenden Sie die Methode <codeph>findAny()</codeph>, die möglicherweise ein wenig schneller ist als die <codeph>findFirst()</codeph>-Methode.</p>
      
       <p>Wenn die Daten nicht lokal sind und ein asynchroner Vorgang ausgeführt werden muss, wird ein ItemPendingError ausgegeben.</p>
      
@@ -1133,7 +1131,7 @@
       
       <p>Wenn die zugehörige Sammlung remote ist und nicht alle Elemente lokal zwischengespeichert wurden, beginnt diese Methode einen asynchronen Abruf aus der Remote-Sammlung. Wenn bereits ein Abruf ausgeführt wird, wartet diese Methode, bis der Abruf beendet wurde, bevor eine weitere Abrufanforderung gestellt wird.</p>
      
-      <p>Wenn es nicht wichtig ist, das letzte Vorkommen eines Elements in einem nicht eindeutigen Index zu finden, verwenden Sie die <codeph>findAny()</codeph>-Methode, die möglicherweise ein wenig schneller ist.</p>
+      <p>Wenn es nicht wichtig ist, das letzte Vorkommen eines Elements in einem nicht eindeutigen Index zu finden, verwenden Sie die Methode <codeph>findAny()</codeph>, die möglicherweise ein wenig schneller ist.</p>
      
       <p>Wenn die Daten nicht lokal sind und ein asynchroner Vorgang ausgeführt werden muss, wird ein ItemPendingError ausgegeben.</p>
      
@@ -1196,7 +1194,7 @@
         <li><codeph>CursorBookmark.LAST</codeph> - Vom Ende der Sammlung aus (letztes Element) suchen</li>
       </ul>
      
-      </apiDesc></apiParam><apiParam><apiItemName>offset</apiItemName><apiType value="int"/><apiData>0</apiData><apiDesc>Gibt an, wie weit vom angegebenen Lesezeichen gesucht werden soll. Wenn die angegebene Zahl negativ ist, versucht der Cursor, sich vor dem angegebene Lesezeichen zu platzieren. Wenn der angegebene Offset sich nach dem Ende der Sammlung befindet, wird der Cursor hinter das Ende platziert, an die Position <codeph>beforeFirst</codeph> oder <codeph>afterLast</codeph>.
+      </apiDesc></apiParam><apiParam><apiItemName>offset</apiItemName><apiType value="int"/><apiData>0</apiData><apiDesc>Gibt an, wie weit vom angegebenen Lesezeichen gesucht werden soll. Wenn die angegebene Zahl negativ ist, versucht der Cursor, sich vor das angegebene Lesezeichen zu platzieren. Wenn der angegebene Offset sich nach dem Ende der Sammlung befindet, wird der Cursor hinter das Ende platziert, an die Position <codeph>beforeFirst</codeph> oder <codeph>afterLast</codeph>.
      
       </apiDesc></apiParam><apiParam><apiItemName>prefetch</apiItemName><apiType value="int"/><apiData>0</apiData><apiDesc>Wird für Remote-Daten verwendet. Gibt eine Priorität an, die Sammlung in einer angegebene Richtung zu durchlaufen, wenn der Suchvorgang abgeschlossen wurde. Dies verringert die Anzahl der erforderlichen Netzwerk-Roundtrips bei einer Suche. Wenn die Durchlaufrichtung zum Zeitpunkt der Anforderung bekannt ist, kann die geeignete Datenmenge zurückgegeben werden, bevor die Anforderung die Daten durchläuft.
      
@@ -1324,7 +1322,7 @@
      
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.collections:CursorBookmark"><apiName>CursorBookmark</apiName><shortdesc>
   Fasst die Positionsaspekte eines Cursor in einer ICollectionView zusammen.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
-  Fasst die Positionsaspekte eines Cursor in einer <codeph>ICollectionView </codeph> zusammen. Lesezeichen werden verwendet, um einen Cursor an eine absolute Position innerhalb der <codeph>ICollectionView</codeph> zurückzuversetzen.
+  Fasst die Positionsaspekte eines Cursors in einer <codeph>ICollectionView </codeph> zusammen. Lesezeichen werden verwendet, um einen Cursor an eine absolute Position innerhalb der <codeph>ICollectionView</codeph> zurückzuversetzen.
  
   </apiDesc></apiClassifierDetail><related-links><link href="mx.collections.xml#IViewCursor/bookmark"><linktext>mx.collections.IViewCursor.bookmark</linktext></link><link href="mx.collections.xml#IViewCursor/seek()"><linktext>mx.collections.IViewCursor.seek()</linktext></link></related-links><apiConstructor id="mx.collections:CursorBookmark:CursorBookmark"><apiName>CursorBookmark</apiName><shortdesc>
       Erstellt eine neue Instanz eines Lesezeichens mit dem angegebenen Wert.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>value</apiItemName><apiType value="Object"/><apiDesc>Der Wert dieses Lesezeichens.

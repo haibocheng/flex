@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<apiPackage id="spark.utils"><apiName>spark.utils</apiName><apiDetail/><apiClassifier id="spark.utils:TextFlowUtil"><apiName>TextFlowUtil</apiName><shortdesc>
+  TextFlowUtil は、Text Layout Framework で使用されるマークアップ言語から TextFlow をインポートしたり、マークアップ言語に TextFlow をエクスポートしたりするためのメソッドを提供するユーティリティクラスです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+  TextFlowUtil は、Text Layout Framework で使用されるマークアップ言語から TextFlow をインポートしたり、マークアップ言語に TextFlow をエクスポートしたりするためのメソッドを提供するユーティリティクラスです。
+  
+  </apiDesc></apiClassifierDetail><apiOperation id="spark.utils:TextFlowUtil:export"><apiName>export</apiName><shortdesc>
+      Text Layout Framework で使用されるマークアップ言語に XML の形式で TextFlow をエクスポートします。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiDesc>Text Layout Framework マークアップ言語を含む XML です。
+      
+      </apiDesc><apiType value="XML"/></apiReturn><apiParam><apiItemName>textFlow</apiItemName><apiType value="flashx.textLayout.elements:TextFlow"/><apiDesc>Text Layout Framework マークアップ言語にエクスポートする TextFlow です。
+     
+      </apiDesc></apiParam></apiOperationDef><apiDesc>
+      Text Layout Framework で使用されるマークアップ言語に XML の形式で TextFlow をエクスポートします。
+     
+      <p>エクスポートされる XML のルートタグです。
+      <pre>
+      &lt;TextFlow xmlns="http://ns.adobe.com/textLayout/2008" ...>
+      </pre>
+      </p>
+     
+      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="spark.utils:TextFlowUtil:importFromString"><apiName>importFromString</apiName><shortdesc>
+      Text Layout Framework で使用されるマークアップ言語を含むストリングをインポート（つまり解析）することで TextFlow を作成します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiDesc>マークアップから作成される新しい TextFlow インスタンスです。
+      
+      </apiDesc><apiType value="flashx.textLayout.elements:TextFlow"/></apiReturn><apiParam><apiItemName>markup</apiItemName><apiType value="String"/><apiDesc>インポートするマークアップストリングです。
+     
+      </apiDesc></apiParam><apiParam><apiItemName>whiteSpaceCollapse</apiItemName><apiType value="String"/><apiData>collapse</apiData><apiDesc>マークアップ内の空白を除去するか維持するかを示すストリングです。有効な値は、flashx.textLayout.formats.WhiteSpaceCollapse クラスの <codeph>WhiteSpaceCollapse.COLLAPSE</codeph> および <codeph>WhiteSpaceCollapse.PRESERVE</codeph> です。デフォルト値は <codeph>WhiteSpaceCollapse.COLLAPSE</codeph> です。
+     
+      </apiDesc></apiParam></apiOperationDef><apiDesc>
+      Text Layout Framework で使用されるマークアップ言語を含むストリングをインポート（つまり解析）することで TextFlow を作成します。
+      
+      <p>マークアップストリングの例は次のとおりです。
+      <pre>
+      "&lt;TextFlow xmlns='http://ns.adobe.com/textLayout/2008'>
+      <p><ph>Hello, </ph><ph fontWeight="bold">World!</ph></p>&lt;/TextFlow>"
+      </pre>
+      </p>
+     
+      <p>ただし、次のようなより簡潔なマークアップを使用できます。
+      <pre>"Hello, <ph fontWeight="bold">World!</ph>"</pre>TextFlow タグで適切な名前空間内にラップされ、TextFlow の構造に準拠するために必要な位置に span および paragraph タグが自動的に挿入されます。</p>
+     
+      <p>TextFlow タグを自分で指定する場合は、ランタイム Text Layout Framework マークアップの正しい XML 名前空間である <codeph>"http://ns.adobe.com/textLayout/2008"</codeph> 内に指定する必要があります。</p>
+     
+      <p>マークアップが正しくないと、このメソッドからさまざまな例外が発生します。エラーメッセージには、マークアップを解析できない理由についての情報が含まれます。</p>
+     
+      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="spark.utils:TextFlowUtil:importFromXML"><apiName>importFromXML</apiName><shortdesc>
+      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiDesc>マークアップから作成される新しい TextFlow インスタンスです。
+      
+      </apiDesc><apiType value="flashx.textLayout.elements:TextFlow"/></apiReturn><apiParam><apiItemName>markup</apiItemName><apiType value="XML"/><apiDesc>インポートするマークアップ XML です。
+     
+      </apiDesc></apiParam><apiParam><apiItemName>whiteSpaceCollapse</apiItemName><apiType value="String"/><apiData>collapse</apiData><apiDesc>マークアップ内の空白を除去するか維持するかを示すストリングです。有効な値は、flashx.textLayout.formats.WhiteSpaceCollapse クラスの <codeph>WhiteSpaceCollapse.COLLAPSE</codeph> および <codeph>WhiteSpaceCollapse.PRESERVE</codeph> です。デフォルト値は <codeph>WhiteSpaceCollapse.COLLAPSE</codeph> です。
+     
+      </apiDesc></apiParam></apiOperationDef><apiDesc>
+      
+      
+      <p>マークアップ XML の例は次のとおりです。
+      <pre>
+      &lt;TextFlow xmlns='http://ns.adobe.com/textLayout/2008'>
+        <p><ph>Hello, </ph><ph fontWeight="bold">World!</ph></p>
+      &lt;/TextFlow>
+      </pre>
+      </p>
+     
+      <p>
+      <pre>
+      "Hello, &lt;span fontWeight='bold'>World!&lt;/span>"
+      </pre>
+      <codeph/></p>
+     
+      <p>TextFlow タグを自分で指定する場合は、ランタイム Text Layout Framework マークアップの正しい XML 名前空間である <codeph>"http://ns.adobe.com/textLayout/2008"</codeph> 内に指定する必要があります。</p>
+     
+      <p/>
+     
+      </apiDesc></apiOperationDetail></apiOperation></apiClassifier><apiClassifier id="spark.utils:LabelUtil"><apiName>LabelUtil</apiName><shortdesc>
+  LabelUtil クラスは、レンダラーまたは下位要素に対して表示する正しいテキストを決定するために、コンポーネントによって使用されます。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+  LabelUtil クラスは、レンダラーまたは下位要素に対して表示する正しいテキストを決定するために、コンポーネントによって使用されます。 
+  
+  </apiDesc></apiClassifierDetail><apiOperation id="spark.utils:LabelUtil:itemToLabel"><apiName>itemToLabel</apiName><shortdesc>
+      アイテムレンダラーがデータアイテムに対して表示する正しいテキストを決定するために、アイテムレンダラーをサポートするコンポーネントで使用される関数です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiDesc>データアイテムのストリング表現です。 
+     
+      </apiDesc><apiType value="String"/></apiReturn><apiParam><apiItemName>item</apiItemName><apiType value="Object"/><apiDesc>データアイテムです。 null アイテムは空のストリングを返します。 
+     
+      </apiDesc></apiParam><apiParam><apiItemName>labelField</apiItemName><apiType value="String"/><apiData>null</apiData><apiDesc>返すデータアイテムのフィールドです。
+     
+      </apiDesc></apiParam><apiParam><apiItemName>labelFunction</apiItemName><apiType value="Function"/><apiData>null</apiData><apiDesc>1 つのパラメーターとしてデータアイテムを取り、ストリングを返す関数です。 
+     
+      </apiDesc></apiParam></apiOperationDef><apiDesc>
+      アイテムレンダラーがデータアイテムに対して表示する正しいテキストを決定するために、アイテムレンダラーをサポートするコンポーネントで使用される関数です。<codeph>labelField</codeph> または <codeph>labelFunction</codeph> パラメーターが指定されていない場合は、データアイテムの <codeph>toString()</codeph> メソッドが呼び出されて、データアイテムのストリング表現が返されます。
+      
+      <p><codeph>labelFunction</codeph> プロパティは、関数への参照を受け取ります。この関数は、データプロバイダー内のアイテムである引数を 1 つ受け取り、ストリングを返します。</p>
+      <pre>
+      myLabelFunction(item:Object):String</pre>
+     
+      </apiDesc></apiOperationDetail></apiOperation></apiClassifier><apiClassifier id="spark.utils:BitmapUtil"><apiName>BitmapUtil</apiName><shortdesc>
+  このクラスは、ビットマップ関連のユーティリティ関数を提供します。 
+  
+  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+  このクラスは、ビットマップ関連のユーティリティ関数を提供します。 
+  
+  </apiDesc></apiClassifierDetail><apiOperation id="spark.utils:BitmapUtil:getSnapshot"><apiName>getSnapshot</apiName><shortdesc>
+      ターゲットオブジェクトの BitmapData 表現を作成します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiDesc>イメージを含む BitmapData オブジェクトです。
+      
+      </apiDesc><apiType value="flash.display:BitmapData"/></apiReturn><apiParam><apiItemName>target</apiItemName><apiType value="mx.core:IUIComponent"/><apiDesc>結果の BitmapData でキャプチャするオブジェクトです。  
+     
+      </apiDesc></apiParam></apiOperationDef><apiDesc>
+      ターゲットオブジェクトの BitmapData 表現を作成します。
+     
+      </apiDesc></apiOperationDetail></apiOperation></apiClassifier></apiPackage>

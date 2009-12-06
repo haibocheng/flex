@@ -84,6 +84,11 @@ use namespace mx_internal;  //ListBase and List share selection properties that 
  *  The ListBase class is the base class for all components that support
  *  selection. 
  *
+ *  <p><b>Note: </b>The Spark list-based controls (the Spark ListBase class and its subclasses
+ *  such as ButtonBar, ComboBox, DropDownList, List, and TabBar) do not support the BasicLayout class
+ *  as the value of the <code>layout</code> property. 
+ *  Do not use BasicLayout with the Spark list-based controls.</p>
+ *
  *  @mxml <p>The <code>&lt;s:ListBase&gt;</code> tag inherits all of the tag 
  *  attributes of its superclass and adds the following tag attributes:</p>
  *
@@ -92,7 +97,6 @@ use namespace mx_internal;  //ListBase and List share selection properties that 
  *
  *    <strong>Properties</strong>
  *    arrowKeysWrapFocus="false"
- *    dataProvider="null"
  *    labelField="label"
  *    labelFunction="null"
  *    requireSelection="false"
@@ -144,9 +148,9 @@ public class ListBase extends SkinnableDataContainer
      */
     private static const NO_CARET:int = -1;
     
-	/**
-	 *  @private
-	 */
+    /**
+     *  @private
+     */
     mx_internal static var CUSTOM_SELECTED_ITEM:int = -3;
 
     //--------------------------------------------------------------------------
@@ -186,9 +190,9 @@ public class ListBase extends SkinnableDataContainer
     //
     //--------------------------------------------------------------------------
 
-	/**
-	 *  @private
-	 */
+    /**
+     *  @private
+     */
     mx_internal var allowCustomSelectedItem:Boolean = false;
     
     //--------------------------------------------------------------------------
@@ -255,9 +259,9 @@ public class ListBase extends SkinnableDataContainer
     //  dataProvider
     //----------------------------------
 
-	/**
-	 *  @private
-	 */
+    /**
+     *  @private
+     */
     private var dataProviderChanged:Boolean;
     
     /**
@@ -328,9 +332,9 @@ public class ListBase extends SkinnableDataContainer
     //  caretIndex
     //----------------------------------
     
-	/**
-	 *  @private
-	 */
+    /**
+     *  @private
+     */
     mx_internal var _caretIndex:Number = NO_CARET; 
     
     [Bindable("caretChange")]
@@ -359,14 +363,14 @@ public class ListBase extends SkinnableDataContainer
     //  labelField
     //----------------------------------
 
-	/**
-	 *  @private
-	 */
+    /**
+     *  @private
+     */
     private var _labelField:String = "label";
     
-	/**
-	 *  @private
-	 */
+    /**
+     *  @private
+     */
     private var labelFieldOrFunctionChanged:Boolean; 
 
     /**
@@ -403,9 +407,9 @@ public class ListBase extends SkinnableDataContainer
     //  labelFunction
     //----------------------------------
     
-	/**
-	 *  @private
-	 */
+    /**
+     *  @private
+     */
     private var _labelFunction:Function; 
     
     /**
@@ -467,7 +471,7 @@ public class ListBase extends SkinnableDataContainer
     /**
      *  If <code>true</code>, a data item must always be selected in the control.
      *  If the value is <code>true</code>, the <code>selectedIndex</code> property 
-     *  is always set to a value between 0 and (<code>dataProvider.length</code> - 1), 
+     *  is always set to a value between 0 and (<code>dataProvider.length</code> - 1).
      *
      *  @default false
      *  
@@ -758,7 +762,7 @@ public class ListBase extends SkinnableDataContainer
             
             if (allowCustomSelectedItem && _proposedSelectedIndex == -1)
             {
-				_proposedSelectedIndex = CUSTOM_SELECTED_ITEM;
+                _proposedSelectedIndex = CUSTOM_SELECTED_ITEM;
                 _selectedItem = _pendingSelectedItem;
             }
               
@@ -831,6 +835,7 @@ public class ListBase extends SkinnableDataContainer
     override protected function partAdded(partName:String, instance:Object):void
     {
         super.partAdded(partName, instance);
+
         if (instance == dataGroup)
         {
             // Not your typical delegation, see 'set useVirtualLayout'
@@ -872,7 +877,7 @@ public class ListBase extends SkinnableDataContainer
         if (isItemIndexSelected(itemIndex))
             itemSelected(itemIndex, true);
 
-	if (isItemIndexShowingCaret(itemIndex))
+    if (isItemIndexShowingCaret(itemIndex))
             itemShowingCaret(itemIndex, true);
         
         // Now run through and initialize the renderer correctly.  We 
@@ -995,8 +1000,8 @@ public class ListBase extends SkinnableDataContainer
         
         _caretIndex = value;
         
-		if (caretIndex != CUSTOM_SELECTED_ITEM)
-        	itemShowingCaret(caretIndex, true);
+        if (caretIndex != CUSTOM_SELECTED_ITEM)
+            itemShowingCaret(caretIndex, true);
     }
     
     /**

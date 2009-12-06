@@ -209,7 +209,7 @@ include "../styles/metadata/SelectionFormatTextStyles.as"
  *  you can also create a custom skin for the container that 
  *  includes the Scroller component. </p>
  * 
- *  <p>The IViewport interface define a viewport for the components that implement it.
+ *  <p>The IViewport interface defines a viewport for the components that implement it.
  *  A viewport is a rectangular subset of the area of a container that you want to display, 
  *  rather than displaying the entire container.
  *  The scroll bars control the viewport's <code>horizontalScrollPosition</code> and
@@ -452,7 +452,7 @@ public class Scroller extends SkinnableComponent
      *  set to true to enable scrolling.
      * 
      *  The Scroller does not support rotating the viewport directly.  The viewport's
-     *  contents can be transformed arbitrarily, but the viewport itself can not.
+     *  contents can be transformed arbitrarily, but the viewport itself cannot.
      * </p>
      * 
      *  This property is Bindable.
@@ -856,7 +856,7 @@ public class Scroller extends SkinnableComponent
         if (instance == verticalScrollBar)
             verticalScrollBar.viewport = viewport;
         
-        if (instance == horizontalScrollBar)
+        else if (instance == horizontalScrollBar)
             horizontalScrollBar.viewport = viewport;
     }
     
@@ -870,7 +870,7 @@ public class Scroller extends SkinnableComponent
         if (instance == verticalScrollBar)
             verticalScrollBar.viewport = null;
         
-        if (instance == horizontalScrollBar)
+        else if (instance == horizontalScrollBar)
             horizontalScrollBar.viewport = null;
     }
     
@@ -957,35 +957,12 @@ public class Scroller extends SkinnableComponent
         }
     }
     
-    // To avoid unconditionally linking the RichEditableText class we lazily
-    // get a reference if it's been linked already.  See below.
-    //private static var textDisplayClassLoaded:Boolean = false;
-    //private static var textDisplayClass:Class = null;
-
     private function skin_mouseWheelHandler(event:MouseEvent):void
     {
-        var vp:IViewport = viewport;
-        if (!vp || event.isDefaultPrevented())
+        const vp:IViewport = viewport;
+        if (event.isDefaultPrevented() || !vp || !vp.visible)
             return;
             
-        // If a TextField has the focus, then check to see if it's already
-        // handling mouse wheel events.  For now, we'll make the same 
-        // assumption about RichEditableText.
-        
-        /*var focusOwner:InteractiveObject = getFocus();
-        if ((focusOwner is TextField) && TextField(focusOwner).mouseWheelEnabled)
-            return;    
-
-        if (!textDisplayClassLoaded)
-        {
-            textDisplayClassLoaded = true;
-            const s:String = "spark.components.RichEditableText";
-            if (ApplicationDomain.currentDomain.hasDefinition(s))
-                textDisplayClass = Class(ApplicationDomain.currentDomain.getDefinition(s));
-        }
-        if (textDisplayClass && (focusOwner is textDisplayClass))
-            return;*/
-
         var nSteps:uint = Math.abs(event.delta);
         var navigationUnit:uint;
 
@@ -1005,7 +982,7 @@ public class Scroller extends SkinnableComponent
         }
         else if (horizontalScrollBar && horizontalScrollBar.visible)
         {
-            navigationUnit = (event.delta < 0) ? NavigationUnit.LEFT : NavigationUnit.RIGHT;
+            navigationUnit = (event.delta < 0) ? NavigationUnit.RIGHT : NavigationUnit.LEFT;
             for (var hStep:int = 0; hStep < nSteps; hStep++)
             {
                 var hspDelta:Number = vp.getHorizontalScrollPositionDelta(navigationUnit);

@@ -81,12 +81,12 @@
  La classe SimpleXMLEncoder extrait les objets ActionScript et les code vers XML à l’aide de la sérialisation par défaut.
   
   </apiDesc></apiClassifierDetail><apiConstructor id="mx.rpc.xml:SimpleXMLEncoder:SimpleXMLEncoder"><apiName>SimpleXMLEncoder</apiName><shortdesc>
-      Constructeur.</shortdesc><prolog/><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>myXML</apiItemName><apiType value="flash.xml:XMLDocument"/><apiDesc>
+      Constructeur.</shortdesc><prolog/><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>myXML</apiItemName><apiType value="flash.xml:XMLDocument"/><apiDesc>Objet XML.
      </apiDesc></apiParam></apiConstructorDef><apiDesc>
       Constructeur.
      
       </apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="mx.rpc.xml:SimpleXMLEncoder:encodeValue"><apiName>encodeValue</apiName><shortdesc>
-      Code un objet ActionScript vers XML à l’aide de la sérialisation par défaut.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc> 
+      Code un objet ActionScript vers XML à l’aide de la sérialisation par défaut.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Objet XMLNode.  
      </apiDesc><apiType value="flash.xml:XMLNode"/></apiReturn><apiParam><apiItemName>obj</apiItemName><apiType value="Object"/><apiDesc>Objet ActionScript à coder.
       
       </apiDesc></apiParam><apiParam><apiItemName>qname</apiItemName><apiType value="QName"/><apiDesc>Nom qualifié du nœud enfant.
@@ -112,7 +112,7 @@
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.rpc.xml:SimpleXMLDecoder:getLocalName"><apiName>getLocalName</apiName><shortdesc>
      Retourne le nom local d’un nœud XMLNode.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiDesc>Nom local d’un nœud XMLNode.
       
-      </apiDesc><apiType value="String"/></apiReturn><apiParam><apiItemName>xmlNode</apiItemName><apiType value="flash.xml:XMLNode"/><apiDesc> 
+      </apiDesc><apiType value="String"/></apiReturn><apiParam><apiItemName>xmlNode</apiItemName><apiType value="flash.xml:XMLNode"/><apiDesc>XMLNode.  
      
      </apiDesc></apiParam></apiOperationDef><apiDesc>
      Retourne le nom local d’un nœud XMLNode.
@@ -121,9 +121,9 @@
  Un type ActionScript doit implémenter cette interface lorsqu’il doit instruire un codeur basé sur un schéma XML (par exemple, le client SOAP WebService) avec une définition de type concret à utiliser pendant le codage d’occurrences du type.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiInterface/><apiAccess value="public"/><apiStatic/><apiBaseClassifier/></apiClassifierDef><apiDesc>
  Un type ActionScript doit implémenter cette interface lorsqu’il doit instruire un codeur basé sur un schéma XML (par exemple, le client SOAP WebService) avec une définition de type concret à utiliser pendant le codage d’occurrences du type.
  
- <p><codeph/></p>
+ <p>Les objets ActionScript anonymes peuvent aussi spécifier un type qualifié en enveloppant un objet dans une occurrence de mx.utils.ObjectProxy et en définissant la propriété <codeph>object_proxy::type</codeph> avec l’objet QName approprié.</p>
  
- </apiDesc></apiClassifierDetail><related-links><link href="" invalidHref="mx.utils.ObjectProxy.xml"><linktext/></link></related-links><apiValue id="mx.rpc.xml:IXMLSchemaInstance:mx.rpc.xml:IXMLSchemaInstance:xsiType:get"><apiName>xsiType</apiName><shortdesc>
+ </apiDesc></apiClassifierDetail><related-links><link href="" invalidHref="mx.utils.ObjectProxy.xml"><linktext>mx.utils.ObjectProxy</linktext></link></related-links><apiValue id="mx.rpc.xml:IXMLSchemaInstance:mx.rpc.xml:IXMLSchemaInstance:xsiType:get"><apiName>xsiType</apiName><shortdesc>
      Lorsqu’il code des occurrences ActionScript en tant que XML, le codeur peut nécessiter une définition de type pour l’implémentation concrète quand le type complexType de schéma XML associé est abstrait.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="QName"/></apiValueDef><apiDesc>
      Lorsqu’il code des occurrences ActionScript en tant que XML, le codeur peut nécessiter une définition de type pour l’implémentation concrète quand le type complexType de schéma XML associé est abstrait. Cette propriété permet à une occurrence typée de spécifier l’implémentation concrète d’un objet QName pour représenter le <codeph>xsi:type</codeph>.
      

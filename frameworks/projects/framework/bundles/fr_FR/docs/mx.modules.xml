@@ -65,8 +65,8 @@
       Emplacement du module, spécifié en tant qu’URL.
       
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.modules:Module"><apiName>Module</apiName><shortdesc>
-  Classe de base des modules MXML pouvant être chargés dynamiquement.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>mx.core:LayoutContainer</apiBaseClassifier></apiClassifierDef><apiDesc>
-  Classe de base des modules MXML pouvant être chargés dynamiquement. Vous développez cette classe dans MXML à l’aide de la balise <codeph>&lt;mx:Module></codeph> dans un fichier MXML, comme illustré dans l’exemple suivant :
+  Classe de base des modules MXML pouvant être chargés dynamiquement.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseInterface>mx.modules:IModule</apiBaseInterface><apiBaseClassifier>mx.core:LayoutContainer</apiBaseClassifier></apiClassifierDef><apiDesc>
+  Classe de base des modules MXML pouvant être chargés dynamiquement. Vous pouvez développer cette classe dans MXML à l’aide de la balise <codeph>&lt;mx:Module></codeph> dans un fichier MXML, comme l’illustre l’exemple suivant :
   
   <PRE>
   &lt;?xml version="1.0"?>
@@ -106,7 +106,11 @@
       </apiDesc></apiParam></apiOperationDef><apiDesc>
       Obtient l’interface IModuleInfo associée à une URL particulière. Il n’est pas nécessaire que cette URL soit chargée avec succès, mais la classe ModuleManager retourne un descripteur IModuleInfo unique pour chaque URL unique.
       
-      </apiDesc></apiOperationDetail></apiOperation></apiClassifier><apiClassifier id="mx.modules:ModuleBase"><apiName>ModuleBase</apiName><shortdesc>
+      </apiDesc></apiOperationDetail></apiOperation></apiClassifier><apiClassifier id="mx.modules:IModule"><apiName>IModule</apiName><shortdesc>
+      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiInterface/><apiAccess value="public"/><apiStatic/><apiBaseClassifier/></apiClassifierDef><apiDesc>
+      
+     
+      </apiDesc></apiClassifierDetail><related-links><link href="mx.modules.xml#Module"><linktext>mx.modules.Module</linktext></link></related-links></apiClassifier><apiClassifier id="mx.modules:ModuleBase"><apiName>ModuleBase</apiName><shortdesc>
   Classe de base des modules ActionScript pouvant être chargés dynamiquement.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.events:EventDispatcher</apiBaseClassifier></apiClassifierDef><apiDesc>
   Classe de base des modules ActionScript pouvant être chargés dynamiquement. Si vous écrivez un module ActionScript uniquement, développez cette classe. Si vous écrivez un module MXML à l’aide de la balise <codeph>&lt;mx:Module></codeph> dans un fichier MXML, vous développez à la place la classe Module
   
@@ -141,7 +145,7 @@
      
       </apiDesc></apiParam><apiParam><apiItemName>bytes</apiItemName><apiType value="flash.utils:ByteArray"/><apiData>null</apiData><apiDesc>Objet ByteArray. L’objet ByteArray est supposé contenir les octets d’un fichier SWF représentant un module compilé. L’objet ByteArray peut être obtenu via l’utilisation de la classe URLLoader. Si ce paramètre est spécifié, le module est chargé depuis l’objet ByteArray. Si ce paramètre est nul, le module est chargé depuis l’URL spécifiée dans la propriété url.
      
-      </apiDesc></apiParam><apiParam><apiItemName>moduleFactory</apiItemName><apiOperationClassifier>mx.core:IFlexModuleFactory</apiOperationClassifier><apiData>null</apiData><apiDesc> 
+      </apiDesc></apiParam><apiParam><apiItemName>moduleFactory</apiItemName><apiOperationClassifier>mx.core:IFlexModuleFactory</apiOperationClassifier><apiData>null</apiData><apiDesc>moduleFactory de l’appelant. Une utilisation de la propriété moduleFactory consiste à déterminer le gestionnaire de style parent du module chargé. 
       
       </apiDesc></apiParam></apiOperationDef><apiDesc>
       Demande que le module soit chargé. Si le module est déjà chargé, l’appel ne fait rien. Dans le cas contraire, le module commence à se charger et distribue des événements <codeph>progress</codeph> tout au long du chargement.

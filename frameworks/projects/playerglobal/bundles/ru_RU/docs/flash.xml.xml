@@ -1,0 +1,676 @@
+<?xml version="1.0"?>
+<apiPackage id="flash.xml"><apiName>flash.xml</apiName><apiDetail/><apiClassifier id="flash.xml:XMLNode"><apiName>XMLNode</apiName><shortdesc>
+ Класс XMLNode представляет устаревший объект XML, который использовался в ActionScript 2.0 и был переименован в ActionScript 3.0.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode, XMLNode object, built-in class
+ </keyword></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ Класс XMLNode представляет устаревший объект XML, который использовался в ActionScript 2.0 и в ActionScript 3.0 был переименован. Вместо него в ActionScript 3.0 следует использовать новый <xref href="../../XML.html">XML</xref>-класс верхнего уровня и связанные классы с поддержкой E4X (ECMAScript для XML). Класс XMLNode является обратно совместимым.
+ 
+ </apiDesc><example conref="examples\XMLDocumentExample.as"> В следующем примере показано, как классы XMLDocument и XMLNode используются для разбора и форматирования XML-документа. Вместо загрузки внешнего XML-файла для создания и разбора XML-документа используется класс XML верхнего уровня. 
+<codeblock>
+package {
+    import flash.display.Sprite;
+    import flash.xml.XMLDocument;
+    import flash.xml.XMLNode;
+    import flash.xml.XMLNodeType;
+
+    public class XMLDocumentExample extends Sprite {
+        public function XMLDocumentExample() {
+            var result:XMLDocument = new XMLDocument();
+            result.ignoreWhite = true;
+            result.parseXML(getXMLString());
+
+            var books:Array = parseBooks(result.firstChild);
+            trace("books: \n" + books);
+        }
+
+        private function parseBooks(node:XMLNode):Array {
+            var books:Array = new Array();
+
+            var kids:Array = node.childNodes;
+            for each(var item:XMLNode in kids) {
+                parseBook(item, books);
+            }
+
+            return books;
+        }
+
+        private function parseBook(node:XMLNode, books:Array):void {
+            var item:Book = new Book();
+            item.setPublisher(node.attributes.publisher);
+            item.setName(node.attributes.name);
+            books.push(item);
+        }
+
+        private function getXMLString():String {
+            var list:XML = &lt;books>
+                                &lt;book publisher="Addison-Wesley" name="Design Patterns" />
+                                &lt;book publisher="Addison-Wesley" name="The Pragmatic Programmer" />
+                                &lt;book publisher="Addison-Wesley" name="Test Driven Development" />
+                                &lt;book publisher="Addison-Wesley" name="Refactoring to Patterns" />
+                                &lt;book publisher="O'Reilly Media" name="The Cathedral &amp; the Bazaar" />
+                                &lt;book publisher="O'Reilly Media" name="Unit Test Frameworks" />
+                            &lt;/books>;
+            return list.toXMLString();
+        }
+    }
+
+}
+class Book {
+    private var publisher:String;
+    private var name:String;
+
+    public function setPublisher(publisher:String):void {
+        this.publisher = publisher;
+    }
+
+    public function setName(name:String):void {
+        this.name = name;
+    }
+
+    public function toString():String {
+        return "[Book name: " + name + " publisher: " + publisher + "]\n";
+    }
+}
+</codeblock></example></apiClassifierDetail><related-links><link href="#XML"><linktext>XML</linktext></link><link href="flash.xml.xml#XMLDocument"><linktext>flash.xml.XMLDocument</linktext></link></related-links><apiConstructor id="flash.xml:XMLNode:XMLNode"><apiName>XMLNode</apiName><shortdesc>
+ Создает новый объект XMLNode.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>new XMLNode, new, constructor
+ </keyword></asCustoms></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>type</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiDesc>Тип узла: 1 в случае элемента XML и 3 в случае текстового узла.
+ </apiDesc></apiParam><apiParam><apiItemName>value</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Текст XML разбирается, и в результате создается новый объект XMLNode. 
+ 
+ 
+ 
+ 
+ 
+ </apiDesc></apiParam></apiConstructorDef><apiDesc>
+ Создает новый объект XMLNode. Для создания объекта XMLNode следует использовать конструктор перед вызовом каких-либо методов класса XMLNode.
+ <p><b>Примечание. </b>Пользуйтесь методами <codeph>createElement()</codeph> и <codeph>createTextNode()</codeph> для добавления элементов и текстовых узлов в дерево XML-документа.</p>
+ 
+ </apiDesc></apiConstructorDetail><related-links><link href="flash.xml.xml#XMLDocument/createElement()"><linktext>XMLDocument.createElement()</linktext></link><link href="flash.xml.xml#XMLDocument/createTextNode()"><linktext>XMLDocument.createTextNode()</linktext></link></related-links></apiConstructor><apiOperation id="flash.xml:XMLNode:appendChild"><apiName>appendChild</apiName><shortdesc>
+	  
+	 Добавляет указанный узел к списку нижестоящих узлов объекта XML.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.appendchild, appendchild
+	 </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>node</apiItemName><apiOperationClassifier>flash.xml:XMLNode</apiOperationClassifier><apiDesc>XMLNode, представляющий узел, который необходимо переместить из текущего местоположения в список нижестоящих узлов объекта <codeph>my_xml</codeph>.
+	 
+	 
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	  
+	 Добавляет указанный узел к списку нижестоящих узлов объекта XML. Данный метод применяется непосредственно на узле, на который ссылается параметр <codeph>childNode</codeph>. Он не добавляет копию узла. Если добавляемый узел уже существует в другой древовидной структуре, при добавлении узла в новое местоположение он будет удален из текущего места. Если параметр <codeph>childNode</codeph> относится к узлу, который уже существует в другой древовидной структуре XML, добавляемый нижестоящий узел помещается в новое дерево после того, как он удаляется из текущего вышестоящего узла.
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.xml:XMLNode:cloneNode"><apiName>cloneNode</apiName><shortdesc>
+	  
+	 Формирует и возвращает новый узел XML того же типа, с тем же именем, значением и атрибутами, что и заданный объект XML.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.clonenode, clodenode
+	 </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Объект XMLNode.
+	 
+	 
+	 
+	 </apiDesc><apiOperationClassifier>flash.xml:XMLNode</apiOperationClassifier></apiReturn><apiParam><apiItemName>deep</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiDesc>Логическое значение: при значении <codeph>true</codeph> нижестоящие узлы указанного объекта XML рекурсивно клонируются.
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	  
+	 Формирует и возвращает новый узел XML того же типа, с тем же именем, значением и атрибутами, что и заданный объект XML. При назначении параметру <codeph>deep</codeph> значения <codeph>true</codeph> все нижестоящие узлы рекурсивно клонируются, и в результате получается точная копия дерева документа объекта. 
+	 <p>Клон возвращаемого узла более не связан с деревом клонированного элемента. Следовательно, <codeph>nextSibling</codeph>, <codeph>parentNode</codeph> и <codeph>previousSibling</codeph> принимают значение <codeph>null</codeph>. Если параметр <codeph>deep</codeph> имеет значение <codeph>false</codeph> или узел <codeph>my_xml</codeph> не имеет нижестоящих узлов, <codeph>firstChild</codeph> и <codeph>lastChild</codeph> также принимают значение null.</p>
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.xml:XMLNode:getNamespaceForPrefix"><apiName>getNamespaceForPrefix</apiName><shortdesc>
+	 Возвращает URI пространства имен, связанный с заданным префиксом узла.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><refpath>
+	 </refpath></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Область имен, ассоциируемая с указанным префиксом. 
+	 
+	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn><apiParam><apiItemName>prefix</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Префикс, для которого метод возвращает ассоциируемую область имен.
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Возвращает URI пространства имен, связанный с заданным префиксом узла. Для определения URI <codeph>getPrefixForNamespace()</codeph> производит поиск в иерархии XML от узла (по мере необходимости) и возвращает URI области имен первого определения <codeph>xmlns</codeph> для данного <codeph>префикса</codeph>.
+	 
+	 <p>Если область имен не определена ля указанного префикса, метод возвращает значение <codeph>null</codeph>.</p>
+	 
+	 <p>Если в качестве <codeph>префикса</codeph> указана пустая строка (<codeph>""</codeph>), а для узла определена область имен по умолчанию (как, например, здесь: <codeph>xmlns="http://www.example.com/"</codeph>), метод возвращает URI области имен по умолчанию.
+	 </p>
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.xml.xml#XMLNode/getPrefixForNamespace()"><linktext>XMLNode.getPrefixForNamespace()</linktext></link><link href="flash.xml.xml#XMLNode/namespaceURI"><linktext>XMLNode.namespaceURI</linktext></link></related-links></apiOperation><apiOperation id="flash.xml:XMLNode:getPrefixForNamespace"><apiName>getPrefixForNamespace</apiName><shortdesc>
+	 Возвращает префикс, связанный с заданным URI пространства имен узла.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>
+	 </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Префикс, ассоциируемый с указанной областью имен. 
+	 
+	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn><apiParam><apiItemName>ns</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>URI области имен, для которого метод возвращает ассоциируемый префикс.
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Возвращает префикс, связанный с заданным URI пространства имен узла. Для определения префикса <codeph>getPrefixForNamespace()</codeph> производит поиск в иерархии XML от узла (по мере необходимости) и возвращает префикс первого определения <codeph>xmlns</codeph> с URI области имен, соответствующим <codeph>ns</codeph>.
+	 
+	 <p>Если для данного URI не задан <codeph>xmlns</codeph>, метод возвращает <codeph>null</codeph>. Если данному URI присвоен <codeph>xmlns</codeph>, но с этим присваиванием не ассоциирован префикс, метод возвращает пустую строку (<codeph>""</codeph>).
+	 </p>
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.xml.xml#XMLNode/getNamespaceForPrefix()"><linktext>XMLNode.getNamespaceForPrefix()</linktext></link><link href="flash.xml.xml#XMLNode/namespaceURI"><linktext>XMLNode.namespaceURI</linktext></link></related-links></apiOperation><apiOperation id="flash.xml:XMLNode:hasChildNodes"><apiName>hasChildNodes</apiName><shortdesc>
+	 Показывает, есть ли у заданного объекта XMLNode нижестоящие узлы.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.haschildnodes, haschildnodes, has child nodes
+	 </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Возвращает значение <codeph>true</codeph>, если у указанного объекта XMLNode есть нижестоящие узлы, в остальных случаях возвращает <codeph>false</codeph>.
+	 
+	 </apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 Показывает, есть ли у заданного объекта XMLNode нижестоящие узлы. Данное свойство принимает значение <codeph>true</codeph>, если у объекта XMLNode есть нижестоящие узлы, в остальных случаях – значение <codeph>false</codeph>.
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.xml:XMLNode:insertBefore"><apiName>insertBefore</apiName><shortdesc>
+	 Добавляет новый нижестоящий узел в список дочерних узлов объекта XML перед узлом beforeNode.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.insertbefore, insertbefore, insert before
+	 </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>node</apiItemName><apiOperationClassifier>flash.xml:XMLNode</apiOperationClassifier><apiDesc>Объект XMLNode, который необходимо добавить.
+	 </apiDesc></apiParam><apiParam><apiItemName>before</apiItemName><apiOperationClassifier>flash.xml:XMLNode</apiOperationClassifier><apiDesc>Объект XMLNode до точки добавления <codeph>childNode</codeph>.
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Добавляет новый нижестоящий узел в список нижестоящих узлов объекта XML перед узлом <codeph>beforeNode</codeph>. Если параметр <codeph>beforeNode</codeph> не определен или имеет значение null, узел добавляется с помощью метода <codeph>appendChild()</codeph>. Если <codeph>beforeNode</codeph> не является нижестоящим узлом <codeph>my_xml</codeph>, добавление не выполняется.
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.xml.xml#XMLNode/cloneNode()"><linktext>XMLNode.cloneNode()</linktext></link></related-links></apiOperation><apiOperation id="flash.xml:XMLNode:removeNode"><apiName>removeNode</apiName><shortdesc>
+	 Удаляет заданный объект XML из его вышестоящего объекта.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.removenode, removenode, remove node
+	 </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+	 Удаляет заданный объект XML из его вышестоящего объекта. Также удаляет всех потомков узла.
+	 
+	 
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.xml:XMLNode:toString"><apiName>toString</apiName><shortdesc>
+	 Вычисляет заданный объект XMLNode, формирует текстовое представление структуры XML, включая узел, его нижестоящие объекты и атрибуты, и возвращает результат в виде строки.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.tostring, tostring
+	 </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Строка, представляющая объект XMLNode.
+	 
+	 
+	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 Вычисляет заданный объект XMLNode, формирует текстовое представление структуры XML, включая узел, его нижестоящие объекты и атрибуты, и возвращает результат в виде строки. 
+	 
+	 <p>При работе с объектами XMLDocument верхнего уровня (созданными с помощью конструктора) метод <codeph>XMLDocument.toString()</codeph> выводит объявление документа XML (хранится в свойстве <codeph>XMLDocument.xmlDecl</codeph>) перед объявлением <codeph>DOCTYPE</codeph> документа (хранится в свойстве <codeph>XMLDocument.docTypeDecl</codeph>) и перед текстовым представлением всех узлов XML в объекте. XML-объявление не выводится, если свойство <codeph>XMLDocument.xmlDecl</codeph> имеет значение <codeph>null</codeph>. Декларация <codeph>DOCTYPE</codeph> не выводится, если свойство <codeph>XMLDocument.docTypeDecl</codeph> имеет значение <codeph>null</codeph>.</p>
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.xml.xml#XMLDocument/docTypeDecl"><linktext>XMLDocument.docTypeDecl</linktext></link><link href="flash.xml.xml#XMLDocument/xmlDecl"><linktext>XMLDocument.xmlDecl</linktext></link></related-links></apiOperation><apiValue id="flash.xml:XMLNode:firstChild"><apiName>firstChild</apiName><shortdesc>
+	 Оценивает указанный объект XMLDocument и ссылается на первый нижестоящий узел в списке нижестоящих узлов вышестоящего узла.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.firstchild, first child
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>flash.xml:XMLNode</apiValueClassifier></apiValueDef><apiDesc>
+	 Оценивает указанный объект XMLDocument и ссылается на первый дочерний узел в списке нижестоящих узлов вышестоящего узла. Это свойство принимает значение <codeph>null</codeph>, если для узла не существует нижестоящих узлов. Это свойство не определено (имеет значение <codeph>undefined</codeph>), если узел является текстовым. Это свойство работает в режиме только для чтения, его невозможно использовать для обработки нижестоящих узлов. Для обработки нижестоящих узлов используйте методы <codeph>appendChild()</codeph>, <codeph>insertBefore()</codeph> и <codeph>removeNode()</codeph>.
+	 
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.xml.xml#XMLNode/appendChild()"><linktext>XMLNode.appendChild()</linktext></link><link href="flash.xml.xml#XMLNode/insertBefore()"><linktext>XMLNode.insertBefore()</linktext></link><link href="flash.xml.xml#XMLNode/removeNode()"><linktext>XMLNode.removeNode()</linktext></link></related-links></apiValue><apiValue id="flash.xml:XMLNode:lastChild"><apiName>lastChild</apiName><shortdesc>
+	 Значение XMLNode, ссылающееся на последний узел того же уровня в списке нижестоящих узлов вышестоящего узла.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.lastchild, lastchild, last child
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>flash.xml:XMLNode</apiValueClassifier></apiValueDef><apiDesc>
+	 Значение XMLNode, ссылающееся на последний узел того же уровня в списке нижестоящих узлов вышестоящего узла. Свойство <codeph>XMLNode.lastChild</codeph> принимает значение <codeph>null</codeph>, если для узла не существует нижестоящих узлов. Это свойство невозможно использовать для обработки нижестоящих узлов. Для обработки нижестоящих узлов используйте методы <codeph>appendChild()</codeph>, <codeph>insertBefore()</codeph> и <codeph>removeNode()</codeph>.
+	 
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.xml.xml#XMLNode/appendChild()"><linktext>XMLNode.appendChild()</linktext></link><link href="flash.xml.xml#XMLNode/insertBefore()"><linktext>XMLNode.insertBefore()</linktext></link><link href="flash.xml.xml#XMLNode/removeNode()"><linktext>XMLNode.removeNode()</linktext></link></related-links></apiValue><apiValue id="flash.xml:XMLNode:nextSibling"><apiName>nextSibling</apiName><shortdesc>
+	 Значение XMLNode, ссылающееся на следующий родственный элемент того же уровня в списке нижестоящих узлов вышестоящего узла.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.nextsibling, next sibling
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>flash.xml:XMLNode</apiValueClassifier></apiValueDef><apiDesc>
+	 Значение XMLNode, ссылающееся на следующий родственный элемент того же уровня в списке нижестоящих узлов вышестоящего узла. Это свойство принимает значение <codeph>null</codeph>, если для узла не существует следующего родственного элемента того же уровня. Это свойство невозможно использовать для обработки нижестоящих узлов. Для обработки нижестоящих узлов используйте методы <codeph>appendChild()</codeph>, <codeph>insertBefore()</codeph> и <codeph>removeNode()</codeph>.
+	 
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.xml.xml#XMLNode/firstChild"><linktext>XMLNode.firstChild</linktext></link><link href="flash.xml.xml#XMLNode/appendChild()"><linktext>XMLNode.appendChild()</linktext></link><link href="flash.xml.xml#XMLNode/insertBefore()"><linktext>XMLNode.insertBefore()</linktext></link><link href="flash.xml.xml#XMLNode/removeNode()"><linktext>XMLNode.removeNode()</linktext></link></related-links></apiValue><apiValue id="flash.xml:XMLNode:nodeName"><apiName>nodeName</apiName><shortdesc>
+	 Строковое представление имени узла объекта XMLNode.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.nodename, node name
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 Строковое представление имени узла объекта XMLNode. Если объект XMLNode является элементом XML (<codeph>nodeType == 1</codeph>), <codeph>nodeName</codeph> – это имя метки, представляющей узел в XML-файле. Например, <codeph>TITLE</codeph> – это параметр <codeph>nodeName</codeph> метки <codeph>TITLE</codeph> в формате HTML. Если объект XMLNode является текстовым узлом (<codeph>nodeType == 3</codeph>), то nodeName принимает значение <codeph>null</codeph>.
+	 
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.xml.xml#XMLNode/nodeType"><linktext>XMLNode.nodeType</linktext></link></related-links></apiValue><apiValue id="flash.xml:XMLNode:nodeType"><apiName>nodeType</apiName><shortdesc>
+	 Значение константы nodeType: XMLNodeType.ELEMENT_NODE в случае элемента XML или XMLNodeType.TEXT_NODE в случае текстового узла.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XML.nodetype, node type
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>uint</apiValueClassifier></apiValueDef><apiDesc>
+	 Значение константы <codeph>nodeType</codeph>: <codeph>XMLNodeType.ELEMENT_NODE</codeph> в случае элемента XML или <codeph>XMLNodeType.TEXT_NODE</codeph> в случае текстового узла. 
+	 <p><codeph>nodeType</codeph> является числовой величиной, которая определена списком NodeType, приведенным в рекомендации W3C DOM для Уровня 1: <xref href="http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html" scope="external">http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html</xref>. В следующей таблице приведены значения:</p>
+	 <p><adobetable><row><entry>4</entry><entry>CDATA_SECTION_NODE</entry></row>
+	 
+	 
+	 
+	 
+	 <tgroup cols="2"><thead><row><entry align="left">Целое значение</entry><entry align="left">Определенная константа</entry></row></thead><tbody><row><entry>1</entry><entry>ELEMENT_NODE</entry></row><row><entry>3</entry><entry>TEXT_NODE</entry></row><row><entry>5</entry><entry>ENTITY_REFERENCE_NODE</entry></row><row><entry>7</entry><entry>PROCESSING_INSTRUCTION_NODE</entry></row><row><entry>9</entry><entry>DOCUMENT_NODE</entry></row><row><entry>11</entry><entry>DOCUMENT_FRAGMENT_NODE</entry></row></tbody></tgroup></adobetable></p>
+	 <p>Встроенный в программу Flash Player класс XMLNode поддерживает только значения <codeph>XMLNodeType.ELEMENT_NODE</codeph> и <codeph>XMLNodeType.TEXT_NODE</codeph>.</p>
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.xml.xml#XMLNodeType/TEXT_NODE"><linktext>XMLNodeType.TEXT_NODE</linktext></link><link href="flash.xml.xml#XMLNodeType/ELEMENT_NODE"><linktext>XMLNodeType.ELEMENT_NODE</linktext></link></related-links></apiValue><apiValue id="flash.xml:XMLNode:nodeValue"><apiName>nodeValue</apiName><shortdesc>
+	 Значение узла объекта XMLDocument.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.nodevalue, nodevalue, node value
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 Значение узла объекта XMLDocument. Если объект XMLDocument является текстовым узлом, значение <codeph>nodeType</codeph> – 3, а <codeph>nodeValue</codeph> – это текст узла. Если объект XMLDocument является элементом XML (<codeph>nodeType</codeph> имеет значение 1), то <codeph>nodeValue</codeph> принимает значение <codeph>null</codeph> и работает в режиме только для чтения.
+	 
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.xml.xml#XMLNode/nodeType"><linktext>XMLNode.nodeType</linktext></link></related-links></apiValue><apiValue id="flash.xml:XMLNode:parentNode"><apiName>parentNode</apiName><shortdesc>
+	 Значение XMLNode, которое ссылается на вышестоящий узел указанного объекта XML, либо возвращает значение null при отсутствии вышестоящего узла для данного узла.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.parentnode, parentnode, parent node
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>flash.xml:XMLNode</apiValueClassifier></apiValueDef><apiDesc>
+	 Значение XMLNode, которое ссылается на вышестоящий узел указанного объекта XML, либо возвращает значение <codeph>null</codeph> при отсутствии вышестоящего узла для данного узла. Это свойство работает в режиме только для чтения, его невозможно использовать для обработки нижестоящих узлов. Для обработки нижестоящих узлов используйте методы <codeph>appendChild()</codeph>, <codeph>insertBefore()</codeph> и <codeph>removeNode()</codeph>.
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.xml.xml#XMLNode/appendChild()"><linktext>XMLNode.appendChild()</linktext></link><link href="flash.xml.xml#XMLNode/insertBefore()"><linktext>XMLNode.insertBefore()</linktext></link><link href="flash.xml.xml#XMLNode/removeNode()"><linktext>XMLNode.removeNode()</linktext></link></related-links></apiValue><apiValue id="flash.xml:XMLNode:previousSibling"><apiName>previousSibling</apiName><shortdesc>
+	 Значение XMLNode, ссылающееся на предыдущий родственный элемент того же уровня в списке нижестоящих узлов вышестоящего узла.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.previousSibling, previousSibling
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>flash.xml:XMLNode</apiValueClassifier></apiValueDef><apiDesc>
+	 Значение XMLNode, ссылающееся на предыдущий родственный элемент того же уровня в списке нижестоящих узлов вышестоящего узла. Свойство имеет значение null, если для узла не существует предыдущего родственного элемента того же уровня. Это свойство невозможно использовать для обработки нижестоящих узлов. Для обработки нижестоящих узлов используйте методы <codeph>appendChild()</codeph>, <codeph>insertBefore()</codeph> и <codeph>removeNode()</codeph>.
+	 
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.xml.xml#XMLNode/lastChild"><linktext>XMLNode.lastChild</linktext></link><link href="flash.xml.xml#XMLNode/appendChild()"><linktext>XMLNode.appendChild()</linktext></link><link href="flash.xml.xml#XMLNode/insertBefore()"><linktext>XMLNode.insertBefore()</linktext></link><link href="flash.xml.xml#XMLNode/removeNode()"><linktext>XMLNode.removeNode()</linktext></link></related-links></apiValue><apiValue id="flash.xml:XMLNode:attributes:get"><apiName>attributes</apiName><shortdesc>
+	 Объект, содержащий все атрибуты заданного экземпляра XMLNode.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.attributes, attributes
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Object</apiValueClassifier></apiValueDef><apiDesc>
+	 Объект, содержащий все атрибуты заданного экземпляра XMLNode. Объект XMLNode.attributes содержит по одной переменной для каждого атрибута экземпляра XMLNode. Так как эти переменные определены как часть объекта, они обычно принимаются за свойства объекта. Значение каждого атрибута хранится в соответствующем свойстве в виде строки. Например, если существует атрибут с именем <codeph>color</codeph>, значение этого атрибута можно получить, задав имя свойства <codeph>color</codeph>, как показано в следующем примере: 
+	 <pre>
+	 var myColor:String = doc.firstChild.attributes.color
+	 </pre>
+	 
+	 
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.xml:XMLNode:childNodes:get"><apiName>childNodes</apiName><shortdesc>
+	 Массив нижестоящих узлов указанного объекта XMLNode.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.childnodes, childnodes
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Array</apiValueClassifier></apiValueDef><apiDesc>
+	 Массив нижестоящих узлов указанного объекта XMLNode. Каждый элемент массива является ссылкой на объект XMLNode, которым представлен нижестоящий узел. Это свойство типа только для чтения, и его невозможно использовать для обработки нижестоящих узлов. Для обработки нижестоящих узлов пользуйтесь методами <codeph>appendChild()</codeph>, <codeph>insertBefore()</codeph> и <codeph>removeNode()</codeph>. 
+	 
+	 <p>Данное свойство не определено для текстовых узлов (<codeph>nodeType == 3</codeph>).</p>
+	 
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.xml.xml#XMLNode/nodeType"><linktext>XMLNode.nodeType</linktext></link><link href="flash.xml.xml#XMLNode/appendChild()"><linktext>XMLNode.appendChild()</linktext></link><link href="flash.xml.xml#XMLNode/insertBefore()"><linktext>XMLNode.insertBefore()</linktext></link><link href="flash.xml.xml#XMLNode/removeNode()"><linktext>XMLNode.removeNode()</linktext></link></related-links></apiValue><apiValue id="flash.xml:XMLNode:localName:get"><apiName>localName</apiName><shortdesc>
+	 Локальная часть имени узла XML.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 Локальная часть имени узла XML. Это имя элемента без префикса области имен. Например, у узла <codeph>&lt;contact:mailbox/>ivan@example.ru&lt;/contact:mailbox></codeph> есть локальное имя mailbox и префикс contact, которые составляют полное имя элемента contact.mailbox.
+	 
+	 <p>Префикс области имен доступен через свойство <codeph>prefix</codeph> объекта узла XML. Свойство <codeph>nodeName</codeph> возвращает полное имя (включая префикс и локальное имя).</p>
+	 
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.xml:XMLNode:namespaceURI:get"><apiName>namespaceURI</apiName><shortdesc>
+	 Если у узла XML есть префикс, namespaceURI является значением объявления xmlns для этого префикса (URI), который обычно называют URI области имен.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier><apiTipTexts><apiTipText>URI области имен, к которому относится префикс узла XML. 
+	 
+	 </apiTipText></apiTipTexts></apiValueDef><apiDesc>
+	 Если у узла XML есть префикс, <codeph>namespaceURI</codeph> является значением объявления <codeph>xmlns</codeph> для этого префикса (URI), который обычно называют URI области имен. Объявление <codeph>xmlns</codeph> содержится в текущем узле или в узле, расположенном выше в иерархии XML. 
+	 
+	 <p>Если у узла XML нет префикса, значение свойства <codeph>namespaceURI</codeph> зависит от того, определена ли области имен по умолчанию (как в примере <codeph>xmlns="http://www.example.com/"</codeph>). Если существует область имен по умолчанию, значение свойства <codeph>namespaceURI</codeph> является значением области имен по умолчанию. Если области имен по умолчанию не существует, свойство <codeph>namespaceURI</codeph> для этого узла будет пустой строкой (<codeph>""</codeph>).</p>
+	 
+	 <p>Можно использовать метод <codeph>getNamespaceForPrefix()</codeph> для определения области имен, ассоциируемой с конкретным префиксом. Свойство <codeph>namespaceURI</codeph> возвращает префикс, ассоциируемый с именем узла.</p>
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.xml.xml#XMLNode/getNamespaceForPrefix()"><linktext>getNamespaceForPrefix()</linktext></link><link href="flash.xml.xml#XMLNode/getPrefixForNamespace()"><linktext>getPrefixForNamespace()</linktext></link></related-links></apiValue><apiValue id="flash.xml:XMLNode:prefix:get"><apiName>prefix</apiName><shortdesc>
+	 Префикс имени узла XML.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 Префикс имени узла XML. Например, узел <codeph>&lt;contact:mailbox/>ivan@example.ru&lt;/contact:mailbox></codeph>, префикс contact и локальное имя mailbox, которые составляют полное имя элемента contact.mailbox.
+	 
+	 <p>Свойство <codeph>nodeName</codeph> объекта узла XML возвращает полное имя (включая префикс и локальное имя). Локальная часть имени элемента доступна через свойство <codeph>localName</codeph>. </p>
+	 
+	 
+	 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.xml:XMLNodeType"><apiName>XMLNodeType</apiName><shortdesc>
+ Класс XMLNodeType содержит константы, используемые с XMLNode.nodeType.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ Класс XMLNodeType содержит константы, используемые с <codeph>XMLNode.nodeType</codeph>. Значения определяются списком NodeType, приведенным в рекомендации W3C DOM для Уровня 1: <xref href="http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html" scope="external">http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html</xref>
+ 
+ </apiDesc></apiClassifierDetail><related-links><link href="flash.xml.xml#XMLNode/nodeType"><linktext>XMLNode.nodeType</linktext></link></related-links><apiValue id="flash.xml:XMLNodeType:ELEMENT_NODE"><apiName>ELEMENT_NODE</apiName><shortdesc>
+ 	 Показывает, что узел является элементом.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>1</apiData><apiValueClassifier>uint</apiValueClassifier></apiValueDef><apiDesc>
+ 	 Показывает, что узел является элементом. Эта константа используется с <codeph>XMLNode.nodeType</codeph>. Значения определяются списком NodeType, приведенным в рекомендации W3C DOM для Уровня 1: <xref href="http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html" scope="external">http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html</xref>
+ 	 
+ 	 </apiDesc></apiValueDetail><related-links><link href="flash.xml.xml#XMLNode/nodeType"><linktext>XMLNode.nodeType</linktext></link></related-links></apiValue><apiValue id="flash.xml:XMLNodeType:TEXT_NODE"><apiName>TEXT_NODE</apiName><shortdesc>
+	 Показывает, что узел является текстовым узлом.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>3</apiData><apiValueClassifier>uint</apiValueClassifier></apiValueDef><apiDesc>
+	 Показывает, что узел является текстовым узлом. Эта константа используется с <codeph>XMLNode.nodeType</codeph>. Значения определяются списком NodeType, приведенным в рекомендации W3C DOM для Уровня 1: <xref href="http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html" scope="external">http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html</xref>
+ 	 
+ 	 </apiDesc></apiValueDetail><related-links><link href="flash.xml.xml#XMLNode/nodeType"><linktext>XMLNode.nodeType</linktext></link></related-links></apiValue></apiClassifier><apiClassifier id="flash.xml:XMLDocument"><apiName>XMLDocument</apiName><shortdesc>
+ Класс XMLDocument представляет устаревший объект XML, который использовался в ActionScript 2.0.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.xml:XMLNode</apiBaseClassifier></apiClassifierDef><apiDesc>
+ Класс XMLDocument представляет устаревший объект XML, который использовался в ActionScript 2.0. В ActionScript 3.0 он был переименован в XMLDocument во избежание конфликтов имен с новым XML-классом ActionScript 3.0. В ActionScript 3.0 рекомендуется использовать новый <xref href="../../XML.html">XML</xref>-класс и связанные классы, поддерживающие E4X (ECMAScript для XML).
+ 
+ <p>Класс XMLDocument, как и XMLNode и XMLNodeType, является обратно совместимым. Функциональность для загрузки XML-документов теперь содержится в классе URLLoader.</p>
+ 
+ </apiDesc><example conref="examples\XMLDocumentExample.as"> В следующем примере показано, как классы XMLDocument и XMLNode используются для разбора и форматирования XML-документа. Вместо загрузки внешнего XML-файла для создания и разбора XML-документа используется класс XML верхнего уровня. 
+<codeblock>
+package {
+    import flash.display.Sprite;
+    import flash.xml.XMLDocument;
+    import flash.xml.XMLNode;
+    import flash.xml.XMLNodeType;
+
+    public class XMLDocumentExample extends Sprite {
+        public function XMLDocumentExample() {
+            var result:XMLDocument = new XMLDocument();
+            result.ignoreWhite = true;
+            result.parseXML(getXMLString());
+
+            var books:Array = parseBooks(result.firstChild);
+            trace("books: \n" + books);
+        }
+
+        private function parseBooks(node:XMLNode):Array {
+            var books:Array = new Array();
+
+            var kids:Array = node.childNodes;
+            for each(var item:XMLNode in kids) {
+                parseBook(item, books);
+            }
+
+            return books;
+        }
+
+        private function parseBook(node:XMLNode, books:Array):void {
+            var item:Book = new Book();
+            item.setPublisher(node.attributes.publisher);
+            item.setName(node.attributes.name);
+            books.push(item);
+        }
+
+        private function getXMLString():String {
+            var list:XML = &lt;books>
+                                &lt;book publisher="Addison-Wesley" name="Design Patterns" />
+                                &lt;book publisher="Addison-Wesley" name="The Pragmatic Programmer" />
+                                &lt;book publisher="Addison-Wesley" name="Test Driven Development" />
+                                &lt;book publisher="Addison-Wesley" name="Refactoring to Patterns" />
+                                &lt;book publisher="O'Reilly Media" name="The Cathedral &amp; the Bazaar" />
+                                &lt;book publisher="O'Reilly Media" name="Unit Test Frameworks" />
+                            &lt;/books>;
+            return list.toXMLString();
+        }
+    }
+
+}
+class Book {
+    private var publisher:String;
+    private var name:String;
+
+    public function setPublisher(publisher:String):void {
+        this.publisher = publisher;
+    }
+
+    public function setName(name:String):void {
+        this.name = name;
+    }
+
+    public function toString():String {
+        return "[Book name: " + name + " publisher: " + publisher + "]\n";
+    }
+}
+</codeblock></example></apiClassifierDetail><related-links><link href="flash.net.xml#URLLoader"><linktext>flash.net.URLLoader</linktext></link><link href="#XML"><linktext>Класс XML</linktext></link></related-links><apiConstructor id="flash.xml:XMLDocument:XMLDocument"><apiName>XMLDocument</apiName><shortdesc>
+	 Создает новый объект XMLDocument.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><maelexample>The following example creates a new, empty XMLDocument object:
+	 <listing>
+	 var my_xml:XML = new XML();
+	 </listing>
+	 <p>The following example creates an XML object by parsing the XML text specified in the <code>source</code> parameter, and populates the newly created XML object with the resulting XML document tree:</p>
+	 <listing>
+	 var other_xml:XML = new XML("&lt;state name=\"California\">&lt;city>San Francisco&lt;/city>&lt;/state>");
+	 </listing>
+	 
+	 </maelexample></asCustoms></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>source</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData>null</apiData><apiDesc>Текст XML разбирается, и в результате создается новый объект XMLDocument. 
+	 
+	 </apiDesc></apiParam></apiConstructorDef><apiDesc>
+	 Создает новый объект XMLDocument. Для создания объекта XMLDocument следует использовать конструктор, прежде чем вызывать какие-либо методы класса XMLDocument.
+	 <p><b>Примечание. </b>Используйте методы <codeph>createElement()</codeph> и <codeph>createTextNode()</codeph> для добавления элементов и текстовых узлов в дерево XML-документа.</p>
+	 
+	 </apiDesc></apiConstructorDetail><related-links><link href="flash.xml.xml#XMLDocument/createElement()"><linktext>XMLDocument.createElement()</linktext></link><link href="flash.xml.xml#XMLDocument/createTextNode()"><linktext>XMLDocument.createTextNode()</linktext></link></related-links></apiConstructor><apiOperation id="flash.xml:XMLDocument:createElement"><apiName>createElement</apiName><shortdesc>
+	 Создает новый объект XMLNode с именем, заданным параметром.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><maelexample>The following example creates three XML nodes using the <code>createElement()</code> method:
+	 <listing>
+	 // create an XML document
+	 var doc:XML = new XML();
+	 
+	 // create three XML nodes using createElement()
+	 var element1:XMLNode = doc.createElement("element1");
+	 var element2:XMLNode = doc.createElement("element2");
+	 var element3:XMLNode = doc.createElement("element3");
+	 
+	 // place the new nodes into the XML tree
+	 doc.appendChild(element1);
+	 element1.appendChild(element2);
+	 element1.appendChild(element3);
+	 
+	 trace(doc);
+	 // output: &lt;element1>&lt;element2 />&lt;element3 />&lt;/element1>
+	 </listing>
+	 
+	 </maelexample></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Объект XMLNode.
+	 
+	 </apiDesc><apiOperationClassifier>flash.xml:XMLNode</apiOperationClassifier></apiReturn><apiParam><apiItemName>name</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Имя метки создаваемого элемента XMLDocument.
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Создает новый объект XMLNode с именем, заданным параметром. Для нового узла изначально не существует вышестоящих и нижестоящих узлов и родственных элементов того же уровня. Метод возвращает ссылку на вновь созданный объект XMLNode, которым представлен элемент. Этот метод и метод <codeph>XMLDocument.createTextNode()</codeph> являются методами-конструкторами для создания узлов объекта XMLDocument.
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.xml.xml#XMLDocument/createTextNode()"><linktext>XMLDocument.createTextNode()</linktext></link></related-links></apiOperation><apiOperation id="flash.xml:XMLDocument:createTextNode"><apiName>createTextNode</apiName><shortdesc>
+	 Создает новый текстовый узел XML с заданным текстом.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><maelexample>The following example creates two XML text nodes using the <code>createTextNode()</code> method, and places them into existing XML nodes:
+	 <listing>
+	 // create an XML document
+	 var doc:XML = new XML();
+	 
+	 // create three XML nodes using createElement()
+	 var element1:XMLNode = doc.createElement("element1");
+	 var element2:XMLNode = doc.createElement("element2");
+	 var element3:XMLNode = doc.createElement("element3");
+	 
+	 // place the new nodes into the XML tree
+	 doc.appendChild(element1);
+	 element1.appendChild(element2);
+	 element1.appendChild(element3);
+	 
+	 // create two XML text nodes using createTextNode()
+	 var textNode1:XMLNode = doc.createTextNode("textNode1 String value");
+	 var textNode2:XMLNode = doc.createTextNode("textNode2 String value");
+	 
+	 // place the new nodes into the XML tree
+	 element2.appendChild(textNode1);
+	 element3.appendChild(textNode2);
+	 
+	 trace(doc);
+	 // output (with line breaks added between tags):
+	 // &lt;element1>
+	 //    &lt;element2>textNode1 String value&lt;/element2>
+	 //    &lt;element3>textNode2 String value&lt;/element3>
+	 // &lt;/element1>
+	 </listing>
+	 
+	 
+	 </maelexample></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Объект XMLNode.
+	 
+	 </apiDesc><apiOperationClassifier>flash.xml:XMLNode</apiOperationClassifier></apiReturn><apiParam><apiItemName>text</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Текст для создания нового текстового узла.
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Создает новый текстовый узел XML с заданным текстом. Для нового узла изначально не существует вышестоящих узлов, а у текстового узла не может быть нижестоящих узлов или родственных элементов того же уровня. Этот метод возвращает ссылку на объект XMLDocument, которым представлен текстовый узел. Этот метод и метод <codeph>XMLDocument.createElement()</codeph> являются методами-конструкторами для создания узлов объекта XMLDocument.
+	 
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.xml.xml#XMLDocument/createElement()"><linktext>XMLDocument.createElement()</linktext></link></related-links></apiOperation><apiOperation id="flash.xml:XMLDocument:parseXML"><apiName>parseXML</apiName><shortdesc>
+	 Разбирает текст XML, указанный в параметре value, и формирует в объекте XMLDocument получившееся дерево XML.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><maelexample>The following example creates and parses an XML packet:
+	 <listing>
+	 var xml_str:String = "&lt;state name=\"California\">
+	 &lt;city>San Francisco&lt;/city>&lt;/state>"
+	 
+	 // defining the XML source within the XML constructor:
+	 var my1_xml:XML = new XML(xml_str);
+	 trace(my1_xml.firstChild.attributes.name); // output: California
+	 
+	 // defining the XML source using the XML.parseXML method:
+	 var my2_xml:XML = new XML();
+	 my2_xml.parseXML(xml_str);
+	 trace(my2_xml.firstChild.attributes.name); // output: California
+	 </listing>
+	 
+	 </maelexample></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>source</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>Текст XML для разбора и передачи указанному объекту XMLDocument.
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 Разбирает текст XML, указанный в параметре <codeph>value</codeph>, и формирует в объекте XMLDocument получившееся дерево XML. Все существующие деревья в объекте XMLDocument отбрасываются.
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.xml:XMLDocument:toString"><apiName>toString</apiName><shortdesc>
+	 Возвращает строковое представление объекта XML.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiDesc>Строковое представление объекта XML.
+ 	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 Возвращает строковое представление объекта XML.
+	 
+ 	 </apiDesc></apiOperationDetail></apiOperation><apiValue id="flash.xml:XMLDocument:docTypeDecl"><apiName>docTypeDecl</apiName><shortdesc>
+	 Показывает сведения об объявлении DOCTYPE для XML-документа.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><maelexample>The following example uses the <code>XML.docTypeDecl</code> property to set the <code>DOCTYPE</code> declaration for an XML object:
+	 <listing>
+	 <code><em>my_xml</em></code>.<code>docTypeDecl = "&lt;!DOCTYPE greeting SYSTEM \"hello.dtd\">";</code>
+	 </listing>
+	 </maelexample></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>null</apiData><apiValueClassifier>Object</apiValueClassifier></apiValueDef><apiDesc>
+	 Показывает сведения об объявлении <codeph>DOCTYPE</codeph> для XML-документа. После разбора текста XML и преобразования его в объект XMLDocument свойство <codeph>XMLDocument.docTypeDecl</codeph> объекта XMLDocument получает текст объявления <codeph>DOCTYPE</codeph> XML-документа (например, <codeph>&lt;!DOCTYPE</codeph> <codeph> greeting SYSTEM "hello.dtd"></codeph>). Это свойство задается с помощью строкового представления объявления <codeph>DOCTYPE</codeph>, а не с помощью объекта XMLNode.
+	 <p>Синтаксический анализатор XML, встречающийся в предыдущих версиях ActionScript, не проверяет достоверность документа. Объявление <codeph>DOCTYPE</codeph> считывается анализатором и сохраняется в свойстве <codeph>XMLDocument.docTypeDecl</codeph>, но проверка описания типа документа (DTD) при этом не выполняется.</p>
+	 <p>Если в ходе разбора не удается обнаружить объявление <codeph>DOCTYPE</codeph>, свойство <codeph>XMLDocument.docTypeDecl</codeph> принимает значение <codeph>null</codeph>. Метод <codeph>XML.toString()</codeph> выводит содержимое <codeph>XML.docTypeDecl</codeph> сразу после XML-объявления, сохраняемого в <codeph>XML.xmlDecl</codeph>, и перед любым другим текстом в объекте XML. Если <codeph>XMLDocument.docTypeDecl</codeph> имеет значение null, объявление <codeph>DOCTYPE</codeph> не выводится.</p>
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.xml:XMLDocument:idMap"><apiName>idMap</apiName><shortdesc>
+	 Объект, содержащий узлы XML, которым присвоен атрибут id.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><maelexample>Create a text file named "idMapTest.xml" containing the following text:
+	 
+	 <listing>&lt;?xml version="1.0"?> 
+	 &lt;doc xml:base="http://example.org/today/" xmlns:xlink="http://www.w3.org/1999/xlink"> 
+	   &lt;head> 
+	     &lt;title>Virtual Library&lt;/title> 
+	   &lt;/head> 
+	   &lt;body> 
+	     &lt;paragraph id="linkP1">See &lt;link xlink:type="simple" xlink:href="new.xml">what's 
+	       new&lt;/link>!&lt;/paragraph> 
+	     &lt;paragraph>Check out the hot picks of the day!&lt;/paragraph> 
+	     &lt;olist xml:base="/hotpicks/"> 
+	       &lt;item> 
+	         &lt;link id="foo" xlink:type="simple" xlink:href="pick1.xml">Hot Pick #1&lt;/link> 
+	       &lt;/item> 
+	       &lt;item> 
+	         &lt;link id="bar" xlink:type="simple" xlink:href="pick2.xml">Hot Pick #2&lt;/link> 
+	       &lt;/item> 
+	       &lt;item> 
+	         &lt;link xlink:type="simple" xlink:href="pick3.xml">Hot Pick #3&lt;/link> 
+	       &lt;/item> 
+	     &lt;/olist>
+	   &lt;/body> 
+	  &lt;/doc>
+	 </listing>
+	 
+	 <p>Then create a SWF file in the same directory as the XML file. Include the following
+	 script in the SWF:</p>
+	 
+	 <listing>
+	 var readXML = new XMLDocument();
+	 readXML.load("idMapTest.xml");
+	 readXML.onLoad = function(success) {
+	 	myXML = new XMLDocument();
+	 	myXML.parseXML(readXML);	
+	 	for (var x in myXML.idMap){
+	 		 trace('idMap.' + x + " = " + newline + myXML.idMap[x]);
+	 		 trace('____________' + newline);
+	 	}
+	 }
+	 </listing>
+	 
+	 <p>When you test the SWF file, the following output is generated:</p>
+	 
+	 <listing>
+	 idMap.bar = 
+	 &lt;link id="bar" xlink:type="simple" xlink:href="pick2.xml">Hot Pick #2&lt;/link>
+	 ____________
+	 
+	 idMap.foo = 
+	 &lt;link id="foo" xlink:type="simple" xlink:href="pick1.xml">Hot Pick #1&lt;/link>
+	 ____________
+	 
+	 idMap.linkP1 = 
+	 &lt;paragraph id="linkP1">See &lt;link xlink:type="simple" xlink:href="new.xml">what's 
+	 
+	       new&lt;/link>!&lt;/paragraph>
+	 ____________
+	 </listing>
+	 
+	 </maelexample></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>unknown</apiData><apiValueClassifier>Object</apiValueClassifier></apiValueDef><apiDesc>
+	 Объект, содержащий узлы XML, которым присвоен атрибут <codeph>id</codeph>. Имена свойств объекта (каждое из которых содержит узел) совпадают со значениями атрибутов <codeph>id</codeph>.
+	 
+	 <p>Рассмотрим следующий объект XMLDocument:</p>
+	 
+	 <codeblock>
+	 &lt;employee id='41'>
+	 	&lt;name>
+	 		John Doe
+	 	&lt;/name>
+	 	&lt;address>
+	 		601 Townsend St.
+	 	&lt;/address>
+	 &lt;/employee>
+	 
+	 &lt;employee id='42'>
+	 	&lt;name>
+	 		Jane Q. Public
+	 	&lt;/name>
+	 &lt;/employee>
+	 &lt;department id="IT">
+	 	Information Technology
+	 &lt;/department>
+	 </codeblock>
+	 
+	 <p>В данном примере свойство <codeph>idMap</codeph> объекта XMLDocument является объектом с тремя свойствами: <codeph>41</codeph>, <codeph>42</codeph> и <codeph>IT</codeph>. Каждое из этих свойств является объектом XMLNode с подходящим значением <codeph>id</codeph>. Например, свойство <codeph>IT</codeph> объекта <codeph>idMap</codeph> является этим узлом:</p> 
+	 
+	 <codeblock>
+	 &lt;department id="IT">
+	 	Information Technology
+	 &lt;/department>
+	 </codeblock>
+	 
+	 <p>Для создания экземпляра свойства <codeph>idMap</codeph> к объекту XMLDocument необходимо применить метод <codeph>parseXML()</codeph>.</p>
+	 
+	 <p>Если объектов XMLNode с одинаковым значением <codeph>id</codeph> более одного, подходящим свойством объекта <codeph>idNode</codeph> будет это же свойство последнего разобранного узла. Например:</p>
+	 
+	 <codeblock>
+	 var x1:XML = new XMLDocument("&lt;a id='1'>&lt;b id='2' />&lt;c id='1' />&lt;/a>");
+	 x2 = new XMLDocument();
+	 x2.parseXML(x1);
+	 trace(x2.idMap['1']);
+	 </codeblock>
+	 
+	 Это выведет узел <codeph>&lt;c></codeph>: 
+	 
+	 <codeblock>
+	 <codeph>&lt;c id='1' /></codeph>
+	 </codeblock>
+	 
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.xml:XMLDocument:ignoreWhite"><apiName>ignoreWhite</apiName><shortdesc>
+	 Если установлено значение true, текстовые узлы, содержащие только пробелы, при разборе игнорируются.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><maelexample>The following example loads an XML file with a text node that contains only white space; the <code>foyer</code> tag comprises fourteen space characters. To run this example, create a text file named <em>flooring.xml</em>, and copy the following tags into it:
+	 <listing>
+	 &lt;house>
+	    &lt;kitchen>   ceramic tile   &lt;/kitchen>
+	    &lt;bathroom>linoleum&lt;/bathroom>
+	    &lt;foyer>              &lt;/foyer>
+	 &lt;/house>
+	 </listing>
+	 <p>Create a new Flash document named <em>flooring.fla</em> and save it to the same directory as the XML file. Place the following code into the main Timeline:</p>
+	 <listing>
+	 // create a new XML object
+	 var flooring:XML = new XML();
+	 
+	 // set the ignoreWhite property to true (default value is false)
+	 flooring.ignoreWhite = true;
+	 
+	 // After loading is complete, trace the XML object
+	 flooring.onLoad = function(success:Boolean) {
+	   trace(flooring);
+	 }
+	 
+	 // load the XML into the flooring object
+	 flooring.load("flooring.xml");
+	 
+	 // output (line breaks added for clarity):
+	 &lt;house>
+	    &lt;kitchen>   ceramic tile   &lt;/kitchen>
+	    &lt;bathroom>linoleum&lt;/bathroom>
+	    &lt;foyer />
+	 &lt;/house>
+	 
+	 </listing>
+	 <p>If you then change the setting of <code>flooring.ignoreWhite</code> to <code>false</code>, or simply remove that line of code entirely, the fourteen space characters in the <code>foyer</code> tag will be preserved:</p>
+	 <listing>
+	 ...
+	 // set the ignoreWhite property to false (default value)
+	 flooring.ignoreWhite = false;
+	 ...
+	 // output (line breaks added for clarity):
+	 &lt;house>
+	    &lt;kitchen>   ceramic tile   &lt;/kitchen>
+	    &lt;bathroom>linoleum&lt;/bathroom>
+	    &lt;foyer>              &lt;/foyer>
+	 &lt;/house>
+	 
+	 </listing>
+	 <span class="flashonly"><p>The XML_blogTracker.fla and XML_languagePicker.fla files in the ActionScript samples folder also contain a code example. The following are typical paths to this folder:</p>
+	 <ul>
+	   <li>Windows: <i>boot drive</i>\Program Files\Macromedia\Flash 8\Samples and Tutorials\Samples\ActionScript </li>
+	   <li>Macintosh: <i>Macintosh HD</i>/Applications/Macromedia Flash 8/Samples and Tutorials/Samples/ActionScript </li>
+	   <li/>
+	 </ul>
+	 </span>
+	 </maelexample></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>false</apiData><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	 Если установлено значение <codeph>true</codeph>, текстовые узлы, содержащие только пробелы, при разборе игнорируются. Текстовые узлы, начинающиеся или заканчивающиеся пробелом, не затрагиваются. Параметр по умолчанию – <codeph>false</codeph>. 
+	 <p>Можно назначить свойство <codeph>ignoreWhite</codeph> отдельным объектам XMLDocument, как показано в примере:</p>
+	 <codeblock>
+	 my_xml.ignoreWhite = true;
+	 </codeblock>
+	 
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.xml:XMLDocument:xmlDecl"><apiName>xmlDecl</apiName><shortdesc>
+	 Строка, задающая информацию о XML-объявлении в документе.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><maelexample>The following example creates a text field called <code>my_txt</code> 
+	 that has the same dimensions as the Stage. The text field displays properties of the XML packet that loads into the SWF file. The doc type declaration displays in <code>my_txt</code>. Add the following ActionScript to your FLA or AS file:
+	 <listing>
+	 <code>var my_fmt:TextFormat = new TextFormat();</code>
+	 <code>my_fmt.font = "_typewriter";</code>
+	 <code>my_fmt.size = 12;</code>
+	 <code>my_fmt.leftMargin = 10;</code>
+	 
+	 <code>this.createTextField("my_txt", this.getNextHighestDepth(), 0, 0, Stage.width, Stage.height);</code>
+	 <code>my_txt.border = true;</code>
+	 <code>my_txt.multiline = true;</code>
+	 <code>my_txt.wordWrap = true;</code>
+	 <code>my_txt.setNewTextFormat(my_fmt);</code>
+	 
+	 <code>var my_xml:XML = new XML();</code>
+	 <code>my_xml.ignoreWhite = true;</code>
+	 <code>my_xml.onLoad = function(success:Boolean) {</code>
+	 <code>  var endTime:Number = getTimer();</code>
+	 <code>  var elapsedTime:Number = endTime-startTime;</code>
+	 <code>  if (success) {</code>
+	 <code>    my_txt.text = "xmlDecl:"+newline+my_xml.xmlDecl+newline+newline;</code>
+	 <code>    my_txt.text += "contentType:"+newline+my_xml.contentType+newline+newline;</code>
+	 <code>    my_txt.text += "docTypeDecl:"+newline+my_xml.docTypeDecl+newline+newline;</code>
+	 <code>    my_txt.text += "packet:"+newline+my_xml.toString()+newline+newline;</code>
+	 <code>  } else {</code>
+	 <code>    my_txt.text = "Unable to load remote XML."+newline+newline;</code>
+	 <code>  }</code>
+	 <code>  my_txt.text += "loaded in: "+elapsedTime+" ms.";</code>
+	 <code>};</code>
+	 <code>my_xml.load("http://www.helpexamples.com/crossdomain.xml");</code>
+	 <code>var startTime:Number = getTimer();</code>
+	 </listing>
+	 </maelexample></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>null</apiData><apiValueClassifier>Object</apiValueClassifier></apiValueDef><apiDesc>
+	 Строка, задающая информацию о XML-объявлении в документе. После разбора XML-документа и преобразования в объект XMLDocument то свойство устанавливается для XML-объявления в документе. Это свойство задается с помощью строкового представления XML-объявления, а не с помощью объекта XMLNode. Если в ходе разбора не удается обнаружить XML-объявление, свойство принимает значение <codeph>null</codeph>. Метод <codeph>XMLDocument.toString()</codeph> выводит содержимое свойства <codeph>XML.xmlDecl</codeph> выше любого другого текста объекта XML. Если свойство <codeph>XML.xmlDecl</codeph> содержит значение <codeph>null</codeph>, XML-объявление не выводится.
+	 </apiDesc></apiValueDetail></apiValue></apiClassifier></apiPackage>

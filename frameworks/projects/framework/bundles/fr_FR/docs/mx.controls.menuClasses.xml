@@ -33,7 +33,7 @@
 <description>
   Classe implémentant l’occurrence IUITextField qui permet à ce composant de rendre le texte.
  
-  <p>Elle peut être définie sur la classe mx.core.UITextField (pour utiliser la classe TextField classique intégrée à Flash Player) ou la classe mx.core.UITLFTextField (pour utiliser Text Layout Framework, qui permet d’améliorer le rendu du texte et d’obtenir notamment une mise en forme bidirectionnelle).</p>
+  <p>Elle peut être définie sur la classe mx.core.UITextField (pour utiliser la classe TextField classique intégrée à Flash Player) ou la classe mx.core.UIFTETextField (pour utiliser Text Layout Framework, qui permet d’améliorer le rendu du texte et d’obtenir notamment une mise en forme bidirectionnelle).</p>
  
   </description>
 <default>mx.core.UITextField
@@ -71,11 +71,11 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog></style><style inherit="yes" name="locale" owner="mx.controls.menuClasses:MenuBarItem" playerVersion="Flash10" type="String">
 <description>
-  
+  Paramètres régionaux du texte affiché par ce composant. 
  
-  <p/>
+  <p>FTE et TLF utilisent ces paramètres régionaux pour mapper des caractères Unicode à des glyphes de police et rechercher des polices de rechange. </p>
  
-  <p><codeph/></p>
+  <p>Remarque : ce style s’applique uniquement lorsqu’un composant MX spécifie UIFTETextField comme classe <codeph>textFieldClass</codeph>. </p>
  
   </description>
 <default>"en"
@@ -88,7 +88,7 @@
   </langversion><productversion>Flex 4
  </productversion></asCustoms></prolog></style><style inherit="yes" name="letterSpacing" owner="mx.controls.menuClasses:MenuBarItem" playerVersion="Flash9" type="Number">
 <description>
-  Nombre de pixels supplémentaires devant apparaître entre chaque caractère. Une valeur positive augmente l’espacement des caractères par rapport à l’espacement normal, alors qu’une valeur négative le réduit.
+  Nombre de pixels supplémentaires qui apparaissent entre chaque caractère. Une valeur positive augmente l’espacement des caractères par rapport à l’espacement normal, alors qu’une valeur négative le réduit.
  
   </description>
 <default>0
@@ -101,7 +101,7 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog></style><style inherit="yes" name="kerning" owner="mx.controls.menuClasses:MenuBarItem" playerVersion="Flash9" type="Boolean">
 <description>
-  Valeur booléenne indiquant si le crénage est activé (<codeph>true</codeph>) ou désactivé (<codeph>false</codeph>). Le crénage ajuste le pas entre certaines paires de caractères pour améliorer la lisibilité et ne doit être employé que si nécessaire, dans les titres en grande police, par exemple. Le crénage est supporté uniquement pour les polices incorporées. Certaines polices, telles que Verdana, et les polices à espacement fixe, telles que Courier New, ne prennent pas en charge le crénage.
+  Valeur booléenne indiquant si le crénage est activé (<codeph>true</codeph>) ou désactivé (<codeph>false</codeph>). Le crénage ajuste le pas entre certaines paires de caractères pour améliorer la lisibilité et ne doit être employé que si nécessaire, dans les titres en grande police, par exemple. Le crénage est supporté uniquement pour les polices incorporées. Certaines polices, telles que Verdana et les polices à espacement fixe, telles que Courier New, ne prennent pas en charge le crénage.
  
   </description>
 <default>false
@@ -157,7 +157,7 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog></style><style format="Length" inherit="yes" name="fontSize" owner="mx.controls.menuClasses:MenuBarItem" playerVersion="Flash9" type="Number">
 <description>
-  Hauteur du texte, en pixels. La valeur par défaut est 10 pour tous les contrôles, à l’exception de ColorPicker. Pour le contrôle ColorPicker, la valeur par défaut est 11. 
+  Hauteur du texte, en pixels.    
   
   </description>
 
@@ -210,12 +210,9 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog><related-links><link href="" invalidHref="flash.text.TextField.xml"><linktext>flash.text.TextField</linktext></link><link href="" invalidHref="flash.text.GridFitType.xml"><linktext>flash.text.GridFitType</linktext></link></related-links></style><style inherit="yes" name="fontFamily" owner="mx.controls.menuClasses:MenuBarItem" playerVersion="Flash9" type="String">
 <description>
-  Nom de la police à utiliser. A la différence d’une implémentation CSS complète, les listes de valeurs séparées par des virgules ne sont pas prises en charge. Vous pouvez utiliser n’importe quel nom de famille de polices. Si vous spécifiez un nom de police générique, il est converti dans la police de périphérique appropriée.
- 
-  </description>
-<default>"Verdana"
+  Nom de la police à utiliser. A la différence d’une implémentation CSS complète, les listes de valeurs séparées par des virgules ne sont pas prises en charge. Vous pouvez utiliser n’importe quel nom de famille de polices. Si vous spécifiez un nom de police générique, il est converti dans la police de périphérique appropriée. <codeph/> <codeph/>
   
-  </default>
+  </description>
 
 <playerversion>AIR 1.1
   </playerversion>
@@ -259,15 +256,15 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog></style><style enumeration="ltr,rtl,inherit" inherit="yes" name="direction" owner="mx.controls.menuClasses:MenuBarItem" playerVersion="Flash10" type="String">
 <description>
-  
+  Direction du texte affiché par le composant. 
  
-  <p><codeph/><codeph/></p>
+  <p>Les valeurs autorisées sont <codeph>"ltr"</codeph> pour les textes rédigés de gauche à droite, comme dans les scripts de style latin et <codeph>"rtl"</codeph> pour les textes rédigés de droite à gauche, comme l’arabe ou l’hébreu. </p>
  
-  <p/>
+  <p>FTE et TLF utilisent cette valeur dans leur algorithme de mise en forme de texte bidirectionnel, lequel mappe l’ordre des caractères Unicode sur ordre des glyphes. </p>
  
-  <p><codeph/></p>
+  <p>Remarque : ce style s’applique uniquement lorsqu’un composant MX spécifie UIFTETextField comme classe <codeph>textFieldClass</codeph>. </p>
  
-  <p><codeph/> </p>
+  <p>La <codeph>direction</codeph> a également une incidence sur l’alignement du texte dans les limites de TLFTextField. Elle n’a pas, cependant, d’incidence sur le positionnement de TLFTextField au sein du composant. </p>
  
   </description>
 <default>"ltr"
@@ -280,12 +277,9 @@
   </langversion><productversion>Flex 4
  </productversion></asCustoms></prolog></style><style format="Color" inherit="yes" name="color" owner="mx.controls.menuClasses:MenuBarItem" playerVersion="Flash9" type="uint">
 <description>
-  Couleur de texte dans le composant, y compris l’étiquette du composant.
- 
-  </description>
-<default>0x0B333C
+  Couleur du texte du composant, libellé du composant inclus. <codeph/> <codeph/>
   
-  </default>
+  </description>
 
 <playerversion>AIR 1.1
   </playerversion>
@@ -363,12 +357,9 @@
   </langversion><productversion>Flex 3
  </productversion></asCustoms></prolog></style><style format="Color" inherit="yes" name="color" owner="mx.controls.menuClasses:MenuItemRenderer" playerVersion="Flash9" type="uint">
 <description>
-  Couleur de texte de l’étiquette d’un élément de menu.
+  Couleur de texte de l’étiquette d’un élément de menu. <codeph/> <codeph/>
   
   </description>
-<default>0x0B333C
-  
-  </default>
 
 <playerversion>AIR 1.1
   </playerversion>
@@ -459,7 +450,7 @@
  
   <p>Les rendus d’élément de menu sont souvent recyclés. Une fois créés, ils peuvent être réutilisés simplement en leur affectant de nouvelles données. Par conséquent, dans les implémentations individuelles, les développeurs de composants doivent s’assurer que les propriétés des composants ne sont pas censées contenir des valeurs d’origine spécifiques ou leurs valeurs par défaut.</p>
  
-  <p>Pour implémenter cette interface, un développeur de composants doit définir une méthode setter et getter qui implémente la propriété <codeph>menu</codeph>. En général, la méthode setter inscrit la valeur de la propriété data sur une variable interne et la méthode getter retourne la valeur actuelle de la variable interne, comme le montre l’exemple suivant :</p>
+  <p>Pour implémenter cette interface, un développeur de composants doit définir une méthode setter et getter qui implémente la propriété <codeph>menu</codeph>. En général, la méthode setter inscrit la valeur de la propriété data sur une variable interne et la méthode getter renvoie la valeur actuelle de la variable interne, comme l’illustre l’exemple suivant :</p>
   <pre>
      // Internal variable for the property value.
      private var _menu:Menu;
@@ -510,13 +501,13 @@
       </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiOperationClassifier>mx.collections:ICollectionView</apiOperationClassifier><apiDesc>Objet contenant les nœuds enfant.
       
       </apiDesc></apiReturn><apiParam><apiItemName>node</apiItemName><apiType value="Object"/><apiDesc>Objet nœud en cours d’évaluation.
-      </apiDesc></apiParam><apiParam><apiItemName>model</apiItemName><apiType value="Object"/><apiData>null</apiData><apiDesc>Collection contenant le nœud ; ignorée par cette classe.
+      </apiDesc></apiParam><apiParam><apiItemName>model</apiItemName><apiType value="Object"/><apiData>null</apiData><apiDesc>Collection contenant le nœud ; ignorée par cette classe.
       </apiDesc></apiParam></apiOperationDef><apiDesc conref="mx.controls.treeClasses.DefaultDataDescriptor#getChildren()">
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.menuClasses:IMenuDataDescriptor:mx.controls.menuClasses:IMenuDataDescriptor:getData"><apiName>getData</apiName><shortdesc conref="mx.controls.treeClasses.DefaultDataDescriptor#getData()">
       </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="Object"/><apiDesc>Nœud.
       
       </apiDesc></apiReturn><apiParam><apiItemName>node</apiItemName><apiType value="Object"/><apiDesc>Objet nœud en cours d’évaluation.
-      </apiDesc></apiParam><apiParam><apiItemName>model</apiItemName><apiType value="Object"/><apiData>null</apiData><apiDesc>Collection contenant le nœud ; ignorée par cette classe.
+      </apiDesc></apiParam><apiParam><apiItemName>model</apiItemName><apiType value="Object"/><apiData>null</apiData><apiDesc>Collection contenant le nœud ; ignorée par cette classe.
       </apiDesc></apiParam></apiOperationDef><apiDesc conref="mx.controls.treeClasses.DefaultDataDescriptor#getData()">
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.menuClasses:IMenuDataDescriptor:mx.controls.menuClasses:IMenuDataDescriptor:getGroupName"><apiName>getGroupName</apiName><shortdesc conref="mx.controls.treeClasses.DefaultDataDescriptor#getGroupName()">
       </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="String"/><apiDesc>Valeur de l’attribut <codeph>groupName</codeph> ou du champ du nœud ou chaîne vide si aucune entrée de ce type n’existe.
@@ -533,14 +524,14 @@
       </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="Boolean"/><apiDesc>La valeur est <codeph>true</codeph> si ce nœud a actuellement des enfants.
       
       </apiDesc></apiReturn><apiParam><apiItemName>node</apiItemName><apiType value="Object"/><apiDesc>Objet nœud en cours d’évaluation.
-      </apiDesc></apiParam><apiParam><apiItemName>model</apiItemName><apiType value="Object"/><apiData>null</apiData><apiDesc>Collection contenant le nœud ; ignorée par cette classe.
+      </apiDesc></apiParam><apiParam><apiItemName>model</apiItemName><apiType value="Object"/><apiData>null</apiData><apiDesc>Collection contenant le nœud ; ignorée par cette classe.
       
       </apiDesc></apiParam></apiOperationDef><apiDesc conref="mx.controls.treeClasses.DefaultDataDescriptor#hasChildren()">
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.menuClasses:IMenuDataDescriptor:mx.controls.menuClasses:IMenuDataDescriptor:isBranch"><apiName>isBranch</apiName><shortdesc conref="mx.controls.treeClasses.DefaultDataDescriptor#isBranch()">
       </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="Boolean"/><apiDesc>La valeur est <codeph>true</codeph> si ce nœud est sans fin d’exécution.
       
       </apiDesc></apiReturn><apiParam><apiItemName>node</apiItemName><apiType value="Object"/><apiDesc>Objet nœud en cours d’évaluation.
-      </apiDesc></apiParam><apiParam><apiItemName>model</apiItemName><apiType value="Object"/><apiData>null</apiData><apiDesc>Collection contenant le nœud ; ignorée par cette classe.
+      </apiDesc></apiParam><apiParam><apiItemName>model</apiItemName><apiType value="Object"/><apiData>null</apiData><apiDesc>Collection contenant le nœud ; ignorée par cette classe.
       
       </apiDesc></apiParam></apiOperationDef><apiDesc conref="mx.controls.treeClasses.DefaultDataDescriptor#isBranch()">
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.controls.menuClasses:IMenuDataDescriptor:mx.controls.menuClasses:IMenuDataDescriptor:isEnabled"><apiName>isEnabled</apiName><shortdesc conref="mx.controls.treeClasses.DefaultDataDescriptor#isEnabled()">

@@ -42,8 +42,8 @@
       撤销向 HistoryManager 注册对象。
      
       </apiDesc></apiOperationDetail></apiOperation></apiClassifier><apiClassifier id="mx.managers:PopUpManagerChildList"><apiName>PopUpManagerChildList</apiName><shortdesc>
-  PopUpManagerChildList 类用于为 PopUpManager addPopUp() 和 createPopUp() 方法的 detail 属性定义常数值。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
-  PopUpManagerChildList 类可以为 PopUpManager <codeph>addPopUp()</codeph> 和 <codeph>createPopUp()</codeph> 方法的 <codeph>detail</codeph> 属性定义常数值。
+  PopUpManagerChildList 类用于为 PopUpManager addPopUp() 和 createPopUp() 方法的 detail 属性定义常量值。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+  PopUpManagerChildList 类可以为 PopUpManager <codeph>addPopUp()</codeph> 和 <codeph>createPopUp()</codeph> 方法的 <codeph>detail</codeph> 属性定义常量值。
   
   </apiDesc></apiClassifierDetail><related-links><link href="mx.managers.xml#PopUpManager"><linktext>PopUpManager</linktext></link></related-links><apiValue id="mx.managers:PopUpManagerChildList:APPLICATION"><apiName>APPLICATION</apiName><shortdesc>
 	  指示弹出窗口与应用程序位于相同的子列表中。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>application</apiData><apiType value="String"/></apiValueDef><apiDesc>
@@ -77,19 +77,19 @@
 	 
 	  <p>如果组件中的子组件实现了 IFocusManagerComponent 接口，但是您从不希望它获得焦点，作为一种优化，您可以先将 <codeph>focusEnabled</codeph> 设置为 <codeph>false</codeph>，然后再在子组件上调用 <codeph>addChild()</codeph>。</p>
 	 
-	  <p><codeph/><codeph/><codeph/>这也意味着 <codeph>addChild()</codeph> 之后，您无法更改此值，也不能指望 FocusManager 进行监视。</p>
+	  <p>这将使 FocusManager 忽略此组件，并且使它不会对组件进行监视以查看 <codeph>tabFocusEnabled</codeph>、<codeph>hasFocusableChildren</codeph> 和 <codeph>mouseFocusEnabled</codeph> 属性是否发生更改。这也意味着 <codeph>addChild()</codeph> 之后，您无法更改此值，也不能指望 FocusManager 进行监视。</p>
 	 
 	  <p>注意：这并不意味着您无法在 <codeph>setFocus()</codeph> 方法中以编程方式使此对象获得焦点；它仅通知 FocusManager 在 Tab 和鼠标搜索中忽略此 IFocusManagerComponent 组件。</p>
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:IFocusManagerComponent:mx.managers:IFocusManagerComponent:hasFocusableChildren:get"><apiName>hasFocusableChildren</apiName><shortdesc>
-	  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="4.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Boolean"/></apiValueDef><apiDesc>
-	  
+	  一个标志，指示子对象是否能够获得焦点。这与 Flash Player 使用的 tabChildren 属性类似。该值通常为 false，因为大多数组件既可以自己获得焦点，也可以委托单个内部子组件获得焦点（但显示为该组件获得了焦点）。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="4.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Boolean"/></apiValueDef><apiDesc>
+	  一个标志，指示子对象是否能够获得焦点
 	 
-	  <p><codeph/></p>
+	  <p>这与 Flash Player 使用的 <codeph>tabChildren</codeph> 属性类似。</p>
 	 
-	  <p><codeph/><codeph/><codeph/></p>
+	  <p>该值通常为 <codeph>false</codeph>，因为大多数组件既可以自己获得焦点，也可以委托单个内部子组件获得焦点（但显示为该组件获得了焦点）。例如，TextInput 包含一个可成为焦点的 RichEditableText 子控件，但实际上当 RichEditableText 子组件获得焦点时，却显示为 TextInput 获得了焦点。TextInput 将 <codeph>hasFocusableChildren</codeph> 设置为 <codeph>false</codeph>，因为获得焦点的组件为 TextInput。其内部结构是一个抽象概念。</p>
      
-	  <p><codeph/></p>
+	  <p>通常只有像 TabNavigator 和 Accordion 这样的导航器组件将此标志设置为 <codeph>true</codeph>，因为它们在按 Tab 键时获得了焦点，但焦点会在进一步按 Tab 键时转移到子容器的组件中。</p>
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:IFocusManagerComponent:mx.managers:IFocusManagerComponent:mouseFocusEnabled:get"><apiName>mouseFocusEnabled</apiName><shortdesc>
 	  一个标志，用于当使用鼠标选中组件时组件是否可以获得焦点。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Boolean"/></apiValueDef><apiDesc>
@@ -97,11 +97,11 @@
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:IFocusManagerComponent:mx.managers:IFocusManagerComponent:tabFocusEnabled:get"><apiName>tabFocusEnabled</apiName><shortdesc>
 	  一个标志，指示通过按 Tab 键最终是否能够将焦点移动到此组件。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Boolean"/></apiValueDef><apiDesc>
-	  一个标志，指示通过按 Tab 键最终是否能够将焦点移动到此组件。即使为 <codeph>false</codeph>，您也可以通过使用鼠标进行选择或通过调用 <codeph>setFocus()</codeph> 获得焦点。. 
+	  一个标志，指示通过按 Tab 键最终是否能够将焦点移动到此组件。即使为 <codeph>false</codeph>，您也可以通过使用鼠标进行选择或通过调用 <codeph>setFocus()</codeph> 获得焦点。此属性替换 InteractiveObject.tabEnabled，后者在 Flex 应用程序中必须设置为 true。
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:IFocusManagerComponent:mx.managers:IFocusManagerComponent:tabIndex:get"><apiName>tabIndex</apiName><shortdesc>
-	  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="int"/></apiValueDef><apiDesc>
-	  <codeph/>如果为 -1，则组件按 z 轴顺序获得焦点。
+	  如果 tabFocusEnabled 为 true，则为组件接收焦点的顺序。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="int"/></apiValueDef><apiDesc>
+	  如果 <codeph>tabFocusEnabled</codeph> 为 true，则为组件接收焦点的顺序。如果为 -1，则组件按 z 轴顺序获得焦点。
 	  
 	  </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.managers:BrowserManager"><apiName>BrowserManager</apiName><shortdesc>
   BrowserManager 是一个 Singleton 管理器，用于充当浏览器和应用程序之间的代理。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
@@ -221,6 +221,10 @@
       </apiDesc></apiParam></apiOperationDef><apiDesc>
       获取所加载应用程序在屏幕上对用户可见的范围。
      
+      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:ISystemManager:mx.managers:ISystemManager:invalidateParentSizeAndDisplayList"><apiName>invalidateParentSizeAndDisplayList</apiName><shortdesc>
+      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+      
+      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:ISystemManager:mx.managers:ISystemManager:isFontFaceEmbedded"><apiName>isFontFaceEmbedded</apiName><shortdesc>
       如果所需的字体已嵌入到此应用程序中，或已使用 Font.registerFont() 方法进行了全局注册，则返回 true。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>如果所需的字体已嵌入到此应用程序中，或已使用 <codeph>Font.registerFont()</codeph> 方法进行了全局注册，则返回 <codeph>true</codeph>。
       
@@ -405,18 +409,18 @@
       
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.managers:CursorManagerPriority"><apiName>CursorManagerPriority</apiName><shortdesc>
   CursorManagerPriority 类定义 CursorManager.setCursor() 方法的 priority 参数的常数值。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
-  CursorManagerPriority 类定义 <codeph>CursorManager.setCursor()</codeph> 方法的 <codeph>priority</codeph> 参数的常数值。 
+  CursorManagerPriority 类定义 <codeph>CursorManager.setCursor()</codeph> 方法的 <codeph>priority</codeph> 参数的常量值。 
  
   </apiDesc></apiClassifierDetail><related-links><link href="mx.managers.xml#CursorManager"><linktext>mx.managers.CursorManager</linktext></link></related-links><apiValue id="mx.managers:CursorManagerPriority:HIGH"><apiName>HIGH</apiName><shortdesc>
-	  一个常数，当作为 priority 参数传递给 setCursor() 时，用于指定光标的最高优先级。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>1</apiData><apiType value="int"/></apiValueDef><apiDesc>
-	  一个常数，当作为 <codeph>priority</codeph> 参数传递给 <codeph>setCursor()</codeph> 时，用于指定光标的最高优先级。
+	  一个常量，当作为 priority 参数传递给 setCursor() 时，用于指定光标的最高优先级。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>1</apiData><apiType value="int"/></apiValueDef><apiDesc>
+	  一个常量，当作为 <codeph>priority</codeph> 参数传递给 <codeph>setCursor()</codeph> 时，用于指定光标的最高优先级。
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:CursorManagerPriority:LOW"><apiName>LOW</apiName><shortdesc>
-	  一个常数，当作为 priority 参数传递给 setCursor() 时，用于指定光标的最低优先级。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>3</apiData><apiType value="int"/></apiValueDef><apiDesc>
-	  一个常数，当作为 <codeph>priority</codeph> 参数传递给 <codeph>setCursor()</codeph> 时，用于指定光标的最低优先级。
+	  一个常量，当作为 priority 参数传递给 setCursor() 时，用于指定光标的最低优先级。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>3</apiData><apiType value="int"/></apiValueDef><apiDesc>
+	  一个常量，当作为 <codeph>priority</codeph> 参数传递给 <codeph>setCursor()</codeph> 时，用于指定光标的最低优先级。
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:CursorManagerPriority:MEDIUM"><apiName>MEDIUM</apiName><shortdesc>
-	  一个常数，当作为 priority 参数传递给 setCursor() 时，用于指定光标的中级优先级。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>2</apiData><apiType value="int"/></apiValueDef><apiDesc>
+	  一个常量，当作为 priority 参数传递给 setCursor() 时，用于指定光标的中级优先级。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>2</apiData><apiType value="int"/></apiValueDef><apiDesc>
 	  一个常数，当作为 <codeph>priority</codeph> 参数传递给 <codeph>setCursor()</codeph> 时，用于指定光标的中级优先级。
 	  
 	  </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.managers:DragManager"><apiName>DragManager</apiName><shortdesc>
@@ -527,20 +531,20 @@
 	  设置拖放操作的反馈指示符。可能的值有：<codeph>DragManager.COPY</codeph>、<codeph>DragManager.MOVE</codeph>、<codeph>DragManager.LINK</codeph> 或 <codeph>DragManager.NONE</codeph>。
 	 
 	  </apiDesc></apiOperationDetail></apiOperation><apiValue id="mx.managers:DragManager:COPY"><apiName>COPY</apiName><shortdesc>
-	  用于指定拖动动作的类型是“copy”的常数。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>copy</apiData><apiType value="String"/></apiValueDef><apiDesc>
-	  用于指定拖动动作的类型是“copy”的常数。
+	  用于指定拖动动作的类型是“copy”的常量。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>copy</apiData><apiType value="String"/></apiValueDef><apiDesc>
+	  用于指定拖动动作的类型是“copy”的常量。
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:DragManager:LINK"><apiName>LINK</apiName><shortdesc>
-	  用于指定拖动动作的类型是“link”的常数。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>link</apiData><apiType value="String"/></apiValueDef><apiDesc>
-	  用于指定拖动动作的类型是“link”的常数。
+	  用于指定拖动动作的类型是“link”的常量。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>link</apiData><apiType value="String"/></apiValueDef><apiDesc>
+	  用于指定拖动动作的类型是“link”的常量。
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:DragManager:MOVE"><apiName>MOVE</apiName><shortdesc>
-	  用于指定拖动动作的类型是“move”的常数。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>move</apiData><apiType value="String"/></apiValueDef><apiDesc>
-	  用于指定拖动动作的类型是“move”的常数。
+	  用于指定拖动动作的类型是“move”的常量。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>move</apiData><apiType value="String"/></apiValueDef><apiDesc>
+	  用于指定拖动动作的类型是“move”的常量。
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:DragManager:NONE"><apiName>NONE</apiName><shortdesc>
-	  用于指定拖动动作的类型是“none”的常数。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>none</apiData><apiType value="String"/></apiValueDef><apiDesc>
-	  用于指定拖动动作的类型是“none”的常数。
+	  用于指定拖动动作的类型是“none”的常量。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>none</apiData><apiType value="String"/></apiValueDef><apiDesc>
+	  用于指定拖动动作的类型是“none”的常量。
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:DragManager:isDragging:get"><apiName>isDragging</apiName><shortdesc>
 	  一个只读属性，如果拖动操作正在进行，则返回 true。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiType value="Boolean"/></apiValueDef><apiDesc>
@@ -872,6 +876,8 @@
      
       </apiDesc></apiParam><apiParam><apiItemName>childList</apiItemName><apiType value="String"/><apiData>null</apiData><apiDesc>要将弹出窗口添加到其中的子项列表。<codeph>PopUpManagerChildList.APPLICATION</codeph>、<codeph>PopUpManagerChildList.POPUP</codeph> 或 <codeph>PopUpManagerChildList.PARENT</codeph>（默认）中的任意一项。
      
+      </apiDesc></apiParam><apiParam><apiItemName>moduleFactory</apiItemName><apiOperationClassifier>mx.core:IFlexModuleFactory</apiOperationClassifier><apiData>null</apiData><apiDesc>
+     
       </apiDesc></apiParam></apiOperationDef><apiDesc>
       弹出顶级窗口。最好调用 <codeph>removePopUp()</codeph> 来删除使用 <codeph>addPopUp()</codeph> 方法创建的弹出窗口。如果该类实现了 IFocusManagerContainer，则该窗口将拥有自己的 FocusManager；因此，当用户使用 Tab 键在各个控件之间导航时，将只能访问此窗口中的控件。
      
@@ -1042,27 +1048,27 @@
   当应用程序完成初始化时分派。
  
   </apiDesc></adobeApiEventDetail></adobeApiEvent><apiConstructor id="mx.managers:SystemManager:SystemManager"><apiName>SystemManager</apiName><shortdesc>
-	  构造函数。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/></apiConstructorDef><apiDesc>
-	  构造函数。
-	 
-	  <p>这是所有 Flex 应用程序的起点。此类将设置为 Flex SWF 文件的根类。Flash Player 实例化此类的实例，从而导致调用此构造函数。</p>
+      构造函数。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/></apiConstructorDef><apiDesc>
+      构造函数。
+     
+      <p>这是所有 Flex 应用程序的起点。此类将设置为 Flex SWF 文件的根类。Flash Player 实例化此类的实例，从而导致调用此构造函数。</p>
       
       </apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="mx.managers:SystemManager:allowDomain"><apiName>allowDomain</apiName><shortdesc>
-      </shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>domains</apiItemName><apiType value="restParam"/></apiParam></apiOperationDef><apiDesc>
-      
+      为与 SystemManager 关联的 SWF 和与 SystemManager 预加载的 RSL 关联的所有 SWF 调用 Security.allowDomain()。</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>domains</apiItemName><apiType value="restParam"/></apiParam></apiOperationDef><apiDesc>
+      为与 SystemManager 关联的 SWF 和与 SystemManager 预加载的 RSL 关联的所有 SWF 调用 Security.allowDomain()。
      
      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:allowInsecureDomain"><apiName>allowInsecureDomain</apiName><shortdesc>
-      </shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>domains</apiItemName><apiType value="restParam"/></apiParam></apiOperationDef><apiDesc>
-      
+      为与 SystemManager 关联的 SWF 和与 SystemManager 预加载的 RSL 关联的所有 SWF 调用 Security.allowInsecureDomain()。</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>domains</apiItemName><apiType value="restParam"/></apiParam></apiOperationDef><apiDesc>
+      为与 SystemManager 关联的 SWF 和与 SystemManager 预加载的 RSL 关联的所有 SWF 调用 Security.allowInsecureDomain()。
      
      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:create"><apiName>create</apiName><shortdesc>
       factory 方法，要求定义的实例是模块已知的。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>模块实例，或 <codeph>null</codeph>。
       
       </apiDesc><apiType value="Object"/></apiReturn><apiParam><apiItemName>params</apiItemName><apiType value="restParam"/><apiDesc>可选参数列表。您可以传递任何数目的参数，这些参数将存储在名为 <codeph>parameters</codeph> 的 Array 中。 
-	 
+     
       </apiDesc></apiParam></apiOperationDef><apiDesc>
       factory 方法，要求定义的实例是模块已知的。您可以提供可选参数集，以便构建工厂根据输入内容更改它们创建的内容。传递 null 指示，如果可能的话，创建默认的定义。在自动生成的子类中将覆盖此方法。
-	 
+     
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:deployMouseShields"><apiName>deployMouseShields</apiName><shortdesc>
       
       部署或删除鼠标盾。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>deploy</apiItemName><apiType value="Boolean"/><apiDesc><codeph>true</codeph> 将部署鼠标盾，<codeph>false</codeph> 将删除鼠标盾。
@@ -1072,13 +1078,13 @@
       部署或删除鼠标盾。鼠标盾可以阻止不受信任的应用程序获得鼠标输入。之所以需要阻止鼠标输入，是因为在不受信任的应用程序上拖动时，一般不会收到任何鼠标移动事件。出于安全考虑，Flash Player 在穿越受信任/不受信任的边界时不发送事件。通过用鼠标盾（假设您是其父级）遮盖不受信任的应用程序，可以得到鼠标移动消息，而拖动操作可以发挥预期的作用。 
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:getDefinitionByName"><apiName>getDefinitionByName</apiName><shortdesc>
-	  
+      
 	  将给定的 String 转换为 Class 或数据包级的 Function。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>使用 <codeph>name</codeph> 或 null 表示的 Class。
 	  
 	  </apiDesc><apiType value="Object"/></apiReturn><apiParam><apiItemName>name</apiItemName><apiType value="String"/><apiDesc>类名称，例如“mx.video.VideoManager”。
 	 
 	  </apiDesc></apiParam></apiOperationDef><apiDesc>
-	  
+      
 	  将给定的 String 转换为 Class 或数据包级的 Function。根据是否加载到其它应用程序来调用适当的 <codeph>ApplicationDomain.getDefinition()</codeph> 方法。
 	 
 	  </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:getExplicitOrMeasuredHeight"><apiName>getExplicitOrMeasuredHeight</apiName><shortdesc>
@@ -1086,34 +1092,34 @@
       
       </apiDesc><apiType value="Number"/></apiReturn></apiOperationDef><apiDesc>
       一种可以确定是使用显式高度还是测量高度的简便方法。
-	 
+     
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:getExplicitOrMeasuredWidth"><apiName>getExplicitOrMeasuredWidth</apiName><shortdesc>
       一种可以确定是使用显式宽度还是测量宽度的简便方法。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>一个 Number，在已定义的情况下是 <codeph>explicitWidth</codeph> 属性，在未定义的情况下是 <codeph>measuredWidth</codeph> 属性。
       
       </apiDesc><apiType value="Number"/></apiReturn></apiOperationDef><apiDesc>
       一种可以确定是使用显式宽度还是测量宽度的简便方法。
-	 
+     
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:getSWFRoot"><apiName>getSWFRoot</apiName><shortdesc>
-	  返回包含给定对象的代码的 SWF 的根 DisplayObject。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiDesc>根 DisplayObject
+      返回包含给定对象的代码的 SWF 的根 DisplayObject。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiDesc>根 DisplayObject
       
       </apiDesc><apiType value="flash.display:DisplayObject"/></apiReturn><apiParam><apiItemName>object</apiItemName><apiType value="Object"/><apiDesc>任一 Object。 
-	 
-	  </apiDesc></apiParam></apiOperationDef><apiDesc>
-	  返回包含给定对象的代码的 SWF 的根 DisplayObject。
-	 
-	  </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:getSandboxRoot"><apiName>getSandboxRoot</apiName><shortdesc>
-          沿父级链上行，到达此 SecurityDomain 中的顶级系统管理器。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>此 SecurityDomain 中的根系统管理器。
+     
+      </apiDesc></apiParam></apiOperationDef><apiDesc>
+      返回包含给定对象的代码的 SWF 的根 DisplayObject。
+     
+      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:getSandboxRoot"><apiName>getSandboxRoot</apiName><shortdesc>
+      沿父级链上行，到达此 SecurityDomain 中的顶级系统管理器。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>此 SecurityDomain 中的根系统管理器。
       
       </apiDesc><apiType value="flash.display:DisplayObject"/></apiReturn></apiOperationDef><apiDesc>
-          沿父级链上行，到达此 SecurityDomain 中的顶级系统管理器。
-	 
-          </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:getTopLevelRoot"><apiName>getTopLevelRoot</apiName><shortdesc>
-          沿父级链上行，到达顶级系统管理器。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>根系统管理器。
+      沿父级链上行，到达此 SecurityDomain 中的顶级系统管理器。
+     
+      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:getTopLevelRoot"><apiName>getTopLevelRoot</apiName><shortdesc>
+      沿父级链上行，到达顶级系统管理器。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>根系统管理器。
       
       </apiDesc><apiType value="flash.display:DisplayObject"/></apiReturn></apiOperationDef><apiDesc>
-          沿父级链上行，到达顶级系统管理器。如果我们不在显示列表上，或我们无权访问顶级系统管理器，则返回 <codeph>null</codeph>。
-          
-          </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:getVisibleApplicationRect"><apiName>getVisibleApplicationRect</apiName><shortdesc>
+      沿父级链上行，到达顶级系统管理器。如果我们不在显示列表上，或我们无权访问顶级系统管理器，则返回 <codeph>null</codeph>。
+      
+      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:getVisibleApplicationRect"><apiName>getVisibleApplicationRect</apiName><shortdesc>
      
       获取所加载应用程序在屏幕上对用户可见的范围。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>包括此对象可见部分的 <codeph>Rectangle</codeph>。该矩形采用全局坐标。
       
@@ -1123,67 +1129,73 @@
      
       获取所加载应用程序在屏幕上对用户可见的范围。
      
+      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:invalidateParentSizeAndDisplayList"><apiName>invalidateParentSizeAndDisplayList</apiName><shortdesc>
+      
+      
+      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+      
+      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:isFontFaceEmbedded"><apiName>isFontFaceEmbedded</apiName><shortdesc>
-	  
+      
       如果所需的字体已嵌入到此应用程序中，或已使用 Font.registerFont() 方法进行了全局注册，则返回 true。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>如果所需的字体已嵌入到此应用程序中，或已使用 <codeph>Font.registerFont()</codeph> 方法进行了全局注册，则返回 <codeph>true</codeph>。
       
       </apiDesc><apiType value="Boolean"/></apiReturn><apiParam><apiItemName>textFormat</apiItemName><apiType value="flash.text:TextFormat"/><apiDesc>提供字符格式设置信息的 TextFormat 类。
 	 
 	  </apiDesc></apiParam></apiOperationDef><apiDesc>
-	  
+      
       如果所需的字体已嵌入到此应用程序中，或已使用 <codeph>Font.registerFont()</codeph> 方法进行了全局注册，则返回 <codeph>true</codeph>。
 	 
 	  </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:isTopLevel"><apiName>isTopLevel</apiName><shortdesc>
-	  
+      
 	  如果此 ISystemManager 负责应用程序窗口，则返回 true；如果此应用程序已加载到其它应用程序中，则返回 false。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>如果此 ISystemManager 负责应用程序窗口，则返回 <codeph>true</codeph>。
 	  
 	  </apiDesc><apiType value="Boolean"/></apiReturn></apiOperationDef><apiDesc>
-	  
+      
 	  如果此 ISystemManager 负责应用程序窗口，则返回 <codeph>true</codeph>；如果此应用程序已加载到其它应用程序中，则返回 <codeph>false</codeph>。
 	 
 	  </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:isTopLevelRoot"><apiName>isTopLevelRoot</apiName><shortdesc>
-	 
+     
       测试此系统管理器是否为所有顶级系统管理器的根。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>如果此 SystemManager 是显示列表上所有 SystemManager 的根，则为 <codeph>true</codeph>；否则为 <codeph>false</codeph>。
       
       </apiDesc><apiType value="Boolean"/></apiReturn></apiOperationDef><apiDesc>
-	 
+     
       测试此系统管理器是否为所有顶级系统管理器的根。
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:isTopLevelWindow"><apiName>isTopLevelWindow</apiName><shortdesc>
           确定给定的 DisplayObject 是否为顶级窗口。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>如果给定的 DisplayObject 是顶级窗口，则为 <codeph>true</codeph>。
       
       </apiDesc><apiType value="Boolean"/></apiReturn><apiParam><apiItemName>object</apiItemName><apiType value="flash.display:DisplayObject"/><apiDesc>要测试的 DisplayObject。
-	 
-	  </apiDesc></apiParam></apiOperationDef><apiDesc>
+     
+      </apiDesc></apiParam></apiOperationDef><apiDesc>
           确定给定的 DisplayObject 是否为顶级窗口。
-	 
-	  </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:move"><apiName>move</apiName><shortdesc>
-	  调用 move() 方法不会起任何作用，因为它会直接映射到应用程序窗口或加载程序中。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>x</apiItemName><apiType value="Number"/><apiDesc>新的 x 坐标。
-	 
-	  </apiDesc></apiParam><apiParam><apiItemName>y</apiItemName><apiType value="Number"/><apiDesc>新的 y 坐标。
+     
+      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:move"><apiName>move</apiName><shortdesc>
+      调用 move() 方法不会起任何作用，因为它会直接映射到应用程序窗口或加载程序中。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>x</apiItemName><apiType value="Number"/><apiDesc>新的 x 坐标。
+     
+      </apiDesc></apiParam><apiParam><apiItemName>y</apiItemName><apiType value="Number"/><apiDesc>新的 y 坐标。
       
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-	  调用 <codeph>move()</codeph> 方法不会起任何作用，因为它会直接映射到应用程序窗口或加载程序中。
-	 
-	  </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:setActualSize"><apiName>setActualSize</apiName><shortdesc>
-	  如果可以直接映射到应用程序窗口并且该窗口是顶级窗口，则调用 setActualSize() 方法不会产生任何影响。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>newWidth</apiItemName><apiType value="Number"/><apiDesc>新的宽度。
-	 
-	  </apiDesc></apiParam><apiParam><apiItemName>newHeight</apiItemName><apiType value="Number"/><apiDesc>新的高度。
+      调用 <codeph>move()</codeph> 方法不会起任何作用，因为它会直接映射到应用程序窗口或加载程序中。
+     
+      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:setActualSize"><apiName>setActualSize</apiName><shortdesc>
+      如果可以直接映射到应用程序窗口并且该窗口是顶级窗口，则调用 setActualSize() 方法不会产生任何影响。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>newWidth</apiItemName><apiType value="Number"/><apiDesc>新的宽度。
+     
+      </apiDesc></apiParam><apiParam><apiItemName>newHeight</apiItemName><apiType value="Number"/><apiDesc>新的高度。
       
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-	  如果可以直接映射到应用程序窗口并且该窗口是顶级窗口，则调用 <codeph>setActualSize()</codeph> 方法不会产生任何影响。另外，请尝试让其自行调整大小，如果需要，还可以裁减子项。
-	 
-	  </apiDesc></apiOperationDetail></apiOperation><apiValue id="mx.managers:SystemManager:application:get"><apiName>application</apiName><shortdesc>
-	  此 SystemManager 的子应用程序。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>mx.core:IUIComponent</apiValueClassifier></apiValueDef><apiDesc>
-	  此 SystemManager 的子应用程序。即使已将 SystemManager 加载到某个 Application 中，也可以使用它来创建其它 Application 的实例。因此，如果已将 SWF 加载到其它应用程序，则此属性就无法与 mx.core.Application.application 匹配。
-	  <p>请注意，出于加载时性能考虑，此属性的类型不能为 mx.core.Application，但可以将其强制为 mx.core.Application。</p>
+      如果可以直接映射到应用程序窗口并且该窗口是顶级窗口，则调用 <codeph>setActualSize()</codeph> 方法不会产生任何影响。另外，请尝试让其自行调整大小，如果需要，还可以裁减子项。
+     
+      </apiDesc></apiOperationDetail></apiOperation><apiValue id="mx.managers:SystemManager:application:get"><apiName>application</apiName><shortdesc>
+      此 SystemManager 的子应用程序。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>mx.core:IUIComponent</apiValueClassifier></apiValueDef><apiDesc>
+      此 SystemManager 的子应用程序。即使已将 SystemManager 加载到某个 Application 中，也可以使用它来创建其它 Application 的实例。因此，如果已将 SWF 加载到其它应用程序，则此属性就无法与 mx.core.Application.application 匹配。
+      <p>请注意，出于加载时性能考虑，此属性的类型不能为 mx.core.Application，但可以将其强制为 mx.core.Application。</p>
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:childAllowsParent:get"><apiName>childAllowsParent</apiName><shortdesc>
      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Boolean"/></apiValueDef><apiDesc>
      </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:cursorChildren:get"><apiName>cursorChildren</apiName><shortdesc>
-	  
+      
 	  使用此 ISystemManager 作为父项的自定义光标的列表。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>mx.core:IChildList</apiValueClassifier></apiValueDef><apiDesc>
-	  
+      
 	  使用此 ISystemManager 作为父项的自定义光标的列表。
 	 
 	  <p>ISystemManager 包含各种类型的子项，例如应用程序、弹出窗口、顶级窗口、工具提示和自定义光标。您可以通过 <codeph>cursorChildren</codeph> 属性访问自定义光标。</p>
@@ -1191,60 +1203,60 @@
 	  <p>IChildList 对象具有类似于 <codeph>getChildAt()</codeph> 的方法和类似于 <codeph>numChildren</codeph> 的属性。例如，<codeph>cursorChildren.numChildren</codeph> 可提供自定义光标数目（可以是 0，也可以是 1）；如果存在自定义光标，您可以将其当作 <codeph>cursorChildren.getChildAt(0)</codeph> 进行访问。</p>
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:document:get"><apiName>document</apiName><shortdesc>
-	  
+      
 	  对文档对象的引用。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Object"/></apiValueDef><apiDesc>
-	  
+      
 	  对文档对象的引用。文档对象是位于 Flex 应用程序、MXML 组件或 AS 组件层次结构顶层的 Object。
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:embeddedFontList:get"><apiName>embeddedFontList</apiName><shortdesc>
-	  此应用程序中的嵌入字体表。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Object"/></apiValueDef><apiDesc>
-	  此应用程序中的嵌入字体表。此对象是一个按字体名称编制索引的表格。
+      此应用程序中的嵌入字体表。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Object"/></apiValueDef><apiDesc>
+      此应用程序中的嵌入字体表。此对象是一个按字体名称编制索引的表格。
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:explicitHeight:get"><apiName>explicitHeight</apiName><shortdesc>
-	  此对象的显式宽度。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
-	  此对象的显式宽度。对于 SystemManager 而言，只要未将此应用程序加载到其它应用程序中，此值就应始终为 NaN。如果此应用程序未加载到其它应用程序中，则设置此值不会起任何作用。
+      此对象的显式宽度。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
+      此对象的显式宽度。对于 SystemManager 而言，只要未将此应用程序加载到其它应用程序中，此值就应始终为 NaN。如果此应用程序未加载到其它应用程序中，则设置此值不会起任何作用。
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:explicitWidth:get"><apiName>explicitWidth</apiName><shortdesc>
-	  此对象的显式宽度。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
-	  此对象的显式宽度。对于 SystemManager 而言，只要未将此应用程序加载到其它应用程序中，此值就应始终为 NaN。如果此应用程序未加载到其它应用程序中，则设置此值不会起任何作用。
+      此对象的显式宽度。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
+      此对象的显式宽度。对于 SystemManager 而言，只要未将此应用程序加载到其它应用程序中，此值就应始终为 NaN。如果此应用程序未加载到其它应用程序中，则设置此值不会起任何作用。
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:focusPane:get"><apiName>focusPane</apiName><shortdesc conref="mx.core.UIComponent#focusPane">
       </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="flash.display:Sprite"/></apiValueDef><apiDesc conref="mx.core.UIComponent#focusPane">
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:height:get"><apiName>height</apiName><shortdesc>
-	  此对象的高度。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
-	  此对象的高度。对于 SystemManager 而言，只要该应用程序未加载到其它应用程序中，此值就应始终为舞台的宽度。如果此应用程序未加载到其它应用程序中，则设置此值不会起任何作用。
+      此对象的高度。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
+      此对象的高度。对于 SystemManager 而言，只要该应用程序未加载到其它应用程序中，此值就应始终为舞台的宽度。如果此应用程序未加载到其它应用程序中，则设置此值不会起任何作用。
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:isProxy:get"><apiName>isProxy</apiName><shortdesc>
-	  如果 SystemManager 是代理而不是根类时为 true
-	 </shortdesc><prolog/><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Boolean"/></apiValueDef><apiDesc>
-	  如果 SystemManager 是代理而不是根类时为 true
-	 </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:measuredHeight:get"><apiName>measuredHeight</apiName><shortdesc>
-	  measuredHeight 可以是主 mx.core.Application 窗口的显式高度或 measuredHeight，如果尚未创建主窗口或主窗口不存在，则可以是 SWF 的起始高度。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
-	  measuredHeight 可以是主 mx.core.Application 窗口的显式高度或 measuredHeight，如果尚未创建主窗口或主窗口不存在，则可以是 SWF 的起始高度。
+      如果 SystemManager 是代理而不是根类时为 true
+     </shortdesc><prolog/><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Boolean"/></apiValueDef><apiDesc>
+      如果 SystemManager 是代理而不是根类时为 true
+     </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:measuredHeight:get"><apiName>measuredHeight</apiName><shortdesc>
+      measuredHeight 可以是主 mx.core.Application 窗口的显式高度或 measuredHeight，如果尚未创建主窗口或主窗口不存在，则可以是 SWF 的起始高度。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
+      measuredHeight 可以是主 mx.core.Application 窗口的显式高度或 measuredHeight，如果尚未创建主窗口或主窗口不存在，则可以是 SWF 的起始高度。
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:measuredWidth:get"><apiName>measuredWidth</apiName><shortdesc>
-	  measuredWidth 可以是主 mx.core.Application 窗口的显式宽度或 measuredWidth，如果尚未创建主窗口或主窗口不存在，则可以是 SWF 的起始宽度。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
-	  measuredWidth 可以是主 mx.core.Application 窗口的显式宽度或 measuredWidth，如果尚未创建主窗口或主窗口不存在，则可以是 SWF 的起始宽度。
+      measuredWidth 可以是主 mx.core.Application 窗口的显式宽度或 measuredWidth，如果尚未创建主窗口或主窗口不存在，则可以是 SWF 的起始宽度。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
+      measuredWidth 可以是主 mx.core.Application 窗口的显式宽度或 measuredWidth，如果尚未创建主窗口或主窗口不存在，则可以是 SWF 的起始宽度。
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:numChildren:get"><apiName>numChildren</apiName><shortdesc>
-	  非浮动窗口的数目。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="int"/></apiValueDef><apiDesc>
-	  非浮动窗口的数目。此值是主应用程序窗口以及添加到 SystemManager 中的除弹出窗口、工具提示或光标以外的任何其它窗口数目之和。
+      非浮动窗口的数目。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="int"/></apiValueDef><apiDesc>
+      非浮动窗口的数目。此值是主应用程序窗口以及添加到 SystemManager 中的除弹出窗口、工具提示或光标以外的任何其它窗口数目之和。
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:numModalWindows:get"><apiName>numModalWindows</apiName><shortdesc>
       模式窗口的数量。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="int"/></apiValueDef><apiDesc>
       模式窗口的数量。模式窗口不允许在其它窗口中单击，因为这通常会激活该窗口中的 FocusManager。PopUpManager 在创建和销毁模式窗口时会修改此计数。
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:parent:get"><apiName>parent</apiName><shortdesc>
-	 覆盖 parent 属性，用于处理父级位于不同沙箱中的情况。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="flash.display:DisplayObjectContainer"/></apiValueDef><apiDesc>
-	 覆盖 parent 属性，用于处理父级位于不同沙箱中的情况。如果父级位于同一沙箱中，则返回父级。如果父级位于不同的沙箱中，则返回 null。
-	 
+     覆盖 parent 属性，用于处理父级位于不同沙箱中的情况。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="flash.display:DisplayObjectContainer"/></apiValueDef><apiDesc>
+     覆盖 parent 属性，用于处理父级位于不同沙箱中的情况。如果父级位于同一沙箱中，则返回父级。如果父级位于不同的沙箱中，则返回 null。
+     
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:parentAllowsChild:get"><apiName>parentAllowsChild</apiName><shortdesc>
      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Boolean"/></apiValueDef><apiDesc>
      </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:popUpChildren:get"><apiName>popUpChildren</apiName><shortdesc>
-	  
+      
 	  将使用此 ISystemManager 作为父项的最顶级窗口（弹出窗口）的列表。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>mx.core:IChildList</apiValueClassifier></apiValueDef><apiDesc>
-	  
+      
 	  将使用此 ISystemManager 作为父项的最顶级窗口（弹出窗口）的列表。
 	 
 	  <p>ISystemManager 包含各种类型的子项，例如应用程序、弹出窗口、工具提示和自定义光标。您可以通过 <codeph>popUpChildren</codeph> 属性访问最顶级窗口。</p>
@@ -1253,28 +1265,28 @@
 	 
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:preloadedRSLs:get"><apiName>preloadedRSLs</apiName><shortdesc>
-      </shortdesc><prolog/><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="flash.utils:Dictionary"/></apiValueDef><apiDesc>
-      
+      在应用程序启动之前由该 SystemManager 加载的 RSL。</shortdesc><prolog/><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="flash.utils:Dictionary"/></apiValueDef><apiDesc>
+      在应用程序启动之前由该 SystemManager 加载的 RSL。由应用程序加载的 RSL 不包括在此列表中。预加载的 RSL 信息存储在词典中。该键为 RSL 的 LoaderInfo。该值为从中加载 RSL 的 URL。
      </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:preloaderBackgroundAlpha:get"><apiName>preloaderBackgroundAlpha</apiName><shortdesc>
-	 preloader 的子项使用的背景 Alpha。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
-	 preloader 的子项使用的背景 Alpha。
+      preloader 的子项使用的背景 Alpha。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
+      preloader 的子项使用的背景 Alpha。
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:preloaderBackgroundColor:get"><apiName>preloaderBackgroundColor</apiName><shortdesc>
-	 preloader 的子项使用的背景颜色。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="uint"/></apiValueDef><apiDesc>
-	 preloader 的子项使用的背景颜色。
+      preloader 的子项使用的背景颜色。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="uint"/></apiValueDef><apiDesc>
+      preloader 的子项使用的背景颜色。
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:preloaderBackgroundImage:get"><apiName>preloaderBackgroundImage</apiName><shortdesc>
-	 preloader 的子项使用的背景颜色。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Object"/></apiValueDef><apiDesc>
-	 preloader 的子项使用的背景颜色。
+      preloader 的子项使用的背景颜色。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Object"/></apiValueDef><apiDesc>
+      preloader 的子项使用的背景颜色。
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:preloaderBackgroundSize:get"><apiName>preloaderBackgroundSize</apiName><shortdesc>
-	 preloader 的子项使用的背景大小。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="String"/></apiValueDef><apiDesc>
-	 preloader 的子项使用的背景大小。
+      preloader 的子项使用的背景大小。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="String"/></apiValueDef><apiDesc>
+      preloader 的子项使用的背景大小。
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:rawChildren:get"><apiName>rawChildren</apiName><shortdesc>
-	  
+      
 	  使用此 ISystemManager 作为父项的所有子项的列表。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>mx.core:IChildList</apiValueClassifier></apiValueDef><apiDesc>
-	  
+      
 	  使用此 ISystemManager 作为父项的所有子项的列表。
 	 
 	  <p>ISystemManager 包含各种类型的子项，例如应用程序、弹出窗口、工具提示和自定义光标。</p>
@@ -1282,15 +1294,15 @@
 	  <p>IChildList 对象具有类似于 <codeph>getChildAt()</codeph> 的方法和类似于 <codeph>numChildren</codeph> 的属性。</p>
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:screen:get"><apiName>screen</apiName><shortdesc>
-	  
+      
 	  应用程序窗口的大小和位置。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="flash.geom:Rectangle"/></apiValueDef><apiDesc>
-	  
+      
 	  应用程序窗口的大小和位置。Rectangle 对象包含 <codeph>x</codeph>、<codeph>y</codeph>、<codeph>width</codeph> 和 <codeph>height</codeph> 属性。
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:toolTipChildren:get"><apiName>toolTipChildren</apiName><shortdesc>
-	  
+      
 	  将使用此 ISystemManager 作为父项的工具提示的列表。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>mx.core:IChildList</apiValueClassifier></apiValueDef><apiDesc>
-	  
+      
 	  将使用此 ISystemManager 作为父项的工具提示的列表。
 	 
 	  <p>ISystemManager 包含各种类型的子项，例如应用程序、弹出窗口、最顶部窗口、工具提示和自定义光标。</p>
@@ -1298,12 +1310,12 @@
 	  <p>IChildList 对象具有类似于 <codeph>getChildAt()</codeph> 的方法和类似于 <codeph>numChildren</codeph> 的属性。例如，<codeph>toolTipChildren.numChildren</codeph> 可提供工具提示数目（可以是 0，也可以是 1）；如果存在工具提示，您可以将其当作 <codeph>toolTipChildren.getChildAt(0)</codeph> 进行访问。</p>
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:topLevelSystemManager:get"><apiName>topLevelSystemManager</apiName><shortdesc>
-	  返回负责应用程序窗口的 SystemManager。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>mx.managers:ISystemManager</apiValueClassifier></apiValueDef><apiDesc>
-	  返回负责应用程序窗口的 SystemManager。只要此应用程序尚未加载到其它应用程序中，这就是同一个 SystemManager。
+      返回负责应用程序窗口的 SystemManager。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>mx.managers:ISystemManager</apiValueClassifier></apiValueDef><apiDesc>
+      返回负责应用程序窗口的 SystemManager。只要此应用程序尚未加载到其它应用程序中，这就是同一个 SystemManager。
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:width:get"><apiName>width</apiName><shortdesc>
-	  此对象的宽度。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
-	  此对象的宽度。对于 SystemManager 而言，只要该应用程序未加载到其它应用程序中，此值就应始终为舞台的宽度。如果此应用程序未加载到其它应用程序中，则设置此值不会起任何作用。
+      此对象的宽度。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
+      此对象的宽度。对于 SystemManager 而言，只要该应用程序未加载到其它应用程序中，此值就应始终为舞台的宽度。如果此应用程序未加载到其它应用程序中，则设置此值不会起任何作用。
       
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.managers:LayoutManager"><apiName>LayoutManager</apiName><shortdesc>
   LayoutManager 是 Flex 的度量和布局策略所基于的引擎。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseInterface>mx.managers:ILayoutManager</apiBaseInterface><apiBaseClassifier>flash.events:EventDispatcher</apiBaseClassifier></apiClassifierDef><apiDesc>
@@ -1511,7 +1523,17 @@
 	  此组件的工具提示文本。
 	  
 	  </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.managers:CursorManager"><apiName>CursorManager</apiName><shortdesc>
-  CursorManager 类控制光标的优先级列表，在该列表中，具有最高优先级的光标是当前可见的光标。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion><styles><style inherit="no" name="busyCursor" owner="mx.managers:CursorManager" playerVersion="Flash9" type="Class">
+  CursorManager 类控制光标的优先级列表，在该列表中，具有最高优先级的光标是当前可见的光标。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion><styles><style inherit="no" name="busyCursorBackground" owner="mx.managers:CursorManager" playerVersion="Flash9" type="Class">
+<description>
+  用作忙状态光标背景外观的类。默认值为 Assets.swf 文件中的“cursorStretch”符号。
+  
+  </description>
+
+<playerversion>AIR 1.1
+  </playerversion>
+	<prolog><asCustoms><langversion>3.0
+  </langversion><productversion>Flex 3
+ </productversion></asCustoms></prolog></style><style inherit="no" name="busyCursor" owner="mx.managers:CursorManager" playerVersion="Flash9" type="Class">
 <description>
   忙状态光标的外观
  
@@ -1586,8 +1608,8 @@
       <p>调用此方法不会影响系统光标。使用 <codeph>Mouse.show()</codeph> 和 <codeph>Mouse.hide()</codeph> 方法可直接控制系统光标。 </p>
       
       </apiDesc></apiOperationDetail></apiOperation><apiValue id="mx.managers:CursorManager:NO_CURSOR"><apiName>NO_CURSOR</apiName><shortdesc>
-      一个常数，表示当由于 CursorManager 没有管理任何光标而显示系统光标时，currentCursorID 属性的值。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>0</apiData><apiType value="int"/></apiValueDef><apiDesc>
-      一个常数，表示当由于 CursorManager 没有管理任何光标而显示系统光标时，<codeph>currentCursorID</codeph> 属性的值。
+      一个常量，表示当由于 CursorManager 没有管理任何光标而显示系统光标时，currentCursorID 属性的值。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>0</apiData><apiType value="int"/></apiValueDef><apiDesc>
+      一个常量，表示当由于 CursorManager 没有管理任何光标而显示系统光标时，<codeph>currentCursorID</codeph> 属性的值。
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:CursorManager:currentCursorID:get"><apiName>currentCursorID</apiName><shortdesc>
       当前自定义光标的 ID；如果显示的是系统光标，则为 NO_CURSOR。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="readwrite"/><apiType value="int"/></apiValueDef><apiDesc>

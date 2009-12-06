@@ -1,0 +1,1261 @@
+<?xml version="1.0"?>
+<apiPackage id="flash.desktop"><apiName>flash.desktop</apiName><apiDetail/><apiClassifier id="flash.desktop:InvokeEventReason"><apiName>InvokeEventReason</apiName><shortdesc>
+	 InvokeEventReason クラスには、InvokeEvent オブジェクトの reason プロパティで返される値が列挙されています。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5.1"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 InvokeEventReason クラスには、<codeph>InvokeEvent</codeph> オブジェクトの <codeph>reason</codeph> プロパティで返される値が列挙されています。
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="flash.events.xml#InvokeEvent/reason"><linktext>flash.events.InvokeEvent.reason</linktext></link></related-links><apiValue id="flash.desktop:InvokeEventReason:LOGIN"><apiName>LOGIN</apiName><shortdesc>
+			ユーザーがログインしたことが理由で InvokeEvent イベントが発生したことを示します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5.1"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>login</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+			ユーザーがログインしたことが理由で InvokeEvent イベントが発生したことを示します。
+			
+			</apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:InvokeEventReason:STANDARD"><apiName>STANDARD</apiName><shortdesc>
+			ログイン以外の理由で InvokeEvent が発生したことを示します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5.1"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>standard</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+			ログイン以外の理由で InvokeEvent が発生したことを示します。
+			
+			</apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.desktop:InteractiveIcon"><apiName>InteractiveIcon</apiName><shortdesc>
+	 InteractiveIcon クラスは、アプリケーションに関連付けられたオペレーティングシステムアイコンの基本クラスです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.desktop:Icon</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 InteractiveIcon クラスは、アプリケーションに関連付けられたオペレーティングシステムアイコンの基本クラスです。 
+	 
+	 <p>アプリケーションアイコンのインスタンスを取得するには、NativeApplication オブジェクトの <codeph>icon</codeph> プロパティを使用します。アイコンのタイプは、InteractiveIcon のサブクラスである DockIcon（Mac OS X<sup>®</sup>）または SystemTrayIcon（Windows<sup>®</sup>、Linux）のいずれかです。</p>
+	 
+	 <p>InteractiveIcon クラスを直接インスタンス化することはできません。<codeph>new InteractiveIcon()</codeph> コンストラクターを呼び出すと、ArgumentError 例外がスローされます。</p>
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="flash.desktop.xml#NativeApplication/icon"><linktext>flash.desktop.NativeApplication.icon</linktext></link><link href="flash.desktop.xml#NativeApplication/supportsDockIcon"><linktext>flash.desktop.NativeApplication.supportsDockIcon</linktext></link><link href="flash.desktop.xml#NativeApplication/supportsSystemTrayIcon"><linktext>flash.desktop.NativeApplication.supportsSystemTrayIcon</linktext></link></related-links><apiValue id="flash.desktop:InteractiveIcon:bitmaps:set"><apiName>bitmaps</apiName><shortdesc>
+		  
+	 さまざまなサイズの BitmapData オブジェクトの配列としてのアイコンイメージです。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Array</apiValueClassifier></apiValueDef><apiDesc>
+		  
+	 さまざまなサイズの BitmapData オブジェクトの配列としてのアイコンイメージです。
+	   
+	 <p>指定されたオペレーティングシステムのコンテキストでアイコンを表示する場合、表示するサイズに最も近い配列のビットマップが使用されます（必要に応じて伸縮）。一般的なサイズには、16x16、32x32、48x48 および 128x128 があります （512x512 ピクセルのアイコンは、近い将来にいくつかのオペレーティングシステムアイコンで使用される可能性があります）。</p>
+	 
+	 <p>一部のコンテキストでは、<codeph>bitmaps</codeph> プロパティに何も割り当てられていない場合、オペレーティングシステムがデフォルトのシステムアイコンを使用することがあります。他のコンテキストでは、アイコンは表示されません。</p>
+	 
+	 <p>アイコンの外観を設定または変更するには、BitmapData オブジェクトの配列を <codeph>bitmaps</codeph> プロパティに割り当てます。</p>
+	 
+	 <codeblock>
+	 icon.bitmaps = new Array(icon16x16.bitmapData, icon128x128.bitmapData);
+	 </codeblock>
+	  
+	 <p><codeph>bitmaps</codeph> 配列を直接変更しても効果はありません。</p>
+	 
+	 <p>アイコンイメージを消去するには、<codeph>bitmaps</codeph> プロパティに空の配列を割り当てます。</p>
+	 
+	 <p>
+	 <b>注意：</b>アイコン用のイメージファイルを読み込む場合、通常、最も適切なアルファブレンドが提供されるのは PNG ファイル形式です。GIF 形式は透明度のオンまたはオフのみをサポートし、ブレンドは行いません。JPG 形式は、透明度をまったくサポートしません。  
+	 </p>
+	  
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:InteractiveIcon:height:get"><apiName>height</apiName><shortdesc>
+		 アイコンの現在の表示の高さです（ピクセル単位）。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+		 アイコンの現在の表示の高さです（ピクセル単位）。
+		 
+		 <p>一部のアイコンのコンテキストでは、動的なサイズ調整がサポートされます。<codeph>height</codeph> プロパティは、現在のコンテキストの <codeph>bitmaps</codeph> 配列から選択されたアイコンの高さを示します。オペレーティングシステムによってアイコンが伸縮されている場合は、実際の表示の高さはこれとは異なります。</p>
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:InteractiveIcon:width:get"><apiName>width</apiName><shortdesc>
+		 アイコンの現在の表示幅です（ピクセル単位）。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+		 アイコンの現在の表示幅です（ピクセル単位）。 
+		 
+		 <p>一部のアイコンのコンテキストでは、動的なサイズ調整がサポートされます。<codeph>width</codeph> プロパティは、現在のコンテキストの <codeph>bitmaps</codeph> 配列から選択されたアイコンの幅を示します。オペレーティングシステムによってアイコンが伸縮されている場合は、実際の表示幅はこれとは異なります。</p>
+		 
+		 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.desktop:NativeDragActions"><apiName>NativeDragActions</apiName><shortdesc>
+NativeDragActions クラスは、ドラッグ &amp; ドロップアクションの名前のストリング定数を定義します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+NativeDragActions クラスは、ドラッグ &amp; ドロップアクションの名前のストリング定数を定義します。
+ 
+ <p>NativeDragActions 定数は、NativeDragManager クラスおよび NativeDragEvent クラスの <codeph>dropAction</codeph> プロパティの値として使用されます。</p>
+ 
+ </apiDesc></apiClassifierDetail><related-links><link href="flash.desktop.xml#NativeDragManager"><linktext>flash.desktop.NativeDragManager</linktext></link><link href="flash.events.xml#NativeDragEvent"><linktext>flash.events.NativeDragEvent</linktext></link></related-links><apiValue id="flash.desktop:NativeDragActions:COPY"><apiName>COPY</apiName><shortdesc>
+	copy アクションに使用するストリングを定義します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>copy</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	copy アクションに使用するストリングを定義します。
+	
+    </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeDragActions:LINK"><apiName>LINK</apiName><shortdesc>
+	link アクションに使用するストリングを定義します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>link</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	link アクションに使用するストリングを定義します。
+	
+    </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeDragActions:MOVE"><apiName>MOVE</apiName><shortdesc>
+	 move アクションに使用するストリングを定義します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>move</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 move アクションに使用するストリングを定義します。
+      
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeDragActions:NONE"><apiName>NONE</apiName><shortdesc>
+	アクションが指定されていないときに使用するストリングを定義します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>none</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	アクションが指定されていないときに使用するストリングを定義します。
+	 
+	 <p><codeph>nativeDragComplete</codeph> イベントでは、<codeph>none</codeph> アクションはドラッグ＆ドロップ操作がユーザーによって中止されたことを示します。</p>
+	 
+     </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.desktop:ClipboardFormats"><apiName>ClipboardFormats</apiName><shortdesc>
+ClipboardFormats クラスは、Clipboard クラスで使用する標準データ形式の名前の定数を定義します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><internal>Clipboard, ClipboardFormats and ClipboardTransferMode were all added to AIR 1.0. These are also being added, with some exceptions listed in this file, to FP10.
+</internal></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ClipboardFormats クラスは、Clipboard クラスで使用する標準データ形式の名前の定数を定義します。Flash Player 10 は、TEXT_FORMAT、RICH_TEXT_FORMAT および HTML_FORMAT のみをサポートします。
+
+</apiDesc></apiClassifierDetail><related-links><link href="flash.desktop.xml#Clipboard"><linktext>flash.desktop.Clipboard</linktext></link></related-links><apiValue id="flash.desktop:ClipboardFormats:BITMAP_FORMAT"><apiName>BITMAP_FORMAT</apiName><shortdesc>
+	イメージデータです（AIR のみ）。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><internal>Not supported in FP10.
+	</internal></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>air:bitmap</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	イメージデータです（AIR のみ）。
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:ClipboardFormats:FILE_LIST_FORMAT"><apiName>FILE_LIST_FORMAT</apiName><shortdesc>
+	ファイルの配列です（AIR のみ）。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><internal>Not supported in FP10.
+	</internal></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>air:file list</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	ファイルの配列です（AIR のみ）。
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:ClipboardFormats:HTML_FORMAT"><apiName>HTML_FORMAT</apiName><shortdesc>
+	HTML データです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>air:html</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	HTML データです。
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:ClipboardFormats:RICH_TEXT_FORMAT"><apiName>RICH_TEXT_FORMAT</apiName><shortdesc>
+	リッチテキストフォーマットデータです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.1"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>air:rtf</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	リッチテキストフォーマットデータです。
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:ClipboardFormats:TEXT_FORMAT"><apiName>TEXT_FORMAT</apiName><shortdesc>
+	ストリングデータです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>air:text</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	ストリングデータです。
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:ClipboardFormats:URL_FORMAT"><apiName>URL_FORMAT</apiName><shortdesc>
+	URL ストリングです（AIR のみ）。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><internal>Not supported in FP10.
+	</internal></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>air:url</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	URL ストリングです（AIR のみ）。
+	
+	</apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.desktop:NativeApplication"><apiName>NativeApplication</apiName><shortdesc>
+	 NativeApplication クラスは、この AIR アプリケーションを表します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>flash.events:EventDispatcher</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 NativeApplication クラスは、この AIR アプリケーションを表します。
+	 
+	 <p>
+	 NativeApplication クラスは、アプリケーション情報とアプリケーション全体の関数を提供し、アプリケーションレベルのイベントを送出します。
+	 </p>
+	 <p>
+	 NativeApplication オブジェクトは、起動時に自動的に作成されるシングルトンオブジェクトです。静的な <codeph>NativeApplication.nativeApplication</codeph> プロパティを持つアプリケーションの NativeApplication インスタンスを取得します。
+	 </p>
+	 
+	 </apiDesc></apiClassifierDetail><adobeApiEvent id="flash.desktop:NativeApplication_flash.events.Event.USER_PRESENT_userPresent"><apiName>userPresent</apiName><shortdesc>
+	 アイドル期間の後にオペレーティングシステムがマウスまたはキーボードの操作を検出すると送出されます。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.USER_PRESENT</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 アイドル期間の後にオペレーティングシステムがマウスまたはキーボードの操作を検出すると送出されます。
+	 
+	 <p><codeph>idleThreshold</codeph> プロパティを使用すると、アイドル状態にあると見なす時間の長さを設定できます。ユーザーがアイドル状態になってからの経過時間は、<codeph>timeSinceLastUserInput</codeph> プロパティで判断できます。</p>
+	 
+	 </apiDesc></adobeApiEventDetail><related-links><link href="flash.desktop.xml#NativeApplication/idleThreshold"><linktext>idleThreshold</linktext></link><link href="flash.desktop.xml#NativeApplication/timeSinceLastUserInput"><linktext>timeSinceLastUserInput</linktext></link></related-links></adobeApiEvent><adobeApiEvent id="flash.desktop:NativeApplication_flash.events.Event.USER_IDLE_userIdle"><apiName>userIdle</apiName><shortdesc>
+	 idleThreshold プロパティに指定された期間にわたってユーザーのアイドル状態が継続したときに送出されます。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.USER_IDLE</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 <codeph>idleThreshold</codeph> プロパティに指定された期間にわたってユーザーのアイドル状態が継続したときに送出されます。 
+	 
+	 <p>ユーザーがアイドル状態になってからの経過時間は、<codeph>timeSinceLastUserInput</codeph> プロパティで判断できます。</p>
+	 
+	 </apiDesc></adobeApiEventDetail><related-links><link href="flash.desktop.xml#NativeApplication/idleThreshold"><linktext>idleThreshold</linktext></link><link href="flash.desktop.xml#NativeApplication/timeSinceLastUserInput"><linktext>timeSinceLastUserInput</linktext></link></related-links></adobeApiEvent><adobeApiEvent id="flash.desktop:NativeApplication_flash.events.Event.NETWORK_CHANGE_networkChange"><apiName>networkChange</apiName><shortdesc>
+	 新しいネットワーク接続が使用可能になるか、既存のネットワーク接続が失われると送出されます。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.NETWORK_CHANGE</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 新しいネットワーク接続が使用可能になるか、既存のネットワーク接続が失われると送出されます。 
+	 
+	 <p><codeph>networkChange</codeph> イベントは、ホストコンピューターがオンラインまたはオフラインになったことを示しているとは限りません。接続がある種類から別の種類に移行したことを示している場合もあります。 アプリケーションはこのイベントを使用して、リモートリソースの可用性を監視するタスクを最適化できます。<codeph>networkChange</codeph> イベントが送出されたときに、リモートリソースの可用性を確認することをお勧めします。
+	 </p> 
+	 <p><b>注意：</b>ネットワークに変更が発生してからこのイベントが送出されるまでに少し時間がかかることがあります。</p>
+	 
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.desktop:NativeApplication_flash.events.Event.EXITING_exiting"><apiName>exiting</apiName><shortdesc>
+	 アプリケーションの終了シーケンスが開始されると送出されます。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.EXITING</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 アプリケーションの終了シーケンスが開始されると送出されます。 
+	 
+	 <p>例えば、ユーザーが Mac OS X で <codeph>Command+Q</codeph> キーを押すか、NativeApplication オブジェクトの <codeph>autoExit</codeph> プロパティを <codeph>true</codeph> に設定して最後のアプリケーションウィンドウを閉じるなどの方法で、オペレーティングシステムによってアプリケーションの終了が開始されると終了イベントが送出されます。このイベントをキャンセルすると、アプリケーションは終了しません。</p>
+	 
+	 <p><b>注意：</b>NativeApplication の <codeph>exit()</codeph> メソッドを呼び出しても、<codeph>exiting</codeph> イベントは送出されません。間もなくコンポーネントを終了することを警告する場合は、<codeph>exiting</codeph> イベントを送出した後で <codeph>exit()</codeph> を呼び出します。</p>
+	 
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.desktop:NativeApplication_flash.events.Event.DEACTIVATE_deactivate"><apiName>deactivate</apiName><shortdesc>
+	 デスクトップのフォーカスが別のアプリケーションに切り替わると送出されます。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.DEACTIVATE</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 デスクトップのフォーカスが別のアプリケーションに切り替わると送出されます。
+	 
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.desktop:NativeApplication_flash.events.Event.ACTIVATE_activate"><apiName>activate</apiName><shortdesc>
+	 このアプリケーションがアクティブデスクトップアプリケーションになると送出されます。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.Event.ACTIVATE</apiEventType><adobeApiEventClassifier>flash.events.Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 このアプリケーションがアクティブデスクトップアプリケーションになると送出されます。
+	  
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.desktop:NativeApplication_flash.events.BrowserInvokeEvent.Browser_INVOKE_browserInvoke"><apiName>browserInvoke</apiName><shortdesc>
+	 アプリケーションがユーザーのブラウザーを実行している SWF ファイルによって起動されたときに送出されます。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.BrowserInvokeEvent.Browser_INVOKE</apiEventType><adobeApiEventClassifier>flash.events.BrowserInvokeEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 アプリケーションがユーザーのブラウザーを実行している SWF ファイルによって起動されたときに送出されます。 
+	 
+	 <p>ブラウザー呼び出しが許可されるのは、アプリケーション記述ファイルで次のように指定されている場合のみです。</p>
+	 
+	 <codeblock>&lt;allowBrowserInvocation>true&lt;/allowBrowserInvocation></codeblock>
+	 
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.desktop:NativeApplication_flash.events.InvokeEvent.INVOKE_invoke"><apiName>invoke</apiName><shortdesc>
+	 アプリケーションが起動されたときに送出されます。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.InvokeEvent.INVOKE</apiEventType><adobeApiEventClassifier>flash.events.InvokeEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 アプリケーションが起動されたときに送出されます。 
+	 
+	 <p>1 つのアプリケーションを 2 回起動しても、そのアプリケーションの別のインスタンスは起動しません。代わりに、最初のインスタンスが追加の invoke イベントを受け取ります。アプリケーションで後続の <codeph>invoke</codeph> イベントを適切に処理する必要があります。</p>
+	 
+	 <p><b>注意：</b><codeph>invoke</codeph> イベントはすべてキューに置かれます。このイベントのリスナーは、登録されると、新しいイベントおよびキュー内のすべてのイベントを受け取ります。キューに置かれたイベントは、新しい <codeph>invoke</codeph> イベントの前または後に配信されます。</p>
+	 
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><apiOperation id="flash.desktop:NativeApplication:activate"><apiName>activate</apiName><shortdesc>
+         このアプリケーションをアクティブ化します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>window</apiItemName><apiOperationClassifier>flash.display:NativeWindow</apiOperationClassifier><apiData>null</apiData><apiDesc>アプリケーションと共にアクティブ化するウィンドウの NativeWindow オブジェクトです。
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+         このアプリケーションをアクティブ化します。 
+         
+         <p>オペレーティングシステムによって決められた一部の環境下では、このメソッドでアプリケーションはアクティブになりません。ほとんどのオペレーティングシステムでは、アプリケーション自体でアクティブになる機能を制限することにより、誤った操作や悪意のある操作によってユーザーが他のアプリケーションを使用できなくなることを防止しています。</p>
+         
+         <p>オペレーティングシステムでアクティブ化が許可されている場合は、指定したウィンドウがアクティブになり、デスクトップのフォアグラウンド、つまり他のアプリケーションのウィンドウよりも手前に表示されます(<codeph>window</codeph> パラメーターが <codeph>null</codeph> の場合、このアプリケーションの可視状態のウィンドウが選択されます)。</p>
+         
+         <p>アプリケーションに表示ウィンドウがない場合、<codeph>activate()</codeph> メソッドは無効です。</p>
+		 
+		 <p>アクティブ化操作は、同期的です。</p>
+		 
+		 </apiDesc></apiOperationDetail><adobeApiEvent id="flash.desktop:NativeApplication:activate_activate"><apiName>activate</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><adobeApiEventClassifier>flash.events:Event</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>アクティブ状態が変化すると送出されます。
+         
+         </apiDesc></adobeApiEventDetail><shortdesc>アクティブ状態が変化すると送出されます。</shortdesc></adobeApiEvent></apiOperation><apiOperation id="flash.desktop:NativeApplication:addEventListener"><apiName>addEventListener</apiName><shortdesc>
+		
+	イベントリスナーオブジェクトを EventDispatcher オブジェクトに登録し、リスナーがイベントの通知を受け取るようにします。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>type</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>イベントのタイプです。
+	
+	</apiDesc></apiParam><apiParam><apiItemName>listener</apiItemName><apiOperationClassifier>Function</apiOperationClassifier><apiDesc>イベントを処理するリスナー関数です。この関数は、次の例のように、Event オブジェクトを唯一のパラメーターとして受け取り、何も返さないもの<ph platform="actionscript">である必要があります。</ph> <ph platform="javascript"/>
+	
+    <codeblock platform="actionscript">function(evt:Event):void</codeblock>
+	
+	<p>関数の名前は任意に付けられます。</p>
+	
+	</apiDesc></apiParam><apiParam><apiItemName>useCapture</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc><ph platform="javascript">このパラメーターは、SWF コンテンツで使用される ActionScript 3.0 の表示リストアーキテクチャの表示オブジェクトに適用されます。</ph> <ph platform="actionscript">リスナーが、キャプチャ段階、またはターゲットおよびバブリング段階で動作するかどうかを判断します。 <codeph>useCapture</codeph> を <codeph>true</codeph> に設定すると、リスナーはキャプチャ段階のみでイベントを処理し、ターゲット段階またはバブリング段階では処理しません。<codeph>useCapture</codeph> を <codeph>false</codeph> に設定すると、リスナーはターゲット段階またはバブリング段階のみでイベントを処理します。3 つの段階すべてでイベントを受け取るには、<codeph>addEventListener</codeph> を 2 回呼び出します。<codeph>useCapture</codeph> を <codeph>true</codeph> に設定して呼び出し、<codeph>useCapture</codeph> を <codeph>false</codeph> に設定してもう一度呼び出します。</ph>
+	
+	</apiDesc></apiParam><apiParam><apiItemName>priority</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiData>0</apiData><apiDesc>イベントリスナーの優先度レベルです。優先度は、符号付き 32 ビット整数で指定します。数値が大きくなるほど優先度が高くなります。優先度が <i>n</i> のすべてのリスナーは、優先度が <i>n</i>-1 のリスナーよりも前に処理されます。複数のリスナーに対して同じ優先度が設定されている場合、それらは追加された順番に処理されます。デフォルトの優先度は 0 です。
+	
+	</apiDesc></apiParam><apiParam><apiItemName>useWeakReference</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>リスナーへの参照が強参照と弱参照のいずれであるかを判断します。デフォルトである強参照の場合は、リスナーのガベージコレクションが回避されます。弱参照では回避されません。 <p>クラスレベルメンバー関数はガベージコレクションの対象外であるため、クラスレベルメンバー関数の <codeph>useWeakReference</codeph> は、ガベージコレクションの制限とは無関係に <codeph>true</codeph> に設定できます。ネストされた内部の関数であるリスナーに対して <codeph>useWeakReference</codeph> を <codeph>true</codeph> に設定すると、その関数はガベージコレクションされ、永続的ではなくなります。inner 関数に対する参照を作成（別の変数に保存）した場合、その関数はガベージコレクションされず、永続化された状態のままになります。</p>
+	
+	</apiDesc></apiParam></apiOperationDef><apiDesc>
+		
+	イベントリスナーオブジェクトを EventDispatcher オブジェクトに登録し、リスナーがイベントの通知を受け取るようにします。<ph platform="actionscript">イベントリスナーは、特定のタイプのイベント、段階、および優先度に関する表示リスト内のすべてのノードに登録できます。</ph>
+	
+	<p platform="javascript">AIR ランタイムの JavaScript コードは、このメソッドを使用して AIR API によって定義されたイベント用のイベントリスナーを登録します。他の JavaScript イベント、例えば、<codeph>onload</codeph> イベント（DOM <codeph>body</codeph> オブジェクトのイベント）などの場合、ブラウザー内で実行されるコンテンツに対して行うように標準イベント処理テクニックを使用できます。</p>
+	
+	<p>イベントリスナーが正常に登録された後に、<codeph>addEventListener()</codeph> をさらに呼び出して優先度を変更することはできません。リスナーの優先度を変更するには、最初に <codeph>removeListener()</codeph> を呼び出す必要があります。その後、同じリスナーを新しい優先度レベルで再度登録できます。 </p>
+	
+	<p>リスナーが登録された後に、<codeph>addEventListener()</codeph>（<codeph>type</codeph> または <codeph>useCapture</codeph> に別の値を設定）を再度呼び出すと、別のリスナー登録が作成されることに注意してください。<ph platform="actionscript">例えば、最初にリスナーを登録するときに <codeph>useCapture</codeph> を <codeph>true</codeph> に設定すると、そのリスナーはキャプチャ段階のみでリスニングします。同じリスナーオブジェクトを使用して再度 <codeph>addEventListener()</codeph> を呼び出すと（このとき、<codeph>useCapture</codeph> に <codeph>false</codeph> を設定）、異なる 2 つのリスナーが登録されます。1 つはキャプチャ段階でリスニングするリスナーで、もう 1 つはターゲット段階とバブリング段階でリスニングするリスナーです。</ph>
+	</p>
+	
+	<p platform="actionscript">ターゲット段階またはバブリング段階のみを対象とするイベントリスナーを登録することはできません。登録時にこれらの段階が組み合わされるのは、バブリングはターゲットノードの祖先にしか適用されないためです。</p>
+	
+	<p>イベントリスナーが不要になった場合は、<codeph>removeEventListener()</codeph> を呼び出して、イベントリスナーを削除します。削除しない場合、メモリの問題が発生する可能性があります。ガベージコレクターは送出するオブジェクトがないとリスナーを削除しないので、イベントリスナーはメモリから自動的に削除されません（ただし、<codeph>useWeakReference</codeph> パラメーターが <codeph>true</codeph> に設定されている場合を除きます）。</p>
+		
+	<p>EventDispatcher インスタンスをコピーしても、それに関連付けられているイベントリスナーはコピーされません。新しく作成したノードにイベントリスナーが必要な場合は、ノードを作成した後に、リスナーを関連付ける必要があります。ただし、EventDispatcher インスタンスを移動した場合は、関連付けられているイベントリスナーも一緒に移動されます。</p>
+	
+	
+	<p platform="actionscript">イベントがノードで処理されるときに、イベントリスナーがそのノードに登録中であれば、イベントリスナーは現在の段階ではトリガーされません。ただし、バブリング段階など、イベントフローの後の段階でトリガーすることができます。</p>
+	
+	<p platform="actionscript">イベントがノードで処理されているときにイベントリスナーがノードから削除された場合でも、イベントは現在のアクションによってトリガーされます。削除された後は、その後の処理で再び登録されない限り、イベントリスナーは二度と呼び出されません。 </p>
+	
+	</apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.desktop:NativeApplication:clear"><apiName>clear</apiName><shortdesc>
+         フォーカスがある表示オブジェクトで内部 delete コマンドを起動します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc><codeph>true</codeph>.
+         
+		 </apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+         フォーカスがある表示オブジェクトで内部 delete コマンドを起動します。
+		 
+         <p>この関数呼び出しは、フォーカスがあるオブジェクトがコマンドを実装しない場合には無視されます。現在このコマンドを実装しているのは、TextField クラスまたは HTMLLoader クラスの下位にある表示コマンドのみです。</p>
+         
+         <p><b>注意：</b><codeph>clear()</codeph> コマンドは、選択したテキストを削除します。何も選択しない場合は、どのテキストもクリアされません。</p>
+         
+         </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.desktop:NativeApplication:copy"><apiName>copy</apiName><shortdesc>
+         フォーカスがある表示オブジェクトで内部 copy コマンドを起動します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+         フォーカスがある表示オブジェクトで内部 copy コマンドを起動します。
+         
+         <p>この関数呼び出しは、コンポーネントがコマンドを実装しない場合には無視されます。現在このコマンドを実装しているのは、TextField クラスまたは HTMLLoader クラスの下位にある表示コマンドのみです。</p>
+		 
+		 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.desktop:NativeApplication:cut"><apiName>cut</apiName><shortdesc>
+         フォーカスがある表示オブジェクトで内部 cut コマンドを起動します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc><codeph>true</codeph>.
+         
+		 </apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+         フォーカスがある表示オブジェクトで内部 cut コマンドを起動します。
+		 
+         <p>この関数呼び出しは、コンポーネントがコマンドを実装しない場合には無視されます。現在このコマンドを実装しているのは、TextField クラスまたは HTMLLoader クラスの下位にある表示コマンドのみです。</p>
+         
+         </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.desktop:NativeApplication:dispatchEvent"><apiName>dispatchEvent</apiName><shortdesc>
+		
+	イベントをイベントフローに送出します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiDesc>値が <codeph>true</codeph> の場合、イベントは正常に送出されました。値が <codeph>false</codeph> の場合、イベントの送出に失敗したか、イベントで <codeph>preventDefault()</codeph> が呼び出されたことを示しています。
+	
+	</apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn><apiParam><apiItemName>event</apiItemName><apiOperationClassifier>flash.events:Event</apiOperationClassifier><apiDesc>イベントフローに送出されるイベントオブジェクトです。イベントが再度送出されると、イベントのクローンが自動的に作成されます。イベントが送出された後にそのイベントの <codeph>target</codeph> プロパティは変更できないため、再送出処理のためにはイベントの新しいコピーを作成する必要があります。
+	
+	</apiDesc></apiParam></apiOperationDef><apiDesc>
+		
+	イベントをイベントフローに送出します。イベントターゲットは EventDispatcher オブジェクトです。これに対して <codeph>dispatchEvent()</codeph> メソッドが呼び出されます。
+	
+	</apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.desktop:NativeApplication:exit"><apiName>exit</apiName><shortdesc>
+		 このアプリケーションを終了します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>errorCode</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiData>0</apiData><apiDesc>このアプリケーションが終了するときにオペレーティングシステムに報告される終了コードです。
+		 
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+		 このアプリケーションを終了します。 
+		 
+		 <p><codeph>exit()</codeph> メソッドの呼び出しによって返されます。現在実行中のコード（現在のイベントハンドラーなど）が完了するまで、シャットダウンシーケンスは開始されません。<i/> 保留中の非同期操作はキャンセルされ、操作が完了しない場合もあります。</p>
+		 
+		 <p><codeph>exiting</codeph> イベントは送出されません。アプリケーションのロジック上 <codeph>exiting</codeph> イベントが必要な場合は、<codeph>NativeApplication.nativeApplication.dispatchEvent()</codeph> を呼び出し、タイプが <codeph>exiting</codeph> の Event オブジェクトを渡します。同様に、アプリケーションウィンドウが閉じるまで <codeph>closing</codeph> イベントおよび <codeph>close</codeph> イベントは送出されません。アプリケーションを終了する前にウィンドウに通知する必要がある場合は、開いている各ウィンドウに対して <codeph>closing</codeph> イベントを送出します。ウィンドウの <codeph>close</codeph> イベントが必要な場合は、終了する前にウィンドウの <codeph>close()</codeph> メソッドを呼び出します。</p>
+		 
+		 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.desktop:NativeApplication:getDefaultApplication"><apiName>getDefaultApplication</apiName><shortdesc>
+		 指定された拡張子を持つ開始ファイル用のデフォルトのアプリケーションを取得します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc><codeph>extension</codeph> パラメーターがアプリケーション記述子に宣言されたファイル拡張子を含まない場合。
+		 
+		 </apiDesc><apiItemName>Error</apiItemName><apiOperationClassifier>Error</apiOperationClassifier></apiException><apiReturn><apiDesc>デフォルトアプリケーションのパスです。
+		 
+		 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn><apiParam><apiItemName>extension</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>「.」を除く、対象のファイルタイプの拡張子を含む String です。
+		 
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+		 指定された拡張子を持つ開始ファイル用のデフォルトのアプリケーションを取得します。
+		 
+		 <p><b>注意：</b>このメソッドは、アプリケーション記述子の <codeph>fileTypes</codeph> ステートメントに宣言されたファイルタイプでのみ使用できます。</p>
+		 
+		 </apiDesc></apiOperationDetail><related-links><link href="flash.desktop.xml#NativeApplication/applicationDescriptor"><linktext>applicationDescriptor</linktext></link></related-links></apiOperation><apiOperation id="flash.desktop:NativeApplication:isSetAsDefaultApplication"><apiName>isSetAsDefaultApplication</apiName><shortdesc>
+		 現在このアプリケーションが、指定された拡張子を持つ開始ファイル用のデフォルトのアプリケーションかどうかを指定します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc><codeph>extension</codeph> パラメーターがアプリケーション記述子に宣言されたファイル拡張子を含まない場合。
+		 
+		 </apiDesc><apiItemName>Error</apiItemName><apiOperationClassifier>Error</apiOperationClassifier></apiException><apiReturn><apiDesc>このアプリケーションがデフォルトである場合は <codeph>true</codeph> です。
+		 
+		 </apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn><apiParam><apiItemName>extension</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>「.」を除く、対象のファイルタイプの拡張子を含む String です。
+		 
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+		 現在このアプリケーションが、指定された拡張子を持つ開始ファイル用のデフォルトのアプリケーションかどうかを指定します。
+		 
+		 </apiDesc></apiOperationDetail><related-links><link href="flash.desktop.xml#NativeApplication/applicationDescriptor"><linktext>applicationDescriptor</linktext></link></related-links></apiOperation><apiOperation id="flash.desktop:NativeApplication:paste"><apiName>paste</apiName><shortdesc>
+         フォーカスがある表示オブジェクトで内部 paste コマンドを起動します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc><codeph>true</codeph>.
+         
+		 </apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+         フォーカスがある表示オブジェクトで内部 paste コマンドを起動します。
+		 
+         <p>この関数呼び出しは、コンポーネントがコマンドを実装しない場合には無視されます。現在このコマンドを実装しているのは、TextField クラスまたは HTMLLoader クラスの下位にある表示コマンドのみです。</p>
+         
+         </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.desktop:NativeApplication:removeAsDefaultApplication"><apiName>removeAsDefaultApplication</apiName><shortdesc>
+		 このアプリケーションを、指定された拡張子を持つ開始ファイルに対するデフォルト指定から解除します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc><codeph>extension</codeph> パラメーターがアプリケーション記述子に宣言されたファイル拡張子を含まない場合。
+		 
+		 </apiDesc><apiItemName>Error</apiItemName><apiOperationClassifier>Error</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>extension</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>「.」を除く、対象のファイルタイプの拡張子を含む String です。
+         
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+		 このアプリケーションを、指定された拡張子を持つ開始ファイルに対するデフォルト指定から解除します。
+		 
+		 <p><b>注意：</b>このメソッドは、アプリケーション記述子の <codeph>fileTypes</codeph> ステートメントに示されたファイルタイプでのみ使用できます。</p>
+		 
+		 </apiDesc></apiOperationDetail><related-links><link href="flash.desktop.xml#NativeApplication/applicationDescriptor"><linktext>applicationDescriptor</linktext></link></related-links></apiOperation><apiOperation id="flash.desktop:NativeApplication:removeEventListener"><apiName>removeEventListener</apiName><shortdesc>
+		
+	EventDispatcher オブジェクトからリスナーを削除します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>type</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>イベントのタイプです。
+	
+	</apiDesc></apiParam><apiParam><apiItemName>listener</apiItemName><apiOperationClassifier>Function</apiOperationClassifier><apiDesc>削除するリスナーオブジェクトです。
+	
+	</apiDesc></apiParam><apiParam><apiItemName>useCapture</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc><ph platform="javascript">このパラメーターは、SWF コンテンツで使用される ActionScript 3.0 の表示リストアーキテクチャの表示オブジェクトに適用されます。</ph> <ph platform="actionscript">リスナーが、キャプチャ段階、またはターゲットおよびバブリング段階に対して登録されたかどうかを示します。 リスナーがキャプチャ段階だけでなくターゲット段階とバブリング段階にも登録されている場合は、<codeph>removeEventListener()</codeph> を 2 回呼び出して両方のリスナーを削除する必要があります。1 回は <codeph>useCapture()</codeph> を <codeph>true</codeph> に設定し、もう 1 回は <codeph>useCapture()</codeph> を <codeph>false</codeph> に設定する必要があります。</ph>
+	
+	</apiDesc></apiParam></apiOperationDef><apiDesc>
+		
+	EventDispatcher オブジェクトからリスナーを削除します。対応するリスナーが EventDispatcher オブジェクトに登録されていない場合は、このメソッドを呼び出しても効果はありません。
+	
+	</apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.desktop:NativeApplication:selectAll"><apiName>selectAll</apiName><shortdesc>
+         フォーカスがある表示オブジェクトで内部 selectAll コマンドを起動します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc><codeph>true</codeph>.
+         
+		 </apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+         フォーカスがある表示オブジェクトで内部 selectAll コマンドを起動します。
+		 
+         <p>この関数呼び出しは、コンポーネントがコマンドを実装しない場合には無視されます。現在このコマンドを実装しているのは、TextField クラスまたは HTMLLoader クラスの下位にある表示コマンドのみです。</p>
+         
+         </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.desktop:NativeApplication:setAsDefaultApplication"><apiName>setAsDefaultApplication</apiName><shortdesc>
+		 このアプリケーションを、指定された拡張子を持つ開始ファイル用のデフォルトのアプリケーションとして設定します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc><codeph>extension</codeph> パラメーターがアプリケーション記述子に宣言されたファイル拡張子を含まない場合。
+		 
+		 </apiDesc><apiItemName>Error</apiItemName><apiOperationClassifier>Error</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>extension</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>「.」を除く、対象のファイルタイプの拡張子を含む String です。
+		 
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+		 このアプリケーションを、指定された拡張子を持つ開始ファイル用のデフォルトのアプリケーションとして設定します。
+		 
+		 <p><b>注意：</b>このメソッドは、アプリケーション記述子の <codeph>fileTypes</codeph> ステートメントに宣言されたファイルタイプでのみ使用できます。</p>
+		 
+		 </apiDesc></apiOperationDetail><related-links><link href="flash.desktop.xml#NativeApplication/applicationDescriptor"><linktext>applicationDescriptor</linktext></link></related-links></apiOperation><apiValue id="flash.desktop:NativeApplication:activeWindow:get"><apiName>activeWindow</apiName><shortdesc>
+         アクティブなアプリケーションウィンドウです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>flash.display:NativeWindow</apiValueClassifier></apiValueDef><apiDesc>
+         アクティブなアプリケーションウィンドウです。 
+		 
+		 <p>アクティブなデスクトップウィンドウがこのアプリケーションに属していない場合、またはアクティブなウィンドウがない場合、<codeph>activeWindow</codeph> は <codeph>null</codeph> です。</p>
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeApplication:applicationDescriptor:get"><apiName>applicationDescriptor</apiName><shortdesc> 
+		 この AIR アプリケーション用のアプリケーション記述ファイルの内容です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>XML</apiValueClassifier></apiValueDef><apiDesc> 
+		 この AIR アプリケーション用のアプリケーション記述ファイルの内容です。
+		 
+		 <p platform="javascript">SWF ファイルの ActionScript 3.0 コードは、XML データを操作する E4X シンタックスをサポートします。 ただし、HTML ベースの AIR アプリケーションでは、DOMParser オブジェクトの <codeph>parseFromString()</codeph> メソッドを使用して、このプロパティの XML 値を DOMParser オブジェクトに変換できます。</p>
+		 
+		 </apiDesc><example conref="examples\NativeApplication.applicationDescriptor.1.as"> 次の例は、アプリケーション記述ファイルから <codeph>copyright</codeph> 要素と <codeph>version</codeph> 要素を読み取ります。アプリケーション記述子 XML に定義されたデフォルトの名前空間を使用する必要があります。
+<codeblock>
+var appDescriptor:XML = NativeApplication.nativeApplication.applicationDescriptor;
+var ns:Namespace = appDescriptor.namespace();
+var appCopyright:String = appDescriptor.ns::copyright;
+var appVersion:String = appDescriptor.ns::version;
+trace("appId:", appCopyright);
+trace("version:", appVersion);
+</codeblock><swfblock conref="examples\NativeApplication.applicationDescriptor.1.swf"/></example></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeApplication:applicationID:get"><apiName>applicationID</apiName><shortdesc> 
+		 このアプリケーションのアプリケーション ID です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+		 このアプリケーションのアプリケーション ID です。 
+		 
+		 <p>この ID の値は、アプリケーション記述ファイルに設定されます。</p>
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeApplication:autoExit:get"><apiName>autoExit</apiName><shortdesc>
+		 すべてのウィンドウを閉じたときにアプリケーションを自動的に終了するかどうかを指定します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+		 すべてのウィンドウを閉じたときにアプリケーションを自動的に終了するかどうかを指定します。  
+		 
+		 <p><codeph>autoExit</codeph> がデフォルトの <codeph>true</codeph> の場合、すべてのウィンドウを閉じるとアプリケーションが終了します。<codeph>exiting</codeph> イベントと <codeph>exit</codeph> イベントの両方が送出されます。<codeph>autoExit</codeph> が <codeph>false</codeph> の場合、<codeph>NativeApplication.nativeApplication.exit()</codeph> を呼び出してアプリケーションを終了する必要があります。 </p> 
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeApplication:icon:get"><apiName>icon</apiName><shortdesc>
+		 アプリケーションアイコンです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>flash.desktop:InteractiveIcon</apiValueClassifier></apiValueDef><apiDesc>
+		 アプリケーションアイコンです。
+		 
+		 <p><codeph>NativeApplication.supportsDockIcon</codeph> と <codeph>NativeApplication.supportsSystemTrayIcon</codeph> を使用して、icon クラスを判別します。タイプは、InteractiveIcon のいずれかのサブクラスです。Mac<sup>®</sup> OS X では、<codeph>NativeApplication.icon</codeph> は <codeph>DockIcon</codeph> タイプのオブジェクトです。Windows<sup>®</sup> の場合、<codeph>NativeApplication.icon</codeph> はタイプが <codeph>SystemTrayIcon</codeph> のオブジェクトです。Linux では、アプリケーションアイコンは常にサポートされているわけではありません。この場合、<codeph>icon</codeph> プロパティは <codeph>null</codeph> です。</p>  
+		 
+		 <p><codeph>icon</codeph> オブジェクトは自動的に作成されますが、イメージデータで初期化されません。Mac OS X などの一部のオペレーティングシステムでは、デフォルトのイメージが指定されます。一方、Windows などのオペレーティングシステムでは、アイコンにイメージデータが割り当てられない限りアイコンは表示されません。アイコンイメージを割り当てるには、少なくとも 1 つの BitmapData オブジェクトが格納されている配列を <codeph>icon.bitmaps</codeph> プロパティに設定します。配列に複数の BitmapData オブジェクトが格納されている場合、サイズがアイコンの表示サイズに最も近いイメージをオペレーティングシステムが選択し、必要に応じてイメージを伸縮します。</p>  
+   		 
+         </apiDesc></apiValueDetail><related-links><link href="flash.desktop.xml#NativeApplication/supportsDockIcon"><linktext>supportsDockIcon</linktext></link><link href="flash.desktop.xml#DockIcon"><linktext>flash.desktop.DockIcon</linktext></link><link href="flash.desktop.xml#NativeApplication/supportsSystemTrayIcon"><linktext>supportsSystemTrayIcon</linktext></link><link href="flash.desktop.xml#SystemTrayIcon"><linktext>flash.desktop.SystemTrayIcon</linktext></link></related-links></apiValue><apiValue id="flash.desktop:NativeApplication:idleThreshold:get"><apiName>idleThreshold</apiName><shortdesc>
+		 キーボード入力またはマウス入力が行われなくなってから userIdle イベントを送出するまでの秒数です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>int</apiValueClassifier><apiException><apiDesc>プロパティに無効な値を設定しようとした場合に発生します。許容される値の範囲は、5（5 秒）以上 86,400（1 日）以下です。
+		 
+		 </apiDesc><apiItemName>ArgumentError</apiItemName><apiOperationClassifier>ArgumentError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+		 キーボード入力またはマウス入力が行われなくなってから <codeph>userIdle</codeph> イベントを送出するまでの秒数です。 
+		 
+		 <p>デフォルトでは、アイドル時間のしきい値は 300 秒（5 分）に設定されています。許容される値の範囲は、5（5 秒）以上 86,400（1 日）以下です。</p>
+		 
+		 </apiDesc></apiValueDetail><related-links><link href="flash.desktop.xml#NativeApplication/event:userIdle"><linktext>userIdle</linktext></link><link href="flash.desktop.xml#NativeApplication/event:userPresent"><linktext>userPresent</linktext></link></related-links></apiValue><apiValue id="flash.desktop:NativeApplication:menu:get"><apiName>menu</apiName><shortdesc>
+		 アプリケーションメニューです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>flash.display:NativeMenu</apiValueClassifier></apiValueDef><apiDesc>
+		 アプリケーションメニューです。
+		 
+		 <p>アプリケーションメニューは、<codeph>NativeApplication.nativeApplication.supportsMenu</codeph> が <codeph>true</codeph> のときにサポートされます。アプリケーションメニューをサポートしないオペレーティングシステムもあります。例えば、Mac OS X ではアプリケーションメニューがサポートされますが、Windows または Linux ではサポートされません。<codeph>NativeApplication.nativeApplication.supportsMenu</codeph> が <codeph>false</codeph> の場合も、このプロパティに NativeMenu オブジェクトを割り当てることはできますが、効果はありません。使用しているオペレーティングシステムでアプリケーションメニューがサポートされているか確認するには、必ず <codeph>NativeApplication.nativeApplication.supportsMenu</codeph> プロパティを使用してください。その他の方法（<codeph>Capabilities.os</codeph> など）でサポートの有無を判断すると、プログラミングエラーの原因になる可能性があります（ターゲットとなり得るオペレーティングシステムの種類についての配慮が完全でない場合）。</p>
+		 
+         <p><b>注意：</b>Mac OS X の場合、<codeph>menu</codeph> プロパティはオペレーティングシステムで指定されたデフォルトのアプリケーションメニューを参照します。アイテムやサブメニューを追加および削除したり、イベントリスナーを追加することで、既存のメニュー構造を変更できます。新しい NativeMenu オブジェクトをこの <codeph>menu</codeph> プロパティに割り当てることによって、デフォルトのメニュー全体を置き換えることもできます。</p>
+		 
+		 </apiDesc></apiValueDetail><related-links><link href="flash.display.xml#NativeMenu"><linktext>flash.display.NativeMenu</linktext></link><link href="flash.display.xml#NativeWindow/supportsMenu"><linktext>flash.display.NativeWindow.supportsMenu</linktext></link></related-links></apiValue><apiValue id="flash.desktop:NativeApplication:nativeApplication:get"><apiName>nativeApplication</apiName><shortdesc> 
+		 NativeApplication オブジェクトのシングルトンインスタンスです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>flash.desktop:NativeApplication</apiValueClassifier><apiException><apiDesc>アプリケーションのセキュリティサンドボックス外部のコンテンツでアクセスした場合。
+		 
+		 </apiDesc><apiItemName>Error</apiItemName><apiOperationClassifier>Error</apiOperationClassifier></apiException></apiValueDef><apiDesc> 
+		 NativeApplication オブジェクトのシングルトンインスタンスです。
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeApplication:openedWindows:get"><apiName>openedWindows</apiName><shortdesc>
+		 このアプリケーションの開いているすべてのネイティブウィンドウを含む配列です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Array</apiValueClassifier></apiValueDef><apiDesc>
+		 このアプリケーションの開いているすべてのネイティブウィンドウを含む配列です。
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeApplication:publisherID:get"><apiName>publisherID</apiName><shortdesc> 
+		 このアプリケーションの発行者 ID です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+		 このアプリケーションの発行者 ID です。 
+		 
+		 <p>この ID の値は、アプリケーションの発行者 ID ファイルに設定されます。このファイルは、インストール時に、アプリケーションの署名に使用される証明書チェーンから生成されます。</p>
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeApplication:runtimePatchLevel:get"><apiName>runtimePatchLevel</apiName><shortdesc> 
+		 このアプリケーションをホストしているランタイムのパッチレベルです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>uint</apiValueClassifier></apiValueDef><apiDesc> 
+		 このアプリケーションをホストしているランタイムのパッチレベルです。
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeApplication:runtimeVersion:get"><apiName>runtimeVersion</apiName><shortdesc> 
+		 このアプリケーションをホストしているランタイムのバージョン番号です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc> 
+		 このアプリケーションをホストしているランタイムのバージョン番号です。
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeApplication:startAtLogin:set"><apiName>startAtLogin</apiName><shortdesc>
+        現在のユーザーがログインしたときは常にこのアプリケーションを自動的に起動するかどうかを指定します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier><apiException><apiDesc>Windows では、同じ名前を持つ（ただし、実行可能ファイルへのパスが異なる）別のアプリケーションが、このユーザーがログインすると起動するように既に設定されている場合。
+        
+        </apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException><apiException><apiDesc>このアプリケーションがインストールされていない場合、AIR Debug Launcher（ADL）によって起動された可能性があります。
+        
+		</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiValueDef><apiDesc>
+        現在のユーザーがログインしたときは常にこのアプリケーションを自動的に起動するかどうかを指定します。
+        
+        <p>
+        <codeph>startAtLogin</codeph> プロパティは、ユーザーがログインするとアプリケーションを自動的に開始することを指定するためにオペレーティングシステムに定義されたメカニズムのステータスを反映します。ユーザーは、オペレーティングシステムのユーザーインターフェイスでこのステータスを変更できます。このプロパティは、AIR アプリケーションまたはオペレーティングシステムによってこのステータスが最近変更されたかどうかについての現在のステータスを反映します。   
+        </p>
+        </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeApplication:supportsDockIcon:get"><apiName>supportsDockIcon</apiName><shortdesc> 
+	   AIR が現在のオペレーティングシステムのアプリケーションドックアイコンをサポートするかどうかを示します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc> 
+	   AIR が現在のオペレーティングシステムのアプリケーションドックアイコンをサポートするかどうかを示します。
+	  
+	  <p><codeph>true</codeph> の場合、<codeph>NativeApplication.icon</codeph> プロパティは <codeph>DockIcon</codeph> タイプです。</p>
+	  
+      <p>Mac OS X および各種の Linux<sup>®</sup> のユーザーインターフェイスには、実行中または頻繁に使用するアプリケーション用のアイコンが含まれた、アプリケーション "ドック" が用意されています。</p>
+	  
+	  <p>使用しているオペレーティングシステムでアプリケーションのドックアイコンがサポートされているか確認するには、必ず <codeph>NativeApplication.supportsDockIcon</codeph> プロパティを使用してください。その他の方法（<codeph>Capabilities.os</codeph> など）でサポートの有無を判断すると、プログラミングエラーの原因になる可能性があります（ターゲットとなり得るオペレーティングシステムの種類についての配慮が完全でない場合）。</p>
+      
+      </apiDesc></apiValueDetail><related-links><link href="flash.desktop.xml#NativeApplication/icon"><linktext>icon</linktext></link></related-links></apiValue><apiValue id="flash.desktop:NativeApplication:supportsMenu:get"><apiName>supportsMenu</apiName><shortdesc> 
+	   現在のオペレーティングシステムがグローバルアプリケーションメニューバーをサポートするかどうかを指定します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc> 
+	   現在のオペレーティングシステムがグローバルアプリケーションメニューバーをサポートするかどうかを指定します。
+	  
+	  <p><codeph>true</codeph> の場合、<codeph>NativeApplication.menu</codeph> プロパティを使用してネイティブアプリケーションメニューを定義（またはネイティブアプリケーションメニューにアクセス）できます。</p> 
+	  
+	  <p>使用しているオペレーティングシステムでアプリケーションメニューバーがサポートされているか確認するには、必ず <codeph>NativeApplication.supportsMenu</codeph> プロパティを使用してください。その他の方法（<codeph>Capabilities.os</codeph> など）でサポートの有無を判断すると、プログラミングエラーの原因になる可能性があります（ターゲットとなり得るオペレーティングシステムの種類についての配慮が完全でない場合）。</p>
+	  
+      </apiDesc></apiValueDetail><related-links><link href="flash.desktop.xml#NativeApplication/menu"><linktext>menu</linktext></link><link href="flash.display.xml#NativeWindow/supportsMenu"><linktext>flash.display.NativeWindow.supportsMenu</linktext></link></related-links></apiValue><apiValue id="flash.desktop:NativeApplication:supportsSystemTrayIcon:get"><apiName>supportsSystemTrayIcon</apiName><shortdesc> 
+	  AIR が現在のオペレーティングシステムのシステムトレイアイコンをサポートするかどうかを指定します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc> 
+	  AIR が現在のオペレーティングシステムのシステムトレイアイコンをサポートするかどうかを指定します。
+	  
+	  <p><codeph>true</codeph> の場合、<codeph>NativeApplication.icon</codeph> プロパティは <codeph>SystemTrayIcon</codeph> タイプです。</p>
+	  
+	  <p>使用しているオペレーティングシステムでシステムトレイアイコンがサポートされているか確認するには、必ず <codeph>NativeApplication.supportsSystemTrayIcon</codeph> プロパティを使用してください。その他の方法（<codeph>Capabilities.os</codeph> など）でサポートの有無を判断すると、プログラミングエラーの原因になる可能性があります（ターゲットとなり得るオペレーティングシステムの種類についての配慮が完全でない場合）。</p>
+	  
+      <p><b>メモ :</b> Windows では、タスクバーのシステムトレイ領域は正式には<i>通知領域</i>と呼ばれています。</p> 
+      
+      </apiDesc></apiValueDetail><related-links><link href="flash.desktop.xml#NativeApplication/icon"><linktext>icon</linktext></link></related-links></apiValue><apiValue id="flash.desktop:NativeApplication:timeSinceLastUserInput:get"><apiName>timeSinceLastUserInput</apiName><shortdesc>
+         最後のマウス入力またはキーボード入力からの秒単位の経過時間です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+         最後のマウス入力またはキーボード入力からの秒単位の経過時間です。
+		 
+		 </apiDesc></apiValueDetail><related-links><link href="flash.desktop.xml#NativeApplication/event:userIdle"><linktext>userIdle</linktext></link><link href="flash.desktop.xml#NativeApplication/event:userPresent"><linktext>userPresent</linktext></link></related-links></apiValue></apiClassifier><apiClassifier id="flash.desktop:Updater"><apiName>Updater</apiName><shortdesc>
+     Updater クラスは、現在実行しているアプリケーションを別のバージョンに更新するときに使用されます。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+     Updater クラスは、現在実行しているアプリケーションを別のバージョンに更新するときに使用されます。このクラスを使用するには、Updater オブジェクトをインスタンス化した後で、その <codeph>update()</codeph> メソッドを呼び出します。
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="air.update.xml#ApplicationUpdater"><linktext>air.update.ApplicationUpdater</linktext></link><link href="air.update.xml#ApplicationUpdaterUI"><linktext>air.update.ApplicationUpdaterUI</linktext></link></related-links><apiConstructor id="flash.desktop:Updater:Updater"><apiName>Updater</apiName><shortdesc>
+         Updater クラスのコンストラクター関数です。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/></apiConstructorDef><apiDesc>
+         Updater クラスのコンストラクター関数です。 <codeph>update()</codeph> メソッドはクラスの静的メンバーではない点に注意してください。Updater オブジェクトをインスタンス化して、その <codeph>update()</codeph> メソッドを呼び出す必要があります。
+		 
+		 </apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="flash.desktop:Updater:update"><apiName>update</apiName><shortdesc>
+         現在実行しているアプリケーションを、指定された AIR ファイルにあるアプリケーションのバージョンに更新します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>ADL で実行した場合にこのメソッドが呼び出されました。 
+		 
+		 </apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>airFile</apiItemName><apiOperationClassifier>flash.filesystem:File</apiOperationClassifier><apiDesc>更新バージョンのアプリケーションが格納されている AIR ファイルを示す File オブジェクトです。
+		 
+		 </apiDesc></apiParam><apiParam><apiItemName>version</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>新規 AIR ファイル内の必要なバージョンです。更新が成功するには、<codeph>version</codeph> 属性（AIR ファイルにあるアプリケーション記述ファイルのメイン <codeph>application</codeph> エレメントで指定）のストリングが、この値と一致する必要があります。
+		 
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+         現在実行しているアプリケーションを、指定された AIR ファイルにあるアプリケーションのバージョンに更新します。AIR ファイル内のアプリケーションは、現在実行しているアプリケーションと同じアプリケーション識別子（<codeph>appID</codeph>）を持っている必要があります。
+		 
+         <p>このメソッドを呼び出すと、(<codeph>NativeApplication.exit()</codeph> メソッドを呼び出した場合と同じように）現在のアプリケーションが終了します。アプリケーションが実行中になっていると Adobe AIR はそのアプリケーションを更新できないため、この操作が必要になります。新しいバージョンのアプリケーションのインストールが正常に完了すると、そのアプリケーションが起動します。ランタイムで新しいバージョンを正常にインストールできない場合（例えば、アプリケーション ID が既存のバージョンと一致しない場合）、AIR インストーラーによってユーザーにエラーメッセージが表示され、古いバージョンが再起動されます。</p>
+		 
+		 <p>更新処理は更新が成功したかどうかにかかわらずアプリケーションを再起動します。更新は、ユーザーがアプリケーションをインストールする十分な権限を持っていないといったアプリケーションが制御できないなどのさまざまな理由で失敗する可能性があります。アプリケーションでは、失敗を検出し、同じ失敗の更新を繰り返し行わないようにする必要があります。失敗の結果として発生する無限ループは、アプリケーションを事実上無効にすることになります。更新が成功したことを確認する 1 つの方法として、更新を開始する前に現在のバージョン番号をファイルに書き込み、その後、アプリケーションが再起動されるときにそのバージョン番号と比較することがあります。</p>
+		 
+		 <p>AIR Debug Launcher（ADL）アプリケーションを使用してアプリケーションをテストしているときに、<codeph>update()</codeph> メソッドを呼び出すと、IllegalOperationError 例外が発生します。</p>
+		 
+		 <p>Mac OS の場合、アプリケーションの更新されたバージョンをインストールするには、適切なシステム権限を持ってアプリケーションディレクトリにインストールする必要があります。Windows または Linux の場合、管理権限を持っている必要があります。 </p>
+		 
+		 <p>アプリケーションの更新されたバージョンがランタイムの更新されたバージョンを必要とする場合、新しいランタイムバージョンがインストールされます。ランタイムを更新するには、コンピューターの管理権限を持っている必要があります。</p>
+		 
+		 <p><i/>注意：セキュリティ上の理由から、<codeph>version</codeph> パラメーターを指定する必要があります。AIR ファイルのアプリケーションのバージョン番号の確認を必須とすることで、修正済みのセキュリティ上の脆弱性が含まれている可能性のある、古いバージョンのアプリケーションが誤ってインストールされることがなくなります。</p>
+		 
+		 </apiDesc><example conref="examples\Updater.update.1.as"> <codeph>update()</codeph> メソッドはクラスの静的メソッドではない点に注意してください。<i/> Updater オブジェクトをインスタンス化して、そのオブジェクトの <codeph>update()</codeph> メソッドを呼び出します。
+<codeblock>
+import flash.fileSystem.File;
+import flash.desktop.Updater;
+ 
+var updater:Updater = new Updater();
+var airFile:File = File.applicationStore.resolvePath("Example Application.air");
+var version:String = "2.01";
+updater.update(airFile, version);
+</codeblock></example></apiOperationDetail><related-links><link href="air.update.xml#ApplicationUpdater"><linktext>air.update.ApplicationUpdater</linktext></link><link href="air.update.xml#ApplicationUpdaterUI"><linktext>air.update.ApplicationUpdaterUI</linktext></link></related-links></apiOperation></apiClassifier><apiClassifier id="flash.desktop:SystemTrayIcon"><apiName>SystemTrayIcon</apiName><shortdesc>
+	 SystemTrayIcon クラスは、Windows&amp;#xAE; タスクバーの通知領域（システムトレイ）スタイルのアイコンを表します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.desktop:InteractiveIcon</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 SystemTrayIcon クラスは、Windows<sup>®</sup> タスクバーの通知領域（システムトレイ）スタイルのアイコンを表します。
+	 
+	 <p>システムトレイアイコンのないオペレーティングシステムもあります。 現在のシステムでシステムトレイアイコンがサポートされているかどうかを確認するには、<codeph>NativeApplication.supportsSystemTrayIcon</codeph> を調べます。</p>
+	 
+	 <p>SystemTrayIcon クラスのインスタンスは作成できません。"グローバルな" NativeApplication オブジェクトの <codeph>icon</codeph> プロパティからシステムトレイアイコンを表すオブジェクトを取得します。
+	 </p>
+	 
+	 <p>システムトレイアイコンがサポートされている場合は、icon プロパティのタイプが <i>SystemTrayIcon</i> に設定されています。サポートされていない場合、<codeph>icon</codeph> のタイプは、InteractiveIcon の別のサブクラスである DockIcon などに設定されています。</p>
+	 
+	 
+	 <p><b>重要：</b>AIR がシステムトレイアイコンをサポートしていないオペレーティングシステムで <codeph>NativeApplication.icon</codeph> オブジェクトの SystemTrayIcon クラスのメソッドを呼び出そうとすると、ランタイム例外が生成されます。</p>
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="flash.desktop.xml#NativeApplication/icon"><linktext>flash.desktop.NativeApplication.icon</linktext></link><link href="flash.desktop.xml#NativeApplication/supportsSystemTrayIcon"><linktext>flash.desktop.NativeApplication.supportsSystemTrayIcon</linktext></link><link href="flash.desktop.xml#DockIcon"><linktext>flash.desktop.DockIcon</linktext></link></related-links><adobeApiEvent id="flash.desktop:SystemTrayIcon_flash.events.ScreenMouseEvent.RIGHT_CLICK_rightClick"><apiName>rightClick</apiName><shortdesc>
+	 マウスを右クリックしたときに、この SystemTrayIcon オブジェクトによって送出されます。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.ScreenMouseEvent.RIGHT_CLICK</apiEventType><adobeApiEventClassifier>flash.events.ScreenMouseEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 マウスを右クリックしたときに、この SystemTrayIcon オブジェクトによって送出されます。
+	 
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.desktop:SystemTrayIcon_flash.events.ScreenMouseEvent.RIGHT_MOUSE_UP_rightMouseUp"><apiName>rightMouseUp</apiName><shortdesc>
+	 マウスの右ボタンを離したときに、この SystemTrayIcon オブジェクトによって送出されます。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.ScreenMouseEvent.RIGHT_MOUSE_UP</apiEventType><adobeApiEventClassifier>flash.events.ScreenMouseEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 マウスの右ボタンを離したときに、この SystemTrayIcon オブジェクトによって送出されます。
+	 
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.desktop:SystemTrayIcon_flash.events.ScreenMouseEvent.RIGHT_MOUSE_DOWN_rightMouseDown"><apiName>rightMouseDown</apiName><shortdesc>
+	 マウスの右ボタンを押したときに、この SystemTrayIcon オブジェクトによって送出されます。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.ScreenMouseEvent.RIGHT_MOUSE_DOWN</apiEventType><adobeApiEventClassifier>flash.events.ScreenMouseEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+	 マウスの右ボタンを押したときに、この SystemTrayIcon オブジェクトによって送出されます。
+	 
+	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.desktop:SystemTrayIcon_flash.events.ScreenMouseEvent.CLICK_click"><apiName>click</apiName><shortdesc>
+ 	 マウスをクリックしたときに、この SystemTrayIcon オブジェクトによって送出されます。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.ScreenMouseEvent.CLICK</apiEventType><adobeApiEventClassifier>flash.events.ScreenMouseEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ 	 マウスをクリックしたときに、この SystemTrayIcon オブジェクトによって送出されます。
+ 	 
+ 	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.desktop:SystemTrayIcon_flash.events.ScreenMouseEvent.MOUSE_UP_mouseUp"><apiName>mouseUp</apiName><shortdesc>
+ 	 マウスを離したときに、この SystemTrayIcon オブジェクトによって送出されます。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.ScreenMouseEvent.MOUSE_UP</apiEventType><adobeApiEventClassifier>flash.events.ScreenMouseEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ 	 マウスを離したときに、この SystemTrayIcon オブジェクトによって送出されます。
+ 	 
+ 	 </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="flash.desktop:SystemTrayIcon_flash.events.ScreenMouseEvent.MOUSE_DOWN_mouseDown"><apiName>mouseDown</apiName><shortdesc>
+ 	 マウスを押したときに、この SystemTrayIcon オブジェクトによって送出されます。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.ScreenMouseEvent.MOUSE_DOWN</apiEventType><adobeApiEventClassifier>flash.events.ScreenMouseEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ 	 マウスを押したときに、この SystemTrayIcon オブジェクトによって送出されます。
+ 	 
+ 	 </apiDesc></adobeApiEventDetail></adobeApiEvent><apiValue id="flash.desktop:SystemTrayIcon:MAX_TIP_LENGTH"><apiName>MAX_TIP_LENGTH</apiName><shortdesc>
+		 システムトレイアイコンのツールヒントに対して許可されている最大の長さです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>63</apiData><apiValueClassifier>Number</apiValueClassifier></apiValueDef><apiDesc>
+		 システムトレイアイコンのツールヒントに対して許可されている最大の長さです。
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:SystemTrayIcon:bitmaps:get"><apiName>bitmaps</apiName><shortdesc> 
+		
+		  
+	 さまざまなサイズの BitmapData オブジェクトの配列としてのアイコンイメージです。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Array</apiValueClassifier></apiValueDef><apiDesc> 
+		
+		  
+	 さまざまなサイズの BitmapData オブジェクトの配列としてのアイコンイメージです。
+	   
+	 <p>指定されたオペレーティングシステムのコンテキストでアイコンを表示する場合、表示するサイズに最も近い配列のビットマップが使用されます（必要に応じて伸縮）。一般的なサイズには、16x16、32x32、48x48 および 128x128 があります （512x512 ピクセルのアイコンは、近い将来にいくつかのオペレーティングシステムアイコンで使用される可能性があります）。</p>
+	 
+	 <p>一部のコンテキストでは、<codeph>bitmaps</codeph> プロパティに何も割り当てられていない場合、オペレーティングシステムがデフォルトのシステムアイコンを使用することがあります。他のコンテキストでは、アイコンは表示されません。</p>
+	 
+	 <p>アイコンの外観を設定または変更するには、BitmapData オブジェクトの配列を <codeph>bitmaps</codeph> プロパティに割り当てます。</p>
+	 
+	 <codeblock>
+	 icon.bitmaps = new Array(icon16x16.bitmapData, icon128x128.bitmapData);
+	 </codeblock>
+	  
+	 <p><codeph>bitmaps</codeph> 配列を直接変更しても効果はありません。</p>
+	 
+	 <p>アイコンイメージを消去するには、<codeph>bitmaps</codeph> プロパティに空の配列を割り当てます。</p>
+	 
+	 <p>
+	 <b>注意：</b>アイコン用のイメージファイルを読み込む場合、通常、最も適切なアルファブレンドが提供されるのは PNG ファイル形式です。GIF 形式は透明度のオンまたはオフのみをサポートし、ブレンドは行いません。JPG 形式は、透明度をまったくサポートしません。  
+	 </p>
+	  
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:SystemTrayIcon:height:get"><apiName>height</apiName><shortdesc> 
+		
+		 アイコンの現在の表示の高さです（ピクセル単位）。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc> 
+		
+		 アイコンの現在の表示の高さです（ピクセル単位）。
+		 
+		 <p>一部のアイコンのコンテキストでは、動的なサイズ調整がサポートされます。<codeph>height</codeph> プロパティは、現在のコンテキストの <codeph>bitmaps</codeph> 配列から選択されたアイコンの高さを示します。オペレーティングシステムによってアイコンが伸縮されている場合は、実際の表示の高さはこれとは異なります。</p>
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:SystemTrayIcon:menu:get"><apiName>menu</apiName><shortdesc>
+		 システムトレイアイコンメニューです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>flash.display:NativeMenu</apiValueClassifier></apiValueDef><apiDesc>
+		 システムトレイアイコンメニューです。
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:SystemTrayIcon:tooltip:get"><apiName>tooltip</apiName><shortdesc>
+		 システムトレイアイコンにポップアップ表示されるツールヒントです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 システムトレイアイコンにポップアップ表示されるツールヒントです。ストリングが <codeph>SystemTrayIcon.MAX_TIP_LENGTH</codeph> より長い場合、ツールヒントは切り詰められます。
+		 
+	     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:SystemTrayIcon:width:get"><apiName>width</apiName><shortdesc> 
+		
+		 アイコンの現在の表示幅です（ピクセル単位）。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc> 
+		
+		 アイコンの現在の表示幅です（ピクセル単位）。 
+		 
+		 <p>一部のアイコンのコンテキストでは、動的なサイズ調整がサポートされます。<codeph>width</codeph> プロパティは、現在のコンテキストの <codeph>bitmaps</codeph> 配列から選択されたアイコンの幅を示します。オペレーティングシステムによってアイコンが伸縮されている場合は、実際の表示幅はこれとは異なります。</p>
+		 
+		 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.desktop:Clipboard"><apiName>Clipboard</apiName><shortdesc>
+ Clipboard クラスは、クリップボードを通じてデータとオブジェクトを転送するコンテナを提供します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><internal>NativeDragManager is AIR only and is not in FP10.
+ </internal></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ Clipboard クラスは、クリップボードを通じてデータとオブジェクトを転送するコンテナを提供します。AIR では、Clipboard クラスは、ドラッグ &amp; ドロップ操作でも使用されます。オペレーティングシステムクリップボードには、静的 <codeph>generalClipboard</codeph> プロパティを通じてアクセスできます。
+ 
+ <p>Clipboard オブジェクトには、同じ情報を複数の形式で格納できます。情報を複数の形式で提供することにより、別のアプリケーションでその情報を使用できる可能性が高くなります。<codeph>setData()</codeph> メソッドまたは <codeph>setDataHandler()</codeph> メソッドを使用して、Clipboard オブジェクトにデータを追加します。</p> 
+ 
+ <p>標準形式は次のとおりです。</p>
+ <ul>
+ <li>BITMAP_FORMAT：BitmapData オブジェクト（AIR のみ）</li>
+ <li>FILE_LIST_FORMAT：File オブジェクトの配列（AIR のみ）</li>
+ <li>HTML_FORMAT：HTML 形式のストリングデータ</li>
+ <li>TEXT_FORMAT：ストリングデータ</li>
+ <li>RICH_TEXT_FORMAT：リッチテキストフォーマットデータを含む ByteArray</li>
+ <li>URL_FORMAT：URL ストリング（AIR のみ）</li>
+ </ul>
+ <p>ClipboardFormats クラスに標準形式の名前のこれらの定数が定義されます。</p>
+ 
+ <p>Flash Player や AIR アプリケーションとオペレーティングシステムとの間で転送が行われる場合、<ph platform="javascript">JavaScript</ph> や <ph platform="actionscript">ActionScript</ph> データ型とネイティブクリップボードとの間で標準形式が自動的に変換されます。</p>
+ 
+ <p>アプリケーションで定義された形式を使用して、<ph platform="javascript">JavaScript</ph> オブジェクトや <ph platform="actionscript">ActionScript</ph> オブジェクトを Clipboard オブジェクトに追加できます。 オブジェクトを直列化できる場合、参照とオブジェクトのクローンの両方を使用できるようになります。オブジェクト参照は、元のアプリケーション内でのみ有効です。</p>
+ 
+ <p>転送する情報を特定の形式に変換するための計算の負荷が大きい場合は、変換を実行する関数の名前を指定できます。この関数は、特定の形式が受信側のコンポーネントまたはアプリケーションによって読み取られた場合にのみ呼び出されます。<codeph>setDataHandler()</codeph> メソッドを使用して、遅延レンダリング関数を Clipboard オブジェクトに追加します。</p>
+ 
+ <p><b>AIR アプリケーションに関する注意：</b>HTML のドラッグ＆ドロップイベントおよびコピー＆ペーストイベントに対して送出されるイベントオブジェクトによって参照されるクリップボードオブジェクトは、AIR Clipboard オブジェクトと同じタイプではありません。JavaScript クリップボードオブジェクトについては、AIR 開発者ガイドを参照してください。</p>
+ 
+ <p>Linux の場合、クリップボードのデータは AIR アプリケーションが終了すると失われます。</p>
+  
+ </apiDesc><example conref="examples\ClipboardExample.as"> 次の例では、ClipboardExample クラスを使用して、ある変数から別の変数にシステムクリップボードを介してストリングをコピーします（Adobe AIR の場合）。これを行うには、以下の手順を実行します。
+ 
+ <ol>
+     <li>データ（この例ではストリング）を <codeph>Clipboard.generalClipboard</codeph> に書き込みます。</li>
+    <li><codeph>Clipboard.generalClipboard</codeph> からクリップボード定数を読み取ります。</li>
+ </ol>
+ <p><b>注意：</b>クリップボードのデータアクセスに対するセキュリティ上の制限により、この例は Flash Player では機能しません。Flash Player の場合、<codeph>paste</codeph> イベントハンドラーでは Clipboard オブジェクトの <codeph>getData()</codeph> メソッドのみ呼び出すことができます。</p>
+<codeblock>
+package
+{
+    import flash.display.Sprite;
+    import flash.desktop.Clipboard;
+    import flash.desktop.ClipboardFormats;
+    import flash.desktop.ClipboardTransferMode;
+
+    public class ClipboardExample extends Sprite
+    {
+        public function ClipboardExample()
+        {
+            var sally:String = "Sally";
+            var person:String;
+            
+            copy(sally);
+            person = paste();
+            trace(person); //traces: "Sally"
+        }
+
+        private function copy(text:String):void 
+        {
+            Clipboard.generalClipboard.clear();
+            Clipboard.generalClipboard.setData(ClipboardFormats.TEXT_FORMAT, text);
+        }
+        
+        private function paste():String
+        {
+            if(Clipboard.generalClipboard.hasFormat(ClipboardFormats.TEXT_FORMAT))
+            {
+                return String(Clipboard.generalClipboard.getData(ClipboardFormats.TEXT_FORMAT));
+            } 
+            else 
+            {
+                return null;
+            }
+        }
+        
+    }
+}
+</codeblock></example></apiClassifierDetail><related-links><link href="flash.desktop.xml#NativeDragManager"><linktext>flash.desktop.NativeDragManager</linktext></link><link href="flash.desktop.xml#ClipboardFormats"><linktext>flash.desktop.ClipboardFormats</linktext></link><link href="flash.desktop.xml#ClipboardTransferMode"><linktext>flash.desktop.ClipboardTransferMode</linktext></link></related-links><apiConstructor id="flash.desktop:Clipboard:Clipboard"><apiName>Clipboard</apiName><shortdesc>
+	空の Clipboard オブジェクトを作成します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><internal>the example located at examples\Clipboard.clipboard.1.as should not be displayed with FP10 docs because FP10 will throw an error when new Clipboard() is called.
+	</internal></asCustoms></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiException><apiDesc>Flash Player では、オペレーティングシステムのクリップボードのみを使用できるため、<codeph>new Clipboard()</codeph> は、Flash Player ではサポートされていません。オペレーティングシステムのクリップボードを使用するコピー＆ペースト操作に対しては、新しいクリップボードオブジェクトを作成する代わりに Clipboard.generalClipboard オブジェクトを使用します。AIR アプリケーションでは、エラーはスローされません。
+	
+	</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiConstructorDef><apiDesc>
+	空の Clipboard オブジェクトを作成します。
+	
+	</apiDesc><example conref="examples\Clipboard.clipboard.1.as"> 次の例では、NativeDragManager クラスで使用する新しいクリップボードを作成します。
+ 
+ <p><b>注意：</b>オペレーティングシステムのクリップボードを使用するコピー &amp; ペースト操作に対しては、新しいクリップボードを作成する代わりに <codeph>Clipboard.generalClipboard</codeph> オブジェクトを使用します。</p>
+<codeblock>
+ import flash.desktop.Clipboard;
+ 
+ var clipboard:Clipboard = new Clipboard();
+</codeblock></example></apiConstructorDetail><related-links><link href="flash.desktop.xml#Clipboard/generalClipboard"><linktext>generalClipboard</linktext></link></related-links></apiConstructor><apiOperation id="flash.desktop:Clipboard:clear"><apiName>clear</apiName><shortdesc>
+	この Clipboard オブジェクトからすべてのデータ表現を削除します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+	この Clipboard オブジェクトからすべてのデータ表現を削除します。
+	
+ 	</apiDesc><example conref="examples\Clipboard.clear.1.as"> 次の例では、システムクリップボードをクリアします。
+<codeblock>
+ Clipboard.generalClipboard.clear();
+</codeblock></example></apiOperationDetail></apiOperation><apiOperation id="flash.desktop:Clipboard:clearData"><apiName>clearData</apiName><shortdesc>
+	指定された形式のデータ表現を削除します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>format</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>削除するデータ形式です。
+	</apiDesc></apiParam></apiOperationDef><apiDesc>
+	指定された形式のデータ表現を削除します。
+	
+ 	</apiDesc><example conref="examples\Clipboard.clearData.1.as"> 次の例では、システムクリップボードから、<codeph>ClipboardFormats.TEXT_FORMAT</codeph> 形式のすべてのデータをクリアします。
+<codeblock>
+ import flash.desktop.ClipboardFormats;
+ 
+ Clipboard.generalClipboard.clearData(ClipboardFormats.TEXT_FORMAT);
+</codeblock></example></apiOperationDetail></apiOperation><apiOperation id="flash.desktop:Clipboard:getData"><apiName>getData</apiName><shortdesc>
+	指定された形式のデータが存在する場合、クリップボードデータを取得します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc><codeph>transferMode</codeph> は、ClipboardTransferMode クラスで定義された名前のいずれかではありません。
+	</apiDesc><apiItemName>Error</apiItemName><apiOperationClassifier>Error</apiOperationClassifier></apiException><apiException><apiDesc>要求された Clipboard オブジェクトは、スコープ内になくなります（AIR のみ）。
+	</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException><apiException><apiDesc>このコンテキストでは、クリップボードからの読み取りまたはクリップボードへの書き込みは許可されません。Flash Playerでは、このメソッドの呼び出しは<codeph>paste</codeph> イベントの処理時にのみ成功します。AIR では、この制限はアプリケーションセキュリティサンドボックス外のコンテンツにのみ適用されます。
+	
+	</apiDesc><apiItemName>SecurityError</apiItemName><apiOperationClassifier>SecurityError</apiOperationClassifier></apiException><apiReturn><apiDesc>データ形式に対応するタイプのオブジェクトです。
+	
+	</apiDesc><apiOperationClassifier>Object</apiOperationClassifier></apiReturn><apiParam><apiItemName>format</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>返すデータ形式です。フォーマットストリングには、ClipboardFormats クラスに定義された標準の名前のいずれか、またはアプリケーションで定義された名前を含めることができます。
+	</apiDesc></apiParam><apiParam><apiItemName>transferMode</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData>originalPreferred</apiData><apiDesc>アプリケーションで定義されたデータ形式にアクセスするときに、参照または直列化されたコピーを返すかどうかを指定します。この値は、ClipboardTransferMode クラスに定義されている名前のいずれかにする必要があります。標準データ形式では、この値は無視されます。コピーは常に返されます。
+	</apiDesc></apiParam></apiOperationDef><apiDesc>
+	指定された形式のデータが存在する場合、クリップボードデータを取得します。
+	
+	<p>Flash Playerでは、<codeph>getData()</codeph> の呼び出しは <codeph>paste</codeph> イベントハンドラー内で実行する必要があります。AIR では、この制限はアプリケーションセキュリティサンドボックス外のコンテンツにのみ適用されます。</p>
+	
+	<p>標準のデータ形式にアクセスすると、対応する Flash Player または AIR タイプの新しいオブジェクトとしてデータが返されます。</p>
+	
+	<p>アプリケーションで定義された形式にアクセスする場合、<codeph>transferMode</codeph> パラメーターの値によって、元のオブジェクトへの参照を返すか、元のオブジェクトの直列化されたコピーが格納された匿名オブジェクトを返すかが決まります。<codeph>originalPreferred</codeph> モードまたは <codeph>clonePreferred</codeph> モードを指定すると、適切なバージョンを使用できない場合に代わりのバージョンが返されます。<codeph>originalOnly</codeph> モードまたは <codeph>cloneOnly</codeph> モードを指定すると、要求されたバージョンを使用できない場合に <codeph>null</codeph> が返されます。</p>
+	
+	</apiDesc><example conref="examples\Clipboard.getData.1.as"> 次の例では、システムクリップボードからテキスト（存在する場合）を読み込みます。
+<codeblock>
+ import flash.desktop.ClipboardFormats;
+
+ var pasteData:String = Clipboard.generalClipboard.getData(ClipboardFormats.TEXT_FORMAT) as String;
+</codeblock></example></apiOperationDetail><related-links><link href="flash.desktop.xml#Clipboard/setData()"><linktext>setData()</linktext></link><link href="flash.desktop.xml#ClipboardFormats"><linktext>flash.desktop.ClipboardFormats</linktext></link><link href="flash.desktop.xml#ClipboardTransferMode"><linktext>flash.desktop.ClipboardTransferMode</linktext></link></related-links></apiOperation><apiOperation id="flash.desktop:Clipboard:hasFormat"><apiName>hasFormat</apiName><shortdesc>
+	指定された形式のデータがこの Clipboard オブジェクトに存在するかどうかをチェックします。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>要求された Clipboard オブジェクトは、スコープ内になくなります（AIR のみ）。
+	</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException><apiException><apiDesc>このコンテキストでは、クリップボードからの読み取りまたはクリップボードへの書き込みは許可されません。
+	
+	</apiDesc><apiItemName>SecurityError</apiItemName><apiOperationClassifier>SecurityError</apiOperationClassifier></apiException><apiReturn><apiDesc>指定された形式のデータが存在する場合、<codeph>true</codeph> になります。
+	
+	</apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn><apiParam><apiItemName>format</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>チェックする形式のタイプです。
+	</apiDesc></apiParam></apiOperationDef><apiDesc>
+	指定された形式のデータがこの Clipboard オブジェクトに存在するかどうかをチェックします。
+	
+	<p>ClipboardFormats クラスの定数を使用して、標準の形式名を参照します。</p>
+	
+	</apiDesc><example conref="examples\Clipboard.hasFormat.1.as"> 次の例では、システムクリップボードを調べて、テキスト形式のデータを使用できるかどうか判別します。
+<codeblock>
+if(Clipboard.generalClipboard.hasFormat(ClipboardFormats.TEXT_FORMAT)){
+    //do something 
+}
+</codeblock></example></apiOperationDetail><related-links><link href="flash.desktop.xml#ClipboardFormats"><linktext>flash.desktop.ClipboardFormats</linktext></link></related-links></apiOperation><apiOperation id="flash.desktop:Clipboard:setData"><apiName>setData</apiName><shortdesc>
+	転送する情報の指定されたデータ形式の表現を追加します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>要求された Clipboard オブジェクトは、スコープ内になくなります（AIR のみ）。
+	
+	</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException><apiException><apiDesc>このコンテキストでは、クリップボードからの読み取りまたはクリップボードへの書き込みは許可されません。Flash Player では、このメソッドの呼び出しは、キー入力やマウスのクリックなどのユーザーイベントの処理時にのみ成功します。AIR では、この制限はアプリケーションセキュリティサンドボックス外のコンテンツにのみ適用されます。
+	
+	</apiDesc><apiItemName>SecurityError</apiItemName><apiOperationClassifier>SecurityError</apiOperationClassifier></apiException><apiException><apiDesc><codeph>format</codeph> または <codeph>data</codeph> は <codeph>null</codeph> です。
+	
+	</apiDesc><apiItemName>TypeError</apiItemName><apiOperationClassifier>TypeError</apiOperationClassifier></apiException><apiReturn><apiDesc>データが正常に設定された場合は <codeph>true</codeph>、それ以外の場合は <codeph>false</codeph> になります。Flash Player では、<codeph>format</codeph> が ClipboardFormats のサポートされないメンバーである場合、<codeph>false</codeph> が返されます（Flash Player では、<codeph>ClipboardFormats.URL_FORMAT</codeph>、<codeph>ClipboardFormats.FILE_LIST_FORMAT</codeph> または <codeph>ClipboardFormats.BITMAP_FORMAT</codeph> はサポートされていません）。
+	
+	</apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn><apiParam><apiItemName>format</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>データ形式です。
+	</apiDesc></apiParam><apiParam><apiItemName>data</apiItemName><apiOperationClassifier>Object</apiOperationClassifier><apiDesc>追加する情報です。 
+	</apiDesc></apiParam><apiParam><apiItemName>serializable</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>true</apiData><apiDesc>直列化（および非直列化）が可能なオブジェクトの場合は <codeph>true</codeph> を指定します。
+	
+	</apiDesc></apiParam></apiOperationDef><apiDesc>
+	転送する情報の指定されたデータ形式の表現を追加します。Flash Player では、<codeph>setData()</codeph> を使用する前に、キー入力やマウスのクリックなどのユーザーイベントを必要とします。AIR では、この制限はアプリケーションセキュリティサンドボックス外のコンテンツにのみ適用されます。
+	
+	<p>同じ情報の別の表現を、異なる形式でクリップボードに追加できます。これにより、他の多くのコンポーネントまたはアプリケーションでもデータを利用できるようになります。例えば、AIR アプリケーションでは、イメージ編集アプリケーション用のビットマップデータ、他の AIR アプリケーション用の Bitmap オブジェクトおよびネイティブファイルシステムへの転送用のエンコードされた PNG ファイルとしてイメージを追加できます。</p>
+	
+	<p>data パラメーターは、指定された形式に適合するデータ型にする必要があります。</p>
+	<adobetable class="innertable">
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	<tgroup cols="3"><thead><row><entry>形式</entry><entry>データ型</entry><entry>説明</entry></row></thead><tbody><row><entry><codeph>ClipboardFormats.TEXT_FORMAT</codeph></entry><entry><codeph>String</codeph></entry><entry>ストリングデータです。</entry></row><row><entry><codeph>ClipboardFormats.HTML_FORMAT</codeph></entry><entry><codeph>String</codeph></entry><entry>HTML ストリングデータです。</entry></row><row><entry><codeph>ClipboardFormats.URL_FORMAT</codeph></entry><entry><codeph>String</codeph></entry><entry>URL ストリングです（AIR のみ）。</entry></row><row><entry><codeph>ClipboardFormats.RICH_TEXT_FORMAT</codeph></entry><entry><codeph>ByteArray</codeph></entry><entry>リッチテキストフォーマットデータです。</entry></row><row><entry><codeph>ClipboardFormats.BITMAP_FORMAT</codeph></entry><entry><codeph>BitmapData</codeph></entry><entry>ビットマップデータ（AIR のみ)</entry></row><row><entry><codeph>ClipboardFormats.FILE_LIST_FORMAT</codeph></entry><entry><codeph>File</codeph> の配列</entry><entry>ファイルの配列（AIR のみ）</entry></row><row><entry>カスタムフォーマット名</entry><entry>すべて</entry><entry>オブジェクト参照および直列化されたクローンです。</entry></row></tbody></tgroup></adobetable>
+	
+	<p>カスタムの形式名の先頭を "air:" または "flash:" にすることはできません。AIR アプリケーションでは、カスタムの形式を使用するときに名前が競合することを避けるために、アプリケーション ID やパッケージ名を接頭辞として使用して、「com.example.applicationName.dataPacket」のような形式にすることができます。</p>
+	
+	<p>Flash Player または AIR アプリケーション内、あるいは Flash Player または AIR アプリケーション間で転送する場合、<codeph>serializable</codeph> パラメーターによって参照とコピーの両方を使用できるのか、オブジェクトへの参照のみを使用できるのかが決まります。<codeph>serializable</codeph> を <codeph>true</codeph> に設定すると、参照とデータオブジェクトのコピーの両方を使用できるようになります。<codeph>serializable</codeph> を <codeph>false</codeph> に設定すると、オブジェクト参照のみを使用できるようになります。オブジェクト参照は、現在のアプリケーション内でのみ有効です。そのため、<codeph>serializable</codeph> が <codeph>false</codeph> に設定されている場合、その形式のデータは、他の Flash Player または AIR アプリケーションで使用できないことも意味します。コンポーネントは、目的の形式のデータにアクセスするときに適切なクリップボード転送モードを設定することにより、参照を取得するかオブジェクトのコピーを取得するかを選択できます。</p>
+	
+	<p><b>注意：</b>標準形式は、サポートされているアプリケーションの外部にデータをペーストまたはドラッグする場合、常にネイティブ形式に変換されます（AIR のみ）。そのため、<codeph>serializable</codeph> パラメーターの値は、Flash Player 以外または AIR 以外のアプリケーションによる標準形式のデータの使用に影響を与えません。</p>
+	
+	<p>ある形式でのデータのレンダリングを遅らせるには、代わりに <codeph>setDataHandler()</codeph> メソッドを使用します。<codeph>setData()</codeph> メソッドと <codeph>setDataHandler()</codeph> メソッドの両方を使用して同じ形式名でデータ表現を追加すると、ハンドラー関数は呼び出されません。</p>
+	
+	<p><b>注意：</b>Mac OS で <codeph>format</codeph> パラメーターに <codeph>ClipboardFormats.URL_FORMAT</codeph> を設定した場合、URL が転送されるのは、その URL が有効である場合に限られます。それ以外の場合、Clipboard オブジェクトは空になります（<codeph>getData()</codeph> を呼び出すと、<codeph>null</codeph> が返されます）。</p>
+	
+	</apiDesc><example conref="examples\Clipboard.setData.1.as"> 次の例では、コンテンツをテキスト形式と HTML 形式の両方でシステムクリップボードに追加します。
+<codeblock>
+ import flash.desktop.ClipboardFormats;
+ 
+ var htmlString:String = "&lt;html>&lt;body>Body content&lt;/body>&lt;/html>";
+ Clipboard.generalClipboard.setData(ClipboardFormats.TEXT_FORMAT, urlString);
+ Clipboard.generalClipboard.setData(ClipboardFormats.HTML_FORMAT, urlString);
+</codeblock></example></apiOperationDetail><related-links><link href="flash.desktop.xml#Clipboard/setDataHandler()"><linktext>setDataHandler()</linktext></link><link href="flash.desktop.xml#Clipboard/getData()"><linktext>getData()</linktext></link><link href="flash.desktop.xml#ClipboardFormats"><linktext>flash.desktop.ClipboardFormats</linktext></link><link href="flash.desktop.xml#ClipboardTransferMode"><linktext>flash.desktop.ClipboardTransferMode</linktext></link></related-links></apiOperation><apiOperation id="flash.desktop:Clipboard:setDataHandler"><apiName>setDataHandler</apiName><shortdesc>
+	要求時に、指定された形式のデータを生成するハンドラー関数への参照を追加します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc><codeph>format</codeph> または <codeph>handler</codeph> は <codeph>null</codeph> です。
+	</apiDesc><apiItemName>TypeError</apiItemName><apiOperationClassifier>TypeError</apiOperationClassifier></apiException><apiException><apiDesc>要求された Clipboard オブジェクトは、スコープ内になくなります（AIR のみ）。
+	</apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException><apiException><apiDesc>このコンテキストでは、クリップボードからの読み取りまたはクリップボードへの書き込みは許可されません。Flash Player では、このメソッドの呼び出しは、キー入力やマウスのクリックなどのユーザーイベントの処理時にのみ成功します。AIR では、この制限はアプリケーションセキュリティサンドボックス外のコンテンツにのみ適用されます。
+	
+	</apiDesc><apiItemName>SecurityError</apiItemName><apiOperationClassifier>SecurityError</apiOperationClassifier></apiException><apiReturn><apiDesc>ハンドラーが正常に設定された場合は <codeph>true</codeph>、それ以外の場合は <codeph>false</codeph> になります。
+	
+	</apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn><apiParam><apiItemName>format</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>転送するデータを返す関数です。
+	</apiDesc></apiParam><apiParam><apiItemName>handler</apiItemName><apiOperationClassifier>Function</apiOperationClassifier><apiDesc>データ形式です。 
+	</apiDesc></apiParam><apiParam><apiItemName>serializable</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>true</apiData><apiDesc><codeph>true</codeph> を指定するのは、<codeph>handler</codeph> で返されるオブジェクトを直列化（および非直列化）できる場合です。
+	
+	</apiDesc></apiParam></apiOperationDef><apiDesc>
+	要求時に、指定された形式のデータを生成するハンドラー関数への参照を追加します。このメソッドを使用して、データに実際にアクセスするまで、データの作成またはレンダリングを遅らせます。Flash Player では、<codeph>setDataHandler()</codeph> を使用する前に、キー入力やマウスのクリックなどのユーザーイベントを必要とします。AIR では、この制限はアプリケーションセキュリティサンドボックス外のコンテンツにのみ適用されます。
+	
+	<p>ハンドラー関数は、指定された形式に適合するデータ型を返す必要があります。</p>
+	<adobetable class="innertable">
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	      
+	<tgroup cols="2"><thead><row><entry>形式</entry><entry>返す型</entry></row></thead><tbody><row><entry><codeph>ClipboardFormats.TEXT_FORMAT</codeph></entry><entry><codeph>String</codeph></entry></row><row><entry><codeph>ClipboardFormats.HTML_FORMAT</codeph></entry><entry><codeph>String</codeph></entry></row><row><entry><codeph>ClipboardFormats.URL_FORMAT</codeph></entry><entry><codeph>String</codeph>（AIR のみ）</entry></row><row><entry><codeph>ClipboardFormats.RICH_TEXT_FORMAT</codeph></entry><entry><codeph>ByteArray</codeph></entry></row><row><entry><codeph>ClipboardFormats.BITMAP_FORMAT</codeph></entry><entry><codeph>BitmapData</codeph>（AIR のみ）</entry></row><row><entry><codeph>ClipboardFormats.FILE_LIST_FORMAT</codeph></entry><entry><codeph>File</codeph> の配列（AIR のみ）</entry></row><row><entry>カスタムフォーマット名</entry><entry>void 以外</entry></row></tbody></tgroup></adobetable>
+	
+	<p>指定された形式のデータを読み取る場合にのみ、ハンドラー関数が呼び出されます。基になるデータは、アプリケーションでそのデータを保護する手順を実行しない場合、ハンドラーを追加した時点からデータを読み取る時点までの間変更できます。ハンドラー関数によって表されるクリップボード上のデータが複数回読み取られた場合の動作は保証されません。Flash Player または AIR は、最初の関数呼び出しで生成されたデータを返す場合もあれば、もう一度関数を呼び出す場合もあります。いずれの動作にも依存しないでください。</p>
+	
+	<p>この Clipboard オブジェクトにデータを直接追加するには、代わりに <codeph>setData()</codeph> メソッドを使用します。同じ形式名を使用して <codeph>setData()</codeph> メソッドと <codeph>setDataHandler()</codeph> メソッドの両方を呼び出すと、ハンドラー関数は呼び出されません。</p>
+	
+	<p><b>注意：</b>Mac OS で <codeph>format</codeph> パラメーターに <codeph>ClipboardFormats.URL_FORMAT</codeph> を設定した場合、URL が転送されるのは、ハンドラー関数が有効な URL を返す場合に限られます。それ以外の場合、Clipboard オブジェクトは空になります（<codeph>getData()</codeph> を呼び出すと、<codeph>null</codeph> が返されます）。</p>
+	
+	</apiDesc><example conref="examples\Clipboard.setDataHandler.1.as"> 次の例では、遅延データ関数を使用して、システムクリップボードに乱数を追加します。
+<codeblock>
+ import flash.desktop.ClipboardFormats;
+ 
+ Clipboard.generalClipboard.setDataHandler(ClipboardFormats.TEXT_FORMAT, randomNumberGenerator);
+
+ public function randomNumberGenerator():String{
+     return Math.random().toString();
+ }
+</codeblock></example></apiOperationDetail><related-links><link href="flash.desktop.xml#Clipboard/setData()"><linktext>setData()</linktext></link><link href="flash.desktop.xml#ClipboardFormats"><linktext>flash.desktop.ClipboardFormats</linktext></link></related-links></apiOperation><apiValue id="flash.desktop:Clipboard:formats:get"><apiName>formats</apiName><shortdesc>
+	この Clipboard オブジェクトで使用できるデータ形式の名前が含まれたストリングの配列です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Array</apiValueClassifier></apiValueDef><apiDesc>
+	この Clipboard オブジェクトで使用できるデータ形式の名前が含まれたストリングの配列です。
+	
+	<p>ClipboardFormats クラスに標準形式の名前のストリング定数が定義されます。この他の、アプリケーションで定義されたストリングは、データをオブジェクトとして転送する場合、形式名として使用することもできます。</p>
+	
+	</apiDesc><example conref="examples\Clipboard.formats.1.as"> 次の例では、システムクリップボードの <codeph>formats</codeph> 配列を読み取ります。
+<codeblock>
+ var availableFormats:Array = Clipboard.generalClipboard.formats;
+</codeblock></example></apiValueDetail><related-links><link href="flash.desktop.xml#ClipboardFormats"><linktext>flash.desktop.ClipboardFormats</linktext></link></related-links></apiValue><apiValue id="flash.desktop:Clipboard:generalClipboard:get"><apiName>generalClipboard</apiName><shortdesc>
+	 オペレーティングシステムクリップボードです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>flash.desktop:Clipboard</apiValueClassifier></apiValueDef><apiDesc>
+	 オペレーティングシステムクリップボードです。
+	 
+	 <p>システムのクリップボードにペーストされたデータは、他のアプリケーションからも利用できます。それには Web ブラウザー内で実行される保護されていないリモートコードも含まれます。</p>
+	 
+	 <p><b>注意：</b>Flash Player 10 アプリケーションでは、クリップボードからのペースト操作には最初に「ペースト」コマンドに対応するショートカットキーを押すかコンテキストメニューの「ペースト」コマンドをマウスでクリックするなどのユーザーイベントが必要です。<codeph>Clipboard.getData()</codeph> は、InteractiveObject が paste イベントを受け取り、paste イベントを実行している場合にのみクリップボードのコンテンツを返します。他の環境での <codeph>Clipboard.getData()</codeph> の呼び出しは失敗します。アプリケーションサンドボックスの外部にあるコンテンツには AIR で同じ制限が適用されます。</p>
+	 
+	 <p><codeph>generalClipboard</codeph> オブジェクトは自動的に作成されます。このプロパティには Clipboard の別のインスタンスを割り当てることはできません。その代わりに、<codeph>getData()</codeph> メソッドと <codeph>setData()</codeph> メソッドを使用して既存のオブジェクトに対してデータの読み書きを行います。</p>
+	 
+	 <p>クリップボードは、新しいデータを書き込む前に必ずクリアして、すべての形式の古いデータを確実に消去する必要があります。</p>
+	 
+	 </apiDesc><example conref="examples\Clipboard.generalClipboard.1.as"> オペレーティングシステムのクリップボードに書き込む場合
+<codeblock>
+ import flash.desktop.ClipboardFormats;
+ 
+ var copy:String = "A string to copy to the system clipboard.";
+ Clipboard.generalClipboard.clear();
+ Clipboard.generalClipboard.setData(ClipboardFormats.TEXT_FORMAT, copy);
+</codeblock></example><example conref="examples\Clipboard.generalClipboard.2.as"> オペレーティングシステムのクリップボードから読み取る場合
+<codeblock>
+ import flash.desktop.ClipboardFormats;
+ 
+ var pasteData:String  = Clipboard.generalClipboard.getData(ClipboardFormats.TEXT_FORMAT) as String;
+</codeblock></example></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.desktop:NotificationType"><apiName>NotificationType</apiName><shortdesc>
+ NotificationType クラスは、priority パラメーター（DockIcon bounce() メソッドのパラメーター）と type パラメーター（NativeWindow notifyUser() メソッドのパラメーター）で使用する定数を定義します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ NotificationType クラスは、<codeph>priority</codeph> パラメーター（DockIcon <codeph>bounce()</codeph> メソッドのパラメーター）と <codeph>type</codeph> パラメーター（NativeWindow <codeph>notifyUser()</codeph> メソッドのパラメーター）で使用する定数を定義します。
+ 
+ </apiDesc></apiClassifierDetail><related-links><link href="flash.desktop.xml#DockIcon/bounce()"><linktext>flash.desktop.DockIcon.bounce()</linktext></link><link href="flash.display.xml#NativeWindow/notifyUser()"><linktext>flash.display.NativeWindow.notifyUser()</linktext></link></related-links><apiValue id="flash.desktop:NotificationType:CRITICAL"><apiName>CRITICAL</apiName><shortdesc>
+	 通知警告が重要な内容であり、ユーザーは迅速に注意を払う必要があることを指定します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>critical</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 通知警告が重要な内容であり、ユーザーは迅速に注意を払う必要があることを指定します。
+	 
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NotificationType:INFORMATIONAL"><apiName>INFORMATIONAL</apiName><shortdesc>
+	 通知警告が実質上情報の通知のみを目的としていて、ユーザーがそれを無視しても問題がないことを指定します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>informational</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 通知警告が実質上情報の通知のみを目的としていて、ユーザーがそれを無視しても問題がないことを指定します。
+	 
+     </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.desktop:ClipboardTransferMode"><apiName>ClipboardTransferMode</apiName><shortdesc>
+ ClipboardTransferMode クラスは、transferMode パラメーター（Clipboard.getData() メソッドのパラメーター）の値として使用するモードの定数を定義します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata><asCustoms><internal>Clipboard, ClipboardFormats and ClipboardTransferMode were all added to AIR 1.0. These are also being added, with some exceptions listed in this file, to FP10.
+ </internal></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ ClipboardTransferMode クラスは、<codeph>transferMode</codeph> パラメーター（<codeph>Clipboard.getData()</codeph> メソッドのパラメーター）の値として使用するモードの定数を定義します。
+ 
+ <p>転送モードでは、クリップボードに格納されているオブジェクトにアクセスするときに、参照またはコピーを返すかどうかについてのヒントが提供されます。</p>
+ 
+ </apiDesc></apiClassifierDetail><related-links><link href="flash.desktop.xml#Clipboard/getData()"><linktext>flash.desktop.Clipboard.getData()</linktext></link></related-links><apiValue id="flash.desktop:ClipboardTransferMode:CLONE_ONLY"><apiName>CLONE_ONLY</apiName><shortdesc>
+    Clipboard オブジェクトは、コピーのみを返します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>cloneOnly</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+    Clipboard オブジェクトは、コピーのみを返します。
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:ClipboardTransferMode:CLONE_PREFERRED"><apiName>CLONE_PREFERRED</apiName><shortdesc>
+    Clipboard オブジェクトは、コピーが存在する場合はコピーを返し、存在しない場合は参照を返します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>clonePreferred</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+    Clipboard オブジェクトは、コピーが存在する場合はコピーを返し、存在しない場合は参照を返します。
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:ClipboardTransferMode:ORIGINAL_ONLY"><apiName>ORIGINAL_ONLY</apiName><shortdesc>
+    Clipboard オブジェクトは、参照のみを返します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>originalOnly</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+    Clipboard オブジェクトは、参照のみを返します。
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:ClipboardTransferMode:ORIGINAL_PREFERRED"><apiName>ORIGINAL_PREFERRED</apiName><shortdesc>
+    Clipboard オブジェクトは、参照が存在する場合は参照を返し、存在しない場合はコピーを返します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>originalPreferred</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+    Clipboard オブジェクトは、参照が存在する場合は参照を返し、存在しない場合はコピーを返します。
+	
+	</apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.desktop:NativeDragManager"><apiName>NativeDragManager</apiName><shortdesc>
+ NativeDragManager クラスは、ドラッグ＆ドロップ操作を調整します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ NativeDragManager クラスは、ドラッグ＆ドロップ操作を調整します。ネイティブドラッグ＆ドロップ API を使用すると、ユーザーは、AIR アプリケーションとネイティブのオペレーティングシステムとの間、2 つの AIR アプリケーションの間または 1 つのアプリケーション内のコンポーネントの間でデータをドラッグできるようになります。
+ 
+ <p>次の種類のデータを転送できます。</p>
+ <ul>
+ <li>ビットマップ</li>
+ <li>ファイル</li>
+ <li>テキスト</li>
+ <li>URL ストリング</li>
+ <li>直列化されたオブジェクト</li>
+ <li>オブジェクト参照（元のアプリケーション内でのみ有効）</li>
+ </ul>
+ 
+ <p><b>注意：</b>すべての NativeDragManager メンバーが静的メンバーです。このクラスのインスタンスを作成する必要はありません。</p>
+ 
+ <p>ドラッグ＆ドロップ操作は、ユーザーが表示されたアイテムをクリックして別の場所にドラッグすると開始される、ユーザーインターフェイスのジェスチャです。ドラッグジェスチャを実行している間、AIR アプリケーションウィンドウ内を移動するにつれて、表示リスト上のインタラクティブオブジェクトによってネイティブドラッグイベントが送出されます。これらのイベントのハンドラーで NativeDragManager クラスのメソッドを呼び出すと、ドラッグしたアイテムをオブジェクトにドロップできるかどうかを示すことができます。これに応答してマウスポインターが変わり、ユーザーにフィードバックが提供されます。</p>
+ 
+ <p><b>ドラッグアクション</b></p>
+ <p>通常、ドラッグ &amp; ドロップジェスチャは、<i>アクション</i>と呼ばれる 3 種類の操作に使用されます。これらのアクションの意味はアプリケーションのコンテキストに応じて異なるため、ランタイムではアクションに対して特定の動作は適用されません。ただし、アクションを適切に実装すると、アプリケーションに対するユーザーの操作性が向上します。
+ </p> 
+ 
+ <p>実行可能なアクションは次のとおりです。</p>
+ <ul>
+ <li>copy — データのコピーを作成し、元のデータには変更を加えません（1 つのアプリケーション内でオブジェクトをドラッグする場合、元のオブジェクトへの参照ではなくそのオブジェクト自体をコピーするときは注意が必要です）。</li>
+ <li>move — アイテムをあるリストから別のリストに移動する場合のように、元のコンテキストから、ドロップターゲットに定義されたコンテキストにデータを移動します。</li>
+ <li>link — アイテムを元のコンテキスト内に残したまま、元のデータへの参照またはショートカットを作成します。</li>
+ </ul>
+ 
+ <p><codeph>allowedActions</codeph> パラメーターを、ドラッグ操作を開始する <codeph>NativeDragManager.doDrag()</codeph> 呼び出しに指定することにより、実行可能なアクションをドラッグジェスチャに設定できます。<codeph>allowedActions</codeph> パラメーターを指定しない場合は、すべてのアクションが許可されます。NativeDragEvent オブジェクトの <codeph>allowedActions</codeph> プロパティを使用すると、ドラッグ可能ターゲットで実行できるアクションを確認できます。また、実行できるのが互換性のないアクションのみのドロップを受け入れないようにできます（ただし、ランタイムでは適用できません）。</p>
+ 
+ <p>ドロップターゲットが単一のアクションのみを実装している場合、オブジェクトは NativeDragManager の <codeph>dropAction</codeph> プロパティを、<codeph>nativeDragEnter</codeph> イベントおよび <codeph>nativeDragOver</codeph> イベントの両方のハンドラーで設定できます。ドロップの前にプロパティを設定することによって、ドラッグマネージャーはマウスポインターを更新してサポートされるアクションを示すことができ、ユーザーが修飾キーを使用して互換性のないアクションを選択することを防止できます。指定したアクションが許可されるアクションのいずれでもない場合、ターゲットが <codeph>acceptDrop()</codeph> メソッドを呼び出しても、ドロップは許可されません。</p>
+ 
+ <p>ドロップを受け入れる場合は、<codeph>NativeDragManager.dropAction</codeph> プロパティを設定することにより、ドロップ可能ターゲットが <codeph>nativeDragDrop</codeph> イベントに応答して選択したアクションを指定する必要があります。このアクションは、<codeph>nativeDragComplete</codeph> イベントで元の開始表示オブジェクトに通知されます。ドロップターゲットにアクションが設定されていない場合、デフォルトのアクションが、許可されたアクションから copy、move、link の優先順位に従って選択されます。開始オブジェクトは、選択されたアクションに応じて内部状態を更新する必要があります。</p> 
+ 
+ <p>NativeDragActions クラスにアクション名のストリング定数が定義されます。</p>
+  
+ <p><b>イベントの順序</b></p>
+ <p><codeph>NativeDragManager.doDrag()</codeph> メソッド（<codeph>mouseDown</codeph> イベントハンドラー内または <codeph>mouseMove</codeph> イベントハンドラー内）を呼び出すことによりドラッグジェスチャが開始され、ユーザーの操作に応答して次のイベントシーケンスが実行されます。</p>
+ <ul>
+ <li><codeph>nativeDragStart</codeph> イベント：<codeph>NativeDragManager.doDrag()</codeph> が呼び出されると、このメソッドにパラメーターとして渡されたインタラクティブオブジェクトが開始元オブジェクトとなって、<codeph>nativeDragStart</codeph> イベントが送出されます。</li> 
+ 
+ <li><codeph>nativeDragUpdate</codeph> イベント：ドラッグが進行している間、開始元オブジェクトによって継続的に <codeph>nativeDragUpdate</codeph> イベントが送出されます。</li>
+ 
+ <li><codeph>nativeDragEnter</codeph> イベント、<codeph>nativeDragOver</codeph> イベント：ドラッグジェスチャがインタラクティブオブジェクトの上を通ると、<codeph>nativeDragEnter</codeph> イベントが送出されます。ドラッグジェスチャがインタラクティブオブジェクトの上で止まっている間、継続的に <codeph>nativeDragOver</codeph> イベントが送出されます。これらのイベントのいずれかに応答して、ドロップ可能ターゲットとして機能するオブジェクトがイベントオブジェクトのプロパティをチェックし、ドロップを受け入れ可能かどうかを判断します。データ形式と許可されたアクションが適切な場合、これらのイベントのイベントハンドラーで <codeph>NativeDragManager.acceptDrop()</codeph> を呼び出し、ドラッグターゲットとして機能する表示オブジェクト（通常、<codeph>nativeDragEnter</codeph> または <codeph>nativeDragOver</codeph> イベントを送出したオブジェクト）に参照を渡す必要があります。これで、ユーザーはドラッグしたアイテムをターゲットにドロップすることができます。</li>
+ 
+ <li><codeph>nativeDragExit</codeph> イベント — ドラッグジェスチャがインタラクティブオブジェクトからなくなると、オブジェクトによって <codeph>nativeDragExit</codeph> イベントが送出されます。オブジェクトが <codeph>NativeDragManager.acceptDrop()</codeph> メソッドに対する前の呼び出しでドラッグターゲットとして指定されていた場合、その呼び出しは無効になり、ジェスチャが再びインタラクティブオブジェクトに入った場合は <codeph>acceptDrop()</codeph> をもう一度呼び出す必要があります。</li>
+ 
+ <li><codeph>nativeDragDrop</codeph> イベント — オブジェクトの上でユーザーがマウスボタンを離すと、ターゲット表示オブジェクトによって <codeph>nativeDragDrop</codeph> イベントが送出されます。このイベントのハンドラーは、イベントオブジェクトの <codeph>transferable</codeph> プロパティのデータにアクセスできます。開始元オブジェクトで実行する必要のあるアクションを通知するには、<codeph>NativeDragManager.dropAction</codeph> プロパティを設定します。</li>
+ 
+ <li><codeph>nativeDragComplete</codeph> — ドラッグジェスチャの最後でユーザーがマウスボタンを離すと、開始元オブジェクトによって <codeph>nativeDragComplete</codeph> イベントが送出されます（ドロップ自体が完了したかどうか）。このイベントのハンドラーは、イベントオブジェクトの <codeph>dropAction</codeph> プロパティをチェックして、リストからドラッグされたアイテムの削除など、内部のデータ状態に対して実行する必要のある変更があるかどうかを確認できます。 <codeph>dropAction</codeph> が <codeph>NativeDragActions.NONE</codeph> の場合、ドラッグしたアイテムが適切なターゲットにドロップされなかったことを示します。</li>
+ </ul>
+ 
+ <p><b>アプリケーション間のジェスチャ</b></p>
+ <p>ドラッグジェスチャが AIR 以外のアプリケーションから AIR アプリケーションウィンドウに入った場合、<codeph>nativeDragStart</codeph> イベントまたは <codeph>nativeDragComplete</codeph> イベントを送出する開始元オブジェクトはありません。その他の点では、ジェスチャを実行中のイベントは、同じ AIR アプリケーション内で開始および終了するジェスチャと同じパターンに従って送出されます。</p>
+ 
+ <p>ドラッグジェスチャが AIR アプリケーションウィンドウの外に移動すると、<codeph>nativeDragEnter</codeph>、<codeph>nativeDragOver</codeph> または <codeph>nativeDragDrop</codeph> イベントを送出するターゲットオブジェクトはなくなります。開始元オブジェクトは引き続き <codeph>nativeDragComplete</codeph> イベントを送出し、ネイティブオペレーティングシステムによって設定されたドラッグアクションを通知します（ドロップが受け入れられなかった場合は <codeph>none</codeph>）。</p>
+ 
+ <p>ドラッグジェスチャがある AIR アプリケーションから別の AIR アプリケーションに移動すると、開始元オブジェクトとターゲット表示オブジェクトは、それぞれのアプリケーション内で通常と同じイベントを送出します。</p>
+ 
+ <p><b>情報の転送</b></p>
+ <p>ドラッグ &amp; ドロップジェスチャの実行中に転送されるデータは Clipboard オブジェクトに格納されます。このデータオブジェクトは、<codeph>NativeDragManager.doDrag()</codeph> メソッドを使用して、ドラッグジェスチャを開始したドラッグ操作に追加されます。ドロップ可能ターゲットは、ネイティブドラッグイベントオブジェクトの <codeph>clipboard</codeph> プロパティを使用して Clipboard オブジェクトにアクセスできます。ドラッグ操作が一旦開始されると、Clipboard オブジェクトにアクセスできるのは NativeDragEvent のイベントハンドラーだけになります。その他のハンドラーからこのオブジェクトにアクセスすると、ランタイムエラーが生成されます。</p>
+ 
+ <p><b>セキュリティについての考慮事項</b></p>
+ <p>開始元オブジェクトおよびターゲットオブジェクトのセキュリティサンドボックスに応じて、ドラッグされているデータへのアクセス方法が決まります。両方のオブジェクトが同じサンドボックス内にある場合は、すべての NativeDragEvent オブジェクトからデータにアクセスできます。一方、開始元オブジェクトとターゲットオブジェクトが異なるサンドボックス内にある場合、データにアクセスできるのは <codeph>nativeDragDrop</codeph> イベントのイベントハンドラー内のターゲットサンドボックスだけです。他のネイティブドラッグイベントハンドラーは、イベントの <codeph>clipboard</codeph> プロパティで参照される Clipboard オブジェクトに引き続きアクセスし、利用可能なデータ形式を確認できますが、<codeph>clipboard.getData()</codeph> メソッドを呼び出すとセキュリティエラーが生成されます。</p>
+ 
+ </apiDesc></apiClassifierDetail><related-links><link href="flash.events.xml#NativeDragEvent"><linktext>flash.events.NativeDragEvent</linktext></link><link href="flash.desktop.xml#NativeDragActions"><linktext>flash.desktop.NativeDragActions</linktext></link><link href="flash.desktop.xml#NativeDragOptions"><linktext>flash.desktop.NativeDragOptions</linktext></link><link href="flash.desktop.xml#Clipboard"><linktext>flash.desktop.Clipboard</linktext></link></related-links><apiOperation id="flash.desktop:NativeDragManager:acceptDragDrop"><apiName>acceptDragDrop</apiName><shortdesc>
+	 指定されたターゲットのインタラクティブオブジェクトが現在のドラッグイベントに対応するドロップを受け入れ可能であることを、NativeDragManager オブジェクトに通知します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>target</apiItemName><apiOperationClassifier>flash.display:InteractiveObject</apiOperationClassifier></apiParam></apiOperationDef><apiDesc>
+	 指定されたターゲットのインタラクティブオブジェクトが現在のドラッグイベントに対応するドロップを受け入れ可能であることを、NativeDragManager オブジェクトに通知します。
+	 
+     <p>このメソッドは、指定されたターゲットオブジェクトに、ドラッグしたアイテムの少なくとも 1 つのデータ形式および少なくとも 1 つの許可されたアクションを処理できる <codeph>nativeDragDrop</codeph> ハンドラーがある場合にのみ呼び出す必要があります。</p>
+     
+	 <p>この機能は、<codeph>nativeDragEnter</codeph> イベントハンドラーまたは <codeph>nativeDragOver</codeph> イベントハンドラー内からのみ呼び出すことができます。</p>
+	 
+     </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.desktop:NativeDragManager:doDrag"><apiName>doDrag</apiName><shortdesc>
+	 ドラッグ＆ドロップ操作を開始します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>dragInitiator</apiItemName><apiOperationClassifier>flash.display:InteractiveObject</apiOperationClassifier><apiDesc>通常、ドラッグジェスチャを開始したオブジェクトです。<codeph>nativeDragStart</codeph> イベントと <codeph>nativeDragComplete</codeph> イベントを受け取ります。
+	 
+	 </apiDesc></apiParam><apiParam><apiItemName>clipboard</apiItemName><apiOperationClassifier>flash.desktop:Clipboard</apiOperationClassifier><apiDesc>ドラッグされているデータのコンテナオブジェクトです。
+	 
+     </apiDesc></apiParam><apiParam><apiItemName>dragImage</apiItemName><apiOperationClassifier>flash.display:BitmapData</apiOperationClassifier><apiData>null</apiData><apiDesc>ドラッグジェスチャの実行中にマウスポインターの下に表示される、オプションのプロキシイメージです。<codeph>null</codeph> の場合、プロキシイメージは表示されません。
+     
+     </apiDesc></apiParam><apiParam><apiItemName>offset</apiItemName><apiOperationClassifier>flash.geom:Point</apiOperationClassifier><apiData>null</apiData><apiDesc>マウスホットスポットとドラッグイメージの左上隅の間のオフセットです。負の座標では、イメージが上方向の、ホットスポットを基準としてその左側に移動します。<codeph>null</codeph> の場合、ドラッグイメージの左上隅が、マウスホットスポットの位置に配置されます。 
+     
+     </apiDesc></apiParam><apiParam><apiItemName>allowedActions</apiItemName><apiOperationClassifier>flash.desktop:NativeDragOptions</apiOperationClassifier><apiData>null</apiData><apiDesc>この操作に許可されるドラッグ &amp; ドロップアクションを制限します。<codeph>null</codeph> の場合、すべてのアクションが許可されます。
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 ドラッグ＆ドロップ操作を開始します。
+	 
+	 <p>ドラッグ操作を開始するには</p>
+	 <ol>
+	 <li>新しい Clipboard オブジェクトを作成します。</li>
+	 <li>転送するデータを 1 つ以上の形式で追加します。</li>
+	 <li>オプションで、ドラッグ中にプロキシイメージとして機能する BitmapData オブジェクトを作成します。</li>
+	 <li>オプションで、この操作で許可するアクションを制限する NativeDragOptions オブジェクトを作成します （<codeph>allowedActions</codeph> パラメーターを <codeph>null</codeph> のままにすると、すべてのアクションが許可されます）。</li>
+     <li><codeph>NativeDragManager.doDrag()</codeph> を呼び出します。</li>
+	 </ol>
+	 
+     <p>開始元オブジェクトは、このメソッドが呼び出された後に <codeph>nativeDragStart</codeph> イベント、ドラッグが進行中の間には <codeph>nativeDragStart</codeph> イベント、ユーザーがマウスボタンを離してドラッグジェスチャを終了したときに <codeph>nativeDragComplete</codeph> イベントを送出します。<codeph>nativeDragComplete</codeph> イベントのハンドラーは、イベントの <codeph>dropAction</codeph> プロパティをチェックして、ドラッグ &amp; ドロップ操作が正常に完了したかどうかを判断できます。 <codeph>dropAction</codeph> が <codeph>NativeDragActions.NONE</codeph> の場合、ドラッグしたアイテムが適切なターゲットにドロップされなかったことを示します。</p>
+	 
+     <p>このメソッドは、<codeph>mouseDown</codeph> イベントハンドラーまたは <codeph>mouseMove</codeph> イベントハンドラー内からのみ呼び出すことができます。（<codeph>mouseMove</codeph> イベントに応答して呼び出す場合は、マウスボタンも押す必要があります）。</p>
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.desktop.xml#NativeDragActions"><linktext>flash.desktop.NativeDragActions</linktext></link></related-links></apiOperation><apiValue id="flash.desktop:NativeDragManager:dragInitiator:get"><apiName>dragInitiator</apiName><shortdesc>
+	ドラッグ操作を開始した NativeDragManager.doDrag() 呼び出しに渡されるインタラクティブオブジェクトです。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>flash.display:InteractiveObject</apiValueClassifier></apiValueDef><apiDesc>
+	ドラッグ操作を開始した <codeph>NativeDragManager.doDrag()</codeph> 呼び出しに渡されるインタラクティブオブジェクトです。
+	
+	</apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeDragManager:dropAction:get"><apiName>dropAction</apiName><shortdesc>
+	ドロップターゲットによって指定されているドラッグアクションです。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="readwrite"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	ドロップターゲットによって指定されているドラッグアクションです。
+	 
+     <p><codeph>dropAction</codeph> プロパティは、<codeph>nativeDragDrop</codeph> イベントのハンドラーに設定する必要があります。<codeph>dropAction</codeph> が <codeph>nativeDragComplete</codeph> よりも前に設定されていない場合、NativeDragManager はこの値を copy、move、link の順序のリストで最初に許可されているアクションに設定します。</p>
+     
+     </apiDesc></apiValueDetail><related-links><link href="flash.desktop.xml#NativeDragActions"><linktext>flash.desktop.NativeDragActions</linktext></link></related-links></apiValue><apiValue id="flash.desktop:NativeDragManager:isDragging:get"><apiName>isDragging</apiName><shortdesc>
+	ドラッグ操作が現在進行中かどうかを報告します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	ドラッグ操作が現在進行中かどうかを報告します。
+	 
+     </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.desktop:NativeDragOptions"><apiName>NativeDragOptions</apiName><shortdesc>
+ NativeDragOptions クラスは、ドラッグ &amp; ドロップ操作で許可されるドラッグ &amp; ドロップアクションの名前の定数を定義します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ NativeDragOptions クラスは、ドラッグ &amp; ドロップ操作で許可されるドラッグ &amp; ドロップアクションの名前の定数を定義します。
+ 
+ <p>ドラッグアクションは、開始オブジェクトとターゲットオブジェクトをドラッグ＆ドロップ操作で連動して処理できるようにする、フィードバックメカニズムの一部です。これらのアクションは、オペレーティングシステムに対する単なる<i>ヒント</i>に過ぎません。適切なビヘイビアーの実装は、トランザクションに含まれる、ドラッグの開始元オブジェクトとターゲットオブジェクトが行います。</p>
+ 
+ <p>開始オブジェクトは、そのオブジェクトがサポートするアクションのみを許可します。例えば、開始オブジェクトの内部ロジックで、ターゲットが <i>move</i> アクションでドロップ操作を受け入れてソースデータを削除するように指定されている場合にのみ、そのオブジェクトは move アクションを許可します。</p>
+ 
+ 
+ <p>新しい NativeDragOptions オブジェクトでは、すべてのプロパティが <codeph>true</codeph>（すべてのアクションを許可）に初期設定されています。</p>
+ 
+ </apiDesc></apiClassifierDetail><related-links><link href="flash.desktop.xml#NativeDragManager"><linktext>flash.desktop.NativeDragManager</linktext></link><link href="flash.events.xml#NativeDragEvent"><linktext>flash.events.NativeDragEvent</linktext></link></related-links><apiOperation id="flash.desktop:NativeDragOptions:toString"><apiName>toString</apiName><shortdesc>
+	
+	 指定されたオブジェクトのストリング表現を返します。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>オブジェクトのストリング表現です。
+	 
+	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	
+	 指定されたオブジェクトのストリング表現を返します。
+	 
+     <p platform="actionscript"><b>注意：</b>Object クラスのメソッドは、Object のプロトタイプに動的に作成されます。Object のサブクラスでこのメソッドを再定義する場合は、<codeph>override</codeph> キーワードを使用しないでください。例えば、Object のサブクラスでは、基本クラスのオーバーライドを使用する代わりに <codeph>function toString():String</codeph> が実装されます。</p>
+     
+     </apiDesc></apiOperationDetail></apiOperation><apiValue id="flash.desktop:NativeDragOptions:allowCopy"><apiName>allowCopy</apiName><shortdesc>
+	ドロップターゲットでは、ドラッグしたデータのコピーが可能です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>true</apiData><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	ドロップターゲットでは、ドラッグしたデータのコピーが可能です。
+	
+    </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeDragOptions:allowLink"><apiName>allowLink</apiName><shortdesc>
+	 ドロップターゲットでは、ドラッグしたデータへのリンクの作成が可能です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>true</apiData><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	 ドロップターゲットでは、ドラッグしたデータへのリンクの作成が可能です。
+	 
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:NativeDragOptions:allowMove"><apiName>allowMove</apiName><shortdesc>
+	ドロップターゲットでは、ドラッグしたデータの移動が可能です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>true</apiData><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	ドロップターゲットでは、ドラッグしたデータの移動が可能です。
+	
+    </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.desktop:DockIcon"><apiName>DockIcon</apiName><shortdesc>
+	 DockIcon クラスは MacOS X &amp;#xAE; スタイルのドックアイコンを表します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.desktop:InteractiveIcon</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 DockIcon クラスは MacOS X<sup>®</sup> スタイルのドックアイコンを表します。
+	 
+	 <p>DockIcon クラスを使用すると、例えば、アイコンをアニメーション化したり内容を表すグラフィックを追加して、標準のアイコンの外観を変更できます。また、ドックアイコンメニューにアイテムを追加することもできます。追加したメニューアイテムは、標準メニューアイテムの上に表示されます。</p>
+	 
+	 <p>DockIcon クラスのインスタンスは作成できません。<codeph>NativeApplication.icon</codeph> からオペレーティングシステムドックアイコンを表すオブジェクトを取得します。
+	 </p>
+	 
+	 <p>ドックアイコンのないオペレーティングシステムもあります。現在のシステムでドックアイコンがサポートされているかどうかを確認するには、<codeph>NativeApplication.supportsDockIcon</codeph> を調べます。ドックアイコンがサポートされている場合は、<codeph>NativeApplication.icon</codeph> プロパティのタイプが DockIcon に設定されています。サポートされていない場合、<codeph>NativeApplication.icon</codeph> のタイプは、InteractiveIcon の別のサブクラスである SystemTrayIcon などに設定されています。</p>
+	 
+	 <p><b>重要：</b> AIR がドックアイコンをサポートしていないオペレーティングシステムで <codeph>NativeApplication.icon</codeph> オブジェクトの DockIcon クラスのメソッドを呼び出そうとすると、ランタイム例外が生成されます。</p>
+	 
+	 </apiDesc><example conref="examples\DockIconExample.as"> 次の例では、一連のイメージをロードし、ドックメニューアイコンを使用してタイマーが起動されたときに、アイコンイメージをアニメーション化します。この例を動作させるには、一連のアイコンイメージを用意し、imageURLs 配列の URL を変更する必要があります。
+<codeblock>
+
+ package {
+    import flash.desktop.DockIcon;
+    import flash.desktop.NativeApplication;
+    import flash.display.Loader;
+    import flash.display.NativeMenu;
+    import flash.display.NativeMenuItem;
+    import flash.display.Sprite;
+    import flash.events.Event;
+    import flash.events.TimerEvent;
+    import flash.net.URLRequest;
+    import flash.utils.Timer;
+
+    public class AnimatedDockIcon extends Sprite
+    {
+        private var imageURLs:Array =  ['gfx/frame01.png',
+                                        'gfx/frame02.png',
+                                        'gfx/frame03.png',
+                                        'gfx/frame04.png'];
+        
+        private var images:Array = new Array();
+        private var animTimer:Timer = new Timer(100);
+                                        
+        public function AnimatedDockIcon()
+        {
+            NativeApplication.nativeApplication.autoExit = false;
+            
+            addEventListener(Event.COMPLETE, loadImages);
+            loadImages();
+            
+            animTimer.addEventListener(TimerEvent.TIMER,advanceFrame);
+            addMenu();
+            stage.nativeWindow.close();
+        }
+        
+        private function addMenu():void{
+            var menu:NativeMenu = new NativeMenu();
+            var start:NativeMenuItem = menu.addItem(new NativeMenuItem("Start animation"));
+            var stop:NativeMenuItem = menu.addItem(new NativeMenuItem("Stop animation"));
+            start.addEventListener(Event.SELECT, startTimer);
+            stop.addEventListener(Event.SELECT, stopTimer);
+            
+            var dockIcon:DockIcon =    NativeApplication.nativeApplication.icon as DockIcon;
+            dockIcon.menu = menu;
+        }
+        
+        private function startTimer(event:Event):void{
+            animTimer.start();
+        }
+
+        private function stopTimer(event:Event):void{
+            animTimer.stop();
+        }
+
+        private var currentFrame:int = 0;
+        private function advanceFrame(event:Event):void{
+            if(currentFrame &lt; images.length){
+                currentFrame++;
+            } else {
+                currentFrame = 0;
+            }
+            NativeApplication.nativeApplication.icon.bitmaps = [images[currentFrame]];
+        }
+        
+
+        private function loadImages(event:Event = null):void{
+            if(event != null){
+                images.push(event.target.content.bitmapData);
+            }
+            if(imageURLs.length > 0){
+                var urlString:String = imageURLs.pop();
+                var loader:Loader = new Loader();
+                loader.contentLoaderInfo.addEventListener(Event.COMPLETE, loadImages, false, 0, true);
+                loader.load(new URLRequest(urlString));
+            } else {
+                var complete:Event = new Event(Event.COMPLETE,false,false);
+                dispatchEvent(complete);
+            }
+        }
+    }
+}
+</codeblock></example></apiClassifierDetail><related-links><link href="flash.desktop.xml#NativeApplication/icon"><linktext>flash.desktop.NativeApplication.icon</linktext></link><link href="flash.desktop.xml#NativeApplication/supportsDockIcon"><linktext>flash.desktop.NativeApplication.supportsDockIcon</linktext></link><link href="flash.desktop.xml#SystemTrayIcon"><linktext>flash.desktop.SystemTrayIcon</linktext></link></related-links><apiOperation id="flash.desktop:DockIcon:bounce"><apiName>bounce</apiName><shortdesc>
+		 注意を要するイベントが発生したことをユーザーに通知します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiDefaultValue>NotificationType.Informational
+		 
+		 </apiDefaultValue><apiParam><apiItemName>priority</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData>informational</apiData><apiDesc>ドックがバウンドする緊急度です。
+		 
+		 </apiDesc></apiParam></apiOperationDef><apiDesc>
+		 注意を要するイベントが発生したことをユーザーに通知します。
+		 
+		 <p>アプリケーションがバックグラウンドで動作している場合にのみ、このメソッドを呼び出すとドックアイコンがバウンドします。<codeph>priority</codeph> が <codeph>NotificationType.Informational</codeph> の場合、アイコンが 1 回バウンドします。<codeph>priority</codeph> が <codeph>NotificationType.Critical</codeph> の場合、アプリケーションがフォアグラウンドで実行されるまで、ドックアイコンがバウンドします。</p>
+		 
+		 </apiDesc><example conref="examples\DockIcon.bounce.1.as"> 次の例では、ユーザーがアプリケーションをアクティブ化するまでドックアイコンがバウンドします。
+<codeblock>
+ import flash.display.DockIcon;
+ import flash.display.NotificationType;
+ import flash.desktop.NativeApplication;
+
+ if(NativeApplication.supportsDockIcon){
+     var dockIcon:DockIcon = NativeApplication.nativeApplication.icon As DockIcon;
+     dockIcon.bounce(NotificationType.CRITICAL);
+ }
+ 
+</codeblock></example></apiOperationDetail><related-links><link href="flash.desktop.xml#NotificationType"><linktext>flash.desktop.NotificationType</linktext></link><link href="flash.display.xml#NativeWindow/notifyUser()"><linktext>flash.display.NativeWindow.notifyUser()</linktext></link></related-links></apiOperation><apiValue id="flash.desktop:DockIcon:bitmaps:set"><apiName>bitmaps</apiName><shortdesc> 
+		
+		  
+	 さまざまなサイズの BitmapData オブジェクトの配列としてのアイコンイメージです。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Array</apiValueClassifier></apiValueDef><apiDesc> 
+		
+		  
+	 さまざまなサイズの BitmapData オブジェクトの配列としてのアイコンイメージです。
+	   
+	 <p>指定されたオペレーティングシステムのコンテキストでアイコンを表示する場合、表示するサイズに最も近い配列のビットマップが使用されます（必要に応じて伸縮）。一般的なサイズには、16x16、32x32、48x48 および 128x128 があります （512x512 ピクセルのアイコンは、近い将来にいくつかのオペレーティングシステムアイコンで使用される可能性があります）。</p>
+	 
+	 <p>一部のコンテキストでは、<codeph>bitmaps</codeph> プロパティに何も割り当てられていない場合、オペレーティングシステムがデフォルトのシステムアイコンを使用することがあります。他のコンテキストでは、アイコンは表示されません。</p>
+	 
+	 <p>アイコンの外観を設定または変更するには、BitmapData オブジェクトの配列を <codeph>bitmaps</codeph> プロパティに割り当てます。</p>
+	 
+	 <codeblock>
+	 icon.bitmaps = new Array(icon16x16.bitmapData, icon128x128.bitmapData);
+	 </codeblock>
+	  
+	 <p><codeph>bitmaps</codeph> 配列を直接変更しても効果はありません。</p>
+	 
+	 <p>アイコンイメージを消去するには、<codeph>bitmaps</codeph> プロパティに空の配列を割り当てます。</p>
+	 
+	 <p>
+	 <b>注意：</b>アイコン用のイメージファイルを読み込む場合、通常、最も適切なアルファブレンドが提供されるのは PNG ファイル形式です。GIF 形式は透明度のオンまたはオフのみをサポートし、ブレンドは行いません。JPG 形式は、透明度をまったくサポートしません。  
+	 </p>
+	  
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:DockIcon:height:get"><apiName>height</apiName><shortdesc> 
+		
+		 アイコンの現在の表示の高さです（ピクセル単位）。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc> 
+		
+		 アイコンの現在の表示の高さです（ピクセル単位）。
+		 
+		 <p>一部のアイコンのコンテキストでは、動的なサイズ調整がサポートされます。<codeph>height</codeph> プロパティは、現在のコンテキストの <codeph>bitmaps</codeph> 配列から選択されたアイコンの高さを示します。オペレーティングシステムによってアイコンが伸縮されている場合は、実際の表示の高さはこれとは異なります。</p>
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.desktop:DockIcon:menu:set"><apiName>menu</apiName><shortdesc>
+		 このドックアイコンのシステム指定のメニューです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>flash.display:NativeMenu</apiValueClassifier></apiValueDef><apiDesc>
+		 このドックアイコンのシステム指定のメニューです。
+		 
+		 <p>メニューのすべてのアイテムが、標準アイテムの上に表示されます。標準アイテムは変更および削除できません。</p>
+		 
+		 </apiDesc><example conref="examples\DockIcon.menu.1.as"> 次の例では、アイテムをドックアイコンメニューに追加します。
+<codeblock>
+ import flash.desktop.NativeApplication;
+ import flash.events.Event;
+ 
+private function createDockIconMenu():void{
+    if(NativeApplication.supportsDockIcon){                
+        var dockIcon:DockIcon = NativeApplication.nativeApplication.icon as DockIcon;
+        
+        var dockMenu:NativeMenu = new NativeMenu();
+        var command:NativeMenuItem = dockMenu.addItem(new NativeMenuItem("Command"));
+        command.addEventListener(Event.SELECT, onCommand);
+        
+        dockIcon.menu = dockMenu;
+    }
+}
+
+ private function onCommand(event:Event):void{
+     //do command...
+ }
+</codeblock></example></apiValueDetail></apiValue><apiValue id="flash.desktop:DockIcon:width:get"><apiName>width</apiName><shortdesc> 
+		
+		 アイコンの現在の表示幅です（ピクセル単位）。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc> 
+		
+		 アイコンの現在の表示幅です（ピクセル単位）。 
+		 
+		 <p>一部のアイコンのコンテキストでは、動的なサイズ調整がサポートされます。<codeph>width</codeph> プロパティは、現在のコンテキストの <codeph>bitmaps</codeph> 配列から選択されたアイコンの幅を示します。オペレーティングシステムによってアイコンが伸縮されている場合は、実際の表示幅はこれとは異なります。</p>
+		 
+		 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.desktop:Icon"><apiName>Icon</apiName><shortdesc> 
+	 Icon クラスは、オペレーティングシステムアイコンを表します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.events:EventDispatcher</apiBaseClassifier></apiClassifierDef><apiDesc> 
+	 Icon クラスは、オペレーティングシステムアイコンを表します。 
+	 
+	 <p>Icon オブジェクトには、BitmapData オブジェクトの配列の、<codeph>bitmaps</codeph> という 1 つのプロパティがあります。一度に 1 つのイメージのみ表示されます。オペレーティングシステムはアイコンの現在の表示サイズに最も近いサイズのイメージを選択し、必要に応じて伸縮します。</p>
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="flash.filesystem.xml#File/icon"><linktext>flash.filesystem.File.icon</linktext></link><link href="flash.display.xml#BitmapData"><linktext>flash.display.BitmapData</linktext></link></related-links><apiValue id="flash.desktop:Icon:bitmaps:set"><apiName>bitmaps</apiName><shortdesc> 
+	 さまざまなサイズの BitmapData オブジェクトの配列としてのアイコンイメージです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Array</apiValueClassifier></apiValueDef><apiDesc> 
+	 さまざまなサイズの BitmapData オブジェクトの配列としてのアイコンイメージです。
+	   
+	 <p>指定されたオペレーティングシステムのコンテキストでアイコンを表示する場合、表示するサイズに最も近い配列のビットマップが使用されます（必要に応じて伸縮）。一般的なサイズには、16x16、32x32、48x48 および 128x128 があります （512x512 ピクセルのアイコンは、近い将来にいくつかのオペレーティングシステムアイコンで使用される可能性があります）。</p>
+	 
+	 <p>一部のコンテキストでは、<codeph>bitmaps</codeph> プロパティに何も割り当てられていない場合、オペレーティングシステムがデフォルトのシステムアイコンを使用することがあります。他のコンテキストでは、アイコンは表示されません。</p>
+	 
+	 <p>アイコンの外観を設定または変更するには、BitmapData オブジェクトの配列を <codeph>bitmaps</codeph> プロパティに割り当てます。</p>
+	 
+	 <codeblock>
+	 icon.bitmaps = new Array(icon16x16.bitmapData, icon128x128.bitmapData);
+	 </codeblock>
+	  
+	 <p><codeph>bitmaps</codeph> 配列を直接変更しても効果はありません。</p>
+	 
+	 <p>アイコンイメージを消去するには、<codeph>bitmaps</codeph> プロパティに空の配列を割り当てます。</p>
+	 
+	 <p>
+	 <b>注意：</b>アイコン用のイメージファイルを読み込む場合、通常、最も適切なアルファブレンドが提供されるのは PNG ファイル形式です。GIF 形式は透明度のオンまたはオフのみをサポートし、ブレンドは行いません。JPG 形式は、透明度をまったくサポートしません。  
+	 </p>
+	  
+	 </apiDesc></apiValueDetail><related-links><link href="flash.filesystem.xml#File/icon"><linktext>flash.filesystem.File.icon</linktext></link><link href="flash.display.xml#BitmapData"><linktext>flash.display.BitmapData</linktext></link></related-links></apiValue></apiClassifier></apiPackage>

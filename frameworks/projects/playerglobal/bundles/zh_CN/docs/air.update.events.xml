@@ -1,0 +1,429 @@
+<?xml version="1.0"?>
+<apiPackage id="air.update.events"><apiName>air.update.events</apiName><apiDetail/><apiClassifier id="air.update.events:StatusUpdateEvent"><apiName>StatusUpdateEvent</apiName><shortdesc>
+	在更新程序成功下载并解释更新描述符文件之后，Updater 对象将分派 StatusUpdateEvent 对象。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>air.update.events:UpdateEvent</apiBaseClassifier></apiClassifierDef><apiDesc>
+	在更新程序成功下载并解释更新描述符文件之后，Updater 对象将分派 StatusUpdateEvent 对象。 
+	
+	<p>如果将 StatusUpdateEvent 对象的 <codeph>available</codeph> 属性设置为 <codeph>true</codeph>，则默认行为是开始下载更新。只有在使用 ApplicationUpdater 类时才能阻止默认行为。</p>
+	
+	</apiDesc></apiClassifierDetail><related-links><link href="air.update.xml#ApplicationUpdater"><linktext>air.update.ApplicationUpdater</linktext></link><link href="air.update.xml#ApplicationUpdaterUI"><linktext>air.update.ApplicationUpdaterUI</linktext></link></related-links><adobeApiEvent id="air.update.events:StatusUpdateEvent:UPDATE_STATUS_updateStatus"><apiName>updateStatus</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events:StatusUpdateEvent:UPDATE_STATUS</apiEventType><adobeApiEventClassifier>air.update.events:StatusUpdateEvent</adobeApiEventClassifier><apiDefinedEvent/></adobeApiEventDef></adobeApiEventDetail></adobeApiEvent><apiConstructor id="air.update.events:StatusUpdateEvent:StatusUpdateEvent"><apiName>StatusUpdateEvent</apiName><shortdesc>
+		构造函数。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>type</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc> 事件的类型。事件侦听器可以通过继承的 <codeph>type</codeph> 属性访问此信息。只有一种类型的 error 事件：<codeph>ErrorEvent.ERROR</codeph>。
+		</apiDesc></apiParam><apiParam><apiItemName>bubbles</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>确定 Event 对象是否冒泡。事件侦听器可以通过继承的 <codeph>bubbles</codeph> 属性访问此信息。  
+		</apiDesc></apiParam><apiParam><apiItemName>cancelable</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>确定是否可以取消 Event 对象。事件侦听器可以通过继承的 <codeph>cancelable</codeph> 属性访问此信息。 
+		</apiDesc></apiParam><apiParam><apiItemName>available</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>要显示为错误消息的文本。事件侦听器可以通过 <codeph>text</codeph> 属性访问此信息。
+		</apiDesc></apiParam><apiParam><apiItemName>version</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData/><apiDesc>要与特定错误关联的引用数字。
+		
+		</apiDesc></apiParam><apiParam><apiItemName>details</apiItemName><apiOperationClassifier>Array</apiOperationClassifier><apiData>null</apiData></apiParam></apiConstructorDef><apiDesc>
+		构造函数。请勿调用此函数。更新框架调用此函数是为了创建事件对象。
+		
+		</apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="air.update.events:StatusUpdateEvent:clone"><apiName>clone</apiName><shortdesc>
+	 	 创建 对象的副本，并将每个属性的值设置为与原始属性值相匹配。</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiOperationClassifier>flash.events:Event</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 	 创建 对象的副本，并将每个属性的值设置为与原始属性值相匹配。
+	 	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.update.events:StatusUpdateEvent:toString"><apiName>toString</apiName><shortdesc>
+	 	 返回一个字符串，其中包含 对象的所有属性。</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 	 返回一个字符串，其中包含 对象的所有属性。
+	 	 </apiDesc></apiOperationDetail></apiOperation><apiValue id="air.update.events:StatusUpdateEvent:UPDATE_STATUS"><apiName>UPDATE_STATUS</apiName><shortdesc>
+		 StatusUpdateEvent.UPDATE_STATUS 常量为 updateStatus 事件定义事件对象的 type 属性的值。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>updateStatus</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 <codeph>StatusUpdateEvent.UPDATE_STATUS</codeph> 常量为 <codeph>updateStatus</codeph> 事件定义事件对象的 <codeph>type</codeph> 属性的值。
+		 
+		<p>此事件具有以下属性：</p>
+		
+		<adobetable class="innertable">
+		
+		    
+		
+		    
+		
+		    
+		
+		    
+		
+		<tgroup cols="2"><thead><row><entry>属性</entry><entry>值</entry></row></thead><tbody><row><entry><codeph>available</codeph></entry><entry>如果更新描述符文件指定的版本与当前应用程序的版本不同，则设置为 <codeph>true</codeph>；否则（版本相同）为 <codeph>false</codeph>。</entry></row><row><entry><codeph>details</codeph></entry><entry>为每种受支持的语言定义 <codeph>details</codeph> 字符串的数组。如果没有本地化的说明，则将此属性定义为其中第一个元素为空字符串 (<codeph>""</codeph>)、第二个元素为 details 字符串的数组。有本地化的说明时，数组中的每个元素都是含有两个元素的数组自身。第一个元素是语言环境代码，第二个元素是说明。例如，以下数组有两种语言（美国英语和法语）的子数组：<codeph>["en-US", "Hello World"], ["fr", "Bonjour monde"]</codeph>。列出语言的顺序与更新描述符中的顺序相同。</entry></row><row><entry><codeph>version</codeph></entry><entry>代表新的可用版本的字符串 </entry></row></tbody></tgroup></adobetable>
+		
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="air.update.events:StatusUpdateEvent:available"><apiName>available</apiName><shortdesc>
+		 指示更新是否可用。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>false</apiData><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+		 指示更新是否可用。如果更新描述符文件指定的版本与当前应用程序的版本不同，则将此属性设置为 <codeph>true</codeph>；否则（版本相同）为 <codeph>false</codeph>。
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="air.update.events:StatusUpdateEvent:details"><apiName>details</apiName><shortdesc>
+		一个数组，定义每种所支持语言的详细信息字符串。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>unknown</apiData><apiValueClassifier>Array</apiValueClassifier></apiValueDef><apiDesc>
+		为每种受支持的语言定义 <codeph>details</codeph> 字符串的数组。如果没有本地化的说明，则将此属性定义为其中第一个元素为空字符串 (<codeph>""</codeph>)、第二个元素为 details 字符串的数组。有本地化的说明时，数组中的每个元素都是含有两个元素的数组自身。第一个元素是语言环境代码，第二个元素是说明。例如，以下数组有两种语言（美国英语和法语）的子数组：<codeph>["en-US", "Hello World"], ["fr", "Bonjour monde"]</codeph>。列出语言的顺序与更新描述符中的顺序相同。
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="air.update.events:StatusUpdateEvent:version"><apiName>version</apiName><shortdesc>
+		 表示新的可用版本的字符串。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 表示新的可用版本的字符串。
+		 
+		 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="air.update.events:StatusUpdateErrorEvent"><apiName>StatusUpdateErrorEvent</apiName><shortdesc>
+	 调用 ApplicationUpdater 对象的 checkForUpdate() 方法时在下载或分析更新描述符文件的过程中如果遇到错误，将分派 StatusUpdateErrorEvent。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.events:ErrorEvent</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 调用 ApplicationUpdater 对象的 <codeph>checkForUpdate()</codeph> 方法时在下载或分析更新描述符文件的过程中如果遇到错误，将分派 StatusUpdateErrorEvent。
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="air.update.xml#ApplicationUpdater"><linktext>air.update.ApplicationUpdater</linktext></link><link href="air.update.xml#ApplicationUpdaterUI"><linktext>air.update.ApplicationUpdaterUI</linktext></link></related-links><adobeApiEvent id="air.update.events:StatusUpdateErrorEvent:UPDATE_ERROR_updateError"><apiName>updateError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events:StatusUpdateErrorEvent:UPDATE_ERROR</apiEventType><adobeApiEventClassifier>air.update.events:StatusUpdateErrorEvent</adobeApiEventClassifier><apiDefinedEvent/></adobeApiEventDef></adobeApiEventDetail></adobeApiEvent><apiConstructor id="air.update.events:StatusUpdateErrorEvent:StatusUpdateErrorEvent"><apiName>StatusUpdateErrorEvent</apiName><shortdesc>
+		构造函数。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>type</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc> 事件的类型。事件侦听器可以通过继承的 <codeph>type</codeph> 属性访问此信息。只有一种类型的 error 事件：<codeph>ErrorEvent.ERROR</codeph>。
+		</apiDesc></apiParam><apiParam><apiItemName>bubbles</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>确定 Event 对象是否冒泡。事件侦听器可以通过继承的 <codeph>bubbles</codeph> 属性访问此信息。  
+		</apiDesc></apiParam><apiParam><apiItemName>cancelable</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>确定是否可以取消 Event 对象。事件侦听器可以通过继承的 <codeph>cancelable</codeph> 属性访问此信息。 
+		</apiDesc></apiParam><apiParam><apiItemName>text</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData/><apiDesc>要显示为错误消息的文本。事件侦听器可以通过 <codeph>text</codeph> 属性访问此信息。
+		</apiDesc></apiParam><apiParam><apiItemName>id</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiData>0</apiData><apiDesc>要与特定错误关联的引用数字。
+		</apiDesc></apiParam><apiParam><apiItemName>subErrorID</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiData>0</apiData><apiDesc>除 <codeph>errorID</codeph> 之外，还提供有关错误事件的详细信息。
+		
+		</apiDesc></apiParam></apiConstructorDef><apiDesc>
+		构造函数。请勿调用此函数。更新框架调用此函数是为了创建事件对象。
+		
+		</apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="air.update.events:StatusUpdateErrorEvent:clone"><apiName>clone</apiName><shortdesc>
+	 	 创建 对象的副本，并将每个属性的值设置为与原始属性值相匹配。</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiOperationClassifier>flash.events:Event</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 	 创建 对象的副本，并将每个属性的值设置为与原始属性值相匹配。
+	 	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.update.events:StatusUpdateErrorEvent:toString"><apiName>toString</apiName><shortdesc>
+	 	 返回一个字符串，其中包含 对象的所有属性。</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 	 返回一个字符串，其中包含 对象的所有属性。
+	 	 </apiDesc></apiOperationDetail></apiOperation><apiValue id="air.update.events:StatusUpdateErrorEvent:UPDATE_ERROR"><apiName>UPDATE_ERROR</apiName><shortdesc>
+		 StatusUpdateErrorEvent.UPDATE_ERROR 常量为 statusUpdateError 事件定义事件对象的 type 属性的值。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>updateError</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 <codeph>StatusUpdateErrorEvent.UPDATE_ERROR</codeph> 常量为 <codeph>statusUpdateError</codeph> 事件定义事件对象的 <codeph>type</codeph> 属性的值。
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="air.update.events:StatusUpdateErrorEvent:subErrorID"><apiName>subErrorID</apiName><shortdesc>
+		提供 errorId 属性之外的信息。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>0</apiData><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+		提供 <codeph>errorId</codeph> 属性之外的信息。 
+		
+		</apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="air.update.events:DownloadErrorEvent"><apiName>DownloadErrorEvent</apiName><shortdesc>
+	 如果下载更新文件时出错，ApplicationUpdater 或 ApplicationUpdaterUI 对象将分派 DownloadErrorEvent 对象。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.events:ErrorEvent</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 如果下载更新文件时出错，ApplicationUpdater 或 ApplicationUpdaterUI 对象将分派 DownloadErrorEvent 对象。
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="air.update.xml#ApplicationUpdater"><linktext>air.update.ApplicationUpdater</linktext></link><link href="air.update.xml#ApplicationUpdaterUI"><linktext>air.update.ApplicationUpdaterUI</linktext></link></related-links><adobeApiEvent id="air.update.events:DownloadErrorEvent:DOWNLOAD_ERROR_downloadError"><apiName>downloadError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events:DownloadErrorEvent:DOWNLOAD_ERROR</apiEventType><adobeApiEventClassifier>air.update.events:DownloadErrorEvent</adobeApiEventClassifier><apiDefinedEvent/></adobeApiEventDef></adobeApiEventDetail></adobeApiEvent><apiConstructor id="air.update.events:DownloadErrorEvent:DownloadErrorEvent"><apiName>DownloadErrorEvent</apiName><shortdesc>
+		构造函数。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>type</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc> 事件的类型。事件侦听器可以通过继承的 <codeph>type</codeph> 属性访问此信息。只有一种类型的 error 事件：<codeph>ErrorEvent.ERROR</codeph>。
+		</apiDesc></apiParam><apiParam><apiItemName>bubbles</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>确定 Event 对象是否冒泡。事件侦听器可以通过继承的 <codeph>bubbles</codeph> 属性访问此信息。  
+		</apiDesc></apiParam><apiParam><apiItemName>cancelable</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>确定是否可以取消 Event 对象。事件侦听器可以通过继承的 <codeph>cancelable</codeph> 属性访问此信息。 
+		</apiDesc></apiParam><apiParam><apiItemName>text</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData/><apiDesc>要显示为错误消息的文本。事件侦听器可以通过 <codeph>text</codeph> 属性访问此信息。
+		</apiDesc></apiParam><apiParam><apiItemName>id</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiData>0</apiData><apiDesc>要与特定错误关联的引用数字。
+		</apiDesc></apiParam><apiParam><apiItemName>subErrorID</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiData>0</apiData><apiDesc>除 <codeph>errorID</codeph> 之外，还提供有关错误事件的详细信息。
+		
+		</apiDesc></apiParam></apiConstructorDef><apiDesc>
+		构造函数。请勿调用此函数。更新框架调用此函数是为了创建事件对象。
+		
+		</apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="air.update.events:DownloadErrorEvent:clone"><apiName>clone</apiName><shortdesc>
+	 	 创建 对象的副本，并将每个属性的值设置为与原始属性值相匹配。</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiOperationClassifier>flash.events:Event</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 	 创建 对象的副本，并将每个属性的值设置为与原始属性值相匹配。
+	 	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.update.events:DownloadErrorEvent:toString"><apiName>toString</apiName><shortdesc>
+	 	 返回一个字符串，其中包含 对象的所有属性。</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 	 返回一个字符串，其中包含 对象的所有属性。
+	 	 </apiDesc></apiOperationDetail></apiOperation><apiValue id="air.update.events:DownloadErrorEvent:DOWNLOAD_ERROR"><apiName>DOWNLOAD_ERROR</apiName><shortdesc>
+		 DownloadErrorEvent.DOWNLOAD_ERROR 常量为 downloadError 事件定义事件对象的 type 属性的值。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>downloadError</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 <codeph>DownloadErrorEvent.DOWNLOAD_ERROR</codeph> 常量为 <codeph>downloadError</codeph> 事件定义事件对象的 <codeph>type</codeph> 属性的值。
+		 
+		<p>DownloadErrorEvent 对象的 <codeph>errorID</codeph> 属性是一个整数，用于定义错误信息（请参阅下表）。此外，还具有另一个属性 <codeph>subErrorID</codeph>，该属性可能包含更多错误信息。</p>
+		
+		<adobetable class="innertable">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<tgroup cols="2"><thead><row><entry>errorID 错误代码</entry><entry>说明</entry></row></thead><tbody><row>
+		<entry>16800</entry>
+		<entry>验证已下载的更新文件时出错。<codeph>subErrorID</codeph> 属性可能包含其它信息。</entry>
+		</row><row>
+		<entry>16801</entry>
+		<entry>Adobe AIR 文件无效（缺少 application.xml）。</entry>
+		</row><row>
+		<entry>16802</entry>
+		<entry>Adobe AIR 文件无效（缺少 MIME 类型）。</entry>
+		</row><row>
+		<entry>16807</entry>
+		<entry>Adobe AIR 文件无效（格式）。</entry>
+		</row><row>
+		<entry>16804</entry>
+		<entry>Adobe AIR 文件无效（标志无效）。</entry>
+		</row><row>
+		<entry>16805</entry>
+		<entry>Adobe AIR 文件无效（压缩方式未知）。</entry>
+		</row><row>
+		<entry>16806</entry>
+		<entry>Adobe AIR 文件无效（文件名无效）。</entry>
+		</row><row>
+		<entry>16807</entry>
+		<entry>Adobe AIR 文件无效（已损坏）。</entry>
+		</row><row>
+		<entry>16808</entry>
+		<entry>配置文件不存在。</entry>
+		</row><row>
+		<entry>16809</entry>
+		<entry>未设置 <codeph>updateURL</codeph> 属性。</entry>
+		</row><row>
+		<entry>16810</entry>
+		<entry>保留。</entry>
+		</row><row>
+		<entry>16811</entry>
+		<entry>配置文件无效（配置版本未知）。</entry>
+		</row><row>
+		<entry>16812</entry>
+		<entry>配置文件无效（缺少 URL）。</entry>
+		</row><row>
+		<entry>16813</entry>
+		<entry>配置文件无效（延迟格式）。</entry>
+		</row><row>
+		<entry>16814</entry>
+		<entry>配置文件无效（defaultUI 值无效）。</entry>
+		</row><row>
+		<entry>16815</entry>
+		<entry>更新描述符无效（描述符版本未知）。</entry>
+		</row><row>
+		<entry>16816</entry>
+		<entry>更新描述符无效（缺少更新版本）。</entry>
+		</row><row>
+		<entry>16817</entry>
+		<entry>更新描述符无效（说明无效）。</entry>
+		</row><row>
+		<entry>16818</entry>
+		<entry>向磁盘保存数据时发生 I/O 错误。<codeph>subErrorID</codeph> 属性可能会提供更多信息。</entry>
+		</row><row>
+		<entry>16819</entry>
+		<entry>下载时发生安全错误。<codeph>subErrorID</codeph> 属性可能会提供更多信息。</entry>
+		</row><row>
+		<entry>16820</entry>
+		<entry>HTTP 状态代码无效。<codeph>subErrorID</codeph> 属性可能包含无效的状态代码。</entry>
+		</row><row>
+		<entry>16821</entry>
+		<entry>保留。</entry>
+		</row><row>
+		<entry>16822</entry>
+		<entry>下载时发生 I/O 错误。<codeph>subErrorID</codeph> 属性可能会提供更多信息。</entry>
+		</row><row>
+		<entry>16823</entry>
+		<entry>向磁盘保存数据时文件尾出错。<codeph>subErrorID</codeph> 属性可能会提供更多信息。</entry>
+		</row><row>
+		<entry>16824</entry>
+		<entry>更新描述符无效。<codeph>subErrorID</codeph> 属性可能会提供更多信息。</entry>
+		</row><row>
+		<entry>16825</entry>
+		<entry>更新文件包含应用程序 ID 不同的应用程序。</entry>
+		</row><row>
+		<entry>16826</entry>
+		<entry>更新文件不包含应用程序的更新版本。</entry>
+		</row><row>
+		<entry>16827</entry>
+		<entry>更新文件中包含的版本与更新描述符中的版本不匹配。</entry>
+		</row><row>
+		<entry>16828</entry>
+		<entry>无法更新应用程序，通常是因为应用程序正在 AIR Debug Launcher (ADL) 中运行。</entry>
+		</row><row>
+		<entry>16829</entry>
+		<entry>安装时缺少更新文件。</entry>
+		</row></tbody></tgroup></adobetable>
+		
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="air.update.events:DownloadErrorEvent:subErrorID"><apiName>subErrorID</apiName><shortdesc>
+		提供 errorId 属性之外的信息。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>0</apiData><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+		提供 <codeph>errorId</codeph> 属性之外的信息。 
+		
+		</apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="air.update.events:StatusFileUpdateEvent"><apiName>StatusFileUpdateEvent</apiName><shortdesc>
+	updater 成功验证调用 installFromAIRFile() 方法过程中的文件之后将分派此事件。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>air.update.events:UpdateEvent</apiBaseClassifier></apiClassifierDef><apiDesc>
+	updater 成功验证调用 <codeph>installFromAIRFile()</codeph> 方法过程中的文件之后将分派此事件。
+	
+	<p>如果将 StatusFileUpdateEvent 对象的 available 属性设置为 true，则默认行为是安装更新。只有在使用 ApplicationUpdater 类时才能阻止默认行为。</p>
+	
+	</apiDesc></apiClassifierDetail><related-links><link href="air.update.xml#ApplicationUpdater"><linktext>air.update.ApplicationUpdater</linktext></link><link href="air.update.xml#ApplicationUpdaterUI"><linktext>air.update.ApplicationUpdaterUI</linktext></link></related-links><adobeApiEvent id="air.update.events:StatusFileUpdateEvent:FILE_UPDATE_STATUS_fileUpdateStatus"><apiName>fileUpdateStatus</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events:StatusFileUpdateEvent:FILE_UPDATE_STATUS</apiEventType><adobeApiEventClassifier>air.update.events:StatusFileUpdateEvent</adobeApiEventClassifier><apiDefinedEvent/></adobeApiEventDef></adobeApiEventDetail></adobeApiEvent><apiConstructor id="air.update.events:StatusFileUpdateEvent:StatusFileUpdateEvent"><apiName>StatusFileUpdateEvent</apiName><shortdesc>
+		构造函数。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>type</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc> 事件的类型。事件侦听器可以通过继承的 <codeph>type</codeph> 属性访问此信息。只有一种类型的 error 事件：<codeph>ErrorEvent.ERROR</codeph>。
+		</apiDesc></apiParam><apiParam><apiItemName>bubbles</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>确定 Event 对象是否冒泡。事件侦听器可以通过继承的 <codeph>bubbles</codeph> 属性访问此信息。  
+		</apiDesc></apiParam><apiParam><apiItemName>cancelable</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>确定是否可以取消 Event 对象。事件侦听器可以通过继承的 <codeph>cancelable</codeph> 属性访问此信息。 
+		</apiDesc></apiParam><apiParam><apiItemName>available</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>要显示为错误消息的文本。事件侦听器可以通过 <codeph>text</codeph> 属性访问此信息。
+		</apiDesc></apiParam><apiParam><apiItemName>version</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData/><apiDesc>要与特定错误关联的引用数字。
+		
+		</apiDesc></apiParam><apiParam><apiItemName>path</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData/></apiParam></apiConstructorDef><apiDesc>
+		构造函数。请勿调用此函数。更新框架调用此函数是为了创建事件对象。
+		
+		</apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="air.update.events:StatusFileUpdateEvent:clone"><apiName>clone</apiName><shortdesc>
+	 	 创建 对象的副本，并将每个属性的值设置为与原始属性值相匹配。</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiOperationClassifier>flash.events:Event</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 	 创建 对象的副本，并将每个属性的值设置为与原始属性值相匹配。
+	 	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.update.events:StatusFileUpdateEvent:toString"><apiName>toString</apiName><shortdesc>
+	 	 返回一个字符串，其中包含 对象的所有属性。</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 	 返回一个字符串，其中包含 对象的所有属性。
+	 	 </apiDesc></apiOperationDetail></apiOperation><apiValue id="air.update.events:StatusFileUpdateEvent:FILE_UPDATE_STATUS"><apiName>FILE_UPDATE_STATUS</apiName><shortdesc>
+		 StatusUpdateEvent.UPDATE_STATUS 常量为 updateStatus 事件定义事件对象的 type 属性的值。</shortdesc><prolog/><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>fileUpdateStatus</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 <codeph>StatusUpdateEvent.UPDATE_STATUS</codeph> 常量为 <codeph>updateStatus</codeph> 事件定义事件对象的 <codeph>type</codeph> 属性的值。
+		 
+		<p>此事件具有以下属性：</p>
+		
+		<p><adobetable class="innertable">
+		
+		    
+		
+		    
+		
+		    
+		
+		    
+		
+		<tgroup cols="2"><thead><row><entry>属性</entry><entry>值</entry></row></thead><tbody><row><entry><codeph>available</codeph></entry><entry>指示除当前应用程序的版本之外是否还有可用的版本，有则为 <codeph>true</codeph>；否则（版本相同）为 <codeph>false</codeph>。</entry></row><row><entry><codeph>path</codeph></entry><entry>调用 <codeph>installFromAIRFile()</codeph> 方法的过程中由 <codeph>airFile</codeph> 参数指定的更新 File 对象的 <codeph>nativePath</codeph> 属性。</entry></row><row><entry><codeph>version</codeph></entry><entry>指示新的更新的版本。</entry></row></tbody></tgroup></adobetable></p>
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="air.update.events:StatusFileUpdateEvent:available"><apiName>available</apiName><shortdesc>
+		 指示除当前应用程序的版本之外是否还有可用的版本，有则为 true；否则（版本相同）为 false。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>false</apiData><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+		 指示除当前应用程序的版本之外是否还有可用的版本，有则为 <codeph>true</codeph>；否则（版本相同）为 <codeph>false</codeph>。
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="air.update.events:StatusFileUpdateEvent:path"><apiName>path</apiName><shortdesc>
+		 调用 installFromAIRFile() 方法的过程中由 airFile 参数指定的更新 File 对象的 nativePath 属性。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>null</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 调用 <codeph>installFromAIRFile()</codeph> 方法的过程中由 <codeph>airFile</codeph> 参数指定的更新 File 对象的 <codeph>nativePath</codeph> 属性。
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="air.update.events:StatusFileUpdateEvent:version"><apiName>version</apiName><shortdesc>
+		 指示新的更新的版本。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 指示新的更新的版本。
+		 
+		 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="air.update.events:StatusFileUpdateErrorEvent"><apiName>StatusFileUpdateErrorEvent</apiName><shortdesc>
+	 调用 ApplicationUpdater 对象的 checkForUpdate() 方法时在下载或分析更新描述符文件的过程中如果遇到错误，将分派 StatusUpdateFileErrorEvent。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.events:ErrorEvent</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 调用 ApplicationUpdater 对象的 <codeph>checkForUpdate()</codeph> 方法时在下载或分析更新描述符文件的过程中如果遇到错误，将分派 StatusUpdateFileErrorEvent。
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="air.update.xml#ApplicationUpdater"><linktext>air.update.ApplicationUpdater</linktext></link><link href="air.update.xml#ApplicationUpdaterUI"><linktext>air.update.ApplicationUpdaterUI</linktext></link></related-links><adobeApiEvent id="air.update.events:StatusFileUpdateErrorEvent:FILE_UPDATE_ERROR_fileUpdateError"><apiName>fileUpdateError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events:StatusFileUpdateErrorEvent:FILE_UPDATE_ERROR</apiEventType><adobeApiEventClassifier>air.update.events:StatusFileUpdateErrorEvent</adobeApiEventClassifier><apiDefinedEvent/></adobeApiEventDef></adobeApiEventDetail></adobeApiEvent><apiConstructor id="air.update.events:StatusFileUpdateErrorEvent:StatusFileUpdateErrorEvent"><apiName>StatusFileUpdateErrorEvent</apiName><shortdesc>
+		构造函数。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>type</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc> 事件的类型。事件侦听器可以通过继承的 <codeph>type</codeph> 属性访问此信息。只有一种类型的 error 事件：<codeph>ErrorEvent.ERROR</codeph>。
+		</apiDesc></apiParam><apiParam><apiItemName>bubbles</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>确定 Event 对象是否冒泡。事件侦听器可以通过继承的 <codeph>bubbles</codeph> 属性访问此信息。  
+		</apiDesc></apiParam><apiParam><apiItemName>cancelable</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>确定是否可以取消 Event 对象。事件侦听器可以通过继承的 <codeph>cancelable</codeph> 属性访问此信息。 
+		</apiDesc></apiParam><apiParam><apiItemName>text</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData/><apiDesc>要显示为错误消息的文本。事件侦听器可以通过 <codeph>text</codeph> 属性访问此信息。
+		</apiDesc></apiParam><apiParam><apiItemName>id</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiData>0</apiData><apiDesc>要与特定错误关联的引用数字。
+		
+		</apiDesc></apiParam></apiConstructorDef><apiDesc>
+		构造函数。请勿调用此函数。更新框架调用此函数是为了创建事件对象。
+		
+		</apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="air.update.events:StatusFileUpdateErrorEvent:clone"><apiName>clone</apiName><shortdesc>
+	 	 创建 对象的副本，并将每个属性的值设置为与原始属性值相匹配。</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiOperationClassifier>flash.events:Event</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 	 创建 对象的副本，并将每个属性的值设置为与原始属性值相匹配。
+	 	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.update.events:StatusFileUpdateErrorEvent:toString"><apiName>toString</apiName><shortdesc>
+	 	 返回一个字符串，其中包含 对象的所有属性。</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 	 返回一个字符串，其中包含 对象的所有属性。
+	 	 </apiDesc></apiOperationDetail></apiOperation><apiValue id="air.update.events:StatusFileUpdateErrorEvent:FILE_UPDATE_ERROR"><apiName>FILE_UPDATE_ERROR</apiName><shortdesc>
+		 StatusUpdateErrorEvent.UPDATE_ERROR 常量为 statusUpdateError 事件定义事件对象的 type 属性的值。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>fileUpdateError</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 <codeph>StatusUpdateErrorEvent.UPDATE_ERROR</codeph> 常量为 <codeph>statusUpdateError</codeph> 事件定义事件对象的 <codeph>type</codeph> 属性的值。
+		 
+		 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="air.update.events:UpdateEvent"><apiName>UpdateEvent</apiName><shortdesc>
+	 在更新过程中，ApplicationUpdater 对象将分派 UpdateEvent。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.events:Event</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 在更新过程中，ApplicationUpdater 对象将分派 UpdateEvent。
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="air.update.xml#ApplicationUpdater"><linktext>air.update.ApplicationUpdater</linktext></link><link href="air.update.xml#ApplicationUpdaterUI"><linktext>air.update.ApplicationUpdaterUI</linktext></link></related-links><adobeApiEvent id="air.update.events:UpdateEvent:BEFORE_INSTALL_beforeInstall"><apiName>beforeInstall</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events:UpdateEvent:BEFORE_INSTALL</apiEventType><adobeApiEventClassifier>air.update.events:UpdateEvent</adobeApiEventClassifier><apiDefinedEvent/></adobeApiEventDef></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update.events:UpdateEvent:CHECK_FOR_UPDATE_checkForUpdate"><apiName>checkForUpdate</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events:UpdateEvent:CHECK_FOR_UPDATE</apiEventType><adobeApiEventClassifier>air.update.events:UpdateEvent</adobeApiEventClassifier><apiDefinedEvent/></adobeApiEventDef></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update.events:UpdateEvent:DOWNLOAD_COMPLETE_downloadComplete"><apiName>downloadComplete</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events:UpdateEvent:DOWNLOAD_COMPLETE</apiEventType><adobeApiEventClassifier>air.update.events:UpdateEvent</adobeApiEventClassifier><apiDefinedEvent/></adobeApiEventDef></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update.events:UpdateEvent:DOWNLOAD_START_downloadStart"><apiName>downloadStart</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events:UpdateEvent:DOWNLOAD_START</apiEventType><adobeApiEventClassifier>air.update.events:UpdateEvent</adobeApiEventClassifier><apiDefinedEvent/></adobeApiEventDef></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update.events:UpdateEvent:INITIALIZED_initialized"><apiName>initialized</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events:UpdateEvent:INITIALIZED</apiEventType><adobeApiEventClassifier>air.update.events:UpdateEvent</adobeApiEventClassifier><apiDefinedEvent/></adobeApiEventDef></adobeApiEventDetail></adobeApiEvent><apiConstructor id="air.update.events:UpdateEvent:UpdateEvent"><apiName>UpdateEvent</apiName><shortdesc>
+		构造函数。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>type</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc> 事件的类型。事件侦听器可以通过继承的 <codeph>type</codeph> 属性访问此信息。只有一种类型的 error 事件：<codeph>ErrorEvent.ERROR</codeph>。
+		</apiDesc></apiParam><apiParam><apiItemName>bubbles</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>确定 Event 对象是否冒泡。事件侦听器可以通过继承的 <codeph>bubbles</codeph> 属性访问此信息。  
+		</apiDesc></apiParam><apiParam><apiItemName>cancelable</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>确定是否可以取消 Event 对象。事件侦听器可以通过继承的 <codeph>cancelable</codeph> 属性访问此信息。 
+		</apiDesc></apiParam></apiConstructorDef><apiDesc>
+		构造函数。请勿调用此函数。更新框架调用此函数是为了创建事件对象。
+		
+		</apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="air.update.events:UpdateEvent:clone"><apiName>clone</apiName><shortdesc>
+	 	 创建 对象的副本，并将每个属性的值设置为与原始属性值相匹配。</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiOperationClassifier>flash.events:Event</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 	 创建 对象的副本，并将每个属性的值设置为与原始属性值相匹配。
+	 	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.update.events:UpdateEvent:toString"><apiName>toString</apiName><shortdesc>
+	 	 返回一个字符串，其中包含 对象的所有属性。</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 	 返回一个字符串，其中包含 对象的所有属性。
+	 	 </apiDesc></apiOperationDetail></apiOperation><apiValue id="air.update.events:UpdateEvent:BEFORE_INSTALL"><apiName>BEFORE_INSTALL</apiName><shortdesc>
+		 UpdateEvent.BEFORE_INSTALL 常量为 beforeInstall 事件定义事件对象的 type 属性的值。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>beforeInstall</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 <codeph>UpdateEvent.BEFORE_INSTALL</codeph> 常量为 <codeph>beforeInstall</codeph> 事件定义事件对象的 <codeph>type</codeph> 属性的值。
+		 
+		<p>此事件具有以下属性：</p>
+		
+		<adobetable class="innertable">
+		    
+		
+		    
+		
+		    
+		
+		    
+		
+		    
+		
+		<tgroup cols="2"><thead><row><entry>属性</entry><entry>值</entry></row></thead><tbody><row><entry><codeph>bubbles</codeph></entry><entry><codeph>false</codeph></entry></row><row><entry><codeph>cancelable</codeph></entry><entry><codeph>false</codeph>；没有要取消的默认行为。</entry></row><row><entry><codeph>currentTarget</codeph></entry><entry>当前正在使用某个事件侦听器处理 Event 对象的对象。</entry></row><row><entry><codeph>target</codeph></entry><entry>updater 对象。 </entry></row></tbody></tgroup></adobetable>
+		
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="air.update.events:UpdateEvent:CHECK_FOR_UPDATE"><apiName>CHECK_FOR_UPDATE</apiName><shortdesc>
+		 UpdateEvent.CHECK_FOR_UPDATE 常量为 checkForUpdate 事件定义事件对象的 type 属性的值。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>checkForUpdate</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 <codeph>UpdateEvent.CHECK_FOR_UPDATE</codeph> 常量为 <codeph>checkForUpdate</codeph> 事件定义事件对象的 <codeph>type</codeph> 属性的值。
+		 
+		<p>此事件具有以下属性：</p>
+		
+		<adobetable class="innertable">
+		    
+		
+		    
+		
+		    
+		
+		    
+		
+		    
+		
+		<tgroup cols="2"><thead><row><entry>属性</entry><entry>值</entry></row></thead><tbody><row><entry><codeph>bubbles</codeph></entry><entry><codeph>false</codeph></entry></row><row><entry><codeph>cancelable</codeph></entry><entry><codeph>false</codeph>；没有要取消的默认行为。</entry></row><row><entry><codeph>currentTarget</codeph></entry><entry>当前正在使用某个事件侦听器处理 Event 对象的对象。</entry></row><row><entry><codeph>target</codeph></entry><entry>updater 对象。 </entry></row></tbody></tgroup></adobetable>
+		
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="air.update.events:UpdateEvent:DOWNLOAD_COMPLETE"><apiName>DOWNLOAD_COMPLETE</apiName><shortdesc>
+		 UpdateEvent.DOWNLOAD_COMPLETE 常量为 downloadComplete 事件定义事件对象的 type 属性的值。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>downloadComplete</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 <codeph>UpdateEvent.DOWNLOAD_COMPLETE</codeph> 常量为 <codeph>downloadComplete</codeph> 事件定义事件对象的 <codeph>type</codeph> 属性的值。
+		 
+		<p>此事件具有以下属性：</p>
+		
+		<adobetable class="innertable">
+		    
+		
+		    
+		
+		    
+		
+		    
+		
+		    
+		
+		<tgroup cols="2"><thead><row><entry>属性</entry><entry>值</entry></row></thead><tbody><row><entry><codeph>bubbles</codeph></entry><entry><codeph>false</codeph></entry></row><row><entry><codeph>cancelable</codeph></entry><entry><codeph>false</codeph>；没有要取消的默认行为。</entry></row><row><entry><codeph>currentTarget</codeph></entry><entry>当前正在使用某个事件侦听器处理 Event 对象的对象。</entry></row><row><entry><codeph>target</codeph></entry><entry>updater 对象。 </entry></row></tbody></tgroup></adobetable>
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="air.update.events:UpdateEvent:DOWNLOAD_START"><apiName>DOWNLOAD_START</apiName><shortdesc>
+		 UpdateEvent.DOWNLOAD_START 常量为 downloadStart 事件定义事件对象的 type 属性的值。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>downloadStart</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 <codeph>UpdateEvent.DOWNLOAD_START</codeph> 常量为 <codeph>downloadStart</codeph> 事件定义事件对象的 <codeph>type</codeph> 属性的值。
+		 
+		<p>此事件具有以下属性：</p>
+		
+		<adobetable class="innertable">
+		    
+		
+		    
+		
+		    
+		
+		    
+		
+		    
+		
+		<tgroup cols="2"><thead><row><entry>属性</entry><entry>值</entry></row></thead><tbody><row><entry><codeph>bubbles</codeph></entry><entry><codeph>false</codeph></entry></row><row><entry><codeph>cancelable</codeph></entry><entry><codeph>false</codeph>；没有要取消的默认行为。</entry></row><row><entry><codeph>currentTarget</codeph></entry><entry>当前正在使用某个事件侦听器处理 Event 对象的对象。</entry></row><row><entry><codeph>target</codeph></entry><entry>updater 对象。 </entry></row></tbody></tgroup></adobetable>
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="air.update.events:UpdateEvent:INITIALIZED"><apiName>INITIALIZED</apiName><shortdesc>
+		 UpdateEvent.INITIALIZED 常量为 initialized 事件定义事件对象的 type 属性的值。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>initialized</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 <codeph>UpdateEvent.INITIALIZED</codeph> 常量为 <codeph>initialized</codeph> 事件定义事件对象的 <codeph>type</codeph> 属性的值。
+		 
+		<p>此事件具有以下属性：</p>
+		
+		<adobetable class="innertable">
+		    
+		
+		    
+		
+		    
+		
+		    
+		
+		    
+		
+		<tgroup cols="2"><thead><row><entry>属性</entry><entry>值</entry></row></thead><tbody><row><entry><codeph>bubbles</codeph></entry><entry><codeph>false</codeph></entry></row><row><entry><codeph>cancelable</codeph></entry><entry><codeph>false</codeph>；没有要取消的默认行为。</entry></row><row><entry><codeph>currentTarget</codeph></entry><entry>当前正在使用某个事件侦听器处理 Event 对象的对象。</entry></row><row><entry><codeph>target</codeph></entry><entry>updater 对象。 </entry></row></tbody></tgroup></adobetable>
+		
+		 </apiDesc></apiValueDetail></apiValue></apiClassifier></apiPackage>

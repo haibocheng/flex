@@ -1,0 +1,302 @@
+<?xml version="1.0"?>
+<apiPackage id="air.net"><apiName>air.net</apiName><apiDetail/><apiClassifier id="air.net:URLMonitor"><apiName>URLMonitor</apiName><shortdesc>
+ URLMonitor 类监视基于 HTTP 或 HTTPS 的服务的可用性。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>air.net:ServiceMonitor</apiBaseClassifier></apiClassifierDef><apiDesc>
+ URLMonitor 类监视基于 HTTP 或 HTTPS 的服务的可用性。
+ 
+ <p product="flex">此类包括在 ServiceMonitor.swc 文件中。创建 Adobe<sup>®</sup> AIR<sup>®</sup> 项目时，Adobe<sup>®</sup> Flash<sup>®</sup> Builder™ 将自动加载此类。Adobe<sup>®</sup> Flex<sup>®</sup> SDK 也包括此 servicemonitor.swc 文件，在使用 Flex SDK 编译应用程序时应该包括此文件。
+ </p>
+ 
+ <p product="flash">在 Adobe <sup>®</sup> Flash <sup>®</sup> CS3 Professional 中，此类包含在 ServiceMonitorShim.swc 文件中。要使用 air.net 包中的类，必须先将 ServiceMonitorShim 组件从“组件”面板拖到“库”中，然后将以下 <codeph>import</codeph> 语句添加到 ActionScript 3.0 代码中：
+ </p>
+ 
+ <codeblock product="flash">import air.net.~~;</codeblock>
+ 
+ <p product="flash">要在 Adobe <sup>®</sup> Flash <sup>®</sup> CS4 Professional 中使用 air.net 包： </p>
+ 
+ <ol product="flash">
+ <li>选择“文件”>“发布设置”命令。</li>
+ <li>在 Flash 面板中，单击 ActionScript 3.0 对应的“设置”按钮。选择“库路径”。</li>
+ <li>单击“浏览到 SWC 文件”按钮。在 Adobe Flash CS4 安装文件夹中找到 Adobe Flash CS4/AIK1.1/frameworks/libs/air/servicemoniter.swc 文件。</li>
+ <li>单击“确定”按钮。</li>
+ <li>将下面的 <codeph>import</codeph> 语句添加到 ActionScript 3.0 代码中：<codeph>import air.net.~~;</codeph></li>
+ </ol>
+ 
+ <p platform="javascript">要在 JavaScript 代码中使用此类，请加载 ServiceMonitor.swf 文件，如下所示：</p>
+ 
+ <codeblock platform="javascript">&lt;script src="ServiceMonitor.swf" type="application/x-shockwave-flash"></codeblock>
+ 
+ </apiDesc></apiClassifierDetail><apiConstructor id="air.net:URLMonitor:URLMonitor"><apiName>URLMonitor</apiName><shortdesc>
+     为指定的基于 HTTP 或 HTTPS 的服务创建 URLMonitor 对象。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>urlRequest</apiItemName><apiOperationClassifier>flash.net:URLRequest</apiOperationClassifier><apiDesc>表示用于轮询服务器的探查请求的 URLRequest 对象。
+     
+     </apiDesc></apiParam><apiParam><apiItemName>acceptableStatusCodes</apiItemName><apiOperationClassifier>Array</apiOperationClassifier><apiData>null</apiData><apiDesc>一个数字状态代码数组，列出表示成功结果的代码。
+     
+     <p>如果不指定 <codeph>acceptableStatusCodes</codeph> 属性的值，则会将以下状态代码识别为成功响应：</p>
+     
+     <ul>
+      <li>200（正常） </li>
+      <li>202（可接受） </li>
+      <li>204（无内容） </li>
+      <li>205（重置内容） </li>
+      <li>206（部分内容，响应带有 Range 标头的请求） </li>
+     </ul>
+     
+     </apiDesc></apiParam></apiConstructorDef><apiDesc>
+     为指定的基于 HTTP 或 HTTPS 的服务创建 URLMonitor 对象。
+     
+     <p>在创建 URLMonitor 后，调用方应调用 <codeph>start()</codeph> 方法以开始监视服务的状态。</p>
+     
+     <p>与 Timer 对象一样，调用方应保持对 URLMonitor 对象的引用。否则，运行时会删除该对象，从而结束监视。</p>
+     
+     <p>URLRequest 参数指定用于轮询服务器的探查请求。通常，请求方法是 <codeph>"GET"</codeph> 或 <codeph>"HEAD"</codeph>。</p>
+     
+     </apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="air.net:URLMonitor:protected:checkStatus"><apiName>checkStatus</apiName><shortdesc>
+    尝试在后台从 URL 加载内容，以检查返回的 HTTP 状态代码。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiIsOverride/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+    尝试在后台从 URL 加载内容，以检查返回的 HTTP 状态代码。 
+    <p>
+    如果接收到 <codeph>acceptableStatusCodes</codeph> 属性中列出的状态代码，则会将 <codeph>available</codeph> 属性设置为 <codeph>true</codeph>。如果接收到 <codeph>acceptableStatusCodes</codeph> 列表中以外的状态代码，或如果出现安全错误或 I/O 错误，则会将 <codeph>available</codeph> 属性设置为 <codeph>false</codeph>。
+    </p>
+    
+    </apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.net:URLMonitor:toString"><apiName>toString</apiName><shortdesc>
+     
+     
+	 返回指定对象的字符串表示形式。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiDesc>对象的字符串表示形式。
+	 
+	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+     
+     
+	 返回指定对象的字符串表示形式。
+	 
+     <p platform="actionscript"><b>注意：</b>Object 类的方法是在 Object 的原型上动态创建的。要在 Object 的子类中重新定义该方法，请不要使用 <codeph>override</codeph> 关键字。例如，Object 的一个子类实现 <codeph>function toString():String</codeph> 而不使用基类覆盖。</p>
+     
+     </apiDesc></apiOperationDetail></apiOperation><apiValue id="air.net:URLMonitor:acceptableStatusCodes:get"><apiName>acceptableStatusCodes</apiName><shortdesc>
+     表示成功结果的数值状态代码。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Array</apiValueClassifier></apiValueDef><apiDesc>
+     表示成功结果的数值状态代码。
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="air.net:URLMonitor:urlRequest:get"><apiName>urlRequest</apiName><shortdesc>
+     表示探查请求的 URLRequest 对象。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>flash.net:URLRequest</apiValueClassifier></apiValueDef><apiDesc>
+     表示探查请求的 URLRequest 对象。
+     
+     </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="air.net:ServiceMonitor"><apiName>ServiceMonitor</apiName><shortdesc>
+ ServiceMonitor 类实现用于监视网络服务的状态和可用性的框架。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiDynamic/><apiBaseClassifier>flash.events:EventDispatcher</apiBaseClassifier></apiClassifierDef><apiDesc>
+ ServiceMonitor 类实现用于监视网络服务的状态和可用性的框架。ServiceMonitor 类作为所有其它服务监视器的基类。
+ 
+ <p product="flex">此类包括在 ServiceMonitor.swc 文件中。创建 Adobe<sup>®</sup> AIR™ 项目时，Adobe<sup>®</sup> Flash<sup>®</sup> Builder™ 将自动加载此类。Adobe<sup>®</sup> Flex<sup>®</sup> SDK 也包括此 servicemonitor.swc 文件，在使用 Flex SDK 编译应用程序时应该包括此文件。
+ </p>
+ 
+ <p product="flash">在 Adobe <sup>®</sup> Flash <sup>®</sup> CS3 Professional 中，此类包含在 ServiceMonitorShim.swc 文件中。要使用 air.net 包中的类，必须先将 ServiceMonitorShim 组件从“组件”面板拖到“库”中，然后将以下 <codeph>import</codeph> 语句添加到 ActionScript 3.0 代码中：
+ </p>
+ 
+ <codeblock product="flash">import air.net.~~;</codeblock>
+ 
+ <p product="flash">要在 Adobe <sup>®</sup> Flash <sup>®</sup> CS4 Professional 中使用 air.net 包： </p>
+ 
+ <ol product="flash">
+ <li>选择“文件”>“发布设置”命令。</li>
+ <li>在 Flash 面板中，单击 ActionScript 3.0 对应的“设置”按钮。选择“库路径”。</li>
+ <li>单击“浏览到 SWC 文件”按钮。在 Adobe Flash CS4 安装文件夹中找到 Adobe Flash CS4/AIK1.1/frameworks/libs/air/servicemoniter.swc 文件。</li>
+ <li>单击“确定”按钮。</li>
+ <li>将下面的 <codeph>import</codeph> 语句添加到 ActionScript 3.0 代码中：<codeph>import air.net.~~;</codeph></li>
+ </ol>
+ 
+ <p platform="javascript">要在 JavaScript 代码中使用此类，请加载 ServiceMonitor.swf 文件，如下所示：</p>
+ 
+ <codeblock platform="javascript">&lt;script src="ServiceMonitor.swf" type="application/x-shockwave-flash"></codeblock>
+ 
+ </apiDesc></apiClassifierDetail><adobeApiEvent id="air.net:ServiceMonitor_flash.events.StatusEvent.STATUS_status"><apiName>status</apiName><shortdesc>
+ 指示服务状态已更改。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><adobeApiEventDetail><adobeApiEventDef><apiEventType>flash.events.StatusEvent.STATUS</apiEventType><adobeApiEventClassifier>flash.events.StatusEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
+ 指示服务状态已更改。
+ 
+ <p><codeph>code</codeph> 属性的值为 <codeph>"Service.available"</codeph> 或 <codeph>"Service.unavailable"</codeph>，但最佳做法是检查 <codeph>ServiceMonitor.available</codeph> 属性的值。</p>
+ 
+ </apiDesc></adobeApiEventDetail></adobeApiEvent><apiConstructor id="air.net:ServiceMonitor:ServiceMonitor"><apiName>ServiceMonitor</apiName><shortdesc>
+     创建 ServiceMonitor 对象。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/></apiConstructorDef><apiDesc>
+     创建 ServiceMonitor 对象。 
+     
+     <p platform="actionscript">通常会从此类派生子类以监视特定的服务类型。</p>
+     
+     <p platform="javascript">此类专用于 JavaScript（来自 HTML 应用程序内容），如 <codeph>makeJavascriptSubclass()</codeph> 方法的说明所述。</p>
+     
+     <p>在创建 ServiceMonitor 对象（或子类对象）后，调用 <codeph>start()</codeph> 方法可开始监视服务的状态。</p>
+     
+     <p>与 Timer 对象一样，调用方应保持对 ServiceMonitor 对象的引用。否则，运行时会删除该对象并结束监视。</p>
+     
+     </apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="air.net:ServiceMonitor:protected:checkStatus"><apiName>checkStatus</apiName><shortdesc>
+     检查服务状态。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+     检查服务状态。
+     
+     <p>用于检查服务状态的子类覆盖方法。</p>
+     
+     <p>通常，此方法将启动网络操作，该操作的完成或失败将导致设置 <codeph>available</codeph> 属性。</p>
+     
+     <p>通过在“专用函数”对象中定义 <codeph>checkStatus()</codeph> 方法，JavaScript 代码可以专用此方法。</p>
+     
+     </apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.net:ServiceMonitor:makeJavascriptSubclass"><apiName>makeJavascriptSubclass</apiName><shortdesc>
+     将公共 ServiceMonitor 方法添加到 JavaScript 构造函数的原型中。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>constructorFunction</apiItemName><apiOperationClassifier>Object</apiOperationClassifier><apiDesc>JavaScript 对象的 <codeph>prototype</codeph> 属性。例如，如果要用作专用函数对象的 JavaScript 对象名为 MyHTTPMonitor，请传递 <codeph>MyHTTPMonitor.prototype</codeph> 作为此参数的值。
+     
+     </apiDesc></apiParam></apiOperationDef><apiDesc>
+     将公共 ServiceMonitor 方法添加到 JavaScript 构造函数的原型中。
+     
+     <p>将函数添加到 JavaScript 构造函数的原型，以将公共 ServiceMonitor 函数进一步应用到 ServiceMonitor 对象。此类近似于 ActionScript 基类的常规 JavaScript 子类。</p>
+     
+     <p>专用 ServiceMonitor 的 JavaScript 类如下所示：</p>
+     
+     <codeblock>
+     // JavaScript Constructor function
+     function MyHTTPMonitor(url, method)
+     {
+         // "that" variable makes "this" available in closures below
+         var that = this;
+         // Required initialization of the service monitor, returns the actual ServiceMonitor object.
+         this.monitor = this.initServiceMonitor();
+         // Initializes URLStream and event handlers.
+         this._urlStream = new air.URLStream();
+         this._urlRequest = new air.URLRequest(url);
+         if (method)
+         {
+             this._urlRequest.method = method;
+         }
+         else
+         {
+             this._urlRequest.method = "GET";
+         }
+         function onStatus(event) {
+             that.monitor.available = Number(event.status) == 200;
+             that._urlStream.close();
+         }
+         function onError(event)
+         {
+             that.monitor.available = false;
+             that._urlStream.close();
+         }
+         this._urlStream.addEventListener(air.HTTPStatusEvent.HTTP_RESPONSE_STATUS, onStatus);
+         this._urlStream.addEventListener(air.SecurityErrorEvent.SECURITY_ERROR, onError);
+         this._urlStream.addEventListener(air.IOErrorEvent.IO_ERROR, onError);
+     }
+     
+     // Augment JavaScript prototype with public methods from ServiceMonitor
+     air.ServiceMonitor.makeJavascriptSubclass(MyHTTPMonitor);
+     
+     // Implement specializer functions, just as you would when subclassing a JavaScript class
+     MyHTTPMonitor.prototype.checkStatus = function()
+     {
+         air.trace('OVERRIDDEN checkStatus!', this);
+         this._urlStream.load(this._urlRequest);
+     }
+     </codeblock>
+     
+     <p>使用 JavaScript 类：</p>
+     
+     <codeblock>
+     var httpMon = new MyHTTPMonitor('http://www.adobe.com')
+     </codeblock>
+     
+     <p>确保用 <codeph>script</codeph> 标签加载 AIRAliases.js 和 ServiceMonitor.swf 文件。</p>
+     
+     </apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.net:ServiceMonitor:start"><apiName>start</apiName><shortdesc>
+     启动服务监视器。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+     启动服务监视器。
+     
+     </apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.net:ServiceMonitor:stop"><apiName>stop</apiName><shortdesc>
+     停止监视服务。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+     停止监视服务。
+     
+     </apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.net:ServiceMonitor:toString"><apiName>toString</apiName><shortdesc>
+     
+	 返回指定对象的字符串表示形式。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiDesc>对象的字符串表示形式。
+	 
+	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+     
+	 返回指定对象的字符串表示形式。
+	 
+     <p platform="actionscript"><b>注意：</b>Object 类的方法是在 Object 的原型上动态创建的。要在 Object 的子类中重新定义该方法，请不要使用 <codeph>override</codeph> 关键字。例如，Object 的一个子类实现 <codeph>function toString():String</codeph> 而不使用基类覆盖。</p>
+     
+     </apiDesc></apiOperationDetail></apiOperation><apiValue id="air.net:ServiceMonitor:available:get"><apiName>available</apiName><shortdesc>
+     当前是否将服务视为“可用”。初始值为 false，直至状态检查将该属性设置为 true，或者该属性被显式初始化为 true。通常，此属性是由子类或专用函数中的 checkStatus() 实现设置的，但是，如果应用程序具有与服务可用性有关的独立信息（例如，请求刚刚成功或失败），则可以显式设置该属性。
+     
+     </shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+     当前是否将服务视为“可用”。
+     
+     <p>初始值为 <codeph>false</codeph>，直至状态检查将该属性设置为 <codeph>true</codeph>，或者显式将该属性初始化为 <codeph>true</codeph>。</p>
+     
+     <p>通常，此属性是由子类或专用函数中的 <codeph>checkStatus()</codeph> 实现设置的，但是，如果应用程序具有与服务可用性有关的独立信息（例如，请求刚刚成功或失败），则可以显式设置该属性。</p>
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="air.net:ServiceMonitor:lastStatusUpdate:get"><apiName>lastStatusUpdate</apiName><shortdesc>
+     上次更新状态的时间。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Date</apiValueClassifier></apiValueDef><apiDesc>
+     上次更新状态的时间。
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="air.net:ServiceMonitor:pollInterval:get"><apiName>pollInterval</apiName><shortdesc>
+     服务器的轮询间隔（以毫秒为单位）。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Number</apiValueClassifier><apiDefaultValue>0
+     
+     </apiDefaultValue></apiValueDef><apiDesc>
+     服务器的轮询间隔（以毫秒为单位）。
+     
+     <p>如果为零，则不定期轮询服务器，而仅在调用 <codeph>start()</codeph> 后和网络状态发生更改时立即轮询。</p>
+     
+     <p>如果服务状态已更改（不是在每次轮询间隔时），则 ServiceMonitor 对象只分派 <codeph>status</codeph> 事件。如果网络连接发生更改（不管轮询间隔如何），该对象也会分派 <codeph>status</codeph> 事件。</p>
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="air.net:ServiceMonitor:running:get"><apiName>running</apiName><shortdesc>
+     是否已启动监视器。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+     是否已启动监视器。
+     
+     </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="air.net:SocketMonitor"><apiName>SocketMonitor</apiName><shortdesc>
+ SocketMonitor 对象监视 TCP 端点的可用性。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>air.net:ServiceMonitor</apiBaseClassifier></apiClassifierDef><apiDesc>
+ SocketMonitor 对象监视 TCP 端点的可用性。
+ 
+ <p product="flex">此类包括在 ServiceMonitor.swc 文件中。创建 AIR 项目时，Adobe <sup>®</sup> Flash<sup>®</sup> Builder™ 将自动加载此类。Flex<sup>®</sup> SDK 也包括 servicemonitor.swc 文件，在使用 Flex SDK 编译应用程序时应该包括此文件。
+ </p>
+ 
+ <p product="flash">在 Adobe <sup>®</sup> Flash <sup>®</sup> CS3 Professional 中，此类包含在 ServiceMonitorShim.swc 文件中。要使用 air.net 包中的类，必须先将 ServiceMonitorShim 组件从“组件”面板拖到“库”中，然后将以下 <codeph>import</codeph> 语句添加到 ActionScript 3.0 代码中：
+ </p>
+ 
+ <codeblock product="flash">import air.net.~~;</codeblock>
+ 
+ <p product="flash">要在 Adobe <sup>®</sup> Flash <sup>®</sup> CS4 Professional 中使用 air.net 包： </p>
+ 
+ <ol product="flash">
+ <li>选择“文件”>“发布设置”命令。</li>
+ <li>在 Flash 面板中，单击 ActionScript 3.0 对应的“设置”按钮。选择“库路径”。</li>
+ <li>单击“浏览到 SWC 文件”按钮。在 Adobe Flash CS4 安装文件夹中找到 Adobe Flash CS4/AIK1.1/frameworks/libs/air/servicemoniter.swc 文件。</li>
+ <li>单击“确定”按钮。</li>
+ <li>将下面的 <codeph>import</codeph> 语句添加到 ActionScript 3.0 代码中：<codeph>import air.net.~~;</codeph></li>
+ </ol>
+ 
+ <p platform="javascript">要在 JavaScript 代码中使用此类，请加载 ServiceMonitor.swf 文件，如下所示：</p>
+ 
+ <codeblock platform="javascript">&lt;script src="ServiceMonitor.swf" type="application/x-shockwave-flash"></codeblock>
+ 
+ </apiDesc></apiClassifierDetail><apiConstructor id="air.net:SocketMonitor:SocketMonitor"><apiName>SocketMonitor</apiName><shortdesc>
+	 为指定的 TCP 端点创建 SocketMonitor 对象。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>host</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>要监视的主机。
+	 </apiDesc></apiParam><apiParam><apiItemName>port</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiDesc>要监视的端口。
+	 
+	 </apiDesc></apiParam></apiConstructorDef><apiDesc>
+	 为指定的 TCP 端点创建 SocketMonitor 对象。
+	 
+	 <p>在创建 SocketMonitor 对象后，调用方应调用 <codeph>start</codeph> 以开始监视服务的状态。</p>
+	 
+	 <p>与 Timer 对象一样，调用方应保持对 SocketMonitor 对象的引用。否则，运行时会删除该对象并结束监视。</p>
+	 
+	 </apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="air.net:SocketMonitor:protected:checkStatus"><apiName>checkStatus</apiName><shortdesc>
+	调用 SocketMonitor 对象的 checkStatus() 方法会导致应用程序尝试连接到套接字以检查 connect 事件。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiIsOverride/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+	调用 SocketMonitor 对象的 <codeph>checkStatus()</codeph> 方法会导致应用程序尝试连接到套接字以检查 <codeph>connect</codeph> 事件。
+	
+	</apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.net:SocketMonitor:toString"><apiName>toString</apiName><shortdesc>
+	 
+     
+	 返回指定对象的字符串表示形式。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiDesc>对象的字符串表示形式。
+	 
+	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 
+     
+	 返回指定对象的字符串表示形式。
+	 
+     <p platform="actionscript"><b>注意：</b>Object 类的方法是在 Object 的原型上动态创建的。要在 Object 的子类中重新定义该方法，请不要使用 <codeph>override</codeph> 关键字。例如，Object 的一个子类实现 <codeph>function toString():String</codeph> 而不使用基类覆盖。</p>
+     
+     </apiDesc></apiOperationDetail></apiOperation><apiValue id="air.net:SocketMonitor:host:get"><apiName>host</apiName><shortdesc>
+	 所监视的主机。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 所监视的主机。
+	 
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="air.net:SocketMonitor:port:get"><apiName>port</apiName><shortdesc>
+	 所监视的端口。</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.0"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+	 所监视的端口。
+	 
+	 </apiDesc></apiValueDetail></apiValue></apiClassifier></apiPackage>

@@ -10,30 +10,31 @@
 //////////////////////////////////////////////////////////////////////////////////
 package flashx.textLayout.conversion 
 {
-	import flash.utils.Dictionary;
 	import flash.text.engine.Kerning;
 	import flash.text.engine.TextRotation;
+	import flash.utils.Dictionary;
+	
 	import flashx.textLayout.container.ContainerController;
 	import flashx.textLayout.debug.assert;
-	import flashx.textLayout.elements.IConfiguration;
-	import flashx.textLayout.elements.TabElement;
+	import flashx.textLayout.elements.BreakElement;
 	import flashx.textLayout.elements.DivElement;
 	import flashx.textLayout.elements.FlowElement;
-	import flashx.textLayout.elements.FlowLeafElement;
-	import flashx.textLayout.elements.GlobalSettings;	
-	import flashx.textLayout.elements.SpanElement;
-	import flashx.textLayout.elements.BreakElement;
 	import flashx.textLayout.elements.FlowGroupElement;
+	import flashx.textLayout.elements.FlowLeafElement;
+	import flashx.textLayout.elements.GlobalSettings;
+	import flashx.textLayout.elements.IConfiguration;
 	import flashx.textLayout.elements.InlineGraphicElement;
 	import flashx.textLayout.elements.LinkElement;
 	import flashx.textLayout.elements.ParagraphElement;
+	import flashx.textLayout.elements.SpanElement;
 	import flashx.textLayout.elements.SpecialCharacterElement;
+	import flashx.textLayout.elements.TabElement;
 	import flashx.textLayout.elements.TextFlow;
 	import flashx.textLayout.formats.Float;
+	import flashx.textLayout.formats.ITextLayoutFormat;
 	import flashx.textLayout.formats.LeadingModel;
 	import flashx.textLayout.formats.TextLayoutFormat;
 	import flashx.textLayout.formats.TextLayoutFormatValueHolder;
-	import flashx.textLayout.formats.ITextLayoutFormat;
 	import flashx.textLayout.property.Property;
 	import flashx.textLayout.property.StringProperty;
 	import flashx.textLayout.tlf_internal;
@@ -77,8 +78,11 @@ package flashx.textLayout.conversion
 			textAlign:TextLayoutFormat.textAlignProperty
 		};
 		
-		static internal const _linkDescription:Object = {
-			href	: new StringProperty("href",   null, false, null),
+		static internal const _linkHrefDescription:Object = {
+			href	: new StringProperty("href",   null, false, null)
+		};
+		
+		static internal const _linkTargetDescription:Object = {
 			target	: new StringProperty("target", null, false, null)
 		};
 		
@@ -104,7 +108,8 @@ package flashx.textLayout.conversion
 		static private var _textFormatImporter:TextFormatImporter;
 		static private var _textFormatMiscImporter:CaseInsensitiveTLFFormatImporter;		
 		static private var _paragraphFormatImporter:HtmlCustomParaFormatImporter;
-		static private var _linkFormatImporter:CaseInsensitiveTLFFormatImporter;
+		static private var _linkHrefImporter:CaseInsensitiveTLFFormatImporter;
+		static private var _linkTargetImporter:CaseInsensitiveTLFFormatImporter;
 		static private var _ilgFormatImporter:CaseInsensitiveTLFFormatImporter;
 		static private var _ilgMiscFormatImporter:CaseInsensitiveTLFFormatImporter;
 		static private var _classImporter:CaseInsensitiveTLFFormatImporter;
@@ -143,25 +148,19 @@ package flashx.textLayout.conversion
 			
 			// create these here - can't be done above
 			if (_classDescription["class"] === undefined)
+			{
 				_classDescription["class"] = new StringProperty("class", null, false, null);
-			if (_paragraphFormatImporter == null)
 				_paragraphFormatImporter = new HtmlCustomParaFormatImporter(TextLayoutFormat, _paragraphFormatDescription);
-			if (_textFormatImporter == null)
 				_textFormatImporter = new TextFormatImporter(TextLayoutFormat, _textFormatDescription);
-			if (_fontImporter == null)
 				_fontImporter = new FontImporter(TextLayoutFormat, _fontDescription);
-			if (_fontMiscImporter == null)
 				_fontMiscImporter = new CaseInsensitiveTLFFormatImporter(Dictionary, _fontMiscDescription);		
-			if (_textFormatMiscImporter == null)
 				_textFormatMiscImporter = new CaseInsensitiveTLFFormatImporter(Dictionary, _textFormatMiscDescription);
-			if (_linkFormatImporter == null)
-				_linkFormatImporter = new CaseInsensitiveTLFFormatImporter(Dictionary,_linkDescription);
-			if (_ilgFormatImporter == null)
+				_linkHrefImporter = new CaseInsensitiveTLFFormatImporter(Dictionary,_linkHrefDescription,false);
+				_linkTargetImporter = new CaseInsensitiveTLFFormatImporter(Dictionary,_linkTargetDescription);
 				_ilgFormatImporter = new CaseInsensitiveTLFFormatImporter(Dictionary,_imageDescription);
-			if (_ilgMiscFormatImporter == null)
 				_ilgMiscFormatImporter = new CaseInsensitiveTLFFormatImporter(Dictionary,_imageMiscDescription, false);
-			if (_classImporter == null)
 				_classImporter = new CaseInsensitiveTLFFormatImporter(Dictionary,_classDescription);
+			}
 			return config;
 		}
 		
@@ -297,11 +296,11 @@ package flashx.textLayout.conversion
 		{
 			var linkElem:LinkElement = new LinkElement();
 
-			var formatImporters:Array = [ _linkFormatImporter ];
+			var formatImporters:Array = [ _linkHrefImporter, _linkTargetImporter ];
 			parseAttributes(xmlToParse, formatImporters);
 			
-			linkElem.href = _linkFormatImporter.getFormatValue("href");
-			linkElem.target = _linkFormatImporter.getFormatValue("target");
+			linkElem.href = _linkHrefImporter.getFormatValue("href");
+			linkElem.target = _linkTargetImporter.getFormatValue("target");
 			
 			// Handle difference in defaults between TextField and TLF 
 			// target "_self" vs. null (equivalent to "_blank")
@@ -617,27 +616,43 @@ package flashx.textLayout.conversion
 		 */
 		static private function replaceBreakElementsWithParaSplits(para:ParagraphElement):void
 		{
-			do
-			{	
-				// Find the first BreakElement
-				var elem:FlowLeafElement = para.getFirstLeaf();
-				while (elem && !(elem is BreakElement))
+			// performance: when splitting the paragraph into multiple paragraphs take it out of the TextFlow
+			var paraArray:Array;
+			var paraIndex:int;
+			var paraParent:FlowGroupElement;
+	
+			// Find each BreakElement and split into a new paragraph
+			var elem:FlowLeafElement = para.getFirstLeaf();
+			while (elem)
+			{
+				if (!(elem is BreakElement))
+				{
 					elem = elem.getNextLeaf(para);
-				
-				// None exist; we're done
-				if (!elem)
-					break;
-				
-				// Split the para at that point and 
-				var elemAbsStart:uint = elem.getAbsoluteStart();
-				para = para.splitAtPosition(elemAbsStart - para.getAbsoluteStart()) as ParagraphElement;
+					continue;					
+				}
+				if (!paraArray)
+				{
+					paraArray = [ para ];
+					paraParent = para.parent;
+					paraIndex = paraParent.getChildIndex(para);
+					paraParent.removeChildAt(paraIndex);
+				}
+					
+				// Split the para right after the BreakElement
+				//CONFIG::debug { assert(elem.textLength == 1,"Bad TextLength in BreakElement"); }
+				CONFIG::debug {assert( para.getAbsoluteStart() == 0,"Bad paragraph in replaceBreakElementsWithParaSplits"); }
+				para = para.splitAtPosition(elem.getAbsoluteStart()+elem.textLength) as ParagraphElement;
+				paraArray.push(para);
 					
 				// Remove the BreakElement
-				elem.parent.removeChild(elem);
+				elem.parent.removeChild(elem);	
 				
-				// Continue the process with the second fragment following the split
+				// point elem to the first leaf of the new paragraph
+				elem = para.getFirstLeaf();
 			}
-			while (true);
+			
+			if (paraArray)
+				paraParent.replaceChildren(paraIndex,paraIndex,paraArray);
 		}
 		
 		/** HTML parsing code
@@ -825,7 +840,7 @@ package flashx.textLayout.conversion
 				{	
 					if (hasEndModifier || attrs.length)
 					{
-						reportError(GlobalSettings.getResourceStringFunction("malformedTag",[tag]));
+						reportError(GlobalSettings.resourceStringFunction("malformedTag",[tag]));
 					}
 					else
 					{
@@ -993,7 +1008,7 @@ package flashx.textLayout.conversion
 				catch (e:*)
 				{
 					// Report malformed content like "<" instead of "&lt;"
-					reportError(GlobalSettings.getResourceStringFunction("malformedMarkup",[text]));
+					reportError(GlobalSettings.resourceStringFunction("malformedMarkup",[text]));
 				}
 					
 			}

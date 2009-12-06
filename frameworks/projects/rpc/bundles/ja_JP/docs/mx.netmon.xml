@@ -1,26 +1,26 @@
 <?xml version="1.0"?>
 <apiPackage id="mx.netmon"><apiName>mx.netmon</apiName><apiDetail/><apiClassifier id="mx.netmon:NetworkMonitor"><apiName>NetworkMonitor</apiName><shortdesc>
-  NetworkMonitor は、Flex Builder Network Monitor 機能に情報を送信するために、フレームワークとエンタープライズサービスクラスが使用するスタブです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
-  NetworkMonitor は、Flex Builder Network Monitor 機能に情報を送信するために、フレームワークとエンタープライズサービスクラスが使用するスタブです。FlexBuilder に備わっているミクスインクラスが記入する多数の Impl 関数を NetworkMonitor が宣言します。これらの関数を割り当てない場合、スタブは何も行わず、適宜、false または null を返します。現時点では、モニターを呼び出すコードを簡単にするためにシングルトンまたはインスタンスオブジェクトを使用しません。
+  NetworkMonitor は、Flash Builder Network Monitor 機能に情報を送信するために、フレームワークとエンタープライズサービスクラスが使用するスタブです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+  NetworkMonitor は、Flash Builder Network Monitor 機能に情報を送信するために、フレームワークとエンタープライズサービスクラスが使用するスタブです。これらの関数を割り当てない場合、スタブは何も行わず、適宜、false または null を返します。現時点では、モニターを呼び出すコードを簡単にするためにシングルトンまたはインスタンスオブジェクトを使用しません。
   
   </apiDesc></apiClassifierDetail><apiOperation id="mx.netmon:NetworkMonitor:adjustNetConnectionURL"><apiName>adjustNetConnectionURL</apiName><shortdesc>
-      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiType value="String"/></apiReturn><apiParam><apiItemName>rootUrl</apiItemName><apiType value="String"/><apiDesc>
+      モニターを通過するように、NetConnectionChannel および HTTPChannel の要求の URL を調整します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiType value="String"/></apiReturn><apiParam><apiItemName>rootUrl</apiItemName><apiType value="String"/><apiDesc>調整する対象です。
      
       </apiDesc></apiParam><apiParam><apiItemName>url</apiItemName><apiType value="String"/></apiParam></apiOperationDef><apiDesc>
-      
+      モニターを通過するように、NetConnectionChannel および HTTPChannel の要求の URL を調整します。変更後の URL を返します。
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.netmon:NetworkMonitor:adjustURLRequest"><apiName>adjustURLRequest</apiName><shortdesc>
       モニターを通過するように URLRequest を調整します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>urlRequest</apiItemName><apiType value="flash.net:URLRequest"/><apiDesc>調整する URLRequest です。（相対 URL がサポートされます。）
      
-      </apiDesc></apiParam><apiParam><apiItemName>rootURL</apiItemName><apiType value="String"/><apiDesc>
+      </apiDesc></apiParam><apiParam><apiItemName>rootURL</apiItemName><apiType value="String"/><apiDesc>相対 URL から絶対 URL を計算します。必要に応じて、SWF ファイルの URL をこの値として渡します。
      
       </apiDesc></apiParam><apiParam><apiItemName>correlationID</apiItemName><apiType value="String"/><apiDesc>関連イベントに使用される correlationID です。
       
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      モニターを通過するように URLRequest を調整します。
+      モニターを通過するように URLRequest を調整します。モニターに送信される URLRequest には 2 つのヘッダーがあります。
       <ul>
-        <li><codeph/><codeph/></li>
-        <li><codeph/></li>
+        <li><codeph>actualHostPort</codeph>：URL の実際の <codeph>host:port</codeph> です。</li>
+        <li><codeph>correlationID</codeph>：メッセージングからの場合、要求の correlationID です（Image/Loader 要求は独自の correlationID を作成する必要があります）。</li>
       </ul>
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.netmon:NetworkMonitor:isMonitoring"><apiName>isMonitoring</apiName><shortdesc>
@@ -33,7 +33,7 @@
       </apiDesc></apiParam><apiParam><apiItemName>correlationID</apiItemName><apiType value="String"/><apiDesc>他のイベントまたは要求と関連する correlationID です。
       
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      イベントが発生したことをモニターに通知します。<codeph/>
+      イベントが発生したことをモニターに通知します。Loader はこれを使用してセキュリティおよび IO エラーを監視できます。Loader の <codeph>complete</codeph> イベントには使用しないでください。
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.netmon:NetworkMonitor:monitorFault"><apiName>monitorFault</apiName><shortdesc>
       フォルトが発生したことをモニターに通知します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>faultMessage</apiItemName><apiType value="Object"/><apiDesc>返されたメッセージです。結果を示します。呼び出しの失敗による場合は、null になります。（依存関係におけるリンクを避けるため、ここでは型指定されません。）

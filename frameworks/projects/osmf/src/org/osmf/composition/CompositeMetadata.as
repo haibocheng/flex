@@ -29,7 +29,7 @@ package org.osmf.composition
 	import org.osmf.events.MetadataEvent;
 	import org.osmf.metadata.IFacet;
 	import org.osmf.metadata.Metadata;
-	import org.osmf.utils.MediaFrameworkStrings;
+	import org.osmf.utils.OSMFStrings;
 	import org.osmf.utils.URL;
 
 	/**
@@ -124,12 +124,12 @@ package org.osmf.composition
 		{	
 			if (value == null)
 			{
-				throw new IllegalOperationError(MediaFrameworkStrings.NULL_PARAM);
+				throw new IllegalOperationError(OSMFStrings.getString(OSMFStrings.NULL_PARAM));
 				return;
 			}
 			else if (value.namespaceURL == null)
 			{
-				throw new IllegalOperationError(MediaFrameworkStrings.NAMESPACE_MUST_NOT_BE_EMPTY);
+				throw new IllegalOperationError(OSMFStrings.getString(OSMFStrings.NAMESPACE_MUST_NOT_BE_EMPTY));
 				return;
 			}	
 			var oldFacet:* = _mergedFacets[value.namespaceURL.rawUrl];
@@ -158,12 +158,12 @@ package org.osmf.composition
 		{	
 			if (value == null)
 			{
-				throw new IllegalOperationError(MediaFrameworkStrings.NULL_PARAM);
+				throw new IllegalOperationError(OSMFStrings.getString(OSMFStrings.NULL_PARAM));
 				return;
 			}
 			else if (value.namespaceURL == null)
 			{
-				throw new IllegalOperationError(MediaFrameworkStrings.NAMESPACE_MUST_NOT_BE_EMPTY);
+				throw new IllegalOperationError(OSMFStrings.getString(OSMFStrings.NAMESPACE_MUST_NOT_BE_EMPTY));
 				return;
 			}
 			if (ownFacets[value.namespaceURL.rawUrl] != undefined)

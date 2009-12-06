@@ -77,19 +77,19 @@
 	 
 	  <p>最適化するには、使用するコンポーネントの子コンポーネントが IFocusManagerComponent インターフェイスを実装し、そのコンポーネントにフォーカスを取得させない場合、<codeph>focusEnabled</codeph> を <codeph>false</codeph> に設定します。これは、子コンポーネントで <codeph>addChild()</codeph> を呼び出す前に行います。</p>
 	 
-	  <p><codeph/><codeph/><codeph/>これは、<codeph>addChild()</codeph> の後にはこの値を変更することも、FocusManager からの通知を期待することもできないことを意味します。</p>
+	  <p>これによって、FocusManager はこのコンポーネントを無視し、このコンポーネントの <codeph>tabFocusEnabled</codeph>、<codeph>hasFocusableChildren</codeph> および <codeph>mouseFocusEnabled</codeph> プロパティの変更を監視しなくなります。 これは、<codeph>addChild()</codeph> の後にはこの値を変更することも、FocusManager からの通知を期待することもできないことを意味します。</p>
 	 
 	  <p>メモ：これは、<codeph>setFocus()</codeph> メソッドで、プログラムによってこのオブジェクトにフォーカスを置くことができないことを意味するものではありません。これは単に、FocusManager に Tab およびマウスの検索でこの IFocusManagerComponent コンポーネントを無視するように指示するだけです。</p>
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:IFocusManagerComponent:mx.managers:IFocusManagerComponent:hasFocusableChildren:get"><apiName>hasFocusableChildren</apiName><shortdesc>
-	  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="4.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Boolean"/></apiValueDef><apiDesc>
-	  
+	  子オブジェクトがフォーカスを取得できるかどうかを示すフラグです。Flash Player で使用される tabChildren プロパティと似ています。通常このプロパティは false です。ほとんどのコンポーネントは自身がフォーカスを取得するか、単一の内部サブコンポーネントにフォーカスを委譲し、あたかもコンポーネントにフォーカスがあるように表示を行うためです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="4.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Boolean"/></apiValueDef><apiDesc>
+	  子オブジェクトがフォーカスを取得できるかどうかを示すフラグ
 	 
-	  <p><codeph/></p>
+	  <p>Flash Player で使用される <codeph>tabChildren</codeph> プロパティと似ています。</p>
 	 
-	  <p><codeph/><codeph/><codeph/></p>
+	  <p>通常このプロパティは <codeph>false</codeph> です。ほとんどのコンポーネントは自身がフォーカスを取得するか、単一の内部サブコンポーネントにフォーカスを委譲し、あたかもコンポーネントにフォーカスがあるように表示を行うためです。例えば、TextInput コンテナにフォーカスを取得できる子 RichEditableText コントロールが含まれている場合、フォーカスを実際に取得するのが RichEditableText サブコンポーネントであっても、フォーカスは TextInput にあるように表示されます。TextInput がフォーカスのあるコンポーネントとして見なされるので、TextInput の <codeph>hasFocusableChildren</codeph> は <codeph>false</codeph> に設定されます。この内部構造は抽象です。</p>
      
-	  <p><codeph/></p>
+	  <p>一般に、このフラグが <codeph>true</codeph> に設定されるのは、TabNavigator や Accordion などのナビゲーターコンポーネントのみです。これらのコンポーネントでは、フォーカスをタブに取得しますが、フォーカスは下位のタブの子コンテナのコンポーネントのものです。</p>
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:IFocusManagerComponent:mx.managers:IFocusManagerComponent:mouseFocusEnabled:get"><apiName>mouseFocusEnabled</apiName><shortdesc>
 	  コンポーネントがマウスでの選択時にフォーカスを取得できるかどうかを示すフラグです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Boolean"/></apiValueDef><apiDesc>
@@ -97,11 +97,11 @@
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:IFocusManagerComponent:mx.managers:IFocusManagerComponent:tabFocusEnabled:get"><apiName>tabFocusEnabled</apiName><shortdesc>
 	  Tab キーを使用して、このコンポーネントまでフォーカスを移動できるかどうかを示すフラグです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Boolean"/></apiValueDef><apiDesc>
-	  Tab キーを使用して、このコンポーネントまでフォーカスを移動できるかどうかを示すフラグです。 <codeph>false</codeph> の場合でも、マウスでの選択または <codeph>setFocus()</codeph> の呼び出しによって、フォーカスを移すことができます。. 
+	  Tab キーを使用して、このコンポーネントまでフォーカスを移動できるかどうかを示すフラグです。 <codeph>false</codeph> の場合でも、マウスでの選択または <codeph>setFocus()</codeph> の呼び出しによって、フォーカスを移すことができます。. このプロパティは、Flex アプリケーションでは true に設定する必要のある InteractiveObject.tabEnabled を置き換えます。
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:IFocusManagerComponent:mx.managers:IFocusManagerComponent:tabIndex:get"><apiName>tabIndex</apiName><shortdesc>
-	  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="int"/></apiValueDef><apiDesc>
-	  <codeph/>-1 の場合、コンポーネントは z 順序に応じてフォーカスを取得します。
+	  tabFocusEnabled の場合、コンポーネントがフォーカスを受け取る順序を示します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="int"/></apiValueDef><apiDesc>
+	  <codeph>tabFocusEnabled</codeph> の場合、コンポーネントがフォーカスを受け取る順序を示します。-1 の場合、コンポーネントは z 順序に応じてフォーカスを取得します。
 	  
 	  </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.managers:BrowserManager"><apiName>BrowserManager</apiName><shortdesc>
   BrowserManager は、ブラウザーとアプリケーションとの間のプロキシとして機能するシングルトンマネージャーです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
@@ -221,6 +221,10 @@
       </apiDesc></apiParam></apiOperationDef><apiDesc>
       ユーザーが画面で参照できる、ロードされたアプリケーションの境界を取得します。
      
+      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:ISystemManager:mx.managers:ISystemManager:invalidateParentSizeAndDisplayList"><apiName>invalidateParentSizeAndDisplayList</apiName><shortdesc>
+      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+      
+      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:ISystemManager:mx.managers:ISystemManager:isFontFaceEmbedded"><apiName>isFontFaceEmbedded</apiName><shortdesc>
       このアプリケーションに必須フォントが埋め込まれている場合、または Font.registerFont() メソッドを使用してグローバルに登録されている場合は true を返します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>このアプリケーションに必須フォントが埋め込まれている場合、または <codeph>Font.registerFont()</codeph> メソッドを使用してグローバルに登録されている場合は <codeph>true</codeph> となります。
       
@@ -872,6 +876,8 @@
      
       </apiDesc></apiParam><apiParam><apiItemName>childList</apiItemName><apiType value="String"/><apiData>null</apiData><apiDesc>ポップアップを追加する子のリスト。 <codeph>PopUpManagerChildList.APPLICATION</codeph>、<codeph>PopUpManagerChildList.POPUP</codeph> または <codeph>PopUpManagerChildList.PARENT</codeph> （デフォルト）のいずれかです。
      
+      </apiDesc></apiParam><apiParam><apiItemName>moduleFactory</apiItemName><apiOperationClassifier>mx.core:IFlexModuleFactory</apiOperationClassifier><apiData>null</apiData><apiDesc>
+     
       </apiDesc></apiParam></apiOperationDef><apiDesc>
       最上位ウィンドウをポップアップ表示します。 <codeph>removePopUp()</codeph> を呼び出して、<codeph>addPopUp()</codeph> メソッドで作成したポップアップを削除することをお勧めします。 クラスで IFocusManagerContainer を実装すると、ウィンドウが独自の FocusManager を持つことになります。これにより、ユーザーが TAB キーを使用してコントロール間を移動するときには、ウィンドウ内のコントロールだけにアクセスすることになります。
      
@@ -1042,10 +1048,10 @@
   アプリケーションの初期化が完了すると送出されます。
  
   </apiDesc></adobeApiEventDetail></adobeApiEvent><apiConstructor id="mx.managers:SystemManager:SystemManager"><apiName>SystemManager</apiName><shortdesc>
-	  コンストラクターです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/></apiConstructorDef><apiDesc>
-	  コンストラクターです。
-	 
-	  <p>これは、すべての Flex アプリケーションの開始ポイントです。 このクラスは、Flex SWF ファイルのルートクラスとなるように設定されます。 Flash Player はこのコンストラクターが呼び出されるようにすることによって、このクラスのインスタンスをインスタンス化します。</p>
+      コンストラクターです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/></apiConstructorDef><apiDesc>
+      コンストラクターです。
+     
+      <p>これは、すべての Flex アプリケーションの開始ポイントです。 このクラスは、Flex SWF ファイルのルートクラスとなるように設定されます。 Flash Player はこのコンストラクターが呼び出されるようにすることによって、このクラスのインスタンスをインスタンス化します。</p>
       
       </apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="mx.managers:SystemManager:allowDomain"><apiName>allowDomain</apiName><shortdesc>
       この SystemManager に関連付けられている SWF に加え、この SystemManager によってプリロードされた RSL に関連付けられているすべての SWF に対して Security.allowDomain() を呼び出します。</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>domains</apiItemName><apiType value="restParam"/></apiParam></apiOperationDef><apiDesc>
@@ -1059,10 +1065,10 @@
       モジュールが認識している定義のインスタンスを要求するファクトリメソッドです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>モジュールのインスタンス、または <codeph>null</codeph> です。
       
       </apiDesc><apiType value="Object"/></apiReturn><apiParam><apiItemName>params</apiItemName><apiType value="restParam"/><apiDesc>パラメーターのオプションのリストです。 パラメーターはいくつでも渡すことができ、渡されたパラメーターは <codeph>parameters</codeph> という名前の配列に格納されます。 
-	 
+     
       </apiDesc></apiParam></apiOperationDef><apiDesc>
       モジュールが認識している定義のインスタンスを要求するファクトリメソッドです。作成ファクトリにパラメーターのオプションのセットを渡して、この入力を基に、作成されるインスタンスに変更を加えることができます。null を渡すと、可能な場合はデフォルトの定義が作成されます。このメソッドは、自動生成されたクラスでオーバーライドされます。
-	 
+     
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:deployMouseShields"><apiName>deployMouseShields</apiName><shortdesc>
       
       マウスシールドを展開または削除します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>deploy</apiItemName><apiType value="Boolean"/><apiDesc>マウスシールドを展開する場合は <codeph>true</codeph>、マウスシールドを削除する場合は <codeph>false</codeph> です。
@@ -1072,13 +1078,13 @@
       マウスシールドを展開または削除します。マウスシールドは、信頼されていないアプリケーションへのマウス入力をブロックします。マウス入力をブロックする理由は、信頼されていないアプリケーションにドラッグした場合に、通常はマウス移動イベントを受信できないためです。Flash Player では、セキュリティを考慮して、信頼されている境界と信頼されていない境界をまたがってイベントは送信されません。信頼されていないアプリケーションをマウスシールドで保護することにより (その親であることが前提です)、マウス移動メッセージを取得でき、ドラッグ操作が期待どおりに動作します。 
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:getDefinitionByName"><apiName>getDefinitionByName</apiName><shortdesc>
-	  
+      
 	  指定されたストリングをクラスか、またはパッケージレベルの関数に変換します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc><codeph>name</codeph> で表されるクラス、または null。
 	  
 	  </apiDesc><apiType value="Object"/></apiReturn><apiParam><apiItemName>name</apiItemName><apiType value="String"/><apiDesc>クラスの名前。例えば、「mx.video.VideoManager」などがあります。
 	 
 	  </apiDesc></apiParam></apiOperationDef><apiDesc>
-	  
+      
 	  指定されたストリングをクラスか、またはパッケージレベルの関数に変換します。 別のアプリケーションにロードされるかどうかに基づいて、適切な <codeph>ApplicationDomain.getDefinition()</codeph> メソッドを呼び出します。
 	 
 	  </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:getExplicitOrMeasuredHeight"><apiName>getExplicitOrMeasuredHeight</apiName><shortdesc>
@@ -1086,34 +1092,34 @@
       
       </apiDesc><apiType value="Number"/></apiReturn></apiOperationDef><apiDesc>
       明示的に定義された高さを使用するのか、測定した高さを使用するのかを判断する便利なメソッドです。
-	 
+     
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:getExplicitOrMeasuredWidth"><apiName>getExplicitOrMeasuredWidth</apiName><shortdesc>
       明示的に定義された幅を使用するのか、測定した幅を使用するのかを判断する便利なメソッドです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>定義されている場合は <codeph>explicitWidth</codeph> の数値で、定義されていない場合は <codeph>measuredWidth</codeph> プロパティとなります。
       
       </apiDesc><apiType value="Number"/></apiReturn></apiOperationDef><apiDesc>
       明示的に定義された幅を使用するのか、測定した幅を使用するのかを判断する便利なメソッドです。
-	 
+     
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:getSWFRoot"><apiName>getSWFRoot</apiName><shortdesc>
-	  指定されたオブジェクトのコードが含まれる SWF のルート DisplayObject を返します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiDesc>ルート DisplayObject
+      指定されたオブジェクトのコードが含まれる SWF のルート DisplayObject を返します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiDesc>ルート DisplayObject
       
       </apiDesc><apiType value="flash.display:DisplayObject"/></apiReturn><apiParam><apiItemName>object</apiItemName><apiType value="Object"/><apiDesc>任意のオブジェクト。 
-	 
-	  </apiDesc></apiParam></apiOperationDef><apiDesc>
-	  指定されたオブジェクトのコードが含まれる SWF のルート DisplayObject を返します。
-	 
-	  </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:getSandboxRoot"><apiName>getSandboxRoot</apiName><shortdesc>
-          親チェーンに移動して、この SecurityDomain の最上位システムマネージャーを取得します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>この SecurityDomain のルートシステムマネージャー。
+     
+      </apiDesc></apiParam></apiOperationDef><apiDesc>
+      指定されたオブジェクトのコードが含まれる SWF のルート DisplayObject を返します。
+     
+      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:getSandboxRoot"><apiName>getSandboxRoot</apiName><shortdesc>
+      親チェーンに移動して、この SecurityDomain の最上位システムマネージャーを取得します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>この SecurityDomain のルートシステムマネージャー。
       
       </apiDesc><apiType value="flash.display:DisplayObject"/></apiReturn></apiOperationDef><apiDesc>
-          親チェーンに移動して、この SecurityDomain の最上位システムマネージャーを取得します。
-	 
-          </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:getTopLevelRoot"><apiName>getTopLevelRoot</apiName><shortdesc>
-          親チェーンに移動して、最上位システムマネージャーを取得します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>ルートシステムマネージャー。
+      親チェーンに移動して、この SecurityDomain の最上位システムマネージャーを取得します。
+     
+      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:getTopLevelRoot"><apiName>getTopLevelRoot</apiName><shortdesc>
+      親チェーンに移動して、最上位システムマネージャーを取得します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>ルートシステムマネージャー。
       
       </apiDesc><apiType value="flash.display:DisplayObject"/></apiReturn></apiOperationDef><apiDesc>
-          親チェーンに移動して、最上位システムマネージャーを取得します。表示リストに表示されていない場合、または最上位システムマネージャーにアクセスできない場合は <codeph>null</codeph> を返します。
-          
-          </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:getVisibleApplicationRect"><apiName>getVisibleApplicationRect</apiName><shortdesc>
+      親チェーンに移動して、最上位システムマネージャーを取得します。表示リストに表示されていない場合、または最上位システムマネージャーにアクセスできない場合は <codeph>null</codeph> を返します。
+      
+      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:getVisibleApplicationRect"><apiName>getVisibleApplicationRect</apiName><shortdesc>
      
       ユーザーが画面で参照できる、ロードされたアプリケーションの境界を取得します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>このオブジェクトの可視部分を含む <codeph>Rectangle</codeph> です。矩形はグローバル座標にあります。
       
@@ -1123,67 +1129,73 @@
      
       ユーザーが画面で参照できる、ロードされたアプリケーションの境界を取得します。
      
+      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:invalidateParentSizeAndDisplayList"><apiName>invalidateParentSizeAndDisplayList</apiName><shortdesc>
+      
+      
+      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+      
+      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:isFontFaceEmbedded"><apiName>isFontFaceEmbedded</apiName><shortdesc>
-	  
+      
       このアプリケーションに必須フォントが埋め込まれている場合、または Font.registerFont() メソッドを使用してグローバルに登録されている場合は true を返します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>このアプリケーションに必須フォントが埋め込まれている場合、または <codeph>Font.registerFont()</codeph> メソッドを使用してグローバルに登録されている場合は <codeph>true</codeph> となります。
       
       </apiDesc><apiType value="Boolean"/></apiReturn><apiParam><apiItemName>textFormat</apiItemName><apiType value="flash.text:TextFormat"/><apiDesc>文字フォーマット情報を表す TextFormat クラスです。
 	 
 	  </apiDesc></apiParam></apiOperationDef><apiDesc>
-	  
+      
       このアプリケーションに必須フォントが埋め込まれている場合、または <codeph>Font.registerFont()</codeph> メソッドを使用してグローバルに登録されている場合は <codeph>true</codeph> を返します。
 	 
 	  </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:isTopLevel"><apiName>isTopLevel</apiName><shortdesc>
-	  
+      
 	  この ISystemManager がアプリケーションウィンドウを管理する場合は true を返します。このアプリケーションが別のアプリケーションにロードされている場合は false を返します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>この ISystemManager がアプリケーションウィンドウを管理する場合は <codeph>true</codeph> となります。
 	  
 	  </apiDesc><apiType value="Boolean"/></apiReturn></apiOperationDef><apiDesc>
-	  
+      
 	  この ISystemManager がアプリケーションウィンドウを管理する場合は <codeph>true</codeph> を返します。このアプリケーションが別のアプリケーションにロードされている場合は <codeph>false</codeph> を返します。
 	 
 	  </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:isTopLevelRoot"><apiName>isTopLevelRoot</apiName><shortdesc>
-	 
+     
       このシステムマネージャーが、すべての最上位システムマネージャーのルートかどうかをテストします。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>SystemManager が表示リストのすべての SystemManager のルートである場合は <codeph>true</codeph>、それ以外の場合は <codeph>false</codeph> です。
       
       </apiDesc><apiType value="Boolean"/></apiReturn></apiOperationDef><apiDesc>
-	 
+     
       このシステムマネージャーが、すべての最上位システムマネージャーのルートかどうかをテストします。
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:isTopLevelWindow"><apiName>isTopLevelWindow</apiName><shortdesc>
           指定された DisplayObject が最上位ウィンドウであるかどうかを判別します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>指定された DisplayObject が最上位ウィンドウの場合は、<codeph>true</codeph> です。
       
       </apiDesc><apiType value="Boolean"/></apiReturn><apiParam><apiItemName>object</apiItemName><apiType value="flash.display:DisplayObject"/><apiDesc>テストする DisplayObject です。
-	 
-	  </apiDesc></apiParam></apiOperationDef><apiDesc>
+     
+      </apiDesc></apiParam></apiOperationDef><apiDesc>
           指定された DisplayObject が最上位ウィンドウであるかどうかを判別します。
-	 
-	  </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:move"><apiName>move</apiName><shortdesc>
-	  move() メソッドはアプリケーションウィンドウまたはローダーに直接マッピングされるため、このメソッドを呼び出しても効果がありません。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>x</apiItemName><apiType value="Number"/><apiDesc>新しい x 座標。
-	 
-	  </apiDesc></apiParam><apiParam><apiItemName>y</apiItemName><apiType value="Number"/><apiDesc>新しい y 座標。
+     
+      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:move"><apiName>move</apiName><shortdesc>
+      move() メソッドはアプリケーションウィンドウまたはローダーに直接マッピングされるため、このメソッドを呼び出しても効果がありません。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>x</apiItemName><apiType value="Number"/><apiDesc>新しい x 座標。
+     
+      </apiDesc></apiParam><apiParam><apiItemName>y</apiItemName><apiType value="Number"/><apiDesc>新しい y 座標。
       
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-	  <codeph>move()</codeph> メソッドはアプリケーションウィンドウまたはローダーに直接マッピングされるため、このメソッドを呼び出しても効果がありません。
-	 
-	  </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:setActualSize"><apiName>setActualSize</apiName><shortdesc>
-	  setActualSize() メソッドがアプリケーションウィンドウに直接マッピングされていて、そのアプリケーションウィンドウが最上部ウィンドウである場合は、このメソッドを呼び出しても効果はありません。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>newWidth</apiItemName><apiType value="Number"/><apiDesc>新しい幅。
-	 
-	  </apiDesc></apiParam><apiParam><apiItemName>newHeight</apiItemName><apiType value="Number"/><apiDesc>新しい高さ。
+      <codeph>move()</codeph> メソッドはアプリケーションウィンドウまたはローダーに直接マッピングされるため、このメソッドを呼び出しても効果がありません。
+     
+      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:setActualSize"><apiName>setActualSize</apiName><shortdesc>
+      setActualSize() メソッドがアプリケーションウィンドウに直接マッピングされていて、そのアプリケーションウィンドウが最上部ウィンドウである場合は、このメソッドを呼び出しても効果はありません。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>newWidth</apiItemName><apiType value="Number"/><apiDesc>新しい幅。
+     
+      </apiDesc></apiParam><apiParam><apiItemName>newHeight</apiItemName><apiType value="Number"/><apiDesc>新しい高さ。
       
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-	  <codeph>setActualSize()</codeph> メソッドがアプリケーションウィンドウに直接マッピングされていて、そのアプリケーションウィンドウが最上部ウィンドウである場合は、このメソッドを呼び出しても効果はありません。 これ以外の場合は、必要に応じて子を切り詰めて、サイズを変更しようとします。
-	 
-	  </apiDesc></apiOperationDetail></apiOperation><apiValue id="mx.managers:SystemManager:application:get"><apiName>application</apiName><shortdesc>
-	  この SystemManager を親とするアプリケーション。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>mx.core:IUIComponent</apiValueClassifier></apiValueDef><apiDesc>
-	  この SystemManager を親とするアプリケーション。 SystemManager は、別のアプリケーションにロードされた場合でも、Application のインスタンスを作成します。 そのため、SWF が別のアプリケーションにロードされていると、このアプリケーションは mx.core.Application.application と一致しない場合があります。
-	  <p>ロード時間に関するパフォーマンスを考慮して、このプロパティは、mx.core.Application 型ではありませんが、mx.core.Application に強制的に変換することができます。</p>
+      <codeph>setActualSize()</codeph> メソッドがアプリケーションウィンドウに直接マッピングされていて、そのアプリケーションウィンドウが最上部ウィンドウである場合は、このメソッドを呼び出しても効果はありません。 これ以外の場合は、必要に応じて子を切り詰めて、サイズを変更しようとします。
+     
+      </apiDesc></apiOperationDetail></apiOperation><apiValue id="mx.managers:SystemManager:application:get"><apiName>application</apiName><shortdesc>
+      この SystemManager を親とするアプリケーション。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>mx.core:IUIComponent</apiValueClassifier></apiValueDef><apiDesc>
+      この SystemManager を親とするアプリケーション。 SystemManager は、別のアプリケーションにロードされた場合でも、Application のインスタンスを作成します。 そのため、SWF が別のアプリケーションにロードされていると、このアプリケーションは mx.core.Application.application と一致しない場合があります。
+      <p>ロード時間に関するパフォーマンスを考慮して、このプロパティは、mx.core.Application 型ではありませんが、mx.core.Application に強制的に変換することができます。</p>
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:childAllowsParent:get"><apiName>childAllowsParent</apiName><shortdesc>
      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Boolean"/></apiValueDef><apiDesc>
      </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:cursorChildren:get"><apiName>cursorChildren</apiName><shortdesc>
-	  
+      
 	  この ISystemManager を親とするカスタムカーソルのリストです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>mx.core:IChildList</apiValueClassifier></apiValueDef><apiDesc>
-	  
+      
 	  この ISystemManager を親とするカスタムカーソルのリストです。
 	 
 	  <p>ISystemManager には、アプリケーション、ポップアップ、最上位ウィンドウ、ツールヒント、カスタムカーソルなど、さまざまなタイプの子があります。 カスタムカーソルには、<codeph>cursorChildren</codeph> プロパティを使用してアクセスできます。</p>
@@ -1191,60 +1203,60 @@
 	  <p>IChildList オブジェクトには、<codeph>getChildAt()</codeph> などのメソッドと、<codeph>numChildren</codeph> などのプロパティがあります。 例えば、<codeph>cursorChildren.numChildren</codeph> はカスタムカーソルの数（0 または 1 のいずれか）を示し、カスタムカーソルが存在する場合には <codeph>cursorChildren.getChildAt(0)</codeph> を使用してアクセスできます。</p>
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:document:get"><apiName>document</apiName><shortdesc>
-	  
+      
 	  ドキュメントオブジェクトへの参照です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Object"/></apiValueDef><apiDesc>
-	  
+      
 	  ドキュメントオブジェクトへの参照です。 ドキュメントオブジェクトは、Flex アプリケーション、MXML コンポーネント、または AS コンポーネントの階層の最上位にあるオブジェクトです。
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:embeddedFontList:get"><apiName>embeddedFontList</apiName><shortdesc>
-	  このアプリケーション内の埋め込みフォントのテーブルです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Object"/></apiValueDef><apiDesc>
-	  このアプリケーション内の埋め込みフォントのテーブルです。 このオブジェクトは、フォント名でインデックス付けされたテーブルです。
+      このアプリケーション内の埋め込みフォントのテーブルです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Object"/></apiValueDef><apiDesc>
+      このアプリケーション内の埋め込みフォントのテーブルです。 このオブジェクトは、フォント名でインデックス付けされたテーブルです。
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:explicitHeight:get"><apiName>explicitHeight</apiName><shortdesc>
-	  このオブジェクトの明示的な幅です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
-	  このオブジェクトの明示的な幅です。 SystemManager では、アプリケーションが別のアプリケーションにロードされている場合を除き、これは常に NaN となります。 アプリケーションが別のアプリケーションにロードされていない場合、この値を設定しても効果はありません。
+      このオブジェクトの明示的な幅です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
+      このオブジェクトの明示的な幅です。 SystemManager では、アプリケーションが別のアプリケーションにロードされている場合を除き、これは常に NaN となります。 アプリケーションが別のアプリケーションにロードされていない場合、この値を設定しても効果はありません。
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:explicitWidth:get"><apiName>explicitWidth</apiName><shortdesc>
-	  このオブジェクトの明示的な幅です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
-	  このオブジェクトの明示的な幅です。 SystemManager では、アプリケーションが別のアプリケーションにロードされている場合を除き、これは常に NaN となります。 アプリケーションが別のアプリケーションにロードされていない場合、この値を設定しても効果はありません。
+      このオブジェクトの明示的な幅です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
+      このオブジェクトの明示的な幅です。 SystemManager では、アプリケーションが別のアプリケーションにロードされている場合を除き、これは常に NaN となります。 アプリケーションが別のアプリケーションにロードされていない場合、この値を設定しても効果はありません。
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:focusPane:get"><apiName>focusPane</apiName><shortdesc conref="mx.core.UIComponent#focusPane">
       </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="flash.display:Sprite"/></apiValueDef><apiDesc conref="mx.core.UIComponent#focusPane">
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:height:get"><apiName>height</apiName><shortdesc>
-	  このオブジェクトの高さです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
-	  このオブジェクトの高さです。 SystemManager では、アプリケーションが別のアプリケーションにロードされた場合を除き、これは常にステージの幅になります。 アプリケーションが別のアプリケーションにロードされていない場合、この値を設定しても効果はありません。
+      このオブジェクトの高さです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
+      このオブジェクトの高さです。 SystemManager では、アプリケーションが別のアプリケーションにロードされた場合を除き、これは常にステージの幅になります。 アプリケーションが別のアプリケーションにロードされていない場合、この値を設定しても効果はありません。
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:isProxy:get"><apiName>isProxy</apiName><shortdesc>
-	  SystemManager がプロキシであり、ルートクラスでない場合は true です
-	 </shortdesc><prolog/><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Boolean"/></apiValueDef><apiDesc>
-	  SystemManager がプロキシであり、ルートクラスでない場合は true です
-	 </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:measuredHeight:get"><apiName>measuredHeight</apiName><shortdesc>
-	  measuredHeight は、メイン mx.core.Application ウィンドウの明示的な高さまたは測定された高さです。メインウィンドウがまだ作成されてないか、または存在しない場合は、SWF の開始高さです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
-	  measuredHeight は、メイン mx.core.Application ウィンドウの明示的な高さまたは測定された高さです。メインウィンドウがまだ作成されてないか、または存在しない場合は、SWF の開始高さです。
+      SystemManager がプロキシであり、ルートクラスでない場合は true です
+     </shortdesc><prolog/><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Boolean"/></apiValueDef><apiDesc>
+      SystemManager がプロキシであり、ルートクラスでない場合は true です
+     </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:measuredHeight:get"><apiName>measuredHeight</apiName><shortdesc>
+      measuredHeight は、メイン mx.core.Application ウィンドウの明示的な高さまたは測定された高さです。メインウィンドウがまだ作成されてないか、または存在しない場合は、SWF の開始高さです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
+      measuredHeight は、メイン mx.core.Application ウィンドウの明示的な高さまたは測定された高さです。メインウィンドウがまだ作成されてないか、または存在しない場合は、SWF の開始高さです。
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:measuredWidth:get"><apiName>measuredWidth</apiName><shortdesc>
-	  measuredWidth は、メイン mx.core.Application ウィンドウの明示的な幅または測定された幅です。メインウィンドウがまだ作成されていないか、または存在しない場合は、SWF の開始幅です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
-	  measuredWidth は、メイン mx.core.Application ウィンドウの明示的な幅または測定された幅です。メインウィンドウがまだ作成されていないか、または存在しない場合は、SWF の開始幅です。
+      measuredWidth は、メイン mx.core.Application ウィンドウの明示的な幅または測定された幅です。メインウィンドウがまだ作成されていないか、または存在しない場合は、SWF の開始幅です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
+      measuredWidth は、メイン mx.core.Application ウィンドウの明示的な幅または測定された幅です。メインウィンドウがまだ作成されていないか、または存在しない場合は、SWF の開始幅です。
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:numChildren:get"><apiName>numChildren</apiName><shortdesc>
-	  浮動表示されないウィンドウの数。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="int"/></apiValueDef><apiDesc>
-	  浮動表示されないウィンドウの数。 これは、メインアプリケーションウィンドウに、SystemManager に追加されたウィンドウ（ただし、ポップアップ、ツールヒント、カーソルのウィンドウ除く）の数を加えた数値です。
+      浮動表示されないウィンドウの数。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="int"/></apiValueDef><apiDesc>
+      浮動表示されないウィンドウの数。 これは、メインアプリケーションウィンドウに、SystemManager に追加されたウィンドウ（ただし、ポップアップ、ツールヒント、カーソルのウィンドウ除く）の数を加えた数値です。
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:numModalWindows:get"><apiName>numModalWindows</apiName><shortdesc>
       モーダルウィンドウの数です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="int"/></apiValueDef><apiDesc>
       モーダルウィンドウの数です。 通常、別のウィンドウでクリックすると、そのウィンドウの FocusManager がアクティブになりますが、モーダルウィンドウではこのクリック操作は許可されません。 PopUpManager は、モーダルウィンドウを作成したとき、および破棄したときに、このカウントを変更します。
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:parent:get"><apiName>parent</apiName><shortdesc>
-	 親プロパティをオーバーライドして、親が別のサンドボックス内にあるケースを処理します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="flash.display:DisplayObjectContainer"/></apiValueDef><apiDesc>
-	 親プロパティをオーバーライドして、親が別のサンドボックス内にあるケースを処理します。親が同じサンドボックスにある場合は、親が返されます。親が別のサンドボックスにある場合は、null が返されます。
-	 
+     親プロパティをオーバーライドして、親が別のサンドボックス内にあるケースを処理します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="flash.display:DisplayObjectContainer"/></apiValueDef><apiDesc>
+     親プロパティをオーバーライドして、親が別のサンドボックス内にあるケースを処理します。親が同じサンドボックスにある場合は、親が返されます。親が別のサンドボックスにある場合は、null が返されます。
+     
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:parentAllowsChild:get"><apiName>parentAllowsChild</apiName><shortdesc>
      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Boolean"/></apiValueDef><apiDesc>
      </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:popUpChildren:get"><apiName>popUpChildren</apiName><shortdesc>
-	  
+      
 	  この ISystemManager を親とする topMost （ポップアップ）ウィンドウのリストです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>mx.core:IChildList</apiValueClassifier></apiValueDef><apiDesc>
-	  
+      
 	  この ISystemManager を親とする topMost （ポップアップ）ウィンドウのリストです。
 	 
 	  <p>ISystemManager には、アプリケーション、ポップアップ、ツールヒント、カスタムカーソルなど、さまざまなタイプの子があります。 最上位ウィンドウには、<codeph>popUpChildren</codeph> プロパティを使用してアクセスできます。</p>
@@ -1256,25 +1268,25 @@
       アプリケーションが起動する前にこの SystemManager によってロードされた RSL です。</shortdesc><prolog/><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="flash.utils:Dictionary"/></apiValueDef><apiDesc>
       アプリケーションが起動する前にこの SystemManager によってロードされた RSL です。アプリケーションによってロードされた RSL はこのリストには含まれません。preloadedRSLs に関する情報は、Dictionary に格納されます。キーは RSL の LoaderInfo です。値は RSL のロード元の URL です。
      </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:preloaderBackgroundAlpha:get"><apiName>preloaderBackgroundAlpha</apiName><shortdesc>
-	 プリローダーの子が使用する背景の透明度です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
-	 プリローダーの子が使用する背景の透明度です。
+      プリローダーの子が使用する背景の透明度です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
+      プリローダーの子が使用する背景の透明度です。
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:preloaderBackgroundColor:get"><apiName>preloaderBackgroundColor</apiName><shortdesc>
-	 プリローダーの子が使用する背景色です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="uint"/></apiValueDef><apiDesc>
-	 プリローダーの子が使用する背景色です。
+      プリローダーの子が使用する背景色です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="uint"/></apiValueDef><apiDesc>
+      プリローダーの子が使用する背景色です。
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:preloaderBackgroundImage:get"><apiName>preloaderBackgroundImage</apiName><shortdesc>
-	 プリローダーの子が使用する背景色です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Object"/></apiValueDef><apiDesc>
-	 プリローダーの子が使用する背景色です。
+      プリローダーの子が使用する背景色です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Object"/></apiValueDef><apiDesc>
+      プリローダーの子が使用する背景色です。
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:preloaderBackgroundSize:get"><apiName>preloaderBackgroundSize</apiName><shortdesc>
-	 プリローダーの子が使用する背景のサイズです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="String"/></apiValueDef><apiDesc>
-	 プリローダーの子が使用する背景のサイズです。
+      プリローダーの子が使用する背景のサイズです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="String"/></apiValueDef><apiDesc>
+      プリローダーの子が使用する背景のサイズです。
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:rawChildren:get"><apiName>rawChildren</apiName><shortdesc>
-	  
+      
 	  この ISystemManager を親とするすべての子のリストです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>mx.core:IChildList</apiValueClassifier></apiValueDef><apiDesc>
-	  
+      
 	  この ISystemManager を親とするすべての子のリストです。
 	 
 	  <p>ISystemManager には、アプリケーション、ポップアップ、ツールヒント、カスタムカーソルなど、さまざまなタイプの子があります。</p>
@@ -1282,15 +1294,15 @@
 	  <p>IChildList オブジェクトには、<codeph>getChildAt()</codeph> などのメソッドと、<codeph>numChildren</codeph> などのプロパティがあります。</p>
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:screen:get"><apiName>screen</apiName><shortdesc>
-	  
+      
 	  アプリケーションウィンドウのサイズと位置です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="flash.geom:Rectangle"/></apiValueDef><apiDesc>
-	  
+      
 	  アプリケーションウィンドウのサイズと位置です。 Rectangle オブジェクトには、<codeph>x</codeph>、<codeph>y</codeph>、<codeph>width</codeph> および <codeph>height</codeph> プロパティがあります。
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:toolTipChildren:get"><apiName>toolTipChildren</apiName><shortdesc>
-	  
+      
 	  この ISystemManager を親とするツールヒントのリストです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>mx.core:IChildList</apiValueClassifier></apiValueDef><apiDesc>
-	  
+      
 	  この ISystemManager を親とするツールヒントのリストです。
 	 
 	  <p>ISystemManager には、アプリケーション、ポップアップ、最上位ウィンドウ、ツールヒント、カスタムカーソルなど、さまざまなタイプの子があります。</p>
@@ -1298,12 +1310,12 @@
 	  <p>IChildList オブジェクトには、<codeph>getChildAt()</codeph> などのメソッドと、<codeph>numChildren</codeph> などのプロパティがあります。 例えば、<codeph>toolTipChildren.numChildren</codeph> はツールヒントの数（0 または 1 のいずれか）を示し、ツールヒントが存在する場合には <codeph>toolTipChildren.getChildAt(0)</codeph> を使用してアクセスできます。</p>
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:topLevelSystemManager:get"><apiName>topLevelSystemManager</apiName><shortdesc>
-	  アプリケーションウィンドウを管理する SystemManager を返します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>mx.managers:ISystemManager</apiValueClassifier></apiValueDef><apiDesc>
-	  アプリケーションウィンドウを管理する SystemManager を返します。 このアプリケーションが別のアプリケーションにロードされている場合を除き、同じ SystemManager となります。
+      アプリケーションウィンドウを管理する SystemManager を返します。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>mx.managers:ISystemManager</apiValueClassifier></apiValueDef><apiDesc>
+      アプリケーションウィンドウを管理する SystemManager を返します。 このアプリケーションが別のアプリケーションにロードされている場合を除き、同じ SystemManager となります。
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:width:get"><apiName>width</apiName><shortdesc>
-	  このオブジェクトの幅です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
-	  このオブジェクトの幅です。 SystemManager では、アプリケーションが別のアプリケーションにロードされた場合を除き、これは常にステージの幅になります。 アプリケーションが別のアプリケーションにロードされていない場合、この値を設定しても効果はありません。
+      このオブジェクトの幅です。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
+      このオブジェクトの幅です。 SystemManager では、アプリケーションが別のアプリケーションにロードされた場合を除き、これは常にステージの幅になります。 アプリケーションが別のアプリケーションにロードされていない場合、この値を設定しても効果はありません。
       
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.managers:LayoutManager"><apiName>LayoutManager</apiName><shortdesc>
   LayoutManager は、Flex の測定およびレイアウト手順の背後にあるエンジンです。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseInterface>mx.managers:ILayoutManager</apiBaseInterface><apiBaseClassifier>flash.events:EventDispatcher</apiBaseClassifier></apiClassifierDef><apiDesc>
@@ -1511,7 +1523,17 @@
 	  このコンポーネントのツールヒントのテキストです。
 	  
 	  </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.managers:CursorManager"><apiName>CursorManager</apiName><shortdesc>
-  CursorManager クラスではカーソルの優先順位リストが制御されており、リスト内で優先度が最も高いカーソルが表示されます。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion><styles><style inherit="no" name="busyCursor" owner="mx.managers:CursorManager" playerVersion="Flash9" type="Class">
+  CursorManager クラスではカーソルの優先順位リストが制御されており、リスト内で優先度が最も高いカーソルが表示されます。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion><styles><style inherit="no" name="busyCursorBackground" owner="mx.managers:CursorManager" playerVersion="Flash9" type="Class">
+<description>
+  ビジーカーソルの背景のスキンとして使用するクラスです。デフォルト値は、Assets.swf ファイルの "cursorStretch" シンボルです。
+  
+  </description>
+
+<playerversion>AIR 1.1
+  </playerversion>
+	<prolog><asCustoms><langversion>3.0
+  </langversion><productversion>Flex 3
+ </productversion></asCustoms></prolog></style><style inherit="no" name="busyCursor" owner="mx.managers:CursorManager" playerVersion="Flash9" type="Class">
 <description>
   ビジーカーソルのスキン
  

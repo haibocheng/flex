@@ -1496,6 +1496,8 @@ public class ClassTable implements DocCommentTable {
                 if (this.key.type == -1)
                     return;
                 
+                this.key.isStatic = isStatic;
+                
                 //extracts @ tags.
                 if (comment.id != null)
                     processTags(comment.id);
@@ -1967,6 +1969,7 @@ public class ClassTable implements DocCommentTable {
         
         public String name;
         public int type;
+        public boolean isStatic;
         
         public KeyPair(String name, int type)
         {
@@ -1976,7 +1979,7 @@ public class ClassTable implements DocCommentTable {
         
         public int compareTo(Object key)
         {
-            return(((new Integer(type)).toString() + name ).compareTo((new Integer(((KeyPair)key).type)).toString() + ((KeyPair)key).name));
+            return(((new Integer(type)).toString() + name + isStatic).compareTo((new Integer(((KeyPair)key).type)).toString() + ((KeyPair)key).name + ((KeyPair)key).isStatic));
         }
     }
 }

@@ -89,8 +89,8 @@ use namespace mx_internal;
  *  TextInput is a text-entry control that lets users enter and edit
  *  a single line of uniformly-formatted text.
  *
- *  <p>This Spark version of TextInput, which is new with Flex 4,
- *  makes use of the new Text Layout Framework (TLF) library,
+ *  <p>This Spark version of TextInput 
+ *  makes use of the Text Layout Framework (TLF) library,
  *  which in turn builds on the new Flash Text Engine (FTE) in Flash Player 10.
  *  In combination, they provide text editing with
  *  high-quality international typography.
@@ -123,7 +123,7 @@ use namespace mx_internal;
  *  <p>This control dispatches a <code>FlexEvent.ENTER</code> event
  *  when the user pressed the Enter key rather than inserting a line
  *  break, because this control does not support entering multiple
- *  lines of text.</p>
+ *  lines of text. By default, this control has explicit line breaks.</p>
  *
  *  <p>This control is a skinnable control whose skin contains a
  *  RichEditableText instance that handles displaying and editing the text.
@@ -131,18 +131,18 @@ use namespace mx_internal;
  *  This RichEditableText can be accessed as the <code>textDisplay</code>
  *  object.</p>
  *
- *  <p>As a result of its RichEditableText using TLF, the Spark TextInput
- *  supports displaying left-to-right (LTR) text such as French,
- *  right-to-left (RTL) text such as Arabic, and bidirectional text
+ *  <p>As a result of its RichEditableText using TLF, the Spark TextInput control
+ *  supports displaying left-to-right (LTR) text, such as French,
+ *  right-to-left (RTL) text, such as Arabic, and bidirectional text
  *  such as a French phrase inside of an Arabic one.
  *  If the predominant text direction is right-to-left,
- *  set the <code>direction</code> style to <code>"rtl"</code>.
- *  The <code>textAlign</code> style defaults to <code>"start"</code>,
+ *  set the <code>direction</code> style to <code>rtl</code>.
+ *  The <code>textAlign</code> style defaults to <code>start</code>,
  *  which makes the text left-aligned when <code>direction</code>
- *  is <code>"ltr"</code> and right-aligned when <code>direction</code>
- *  is <code>"rtl"</code>.
+ *  is <code>ltr</code> and right-aligned when <code>direction</code>
+ *  is <code>rtl</code>.
  *  To get the opposite alignment,
- *  set <code>textAlign</code> to <code>"end"</code>.</p>
+ *  set <code>textAlign</code> to <code>end</code>.</p>
  *
  *  <p>Also as a result of using TLF, the Spark TextInput supports
  *  unlimited undo/redo within one editing session.
@@ -157,11 +157,7 @@ use namespace mx_internal;
  *        </tr>
  *        <tr>
  *           <td>Default size</td>
- *           <td>188 pixels wide by 22 pixels high</td>
- *        </tr>
- *        <tr>
- *           <td>Minimum size</td>
- *           <td>2 pixels wide and 2 pixels high</td>
+ *           <td>128 pixels wide by 22 pixels high</td>
  *        </tr>
  *        <tr>
  *           <td>Maximum size</td>
@@ -183,7 +179,7 @@ use namespace mx_internal;
  *  <pre>
  *  &lt;s:TextInput
  *    <strong>Properties</strong>
- *    widthInChars=""
+ *    widthInChars="<i>Calculated default</i>"
  *  
  *    <strong>Events</strong>
  *    enter="<i>No default</i>"
@@ -292,25 +288,25 @@ public class TextInput extends SkinnableTextBase
 
     /**
      *  The default width of the control, measured in em units.
-	 *
-	 *  <p>An em is a unit of typographic measurement
-	 *  equal to the point size.
-	 *  It is not necessarily exactly the width of the "M" character,
-	 *  but in many fonts the "M" is about one em wide.
+     *
+     *  <p>An em is a unit of typographic measurement
+     *  equal to the point size.
+     *  It is not necessarily exactly the width of the "M" character,
+     *  but in many fonts the "M" is about one em wide.
      *  The control's <code>fontSize</code> style is used,
-	 *  to calculate the em unit in pixels.</p>
-	 *
-	 *  <p>You would, for example, set this property to 20 if you want
-	 *  the width of the TextInput to be sufficient
-	 *  to input about 20 characters of text.</p>
-	 *
-	 *  <p>This property will be ignored if you specify an explicit width,
-	 *  a percent width, or both <code>left</code> and <code>right</code>
-	 *  constraints.</p>
-	 *
-	 *  @default 10
-	 *
-	 *  @see spark.primitives.heightInLines
+     *  to calculate the em unit in pixels.</p>
+     *
+     *  <p>You would, for example, set this property to 20 if you want
+     *  the width of the TextInput to be sufficient
+     *  to input about 20 characters of text.</p>
+     *
+     *  <p>This property will be ignored if you specify an explicit width,
+     *  a percent width, or both <code>left</code> and <code>right</code>
+     *  constraints.</p>
+     *
+     *  @default 10
+     *
+     *  @see spark.primitives.heightInLines
      *
      *  @langversion 3.0
      *  @playerversion Flash 10
@@ -356,6 +352,10 @@ public class TextInput extends SkinnableTextBase
         if (instance == textDisplay)
         {
             textDisplay.multiline = false;
+
+            // Single line for interactive input.  Multi-line text can be
+            // set.
+            textDisplay.setStyle("lineBreak", "explicit");
             
             // TextInput should always be 1 line.
             textDisplay.heightInLines = 1;

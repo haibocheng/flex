@@ -1,0 +1,676 @@
+<?xml version="1.0"?>
+<apiPackage id="flash.xml"><apiName>flash.xml</apiName><apiDetail/><apiClassifier id="flash.xml:XMLNode"><apiName>XMLNode</apiName><shortdesc>
+ XMLNode 类表示存在于 ActionScript 2.0 中但在 ActionScript 3.0 中已重命名的旧 XML 对象。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode, XMLNode object, built-in class
+ </keyword></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ XMLNode 类表示存在于 ActionScript 2.0 中但在 ActionScript 3.0 中已重命名的旧 XML 对象。在 ActionScript 3.0 中，请考虑改用新的顶级 <xref href="../../XML.html">XML</xref> 类和相关类，这些类支持 E4X (ECMAScript for XML)。使用 XMLNode 类是为了保持向后兼容。
+ 
+ </apiDesc><example conref="examples\XMLDocumentExample.as"> 下例使用 XMLDocument 和 XMLNode 类分析 XML 文档并设置其格式。此示例并未加载外部 XML 文件，而是使用顶级 XML 类来创建 XML 文档，然后对该文档进行分析。 
+<codeblock>
+package {
+    import flash.display.Sprite;
+    import flash.xml.XMLDocument;
+    import flash.xml.XMLNode;
+    import flash.xml.XMLNodeType;
+
+    public class XMLDocumentExample extends Sprite {
+        public function XMLDocumentExample() {
+            var result:XMLDocument = new XMLDocument();
+            result.ignoreWhite = true;
+            result.parseXML(getXMLString());
+
+            var books:Array = parseBooks(result.firstChild);
+            trace("books: \n" + books);
+        }
+
+        private function parseBooks(node:XMLNode):Array {
+            var books:Array = new Array();
+
+            var kids:Array = node.childNodes;
+            for each(var item:XMLNode in kids) {
+                parseBook(item, books);
+            }
+
+            return books;
+        }
+
+        private function parseBook(node:XMLNode, books:Array):void {
+            var item:Book = new Book();
+            item.setPublisher(node.attributes.publisher);
+            item.setName(node.attributes.name);
+            books.push(item);
+        }
+
+        private function getXMLString():String {
+            var list:XML = &lt;books>
+                                &lt;book publisher="Addison-Wesley" name="Design Patterns" />
+                                &lt;book publisher="Addison-Wesley" name="The Pragmatic Programmer" />
+                                &lt;book publisher="Addison-Wesley" name="Test Driven Development" />
+                                &lt;book publisher="Addison-Wesley" name="Refactoring to Patterns" />
+                                &lt;book publisher="O'Reilly Media" name="The Cathedral &amp; the Bazaar" />
+                                &lt;book publisher="O'Reilly Media" name="Unit Test Frameworks" />
+                            &lt;/books>;
+            return list.toXMLString();
+        }
+    }
+
+}
+class Book {
+    private var publisher:String;
+    private var name:String;
+
+    public function setPublisher(publisher:String):void {
+        this.publisher = publisher;
+    }
+
+    public function setName(name:String):void {
+        this.name = name;
+    }
+
+    public function toString():String {
+        return "[Book name: " + name + " publisher: " + publisher + "]\n";
+    }
+}
+</codeblock></example></apiClassifierDetail><related-links><link href="#XML"><linktext>XML</linktext></link><link href="flash.xml.xml#XMLDocument"><linktext>flash.xml.XMLDocument</linktext></link></related-links><apiConstructor id="flash.xml:XMLNode:XMLNode"><apiName>XMLNode</apiName><shortdesc>
+ 创建新的 XMLNode 对象。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>new XMLNode, new, constructor
+ </keyword></asCustoms></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>type</apiItemName><apiOperationClassifier>uint</apiOperationClassifier><apiDesc>节点类型：对于 XML 元素为 1，对于文本节点为 3。
+ </apiDesc></apiParam><apiParam><apiItemName>value</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>经解析用以创建新 XMLNode 对象的 XML 文本。 
+ 
+ 
+ 
+ 
+ 
+ </apiDesc></apiParam></apiConstructorDef><apiDesc>
+ 创建新的 XMLNode 对象。调用 XMLNode 类的任何方法之前，必须使用该构造函数创建一个 XMLNode 对象。
+ <p><b>注意：</b>使用 <codeph>createElement()</codeph> 和 <codeph>createTextNode()</codeph> 方法可以将元素和文本节点添加到 XML 文档树中。</p>
+ 
+ </apiDesc></apiConstructorDetail><related-links><link href="flash.xml.xml#XMLDocument/createElement()"><linktext>XMLDocument.createElement()</linktext></link><link href="flash.xml.xml#XMLDocument/createTextNode()"><linktext>XMLDocument.createTextNode()</linktext></link></related-links></apiConstructor><apiOperation id="flash.xml:XMLNode:appendChild"><apiName>appendChild</apiName><shortdesc>
+	  
+	 将指定的节点追加到 XML 对象的子级列表中。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.appendchild, appendchild
+	 </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>node</apiItemName><apiOperationClassifier>flash.xml:XMLNode</apiOperationClassifier><apiDesc>一个 XMLNode，表示要从其当前位置移动到 <codeph>my_xml</codeph> 对象的子级列表的节点。
+	 
+	 
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	  
+	 将指定的节点追加到 XML 对象的子级列表中。此方法直接在 <codeph>childNode</codeph> 参数引用的节点上操作；它并不追加该节点的副本。如果要追加的节点已经存在于另一个树结构中，则向新位置追加该节点会删除当前位置的该节点。如果 <codeph>childNode</codeph> 参数引用的节点已经存在于另一个 XML 树结构中，则在追加的子节点从现有父级节点删除后，它会被放在新的树结构中。
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.xml:XMLNode:cloneNode"><apiName>cloneNode</apiName><shortdesc>
+	  
+	 构造并返回一个类型、名称、值和属性与指定的 XML 对象均相同的新 XML 节点。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.clonenode, clodenode
+	 </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>XMLNode 对象。
+	 
+	 
+	 
+	 </apiDesc><apiOperationClassifier>flash.xml:XMLNode</apiOperationClassifier></apiReturn><apiParam><apiItemName>deep</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiDesc>一个布尔值；如果设置为 <codeph>true</codeph>，将会以递归方式克隆指定 XML 对象的子级。
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	  
+	 构造并返回一个类型、名称、值和属性与指定的 XML 对象均相同的新 XML 节点。如果将 <codeph>deep</codeph> 设置为 <codeph>true</codeph>，则递归克隆所有子节点，这将得到一个与原始对象文档树完全相同的副本。 
+	 <p>返回的克隆节点与被克隆项目的树不再相关联。因此，<codeph>nextSibling</codeph>、<codeph>parentNode</codeph> 和 <codeph>previousSibling</codeph> 值都为 <codeph>null</codeph>。如果 <codeph>deep</codeph> 参数设置为 <codeph>false</codeph>，或者 <codeph>my_xml</codeph> 节点没有子节点，则 <codeph>firstChild</codeph> 和 <codeph>lastChild</codeph> 同样为空。</p>
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.xml:XMLNode:getNamespaceForPrefix"><apiName>getNamespaceForPrefix</apiName><shortdesc>
+	 返回与节点的指定前缀相关联的命名空间 URI。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><refpath>
+	 </refpath></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>与指定的前缀关联的命名空间。 
+	 
+	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn><apiParam><apiItemName>prefix</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>该方法为其返回关联的命名空间的前缀。
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 返回与节点的指定前缀相关联的命名空间 URI。要确定该 URI，<codeph>getPrefixForNamespace()</codeph> 将根据需要从节点开始搜索 XML 层次结构，并返回给定 <codeph>prefix</codeph> 的第一个 <codeph>xmlns</codeph> 声明的命名空间 URI。
+	 
+	 <p>如果没有为指定的前缀定义命名空间，该方法将返回 <codeph>null</codeph>。</p>
+	 
+	 <p>如果您指定了一个空字符串 (<codeph>""</codeph>) 作为 <codeph>prefix</codeph>，并且为该节点定义了默认命名空间（如 <codeph>xmlns="http://www.example.com/"</codeph> 中所示），该方法将返回该默认命名空间 URI。
+	 </p>
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.xml.xml#XMLNode/getPrefixForNamespace()"><linktext>XMLNode.getPrefixForNamespace()</linktext></link><link href="flash.xml.xml#XMLNode/namespaceURI"><linktext>XMLNode.namespaceURI</linktext></link></related-links></apiOperation><apiOperation id="flash.xml:XMLNode:getPrefixForNamespace"><apiName>getPrefixForNamespace</apiName><shortdesc>
+	 返回与节点的指定命名空间 URI 相关联的前缀。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>
+	 </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>与指定的命名空间关联的前缀。 
+	 
+	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn><apiParam><apiItemName>ns</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>该方法为其返回相关联前缀的命名空间 URI。
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 返回与节点的指定命名空间 URI 相关联的前缀。为了确定前缀，<codeph>getPrefixForNamespace()</codeph> 根据需要从节点开始向上搜索 XML 层次结构，并返回具有与 <codeph>ns</codeph> 匹配的命名空间 URI 的第一个 <codeph>xmlns</codeph> 声明的前缀。
+	 
+	 <p>如果未对给定 URI 进行 <codeph>xmlns</codeph> 赋值，该方法将返回 <codeph>null</codeph>。如果对给定 URI 进行了 <codeph>xmlns</codeph> 赋值但没有与该赋值相关联的前缀，该方法将返回一个空字符串 (<codeph>""</codeph>)。
+	 </p>
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.xml.xml#XMLNode/getNamespaceForPrefix()"><linktext>XMLNode.getNamespaceForPrefix()</linktext></link><link href="flash.xml.xml#XMLNode/namespaceURI"><linktext>XMLNode.namespaceURI</linktext></link></related-links></apiOperation><apiOperation id="flash.xml:XMLNode:hasChildNodes"><apiName>hasChildNodes</apiName><shortdesc>
+	 指示指定的 XMLNode 对象是否具有子节点。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.haschildnodes, haschildnodes, has child nodes
+	 </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>如果指定的 XMLNode 对象具有子节点，则返回 <codeph>true</codeph>；否则返回 <codeph>false</codeph>。
+	 
+	 </apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 指示指定的 XMLNode 对象是否具有子节点。如果指定的 XMLNode 对象具有子节点，此属性为 <codeph>true</codeph>；否则为 <codeph>false</codeph>。
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.xml:XMLNode:insertBefore"><apiName>insertBefore</apiName><shortdesc>
+	 将新的子节点插入到 XML 对象的子级列表中，且在 beforeNode 节点之前。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.insertbefore, insertbefore, insert before
+	 </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>node</apiItemName><apiOperationClassifier>flash.xml:XMLNode</apiOperationClassifier><apiDesc>要插入的 XMLNode 对象。
+	 </apiDesc></apiParam><apiParam><apiItemName>before</apiItemName><apiOperationClassifier>flash.xml:XMLNode</apiOperationClassifier><apiDesc><codeph>childNode</codeph> 的插入点之前的 XMLNode 对象。
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 将新的子节点插入到 XML 对象的子级列表中，且在 <codeph>beforeNode</codeph> 节点之前。如果 <codeph>beforeNode</codeph> 参数未定义或为空，则使用 <codeph>appendChild()</codeph> 方法添加该节点。如果 <codeph>beforeNode</codeph> 不是 <codeph>my_xml</codeph> 的子级，则插入操作失败。
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.xml.xml#XMLNode/cloneNode()"><linktext>XMLNode.cloneNode()</linktext></link></related-links></apiOperation><apiOperation id="flash.xml:XMLNode:removeNode"><apiName>removeNode</apiName><shortdesc>
+	 从指定 XML 对象的父级中删除该对象。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.removenode, removenode, remove node
+	 </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+	 从指定 XML 对象的父级中删除该对象。还将删除此节点的所有子级节点。
+	 
+	 
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.xml:XMLNode:toString"><apiName>toString</apiName><shortdesc>
+	 计算指定的 XMLNode 对象，构造一个包括节点、子级和属性的 XML 结构的文本表示形式，并以字符串形式返回结果。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.tostring, tostring
+	 </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>表示 XMLNode 对象的字符串。
+	 
+	 
+	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 计算指定的 XMLNode 对象，构造一个包括节点、子级和属性的 XML 结构的文本表示形式，并以字符串形式返回结果。 
+	 
+	 <p>对于顶级 XMLDocument 对象（那些用构造函数创建的对象），<codeph>XMLDocument.toString()</codeph> 方法首先输出文档的 XML 声明（存储在 <codeph>XMLDocument.xmlDecl</codeph> 属性中），随后输出文档的 <codeph>DOCTYPE</codeph> 声明（存储在 <codeph>XMLDocument.docTypeDecl</codeph> 属性中），接着输出该对象中所有 XML 节点的文本表示形式。如果 <codeph>XMLDocument.xmlDecl</codeph> 属性为 <codeph>null</codeph>，则不输出 XML 声明。如果 <codeph>XMLDocument.docTypeDecl</codeph> 属性为 <codeph>null</codeph>，则不输出 <codeph>DOCTYPE</codeph> 声明。</p>
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.xml.xml#XMLDocument/docTypeDecl"><linktext>XMLDocument.docTypeDecl</linktext></link><link href="flash.xml.xml#XMLDocument/xmlDecl"><linktext>XMLDocument.xmlDecl</linktext></link></related-links></apiOperation><apiValue id="flash.xml:XMLNode:firstChild"><apiName>firstChild</apiName><shortdesc>
+	 计算指定的 XMLDocument 对象，并引用父节点的子级列表中的第一个子级。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.firstchild, first child
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>flash.xml:XMLNode</apiValueClassifier></apiValueDef><apiDesc>
+	 计算指定的 XMLDocument 对象，并引用父节点的子级列表中的第一个子级。如果该节点没有子级，则此属性为 <codeph>null</codeph>。如果该节点为文本节点，则此属性为 <codeph>undefined</codeph>。这是一个只读属性，不能用于操作子节点；请使用 <codeph>appendChild()</codeph>、<codeph>insertBefore()</codeph> 和 <codeph>removeNode()</codeph> 方法来操作子节点。
+	 
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.xml.xml#XMLNode/appendChild()"><linktext>XMLNode.appendChild()</linktext></link><link href="flash.xml.xml#XMLNode/insertBefore()"><linktext>XMLNode.insertBefore()</linktext></link><link href="flash.xml.xml#XMLNode/removeNode()"><linktext>XMLNode.removeNode()</linktext></link></related-links></apiValue><apiValue id="flash.xml:XMLNode:lastChild"><apiName>lastChild</apiName><shortdesc>
+	 一个 XMLNode 值，它引用节点的子级列表中的最后一个子级。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.lastchild, lastchild, last child
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>flash.xml:XMLNode</apiValueClassifier></apiValueDef><apiDesc>
+	 一个 XMLNode 值，它引用节点的子级列表中的最后一个子级。如果该节点没有子级，则 <codeph>XMLNode.lastChild</codeph> 属性为 <codeph>null</codeph>。此属性不能用于处理子节点；请使用 <codeph>appendChild()</codeph>、<codeph>insertBefore()</codeph> 和 <codeph>removeNode()</codeph> 方法来处理子节点。
+	 
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.xml.xml#XMLNode/appendChild()"><linktext>XMLNode.appendChild()</linktext></link><link href="flash.xml.xml#XMLNode/insertBefore()"><linktext>XMLNode.insertBefore()</linktext></link><link href="flash.xml.xml#XMLNode/removeNode()"><linktext>XMLNode.removeNode()</linktext></link></related-links></apiValue><apiValue id="flash.xml:XMLNode:nextSibling"><apiName>nextSibling</apiName><shortdesc>
+	 一个 XMLNode 值，它引用父级节点的子级列表中的下一个同级。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.nextsibling, next sibling
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>flash.xml:XMLNode</apiValueClassifier></apiValueDef><apiDesc>
+	 一个 XMLNode 值，它引用父级节点的子级列表中的下一个同级。如果该节点没有下一个同级节点，则此属性为 <codeph>null</codeph>。此属性不能用于处理子节点；请使用 <codeph>appendChild()</codeph>、<codeph>insertBefore()</codeph> 和 <codeph>removeNode()</codeph> 方法来处理子节点。
+	 
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.xml.xml#XMLNode/firstChild"><linktext>XMLNode.firstChild</linktext></link><link href="flash.xml.xml#XMLNode/appendChild()"><linktext>XMLNode.appendChild()</linktext></link><link href="flash.xml.xml#XMLNode/insertBefore()"><linktext>XMLNode.insertBefore()</linktext></link><link href="flash.xml.xml#XMLNode/removeNode()"><linktext>XMLNode.removeNode()</linktext></link></related-links></apiValue><apiValue id="flash.xml:XMLNode:nodeName"><apiName>nodeName</apiName><shortdesc>
+	 一个字符串，表示 XMLNode 对象的节点名称。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.nodename, node name
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 一个字符串，表示 XMLNode 对象的节点名称。如果 XMLNode 对象是一个 XML 元素 (<codeph>nodeType == 1</codeph>)，则 <codeph>nodeName</codeph> 是 XML 文件中表示节点的标签的名称。例如，<codeph>TITLE</codeph> 是 HTML <codeph>TITLE</codeph> 标签的 <codeph>nodeName</codeph>。如果 XMLNode 对象是一个文本节点 (<codeph>nodeType == 3</codeph>)，则 nodeName 为 <codeph>null</codeph>。
+	 
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.xml.xml#XMLNode/nodeType"><linktext>XMLNode.nodeType</linktext></link></related-links></apiValue><apiValue id="flash.xml:XMLNode:nodeType"><apiName>nodeType</apiName><shortdesc>
+	 一个 nodeType 常量值，对于 XML 元素为 XMLNodeType.ELEMENT_NODE，对于文本节点为 XMLNodeType.TEXT_NODE。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XML.nodetype, node type
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>uint</apiValueClassifier></apiValueDef><apiDesc>
+	 一个 <codeph>nodeType</codeph> 常数值，对于 XML 元素为 <codeph>XMLNodeType.ELEMENT_NODE</codeph>，对于文本节点为 <codeph>XMLNodeType.TEXT_NODE</codeph>。 
+	 <p><codeph>nodeType</codeph> 是 W3C DOM Level 1 推荐方法的 NodeType 枚举中的一个数字值：<xref href="http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html" scope="external">http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html</xref>。下表列出了这些值：</p>
+	 <p><adobetable><row><entry>4</entry><entry>CDATA_SECTION_NODE</entry></row>
+	 
+	 
+	 
+	 
+	 <tgroup cols="2"><thead><row><entry align="left">整数值</entry><entry align="left">已定义的常量</entry></row></thead><tbody><row><entry>1</entry><entry>ELEMENT_NODE</entry></row><row><entry>3</entry><entry>TEXT_NODE</entry></row><row><entry>5</entry><entry>ENTITY_REFERENCE_NODE</entry></row><row><entry>7</entry><entry>PROCESSING_INSTRUCTION_NODE</entry></row><row><entry>9</entry><entry>DOCUMENT_NODE</entry></row><row><entry>11</entry><entry>DOCUMENT_FRAGMENT_NODE</entry></row></tbody></tgroup></adobetable></p>
+	 <p>在 Flash Player 中，内置 XMLNode 类仅支持 <codeph>XMLNodeType.ELEMENT_NODE</codeph> 和 <codeph>XMLNodeType.TEXT_NODE</codeph>。</p>
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.xml.xml#XMLNodeType/TEXT_NODE"><linktext>XMLNodeType.TEXT_NODE</linktext></link><link href="flash.xml.xml#XMLNodeType/ELEMENT_NODE"><linktext>XMLNodeType.ELEMENT_NODE</linktext></link></related-links></apiValue><apiValue id="flash.xml:XMLNode:nodeValue"><apiName>nodeValue</apiName><shortdesc>
+	 XMLDocument 对象的节点值。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.nodevalue, nodevalue, node value
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 XMLDocument 对象的节点值。如果 XMLDocument 对象是一个文本节点，则 <codeph>nodeType</codeph> 为 3，<codeph>nodeValue</codeph> 是节点的文本。如果 XMLDocument 对象是一个 XML 元素（<codeph>nodeType</codeph> 为 1），则 <codeph>nodeValue</codeph> 为 <codeph>null</codeph> 且为只读。
+	 
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.xml.xml#XMLNode/nodeType"><linktext>XMLNode.nodeType</linktext></link></related-links></apiValue><apiValue id="flash.xml:XMLNode:parentNode"><apiName>parentNode</apiName><shortdesc>
+	 一个 XMLNode 值，它引用指定 XML 对象的父级节点；如果该节点没有父级，则返回 null。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.parentnode, parentnode, parent node
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>flash.xml:XMLNode</apiValueClassifier></apiValueDef><apiDesc>
+	 一个 XMLNode 值，它引用指定 XML 对象的父级节点；如果该节点没有父级，则返回 <codeph>null</codeph>。这是一个只读属性，不能用于操作子节点；请使用 <codeph>appendChild()</codeph>、<codeph>insertBefore()</codeph> 和 <codeph>removeNode()</codeph> 方法来操作子节点。
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.xml.xml#XMLNode/appendChild()"><linktext>XMLNode.appendChild()</linktext></link><link href="flash.xml.xml#XMLNode/insertBefore()"><linktext>XMLNode.insertBefore()</linktext></link><link href="flash.xml.xml#XMLNode/removeNode()"><linktext>XMLNode.removeNode()</linktext></link></related-links></apiValue><apiValue id="flash.xml:XMLNode:previousSibling"><apiName>previousSibling</apiName><shortdesc>
+	 一个 XMLNode 值，它引用父级节点的子级列表中的前一个同级。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.previousSibling, previousSibling
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>flash.xml:XMLNode</apiValueClassifier></apiValueDef><apiDesc>
+	 一个 XMLNode 值，它引用父级节点的子级列表中的前一个同级。如果该节点没有前一个同级节点，则此属性的值为 null。此属性不能用于处理子节点；请使用 <codeph>appendChild()</codeph>、<codeph>insertBefore()</codeph> 和 <codeph>removeNode()</codeph> 方法来处理子节点。
+	 
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.xml.xml#XMLNode/lastChild"><linktext>XMLNode.lastChild</linktext></link><link href="flash.xml.xml#XMLNode/appendChild()"><linktext>XMLNode.appendChild()</linktext></link><link href="flash.xml.xml#XMLNode/insertBefore()"><linktext>XMLNode.insertBefore()</linktext></link><link href="flash.xml.xml#XMLNode/removeNode()"><linktext>XMLNode.removeNode()</linktext></link></related-links></apiValue><apiValue id="flash.xml:XMLNode:attributes:get"><apiName>attributes</apiName><shortdesc>
+	 一个对象，其中包含指定的 XMLNode 实例的所有属性。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.attributes, attributes
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiValueClassifier>Object</apiValueClassifier></apiValueDef><apiDesc>
+	 一个对象，其中包含指定的 XMLNode 实例的所有属性。XMLNode.attributes 对象为 XMLNode 实例的每个属性包含一个变量。因为这些变量定义为该对象的一部分，所以通常将它们称为该对象的属性。每个属性 (attribute) 的值以字符串形式保存在相应的属性 (property) 中。例如，如果有一个名为 <codeph>color</codeph> 的属性 (attribute)，则可以通过将 <codeph>color</codeph> 指定为属性 (property) 名称来检索该属性 (attribute) 的值，如以下代码所示： 
+	 <pre>
+	 var myColor:String = doc.firstChild.attributes.color
+	 </pre>
+	 
+	 
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.xml:XMLNode:childNodes:get"><apiName>childNodes</apiName><shortdesc>
+	 指定的 XMLNode 对象子级的数组。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>XMLNode.childnodes, childnodes
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>Array</apiValueClassifier></apiValueDef><apiDesc>
+	 指定的 XMLNode 对象子级的数组。数组中的每个元素都是对表示子级节点的 XMLNode 对象的引用。这是一个只读属性，不能用于操作子级节点。请使用 <codeph>appendChild()</codeph>、<codeph>insertBefore()</codeph> 和 <codeph>removeNode()</codeph> 来操作子节点。 
+	 
+	 <p>对于文本节点 (<codeph>nodeType == 3</codeph>)，此属性未定义。</p>
+	 
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.xml.xml#XMLNode/nodeType"><linktext>XMLNode.nodeType</linktext></link><link href="flash.xml.xml#XMLNode/appendChild()"><linktext>XMLNode.appendChild()</linktext></link><link href="flash.xml.xml#XMLNode/insertBefore()"><linktext>XMLNode.insertBefore()</linktext></link><link href="flash.xml.xml#XMLNode/removeNode()"><linktext>XMLNode.removeNode()</linktext></link></related-links></apiValue><apiValue id="flash.xml:XMLNode:localName:get"><apiName>localName</apiName><shortdesc>
+	 XML 节点名称的本地名称部分。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 XML 节点名称的本地名称部分。这是没有命名空间前缀的元素名称。例如，节点 <codeph>&lt;contact:mailbox/>bob@example.com&lt;/contact:mailbox></codeph> 具有本地名称“mailbox”和前缀“contact”，两者组成完整的元素名称“contact.mailbox”。
+	 
+	 <p>您可以通过 XML 节点对象的 <codeph>prefix</codeph> 属性来访问命名空间前缀。<codeph>nodeName</codeph> 属性会返回完整的名称（包括前缀和本地名称）。</p>
+	 
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.xml:XMLNode:namespaceURI:get"><apiName>namespaceURI</apiName><shortdesc>
+	 如果 XML 节点具有前缀，则 namespaceURI 为该前缀 (URI) 的 xmlns 声明的值，通常称为命名空间 URI。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier><apiTipTexts><apiTipText>XML 节点前缀所解析到的命名空间的 URI。 
+	 
+	 </apiTipText></apiTipTexts></apiValueDef><apiDesc>
+	 如果 XML 节点具有前缀，则 <codeph>namespaceURI</codeph> 为该前缀 (URI) 的 <codeph>xmlns</codeph> 声明的值，通常称为命名空间 URI。<codeph>xmlns</codeph> 声明位于当前节点中或 XML 层次结构中较高层次的节点中。 
+	 
+	 <p>如果 XML 节点没有前缀，<codeph>namespaceURI</codeph> 属性的值将取决于是否定义了默认的命名空间（如 <codeph>xmlns="http://www.example.com/"</codeph> 中所示）。如果有默认命名空间，则 <codeph>namespaceURI</codeph> 属性的值即为默认命名空间的值。如果没有默认命名空间，则该节点的 <codeph>namespaceURI</codeph> 属性为空字符串 (<codeph>""</codeph>)。</p>
+	 
+	 <p>您可以使用 <codeph>getNamespaceForPrefix()</codeph> 方法标识与特定前缀相关联的命名空间。<codeph>namespaceURI</codeph> 属性会返回与节点名称相关联的前缀。</p>
+	 
+	 </apiDesc></apiValueDetail><related-links><link href="flash.xml.xml#XMLNode/getNamespaceForPrefix()"><linktext>getNamespaceForPrefix()</linktext></link><link href="flash.xml.xml#XMLNode/getPrefixForNamespace()"><linktext>getPrefixForNamespace()</linktext></link></related-links></apiValue><apiValue id="flash.xml:XMLNode:prefix:get"><apiName>prefix</apiName><shortdesc>
+	 XML 节点名称的前缀部分。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>
+	 </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	 XML 节点名称的前缀部分。例如，节点 <codeph>&lt;contact:mailbox/>bob@example.com&lt;/contact:mailbox></codeph> 具有前缀“contact”和本地名称“mailbox”，两者组成完整的元素名称“contact.mailbox”。
+	 
+	 <p>XML 节点对象的 <codeph>nodeName</codeph> 属性会返回完整名称（包括前缀和本地名称）。您可以通过 <codeph>localName</codeph> 属性来访问元素名称的本地名称部分。 </p>
+	 
+	 
+	 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.xml:XMLNodeType"><apiName>XMLNodeType</apiName><shortdesc>
+ XMLNodeType 类包含与 XMLNode.nodeType 一起使用的常数。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+ XMLNodeType 类包含与 <codeph>XMLNode.nodeType</codeph> 一起使用的常数。这些值是由 W3C DOM Level 1 推荐方法中的 NodeType 枚举定义的：<xref href="http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html" scope="external">http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html</xref>
+ 
+ </apiDesc></apiClassifierDetail><related-links><link href="flash.xml.xml#XMLNode/nodeType"><linktext>XMLNode.nodeType</linktext></link></related-links><apiValue id="flash.xml:XMLNodeType:ELEMENT_NODE"><apiName>ELEMENT_NODE</apiName><shortdesc>
+ 	 指定该节点是一个元素。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>1</apiData><apiValueClassifier>uint</apiValueClassifier></apiValueDef><apiDesc>
+ 	 指定该节点是一个元素。此常数与 <codeph>XMLNode.nodeType</codeph> 一起使用。该值是由 W3C DOM Level 1 推荐方法中的 NodeType 枚举定义的：<xref href="http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html" scope="external">http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html</xref>
+ 	 
+ 	 </apiDesc></apiValueDetail><related-links><link href="flash.xml.xml#XMLNode/nodeType"><linktext>XMLNode.nodeType</linktext></link></related-links></apiValue><apiValue id="flash.xml:XMLNodeType:TEXT_NODE"><apiName>TEXT_NODE</apiName><shortdesc>
+	 指定该节点是一个文本节点。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>3</apiData><apiValueClassifier>uint</apiValueClassifier></apiValueDef><apiDesc>
+	 指定该节点是一个文本节点。此常数与 <codeph>XMLNode.nodeType</codeph> 一起使用。该值是由 W3C DOM Level 1 推荐方法中的 NodeType 枚举定义的：<xref href="http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html" scope="external">http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html</xref>
+ 	 
+ 	 </apiDesc></apiValueDetail><related-links><link href="flash.xml.xml#XMLNode/nodeType"><linktext>XMLNode.nodeType</linktext></link></related-links></apiValue></apiClassifier><apiClassifier id="flash.xml:XMLDocument"><apiName>XMLDocument</apiName><shortdesc>
+ XMLDocument 类表示 ActionScript 2.0 中存在的旧 XML 对象。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.xml:XMLNode</apiBaseClassifier></apiClassifierDef><apiDesc>
+ XMLDocument 类表示 ActionScript 2.0 中存在的旧 XML 对象。它在 ActionScript 3.0 中被重命名为 XMLDocument，以避免与 ActionScript 3.0 中新的 XML 类出现名称冲突。在 ActionScript 3.0 中，建议使用新的 <xref href="../../XML.html">XML</xref> 类及相关类，这些类支持 E4X (ECMAScript for XML)。
+ 
+ <p>使用 XMLDocument 类以及 XMLNode 和 XMLNodeType 是为了保持向后兼容。用于加载 XML 文档的功能现在可在 URLLoader 类中找到。</p>
+ 
+ </apiDesc><example conref="examples\XMLDocumentExample.as"> 下例使用 XMLDocument 和 XMLNode 类分析 XML 文档并设置其格式。此示例并未加载外部 XML 文件，而是使用顶级 XML 类来创建 XML 文档，然后对该文档进行分析。 
+<codeblock>
+package {
+    import flash.display.Sprite;
+    import flash.xml.XMLDocument;
+    import flash.xml.XMLNode;
+    import flash.xml.XMLNodeType;
+
+    public class XMLDocumentExample extends Sprite {
+        public function XMLDocumentExample() {
+            var result:XMLDocument = new XMLDocument();
+            result.ignoreWhite = true;
+            result.parseXML(getXMLString());
+
+            var books:Array = parseBooks(result.firstChild);
+            trace("books: \n" + books);
+        }
+
+        private function parseBooks(node:XMLNode):Array {
+            var books:Array = new Array();
+
+            var kids:Array = node.childNodes;
+            for each(var item:XMLNode in kids) {
+                parseBook(item, books);
+            }
+
+            return books;
+        }
+
+        private function parseBook(node:XMLNode, books:Array):void {
+            var item:Book = new Book();
+            item.setPublisher(node.attributes.publisher);
+            item.setName(node.attributes.name);
+            books.push(item);
+        }
+
+        private function getXMLString():String {
+            var list:XML = &lt;books>
+                                &lt;book publisher="Addison-Wesley" name="Design Patterns" />
+                                &lt;book publisher="Addison-Wesley" name="The Pragmatic Programmer" />
+                                &lt;book publisher="Addison-Wesley" name="Test Driven Development" />
+                                &lt;book publisher="Addison-Wesley" name="Refactoring to Patterns" />
+                                &lt;book publisher="O'Reilly Media" name="The Cathedral &amp; the Bazaar" />
+                                &lt;book publisher="O'Reilly Media" name="Unit Test Frameworks" />
+                            &lt;/books>;
+            return list.toXMLString();
+        }
+    }
+
+}
+class Book {
+    private var publisher:String;
+    private var name:String;
+
+    public function setPublisher(publisher:String):void {
+        this.publisher = publisher;
+    }
+
+    public function setName(name:String):void {
+        this.name = name;
+    }
+
+    public function toString():String {
+        return "[Book name: " + name + " publisher: " + publisher + "]\n";
+    }
+}
+</codeblock></example></apiClassifierDetail><related-links><link href="flash.net.xml#URLLoader"><linktext>flash.net.URLLoader</linktext></link><link href="#XML"><linktext>XML 类</linktext></link></related-links><apiConstructor id="flash.xml:XMLDocument:XMLDocument"><apiName>XMLDocument</apiName><shortdesc>
+	 创建新的 XMLDocument 对象。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><maelexample>The following example creates a new, empty XMLDocument object:
+	 <listing>
+	 var my_xml:XML = new XML();
+	 </listing>
+	 <p>The following example creates an XML object by parsing the XML text specified in the <code>source</code> parameter, and populates the newly created XML object with the resulting XML document tree:</p>
+	 <listing>
+	 var other_xml:XML = new XML("&lt;state name=\"California\">&lt;city>San Francisco&lt;/city>&lt;/state>");
+	 </listing>
+	 
+	 </maelexample></asCustoms></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>source</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData>null</apiData><apiDesc>经解析用以创建新 XMLDocument 对象的 XML 文本。 
+	 
+	 </apiDesc></apiParam></apiConstructorDef><apiDesc>
+	 创建新的 XMLDocument 对象。调用 XMLDocument 类的任何方法之前，必须使用该构造函数创建一个 XMLDocument 对象。
+	 <p><b>注意：</b>使用 <codeph>createElement()</codeph> 和 <codeph>createTextNode()</codeph> 方法可以将元素和文本节点添加到 XML 文档树中。</p>
+	 
+	 </apiDesc></apiConstructorDetail><related-links><link href="flash.xml.xml#XMLDocument/createElement()"><linktext>XMLDocument.createElement()</linktext></link><link href="flash.xml.xml#XMLDocument/createTextNode()"><linktext>XMLDocument.createTextNode()</linktext></link></related-links></apiConstructor><apiOperation id="flash.xml:XMLDocument:createElement"><apiName>createElement</apiName><shortdesc>
+	 使用参数中指定的名称来创建新的 XMLNode 对象。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><maelexample>The following example creates three XML nodes using the <code>createElement()</code> method:
+	 <listing>
+	 // create an XML document
+	 var doc:XML = new XML();
+	 
+	 // create three XML nodes using createElement()
+	 var element1:XMLNode = doc.createElement("element1");
+	 var element2:XMLNode = doc.createElement("element2");
+	 var element3:XMLNode = doc.createElement("element3");
+	 
+	 // place the new nodes into the XML tree
+	 doc.appendChild(element1);
+	 element1.appendChild(element2);
+	 element1.appendChild(element3);
+	 
+	 trace(doc);
+	 // output: &lt;element1>&lt;element2 />&lt;element3 />&lt;/element1>
+	 </listing>
+	 
+	 </maelexample></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>XMLNode 对象。
+	 
+	 </apiDesc><apiOperationClassifier>flash.xml:XMLNode</apiOperationClassifier></apiReturn><apiParam><apiItemName>name</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>要创建的 XMLDocument 元素的标签名称。
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 使用参数中指定的名称来创建新的 XMLNode 对象。新节点开始时没有父级、子级和同级。该方法返回一个对新创建的表示该元素的 XMLNode 对象的引用。此方法和 <codeph>XMLDocument.createTextNode()</codeph> 方法都是为 XMLDocument 对象创建节点的构造函数方法。
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.xml.xml#XMLDocument/createTextNode()"><linktext>XMLDocument.createTextNode()</linktext></link></related-links></apiOperation><apiOperation id="flash.xml:XMLDocument:createTextNode"><apiName>createTextNode</apiName><shortdesc>
+	 使用指定的文本创建一个新的 XML 文本节点。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><maelexample>The following example creates two XML text nodes using the <code>createTextNode()</code> method, and places them into existing XML nodes:
+	 <listing>
+	 // create an XML document
+	 var doc:XML = new XML();
+	 
+	 // create three XML nodes using createElement()
+	 var element1:XMLNode = doc.createElement("element1");
+	 var element2:XMLNode = doc.createElement("element2");
+	 var element3:XMLNode = doc.createElement("element3");
+	 
+	 // place the new nodes into the XML tree
+	 doc.appendChild(element1);
+	 element1.appendChild(element2);
+	 element1.appendChild(element3);
+	 
+	 // create two XML text nodes using createTextNode()
+	 var textNode1:XMLNode = doc.createTextNode("textNode1 String value");
+	 var textNode2:XMLNode = doc.createTextNode("textNode2 String value");
+	 
+	 // place the new nodes into the XML tree
+	 element2.appendChild(textNode1);
+	 element3.appendChild(textNode2);
+	 
+	 trace(doc);
+	 // output (with line breaks added between tags):
+	 // &lt;element1>
+	 //    &lt;element2>textNode1 String value&lt;/element2>
+	 //    &lt;element3>textNode2 String value&lt;/element3>
+	 // &lt;/element1>
+	 </listing>
+	 
+	 
+	 </maelexample></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>XMLNode 对象。
+	 
+	 </apiDesc><apiOperationClassifier>flash.xml:XMLNode</apiOperationClassifier></apiReturn><apiParam><apiItemName>text</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>用于创建新文本节点的文本。
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 使用指定的文本创建一个新的 XML 文本节点。该新节点开始时没有父级，且文本节点不能有子级或同级。此方法返回对表示新文本节点的 XMLDocument 对象的引用。此方法和 <codeph>XMLDocument.createElement()</codeph> 方法都是为 XMLDocument 对象创建节点的构造函数方法。
+	 
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.xml.xml#XMLDocument/createElement()"><linktext>XMLDocument.createElement()</linktext></link></related-links></apiOperation><apiOperation id="flash.xml:XMLDocument:parseXML"><apiName>parseXML</apiName><shortdesc>
+	 分析 value 参数中指定的 XML 文本，并使用结果 XML 树填充指定的 XMLDocument 对象。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><maelexample>The following example creates and parses an XML packet:
+	 <listing>
+	 var xml_str:String = "&lt;state name=\"California\">
+	 &lt;city>San Francisco&lt;/city>&lt;/state>"
+	 
+	 // defining the XML source within the XML constructor:
+	 var my1_xml:XML = new XML(xml_str);
+	 trace(my1_xml.firstChild.attributes.name); // output: California
+	 
+	 // defining the XML source using the XML.parseXML method:
+	 var my2_xml:XML = new XML();
+	 my2_xml.parseXML(xml_str);
+	 trace(my2_xml.firstChild.attributes.name); // output: California
+	 </listing>
+	 
+	 </maelexample></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>source</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc>要分析并传递到指定的 XMLDocument 对象的 XML 文本。
+	 
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+	 分析 <codeph>value</codeph> 参数中指定的 XML 文本，并使用结果 XML 树填充指定的 XMLDocument 对象。XMLDocument 对象中任何现有的树将被放弃。
+	 
+	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="flash.xml:XMLDocument:toString"><apiName>toString</apiName><shortdesc>
+	 返回 XML 对象的字符串表示形式。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiDesc>XML 对象的字符串表示形式。
+ 	 </apiDesc><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 返回 XML 对象的字符串表示形式。
+	 
+ 	 </apiDesc></apiOperationDetail></apiOperation><apiValue id="flash.xml:XMLDocument:docTypeDecl"><apiName>docTypeDecl</apiName><shortdesc>
+	 指定有关 XML 文档的 DOCTYPE 声明的信息。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><maelexample>The following example uses the <code>XML.docTypeDecl</code> property to set the <code>DOCTYPE</code> declaration for an XML object:
+	 <listing>
+	 <code><em>my_xml</em></code>.<code>docTypeDecl = "&lt;!DOCTYPE greeting SYSTEM \"hello.dtd\">";</code>
+	 </listing>
+	 </maelexample></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>null</apiData><apiValueClassifier>Object</apiValueClassifier></apiValueDef><apiDesc>
+	 指定有关 XML 文档的 <codeph>DOCTYPE</codeph> 声明的信息。在已经将 XML 文本分析为 XMLDocument 对象后，该 XMLDocument 对象的 <codeph>XMLDocument.docTypeDecl</codeph> 属性就会被设置为该 XML 文档的 <codeph>DOCTYPE</codeph> 声明的文本（例如，<codeph>&lt;!DOCTYPE</codeph> <codeph>greeting SYSTEM "hello.dtd"></codeph>）。使用 <codeph>DOCTYPE</codeph> 声明的字符串表示形式而不是 XMLNode 对象设置该属性。
+	 <p>旧的 ActionScript 的 XML 分析程序不是具有验证功能的分析程序。分析程序读取 <codeph>DOCTYPE</codeph> 声明，并将其存储在 <codeph>XMLDocument.docTypeDecl</codeph> 属性中，但不执行 DTD 验证。</p>
+	 <p>如果在分析操作过程中未遇到 <codeph>DOCTYPE</codeph> 声明，则 <codeph>XMLDocument.docTypeDecl</codeph> 属性被设置为 <codeph>null</codeph>。<codeph>XML.toString()</codeph> 方法将在 XML 声明存储在 <codeph>XML.xmlDecl</codeph> 中后，并在输出该 XML 对象中的任何其它文本之前，立即输出 <codeph>XML.docTypeDecl</codeph> 的内容。如果 <codeph>XMLDocument.docTypeDecl</codeph> 为空，则不输出 <codeph>DOCTYPE</codeph> 声明。</p>
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.xml:XMLDocument:idMap"><apiName>idMap</apiName><shortdesc>
+	 一个对象，其中包含分配了 id 属性的 XML 的节点。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><maelexample>Create a text file named "idMapTest.xml" containing the following text:
+	 
+	 <listing>&lt;?xml version="1.0"?> 
+	 &lt;doc xml:base="http://example.org/today/" xmlns:xlink="http://www.w3.org/1999/xlink"> 
+	   &lt;head> 
+	     &lt;title>Virtual Library&lt;/title> 
+	   &lt;/head> 
+	   &lt;body> 
+	     &lt;paragraph id="linkP1">See &lt;link xlink:type="simple" xlink:href="new.xml">what's 
+	       new&lt;/link>!&lt;/paragraph> 
+	     &lt;paragraph>Check out the hot picks of the day!&lt;/paragraph> 
+	     &lt;olist xml:base="/hotpicks/"> 
+	       &lt;item> 
+	         &lt;link id="foo" xlink:type="simple" xlink:href="pick1.xml">Hot Pick #1&lt;/link> 
+	       &lt;/item> 
+	       &lt;item> 
+	         &lt;link id="bar" xlink:type="simple" xlink:href="pick2.xml">Hot Pick #2&lt;/link> 
+	       &lt;/item> 
+	       &lt;item> 
+	         &lt;link xlink:type="simple" xlink:href="pick3.xml">Hot Pick #3&lt;/link> 
+	       &lt;/item> 
+	     &lt;/olist>
+	   &lt;/body> 
+	  &lt;/doc>
+	 </listing>
+	 
+	 <p>Then create a SWF file in the same directory as the XML file. Include the following
+	 script in the SWF:</p>
+	 
+	 <listing>
+	 var readXML = new XMLDocument();
+	 readXML.load("idMapTest.xml");
+	 readXML.onLoad = function(success) {
+	 	myXML = new XMLDocument();
+	 	myXML.parseXML(readXML);	
+	 	for (var x in myXML.idMap){
+	 		 trace('idMap.' + x + " = " + newline + myXML.idMap[x]);
+	 		 trace('____________' + newline);
+	 	}
+	 }
+	 </listing>
+	 
+	 <p>When you test the SWF file, the following output is generated:</p>
+	 
+	 <listing>
+	 idMap.bar = 
+	 &lt;link id="bar" xlink:type="simple" xlink:href="pick2.xml">Hot Pick #2&lt;/link>
+	 ____________
+	 
+	 idMap.foo = 
+	 &lt;link id="foo" xlink:type="simple" xlink:href="pick1.xml">Hot Pick #1&lt;/link>
+	 ____________
+	 
+	 idMap.linkP1 = 
+	 &lt;paragraph id="linkP1">See &lt;link xlink:type="simple" xlink:href="new.xml">what's 
+	 
+	       new&lt;/link>!&lt;/paragraph>
+	 ____________
+	 </listing>
+	 
+	 </maelexample></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>unknown</apiData><apiValueClassifier>Object</apiValueClassifier></apiValueDef><apiDesc>
+	 一个对象，其中包含分配了 <codeph>id</codeph> 属性的 XML 的节点。对象（每个对象包含一个节点）的属性 (property) 名称与 <codeph>id</codeph> 属性 (attribute) 的值匹配。
+	 
+	 <p>请考虑下面的 XMLDocument 对象：</p>
+	 
+	 <codeblock>
+	 &lt;employee id='41'>
+	 	&lt;name>
+	 		John Doe
+	 	&lt;/name>
+	 	&lt;address>
+	 		601 Townsend St.
+	 	&lt;/address>
+	 &lt;/employee>
+	 
+	 &lt;employee id='42'>
+	 	&lt;name>
+	 		Jane Q. Public
+	 	&lt;/name>
+	 &lt;/employee>
+	 &lt;department id="IT">
+	 	Information Technology
+	 &lt;/department>
+	 </codeblock>
+	 
+	 <p>在此示例中，该 XMLDocument 对象的 <codeph>idMap</codeph> 属性是具有以下三个属性的对象：<codeph>41</codeph>、<codeph>42</codeph> 和 <codeph>IT</codeph>。其中每个属性都是具有匹配的 <codeph>id</codeph> 值的 XMLNode。例如，<codeph>idMap</codeph> 对象的 <codeph>IT</codeph> 属性为下面的节点：</p> 
+	 
+	 <codeblock>
+	 &lt;department id="IT">
+	 	Information Technology
+	 &lt;/department>
+	 </codeblock>
+	 
+	 <p>您必须对此 XMLDocument 对象使用 <codeph>parseXML()</codeph> 方法才能对 <codeph>idMap</codeph> 属性进行实例化。</p>
+	 
+	 <p>如果多个 XMLNode 具有相同的 <codeph>id</codeph> 值，则 <codeph>idNode</codeph> 对象的匹配属性是分析的最后一个节点的属性。例如：</p>
+	 
+	 <codeblock>
+	 var x1:XML = new XMLDocument("&lt;a id='1'>&lt;b id='2' />&lt;c id='1' />&lt;/a>");
+	 x2 = new XMLDocument();
+	 x2.parseXML(x1);
+	 trace(x2.idMap['1']);
+	 </codeblock>
+	 
+	 这将输出 <codeph>&lt;c></codeph> 节点： 
+	 
+	 <codeblock>
+	 <codeph>&lt;c id='1' /></codeph>
+	 </codeblock>
+	 
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.xml:XMLDocument:ignoreWhite"><apiName>ignoreWhite</apiName><shortdesc>
+	 当设置为 true 时，在分析过程中将放弃仅包含空白的文本节点。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><maelexample>The following example loads an XML file with a text node that contains only white space; the <code>foyer</code> tag comprises fourteen space characters. To run this example, create a text file named <em>flooring.xml</em>, and copy the following tags into it:
+	 <listing>
+	 &lt;house>
+	    &lt;kitchen>   ceramic tile   &lt;/kitchen>
+	    &lt;bathroom>linoleum&lt;/bathroom>
+	    &lt;foyer>              &lt;/foyer>
+	 &lt;/house>
+	 </listing>
+	 <p>Create a new Flash document named <em>flooring.fla</em> and save it to the same directory as the XML file. Place the following code into the main Timeline:</p>
+	 <listing>
+	 // create a new XML object
+	 var flooring:XML = new XML();
+	 
+	 // set the ignoreWhite property to true (default value is false)
+	 flooring.ignoreWhite = true;
+	 
+	 // After loading is complete, trace the XML object
+	 flooring.onLoad = function(success:Boolean) {
+	   trace(flooring);
+	 }
+	 
+	 // load the XML into the flooring object
+	 flooring.load("flooring.xml");
+	 
+	 // output (line breaks added for clarity):
+	 &lt;house>
+	    &lt;kitchen>   ceramic tile   &lt;/kitchen>
+	    &lt;bathroom>linoleum&lt;/bathroom>
+	    &lt;foyer />
+	 &lt;/house>
+	 
+	 </listing>
+	 <p>If you then change the setting of <code>flooring.ignoreWhite</code> to <code>false</code>, or simply remove that line of code entirely, the fourteen space characters in the <code>foyer</code> tag will be preserved:</p>
+	 <listing>
+	 ...
+	 // set the ignoreWhite property to false (default value)
+	 flooring.ignoreWhite = false;
+	 ...
+	 // output (line breaks added for clarity):
+	 &lt;house>
+	    &lt;kitchen>   ceramic tile   &lt;/kitchen>
+	    &lt;bathroom>linoleum&lt;/bathroom>
+	    &lt;foyer>              &lt;/foyer>
+	 &lt;/house>
+	 
+	 </listing>
+	 <span class="flashonly"><p>The XML_blogTracker.fla and XML_languagePicker.fla files in the ActionScript samples folder also contain a code example. The following are typical paths to this folder:</p>
+	 <ul>
+	   <li>Windows: <i>boot drive</i>\Program Files\Macromedia\Flash 8\Samples and Tutorials\Samples\ActionScript </li>
+	   <li>Macintosh: <i>Macintosh HD</i>/Applications/Macromedia Flash 8/Samples and Tutorials/Samples/ActionScript </li>
+	   <li/>
+	 </ul>
+	 </span>
+	 </maelexample></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>false</apiData><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+	 当设置为 <codeph>true</codeph> 时，在分析过程中将放弃仅包含空白的文本节点。带有前导或尾随空白的文本节点不受影响。默认设置为 <codeph>false</codeph>。 
+	 <p>可以为单个 XMLDocument 对象设置 <codeph>ignoreWhite</codeph> 属性，如以下代码所示：</p>
+	 <codeblock>
+	 my_xml.ignoreWhite = true;
+	 </codeblock>
+	 
+	 </apiDesc></apiValueDetail></apiValue><apiValue id="flash.xml:XMLDocument:xmlDecl"><apiName>xmlDecl</apiName><shortdesc>
+	 一个字符串，指定有关文档的 XML 声明的信息。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><maelexample>The following example creates a text field called <code>my_txt</code> 
+	 that has the same dimensions as the Stage. The text field displays properties of the XML packet that loads into the SWF file. The doc type declaration displays in <code>my_txt</code>. Add the following ActionScript to your FLA or AS file:
+	 <listing>
+	 <code>var my_fmt:TextFormat = new TextFormat();</code>
+	 <code>my_fmt.font = "_typewriter";</code>
+	 <code>my_fmt.size = 12;</code>
+	 <code>my_fmt.leftMargin = 10;</code>
+	 
+	 <code>this.createTextField("my_txt", this.getNextHighestDepth(), 0, 0, Stage.width, Stage.height);</code>
+	 <code>my_txt.border = true;</code>
+	 <code>my_txt.multiline = true;</code>
+	 <code>my_txt.wordWrap = true;</code>
+	 <code>my_txt.setNewTextFormat(my_fmt);</code>
+	 
+	 <code>var my_xml:XML = new XML();</code>
+	 <code>my_xml.ignoreWhite = true;</code>
+	 <code>my_xml.onLoad = function(success:Boolean) {</code>
+	 <code>  var endTime:Number = getTimer();</code>
+	 <code>  var elapsedTime:Number = endTime-startTime;</code>
+	 <code>  if (success) {</code>
+	 <code>    my_txt.text = "xmlDecl:"+newline+my_xml.xmlDecl+newline+newline;</code>
+	 <code>    my_txt.text += "contentType:"+newline+my_xml.contentType+newline+newline;</code>
+	 <code>    my_txt.text += "docTypeDecl:"+newline+my_xml.docTypeDecl+newline+newline;</code>
+	 <code>    my_txt.text += "packet:"+newline+my_xml.toString()+newline+newline;</code>
+	 <code>  } else {</code>
+	 <code>    my_txt.text = "Unable to load remote XML."+newline+newline;</code>
+	 <code>  }</code>
+	 <code>  my_txt.text += "loaded in: "+elapsedTime+" ms.";</code>
+	 <code>};</code>
+	 <code>my_xml.load("http://www.helpexamples.com/crossdomain.xml");</code>
+	 <code>var startTime:Number = getTimer();</code>
+	 </listing>
+	 </maelexample></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>null</apiData><apiValueClassifier>Object</apiValueClassifier></apiValueDef><apiDesc>
+	 一个字符串，指定有关文档的 XML 声明的信息。将 XML 文档分析为 XMLDocument 对象之后，此属性被设置为文档的 XML 声明的文本。使用 XML 声明的字符串表示形式而不是 XMLNode 对象设置该属性。如果在分析操作过程中未遇到 XML 声明，则该属性被设置为 <codeph>null</codeph>。<codeph>XMLDocument.toString()</codeph> 方法在输出 XML 对象中的任何其它文本之前输出 <codeph>XML.xmlDecl</codeph> 属性的内容。如果 <codeph>XML.xmlDecl</codeph> 属性包含 <codeph>null</codeph>，则不输出 XML 声明。
+	 </apiDesc></apiValueDetail></apiValue></apiClassifier></apiPackage>

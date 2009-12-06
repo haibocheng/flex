@@ -32,7 +32,7 @@ package org.osmf.media
 	import org.osmf.metadata.Metadata;
 	import org.osmf.traits.IDisposable;
 	import org.osmf.traits.MediaTraitType;
-	import org.osmf.utils.MediaFrameworkStrings;
+	import org.osmf.utils.OSMFStrings;
 
 	/**
 	 * Dispatched when an IMediaTrait is added to the media element.
@@ -128,7 +128,7 @@ package org.osmf.media
 		{
 			if (type == null)
 			{
-				throw new ArgumentError(MediaFrameworkStrings.INVALID_PARAM);
+				throw new ArgumentError(OSMFStrings.getString(OSMFStrings.INVALID_PARAM));
 			}
 			
 			return _traits[type] != null;
@@ -147,7 +147,7 @@ package org.osmf.media
 		{
 			if (type == null)
 			{
-				throw new ArgumentError(MediaFrameworkStrings.INVALID_PARAM);
+				throw new ArgumentError(OSMFStrings.getString(OSMFStrings.INVALID_PARAM));
 			}
 
 			return _traits[type];
@@ -259,7 +259,7 @@ package org.osmf.media
 		{
 			if (type == null || instance == null || !(instance is type.traitInterface))
 			{
-				throw new ArgumentError(MediaFrameworkStrings.INVALID_PARAM);
+				throw new ArgumentError(OSMFStrings.getString(OSMFStrings.INVALID_PARAM));
 			}
 			
 			var result:IMediaTrait = _traits[type];
@@ -277,7 +277,7 @@ package org.osmf.media
 			}
 			else if (result != instance)
 			{
-				throw new ArgumentError(MediaFrameworkStrings.TRAIT_INSTANCE_ALREADY_ADDED);
+				throw new ArgumentError(OSMFStrings.getString(OSMFStrings.TRAIT_INSTANCE_ALREADY_ADDED));
 			}
 		}
 		
@@ -295,7 +295,7 @@ package org.osmf.media
 		{
 			if (type == null)
 			{
-				throw new ArgumentError(MediaFrameworkStrings.INVALID_PARAM);
+				throw new ArgumentError(OSMFStrings.getString(OSMFStrings.INVALID_PARAM));
 			}
 
 			var result:IMediaTrait = _traits[type];

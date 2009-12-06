@@ -1,4 +1,4 @@
-    ////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 //
 //  ADOBE SYSTEMS INCORPORATED
 //  Copyright 2008 Adobe Systems Incorporated
@@ -123,10 +123,10 @@ use namespace mx_internal;  //ListBase and List share selection properties that 
  *  Must be of type <code>IFlexDisplayObject</code>.
  *
  *  <p>If the class implements the <code>ILayoutManagerClient</code> interface,
- *  then the instance will be validated by the DragManager.</p>
+ *  then the instance is validated by the DragManager.</p>
  *
  *  <p>If the class implements the <code>IVisualElement</code> interface,
- *  then the instance's <code>owner</code> property will be set to the List
+ *  then the instance's <code>owner</code> property is set to the List
  *  that initiates the drag.</p>
  *
  *  <p>The AIR DragManager takes a snapshot of the instance, while
@@ -204,7 +204,7 @@ use namespace mx_internal;  //ListBase and List share selection properties that 
 
 /**
  *  The List control displays a vertical list of items.
- *  Its functionality is very similar to that of the SELECT
+ *  Its functionality is similar to that of the SELECT
  *  form element in HTML.
  *  If there are more items than can be displayed at once, it
  *  can display a vertical scroll bar so the user can access
@@ -213,6 +213,20 @@ use namespace mx_internal;  //ListBase and List share selection properties that 
  *  when the full width of the list items is unlikely to fit.
  *  The user can select one or more items from the list, depending
  *  on the value of the <code>allowMultipleSelection</code> property.
+ *
+ *  <p><b>Note: </b>The Spark list-based controls (the Spark ListBase class and its subclasses
+ *  such as ButtonBar, ComboBox, DropDownList, List, and TabBar) do not support the BasicLayout class
+ *  as the value of the <code>layout</code> property. 
+ *  Do not use BasicLayout with the Spark list-based controls.</p>
+ *
+ *  <p>The List control has the following default characteristics:</p>
+ *  <table class="innertable">
+ *     <tr><th>Characteristic</th><th>Description</th></tr>
+ *     <tr><td>Default size</td><td>112 pixels wide by 112 pixels high</td></tr>
+ *     <tr><td>Minimum size</td><td>112 pixels wide by 112 pixels high</td></tr>
+ *     <tr><td>Maximum size</td><td>10000 pixels wide and 10000 pixels high</td></tr>
+ *     <tr><td>Default skin class</td><td>spark.skins.spark.BorderContainerSkin</td></tr>
+ *  </table>
  *
  *  @mxml <p>The <code>&lt;s:List&gt;</code> tag inherits all of the tag 
  *  attributes of its superclass and adds the following tag attributes:</p>
@@ -235,6 +249,7 @@ use namespace mx_internal;  //ListBase and List share selection properties that 
  *    borderVisible="true"
  *    contentBackgroundColor="0xFFFFFF"
  *    dragIndicator="ListItemDragProxy"
+ *    dropIndicatorSkin="ListDropIndicator"
  *    rollOverColor="0xCEDBEF"
  *    selectionColor="0xA8C6EE"
  *    symbolColor="0x000000"
@@ -309,14 +324,14 @@ public class List extends ListBase implements IFocusManagerComponent
      *  Used to track whether a drag operation should be initiated when the user
      *  drags further than a certain threshold. 
      */
-    private var mouseDownPoint:Point;
+    mx_internal var mouseDownPoint:Point;
 
     /**
      *  @private
      *  The index of the element the mouse down event was received for. Used to
      *  track which is the "focus item" for a drag and drop operation.
      */
-    private var mouseDownIndex:int = -1;
+    mx_internal var mouseDownIndex:int = -1;
     
     /**
      *  @private
@@ -325,17 +340,17 @@ public class List extends ListBase implements IFocusManagerComponent
      *  intended to start a drag gesture instead. In that case we postpone
      *  comitting the selection until mouse up.
      */
-    private var pendingSelectionOnMouseUp:Boolean = false;
+    mx_internal var pendingSelectionOnMouseUp:Boolean = false;
 
     /**
      *  @private
      */
-    private var pendingSelectionShiftKey:Boolean;
+    mx_internal var pendingSelectionShiftKey:Boolean;
 
     /**
      *  @private
      */
-    private var pendingSelectionCtrlKey:Boolean;
+    mx_internal var pendingSelectionCtrlKey:Boolean;
     
     /**
      *  @private
@@ -408,7 +423,7 @@ public class List extends ListBase implements IFocusManagerComponent
      *  Use the <code>hasFocusableChildren</code> property with Flex applications.
      *  Do not use the <code>tabChildren</code> property.</p>
      *
-     *  <p>This is usually <code>false</code> because most components
+     *  <p>This property is usually <code>false</code> because most components
      *  either receive focus themselves or delegate focus to a single
      *  internal sub-component and appear as if the component has
      *  received focus. You may choose to set this to true on a  List 
@@ -498,7 +513,7 @@ public class List extends ListBase implements IFocusManagerComponent
     private var _allowMultipleSelection:Boolean = false;
     
     /**
-     *  If <code>true</code> multiple selections is enabled. 
+     *  If <code>true</code> multiple selection is enabled. 
      *  When switched at run time, the current selection
      *  is cleared. 
      *
@@ -697,18 +712,19 @@ public class List extends ListBase implements IFocusManagerComponent
      */
     private var _selectedIndices:Vector.<int>;
     
-	/**
+    /**
      *  @private
      */
-	private var _proposedSelectedIndices:Vector.<int> = new Vector.<int>(); 
+    private var _proposedSelectedIndices:Vector.<int> = new Vector.<int>(); 
     
-	/**
+    /**
      *  @private
      */
-	private var multipleSelectionChanged:Boolean; 
+    private var multipleSelectionChanged:Boolean; 
     
     [Bindable("change")]
-	/**
+    
+    /**
      *  A Vector of ints representing the indices of the currently selected  
      *  item or items. 
      *  If multiple selection is disabled by setting 
@@ -752,7 +768,7 @@ public class List extends ListBase implements IFocusManagerComponent
     [Bindable("change")]
 
     /**
-     *  An Vector of Objects representing the currently selected data items. 
+     *  A Vector of Objects representing the currently selected data items. 
      *  If multiple selection is disabled by setting <code>allowMultipleSelection</code>
      *  to <code>false</code>, and this property is set, the data item 
      *  corresponding to the first item in the Vector is selected.  
@@ -860,6 +876,7 @@ public class List extends ListBase implements IFocusManagerComponent
     override protected function partAdded(partName:String, instance:Object):void
     {
         super.partAdded(partName, instance);
+
         if (instance == dataGroup)
         {
             dataGroup.addEventListener(
@@ -867,8 +884,10 @@ public class List extends ListBase implements IFocusManagerComponent
             dataGroup.addEventListener(
                 RendererExistenceEvent.RENDERER_REMOVE, dataGroup_rendererRemoveHandler);
         }
-        if (instance == scroller)
+        else if (instance == scroller)
+        {
             scroller.hasFocusableChildren = hasFocusableChildren;
+        }
     }
 
     /**
@@ -883,7 +902,7 @@ public class List extends ListBase implements IFocusManagerComponent
             dataGroup.removeEventListener(
                 RendererExistenceEvent.RENDERER_REMOVE, dataGroup_rendererRemoveHandler);
         }
-        
+
         super.partRemoved(partName, instance);
     }
     
@@ -919,6 +938,19 @@ public class List extends ListBase implements IFocusManagerComponent
         var oldSelectedIndex:Number = _selectedIndex;
         var oldCaretIndex:Number = _caretIndex;  
         
+        // Consistent with MX, all indices after the first invalid index 
+        // are ignored.
+        var count:int = _proposedSelectedIndices.length;
+        for (var i:int = 0; i < count; i++)
+        {
+            if (_proposedSelectedIndices[i] < 0 ||
+                _proposedSelectedIndices[i] >= dataProvider.length)
+            {
+                _proposedSelectedIndices.splice(i, count - i);
+                break;
+            }
+        }
+       
         // Ensure that multiple selection is allowed and that proposed 
         // selected indices honors it. For example, in the single 
         // selection case, proposedSelectedIndices should only be a 
@@ -1129,11 +1161,21 @@ public class List extends ListBase implements IFocusManagerComponent
     }
     
     /**
-     *  @private
-     *  Taking into account which modifier keys were clicked, the new
-     *  selectedIndices interval is calculated. 
+     *  Helper method to calculate how the current selection changes when an item is clicked.
+     *
+     *  @param index The index of the item that has been clicked.
+     *  @param shiftKey True when the shift key is pressed.
+     *  @param ctrlKey True when the control key is pressed.
+     *  @return The updated item indices that the new selection will be committed to.
+     * 
+     *  @see #selectedIndices
+     *   
+     *  @langversion 3.0
+     *  @playerversion Flash 10
+     *  @playerversion AIR 1.5
+     *  @productversion Flex 4
      */
-    private function calculateSelectedIndicesInterval(index:int, shiftKey:Boolean, ctrlKey:Boolean):Vector.<int>
+    protected function calculateSelectedIndices(index:int, shiftKey:Boolean, ctrlKey:Boolean):Vector.<int>
     {
         var i:int; 
         var interval:Vector.<int> = new Vector.<int>();  
@@ -1432,7 +1474,7 @@ public class List extends ListBase implements IFocusManagerComponent
             }
             else
             {
-                selectedIndices = calculateSelectedIndicesInterval(newIndex, event.shiftKey, event.ctrlKey);
+                selectedIndices = calculateSelectedIndices(newIndex, event.shiftKey, event.ctrlKey);
             }
         }
         
@@ -1520,7 +1562,7 @@ public class List extends ListBase implements IFocusManagerComponent
         {
             if (allowMultipleSelection)
             {
-                selectedIndices = calculateSelectedIndicesInterval(mouseDownIndex, pendingSelectionShiftKey, pendingSelectionCtrlKey);
+                selectedIndices = calculateSelectedIndices(mouseDownIndex, pendingSelectionShiftKey, pendingSelectionCtrlKey);
             }
             else
             {
@@ -1577,7 +1619,7 @@ public class List extends ListBase implements IFocusManagerComponent
 
     /**
      *  Creates and instance of the dropIndicator class that is used to
-     *  display the visuals of the drop location during a drag and dorp
+     *  display the visuals of the drop location during a drag and drop
      *  operation. The instance is set in the layout's 
      *  <code>dropIndicator</code> property.
      * 
@@ -1616,7 +1658,7 @@ public class List extends ListBase implements IFocusManagerComponent
     }
     
     /**
-     *  Releases the dropIndicator instance that is currently set in the layout.
+     *  Releases the <code>dropIndicator</code> instance that is currently set in the layout.
      *
      *  @return Returns the dropIndicator that was removed. 
      * 
@@ -1947,7 +1989,7 @@ public class List extends ListBase implements IFocusManagerComponent
      *  @private
      *  Called when an item has been added to this component.
      */
-    protected function dataGroup_rendererAddHandler(event:RendererExistenceEvent):void
+    private function dataGroup_rendererAddHandler(event:RendererExistenceEvent):void
     {
         var index:int = event.index;
         var renderer:IVisualElement = event.renderer;
@@ -1962,7 +2004,7 @@ public class List extends ListBase implements IFocusManagerComponent
      *  @private
      *  Called when an item has been removed from this component.
      */
-    protected function dataGroup_rendererRemoveHandler(event:RendererExistenceEvent):void
+    private function dataGroup_rendererRemoveHandler(event:RendererExistenceEvent):void
     {
         var index:int = event.index;
         var renderer:Object = event.renderer;
@@ -1978,9 +2020,9 @@ public class List extends ListBase implements IFocusManagerComponent
      *  into view. 
      * 
      *  If the data item at the specified index is not completely 
-     *  visible, the List will scroll until it is brought into 
+     *  visible, the List scrolls until it is brought into 
      *  view. If the data item is already in view, no additional
-     *  scrolling will occur. 
+     *  scrolling occurs. 
      * 
      *  @param index The index of the data item.
      *  
@@ -2158,9 +2200,9 @@ public class List extends ListBase implements IFocusManagerComponent
     /**
      *  Tries to find the next item in the data provider that
      *  starts with the character in the <code>eventCode</code> parameter.
-     *  You can override this to do fancier typeahead lookups. The search
-     *  starts at the <code>selectedIndex</code> location; if it reaches
-     *  the end of the data provider it starts over from the beginning.
+     *  You can override this method to perform custom typeahead lookups. 
+     *  The search starts at the <code>selectedIndex</code> location.
+     *  If it reaches the end of the data provider, it starts over from the beginning.
      *
      *  @param eventCode The key that was pressed on the keyboard.
      *  @return <code>true</code> if a match was found.
@@ -2170,7 +2212,7 @@ public class List extends ListBase implements IFocusManagerComponent
      *  @playerversion AIR 1.5
      *  @productversion Flex 4
      */
-    protected function findKey(eventCode:int):Boolean
+    mx_internal function findKey(eventCode:int):Boolean
     {
         var tmpCode:int = eventCode;
         
@@ -2182,8 +2224,8 @@ public class List extends ListBase implements IFocusManagerComponent
     /**
      *  Finds an item in the list based on a String,
      *  and moves the selection to it. The search
-     *  starts at the <code>selectedIndex</code> location; if it reaches
-     *  the end of the data provider it starts over from the beginning.
+     *  starts at the <code>selectedIndex</code> location.
+     *  If it reaches the end of the data provider, it starts over from the beginning.
      *
      *  @param str The String to match.
      * 
@@ -2194,7 +2236,7 @@ public class List extends ListBase implements IFocusManagerComponent
      *  @playerversion AIR 1.5
      *  @productversion Flex 4
      */
-    public function findString(str:String):Boolean
+    mx_internal function findString(str:String):Boolean
     {
         if (!dataProvider || dataProvider.length == 0)
             return false;
@@ -2300,12 +2342,12 @@ public class List extends ListBase implements IFocusManagerComponent
     /**
      *  Adjusts the selection based on what keystroke or 
      *  keystroke combinations were encountered. The keystroke
-     *  is sent down to the layout and its up to the layout's
+     *  is sent down to the layout and it is up to the layout's
      *  getNavigationDestinationIndex() method to determine 
      *  what the index to navigate to based on the item that 
      *  is currently in focus. Once the index is determined, 
      *  single selection, caret item and if necessary, multiple 
-     *  selection are fixed up to reflect the newly selected
+     *  selections are updated to reflect the newly selected
      *  item.  
      *
      *  @param event The Keyboard Event encountered

@@ -60,7 +60,7 @@
 		Each of the main targets for the modules will call clean themselves before proceeding.
 	-->
 
-	<target name="main" depends="pre-build,modules,frameworks,frameworks-rsls,other.locales,webapps,post-build" description="Full build">
+	<target name="main" depends="pre-build,modules,frameworks,frameworks-rsls,other.locales,sample-themes,webapps,post-build" description="Full build">
 	    <tstamp>
             <format property="build.datetime" pattern="MM/dd/yyyy hh:mm:ss aa" />
         </tstamp>
@@ -264,6 +264,14 @@
 
 	<target name="other.locales" if="locales" description="Build resource SWCs for additional locales">
 		<ant dir="${basedir}/frameworks" target="other.locales"/>
+	</target>
+	
+	<!-- Will only execute if -Dthemes=anyvalue is set -->
+	<target name="sample-themes" description="Build the sample themes" if="themes">
+		<ant dir="${basedir}/samples/themes/arcade" target="main" />
+		<ant dir="${basedir}/samples/themes/cobalt" target="main" />
+		<ant dir="${basedir}/samples/themes/graphite" target="main" />
+		<ant dir="${basedir}/samples/themes/zen" target="main" />
 	</target>
 	
 	<target name="javadoc" description="Build javadoc">
@@ -553,6 +561,7 @@ zip -yrq ../out/flex_sdk_4 * -x /zip_pkg.sh
 				<include name="flex.swc"/>
 				<include name="spark.swc"/>
 				<include name="framework.swc"/>
+                <include name="flash-integration.swc"/>
                 <include name="osmf.swc"/>
 				<include name="player/9/playerglobal.swc"/>
                 <include name="player/10/playerglobal.swc"/>
@@ -646,6 +655,7 @@ zip -yrq ../out/flex_sdk_4 * -x /zip_pkg.sh
 				<include name="mxmlc.jar"/>
 				<include name="optimizer.jar"/>
 				<include name="rideau.jar"/>
+				<include name="swcdepends.jar"/>
 				<include name="swfdump.jar"/>
 				<include name="swfutils.jar"/>
 				<include name="fxgutils.jar"/>
@@ -684,6 +694,13 @@ zip -yrq ../out/flex_sdk_4 * -x /zip_pkg.sh
                 <exclude name="build.*"/>
                 <exclude name="swfobject/readme.txt"/>
                 <exclude name="metadata/**"/>
+			</fileset>
+		</copy>
+		
+		<!-- sample themes -->
+		<copy todir="${basedir}/temp/samples">
+			<fileset dir="${basedir}/samples">
+				<include name="themes/**" />
 			</fileset>
 		</copy>
 
@@ -835,6 +852,7 @@ zip -yrq ../out/flex_sdk_4 * -x /zip_pkg.sh
 				<include name="flex-messaging-common.jar"/>
 				<include name="mxmlc.jar"/>
 				<include name="optimizer.jar"/>
+				<include name="swcdepends.jar"/>
 				<include name="swfutils.jar"/>
 				<include name="fxgutils.jar"/>
 				<include name="saxon9.jar"/>
@@ -868,6 +886,13 @@ zip -yrq ../out/flex_sdk_4 * -x /zip_pkg.sh
 				<exclude name="metadata/**"/>
 			</fileset>
 
+		</copy>
+		
+		<!-- sample themes -->
+		<copy todir="${basedir}/temp/samples">
+			<fileset dir="${basedir}/samples">
+				<include name="themes/**" />
+			</fileset>
 		</copy>
 
 		<!-- get a small subset of AIR sample files -->

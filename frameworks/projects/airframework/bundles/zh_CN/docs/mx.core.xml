@@ -40,21 +40,21 @@
      
       <p>如果组件中的子组件实现了 IFocusManagerComponent 接口，但是您从不希望它获得焦点，作为一种优化，您可以先将 <codeph>focusEnabled</codeph> 设置为 <codeph>false</codeph>，然后再在子组件上调用 <codeph>addChild()</codeph>。</p>
      
-      <p><codeph/><codeph/><codeph/>这也意味着 <codeph>addChild()</codeph> 之后，您无法更改此值，也不能指望 FocusManager 进行监视。</p>
+      <p>这将使 FocusManager 忽略此组件，并且使它不会对组件进行监视以查看 <codeph>tabFocusEnabled</codeph>、<codeph>tabChildren</codeph> 和 <codeph>mouseFocusEnabled</codeph> 属性是否发生更改。这也意味着 <codeph>addChild()</codeph> 之后，您无法更改此值，也不能指望 FocusManager 进行监视。</p>
      
       <p>注意：这并不意味着您无法在 <codeph>setFocus()</codeph> 方法中以编程方式使此对象获得焦点；它仅通知 FocusManager 在 Tab 和鼠标搜索中忽略此 IFocusManagerComponent 组件。</p>
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.core:FlexHTMLLoader:hasFocusableChildren:get"><apiName>hasFocusableChildren</apiName><shortdesc>
-      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="4.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Boolean"/><apiDefaultValue>false
+      一个标志，指示子对象是否能够获得焦点。这与 Flash Player 使用的 tabChildren 属性类似。该值通常为 false，因为大多数组件既可以自己获得焦点，也可以委托单个内部子组件获得焦点（但显示为该组件获得了焦点）。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="4.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Boolean"/><apiDefaultValue>false
       
       </apiDefaultValue></apiValueDef><apiDesc>
-      
+      一个标志，指示子对象是否能够获得焦点
      
-      <p><codeph/></p>
+      <p>这与 Flash Player 使用的 <codeph>tabChildren</codeph> 属性类似。</p>
      
-      <p><codeph/><codeph/><codeph/></p>
+      <p>该值通常为 <codeph>false</codeph>，因为大多数组件既可以自己获得焦点，也可以委托单个内部子组件获得焦点（但显示为该组件获得了焦点）。例如，TextInput 包含一个可成为焦点的 RichEditableText 子控件，但实际上当 RichEditableText 子组件获得焦点时，却显示为 TextInput 获得了焦点。TextInput 将 <codeph>hasFocusableChildren</codeph> 设置为 <codeph>false</codeph>，因为获得焦点的组件为 TextInput。其内部结构是一个抽象概念。</p>
      
-      <p><codeph/></p>
+      <p>通常只有像 TabNavigator 和 Accordion 这样的导航器组件将此标志设置为 <codeph>true</codeph>，因为它们在按 Tab 键时获得了焦点，但焦点会在进一步按 Tab 键时转移到子容器的组件中。</p>
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.core:FlexHTMLLoader:mouseFocusEnabled:get"><apiName>mouseFocusEnabled</apiName><shortdesc>
       单击组件时，组件是否可以获得焦点。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Boolean"/><apiDefaultValue>true
@@ -63,14 +63,14 @@
       单击组件时，组件是否可以获得焦点。如果值为 <codeph>false</codeph>，则焦点将转换到已将 <codeph>mouseFocusEnable</codeph> 设置为 <codeph>true</codeph> 的第一个父项。
      
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.core:FlexHTMLLoader:tabFocusEnabled:get"><apiName>tabFocusEnabled</apiName><shortdesc>
-      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="4.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Boolean"/><apiDefaultValue>true
+      一个标志，指示子对象是否能够获得焦点。这与 Flash Player 使用的 tabEnabled 属性类似。对于处理键盘输入的组件该标志通常为 true，但是控件栏中的一些组件将其设置为 false，因为它们不能像编辑器一样从另外的组件窃取焦点。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="4.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Boolean"/><apiDefaultValue>true
       
       </apiDefaultValue></apiValueDef><apiDesc>
-      
+      一个标志，指示子对象是否能够获得焦点
      
-      <p><codeph/></p>
+      <p>这与 Flash Player 使用的 <codeph>tabEnabled</codeph> 属性类似。</p>
      
-      <p><codeph/><codeph/>
+      <p>对于处理键盘输入的组件该标志通常为 <codeph>true</codeph>，但是控件栏中的一些组件将其设置为 <codeph>false</codeph>，因为它们不能像编辑器一样从另外的组件窃取焦点。
       </p>
      
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.core:Window"><apiName>Window</apiName><shortdesc>
@@ -486,7 +486,7 @@
       创建基础 NativeWindow 并将其打开。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>openWindowActive</apiItemName><apiType value="Boolean"/><apiData>true</apiData><apiDesc>指定打开的 Window 是否已激活（即它是否具有焦点）。默认值为 <codeph>true</codeph>。
       
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      创建基础 NativeWindow 并将其打开。
+      创建基础 NativeWindow 并将其打开。关闭后，Window 对象仍为一个有效的引用，但是不允许访问大多数的属性和方法。关闭的窗口无法重新打开。
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.core:Window:orderInBackOf"><apiName>orderInBackOf</apiName><shortdesc>
       将窗口排序到另一个窗口的正后方。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>如果窗口成功排序到另一个窗口的后方，则为 <codeph>true</codeph>；如果窗口不可见或处于最小化状态，则为 <codeph>false</codeph>。

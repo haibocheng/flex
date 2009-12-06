@@ -6,7 +6,7 @@
   </apiDesc></apiClassifierDetail><apiConstructor id="mx.logging:LogEvent:LogEvent"><apiName>LogEvent</apiName><shortdesc>
       Constructeur.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>message</apiItemName><apiType value="String"/><apiData/><apiDesc>Chaîne contenant les données de journal.
 	 
-      </apiDesc></apiParam><apiParam><apiItemName>level</apiItemName><apiType value="int"/><apiData>0</apiData><apiDesc>Niveau de cet événement consigné. Valeurs valides :
+      </apiDesc></apiParam><apiParam><apiItemName>level</apiItemName><apiType value="int"/><apiData>0</apiData><apiDesc>Niveau de cet événement consigné. Les valeurs possibles sont les suivantes :
       <ul>
         <li><codeph>LogEventLevel.FATAL</codeph> désigne les événements dangereux qui provoquent au final un échec de l’application.</li>
      
@@ -38,7 +38,7 @@
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.logging:LogEvent:level"><apiName>level</apiName><shortdesc>
       Permet d’accéder au niveau de cet événement consigné.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiType value="int"/></apiValueDef><apiDesc>
-      Permet d’accéder au niveau de cet événement consigné. Valeurs valides :
+      Permet d’accéder au niveau de cet événement consigné. Les valeurs possibles sont les suivantes :
         <ul>
           <li><codeph>LogEventLogEventLevel.INFO</codeph> désigne les messages d’information indiquant la progression générale de l’application.</li>
      
@@ -189,7 +189,7 @@
       
       </example></apiValueDetail></apiValue><apiValue id="mx.logging:ILoggingTarget:mx.logging:ILoggingTarget:level:get"><apiName>level</apiName><shortdesc>
       Permet d’accéder au niveau actuel de cette cible.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="int"/></apiValueDef><apiDesc>
-      Permet d’accéder au niveau actuel de cette cible. Valeurs valides :
+      Permet d’accéder au niveau actuel de cette cible. Les valeurs possibles sont les suivantes :
       <ul>
         <li><codeph>LogEventLevel.FATAL</codeph> désigne les événements dangereux qui provoquent au final un échec de l’application.</li>
      
@@ -293,7 +293,7 @@
       </pre>
       
       </example></apiOperationDetail></apiOperation><apiOperation id="mx.logging:ILogger:mx.logging:ILogger:log"><apiName>log</apiName><shortdesc>
-      Consigne les données spécifiées au niveau indiqué.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>level</apiItemName><apiType value="int"/><apiDesc>Niveau auquel ces informations doivent être consignées. Valeurs valides :
+      Consigne les données spécifiées au niveau indiqué.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>level</apiItemName><apiType value="int"/><apiDesc>Niveau auquel ces informations doivent être consignées. Valeurs possibles :
       <ul>
         <li><codeph>LogEventLevel.FATAL</codeph> désigne les événements dangereux qui provoquent au final un échec de l’application.</li>
      
@@ -408,7 +408,7 @@
       </apiDesc><apiOperationClassifier>mx.logging:ILogger</apiOperationClassifier></apiReturn><apiParam><apiItemName>category</apiItemName><apiType value="String"/><apiDesc>Catégorie du journal à retourner.
      
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-      Retourne le journal associé à la catégorie spécifiée. Si la catégorie indiquée n’existe pas, une nouvelle occurrence du journal est retournée et associée à cette catégorie. Les noms des catégories doivent être composés d’au moins un caractère, mais ils ne doivent contenir ni espace, ni les caractères suivants : []~$^&amp;\/(){}&lt;>+=`!#%?,:;’"@ Cette méthode renvoie une erreur <codeph>InvalidCategoryError</codeph> si la syntaxe de la catégorie spécifiée n’est pas correcte.
+      Retourne le journal associé à la catégorie spécifiée. Si la catégorie indiquée n’existe pas, une nouvelle occurrence du journal est retournée et associée à cette catégorie. Les noms des catégories doivent être composés d’au moins un caractère, mais ils ne peuvent contenir aucun espace, ni aucun des caractères suivants : []~$^&amp;\/(){}&lt;>+=`!#%?,:;’"@ Cette méthode renvoie une erreur <codeph>InvalidCategoryError</codeph> si la syntaxe de la catégorie spécifiée n’est pas correcte.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.logging:Log:hasIllegalCharacters"><apiName>hasIllegalCharacters</apiName><shortdesc>
       Cette méthode vérifie que la valeur de chaîne spécifiée ne contient pas de caractère non autorisé.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiDesc><codeph>true</codeph> si au moins un caractère non autorisé est détecté ; <codeph>false</codeph> dans le cas contraire.
@@ -513,7 +513,7 @@
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.logging:LogLogger:log"><apiName>log</apiName><shortdesc>
 	  
-      Consigne les données spécifiées au niveau indiqué.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>level</apiItemName><apiType value="int"/><apiDesc>Niveau auquel ces informations doivent être consignées. Valeurs valides :
+      Consigne les données spécifiées au niveau indiqué.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>level</apiItemName><apiType value="int"/><apiDesc>Niveau auquel ces informations doivent être consignées. Valeurs possibles :
       <ul>
         <li><codeph>LogEventLevel.FATAL</codeph> désigne les événements dangereux qui provoquent au final un échec de l’application.</li>
      

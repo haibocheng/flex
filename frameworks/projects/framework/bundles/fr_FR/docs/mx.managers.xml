@@ -77,19 +77,19 @@
 	 
 	  <p>Pour optimiser votre application, si un composant enfant de votre composant implémente l’interface IFocusManagerComponent et que vous ne souhaitez jamais qu’il reçoive le focus, définissez <codeph>focusEnabled</codeph> sur <codeph>false</codeph> avant d’appeler la méthode <codeph>addChild()</codeph> sur le composant enfant.</p>
 	 
-	  <p><codeph/><codeph/><codeph/> Cela implique également que vous ne pouvez pas changer cette valeur après l’appel de <codeph>addChild()</codeph> et espérer que le FocusManager s’en aperçoive.</p>
+	  <p>Ainsi, la classe FocusManager ignorera ce composant et n’y surveillera pas le changement des propriétés <codeph>tabFocusEnabled</codeph>, <codeph>tabChildren</codeph> et <codeph>mouseFocusEnabled</codeph>. Cela implique également que vous ne pouvez pas changer cette valeur après l’appel de <codeph>addChild()</codeph> et espérer que le FocusManager s’en aperçoive.</p>
 	 
 	  <p>Remarque : cela ne signifie pas que vous ne pouvez pas attribuer le focus à cet objet par programme dans votre méthode <codeph>setFocus()</codeph>, mais simplement que le FocusManager ignore ce composant IFocusManagerComponent dans ses recherches d’actions de souris et de tabulation.</p>
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:IFocusManagerComponent:mx.managers:IFocusManagerComponent:hasFocusableChildren:get"><apiName>hasFocusableChildren</apiName><shortdesc>
-	   </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="4.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Boolean"/></apiValueDef><apiDesc>
-	  
+	  Indicateur qui signale si les objets enfant peuvent recevoir le focus. Cette fonction est similaire à la propriété tabChildren de Flash Player. Elle possède généralement la valeur false, car la plupart des composants reçoivent le focus ou le délèguent à un seul sous-composant interne et apparaissent comme s’ils avaient reçu le focus. </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="4.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Boolean"/></apiValueDef><apiDesc>
+	  Indicateur qui signale si les objets enfant peuvent recevoir le focus 
 	 
-	  <p><codeph/></p>
+	  <p>Cette fonction est similaire à la propriété <codeph>tabChildren</codeph> utilisée par Flash Player. </p>
 	 
-	  <p><codeph/>  <codeph/><codeph/> </p>
+	  <p>Cette valeur est généralement <codeph>false</codeph>, car la plupart des composants reçoivent le focus eux-mêmes ou le délèguent à un sous-composant interne unique. Dans les deux cas, le composant apparaît comme ayant le focus. Par exemple, un TextInput contient un contrôle RichEditableText enfant pouvant recevoir le focus, mais si le sous-composant RichEditableText reçoit le focus, le composant TextInput s’affiche comme s’il avait le focus. TextInput définit <codeph>hasFocusableChildren</codeph> sur <codeph>false</codeph>, car TextInput est considéré comme le composant ayant le focus. Sa structure interne est une abstraction. </p>
      
-	  <p><codeph/></p>
+	  <p>Généralement, seuls les indicateurs des composants de navigateur tels que TabNavigator et Accordion sont définis sur <codeph>true</codeph>, car, bien qu’ils reçoivent le focus sur l’onglet, le focus est attribué aux composants des conteneurs enfant des onglets ultérieurs. </p>
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:IFocusManagerComponent:mx.managers:IFocusManagerComponent:mouseFocusEnabled:get"><apiName>mouseFocusEnabled</apiName><shortdesc>
 	  Indicateur qui signale si le composant peut recevoir le focus lorsqu’il est sélectionné avec la souris.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Boolean"/></apiValueDef><apiDesc>
@@ -97,11 +97,11 @@
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:IFocusManagerComponent:mx.managers:IFocusManagerComponent:tabFocusEnabled:get"><apiName>tabFocusEnabled</apiName><shortdesc>
 	  Indicateur qui spécifie s’il est possible de déplacer le focus avec la touche de tabulation.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Boolean"/></apiValueDef><apiDesc>
-	  Indicateur qui spécifie s’il est possible de déplacer le focus avec la touche de tabulation. Même si la valeur est <codeph>false</codeph>, vous pouvez recevoir le focus en sélectionnant avec la souris ou en appelant <codeph>setFocus()</codeph>. 
+	  Indicateur qui spécifie s’il est possible de déplacer le focus avec la touche de tabulation. Même si la valeur est <codeph>false</codeph>, vous pouvez recevoir le focus en sélectionnant avec la souris ou en appelant <codeph>setFocus()</codeph>. Cette propriété remplace InteractiveObject.tabEnabled qui doit être définie sur true dans Flex apps. 
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:IFocusManagerComponent:mx.managers:IFocusManagerComponent:tabIndex:get"><apiName>tabIndex</apiName><shortdesc>
-	  </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="int"/></apiValueDef><apiDesc>
-	  <codeph/> Si la valeur est -1, le composant reçoit le focus en fonction de l’ordre z.
+	  Si la valeur est tabFocusEnabled, l’ordre dans lequel le composant reçoit le focus.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="int"/></apiValueDef><apiDesc>
+	  Si la valeur est <codeph>tabFocusEnabled</codeph>, l’ordre dans lequel le composant reçoit le focus. Si la valeur est -1, le composant reçoit le focus en fonction de l’ordre z.
 	  
 	  </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.managers:BrowserManager"><apiName>BrowserManager</apiName><shortdesc>
   L’objet BrowserManager est un gestionnaire Singleton qui agit comme proxy entre le navigateur et l’application.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
@@ -181,7 +181,7 @@
  
   <p>L’objet ISystemManager fait également basculer le focus entre les fenêtres de niveau supérieur si plusieurs objets IFocusManagerContainer sont affichées et si les utilisateurs interagissent avec les composants au sein des objets IFocusManagerContainer.</p>
  
-  <p>Toute activité du clavier et de la souris qui n’est pas expressément interrompue est vue par l’objet ISystemManager, ce qui en fait l’endroit idéal pour gérer l’activité si besoin est.</p>
+  <p>Toute activité du clavier et de la souris qui n’est pas expressément traitée à un autre emplacement de l’application est vue par l’objet ISystemManager, ce qui en fait l’endroit idéal pour gérer l’activité, si besoin est.</p>
  
   <p>Si une application est chargée dans une autre application, un objet ISystemManager est tout de même créé, mais il ne gérera pas de « fenêtre d’application », selon les règles de sécurité et du domaine. En revanche, il deviendra le <codeph>contenu</codeph> du composant <codeph>Loader</codeph> qui l’a chargé et servira simplement de parent à la sous-application</p>
  
@@ -221,6 +221,10 @@
       </apiDesc></apiParam></apiOperationDef><apiDesc>
       Obtenez les limites de l’application chargée qui sont visibles pour l’utilisateur à l’écran.
      
+      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:ISystemManager:mx.managers:ISystemManager:invalidateParentSizeAndDisplayList"><apiName>invalidateParentSizeAndDisplayList</apiName><shortdesc>
+      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+      
+      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:ISystemManager:mx.managers:ISystemManager:isFontFaceEmbedded"><apiName>isFontFaceEmbedded</apiName><shortdesc>
       Retourne la valeur true si la police requise est imbriquée dans cette application ou a été enregistrée globalement à l’aide de la méthode Font.registerFont().</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Retourne la valeur <codeph>true</codeph> si la police requise est imbriquée dans cette application ou a été enregistrée globalement à l’aide de la méthode <codeph>Font.registerFont</codeph>.
       
@@ -383,7 +387,7 @@
       </apiDefaultValue></apiValueDef><apiDesc>
       Temps, en millisecondes, qu’un utilisateur peut prendre lorsqu’il déplace la souris entre les contrôles avant que Flex n’attende à nouveau la durée du contrôle <codeph>showDelay</codeph> pour afficher une info-bulle.
      
-      <p>Ce paramètre est utile si l’utilisateur se déplace rapidement d’un contrôle à un autre. Après l’affichage de la première info-bulle, Flex affiche les autres immédiatement à la suite et n’attend pas. Plus le paramètre du contrôle <codeph>scrubDelay</codeph> est court et plus l’utilisateur est susceptible d’attendre la durée spécifiée par le contrôle <codeph>showDelay</codeph> avant de voir la prochaine info-bulle. Cette propriété est bien adaptée au cas suivant : vous possédez une barre d’outils dotée de plusieurs boutons et l’utilisateur les regarde tour à tour brièvement pour voir une rapide description de leur fonctionnalité.</p>
+      <p>Ce paramètre est utile si l’utilisateur se déplace rapidement d’un contrôle à un autre. Après l’affichage de la première info-bulle, Flex affiche les autres immédiatement à la suite et n’attend pas. Plus le paramètre du contrôle <codeph>scrubDelay</codeph> est court et plus l’utilisateur est susceptible d’attendre la durée spécifiée par le contrôle <codeph>showDelay</codeph> avant de voir la prochaine info-bulle. Cette propriété est bien adaptée au cas suivant : vous possédez une barre d’outils dotée de plusieurs boutons et l’utilisateur les consulte tour à tour brièvement pour obtenir une rapide description de leur fonctionnalité.</p>
      
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:ToolTipManager:showDelay:get"><apiName>showDelay</apiName><shortdesc>
       Temps, en millisecondes, que Flex attend avant d’affiche la zone d’info-bulle une fois que l’utilisateur a déplacé la souris sur un composant doté d’une info-bulle.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiStatic/><apiValueAccess value="readwrite"/><apiType value="Number"/><apiDefaultValue>500
@@ -774,7 +778,7 @@
       
       Indicateur précisant si le composant avec focus doit faire l’objet d’une indication visuelle. Si la valeur est <codeph>true</codeph>, un composant qui reçoit le focus trace un indicateur visible pour signaler qu’il a le focus.
      
-      <p>Par défaut, cette valeur est <codeph>false</codeph> jusqu’à ce que l’utilisateur appuie sur la touche de tabulation ; elle est ensuite définie sur <codeph>true</codeph>.</p>
+      <p>Par défaut, cette valeur est <codeph>false</codeph> jusqu’à ce que l’utilisateur appuie sur la touche de tabulation ; elle est ensuite définie sur <codeph>true</codeph>.</p>
      
       <p>En général, il est préférable d’utiliser les méthodes <codeph>showFocus()</codeph> et <codeph>hideFocus()</codeph> pour modifier cette propriété, car elles mettent également à jour l’indicateur visuel signalant qu’un composant a le focus.</p>
       
@@ -871,6 +875,8 @@
       </apiDesc></apiParam><apiParam><apiItemName>modal</apiItemName><apiType value="Boolean"/><apiData>false</apiData><apiDesc>Si la valeur est <codeph>true</codeph>, la fenêtre est modale, ce qui signifie que l’utilisateur ne pourra pas interagir avec d’autres fenêtres contextuelles, tant que la fenêtre n’est pas retirée.
      
       </apiDesc></apiParam><apiParam><apiItemName>childList</apiItemName><apiType value="String"/><apiData>null</apiData><apiDesc>Liste d’enfants à laquelle ajouter la fenêtre contextuelle. Une des méthodes <codeph>PopUpManagerChildList.APPLICATION</codeph>, <codeph>PopUpManagerChildList.POPUP</codeph> ou <codeph>PopUpManagerChildList.PARENT</codeph> (par défaut).
+     
+      </apiDesc></apiParam><apiParam><apiItemName>moduleFactory</apiItemName><apiOperationClassifier>mx.core:IFlexModuleFactory</apiOperationClassifier><apiData>null</apiData><apiDesc>
      
       </apiDesc></apiParam></apiOperationDef><apiDesc>
       Fait apparaître une fenêtre de niveau supérieur. Il est conseillé d’appeler la méthode <codeph>removePopUp()</codeph> pour supprimer les fenêtres contextuelles créées avec la méthode <codeph>addPopUp()</codeph>. Si la classe implémente l’objet IFocusManagerContainer, la fenêtre aura son propre objet FocusManager de sorte que, si l’utilisateur fait appel à la touche de tabulation pour aller d’un contrôle à un autre, il accédera uniquement aux contrôles de la fenêtre.
@@ -995,7 +1001,7 @@
       Indicateur précisant si le composant avec focus doit faire l’objet d’une indication visuelle.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Boolean"/></apiValueDef><apiDesc>
       Indicateur précisant si le composant avec focus doit faire l’objet d’une indication visuelle. Si la valeur est <codeph>true</codeph>, un composant qui reçoit le focus trace un indicateur visible pour signaler qu’il a le focus.
      
-      <p>Par défaut, cette valeur est <codeph>false</codeph> jusqu’à ce que l’utilisateur appuie sur la touche de tabulation ; elle est ensuite définie sur <codeph>true</codeph>.</p>
+      <p>Par défaut, cette valeur est <codeph>false</codeph> jusqu’à ce que l’utilisateur appuie sur la touche de tabulation ; elle est ensuite définie sur <codeph>true</codeph>.</p>
      
       <p>En général, il est préférable d’utiliser les méthodes <codeph>showFocus()</codeph> et <codeph>hideFocus()</codeph> pour modifier cette propriété, car elles mettent également à jour l’indicateur visuel signalant qu’un composant a le focus.</p>
       
@@ -1019,7 +1025,7 @@
  
   <p>L’objet SystemManager fait également basculer le focus entre les fenêtres de niveau supérieur si plusieurs objets IFocusManagerContainer sont affichés et si les utilisateurs interagissent avec les composants au sein des objets IFocusManagerContainer.  </p>
  
-  <p>Toute activité du clavier et de la souris qui n’est pas expressément interrompue est vue par le gestionnaire SystemManager, ce qui en fait l’endroit idéal pour gérer l’activité si besoin est.</p>
+  <p>Toute activité du clavier et de la souris qui n’est pas expressément traitée à un autre emplacement de l’application est vue par l’objet SystemManager, ce qui en fait l’endroit idéal pour gérer l’activité, si besoin est.</p>
  
   <p>Si une application est chargée dans une autre application, un gestionnaire SystemManager sera tout de même créé, mais il ne gérera pas de fenêtre d’application, selon les règles de sécurité et du domaine. En revanche, il deviendra le <codeph>contenu</codeph> du composant <codeph>Loader</codeph> qui l’a chargé et servira simplement de parent à la sous-application</p>
  
@@ -1042,27 +1048,27 @@
   Distribué lorsque l’application a terminé son initialisation.
  
   </apiDesc></adobeApiEventDetail></adobeApiEvent><apiConstructor id="mx.managers:SystemManager:SystemManager"><apiName>SystemManager</apiName><shortdesc>
-	  Constructeur.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/></apiConstructorDef><apiDesc>
-	  Constructeur.
-	 
-	  <p>Ceci est le point de départ de toutes les applications Flex. Cette classe est définie pour être la classe racine d’un fichier SWF Flex. Flash Player instancie une occurrence de cette classe, ce qui entraîne l’appel de ce constructeur.</p>
+      Constructeur.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/></apiConstructorDef><apiDesc>
+      Constructeur.
+     
+      <p>Ceci est le point de départ de toutes les applications Flex. Cette classe est définie pour être la classe racine d’un fichier SWF Flex. Flash Player instancie une occurrence de cette classe, ce qui entraîne l’appel de ce constructeur.</p>
       
       </apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="mx.managers:SystemManager:allowDomain"><apiName>allowDomain</apiName><shortdesc>
-      </shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>domains</apiItemName><apiType value="restParam"/></apiParam></apiOperationDef><apiDesc>
-      
+      Appelle Security.allowDomain() pour le fichier SWF associé à cetle classe SystemManager, plus les fichiers SWF associés aux RSL préchargés par cette dernière. </shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>domains</apiItemName><apiType value="restParam"/></apiParam></apiOperationDef><apiDesc>
+      Appelle Security.allowDomain() pour le fichier SWF associé à cetle classe SystemManager, plus les fichiers SWF associés aux RSL préchargés par cette dernière. 
      
      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:allowInsecureDomain"><apiName>allowInsecureDomain</apiName><shortdesc>
-      </shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>domains</apiItemName><apiType value="restParam"/></apiParam></apiOperationDef><apiDesc>
-      
+      Appelle Security.allowInsecureDomain() pour le fichier SWF associé à cetle classe SystemManager, plus les fichiers SWF associés aux RSL préchargés par cette dernière. </shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>domains</apiItemName><apiType value="restParam"/></apiParam></apiOperationDef><apiDesc>
+      Appelle Security.allowInsecureDomain() pour le fichier SWF associé à cetle classe SystemManager, plus les fichiers SWF associés aux RSL préchargés par cette dernière. 
      
      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:create"><apiName>create</apiName><shortdesc>
       Méthode de fabrique qui demande une occurrence d’une définition connue au module.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Occurrence du module, ou valeur <codeph>null</codeph>.
       
       </apiDesc><apiType value="Object"/></apiReturn><apiParam><apiItemName>params</apiItemName><apiType value="restParam"/><apiDesc>Liste facultative d’arguments. Vous pouvez transmettre autant d’arguments que vous voulez. Ils sont ensuite stockés dans un tableau appelé <codeph>parameters</codeph>. 
-	 
+     
       </apiDesc></apiParam></apiOperationDef><apiDesc>
       Méthode de fabrique qui demande une occurrence d’une définition connue au module. Vous pouvez fournir un jeu facultatif de paramètres pour que les fabriques de construction changent ce qu’elles créent en fonction de la saisie. La transmission de la valeur null indique que la définition par défaut est créée, si possible. Cette méthode est remplacée dans la sous-classe autogénérée.
-	 
+     
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:deployMouseShields"><apiName>deployMouseShields</apiName><shortdesc>
       
       Déploie ou supprime les boucliers de souris.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>deploy</apiItemName><apiType value="Boolean"/><apiDesc>La valeur est <codeph>true</codeph> pour déployer les boucliers de souris et <codeph>false</codeph> pour les enlever.
@@ -1072,13 +1078,13 @@
       Déploie ou supprime les boucliers de souris. Les boucliers de souris bloquent l’entrée de la souris pour les applications non approuvées. Une des raisons pour lesquelles vous pouvez souhaiter bloquer l’entrée de la souris est que lorsque vous faites glisser la souris sur une application non approuvée, vous ne recevez normalement pas d’événements de déplacement de souris. Flash Player n’envoie pas d’événements à travers les limites de confiance/non approuvées pour des raisons de sécurité. En couvrant une application non approuvée avec un bouclier de souris (si vous êtes son parent), vous pouvez recevoir le message de déplacement de la souris et l’opération Glisser-déposer fonctionnera normalement. 
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:getDefinitionByName"><apiName>getDefinitionByName</apiName><shortdesc>
-	  
+      
 	  Convertit la chaîne donnée en classe ou fonction au niveau du package.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Classe représentée par le <codeph>nom</codeph>, ou valeur null.
 	  
 	  </apiDesc><apiType value="Object"/></apiReturn><apiParam><apiItemName>name</apiItemName><apiType value="String"/><apiDesc>Nom de classe, par exemple « mx.video.VideoManager ».
 	 
 	  </apiDesc></apiParam></apiOperationDef><apiDesc>
-	  
+      
 	  Convertit la chaîne donnée en classe ou fonction au niveau du package. Appelle la méthode <codeph>ApplicationDomain.getDefinition()</codeph> appropriée selon si un élément est chargé dans une autre application ou non.
 	 
 	  </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:getExplicitOrMeasuredHeight"><apiName>getExplicitOrMeasuredHeight</apiName><shortdesc>
@@ -1086,34 +1092,34 @@
       
       </apiDesc><apiType value="Number"/></apiReturn></apiOperationDef><apiDesc>
       Méthode pratique pour déterminer si la hauteur explicite ou mesurée doit être utilisée.
-	 
+     
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:getExplicitOrMeasuredWidth"><apiName>getExplicitOrMeasuredWidth</apiName><shortdesc>
       Méthode pratique pour déterminer si la largeur explicite ou mesurée doit être utilisée.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Nombre correspondant au paramètre <codeph>explicitWidth</codeph> s’il est défini, ou propriété <codeph>measuredWidth</codeph> dans le cas contraire.
       
       </apiDesc><apiType value="Number"/></apiReturn></apiOperationDef><apiDesc>
       Méthode pratique pour déterminer si la largeur explicite ou mesurée doit être utilisée.
-	 
+     
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:getSWFRoot"><apiName>getSWFRoot</apiName><shortdesc>
-	  Retourne l’objet DisplayObject racine du fichier SWF contenant le code de l’objet donné.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiDesc>Objet DisplayObject racine.
+      Retourne l’objet DisplayObject racine du fichier SWF contenant le code de l’objet donné.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiStatic/><apiReturn><apiDesc>Objet DisplayObject racine.
       
       </apiDesc><apiType value="flash.display:DisplayObject"/></apiReturn><apiParam><apiItemName>object</apiItemName><apiType value="Object"/><apiDesc>N’importe quel objet. 
-	 
-	  </apiDesc></apiParam></apiOperationDef><apiDesc>
-	  Retourne l’objet DisplayObject racine du fichier SWF contenant le code de l’objet donné.
-	 
-	  </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:getSandboxRoot"><apiName>getSandboxRoot</apiName><shortdesc>
-          Remonte dans la chaîne parent pour obtenir le gestionnaire système de niveau supérieur dans cet objet SecurityDomain.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Gestionnaire système racine dans cet objet SecurityDomain.
+     
+      </apiDesc></apiParam></apiOperationDef><apiDesc>
+      Retourne l’objet DisplayObject racine du fichier SWF contenant le code de l’objet donné.
+     
+      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:getSandboxRoot"><apiName>getSandboxRoot</apiName><shortdesc>
+      Remonte dans la chaîne parent pour obtenir le gestionnaire système de niveau supérieur dans cet objet SecurityDomain.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Gestionnaire système racine dans cet objet SecurityDomain.
       
       </apiDesc><apiType value="flash.display:DisplayObject"/></apiReturn></apiOperationDef><apiDesc>
-          Remonte dans la chaîne parent pour obtenir le gestionnaire système de niveau supérieur dans cet objet SecurityDomain.
-	 
-          </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:getTopLevelRoot"><apiName>getTopLevelRoot</apiName><shortdesc>
-          Remonte dans la chaîne parent pour obtenir le gestionnaire système de niveau supérieur.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Gestionnaire système racine.
+      Remonte dans la chaîne parent pour obtenir le gestionnaire système de niveau supérieur dans cet objet SecurityDomain.
+     
+      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:getTopLevelRoot"><apiName>getTopLevelRoot</apiName><shortdesc>
+      Remonte dans la chaîne parent pour obtenir le gestionnaire système de niveau supérieur.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Gestionnaire système racine.
       
       </apiDesc><apiType value="flash.display:DisplayObject"/></apiReturn></apiOperationDef><apiDesc>
-          Remonte dans la chaîne parent pour obtenir le gestionnaire système de niveau supérieur. Retourne la valeur <codeph>null</codeph> s’il ne figure pas sur la liste d’affichage ou si l’utilisateur n’y a pas accès.
-          
-          </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:getVisibleApplicationRect"><apiName>getVisibleApplicationRect</apiName><shortdesc>
+      Remonte dans la chaîne parent pour obtenir le gestionnaire système de niveau supérieur. Retourne la valeur <codeph>null</codeph> s’il ne figure pas sur la liste d’affichage ou si l’utilisateur n’y a pas accès.
+      
+      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:getVisibleApplicationRect"><apiName>getVisibleApplicationRect</apiName><shortdesc>
      
       Obtenez les limites de l’application chargée qui sont visibles pour l’utilisateur à l’écran.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>un <codeph>Rectangle</codeph> incluant la portion visible de cet objet. Le rectangle est exprimé en coordonnées globales.
       
@@ -1123,67 +1129,73 @@
      
       Obtenez les limites de l’application chargée qui sont visibles pour l’utilisateur à l’écran.
      
+      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:invalidateParentSizeAndDisplayList"><apiName>invalidateParentSizeAndDisplayList</apiName><shortdesc>
+      
+      
+      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="10"/><apiPlatform description="" name="AIR" version="1.5"/><apiTool name="Flex" version="4"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+      
+      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:isFontFaceEmbedded"><apiName>isFontFaceEmbedded</apiName><shortdesc>
-	  
+      
       Retourne la valeur true si la police requise est imbriquée dans cette application ou a été enregistrée globalement à l’aide de la méthode Font.registerFont().</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Retourne la valeur <codeph>true</codeph> si la police requise est imbriquée dans cette application ou a été enregistrée globalement à l’aide de la méthode <codeph>Font.registerFont</codeph>.
       
       </apiDesc><apiType value="Boolean"/></apiReturn><apiParam><apiItemName>textFormat</apiItemName><apiType value="flash.text:TextFormat"/><apiDesc>Classe TextFormat représentant les informations de mise en forme de caractères.
 	 
 	  </apiDesc></apiParam></apiOperationDef><apiDesc>
-	  
+      
       Retourne la valeur <codeph>true</codeph> si la police requise est imbriquée dans cette application ou a été enregistrée globalement à l’aide de la méthode <codeph>Font.registerFont</codeph>.
 	 
 	  </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:isTopLevel"><apiName>isTopLevel</apiName><shortdesc>
-	  
+      
 	  Retourne la valeur true si cet objet ISystemManager est responsable d’une fenêtre d’application et la valeur false si cette application a été chargée dans une autre application.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Retourne la valeur <codeph>true</codeph> si cet objet ISystemManager est responsable d’une fenêtre d’application.
 	  
 	  </apiDesc><apiType value="Boolean"/></apiReturn></apiOperationDef><apiDesc>
-	  
+      
 	  Retourne la valeur <codeph>true</codeph> si cet objet ISystemManager est responsable d’une fenêtre d’application et la valeur <codeph>false</codeph> si cette application a été chargée dans une autre application.
 	 
 	  </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:isTopLevelRoot"><apiName>isTopLevelRoot</apiName><shortdesc>
-	 
+     
       Teste si ce gestionnaire système est la racine de tous les gestionnaires système de niveau supérieur.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Retourne la valeur <codeph>true</codeph> si l’objet SystemManager est la racine de tous les gestionnaires système sur la liste d’affiche. Sinon, la valeur <codeph>false</codeph> est retournée.
       
       </apiDesc><apiType value="Boolean"/></apiReturn></apiOperationDef><apiDesc>
-	 
+     
       Teste si ce gestionnaire système est la racine de tous les gestionnaires système de niveau supérieur.
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:isTopLevelWindow"><apiName>isTopLevelWindow</apiName><shortdesc>
           Détermine si l’objet DisplayObject donné est la fenêtre de niveau supérieur.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Retourne la valeur <codeph>true</codeph> si l’objet DisplayObject donné est la fenêtre de niveau supérieur.
       
       </apiDesc><apiType value="Boolean"/></apiReturn><apiParam><apiItemName>object</apiItemName><apiType value="flash.display:DisplayObject"/><apiDesc>Objet DisplayObject à tester.
-	 
-	  </apiDesc></apiParam></apiOperationDef><apiDesc>
+     
+      </apiDesc></apiParam></apiOperationDef><apiDesc>
           Détermine si l’objet DisplayObject donné est la fenêtre de niveau supérieur.
-	 
-	  </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:move"><apiName>move</apiName><shortdesc>
-	  L’appel de la méthode move() n’a aucun effet, car elle est associée directement à la fenêtre d’application ou à l’objet Loader.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>x</apiItemName><apiType value="Number"/><apiDesc>Nouvelle coordonnée x.
-	 
-	  </apiDesc></apiParam><apiParam><apiItemName>y</apiItemName><apiType value="Number"/><apiDesc>Nouvelle coordonnée y.
+     
+      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:move"><apiName>move</apiName><shortdesc>
+      L’appel de la méthode move() n’a aucun effet, car elle est associée directement à la fenêtre d’application ou à l’objet Loader.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>x</apiItemName><apiType value="Number"/><apiDesc>Nouvelle coordonnée x.
+     
+      </apiDesc></apiParam><apiParam><apiItemName>y</apiItemName><apiType value="Number"/><apiDesc>Nouvelle coordonnée y.
       
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-	  L’appel de la méthode <codeph>move()</codeph> n’a aucun effet, car elle est associée directement à la fenêtre d’application ou à l’objet Loader.
-	 
-	  </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:setActualSize"><apiName>setActualSize</apiName><shortdesc>
-	  L’appel de la méthode setActualSize() n’a aucun effet si elle est associée directement à la fenêtre d’application et s’il s’agit de la fenêtre de niveau supérieur.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>newWidth</apiItemName><apiType value="Number"/><apiDesc>Nouvelle largeur.
-	 
-	  </apiDesc></apiParam><apiParam><apiItemName>newHeight</apiItemName><apiType value="Number"/><apiDesc>Nouvelle hauteur.
+      L’appel de la méthode <codeph>move()</codeph> n’a aucun effet, car elle est associée directement à la fenêtre d’application ou à l’objet Loader.
+     
+      </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.managers:SystemManager:setActualSize"><apiName>setActualSize</apiName><shortdesc>
+      L’appel de la méthode setActualSize() n’a aucun effet si elle est associée directement à la fenêtre d’application et s’il s’agit de la fenêtre de niveau supérieur.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>newWidth</apiItemName><apiType value="Number"/><apiDesc>Nouvelle largeur.
+     
+      </apiDesc></apiParam><apiParam><apiItemName>newHeight</apiItemName><apiType value="Number"/><apiDesc>Nouvelle hauteur.
       
       </apiDesc></apiParam></apiOperationDef><apiDesc>
-	  L’appel de la méthode <codeph>setActualSize()</codeph> n’a aucun effet si elle est associée directement à la fenêtre d’application et s’il s’agit de la fenêtre de niveau supérieur. Sinon, tente de se redimensionner en écrêtant les enfants si besoin est.
-	 
-	  </apiDesc></apiOperationDetail></apiOperation><apiValue id="mx.managers:SystemManager:application:get"><apiName>application</apiName><shortdesc>
-	  Application dont cet objet SystemManager est le parent.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>mx.core:IUIComponent</apiValueClassifier></apiValueDef><apiDesc>
-	  Application dont cet objet SystemManager est le parent. Les objets SystemManager créent une occurrence d’une application même s’ils sont chargés dans une autre application. Ainsi, cela peut ne pas correspondre à l’application mx.core.Application.application si le fichier SWF a été chargé dans une autre application.
-	  <p>Notez que cette propriété n’est pas tapée comme mx.core.Application, en raison des performances du temps de chargement, mais peut être contrainte dans l’application mx.core.Application.</p>
+      L’appel de la méthode <codeph>setActualSize()</codeph> n’a aucun effet si elle est associée directement à la fenêtre d’application et s’il s’agit de la fenêtre de niveau supérieur. Sinon, tente de se redimensionner en écrêtant les enfants si besoin est.
+     
+      </apiDesc></apiOperationDetail></apiOperation><apiValue id="mx.managers:SystemManager:application:get"><apiName>application</apiName><shortdesc>
+      Application dont cet objet SystemManager est le parent.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>mx.core:IUIComponent</apiValueClassifier></apiValueDef><apiDesc>
+      Application dont cet objet SystemManager est le parent. Les objets SystemManager créent une occurrence d’une application même s’ils sont chargés dans une autre application. Ainsi, cela peut ne pas correspondre à l’application mx.core.Application.application si le fichier SWF a été chargé dans une autre application.
+      <p>Notez que cette propriété n’est pas tapée comme mx.core.Application, en raison des performances du temps de chargement, mais peut être contrainte dans l’application mx.core.Application.</p>
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:childAllowsParent:get"><apiName>childAllowsParent</apiName><shortdesc>
      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Boolean"/></apiValueDef><apiDesc>
      </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:cursorChildren:get"><apiName>cursorChildren</apiName><shortdesc>
-	  
+      
 	  Liste des curseurs personnalisés qui sont les parents de cet objet ISystemManager.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>mx.core:IChildList</apiValueClassifier></apiValueDef><apiDesc>
-	  
+      
 	  Liste des curseurs personnalisés qui sont les parents de cet objet ISystemManager.
 	 
 	  <p>Un objet ISystemManager possède plusieurs types d’enfants, comme l’application, les fenêtres contextuelles, les fenêtres de niveau supérieur, les infos-bulles et les curseurs personnalisés. Vous pouvez accéder aux curseurs personnalisés via la propriété <codeph>cursorChildren</codeph>.</p>
@@ -1191,60 +1203,60 @@
 	  <p>L’objet IChildList comporte des méthodes comme <codeph>getChildAt()</codeph> et comme <codeph>numChildren</codeph>. Par exemple, <codeph>cursorChildren.numChildren</codeph> fournit le nombre de curseurs personnalisés (qui sera de 0 ou 1) et, si un curseur personnalisé existe, il est accessible par la méthode <codeph>cursorChildren.getChildAt(0)</codeph>.</p>
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:document:get"><apiName>document</apiName><shortdesc>
-	  
+      
 	  Référence à l’objet de document.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Object"/></apiValueDef><apiDesc>
-	  
+      
 	  Référence à l’objet de document. Un objet de document est un objet qui se trouve au sommet de la hiérarchie d’une application Flex, d’un composant MXML ou d’un composant AS.
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:embeddedFontList:get"><apiName>embeddedFontList</apiName><shortdesc>
-	  Table de polices imbriquées dans cette application.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Object"/></apiValueDef><apiDesc>
-	  Table de polices imbriquées dans cette application. L’objet est une table indexée par le nom de police.
+      Table de polices imbriquées dans cette application.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Object"/></apiValueDef><apiDesc>
+      Table de polices imbriquées dans cette application. L’objet est une table indexée par le nom de police.
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:explicitHeight:get"><apiName>explicitHeight</apiName><shortdesc>
-	  Largeur explicite de cet objet.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
-	  Largeur explicite de cet objet. Pour l’objet SystemManager, la valeur doit toujours est NaN, sauf si l’application a été chargée dans une autre application. Si l’application n’a pas été chargée dans une autre application, la définition de cette valeur n’a aucun effet.
+      Largeur explicite de cet objet.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
+      Largeur explicite de cet objet. Pour l’objet SystemManager, la valeur doit toujours est NaN, sauf si l’application a été chargée dans une autre application. Si l’application n’a pas été chargée dans une autre application, la définition de cette valeur n’a aucun effet.
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:explicitWidth:get"><apiName>explicitWidth</apiName><shortdesc>
-	  Largeur explicite de cet objet.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
-	  Largeur explicite de cet objet. Pour l’objet SystemManager, la valeur doit toujours est NaN, sauf si l’application a été chargée dans une autre application. Si l’application n’a pas été chargée dans une autre application, la définition de cette valeur n’a aucun effet.
+      Largeur explicite de cet objet.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
+      Largeur explicite de cet objet. Pour l’objet SystemManager, la valeur doit toujours est NaN, sauf si l’application a été chargée dans une autre application. Si l’application n’a pas été chargée dans une autre application, la définition de cette valeur n’a aucun effet.
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:focusPane:get"><apiName>focusPane</apiName><shortdesc conref="mx.core.UIComponent#focusPane">
       </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="flash.display:Sprite"/></apiValueDef><apiDesc conref="mx.core.UIComponent#focusPane">
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:height:get"><apiName>height</apiName><shortdesc>
-	  Hauteur de cet objet.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
-	  Hauteur de cet objet. Pour l’objet SystemManager, il doit toujours s’agir de la largeur de la scène, sauf si l’application a été chargée dans une autre application. Si l’application n’a pas été chargée dans une autre application, la définition de cette valeur n’a aucun effet.
+      Hauteur de cet objet.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
+      Hauteur de cet objet. Pour l’objet SystemManager, il doit toujours s’agir de la largeur de la scène, sauf si l’application a été chargée dans une autre application. Si l’application n’a pas été chargée dans une autre application, la définition de cette valeur n’a aucun effet.
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:isProxy:get"><apiName>isProxy</apiName><shortdesc>
-	  True si la classe SystemManager est un proxy et non une classe racine 
-	 </shortdesc><prolog/><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Boolean"/></apiValueDef><apiDesc>
-	  True si la classe SystemManager est un proxy et non une classe racine 
-	 </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:measuredHeight:get"><apiName>measuredHeight</apiName><shortdesc>
-	  L’objet measuredHeight correspond à la hauteur explicite ou mesurée dans la fenêtre mx.core.Application principale ou correspond à la hauteur de début du fichier SWF si la fenêtre principale n’a pas encore été créée ou n’existe pas.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
-	  L’objet measuredHeight correspond à la hauteur explicite ou mesurée dans la fenêtre mx.core.Application principale ou correspond à la hauteur de début du fichier SWF si la fenêtre principale n’a pas encore été créée ou n’existe pas.
+      True si la classe SystemManager est un proxy et non une classe racine 
+     </shortdesc><prolog/><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Boolean"/></apiValueDef><apiDesc>
+      True si la classe SystemManager est un proxy et non une classe racine 
+     </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:measuredHeight:get"><apiName>measuredHeight</apiName><shortdesc>
+      L’objet measuredHeight correspond à la hauteur explicite ou mesurée dans la fenêtre mx.core.Application principale ou correspond à la hauteur de début du fichier SWF si la fenêtre principale n’a pas encore été créée ou n’existe pas.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
+      L’objet measuredHeight correspond à la hauteur explicite ou mesurée dans la fenêtre mx.core.Application principale ou correspond à la hauteur de début du fichier SWF si la fenêtre principale n’a pas encore été créée ou n’existe pas.
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:measuredWidth:get"><apiName>measuredWidth</apiName><shortdesc>
-	  L’objet measuredWidth correspond à la largeur explicite ou mesurée dans la fenêtre mx.core.Application principale ou correspond à la largeur de début du fichier SWF si la fenêtre principale n’a pas encore été créée ou n’existe pas.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
-	  L’objet measuredWidth correspond à la largeur explicite ou mesurée dans la fenêtre mx.core.Application principale ou correspond à la largeur de début du fichier SWF si la fenêtre principale n’a pas encore été créée ou n’existe pas.
+      L’objet measuredWidth correspond à la largeur explicite ou mesurée dans la fenêtre mx.core.Application principale ou correspond à la largeur de début du fichier SWF si la fenêtre principale n’a pas encore été créée ou n’existe pas.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
+      L’objet measuredWidth correspond à la largeur explicite ou mesurée dans la fenêtre mx.core.Application principale ou correspond à la largeur de début du fichier SWF si la fenêtre principale n’a pas encore été créée ou n’existe pas.
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:numChildren:get"><apiName>numChildren</apiName><shortdesc>
-	  Nombre de fenêtres non flottantes.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="int"/></apiValueDef><apiDesc>
-	  Nombre de fenêtres non flottantes. Il s’agit de la fenêtre d’application principale plus toutes les autres fenêtres ajoutées à l’objet SystemManager qui ne sont pas des fenêtres contextuelles, des infos-bulles ou des curseurs.
+      Nombre de fenêtres non flottantes.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="int"/></apiValueDef><apiDesc>
+      Nombre de fenêtres non flottantes. Il s’agit de la fenêtre d’application principale plus toutes les autres fenêtres ajoutées à l’objet SystemManager qui ne sont pas des fenêtres contextuelles, des infos-bulles ou des curseurs.
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:numModalWindows:get"><apiName>numModalWindows</apiName><shortdesc>
       Nombre de fenêtres modales.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="int"/></apiValueDef><apiDesc>
       Nombre de fenêtres modales. Les fenêtres modales n’autorisent pas les clics dans une autre fenêtre qui sont susceptibles d’activer l’objet FocusManager dans cette fenêtre. L’objet PopUpManager modifie ce nombre en créant et supprimant les fenêtres modales.
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:parent:get"><apiName>parent</apiName><shortdesc>
-	 Remplacez la propriété parent pour gérer le cas où le parent se trouve dans un sandbox différent.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="flash.display:DisplayObjectContainer"/></apiValueDef><apiDesc>
-	 Remplacez la propriété parent pour gérer le cas où le parent se trouve dans un sandbox différent. Si le parent se trouve dans le même sandbox, il est retourné. Si le parent se trouve dans un sandbox différent, la valeur null est retournée.
-	 
+     Remplacez la propriété parent pour gérer le cas où le parent se trouve dans un sandbox différent.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="flash.display:DisplayObjectContainer"/></apiValueDef><apiDesc>
+     Remplacez la propriété parent pour gérer le cas où le parent se trouve dans un sandbox différent. Si le parent se trouve dans le même sandbox, il est retourné. Si le parent se trouve dans un sandbox différent, la valeur null est retournée.
+     
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:parentAllowsChild:get"><apiName>parentAllowsChild</apiName><shortdesc>
      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Boolean"/></apiValueDef><apiDesc>
      </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:popUpChildren:get"><apiName>popUpChildren</apiName><shortdesc>
-	  
+      
 	  Liste des fenêtres (contextuelles) topMost qui sont les parents de cet objet ISystemManager.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>mx.core:IChildList</apiValueClassifier></apiValueDef><apiDesc>
-	  
+      
 	  Liste des fenêtres (contextuelles) topMost qui sont les parents de cet objet ISystemManager.
 	 
 	  <p>Un objet ISystemManager possède plusieurs types d’enfants, comme l’application, les fenêtres contextuelles, les infos-bulles et les curseurs personnalisés. Vous pouvez accéder aux fenêtres de niveau supérieur via la propriété <codeph>popUpChildren</codeph>.</p>
@@ -1253,28 +1265,28 @@
 	 
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:preloadedRSLs:get"><apiName>preloadedRSLs</apiName><shortdesc>
-      </shortdesc><prolog/><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="flash.utils:Dictionary"/></apiValueDef><apiDesc>
-          
+      RSL chargés par cette interface IFlexModuleFactory avant le lancement de l’application. </shortdesc><prolog/><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="flash.utils:Dictionary"/></apiValueDef><apiDesc>
+      RSL chargés par cette classe SystemManager avant le lancement de l’application. Les RSL chargés par l’application ne sont pas inclus dans cette liste. Les informations sur les preloadedRSL sont stockées dans un dictionnaire. La clé est l’objet LoaderInfo du RSL. La valeur est l’url à partir de laquelle le RSL a été chargé. 
      </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:preloaderBackgroundAlpha:get"><apiName>preloaderBackgroundAlpha</apiName><shortdesc>
-	 Alpha d’arrière-plan utilisé par l’enfant du préchargeur.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
-	 Alpha d’arrière-plan utilisé par l’enfant du préchargeur.
+      Alpha d’arrière-plan utilisé par l’enfant du préchargeur.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Number"/></apiValueDef><apiDesc>
+      Alpha d’arrière-plan utilisé par l’enfant du préchargeur.
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:preloaderBackgroundColor:get"><apiName>preloaderBackgroundColor</apiName><shortdesc>
-	 Couleur d’arrière-plan utilisée par l’enfant du préchargeur.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="uint"/></apiValueDef><apiDesc>
-	 Couleur d’arrière-plan utilisée par l’enfant du préchargeur.
+      Couleur d’arrière-plan utilisée par l’enfant du préchargeur.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="uint"/></apiValueDef><apiDesc>
+      Couleur d’arrière-plan utilisée par l’enfant du préchargeur.
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:preloaderBackgroundImage:get"><apiName>preloaderBackgroundImage</apiName><shortdesc>
-	 Couleur d’arrière-plan utilisée par l’enfant du préchargeur.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Object"/></apiValueDef><apiDesc>
-	 Couleur d’arrière-plan utilisée par l’enfant du préchargeur.
+      Couleur d’arrière-plan utilisée par l’enfant du préchargeur.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Object"/></apiValueDef><apiDesc>
+      Couleur d’arrière-plan utilisée par l’enfant du préchargeur.
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:preloaderBackgroundSize:get"><apiName>preloaderBackgroundSize</apiName><shortdesc>
-	 Taille d’arrière-plan utilisée par l’enfant du préchargeur.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="String"/></apiValueDef><apiDesc>
-	 Taille d’arrière-plan utilisée par l’enfant du préchargeur.
+      Taille d’arrière-plan utilisée par l’enfant du préchargeur.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="String"/></apiValueDef><apiDesc>
+      Taille d’arrière-plan utilisée par l’enfant du préchargeur.
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:rawChildren:get"><apiName>rawChildren</apiName><shortdesc>
-	  
+      
 	  Liste de tous les enfants qui sont les parents de cet objet ISystemManager.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>mx.core:IChildList</apiValueClassifier></apiValueDef><apiDesc>
-	  
+      
 	  Liste de tous les enfants qui sont les parents de cet objet ISystemManager.
 	 
 	  <p>Un objet ISystemManager possède plusieurs types d’enfants, comme l’application, les fenêtres contextuelles, les infos-bulles et les curseurs personnalisés.</p>
@@ -1282,15 +1294,15 @@
 	  <p>L’objet IChildList comporte des méthodes comme <codeph>getChildAt()</codeph> et comme <codeph>numChildren</codeph>.</p>
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:screen:get"><apiName>screen</apiName><shortdesc>
-	  
+      
 	  Taille et position de la fenêtre d’application.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="flash.geom:Rectangle"/></apiValueDef><apiDesc>
-	  
+      
 	  Taille et position de la fenêtre d’application. L’objet Rectangle contient les propriétés <codeph>x</codeph>, <codeph>y</codeph>, <codeph>width</codeph> et <codeph>height</codeph>.
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:toolTipChildren:get"><apiName>toolTipChildren</apiName><shortdesc>
-	  
+      
 	  Liste des infos-bulles qui sont les parents de cet objet ISystemManager.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>mx.core:IChildList</apiValueClassifier></apiValueDef><apiDesc>
-	  
+      
 	  Liste des infos-bulles qui sont les parents de cet objet ISystemManager.
 	 
 	  <p>Un objet ISystemManager possède plusieurs types d’enfants, comme l’application, les fenêtres contextuelles, les fenêtres de niveau supérieur, les infos-bulles et les curseurs personnalisés.</p>
@@ -1298,12 +1310,12 @@
 	  <p>L’objet IChildList comporte des méthodes comme <codeph>getChildAt()</codeph> et comme <codeph>numChildren</codeph>. Par exemple, la méthode <codeph>toolTipChildren.numChildren</codeph> fournit le nombre d’infos-bulles (qui sera de 0 ou 1) et, si une info-bulle existe, il est accessible avec la méthode <codeph>toolTipChildren.getChildAt(0)</codeph>.</p>
 	  
 	  </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:topLevelSystemManager:get"><apiName>topLevelSystemManager</apiName><shortdesc>
-	  Retourne l’objet SystemManager responsable de la fenêtre d’application.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>mx.managers:ISystemManager</apiValueClassifier></apiValueDef><apiDesc>
-	  Retourne l’objet SystemManager responsable de la fenêtre d’application. Il s’agira du même objet SystemManager sauf si cette application a été chargée dans une autre application.
+      Retourne l’objet SystemManager responsable de la fenêtre d’application.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>mx.managers:ISystemManager</apiValueClassifier></apiValueDef><apiDesc>
+      Retourne l’objet SystemManager responsable de la fenêtre d’application. Il s’agira du même objet SystemManager sauf si cette application a été chargée dans une autre application.
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:SystemManager:width:get"><apiName>width</apiName><shortdesc>
-	  Largeur de cet objet.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
-	  Largeur de cet objet. Pour l’objet SystemManager, il doit toujours s’agir de la largeur de la scène, sauf si l’application a été chargée dans une autre application. Si l’application n’a pas été chargée dans une autre application, la définition de cette valeur n’aura aucun effet.
+      Largeur de cet objet.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiIsOverride/><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Number"/></apiValueDef><apiDesc>
+      Largeur de cet objet. Pour l’objet SystemManager, il doit toujours s’agir de la largeur de la scène, sauf si l’application a été chargée dans une autre application. Si l’application n’a pas été chargée dans une autre application, la définition de cette valeur n’aura aucun effet.
       
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.managers:LayoutManager"><apiName>LayoutManager</apiName><shortdesc>
   L’objet LayoutManager est le moteur qui se trouve derrière la mesure et la stratégie de mise en forme de Flex.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseInterface>mx.managers:ILayoutManager</apiBaseInterface><apiBaseClassifier>flash.events:EventDispatcher</apiBaseClassifier></apiClassifierDef><apiDesc>
@@ -1494,7 +1506,7 @@
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:ILayoutManagerClient:mx.managers:ILayoutManagerClient:nestLevel:get"><apiName>nestLevel</apiName><shortdesc>
       La valeur nestLevel du gestionnaire système de niveau supérieur est 1.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="int"/></apiValueDef><apiDesc>
-      La valeur nestLevel du gestionnaire système de niveau supérieur est 1. La valeur <codeph>nestLevel</codeph> de ses enfants immédiats (l’application de niveau supérieur et toutes les fenêtres contextuelles) est 2. La valeur <codeph>nestLevel</codeph> de leurs enfants est 3 et ainsi de suite. L’objet <codeph>nestLevel</codeph> permet de trier l’interface ILayoutManagerClients lors des phases de mesure et de mise en forme. Lors de la phase de validation, l’objet LayoutManager valide les propriétés sur les clients afin d’augmenter la valeur <codeph>nestLevel</codeph>, de sorte que les propriétés des enfants d’un objet sont déjà validées avant que Flex ne valide les propriétés sur l’objet lui-même. Lors de la phase de mesure, l’objet LayoutManager mesure les clients afin de réduire la valeur <codeph>nestLevel</codeph>, de sorte que les enfants d’un objet ont déjà été mesurés avant que Flex ne mesure l’objet lui-même. Lors de la phase de mise en forme, l’objet LayoutManager dispose les clients afin d’augmenter la valeur <codeph>nestLevel</codeph>, de sorte qu’un objet a une chance de définir la taille de ses enfants avant que les objets enfant ne soient invités à positionner et dimensionner leurs enfants.
+      La valeur nestLevel du gestionnaire système de niveau supérieur est 1. La valeur <codeph>nestLevel</codeph> de ses enfants immédiats (l’application de niveau supérieur et toutes les fenêtres contextuelles) est 2. La valeur <codeph>nestLevel</codeph> de leurs enfants est 3 et ainsi de suite. L’objet <codeph>nestLevel</codeph> permet de trier l’interface ILayoutManagerClients lors des phases de mesure et de mise en forme. Lors de la phase de validation, l’objet LayoutManager valide les propriétés sur les clients par ordre croissant de la valeur <codeph>nestLevel</codeph>, de sorte que les propriétés des enfants d’un objet sont validées avant que Flex ne valide les propriétés sur l’objet lui-même. Lors de la phase de mesure, l’objet LayoutManager mesure les clients par ordre décroissant de la valeur <codeph>nestLevel</codeph>, de sorte que les enfants d’un objet sont mesurés avant que Flex ne mesure l’objet lui-même. Lors de la phase de mise en forme, l’objet LayoutManager dispose les clients par ordre croissant de la valeur <codeph>nestLevel</codeph>, de sorte qu’un objet peut définir la taille de ses enfants avant que les objets enfant ne soient invités à positionner et dimensionner leurs enfants.
       
       </apiDesc></apiValueDetail></apiValue><apiValue id="mx.managers:ILayoutManagerClient:mx.managers:ILayoutManagerClient:processedDescriptors:get"><apiName>processedDescriptors</apiName><shortdesc conref="mx.core.UIComponent#processedDescriptors">
       </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="Boolean"/></apiValueDef><apiDesc conref="mx.core.UIComponent#processedDescriptors">
@@ -1511,7 +1523,17 @@
 	  Texte de l’info-bulle de ce composant.
 	  
 	  </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.managers:CursorManager"><apiName>CursorManager</apiName><shortdesc>
-  La classe CursorManager contrôle une liste de priorités des curseurs, dans laquelle le curseur qui a la propriété la plus élevée est actuellement visible.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion><styles><style inherit="no" name="busyCursor" owner="mx.managers:CursorManager" playerVersion="Flash9" type="Class">
+  La classe CursorManager contrôle une liste de priorités des curseurs, dans laquelle le curseur qui a la propriété la plus élevée est actuellement visible.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="Flex" version="3"/></apiVersion><styles><style inherit="no" name="busyCursorBackground" owner="mx.managers:CursorManager" playerVersion="Flash9" type="Class">
+<description>
+  La classe à utiliser comme enveloppe du curseur d’arrière-plan occupé. La valeur par défaut est le symbole « cursorStretch » dans le fichier Assets.swf.
+  
+  </description>
+
+<playerversion>AIR 1.1
+  </playerversion>
+	<prolog><asCustoms><langversion>3.0
+  </langversion><productversion>Flex 3
+ </productversion></asCustoms></prolog></style><style inherit="no" name="busyCursor" owner="mx.managers:CursorManager" playerVersion="Flash9" type="Class">
 <description>
   Habillage du curseur occupé
  

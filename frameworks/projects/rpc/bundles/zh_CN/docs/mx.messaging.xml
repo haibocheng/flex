@@ -273,6 +273,52 @@
       提供对使用此 ChannelSet 的一组 MessageAgent 的访问。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiType value="Array"/></apiValueDef><apiDesc>
       提供对使用此 ChannelSet 的一组 MessageAgent 的访问。
       
+      </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.messaging:MultiTopicProducer"><apiName>MultiTopicProducer</apiName><shortdesc>
+  MultiTopicProducer 将消息发送到具有零个或多个 subtopics 的目标。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>mx.messaging:AbstractProducer</apiBaseClassifier></apiClassifierDef><apiDesc>
+  MultiTopicProducer 将消息发送到具有零个或多个 subtopics 的目标。它与常规 Producer 类似，但它可以将消息定向到任何订阅大量 subtopics 之一的使用者。如果使用者是 MultiTopicConsumer，并且该使用者已订阅了生产者使用的 subtopics 列表中的多个 subtopic，则使用者将仅能收到消息一次。
+  <p>
+  MultiTopicProducer 将为其发送的每条消息分派 MessageAckEvent 或 MessageFaultEvent，具体取决于出站消息的发送和处理是否成功。
+  </p>
+  
+  </apiDesc></apiClassifierDetail><apiConstructor id="mx.messaging:MultiTopicProducer:MultiTopicProducer"><apiName>MultiTopicProducer</apiName><shortdesc>
+      构造函数。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/></apiConstructorDef><apiDesc>
+      构造函数。
+     
+      </apiDesc><example>
+      <codeblock rev="3.0">
+       function sendMessage():void
+       {
+           var producer:MultiTopicProducer = new MultiTopicProducer();
+           producer.destination = "NASDAQ";
+           var msg:AsyncMessage = new AsyncMessage();
+           msg.headers.operation = "UPDATE";
+           msg.body = {"SYMBOL":50.00};
+           // only send to subscribers to subtopic "SYMBOL" and "ALLSTOCKS"
+           msg.addSubtopic("SYMBOL");
+           msg.addSubtopic("ALLSTOCKS");
+           producer.send(msg);
+       }
+       </codeblock>
+      
+      </example></apiConstructorDetail></apiConstructor><apiOperation id="mx.messaging:MultiTopicProducer:addSubtopic"><apiName>addSubtopic</apiName><shortdesc>
+     将 subtopic 添加到此制造者发送的消息的当前 subtopics 列表中。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>subtopic</apiItemName><apiType value="String"/><apiDesc>要添加到由此 producer 发送的 subtopic 的当前列表的 subtopic。
+     
+      
+      </apiDesc></apiParam></apiOperationDef><apiDesc>
+     将 subtopic 添加到此制造者发送的消息的当前 subtopics 列表中。这是将此 subtopic 添加到 subtopics 属性的快捷方式。
+     
+     </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.messaging:MultiTopicProducer:removeSubtopic"><apiName>removeSubtopic</apiName><shortdesc>
+     将 subtopic 从 subtopics 属性中删除。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>subtopic</apiItemName><apiType value="String"/><apiDesc>要从 subtopics 属性删除的 subtopic。
+      
+      </apiDesc></apiParam></apiOperationDef><apiDesc>
+     将 subtopic 从 subtopics 属性中删除。如果列表中不包含该 subtopic，则将引发错误。
+     
+     </apiDesc></apiOperationDetail></apiOperation><apiValue id="mx.messaging:MultiTopicProducer:subtopics:get"><apiName>subtopics</apiName><shortdesc>
+      提供对发布消息时使用的 subtopics 列表的访问
+      
+      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="mx.collections:ArrayCollection"/></apiValueDef><apiDesc>
+      提供对发布消息时使用的 subtopics 列表的访问
+      
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.messaging:MultiTopicConsumer"><apiName>MultiTopicConsumer</apiName><shortdesc>
   与 Consumer 类似，MultiTopicConsumer 使用单个 clientId 订阅目标，并将消息传递到单个事件处理函数。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata><asCustoms><mxml><![CDATA[
   <p>
@@ -360,52 +406,6 @@
       <p>调用 <codeph>subscribe()</codeph> 方法之前，可以设置此属性，且不会产生任何副作用。MultiTopicConsumer 订阅其目标后，更改此值会产生以下副作用：更新 MultiTopicConsumer 的订阅以包含所有新的 subscriptions 并删除从 ArrayCollection 中删除的所有 subscriptions。</p>
      
       <p>远程目标必须了解选择器表达式的值。</p>
-      
-      </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.messaging:MultiTopicProducer"><apiName>MultiTopicProducer</apiName><shortdesc>
-  MultiTopicProducer 将消息发送到具有零个或多个 subtopics 的目标。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>mx.messaging:AbstractProducer</apiBaseClassifier></apiClassifierDef><apiDesc>
-  MultiTopicProducer 将消息发送到具有零个或多个 subtopics 的目标。它与常规 Producer 类似，但它可以将消息定向到任何订阅大量 subtopics 之一的使用者。如果使用者是 MultiTopicConsumer，并且该使用者已订阅了生产者使用的 subtopics 列表中的多个 subtopic，则使用者将仅能收到消息一次。
-  <p>
-  MultiTopicProducer 将为其发送的每条消息分派 MessageAckEvent 或 MessageFaultEvent，具体取决于出站消息的发送和处理是否成功。
-  </p>
-  
-  </apiDesc></apiClassifierDetail><apiConstructor id="mx.messaging:MultiTopicProducer:MultiTopicProducer"><apiName>MultiTopicProducer</apiName><shortdesc>
-      构造函数。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/></apiConstructorDef><apiDesc>
-      构造函数。
-     
-      </apiDesc><example>
-      <codeblock rev="3.0">
-       function sendMessage():void
-       {
-           var producer:MultiTopicProducer = new MultiTopicProducer();
-           producer.destination = "NASDAQ";
-           var msg:AsyncMessage = new AsyncMessage();
-           msg.headers.operation = "UPDATE";
-           msg.body = {"SYMBOL":50.00};
-           // only send to subscribers to subtopic "SYMBOL" and "ALLSTOCKS"
-           msg.addSubtopic("SYMBOL");
-           msg.addSubtopic("ALLSTOCKS");
-           producer.send(msg);
-       }
-       </codeblock>
-      
-      </example></apiConstructorDetail></apiConstructor><apiOperation id="mx.messaging:MultiTopicProducer:addSubtopic"><apiName>addSubtopic</apiName><shortdesc>
-     将 subtopic 添加到此制造者发送的消息的当前 subtopics 列表中。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>subtopic</apiItemName><apiType value="String"/><apiDesc>要添加到由此 producer 发送的 subtopic 的当前列表的 subtopic。
-     
-      
-      </apiDesc></apiParam></apiOperationDef><apiDesc>
-     将 subtopic 添加到此制造者发送的消息的当前 subtopics 列表中。这是将此 subtopic 添加到 subtopics 属性的快捷方式。
-     
-     </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.messaging:MultiTopicProducer:removeSubtopic"><apiName>removeSubtopic</apiName><shortdesc>
-     将 subtopic 从 subtopics 属性中删除。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>subtopic</apiItemName><apiType value="String"/><apiDesc>要从 subtopics 属性删除的 subtopic。
-      
-      </apiDesc></apiParam></apiOperationDef><apiDesc>
-     将 subtopic 从 subtopics 属性中删除。如果列表中不包含该 subtopic，则将引发错误。
-     
-     </apiDesc></apiOperationDetail></apiOperation><apiValue id="mx.messaging:MultiTopicProducer:subtopics:get"><apiName>subtopics</apiName><shortdesc>
-      提供对发布消息时使用的 subtopics 列表的访问
-      
-      </shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty isBindable="true"/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="readwrite"/><apiType value="mx.collections:ArrayCollection"/></apiValueDef><apiDesc>
-      提供对发布消息时使用的 subtopics 列表的访问
       
       </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="mx.messaging:Consumer"><apiName>Consumer</apiName><shortdesc>
   Consumer 订阅目标以接收消息。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata><asCustoms><mxml><![CDATA[
@@ -598,9 +598,9 @@
       从其远程目标注销 MessageAgent。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
       从其远程目标注销 MessageAgent。从目标中注销适用于使用在服务器配置中指定的同一 ChannelSet 连接的所有对象。例如，如果多个 DataService 组件通过 RTMP 通道进行连接，为它们其中之一调用 <codeph>logout()</codeph> 时，使用相同 ChannelSet 进行连接的所有其它客户端组件也会注销。
      
-      <p><b/> </p>
+      <p><b>注意：</b>Adobe 建议使用 mx.messaging.ChannelSet.logout() 方法而不是此方法。 </p>
      
-      </apiDesc></apiOperationDetail><related-links><link href="mx.messaging.xml#ChannelSet/logout()"><linktext/></link></related-links></apiOperation><apiOperation id="mx.messaging:MessageAgent:protected:reAuthorize"><apiName>reAuthorize</apiName><shortdesc>
+      </apiDesc></apiOperationDetail><related-links><link href="mx.messaging.xml#ChannelSet/logout()"><linktext>mx.messaging.ChannelSet.logout()</linktext></link></related-links></apiOperation><apiOperation id="mx.messaging:MessageAgent:protected:reAuthorize"><apiName>reAuthorize</apiName><shortdesc>
      子类将覆盖此函数来实现由特定于它们的服务器会话超时行为而导致的重新身份验证。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiOperationDetail><apiOperationDef><apiAccess value="protected"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>msg</apiItemName><apiOperationClassifier>mx.messaging.messages:IMessage</apiOperationClassifier><apiDesc>导致错误并应在用户断开连接/连接由此导致的身份重新验证后立即重新发送的消息。
      
       </apiDesc></apiParam></apiOperationDef><apiDesc>
@@ -821,7 +821,7 @@
   </apiDesc></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="mx.messaging:Channel_mx.messaging.events.ChannelEvent.CONNECT_channelConnect"><apiName>channelConnect</apiName><shortdesc>
   通道连接到其端点后分派。</shortdesc><prolog/><adobeApiEventDetail><adobeApiEventDef><apiEventType>mx.messaging.events.ChannelEvent.CONNECT</apiEventType><adobeApiEventClassifier>mx.messaging.events.ChannelEvent</adobeApiEventClassifier><apiGeneratedEvent/></adobeApiEventDef><apiDesc>
   通道连接到其端点后分派。
- <p/>
+ <p>无论何时通道试图连接到远程目标出现问题，通道及其子类都会发出 Channel.Connect.Failed 代码。在通道已经连接但从其基础 NetConnection 获取 Call.Failed 代码之后，AMFChannel 对象就会发出 Channel.Call.Failed 代码。</p>
  
   </apiDesc></adobeApiEventDetail></adobeApiEvent><apiConstructor id="mx.messaging:Channel:Channel"><apiName>Channel</apiName><shortdesc>
       构造连接到指定端点 URI 的通用 Channel 实例。</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/><apiPlatform description="" name="AIR" version="1.1"/><apiTool name="BlazeDS" version="4"/><apiTool name="LCDS" version="3"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>id</apiItemName><apiType value="String"/><apiData>null</apiData><apiDesc>此通道的 id。
@@ -839,7 +839,7 @@
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.messaging:Channel:applySettings"><apiName>applySettings</apiName><shortdesc>
       子类应覆盖此方法以应用单个通道可能需要的任何设置。</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>settings</apiItemName><apiType value="XML"/><apiDesc>services-config.xml 文件中适用于此通道的 XML 片段。
        </apiDesc></apiParam></apiOperationDef><apiDesc>
-      子类应覆盖此方法以应用单个通道可能需要的任何设置。确保调用 <codeph>super.applySettings()</codeph>，以便为该通道应用常见设置。
+      子类应覆盖此方法以应用单个通道可能需要的任何设置。确保调用 <codeph>super.applySettings()</codeph>，以便为该通道应用常见设置。此方法主要在 Channel 子类中使用。
      
       </apiDesc></apiOperationDetail></apiOperation><apiOperation id="mx.messaging:Channel:connect"><apiName>connect</apiName><shortdesc>
       将 ChannelSet 连接到 Channel。</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiFinal/><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>channelSet</apiItemName><apiOperationClassifier>mx.messaging:ChannelSet</apiOperationClassifier><apiDesc>要连接到 Channel 的 ChannelSet。

@@ -1,0 +1,429 @@
+<?xml version="1.0"?>
+<apiPackage id="air.update.events"><apiName>air.update.events</apiName><apiDetail/><apiClassifier id="air.update.events:StatusUpdateEvent"><apiName>StatusUpdateEvent</apiName><shortdesc>
+	Объект updater отправляет объект StatusUpdateEvent после успешной загрузки и интерпретации файла дескриптора обновления программой установки.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>air.update.events:UpdateEvent</apiBaseClassifier></apiClassifierDef><apiDesc>
+	Объект updater отправляет объект StatusUpdateEvent после успешной загрузки и интерпретации файла дескриптора обновления программой установки. 
+	
+	<p>По умолчанию обновление устанавливается, если свойство <codeph>available</codeph> объекта StatusUpdateEvent имеет значение <codeph>true</codeph>. Поведения по умолчанию можно избежать только при использовании класса ApplicationUpdater.</p>
+	
+	</apiDesc></apiClassifierDetail><related-links><link href="air.update.xml#ApplicationUpdater"><linktext>air.update.ApplicationUpdater</linktext></link><link href="air.update.xml#ApplicationUpdaterUI"><linktext>air.update.ApplicationUpdaterUI</linktext></link></related-links><adobeApiEvent id="air.update.events:StatusUpdateEvent:UPDATE_STATUS_updateStatus"><apiName>updateStatus</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events:StatusUpdateEvent:UPDATE_STATUS</apiEventType><adobeApiEventClassifier>air.update.events:StatusUpdateEvent</adobeApiEventClassifier><apiDefinedEvent/></adobeApiEventDef></adobeApiEventDetail></adobeApiEvent><apiConstructor id="air.update.events:StatusUpdateEvent:StatusUpdateEvent"><apiName>StatusUpdateEvent</apiName><shortdesc>
+		Функция конструктора.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>type</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc> Тип события. Прослушиватели событий могут получать эту информацию через унаследованное свойство <codeph>type</codeph>. Существует только один тип события ошибки: <codeph>ErrorEvent.ERROR</codeph>.
+		</apiDesc></apiParam><apiParam><apiItemName>bubbles</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>Определяет, находится ли объект Event в фазе пузыря. Прослушиватели событий могут получать эту информацию через унаследованное свойство <codeph>bubbles</codeph>.  
+		</apiDesc></apiParam><apiParam><apiItemName>cancelable</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>Определяет, можно ли отменить объект Event. Прослушиватели событий могут получать эту информацию через унаследованное свойство <codeph>cancelable</codeph>. 
+		</apiDesc></apiParam><apiParam><apiItemName>available</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>Текст, отображаемый в качестве сообщения об ошибке. Прослушиватели событий могут получать эту информацию через свойство <codeph>text</codeph>.
+		</apiDesc></apiParam><apiParam><apiItemName>version</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData/><apiDesc>Ссылочный номер, связываемый с конкретной ошибкой.
+		
+		</apiDesc></apiParam><apiParam><apiItemName>details</apiItemName><apiOperationClassifier>Array</apiOperationClassifier><apiData>null</apiData></apiParam></apiConstructorDef><apiDesc>
+		Функция конструктора. Не вызывайте эту функцию. Платформа обновления вызывает ее для создания объекта события.
+		
+		</apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="air.update.events:StatusUpdateEvent:clone"><apiName>clone</apiName><shortdesc>
+	 	 Создает копию объекта и задает значение каждого свойства, совпадающее с оригиналом.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiOperationClassifier>flash.events:Event</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 	 Создает копию объекта и задает значение каждого свойства, совпадающее с оригиналом.
+	 	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.update.events:StatusUpdateEvent:toString"><apiName>toString</apiName><shortdesc>
+	 	 Возвращает строку, содержащую все свойства объекта.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 	 Возвращает строку, содержащую все свойства объекта.
+	 	 </apiDesc></apiOperationDetail></apiOperation><apiValue id="air.update.events:StatusUpdateEvent:UPDATE_STATUS"><apiName>UPDATE_STATUS</apiName><shortdesc>
+		 Константа StatusUpdateEvent.UPDATE_STATUS определяет значение свойства type объекта события updateStatus.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>updateStatus</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 Константа <codeph>StatusUpdateEvent.UPDATE_STATUS</codeph> определяет значение свойства <codeph>type</codeph> объекта события <codeph>updateStatus</codeph>.
+		 
+		<p>Это событие имеет следующие свойства:</p>
+		
+		<adobetable class="innertable">
+		
+		    
+		
+		    
+		
+		    
+		
+		    
+		
+		<tgroup cols="2"><thead><row><entry>Свойство</entry><entry>Значение</entry></row></thead><tbody><row><entry><codeph>available</codeph></entry><entry>Имеет значение <codeph>true</codeph>, если в файле дескриптора обновления указана версия приложения, отличная от имеющейся версии; в противном случае – <codeph>false</codeph> (версия та же).</entry></row><row><entry><codeph>details</codeph></entry><entry>Массив, определяющий строку <codeph>details</codeph> для каждого поддерживаемого языка. Если локализованная версия описания отсутствует, то первый элемент массива является пустой строкой (<codeph>""</codeph>), а второй элемент – строкой details. Если имеются локализованные версии описаний, каждый элемент массива представляет собой отдельный массив из двух элементов. Первым элементом является региональный код, а вторым – описание. Например, следующий массив содержит подмассивы для двух языков (американского английского и французского): <codeph>["en-US", "Hello World"], ["fr", "Bonjour monde"]</codeph>. Языки перечислены в том же порядке, что и в дескрипторе обновления.</entry></row><row><entry><codeph>version</codeph></entry><entry>Строка, представляющая новую доступную версию. </entry></row></tbody></tgroup></adobetable>
+		
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="air.update.events:StatusUpdateEvent:available"><apiName>available</apiName><shortdesc>
+		 Указывает, доступно ли обновление.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>false</apiData><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+		 Указывает, доступно ли обновление. Это свойство имеет значение <codeph>true</codeph>, если в файле дескриптора обновления указана версия, отличная от текущей версии приложения; в противном случае оно имеет значение <codeph>false</codeph> (версия та же).
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="air.update.events:StatusUpdateEvent:details"><apiName>details</apiName><shortdesc>
+		Массив, определяющий строку details для каждого поддерживаемого языка.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>unknown</apiData><apiValueClassifier>Array</apiValueClassifier></apiValueDef><apiDesc>
+		Массив, определяющий строку <codeph>details</codeph> для каждого поддерживаемого языка. Если локализованная версия описания отсутствует, то первый элемент массива является пустой строкой (<codeph>""</codeph>), а второй элемент – строкой details. Если имеются локализованные версии описаний, каждый элемент массива представляет собой отдельный массив из двух элементов. Первым элементом является региональный код, а вторым – описание. Например, следующий массив содержит подмассивы для двух языков (американского английского и французского): <codeph>["en-US", "Hello World"], ["fr", "Bonjour monde"]</codeph>. Языки перечислены в том же порядке, что и в дескрипторе обновления.
+		
+		</apiDesc></apiValueDetail></apiValue><apiValue id="air.update.events:StatusUpdateEvent:version"><apiName>version</apiName><shortdesc>
+		 Строка, представляющая новую доступную версию.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 Строка, представляющая новую доступную версию.
+		 
+		 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="air.update.events:StatusUpdateErrorEvent"><apiName>StatusUpdateErrorEvent</apiName><shortdesc>
+	 Событие StatusUpdateErrorEvent отправляется, когда при вызове метода checkForUpdate() объекта ApplicationUpdater возникает ошибка загрузки или разбора файла дескриптора обновления.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.events:ErrorEvent</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 Событие StatusUpdateErrorEvent отправляется, когда при вызове метода <codeph>checkForUpdate()</codeph> объекта ApplicationUpdater возникает ошибка загрузки или разбора файла дескриптора обновления.
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="air.update.xml#ApplicationUpdater"><linktext>air.update.ApplicationUpdater</linktext></link><link href="air.update.xml#ApplicationUpdaterUI"><linktext>air.update.ApplicationUpdaterUI</linktext></link></related-links><adobeApiEvent id="air.update.events:StatusUpdateErrorEvent:UPDATE_ERROR_updateError"><apiName>updateError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events:StatusUpdateErrorEvent:UPDATE_ERROR</apiEventType><adobeApiEventClassifier>air.update.events:StatusUpdateErrorEvent</adobeApiEventClassifier><apiDefinedEvent/></adobeApiEventDef></adobeApiEventDetail></adobeApiEvent><apiConstructor id="air.update.events:StatusUpdateErrorEvent:StatusUpdateErrorEvent"><apiName>StatusUpdateErrorEvent</apiName><shortdesc>
+		Функция конструктора.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>type</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc> Тип события. Прослушиватели событий могут получать эту информацию через унаследованное свойство <codeph>type</codeph>. Существует только один тип события ошибки: <codeph>ErrorEvent.ERROR</codeph>.
+		</apiDesc></apiParam><apiParam><apiItemName>bubbles</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>Определяет, находится ли объект Event в фазе пузыря. Прослушиватели событий могут получать эту информацию через унаследованное свойство <codeph>bubbles</codeph>.  
+		</apiDesc></apiParam><apiParam><apiItemName>cancelable</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>Определяет, можно ли отменить объект Event. Прослушиватели событий могут получать эту информацию через унаследованное свойство <codeph>cancelable</codeph>. 
+		</apiDesc></apiParam><apiParam><apiItemName>text</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData/><apiDesc>Текст, отображаемый в качестве сообщения об ошибке. Прослушиватели событий могут получать эту информацию через свойство <codeph>text</codeph>.
+		</apiDesc></apiParam><apiParam><apiItemName>id</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiData>0</apiData><apiDesc>Ссылочный номер, связываемый с конкретной ошибкой.
+		</apiDesc></apiParam><apiParam><apiItemName>subErrorID</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiData>0</apiData><apiDesc>Предоставляет сведения о событии ошибки в дополнение к <codeph>errorID</codeph>.
+		
+		</apiDesc></apiParam></apiConstructorDef><apiDesc>
+		Функция конструктора. Не вызывайте эту функцию. Платформа обновления вызывает ее для создания объекта события.
+		
+		</apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="air.update.events:StatusUpdateErrorEvent:clone"><apiName>clone</apiName><shortdesc>
+	 	 Создает копию объекта и задает значение каждого свойства, совпадающее с оригиналом.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiOperationClassifier>flash.events:Event</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 	 Создает копию объекта и задает значение каждого свойства, совпадающее с оригиналом.
+	 	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.update.events:StatusUpdateErrorEvent:toString"><apiName>toString</apiName><shortdesc>
+	 	 Возвращает строку, содержащую все свойства объекта.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 	 Возвращает строку, содержащую все свойства объекта.
+	 	 </apiDesc></apiOperationDetail></apiOperation><apiValue id="air.update.events:StatusUpdateErrorEvent:UPDATE_ERROR"><apiName>UPDATE_ERROR</apiName><shortdesc>
+		 Константа StatusUpdateErrorEvent.UPDATE_ERROR определяет значение свойства type объекта события statusUpdateError.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>updateError</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 Константа <codeph>StatusUpdateErrorEvent.UPDATE_ERROR</codeph> определяет значение свойства <codeph>type</codeph> объекта события <codeph>statusUpdateError</codeph>.
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="air.update.events:StatusUpdateErrorEvent:subErrorID"><apiName>subErrorID</apiName><shortdesc>
+		Предоставляет сведения в дополнение к свойству errorID.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>0</apiData><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+		Предоставляет сведения в дополнение к свойству <codeph>errorID</codeph>. 
+		
+		</apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="air.update.events:DownloadErrorEvent"><apiName>DownloadErrorEvent</apiName><shortdesc>
+	 Объект DownloadErrorEvent отправляется объектом ApplicationUpdater или ApplicationUpdaterUI при возникновении ошибки загрузки файла обновления.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.events:ErrorEvent</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 Объект DownloadErrorEvent отправляется объектом ApplicationUpdater или ApplicationUpdaterUI при возникновении ошибки загрузки файла обновления.
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="air.update.xml#ApplicationUpdater"><linktext>air.update.ApplicationUpdater</linktext></link><link href="air.update.xml#ApplicationUpdaterUI"><linktext>air.update.ApplicationUpdaterUI</linktext></link></related-links><adobeApiEvent id="air.update.events:DownloadErrorEvent:DOWNLOAD_ERROR_downloadError"><apiName>downloadError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events:DownloadErrorEvent:DOWNLOAD_ERROR</apiEventType><adobeApiEventClassifier>air.update.events:DownloadErrorEvent</adobeApiEventClassifier><apiDefinedEvent/></adobeApiEventDef></adobeApiEventDetail></adobeApiEvent><apiConstructor id="air.update.events:DownloadErrorEvent:DownloadErrorEvent"><apiName>DownloadErrorEvent</apiName><shortdesc>
+		Функция конструктора.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>type</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc> Тип события. Прослушиватели событий могут получать эту информацию через унаследованное свойство <codeph>type</codeph>. Существует только один тип события ошибки: <codeph>ErrorEvent.ERROR</codeph>.
+		</apiDesc></apiParam><apiParam><apiItemName>bubbles</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>Определяет, находится ли объект Event в фазе пузыря. Прослушиватели событий могут получать эту информацию через унаследованное свойство <codeph>bubbles</codeph>.  
+		</apiDesc></apiParam><apiParam><apiItemName>cancelable</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>Определяет, можно ли отменить объект Event. Прослушиватели событий могут получать эту информацию через унаследованное свойство <codeph>cancelable</codeph>. 
+		</apiDesc></apiParam><apiParam><apiItemName>text</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData/><apiDesc>Текст, отображаемый в качестве сообщения об ошибке. Прослушиватели событий могут получать эту информацию через свойство <codeph>text</codeph>.
+		</apiDesc></apiParam><apiParam><apiItemName>id</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiData>0</apiData><apiDesc>Ссылочный номер, связываемый с конкретной ошибкой.
+		</apiDesc></apiParam><apiParam><apiItemName>subErrorID</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiData>0</apiData><apiDesc>Предоставляет сведения о событии ошибки в дополнение к <codeph>errorID</codeph>.
+		
+		</apiDesc></apiParam></apiConstructorDef><apiDesc>
+		Функция конструктора. Не вызывайте эту функцию. Платформа обновления вызывает ее для создания объекта события.
+		
+		</apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="air.update.events:DownloadErrorEvent:clone"><apiName>clone</apiName><shortdesc>
+	 	 Создает копию объекта и задает значение каждого свойства, совпадающее с оригиналом.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiOperationClassifier>flash.events:Event</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 	 Создает копию объекта и задает значение каждого свойства, совпадающее с оригиналом.
+	 	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.update.events:DownloadErrorEvent:toString"><apiName>toString</apiName><shortdesc>
+	 	 Возвращает строку, содержащую все свойства объекта.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 	 Возвращает строку, содержащую все свойства объекта.
+	 	 </apiDesc></apiOperationDetail></apiOperation><apiValue id="air.update.events:DownloadErrorEvent:DOWNLOAD_ERROR"><apiName>DOWNLOAD_ERROR</apiName><shortdesc>
+		 Константа DownloadErrorEvent.DOWNLOAD_ERROR определяет значение свойства type объекта события downloadError.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>downloadError</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 Константа <codeph>DownloadErrorEvent.DOWNLOAD_ERROR</codeph> определяет значение свойства <codeph>type</codeph> объекта события <codeph>downloadError</codeph>.
+		 
+		<p>Свойство <codeph>errorID</codeph> объекта DownloadErrorEvent является целым числом, определяющим сведения об ошибке (см. таблицу ниже). Дополнительное свойство <codeph>subErrorID</codeph> может содержать более подробные сведения об ошибке.</p>
+		
+		<adobetable class="innertable">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<tgroup cols="2"><thead><row><entry>Код ошибки errorID</entry><entry>Описание</entry></row></thead><tbody><row>
+		<entry>16800</entry>
+		<entry>Возникает во время проверки загруженного файла обновления. Свойство <codeph>subErrorID</codeph> может содержать более подробные сведения.</entry>
+		</row><row>
+		<entry>16801</entry>
+		<entry>Неправильный файл Adobe AIR (отсутствует application.xml).</entry>
+		</row><row>
+		<entry>16802</entry>
+		<entry>Неправильный файл Adobe AIR (отсутствует тип MIME).</entry>
+		</row><row>
+		<entry>16807</entry>
+		<entry>Неправильный файл Adobe AIR (формат).</entry>
+		</row><row>
+		<entry>16804</entry>
+		<entry>Неправильный файл Adobe AIR (недопустимые флаги).</entry>
+		</row><row>
+		<entry>16805</entry>
+		<entry>Неправильный файл Adobe AIR (неизвестный формат сжатия).</entry>
+		</row><row>
+		<entry>16806</entry>
+		<entry>Неправильный файл Adobe AIR (неверное имя файла).</entry>
+		</row><row>
+		<entry>16807</entry>
+		<entry>Неправильный файл Adobe AIR (поврежден).</entry>
+		</row><row>
+		<entry>16808</entry>
+		<entry>Файл конфигурации не существует.</entry>
+		</row><row>
+		<entry>16809</entry>
+		<entry>Не задано свойство <codeph>updateURL</codeph>.</entry>
+		</row><row>
+		<entry>16810</entry>
+		<entry>Зарезервировано.</entry>
+		</row><row>
+		<entry>16811</entry>
+		<entry>Неправильный файл конфигурации (неизвестная версия конфигурации)</entry>
+		</row><row>
+		<entry>16812</entry>
+		<entry>Неправильный файл конфигурации (отсутствует URL-адрес).</entry>
+		</row><row>
+		<entry>16813</entry>
+		<entry>Неправильный файл конфигурации (формат задержки)</entry>
+		</row><row>
+		<entry>16814</entry>
+		<entry>Неправильный файл конфигурации (недопустимые значения defaultUI).</entry>
+		</row><row>
+		<entry>16815</entry>
+		<entry>Неправильный дескриптор обновления (неизвестная версия дескриптора).</entry>
+		</row><row>
+		<entry>16816</entry>
+		<entry>Неправильный дескриптор обновления (отсутствует версия обновления).</entry>
+		</row><row>
+		<entry>16817</entry>
+		<entry>Неправильный дескриптор обновления (недопустимое описание).</entry>
+		</row><row>
+		<entry>16818</entry>
+		<entry>Ошибка ввода-вывода при сохранении данных на диск. Свойство <codeph>subErrorID</codeph> может содержать более подробные сведения.</entry>
+		</row><row>
+		<entry>16819</entry>
+		<entry>Ошибка безопасности при загрузке. Свойство <codeph>subErrorID</codeph> может содержать более подробные сведения.</entry>
+		</row><row>
+		<entry>16820</entry>
+		<entry>Неправильный код состояния HTTP. В свойстве <codeph>subErrorID</codeph> может быть указан неверный код состояния.</entry>
+		</row><row>
+		<entry>16821</entry>
+		<entry>Зарезервировано.</entry>
+		</row><row>
+		<entry>16822</entry>
+		<entry>Ошибка ввода-вывода при загрузке. Свойство <codeph>subErrorID</codeph> может содержать более подробные сведения.</entry>
+		</row><row>
+		<entry>16823</entry>
+		<entry>Ошибка «конец файла» при сохранении данных на диск. Свойство <codeph>subErrorID</codeph> может содержать более подробные сведения.</entry>
+		</row><row>
+		<entry>16824</entry>
+		<entry>Неправильный дескриптор обновления. Свойство <codeph>subErrorID</codeph> может содержать более подробные сведения.</entry>
+		</row><row>
+		<entry>16825</entry>
+		<entry>Файл обновления содержит приложение с другим идентификатором приложения.</entry>
+		</row><row>
+		<entry>16826</entry>
+		<entry>Файл обновления не содержит более новую версию приложения.</entry>
+		</row><row>
+		<entry>16827</entry>
+		<entry>Версия, содержащаяся в файле обновления, не совпадает с версией в дескрипторе обновления.</entry>
+		</row><row>
+		<entry>16828</entry>
+		<entry>Не удается обновить приложение. Возможно, приложение выполняется в AIR Debug Launcher (ADL).</entry>
+		</row><row>
+		<entry>16829</entry>
+		<entry>В момент установки отсутствует файл обновления.</entry>
+		</row></tbody></tgroup></adobetable>
+		
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="air.update.events:DownloadErrorEvent:subErrorID"><apiName>subErrorID</apiName><shortdesc>
+		Предоставляет сведения в дополнение к свойству errorID.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>0</apiData><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+		Предоставляет сведения в дополнение к свойству <codeph>errorID</codeph>. 
+		
+		</apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="air.update.events:StatusFileUpdateEvent"><apiName>StatusFileUpdateEvent</apiName><shortdesc>
+	Отправляется после успешной проверки программой обновления файла в вызове метода installFromAIRFile().</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>air.update.events:UpdateEvent</apiBaseClassifier></apiClassifierDef><apiDesc>
+	Отправляется после успешной проверки программой обновления файла в вызове метода <codeph>installFromAIRFile()</codeph>.
+	
+	<p>По умолчанию обновление устанавливается, если свойство available объекта StatusFileUpdateEvent имеет значение true. Поведения по умолчанию можно избежать только при использовании класса ApplicationUpdater.</p>
+	
+	</apiDesc></apiClassifierDetail><related-links><link href="air.update.xml#ApplicationUpdater"><linktext>air.update.ApplicationUpdater</linktext></link><link href="air.update.xml#ApplicationUpdaterUI"><linktext>air.update.ApplicationUpdaterUI</linktext></link></related-links><adobeApiEvent id="air.update.events:StatusFileUpdateEvent:FILE_UPDATE_STATUS_fileUpdateStatus"><apiName>fileUpdateStatus</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events:StatusFileUpdateEvent:FILE_UPDATE_STATUS</apiEventType><adobeApiEventClassifier>air.update.events:StatusFileUpdateEvent</adobeApiEventClassifier><apiDefinedEvent/></adobeApiEventDef></adobeApiEventDetail></adobeApiEvent><apiConstructor id="air.update.events:StatusFileUpdateEvent:StatusFileUpdateEvent"><apiName>StatusFileUpdateEvent</apiName><shortdesc>
+		Функция конструктора.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>type</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc> Тип события. Прослушиватели событий могут получать эту информацию через унаследованное свойство <codeph>type</codeph>. Существует только один тип события ошибки: <codeph>ErrorEvent.ERROR</codeph>.
+		</apiDesc></apiParam><apiParam><apiItemName>bubbles</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>Определяет, находится ли объект Event в фазе пузыря. Прослушиватели событий могут получать эту информацию через унаследованное свойство <codeph>bubbles</codeph>.  
+		</apiDesc></apiParam><apiParam><apiItemName>cancelable</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>Определяет, можно ли отменить объект Event. Прослушиватели событий могут получать эту информацию через унаследованное свойство <codeph>cancelable</codeph>. 
+		</apiDesc></apiParam><apiParam><apiItemName>available</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>Текст, отображаемый в качестве сообщения об ошибке. Прослушиватели событий могут получать эту информацию через свойство <codeph>text</codeph>.
+		</apiDesc></apiParam><apiParam><apiItemName>version</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData/><apiDesc>Ссылочный номер, связываемый с конкретной ошибкой.
+		
+		</apiDesc></apiParam><apiParam><apiItemName>path</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData/></apiParam></apiConstructorDef><apiDesc>
+		Функция конструктора. Не вызывайте эту функцию. Платформа обновления вызывает ее для создания объекта события.
+		
+		</apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="air.update.events:StatusFileUpdateEvent:clone"><apiName>clone</apiName><shortdesc>
+	 	 Создает копию объекта и задает значение каждого свойства, совпадающее с оригиналом.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiOperationClassifier>flash.events:Event</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 	 Создает копию объекта и задает значение каждого свойства, совпадающее с оригиналом.
+	 	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.update.events:StatusFileUpdateEvent:toString"><apiName>toString</apiName><shortdesc>
+	 	 Возвращает строку, содержащую все свойства объекта.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 	 Возвращает строку, содержащую все свойства объекта.
+	 	 </apiDesc></apiOperationDetail></apiOperation><apiValue id="air.update.events:StatusFileUpdateEvent:FILE_UPDATE_STATUS"><apiName>FILE_UPDATE_STATUS</apiName><shortdesc>
+		 Константа StatusUpdateEvent.UPDATE_STATUS определяет значение свойства type объекта события updateStatus.</shortdesc><prolog/><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>fileUpdateStatus</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 Константа <codeph>StatusUpdateEvent.UPDATE_STATUS</codeph> определяет значение свойства <codeph>type</codeph> объекта события <codeph>updateStatus</codeph>.
+		 
+		<p>Это событие имеет следующие свойства:</p>
+		
+		<p><adobetable class="innertable">
+		
+		    
+		
+		    
+		
+		    
+		
+		    
+		
+		<tgroup cols="2"><thead><row><entry>Свойство</entry><entry>Значение</entry></row></thead><tbody><row><entry><codeph>available</codeph></entry><entry>Указывает, доступна ли версия приложения, отличная от текущей (<codeph>true</codeph>); в противном случае – <codeph>false</codeph> (та же версия).</entry></row><row><entry><codeph>path</codeph></entry><entry>Свойство <codeph>nativePath</codeph> объекта File обновления, заданное параметром <codeph>airFile</codeph> в вызове метода <codeph>installFromAIRFile()</codeph>.</entry></row><row><entry><codeph>version</codeph></entry><entry>Указывает версию обновления.</entry></row></tbody></tgroup></adobetable></p>
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="air.update.events:StatusFileUpdateEvent:available"><apiName>available</apiName><shortdesc>
+		 Указывает, доступна ли версия приложения, отличная от текущей (true); в противном случае – false (та же версия).</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>false</apiData><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+		 Указывает, доступна ли версия приложения, отличная от текущей (<codeph>true</codeph>); в противном случае – <codeph>false</codeph> (та же версия).
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="air.update.events:StatusFileUpdateEvent:path"><apiName>path</apiName><shortdesc>
+		 Свойство nativePath объекта File обновления, заданное параметром airFile в вызове метода installFromAIRFile().</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>null</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 Свойство <codeph>nativePath</codeph> объекта File обновления, заданное параметром <codeph>airFile</codeph> в вызове метода <codeph>installFromAIRFile()</codeph>.
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="air.update.events:StatusFileUpdateEvent:version"><apiName>version</apiName><shortdesc>
+		 Указывает версию обновления.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 Указывает версию обновления.
+		 
+		 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="air.update.events:StatusFileUpdateErrorEvent"><apiName>StatusFileUpdateErrorEvent</apiName><shortdesc>
+	 Событие StatusUpdateFileErrorEvent отправляется, когда при вызове метода checkForUpdate() объекта ApplicationUpdater возникает ошибка загрузки или анализа файла дескриптора обновления.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.events:ErrorEvent</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 Событие StatusUpdateFileErrorEvent отправляется, когда при вызове метода <codeph>checkForUpdate()</codeph> объекта ApplicationUpdater возникает ошибка загрузки или анализа файла дескриптора обновления.
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="air.update.xml#ApplicationUpdater"><linktext>air.update.ApplicationUpdater</linktext></link><link href="air.update.xml#ApplicationUpdaterUI"><linktext>air.update.ApplicationUpdaterUI</linktext></link></related-links><adobeApiEvent id="air.update.events:StatusFileUpdateErrorEvent:FILE_UPDATE_ERROR_fileUpdateError"><apiName>fileUpdateError</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events:StatusFileUpdateErrorEvent:FILE_UPDATE_ERROR</apiEventType><adobeApiEventClassifier>air.update.events:StatusFileUpdateErrorEvent</adobeApiEventClassifier><apiDefinedEvent/></adobeApiEventDef></adobeApiEventDetail></adobeApiEvent><apiConstructor id="air.update.events:StatusFileUpdateErrorEvent:StatusFileUpdateErrorEvent"><apiName>StatusFileUpdateErrorEvent</apiName><shortdesc>
+		Функция конструктора.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>type</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc> Тип события. Прослушиватели событий могут получать эту информацию через унаследованное свойство <codeph>type</codeph>. Существует только один тип события ошибки: <codeph>ErrorEvent.ERROR</codeph>.
+		</apiDesc></apiParam><apiParam><apiItemName>bubbles</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>Определяет, находится ли объект Event в фазе пузыря. Прослушиватели событий могут получать эту информацию через унаследованное свойство <codeph>bubbles</codeph>.  
+		</apiDesc></apiParam><apiParam><apiItemName>cancelable</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>Определяет, можно ли отменить объект Event. Прослушиватели событий могут получать эту информацию через унаследованное свойство <codeph>cancelable</codeph>. 
+		</apiDesc></apiParam><apiParam><apiItemName>text</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiData/><apiDesc>Текст, отображаемый в качестве сообщения об ошибке. Прослушиватели событий могут получать эту информацию через свойство <codeph>text</codeph>.
+		</apiDesc></apiParam><apiParam><apiItemName>id</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiData>0</apiData><apiDesc>Ссылочный номер, связываемый с конкретной ошибкой.
+		
+		</apiDesc></apiParam></apiConstructorDef><apiDesc>
+		Функция конструктора. Не вызывайте эту функцию. Платформа обновления вызывает ее для создания объекта события.
+		
+		</apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="air.update.events:StatusFileUpdateErrorEvent:clone"><apiName>clone</apiName><shortdesc>
+	 	 Создает копию объекта и задает значение каждого свойства, совпадающее с оригиналом.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiOperationClassifier>flash.events:Event</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 	 Создает копию объекта и задает значение каждого свойства, совпадающее с оригиналом.
+	 	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.update.events:StatusFileUpdateErrorEvent:toString"><apiName>toString</apiName><shortdesc>
+	 	 Возвращает строку, содержащую все свойства объекта.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 	 Возвращает строку, содержащую все свойства объекта.
+	 	 </apiDesc></apiOperationDetail></apiOperation><apiValue id="air.update.events:StatusFileUpdateErrorEvent:FILE_UPDATE_ERROR"><apiName>FILE_UPDATE_ERROR</apiName><shortdesc>
+		 Константа StatusUpdateErrorEvent.UPDATE_ERROR определяет значение свойства type объекта события statusUpdateError.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>fileUpdateError</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 Константа <codeph>StatusUpdateErrorEvent.UPDATE_ERROR</codeph> определяет значение свойства <codeph>type</codeph> объекта события <codeph>statusUpdateError</codeph>.
+		 
+		 </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="air.update.events:UpdateEvent"><apiName>UpdateEvent</apiName><shortdesc>
+	 Событие UpdateEvent отправляется объектом ApplicationUpdater во время процесса обновления.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.events:Event</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 Событие UpdateEvent отправляется объектом ApplicationUpdater во время процесса обновления.
+	 
+	 </apiDesc></apiClassifierDetail><related-links><link href="air.update.xml#ApplicationUpdater"><linktext>air.update.ApplicationUpdater</linktext></link><link href="air.update.xml#ApplicationUpdaterUI"><linktext>air.update.ApplicationUpdaterUI</linktext></link></related-links><adobeApiEvent id="air.update.events:UpdateEvent:BEFORE_INSTALL_beforeInstall"><apiName>beforeInstall</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events:UpdateEvent:BEFORE_INSTALL</apiEventType><adobeApiEventClassifier>air.update.events:UpdateEvent</adobeApiEventClassifier><apiDefinedEvent/></adobeApiEventDef></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update.events:UpdateEvent:CHECK_FOR_UPDATE_checkForUpdate"><apiName>checkForUpdate</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events:UpdateEvent:CHECK_FOR_UPDATE</apiEventType><adobeApiEventClassifier>air.update.events:UpdateEvent</adobeApiEventClassifier><apiDefinedEvent/></adobeApiEventDef></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update.events:UpdateEvent:DOWNLOAD_COMPLETE_downloadComplete"><apiName>downloadComplete</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events:UpdateEvent:DOWNLOAD_COMPLETE</apiEventType><adobeApiEventClassifier>air.update.events:UpdateEvent</adobeApiEventClassifier><apiDefinedEvent/></adobeApiEventDef></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update.events:UpdateEvent:DOWNLOAD_START_downloadStart"><apiName>downloadStart</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events:UpdateEvent:DOWNLOAD_START</apiEventType><adobeApiEventClassifier>air.update.events:UpdateEvent</adobeApiEventClassifier><apiDefinedEvent/></adobeApiEventDef></adobeApiEventDetail></adobeApiEvent><adobeApiEvent id="air.update.events:UpdateEvent:INITIALIZED_initialized"><apiName>initialized</apiName><prolog/><adobeApiEventDetail><adobeApiEventDef><apiEventType>air.update.events:UpdateEvent:INITIALIZED</apiEventType><adobeApiEventClassifier>air.update.events:UpdateEvent</adobeApiEventClassifier><apiDefinedEvent/></adobeApiEventDef></adobeApiEventDetail></adobeApiEvent><apiConstructor id="air.update.events:UpdateEvent:UpdateEvent"><apiName>UpdateEvent</apiName><shortdesc>
+		Функция конструктора.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>type</apiItemName><apiOperationClassifier>String</apiOperationClassifier><apiDesc> Тип события. Прослушиватели событий могут получать эту информацию через унаследованное свойство <codeph>type</codeph>. Существует только один тип события ошибки: <codeph>ErrorEvent.ERROR</codeph>.
+		</apiDesc></apiParam><apiParam><apiItemName>bubbles</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>Определяет, находится ли объект Event в фазе пузыря. Прослушиватели событий могут получать эту информацию через унаследованное свойство <codeph>bubbles</codeph>.  
+		</apiDesc></apiParam><apiParam><apiItemName>cancelable</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>Определяет, можно ли отменить объект Event. Прослушиватели событий могут получать эту информацию через унаследованное свойство <codeph>cancelable</codeph>. 
+		</apiDesc></apiParam></apiConstructorDef><apiDesc>
+		Функция конструктора. Не вызывайте эту функцию. Платформа обновления вызывает ее для создания объекта события.
+		
+		</apiDesc></apiConstructorDetail></apiConstructor><apiOperation id="air.update.events:UpdateEvent:clone"><apiName>clone</apiName><shortdesc>
+	 	 Создает копию объекта и задает значение каждого свойства, совпадающее с оригиналом.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiOperationClassifier>flash.events:Event</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 	 Создает копию объекта и задает значение каждого свойства, совпадающее с оригиналом.
+	 	 </apiDesc></apiOperationDetail></apiOperation><apiOperation id="air.update.events:UpdateEvent:toString"><apiName>toString</apiName><shortdesc>
+	 	 Возвращает строку, содержащую все свойства объекта.</shortdesc><prolog/><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiIsOverride/><apiReturn><apiOperationClassifier>String</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+	 	 Возвращает строку, содержащую все свойства объекта.
+	 	 </apiDesc></apiOperationDetail></apiOperation><apiValue id="air.update.events:UpdateEvent:BEFORE_INSTALL"><apiName>BEFORE_INSTALL</apiName><shortdesc>
+		 Константа UpdateEvent.BEFORE_INSTALL определяет значение свойства type объекта события beforeInstall.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>beforeInstall</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 Константа <codeph>UpdateEvent.BEFORE_INSTALL</codeph> определяет значение свойства <codeph>type</codeph> объекта события <codeph>beforeInstall</codeph>.
+		 
+		<p>Это событие имеет следующие свойства:</p>
+		
+		<adobetable class="innertable">
+		    
+		
+		    
+		
+		    
+		
+		    
+		
+		    
+		
+		<tgroup cols="2"><thead><row><entry>Свойство</entry><entry>Значение</entry></row></thead><tbody><row><entry><codeph>bubbles</codeph></entry><entry><codeph>false</codeph></entry></row><row><entry><codeph>cancelable</codeph></entry><entry><codeph>false</codeph>; поведение по умолчанию, подлежащее отмене, не определено.</entry></row><row><entry><codeph>currentTarget</codeph></entry><entry>Объект, активно обрабатывающий объект Event с помощью прослушивателя событий.</entry></row><row><entry><codeph>target</codeph></entry><entry>Объект обновления. </entry></row></tbody></tgroup></adobetable>
+		
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="air.update.events:UpdateEvent:CHECK_FOR_UPDATE"><apiName>CHECK_FOR_UPDATE</apiName><shortdesc>
+		 Константа UpdateEvent.CHECK_FOR_UPDATE определяет значение свойства type объекта события checkForUpdate.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>checkForUpdate</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 Константа <codeph>UpdateEvent.CHECK_FOR_UPDATE</codeph> определяет значение свойства <codeph>type</codeph> объекта события <codeph>checkForUpdate</codeph>.
+		 
+		<p>Это событие имеет следующие свойства:</p>
+		
+		<adobetable class="innertable">
+		    
+		
+		    
+		
+		    
+		
+		    
+		
+		    
+		
+		<tgroup cols="2"><thead><row><entry>Свойство</entry><entry>Значение</entry></row></thead><tbody><row><entry><codeph>bubbles</codeph></entry><entry><codeph>false</codeph></entry></row><row><entry><codeph>cancelable</codeph></entry><entry><codeph>false</codeph>; поведение по умолчанию, подлежащее отмене, не определено.</entry></row><row><entry><codeph>currentTarget</codeph></entry><entry>Объект, активно обрабатывающий объект Event с помощью прослушивателя событий.</entry></row><row><entry><codeph>target</codeph></entry><entry>Объект обновления. </entry></row></tbody></tgroup></adobetable>
+		
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="air.update.events:UpdateEvent:DOWNLOAD_COMPLETE"><apiName>DOWNLOAD_COMPLETE</apiName><shortdesc>
+		 Константа UpdateEvent.DOWNLOAD_COMPLETE определяет значение свойства type объекта события downloadComplete.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>downloadComplete</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 Константа <codeph>UpdateEvent.DOWNLOAD_COMPLETE</codeph> определяет значение свойства <codeph>type</codeph> объекта события <codeph>downloadComplete</codeph>.
+		 
+		<p>Это событие имеет следующие свойства:</p>
+		
+		<adobetable class="innertable">
+		    
+		
+		    
+		
+		    
+		
+		    
+		
+		    
+		
+		<tgroup cols="2"><thead><row><entry>Свойство</entry><entry>Значение</entry></row></thead><tbody><row><entry><codeph>bubbles</codeph></entry><entry><codeph>false</codeph></entry></row><row><entry><codeph>cancelable</codeph></entry><entry><codeph>false</codeph>; поведение по умолчанию, подлежащее отмене, не определено.</entry></row><row><entry><codeph>currentTarget</codeph></entry><entry>Объект, активно обрабатывающий объект Event с помощью прослушивателя событий.</entry></row><row><entry><codeph>target</codeph></entry><entry>Объект обновления. </entry></row></tbody></tgroup></adobetable>
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="air.update.events:UpdateEvent:DOWNLOAD_START"><apiName>DOWNLOAD_START</apiName><shortdesc>
+		 Константа UpdateEvent.DOWNLOAD_START определяет значение свойства type объекта события downloadStart.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>downloadStart</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 Константа <codeph>UpdateEvent.DOWNLOAD_START</codeph> определяет значение свойства <codeph>type</codeph> объекта события <codeph>downloadStart</codeph>.
+		 
+		<p>Это событие имеет следующие свойства:</p>
+		
+		<adobetable class="innertable">
+		    
+		
+		    
+		
+		    
+		
+		    
+		
+		    
+		
+		<tgroup cols="2"><thead><row><entry>Свойство</entry><entry>Значение</entry></row></thead><tbody><row><entry><codeph>bubbles</codeph></entry><entry><codeph>false</codeph></entry></row><row><entry><codeph>cancelable</codeph></entry><entry><codeph>false</codeph>; поведение по умолчанию, подлежащее отмене, не определено.</entry></row><row><entry><codeph>currentTarget</codeph></entry><entry>Объект, активно обрабатывающий объект Event с помощью прослушивателя событий.</entry></row><row><entry><codeph>target</codeph></entry><entry>Объект обновления. </entry></row></tbody></tgroup></adobetable>
+		 
+		 </apiDesc></apiValueDetail></apiValue><apiValue id="air.update.events:UpdateEvent:INITIALIZED"><apiName>INITIALIZED</apiName><shortdesc>
+		 Константа UpdateEvent.INITIALIZED определяет значение свойства type объекта события initialized.</shortdesc><prolog><asMetadata><apiVersion><apiPlatform description="" name="AIR" version="1.5"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>initialized</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+		 Константа <codeph>UpdateEvent.INITIALIZED</codeph> определяет значение свойства <codeph>type</codeph> объекта события <codeph>initialized</codeph>.
+		 
+		<p>Это событие имеет следующие свойства:</p>
+		
+		<adobetable class="innertable">
+		    
+		
+		    
+		
+		    
+		
+		    
+		
+		    
+		
+		<tgroup cols="2"><thead><row><entry>Свойство</entry><entry>Значение</entry></row></thead><tbody><row><entry><codeph>bubbles</codeph></entry><entry><codeph>false</codeph></entry></row><row><entry><codeph>cancelable</codeph></entry><entry><codeph>false</codeph>; поведение по умолчанию, подлежащее отмене, не определено.</entry></row><row><entry><codeph>currentTarget</codeph></entry><entry>Объект, активно обрабатывающий объект Event с помощью прослушивателя событий.</entry></row><row><entry><codeph>target</codeph></entry><entry>Объект обновления. </entry></row></tbody></tgroup></adobetable>
+		
+		 </apiDesc></apiValueDetail></apiValue></apiClassifier></apiPackage>

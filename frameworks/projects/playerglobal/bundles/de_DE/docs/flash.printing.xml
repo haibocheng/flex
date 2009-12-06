@@ -1,0 +1,496 @@
+<?xml version="1.0"?>
+<apiPackage id="flash.printing"><apiName>flash.printing</apiName><apiDetail/><apiClassifier id="flash.printing:PrintJobOptions"><apiName>PrintJobOptions</apiName><shortdesc>
+	 Die PrintJobOptions-Klasse enthält Eigenschaften, die mit dem options-Parameter der PrintJob.addPage()-Methode verwendet werden.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+	 Die PrintJobOptions-Klasse enthält Eigenschaften, die mit dem <codeph>options</codeph>-Parameter der <codeph>PrintJob.addPage()</codeph>-Methode verwendet werden. Weitere Informationen zu <codeph>addPage()</codeph> finden Sie im Abschnitt zur PrintJob-Klasse.
+	 </apiDesc></apiClassifierDetail><related-links><link href="flash.printing.xml#PrintJob"><linktext>PrintJob</linktext></link><link href="flash.printing.xml#PrintJob/addPage()"><linktext>PrintJob.addPage()</linktext></link></related-links><apiConstructor id="flash.printing:PrintJobOptions:PrintJobOptions"><apiName>PrintJobOptions</apiName><shortdesc>
+		 Erstellt ein neues PrintJobOptions-Objekt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiParam><apiItemName>printAsBitmap</apiItemName><apiOperationClassifier>Boolean</apiOperationClassifier><apiData>false</apiData><apiDesc>Beim Wert <codeph>true</codeph> wird dieses Objekt als Bitmap gedruckt. Beim <codeph>false</codeph> wird dieses Objekt als Vektor gedruckt. 
+		 
+		 <p>Wenn der zu druckende Inhalt ein Bitmapbild enthält, setzen Sie die <codeph>printAsBitmap</codeph>-Eigenschaft auf <codeph>true</codeph>, um Alphatransparenz und Farbeffekte einzuschließen. Verwenden Sie diesen Parameter nicht, wenn der Inhalt keine Bitmapbilder enthält. Dadurch wird der Inhalt im Vektorformat mit einer höheren Qualität gedruckt (dies ist die Standardeinstellung).</p>
+		 
+		 <p><i>Hinweis:</i> Adobe AIR unterstützt das Drucken im Vektorformat unter Mac OS nicht.</p>
+		 
+		 </apiDesc></apiParam></apiConstructorDef><apiDesc>
+		 Erstellt ein neues PrintJobOptions-Objekt. Sie übergeben dieses Objekt für den <codeph>options</codeph>-Parameter der <codeph>PrintJob.addPage()</codeph>-Methode.
+		 
+		 </apiDesc></apiConstructorDetail><related-links><link href="flash.printing.xml#PrintJob/addPage()"><linktext>PrintJob.addPage()</linktext></link></related-links></apiConstructor><apiValue id="flash.printing:PrintJobOptions:printAsBitmap"><apiName>printAsBitmap</apiName><shortdesc>
+		 Gibt an, ob der Inhalt des Druckauftrags als Bitmap oder Vektorgrafik gedruckt wird.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiData>false</apiData><apiValueClassifier>Boolean</apiValueClassifier></apiValueDef><apiDesc>
+		 Gibt an, ob der Inhalt des Druckauftrags als Bitmap oder Vektorgrafik gedruckt wird. Der Standardwert ist <codeph>false</codeph>, d. h. Drucken im Vektorformat.
+		 
+		 <p>Wenn der zu druckende Inhalt ein Bitmapbild enthält, setzen Sie die <codeph>printAsBitmap</codeph>-Eigenschaft auf <codeph>true</codeph>, um Alphatransparenz und Farbeffekte einzuschließen. Drucken Sie den Inhalt im Vektorformat (höhere Qualität, Standardeinstellung), wenn keine Bitmapbilder vorhanden sind.</p>
+		 <p>Verwenden Sie die folgende Syntax, wenn Sie Inhalt beispielsweise als Bitmap drucken möchten:</p> 
+		 <pre>
+		 var options:PrintJobOptions = new PrintJobOptions();
+		 options.printAsBitmap = true;
+		 myPrintJob.addPage(mySprite, null, options);
+		 </pre>
+		 
+		 <p><i>Hinweis:</i> Adobe AIR unterstützt das Drucken im Vektorformat unter Mac OS nicht.</p>
+		 
+		 </apiDesc><example conref="examples\printAsBitmapExample.as"> Im folgenden Beispiel wird zuerst ein Bild geladen und in einen rechteckigen Rahmen gesetzt, danach wird das Bild als Bitmap gedruckt.  
+ 
+ <ol>
+ <li>Der Konstruktor lädt das Bild (<codeph>image.jpg</codeph>) mithilfe der <codeph>Loader</codeph>- und <codeph>URLRequest</codeph>-Objekte. Es wird auch überprüft, ob beim Laden ein Fehler aufgetreten ist. Hier wird davon ausgegangen, dass sich die Datei im selben Verzeichnis wie die SWF-Datei befindet. Bei der Kompilierung der SWF-Datei muss „Sicherheit bei lokaler Wiedergabe“ auf „Nur auf lokale Dateien zugreifen“ eingestellt sein.</li>
+ <li>Nachdem das Bild geladen wurde (das Ereignis ist abgeschlossen), wird die <codeph>completeHandler()</codeph>-Methode aufgerufen.</li>  
+ <li>Die <codeph>completeHandler()</codeph>-Methode erstellt ein <codeph>BitmapData</codeph>-Objekt und lädt das Bild (Bitmap) in dieses Objekt. Ein Rechteck wird im <codeph>Sprite</codeph>-Objekt (<codeph>frame</codeph>) gezeichnet, und mit der <codeph>beginBitmapFill()</codeph>-Methode wird das Rechteck mit dem Bild (ein <codeph>BitmapData</codeph>-Objekt) gefüllt. Ein <codeph>Matrix</codeph>-Objekt wird verwendet, um das Bild auf die Größe des Rechtecks zu skalieren. (Beachten Sie, dass das Bild dadurch verzerrt wird. Es wird in diesem Beispiel verwendet, um sicherzustellen, dass das Bild in das Rechteck passt.) Nachdem das Bild das Rechteck ausfüllt, wird die <codeph>printPage()</codeph>-Methode aufgerufen.</li>
+ <li>Die <codeph>printPage()</codeph>-Methode erstellt eine neue Instanz des Druckauftrags und startet den Druckvorgang, wodurch das Druckdialogfeld für den Benutzer aufgerufen wird, und füllt die Eigenschaften des Druckauftrags. Die <codeph>addPage()</codeph>-Methode enthält die Details des Druckauftrags. Hier ist der Rahmen mit dem Bild (ein Sprite-Objekt) für den Druck als Bitmap und nicht als Vektor eingerichtet. <codeph>options</codeph> ist eine Instanz der <codeph>PrintJobOptions</codeph>-Klasse, und seine Eigenschaft <codeph>printAsBitmap</codeph> ist auf <codeph>true</codeph> eingestellt, damit das Bild als Bitmap gedruckt wird (die Standardeinstellung ist „false“).</li>    
+ </ol>
+ <p>Hinweis: Für dieses Beispiel wurde nur eine sehr eingeschränkte Fehlerverarbeitung definiert.</p>
+ 
+<codeblock>
+package {
+    import flash.display.Sprite;
+    import flash.display.Loader;
+    import flash.display.Bitmap;
+    import flash.display.BitmapData;    
+    import flash.printing.PrintJob;
+    import flash.printing.PrintJobOptions;
+    import flash.events.Event;
+    import flash.events.IOErrorEvent;
+    import flash.net.URLRequest;
+    import flash.geom.Matrix;
+
+    public class printAsBitmapExample extends Sprite {
+
+        private var frame:Sprite = new Sprite();
+        private var url:String = "image.jpg";
+        private var loader:Loader = new Loader();
+
+        public function printAsBitmapExample() {
+
+           var request:URLRequest = new URLRequest(url);
+  
+           loader.load(request);
+           loader.contentLoaderInfo.addEventListener(Event.COMPLETE, completeHandler);
+           loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+        }
+
+        private function completeHandler(event:Event):void {
+        
+            var picture:Bitmap = Bitmap(loader.content);
+            var bitmap:BitmapData = picture.bitmapData;
+
+            var matrix:Matrix = new Matrix();
+
+            matrix.scale((200 / bitmap.width), (200 / bitmap.height));
+            
+            frame.graphics.lineStyle(10);
+            frame.graphics.beginBitmapFill(bitmap, matrix, true);
+            frame.graphics.drawRect(0, 0, 200, 200);
+            frame.graphics.endFill();
+
+            addChild(frame);
+             
+            printPage();    
+        }
+
+        private function ioErrorHandler(event:IOErrorEvent):void {
+            trace("Unable to load the image: " + url);
+        }
+
+        private function printPage ():void {
+            var myPrintJob:PrintJob = new PrintJob();
+            var options:PrintJobOptions = new PrintJobOptions();
+            options.printAsBitmap = true;
+            
+            myPrintJob.start();
+  
+            try {
+                myPrintJob.addPage(frame, null, options);
+            }
+            catch(e:Error) {
+                trace ("Had problem adding the page to print job: " + e);
+            }
+ 
+            try {
+            myPrintJob.send();
+            }
+            catch (e:Error) {
+                trace ("Had problem printing: " + e);    
+            }
+        }
+    }
+}
+
+</codeblock></example></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.printing:PrintJob"><apiName>PrintJob</apiName><shortdesc>
+ Mit der PrintJob-Klasse können Sie Inhalt erstellen und eine oder mehrere Seiten ausdrucken.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>printjob, print
+ </keyword></asCustoms></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiBaseClassifier>flash.events:EventDispatcher</apiBaseClassifier></apiClassifierDef><apiDesc>
+ Mit der PrintJob-Klasse können Sie Inhalt erstellen und eine oder mehrere Seiten ausdrucken. Mit dieser Klasse können Sie sichtbare, dynamische oder externe Inhalte für den Benutzer darstellen, Benutzern ein einzelnes Druckdialogfeld anzeigen sowie nicht skalierte Dokumente so drucken, dass sie den Proportionen der Inhalte entsprechen. Diese Funktion ist insbesondere zum Darstellen und Drucken dynamischer Inhalte, z. B. Datenbankinhalte oder dynamischer Text, nützlich.
+ <p>Über den <codeph>PrintJob()</codeph>-Konstruktor können Sie einen Druckauftrag erstellen.</p>
+ 
+ <p>Wenn das Dokument zusätzlich über Eigenschaften verfügt, die mit <codeph>PrintJob.start()</codeph> gefüllt werden, können die Druckereinstellungen des Benutzers gelesen werden, beispielsweise Höhe und Breite der Seite oder Bildausrichtung. Darüber hinaus können Sie das Dokument so konfigurieren, dass dynamische Flash-Inhalte formatiert werden, die für die Druckereinstellungen geeignet sind. Die über <codeph>PrintJob.start()</codeph> gefüllten Layouteigenschaften des Benutzers sind schreibgeschützt und können in Flash Player nicht geändert werden.</p>
+ 
+ <p><b>Hinweis:</b> In ActionScript 3.0 ist ein PrintJob-Objekt nicht auf ein Bild beschränkt (wie dies in früheren Versionen von ActionScript der Fall war). Da im Betriebssystem jedoch Informationen zum Druckstatus angezeigt werden, nachdem der Benutzer im Druckdialogfeld auf die Schaltfläche „OK“ geklickt hat, sollten Sie möglichst bald <codeph>PrintJob.addPage()</codeph> und <codeph>PrintJob.send()</codeph> aufrufen, damit Seiten an die Druckwarteschlange gesendet werden. Durch eine Verzögerung im Bild mit dem <codeph>PrintJob.send()</codeph>-Aufruf wird auch der Druckvorgang verzögert.</p>
+ <p>Darüber hinaus gilt ein Skriptzeitlimit von 15 Sekunden für die folgenden Intervalle:</p>
+ <ul>
+ <li><codeph>PrintJob.start()</codeph> und die erste <codeph>PrintJob.addPage()</codeph></li>
+ <li><codeph>PrintJob.addPage()</codeph> und die nächste <codeph>PrintJob.addPage()</codeph></li>
+ <li>die letzte <codeph>PrintJob.addPage()</codeph> und <codeph>PrintJob.send()</codeph></li>
+ </ul>
+ 
+ <p>Wenn bei diesen Intervallen das Limit von 15 Sekunden überschritten wird, wird beim darauf folgenden Aufruf von <codeph>PrintJob.start()</codeph> für die PrintJob-Instanz der Wert <codeph>false</codeph> zurückgegeben und beim darauf folgenden Aufruf von <codeph>PrintJob.addPage()</codeph> für die PrintJob-Instanz im Flash Player oder in Adobe AIR zur Laufzeit eine Ausnahme ausgelöst.</p>
+ 
+ </apiDesc><example conref="examples\PrintJobExample.as"> Im folgenden Beispiel wird mithilfe der <codeph>PrintJobExample</codeph>-Klasse ein kleines Dokument erstellt und an den Drucker gesendet. Dies wird in den folgenden Schritten erreicht:
+ <ol>
+  <li>Deklarieren Sie zwei Variablen vom Typ „Sprite“ mit den Namen <codeph>sheet1</codeph> und <codeph>sheet2</codeph>.</li>
+  <li>Rufen Sie danach <codeph>init()</codeph> auf, womit sowohl <codeph>sheet1</codeph> als auch <codeph>sheet2</codeph> eine neue Sprite-Instanz zugewiesen wird. Anschließend wird <codeph>createSheet()</codeph> mithilfe von anderen Argumenten aufgerufen.</li>
+  <li><codeph>createSheet()</codeph> bewirkt Folgendes:
+  <ol outputclass="A">
+      <li>Mithilfe des übergebenen Sprite-Objekts wird bei x = 0 und y = 0 ein Rechteck gezeichnet, und zwar mit einer Breite von 100 Pixel und einer Höhe von 200 Pixel, einem hellgrauen Hintergrund und einem schwarzen Rand mit einer Breite von 1 Pixel.</li>
+      <li>Es wird ein neues TextField-Objekt mit dem Namen <codeph>txt</codeph> erstellt. Es weist die gleichen Abmessungen wie das Sprite-Objekt auf, die wordWrap-Eigenschaft ist auf <codeph>true</codeph> gesetzt, und die text-Eigenschaft ist auf den String gesetzt, der als Argument an <codeph>createSheet()</codeph> übergeben wurde.</li>
+      <li>Wenn das übergebene Object-Argument nicht null ist, wird eine neue Sprite-Instanz mit dem Namen <codeph>img</codeph> erstellt. Mithilfe dieser Sprite-Instanz und der Koordinaten- und Abmessungseigenschaften des übergebenen „Object“ wird ein weißes Rechteck gezeichnet. Das weiße Rechteck wird zur Anzeigeliste des Sprite-Objekts mithilfe von <codeph>addChild()</codeph> hinzugefügt.</li>
+      <li>Das TextField-Objekt mit dem Namen <codeph>txt</codeph> wird zur Anzeigeliste des Sprite-Objekts mithilfe von <codeph>addChild()</codeph> hinzugefügt.</li>
+  </ol></li>
+  <li>Im Konstruktor wird die aktivierte Druckmethode (nicht auskommentiert) aufgerufen. Da sich die Methoden sehr ähneln, wird <codeph>printOnePerPage()</codeph> unten beschrieben.</li>
+  <li><codeph>printOnePerPage()</codeph> bewirkt Folgendes:
+  <ol outputclass="A">
+      <li>Deklariert ein neues PrintJob-Objekt mit dem Namen <codeph>pj</codeph> und <codeph>pagesToPrint</codeph> als „uint“.</li>
+      <li>Öffnet das Druckdialogfeld des Betriebssystems, und wartet darauf, dass der Benutzer auf <codeph>OK</codeph> klickt.</li>
+      <li>Überprüft die Ausrichtung und falls „Querformat“ gewählt wurde, wird ein Fehler ausgegeben und der Vorgang beendet.</li>
+      <li>Stellt die Höhe und Breite der Seite für <codeph>sheet1</codeph> und <codeph>sheet2</codeph> ein.</li>
+      <li>Sendet <codeph>sheet1</codeph> und <codeph>sheet2</codeph> mithilfe von <codeph>addPage()</codeph> an die Druckwarteschlange.</li>
+      <li>Wenn die Zahl der zu druckenden Seiten größer 0 ist, werden alle Seiten in der Druckwarteschlange gedruckt.</li>
+  </ol></li>
+  <li>Die <codeph>draw()</codeph>-Methode wird aufgerufen, mit der die Größe der beiden Sprite-Eigenschaften geändert wird, sodass es auf die Bühne passt. Außerdem wird <codeph>sheet2</codeph> verschoben, und zwar an eine Position unmittelbar rechts neben<codeph>sheet1</codeph>.</li>
+ </ol>
+ 
+ <p><b>Hinweis: </b> Der Konstruktor bietet drei Druckmethoden zur Auswahl an: ein Blatt pro Seite, zwei Blätter pro Seite oder Drucken auf die obere Hälfte der Seite. Dieses Beispiel kann nur korrekt ausgeführt werden, wenn zwei der Druckmethoden mithilfe von Code-Kommentaren deaktiviert wurden. Das Beispiel wurde so eingerichtet, dass <codeph>printOnePerPage()</codeph> aufgerufen wird.</p>
+<codeblock>
+package {
+    import flash.printing.PrintJob;
+    import flash.printing.PrintJobOrientation;
+    import flash.display.Stage;
+    import flash.display.Sprite;
+    import flash.text.TextField;
+    import flash.geom.Rectangle;
+       
+    public class PrintJobExample extends Sprite {
+        private var sheet1:Sprite;
+        private var sheet2:Sprite;
+           
+        public function PrintJobExample() {
+            init();
+            printOnePerPage();
+//            printTwoPerPage();
+//            printTopHalf();
+            draw();
+        }
+        
+        private function init():void {
+            sheet1 = new Sprite();
+            createSheet(sheet1, "Once upon a time...", {x:10, y:50, width:80, height:130});
+
+            sheet2 = new Sprite();
+            createSheet(sheet2, "There was a great story to tell, and it ended quickly.\n\nThe end.", null);
+        }
+        
+        private function createSheet(sheet:Sprite, str:String, imgValue:Object):void {
+            sheet.graphics.beginFill(0xEEEEEE);
+            sheet.graphics.lineStyle(1, 0x000000);
+            sheet.graphics.drawRect(0, 0, 100, 200);
+            sheet.graphics.endFill();
+            
+            var txt:TextField = new TextField();
+            txt.height = 200;
+            txt.width = 100;
+            txt.wordWrap = true;
+            txt.text = str;
+            
+            if(imgValue != null) {
+                var img:Sprite = new Sprite();
+                img.graphics.beginFill(0xFFFFFF);
+                img.graphics.drawRect(imgValue.x, imgValue.y, imgValue.width, imgValue.height);
+                img.graphics.endFill();
+                sheet.addChild(img);
+            }
+            sheet.addChild(txt);
+        }
+        
+        private function printOnePerPage():void {
+            var pj:PrintJob = new PrintJob();
+            var pagesToPrint:uint = 0;
+            if(pj.start()) {                
+                if(pj.orientation == PrintJobOrientation.LANDSCAPE) {    
+                    throw new Error("Without embedding fonts you must print one sheet per page with an orientation of portrait.");
+                }
+                
+                sheet1.height = pj.pageHeight;
+                sheet1.width = pj.pageWidth;
+                sheet2.height = pj.pageHeight;
+                sheet2.width = pj.pageWidth;
+
+                try {
+                    pj.addPage(sheet1);
+                    pagesToPrint++;
+                }
+                catch(e:Error) {
+                    // do nothing
+                }
+
+                try {
+                    pj.addPage(sheet2);
+                    pagesToPrint++;
+                }
+                catch(e:Error) {
+                    // do nothing
+                }
+
+                if(pagesToPrint > 0) {
+                    pj.send();
+                }
+            }
+        }
+        
+        private function printTwoPerPage():void {
+            var pj:PrintJob = new PrintJob();
+            var pagesToPrint:uint = 0;
+            if(pj.start()) {                
+                if(pj.orientation == PrintJobOrientation.PORTRAIT) {
+                    throw new Error("Without embedding fonts you must print two sheets per page with an orientation of landscape.");
+                }
+                
+                sheet1.height = pj.pageHeight;
+                sheet1.width = pj.pageWidth/2;
+                sheet2.height = pj.pageHeight;
+                sheet2.width = pj.pageWidth/2;
+
+                var sheets:Sprite = new Sprite();
+                sheets.addChild(sheet1);
+                sheets.addChild(sheet2);
+                sheets.getChildAt(1).x = sheets.getChildAt(0).width;
+                try {
+                    pj.addPage(sheets);
+                    pagesToPrint++;
+                }
+                catch(e:Error) {
+                    // do nothing
+                }
+
+                if(pagesToPrint > 0) {
+                    pj.send();
+                }
+            }
+        }
+
+        private function printTopHalf():void {
+            var pj:PrintJob = new PrintJob();
+            var pagesToPrint:uint = 0;
+            if(pj.start()) {                
+                if(pj.orientation == PrintJobOrientation.PORTRAIT) {
+                    throw new Error("Without embedding fonts you must print the top half with an orientation of landscape.");
+                }
+                
+                sheet1.height = pj.pageHeight;
+                sheet1.width = pj.pageWidth/2;
+                sheet2.height = pj.pageHeight;
+                sheet2.width = pj.pageWidth/2;
+
+                var sheets:Sprite = new Sprite();
+                sheets.addChild(sheet1);
+                sheets.addChild(sheet2);
+                sheets.getChildAt(1).x = sheets.getChildAt(0).width;
+                try {
+                    pj.addPage(sheets, new Rectangle(0, 0, sheets.width, sheets.height/2));
+                    pagesToPrint++;
+                }
+                catch(e:Error) {
+                    // do nothing
+                }
+
+                if(pagesToPrint > 0) {
+                    pj.send();
+                }
+            }
+        }
+
+
+        private function draw():void {
+            var sheetWidth:Number = this.stage.stageWidth/2;
+            var sheetHeight:Number = this.stage.stageHeight;
+            
+            addChild(sheet1);
+            sheet1.width = sheetWidth;
+            sheet1.height = sheetHeight;
+            
+            addChild(sheet2);
+            sheet2.width = sheetWidth;
+            sheet2.height = sheetHeight;
+            sheet2.x = sheet1.width;
+        }        
+    }
+}
+</codeblock></example></apiClassifierDetail><apiConstructor id="flash.printing:PrintJob:PrintJob"><apiName>PrintJob</apiName><shortdesc>
+ Erstellt ein PrintJob-Objekt, mit dem Sie eine oder mehrere Seiten drucken können.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><maelexample>See <code>PrintJob.addPage()</code>.
+ 
+ </maelexample></asCustoms></prolog><apiConstructorDetail><apiConstructorDef><apiAccess value="public"/><apiException><apiDesc>Löst eine Ausnahme aus, wenn ein anderes PrintJob-Objekt noch aktiv ist.
+ 
+ </apiDesc><apiItemName>IllegalOperationError</apiItemName><apiOperationClassifier>flash.errors:IllegalOperationError</apiOperationClassifier></apiException></apiConstructorDef><apiDesc>
+ Erstellt ein PrintJob-Objekt, mit dem Sie eine oder mehrere Seiten drucken können. Nach dem Erstellen eines PrintJob-Objekts müssen Sie (in der folgenden Reihenfolge) die Methoden <codeph>PrintJob.start()</codeph>, <codeph>PrintJob.addPage()</codeph> und anschließend <codeph>PrintJob.send()</codeph> verwenden, um den Druckauftrag an den Drucker zu senden.
+ <p>Sie können beispielsweise den Text für den Platzhalter <codeph>[params]</codeph> für die Aufrufe der <codeph>my_pj.addPage()</codeph>-Methode durch benutzerdefinierte Parameter ersetzen, wie dies im folgenden Code dargestellt ist:</p>
+ <codeblock>
+ // create PrintJob object
+ var my_pj:PrintJob = new PrintJob();
+  
+ // display Print dialog box, but only initiate the print job
+ // if start returns successfully.
+ if (my_pj.start()) {
+  
+    // add specified page to print job
+    // repeat once for each page to be printed
+    try {
+      my_pj.addPage([params]);
+    }
+    catch(e:Error) {
+      // handle error 
+    }
+    try {
+      my_pj.addPage([params]);
+    }
+    catch(e:Error) {
+      // handle error 
+    }
+ 
+    // send pages from the spooler to the printer, but only if one or more
+    // calls to addPage() was successful. You should always check for successful 
+    // calls to start() and addPage() before calling send().
+    my_pj.send();
+ }
+ </codeblock>
+ <p>Es ist nicht möglich, ein zweites PrintJob-Objekt zu erstellen, solange das erste noch aktiv ist. Wenn Sie (durch Aufrufen von <codeph>new PrintJob()</codeph>) ein zweites PrintJob-Objekt erstellen möchten, während das erste Objekt noch aktiv ist, wird das zweite PrintJob-Objekt nicht erstellt. Überprüfen Sie daher vor dem Erstellen eines zweiten PrintJob-Objekts den <codeph>my_pj</codeph>-Wert.</p>
+ 
+ </apiDesc></apiConstructorDetail><related-links><link href="flash.printing.xml#PrintJob/addPage()"><linktext>PrintJob.addPage()</linktext></link><link href="flash.printing.xml#PrintJob/send()"><linktext>PrintJob.send()</linktext></link><link href="flash.printing.xml#PrintJob/start()"><linktext>PrintJob.start()</linktext></link></related-links></apiConstructor><apiOperation id="flash.printing:PrintJob:addPage"><apiName>addPage</apiName><shortdesc>
+     Sendet das angegebene Sprite-Objekt als einzelne Seite an die Druckwarteschlange.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9."/></apiVersion></asMetadata><asCustoms><keyword>printjob, printjob.addpage, print
+	 </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiException><apiDesc>Löst eine Ausnahme aus, wenn <codeph>PrintJob.start()</codeph> nicht aufgerufen wurde oder der Benutzer den Druckauftrag abgebrochen hat.
+	 
+	 
+	 </apiDesc><apiItemName>Error</apiItemName><apiOperationClassifier>Error</apiOperationClassifier></apiException><apiReturn><apiType value="void"/></apiReturn><apiParam><apiItemName>sprite</apiItemName><apiOperationClassifier>flash.display:Sprite</apiOperationClassifier><apiDesc>Der Instanzname des zu druckenden Sprite-Objekts. 
+	 
+	 
+	 </apiDesc></apiParam><apiParam><apiItemName>printArea</apiItemName><apiOperationClassifier>flash.geom:Rectangle</apiOperationClassifier><apiData>null</apiData><apiDesc> Ein Rectangle-Objekt, das den Druckbereich angibt.	 
+	 
+	 <p>Die Breite und Höhe eines Rechtecks werden in Pixeln angegeben. Bei Druckern wird die Druckmaßeinheit „Punkt“ verwendet. „Punkt“ ist eine feste Größe (1/72 Zoll), die Größe eines Pixels richtet sich jedoch nach der jeweiligen Auflösung des Bildschirms. Der Umrechnungsfaktor zwischen Pixel und Punkt hängt daher von den Druckereinstellungen und davon ab, ob der Sprite skaliert ist. Ein nicht skalierter Sprite mit einer Breite von 72 Pixel wird mit einer Breite von 1 Zoll gedruckt. Dabei entspricht ein Punkt einem Pixel, unabhängig von der Bildschirmauflösung.</p>
+	 <p>Mit folgenden Gleichungen können Sie Zoll- oder Zentimeterangaben in Twips oder Punkt umrechnen (ein Twip ist 1/20 Punkt): 
+	 
+	 <ul>
+	   <li>1 Punkt = 1/72 Zoll = 20 Twip</li>
+	   <li>1 Zoll = 72 Punkt = 1440 Twip</li>
+	   <li>1 cm = 567 Twip</li>
+	 </ul>
+	 </p>
+	 
+	 
+	 <p>Wenn Sie den Parameter <codeph>printArea</codeph> weglassen oder falsch übergeben, wird der gesamte Bereich von <codeph>sprite</codeph> gedruckt.</p>
+	 
+	 
+	 <p>Wenn Sie keinen Wert für <codeph>printArea</codeph> angeben möchten, aber <codeph>options</codeph> oder <codeph>frameNum</codeph> mit einem Wert belegen wollen, übergeben Sie den Wert <codeph>null</codeph> für <codeph>printArea</codeph>.</p>
+	 
+	 </apiDesc></apiParam><apiParam><apiItemName>options</apiItemName><apiOperationClassifier>flash.printing:PrintJobOptions</apiOperationClassifier><apiData>null</apiData><apiDesc>Ein optionaler Parameter, der angibt, ob der Ausdruck als Vektor oder Bitmap erfolgt. Der Standardwert ist <codeph>null</codeph>, dabei erfolgt der Ausdruck im Vektorformat. Wenn Sie <codeph>sprite</codeph> als Bitmap drucken möchten, setzen Sie die <codeph>printAsBitmap</codeph>-Eigenschaft des PrintJobOptions-Objekts auf <codeph>true</codeph>. Wenn Sie <codeph>printAsBitmap</codeph> auf <codeph>true</codeph> setzen, beachten Sie folgende Hinweise:
+	 
+	 <ul>
+	   <li>Wenn der zu druckende Inhalt ein Bitmapbild enthält, setzen Sie die <codeph>printAsBitmap</codeph>-Eigenschaft auf <codeph>true</codeph>, um Alphatransparenz und Farbeffekte einzuschließen.</li>
+	   <li>Verwenden Sie diesen Parameter nicht, wenn der Inhalt keine Bitmapbilder enthält. Dadurch wird der Inhalt im Vektorformat mit einer höheren Qualität gedruckt.</li>
+	 </ul>
+	 
+	 <p>Wenn Sie <codeph>options</codeph> auslassen oder fehlerhaft übergeben, erfolgt der Ausdruck im Vektorformat. Wenn Sie keinen Wert für <codeph>options</codeph> angeben möchten, aber <codeph>frameNumber</codeph> mit einem Wert belegen wollen, übergeben Sie den Wert <codeph>null</codeph> für <codeph>options</codeph>.</p>
+	 
+	 <p><i>Hinweis:</i> Adobe AIR unterstützt das Drucken im Vektorformat unter Mac OS nicht.</p>
+	 
+	 </apiDesc></apiParam><apiParam><apiItemName>frameNum</apiItemName><apiOperationClassifier>int</apiOperationClassifier><apiData>0</apiData><apiDesc><ph product="flash">Eine optionale Zahl, mit der Sie das zu druckende Bild angeben können. Das Übergeben von <codeph>frameNum</codeph> führt nicht dazu, dass ActionScript bei diesem Bild aufgerufen wird. Wenn Sie diesen Parameter auslassen, wird das aktuelle Bild in <codeph>sprite</codeph> ausgedruckt.</ph> <ph product="flex">Eine optionale Zahl, die in der Flash-Authoring-Umgebung verwendet wird. Beim Schreiben von Flex-Anwendungen sollten Sie diesen Parameter auslassen oder den Wert 0 übergeben.</ph>	 
+	 
+	 <p product="flash"><b>Hinweis: </b> Wenn Sie zuletzt <codeph>print()</codeph>, <codeph>printAsBitmap()</codeph>, <codeph>printAsBitmapNum()</codeph> oder <codeph>printNum()</codeph> verwendet haben, um aus Flash zu drucken, haben Sie möglicherweise die Bildbezeichnung <codeph>#p</codeph>auf mehrere Bilder angewendet, um zu bestimmen, welche Seiten gedruckt werden sollen. Wenn Sie <codeph>PrintJob.addPage()</codeph> zum Drucken mehrerer Bilder verwenden, müssen Sie für jedes Bild die <codeph>PrintJob.addPage()</codeph>-Methode verwenden. Die Bildbezeichnung <codeph>#p</codeph> wird ignoriert. Eine Möglichkeit, dies programmgesteuert vornehmen zu lassen, wird im Beispielabschnitt beschrieben. </p>
+	 </apiDesc></apiParam></apiOperationDef><apiDesc>
+     Sendet das angegebene Sprite-Objekt als einzelne Seite an die Druckwarteschlange. Vor der Verwendung dieser Methode müssen Sie ein PrintJob-Objekt erstellen und dann <codeph>PrintJob.start()</codeph> verwenden. Senden Sie nach dem einmaligen oder mehrfachen Aufrufen von <codeph>PrintJob.addPage()</codeph> für einen Druckauftrag anschließend die Seiten in der Druckwarteschlange mithilfe von <codeph>PrintJob.send()</codeph> an den Drucker. Mit anderen Worten: Nach dem Erstellen eines PrintJob-Objekts verwenden Sie (in der folgenden Reihenfolge) die Methoden <codeph>PrintJob.start()</codeph>, <codeph>PrintJob.addPage()</codeph> und <codeph>PrintJob.send()</codeph>, um den Druckauftrag an den Drucker zu senden. Um mehrere Seiten gleichzeitig zu drucken, können Sie <codeph>PrintJob.addPage()</codeph> nach einem einmaligen Aufruf von <codeph>PrintJob.start()</codeph> mehrfach verwenden.
+     
+     <p>Wenn durch <codeph>PrintJob.addPage()</codeph> eine Ausnahme in Flash Player ausgelöst wird (z. B. wenn <codeph>PrintJob.start()</codeph> nicht aufgerufen wurde oder der Benutzer den Druckauftrag abgebrochen hat), schlagen alle nachfolgenden Aufrufe von <codeph>PrintJob.addPage()</codeph> fehl. Wenn vorherige Aufrufe von <codeph>PrintJob.addPage()</codeph> jedoch erfolgreich waren, sendet der abschließende Befehl <codeph>PrintJob.send()</codeph> alle Seiten in der Warteschlange an den Drucker.</p>
+     <p>Wenn der <codeph>PrintJob.addPage()</codeph>-Vorgang im Druckauftrag 15 Sekunden überschreitet, wird beim nächsten Aufruf von <codeph>Print.addPage()</codeph> eine Ausnahme in Flash Player ausgelöst.</p>
+     <p>Wenn Sie einen Wert für den <codeph>printArea</codeph>-Parameter übergeben, werden die Koordinaten <codeph><i>x</i></codeph> und <codeph><i>y</i></codeph> des <codeph>printArea</codeph>-Objekts relativ zur oberen linken Ecke (Koordinaten 0,0) des druckbaren Seitenbereichs festgelegt. Der druckbare Bereich wird anhand der schreibgeschützten Eigenschaften <codeph>pageHeight</codeph> und <codeph>pageWidth</codeph> angegeben, die durch <codeph>PrintJob.start()</codeph> festgelegt werden. Da die Ausrichtung des Ausdrucks an der oberen linken Ecke des druckbaren Bereichs der Seite erfolgt, wird er gegebenenfalls rechts und/oder unten in dem durch <codeph>printArea</codeph> definierten Bereich beschnitten, wenn der in <codeph>printArea</codeph> festgelegte Bereich größer ist als der druckbare Bereich der Seite. <ph product="flash">Wenn Sie für <codeph>printArea</codeph> keinen Wert übergeben und die Bühne größer als der druckbare Bereich ist, wird der Ausdruck auch beschnitten.</ph> <ph product="flex">Wenn Sie für <codeph>printArea</codeph> keinen Wert übergeben und der Bildschirm größer als der druckbare Bereich ist, wird der Ausdruck auch beschnitten.</ph></p>
+	 
+	 <p>Wenn Sie ein Sprite-Objekt vor dem Drucken skalieren möchten, legen Sie die Skaliereigenschaften (siehe <codeph>flash.display.DisplayObject.scaleX</codeph> und <codeph>flash.display.DisplayObject.scaleY</codeph>) fest, bevor Sie diese Methode aufrufen, und setzen sie danach auf ihre ursprünglichen Werte zurück. Die Skalierung eines Sprite-Objekts hat keinen Bezug auf <codeph>printArea</codeph>. Wenn Sie beispielsweise einen Druckbereich mit der Größe 50 x 50 Pixel festlegen, werden 2500 Pixel gedruckt. Wenn Sie das Sprite-Objekt skalieren, werden dieselben 2500 Pixel in der skalierten Größe gedruckt.</p>
+	 
+	 <p>Die Druckfunktion im Flash Player unterstützt PostScript- und Nicht-PostScript-Drucker. Bei Nicht-PostScript-Druckern werden die Vektoren in Bitmaps umgewandelt.</p>
+	 
+	 </apiDesc></apiOperationDetail><related-links><link href="flash.printing.xml#PrintJob/send()"><linktext>PrintJob.send()</linktext></link><link href="flash.printing.xml#PrintJob/start()"><linktext>PrintJob.start()</linktext></link><link href="flash.display.xml#DisplayObject"><linktext>DisplayObject-Klasse</linktext></link></related-links></apiOperation><apiOperation id="flash.printing:PrintJob:send"><apiName>send</apiName><shortdesc>
+      Sendet Seiten in der Druckwarteschlange an den Drucker, nachdem „PrintJob.start()“ und „PrintJob.addPage()“ erfolgreich ausgeführt wurden.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9."/></apiVersion></asMetadata><asCustoms><keyword>printjob, printjob.send, print
+     </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiType value="void"/></apiReturn></apiOperationDef><apiDesc>
+      Sendet Seiten in der Druckwarteschlange an den Drucker, nachdem <codeph>PrintJob.start()</codeph> und <codeph>PrintJob.addPage()</codeph> erfolgreich ausgeführt wurden. Aufrufe von <codeph>PrintJob.send()</codeph> sind nicht erfolgreich, wenn der Aufruf von <codeph>PrintJob.start()</codeph> fehlschlägt oder wenn <codeph>PrintJob.addpage()</codeph> eine Ausnahme auslöst. Überprüfen Sie daher, ob <codeph>PrintJob.start()</codeph> den Wert <codeph>true</codeph> zurückgibt, und erfassen Sie alle <codeph>PrintJob.addpage()</codeph>-Ausnahmen vor dem Aufrufen von <codeph>PrintJob.send()</codeph>. Beispiel:
+     <pre>
+     var my_pj:PrintJob = new PrintJob();
+     if (my_pj.start()) {
+       try {
+         my_pj.addPage([params]);
+       }
+       catch(e:Error) {
+          // handle error 
+       }
+     
+       my_pj.send();
+     }
+     </pre>
+     
+     </apiDesc></apiOperationDetail><related-links><link href="flash.printing.xml#PrintJob/addPage()"><linktext>PrintJob.addPage()</linktext></link><link href="flash.printing.xml#PrintJob/start()"><linktext>PrintJob.start()</linktext></link></related-links></apiOperation><apiOperation id="flash.printing:PrintJob:start"><apiName>start</apiName><shortdesc>
+     Zeigt das Druckdialogfeld des Betriebssystems an, startet den Spoolvorgang und legt die schreibgeschützten Eigenschaftswerte für das PrintJob-Objekt fest.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9."/><apiPlatform description="" name="Flash" version="9."/></apiVersion></asMetadata><asCustoms><keyword>printjob, printjob.start, print
+     </keyword></asCustoms></prolog><apiOperationDetail><apiOperationDef><apiAccess value="public"/><apiReturn><apiDesc>Der Wert <codeph>true</codeph>, wenn der Benutzer im angezeigten Druckdialogfeld auf „OK“ klickt; <codeph>false</codeph>, wenn der Benutzer auf „Abbrechen“ klickt oder ein Fehler auftritt.
+     
+     </apiDesc><apiOperationClassifier>Boolean</apiOperationClassifier></apiReturn></apiOperationDef><apiDesc>
+     Zeigt das Druckdialogfeld des Betriebssystems an, startet den Spoolvorgang und legt die schreibgeschützten Eigenschaftswerte für das PrintJob-Objekt fest. Der Benutzer kann die Druckeinstellungen im Druckdialogfeld ändern. Wenn die <codeph>PrintJob.start()</codeph>-Methode erfolgreich zurückgegeben wird (der Benutzer klickt im Druckdialogfeld auf „OK“), sind die folgenden schreibgeschützten Eigenschaften angegeben, welche die aktuellen Druckeinstellungen des Benutzers darstellen.
+     <p> 
+     <adobetable class="innertable"> 
+     
+     
+     
+     
+     
+     <tgroup cols="4"><thead><row><entry>Eigenschaft</entry><entry>Typ</entry><entry>Einheiten</entry><entry>Hinweise</entry></row></thead><tbody><row><entry><codeph>PrintJob.paperHeight</codeph></entry>  <entry>Number</entry> <entry>Punkt</entry> <entry>Gesamthöhe des Papiers</entry></row><row><entry><codeph>PrintJob.paperWidth</codeph></entry>  <entry>Number</entry> <entry>Punkt</entry> <entry>Gesamtbreite des Papiers</entry></row><row><entry><codeph>PrintJob.pageHeight</codeph></entry>  <entry>Number</entry> <entry>Punkt</entry> <entry>Höhe des tatsächlich druckbaren Seitenbereichs. Benutzerdefinierte Ränder werden ignoriert.</entry></row><row><entry><codeph>PrintJob.pageWidth</codeph></entry>  <entry>Number</entry> <entry>Punkt</entry> <entry>Breite des tatsächlich druckbaren Seitenbereichs. Benutzerdefinierte Ränder werden ignoriert.</entry></row><row><entry><codeph>PrintJob.orientation</codeph></entry>  <entry>String</entry> <entry/> <entry><codeph>"portrait"</codeph> (<codeph>flash.printing.PrintJobOrientation.PORTRAIT</codeph>) oder <codeph>"landscape"</codeph> (<codeph>flash.printing.PrintJobOrientation.LANDSCAPE</codeph>).</entry></row></tbody></tgroup></adobetable></p>
+     <p><b>Hinweis:</b> Wenn der Benutzer das Druckdialogfeld durch „Abbrechen“ schließt, werden die Eigenschaften nicht eingetragen.</p>
+     <p>Wenn der Benutzer im Dialogfeld „Drucken“ auf „OK“ klickt, beginnt der Player damit, den Druckauftrag an die Druckwarteschlange des Betriebssystems zu übergeben. Da im Betriebssystem dann Informationen zum Druckstatus angezeigt werden, sollten Sie möglichst bald <codeph>PrintJob.addPage()</codeph> und <codeph>PrintJob.send()</codeph> aufrufen, damit Seiten an die Druckwarteschlange gesendet werden. Sie können die schreibgeschützten, mit dieser Methode angegebenen Eigenschaften für Höhe, Breite und Ausrichtung zum Formatieren des Ausdrucks verwenden.</p>
+     <p>Überprüfen Sie zunächst, ob diese Methode <codeph>true</codeph> zurückgibt (nachdem der Benutzer im Druckdialogfeld des Betriebssystems auf „OK“ geklickt hat), und rufen Sie erst dann <codeph>PrintJob.addPage()</codeph> und <codeph>PrintJob.send()</codeph> auf:</p>
+     <pre>
+     var my_pj:PrintJob = new PrintJob();
+        if(my_pj.start()) {
+          // addPage() and send() statements here
+        }
+     </pre>
+     <p>Wenn eines der folgenden Intervalle bei der angegebenen Instanz des Druckauftrags ein Zeitlimit von 15 Sekunden überschreitet, wird beim darauf folgenden Aufruf von <codeph>PrintJob.start()</codeph> der Wert <codeph>false</codeph> zurückgegeben.</p>
+     <ul>
+     <li><codeph>PrintJob.start()</codeph> und die erste <codeph>PrintJob.addPage()</codeph></li>
+     <li>eine <codeph>PrintJob.addPage()</codeph> und die nächste <codeph>PrintJob.addPage()</codeph></li>
+     <li>die letzte <codeph>PrintJob.addPage()</codeph> und <codeph>PrintJob.send()</codeph></li>
+     </ul>
+     </apiDesc></apiOperationDetail><related-links><link href="flash.printing.xml#PrintJob/addPage()"><linktext>PrintJob.addPage()</linktext></link><link href="flash.printing.xml#PrintJob/send()"><linktext>PrintJob.send()</linktext></link></related-links></apiOperation><apiValue id="flash.printing:PrintJob:orientation:get"><apiName>orientation</apiName><shortdesc>
+    Die Bildausrichtung für den Druck.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9."/></apiVersion></asMetadata><asCustoms><keyword>printjob, printjob.orientation, orientation 
+    </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+    Die Bildausrichtung für den Druck. Diese Eigenschaft ist ein Wert der PrintJobOrientation-Klasse. Diese Eigenschaft ist nur nach einem Aufruf der <codeph>PrintJob.start()</codeph>-Methode verfügbar.
+     
+     </apiDesc></apiValueDetail><related-links><link href="flash.printing.xml#PrintJobOrientation"><linktext>PrintJobOrientation-Klasse</linktext></link></related-links></apiValue><apiValue id="flash.printing:PrintJob:pageHeight:get"><apiName>pageHeight</apiName><shortdesc>
+    Die Höhe des tatsächlich druckbaren Bereichs der Seite in Punkt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9."/></apiVersion></asMetadata><asCustoms><keyword>printjob, printjob.pageHeight, pageHeight 
+    </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+    Die Höhe des tatsächlich druckbaren Bereichs der Seite in Punkt. Alle benutzerdefinierten Randeinstellungen werden ignoriert. Diese Eigenschaft ist nur nach einem Aufruf der <codeph>PrintJob.start()</codeph>-Methode verfügbar.
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.printing:PrintJob:pageWidth:get"><apiName>pageWidth</apiName><shortdesc>
+    Die Breite des tatsächlich druckbaren Bereichs der Seite in Punkt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9."/></apiVersion></asMetadata><asCustoms><keyword>printjob, printjob.pageWidth, pageWidth 
+    </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+    Die Breite des tatsächlich druckbaren Bereichs der Seite in Punkt. Alle benutzerdefinierten Randeinstellungen werden ignoriert. Diese Eigenschaft ist nur nach einem Aufruf der <codeph>PrintJob.start()</codeph>-Methode verfügbar.
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.printing:PrintJob:paperHeight:get"><apiName>paperHeight</apiName><shortdesc>
+    Die Gesamthöhe des Papiers in Punkt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9."/></apiVersion></asMetadata><asCustoms><keyword>printjob, printjob.paperHeight, paperHeight 
+    </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+    Die Gesamthöhe des Papiers in Punkt. Diese Eigenschaft ist nur nach einem Aufruf der <codeph>PrintJob.start()</codeph>-Methode verfügbar.
+     
+     </apiDesc></apiValueDetail></apiValue><apiValue id="flash.printing:PrintJob:paperWidth:get"><apiName>paperWidth</apiName><shortdesc>
+    Die Gesamtbreite des Papiers in Punkt.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9."/></apiVersion></asMetadata><asCustoms><keyword>printjob, printjob.paperWidth, paperWidth 
+    </keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiProperty/><apiAccess value="public"/><apiDynamic/><apiValueAccess value="read"/><apiValueClassifier>int</apiValueClassifier></apiValueDef><apiDesc>
+    Die Gesamtbreite des Papiers in Punkt. Diese Eigenschaft ist nur nach einem Aufruf der <codeph>PrintJob.start()</codeph>-Methode verfügbar.
+     
+     </apiDesc></apiValueDetail></apiValue></apiClassifier><apiClassifier id="flash.printing:PrintJobOrientation"><apiName>PrintJobOrientation</apiName><shortdesc>
+Diese Klasse enthält Werte, die über die PrintJob.orientation-Eigenschaft zum Angeben der Position des Bilds auf einer gedruckten Seite verwendet werden.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata></prolog><apiClassifierDetail><apiClassifierDef><apiAccess value="public"/><apiStatic/><apiFinal/><apiBaseClassifier>Object</apiBaseClassifier></apiClassifierDef><apiDesc>
+Diese Klasse enthält Werte, die über die <codeph>PrintJob.orientation</codeph>-Eigenschaft zum Angeben der Position des Bilds auf einer gedruckten Seite verwendet werden.
+</apiDesc></apiClassifierDetail><related-links><link href="flash.printing.xml#PrintJob/orientation"><linktext>PrintJob.orientation</linktext></link></related-links><apiValue id="flash.printing:PrintJobOrientation:LANDSCAPE"><apiName>LANDSCAPE</apiName><shortdesc>
+	Die horizontale Bildausrichtung (Querformat) für den Druck.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>printjob.landscape, landscape
+	</keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>landscape</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	Die horizontale Bildausrichtung (Querformat) für den Druck. Diese Konstante wird mit der Eigenschaft <codeph>PrintJob.orientation</codeph> verwendet. Verwenden Sie die Syntax <codeph>PrintJobOrientation.LANDSCAPE</codeph>.
+	
+	</apiDesc></apiValueDetail><related-links><link href="flash.printing.xml#PrintJob/orientation"><linktext>PrintJob.orientation</linktext></link><link href="flash.printing.xml#PrintJobOrientation/PORTRAIT"><linktext>PORTRAIT</linktext></link></related-links></apiValue><apiValue id="flash.printing:PrintJobOrientation:PORTRAIT"><apiName>PORTRAIT</apiName><shortdesc>
+	Die vertikale Bildausrichtung (Hochformat) für den Druck.</shortdesc><prolog><asMetadata><apiVersion><apiLanguage version="3.0"/><apiPlatform description="" name="Flash" version="9"/></apiVersion></asMetadata><asCustoms><keyword>printjob.portrait, portrait
+	</keyword></asCustoms></prolog><apiValueDetail><apiValueDef><apiAccess value="public"/><apiStatic/><apiData>portrait</apiData><apiValueClassifier>String</apiValueClassifier></apiValueDef><apiDesc>
+	Die vertikale Bildausrichtung (Hochformat) für den Druck. Diese Konstante wird mit der Eigenschaft <codeph>PrintJob.orientation</codeph> verwendet. Verwenden Sie die Syntax <codeph>PrintJobOrientation.PORTRAIT</codeph>.
+	
+	</apiDesc></apiValueDetail><related-links><link href="flash.printing.xml#PrintJob/orientation"><linktext>PrintJob.orientation</linktext></link><link href="flash.printing.xml#PrintJobOrientation/LANDSCAPE"><linktext>LANDSCAPE</linktext></link></related-links></apiValue></apiClassifier></apiPackage>
